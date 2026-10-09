@@ -1,0 +1,33 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:12100) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssets/action-delivery.test.ts (5.554 s)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/independent-review1/observe-delivery-independent1.test.ts
+  ● one-shot observe withholds protected parts when consumed share expires during final actor-session RPC
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"approvals": [], "cursor": 1, "deliveryExpiresAt": 1791520000100, "parts": [{"part": {"text": "private shared source", "type": "text"}, "sequence": 1}], "run": {"agentId": "agent", "agentVersion": 1, "attemptNumber": 1, "cancellationRequested": false, "contextCompleteness": "complete", "contextFailureCode": null, "conversationId": "conversation", "createdAt": 1, "definitionHash": "hash", "failureCode": null, "graphStatus": "not_requested", "inputMessageIds": ["input"], "memoryStatus": "complete", "outputMessageIds": ["output"], "queueSequence": 1, "responseStatus": "complete", "runId": "run", "scope": {"memorySpaceId": "space", "tenantId": "tenant"}, "updatedAt": 2, "version": 1}, "state": "complete"}
+
+      24 | });
+      25 | it("one-shot observe withholds protected parts when consumed share expires during final actor-session RPC", async () => {
+    > 26 |   const f = fixture(true); try { await expect(f.client.observe(handle)).rejects.toMatchObject({ code: "AUTHORITY_EXPIRED" }); expect(f.counts()).toEqual({ sessions: 2, observes: 1 }); } finally { await f.client.close(); }
+         |                                        ^
+      27 | });
+      28 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/independent-review1/observe-delivery-independent1.test.ts:26:40)
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 10 passed, 11 total
+Snapshots:   0 total
+Time:        6.126 s
+Ran all test suites within paths "tests/unit/runtimeAssets/action-delivery.test.ts", "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/independent-review1/observe-delivery-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/independent-review1/asset-observe-controls2.results.json

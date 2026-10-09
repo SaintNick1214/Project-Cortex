@@ -2,10 +2,15 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { bearer, hostToken, runtimeConfig, withRuntime } from "../cortex.js";
+import { bearer, hostToken, identifier, runtimeConfig, withRuntime } from "../cortex.js";
 import { config, runtimeMock } from "./helpers/test-utils.js";
 afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
 describe("verified remote configuration", () => {
+  it("rejects embedded C0 controls without rejecting printable Unicode or DEL", () => {
+    for (let code = 0; code < 32; code++) expect(() => identifier(`scope${String.fromCharCode(code)}id`)).toThrow("INVALID_INPUT");
+    expect(identifier("scope😀id")).toBe("scope😀id");
+    expect(identifier("scope\u007fid")).toBe("scope\u007fid");
+  });
   it("configuration labels are selectors, with no user or model credential defaults", () => {
     expect(runtimeConfig({ CONVEX_URL: "https://test.convex.cloud" })).toEqual({ deploymentUrl: "https://test.convex.cloud", agentId: "basic-assistant", agentVersion: 1, timeoutMs: 30000 });
   });

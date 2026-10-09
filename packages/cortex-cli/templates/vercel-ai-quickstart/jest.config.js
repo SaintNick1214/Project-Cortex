@@ -11,7 +11,8 @@ const { existsSync } = require("node:fs");
 const { join } = require("node:path");
 const localEnvPath = join(__dirname, ".env.local");
 // Load before Jest creates worker environments; Node's loader preserves overrides.
-if (existsSync(localEnvPath)) process.loadEnvFile(localEnvPath);
+const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+if (!explicitEnvironment && existsSync(localEnvPath)) process.loadEnvFile(localEnvPath);
 
 const baseConfig = {
   preset: "ts-jest",

@@ -1,0 +1,124 @@
+{
+  "version": 2,
+  "closedAtUtc": "2026-10-09T05:21:20Z",
+  "status": "FINAL_SAME_COHERENT_TASK03_NONAUTHOR_REVIEW_CLOSED",
+  "verdict": "PASS",
+  "task03Accepted": true,
+  "requirementsGranted": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "criteriaGranted": [
+    1,
+    2,
+    3
+  ],
+  "rubricScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4,
+    "mean": 4
+  },
+  "rubricPolicy": "acceptance-policy v2: req/test/completeness>=4; code/pattern>=3; mean>=3.6; zero known reachable breaking findings",
+  "knownReachableBreakingFindings": [],
+  "originalScope": "Task03 original5 requirements/3 criteria; unchanged full goal17tasks/61criteria/12success criteria",
+  "fullGoalAccepted": false,
+  "continues": "report1.md and handoff1.json preserved unchanged; one coherent nonauthor source/control/actual batch",
+  "source": {
+    "head": "66d8e43ba8d3056bd41aa8a6beb85a8a3162e658",
+    "sdk5PackSha256": "22f198191d9566eae59f5c1312b85f413dfaffff56526fad97849f5654347565",
+    "backendManifestSha256": "a2e00efd329c173994bc757f3fcd1f004cdd41563d75b092782f447256f79486",
+    "registrations": 461,
+    "public": 270,
+    "internal": 191,
+    "httpRoutes": 5,
+    "backendFiles": 107,
+    "tables": 68
+  },
+  "actual": {
+    "packet": "../native-actual/final-native-report2.json",
+    "index": "../native-actual/evidence-index-final2.json",
+    "matrix": "../native-actual/current18-class-evidence2.json",
+    "groups": 9,
+    "newModelAttempts": 0,
+    "sourceApplicableActualReuseClasses": 16,
+    "callback": "security only; genuine provider callback/poll/materialization remains blocked503",
+    "unavailable": "safety only; no functional feature restoration",
+    "noAliasCartesianClaim": true
+  },
+  "selectedInspection": {
+    "previousSelectedRawPins": 34,
+    "newSelectedRawPins": 13,
+    "packVerified": true,
+    "rootSDKUIPins": 6,
+    "currentDeclaredCompositePins": 24,
+    "modernizationTestHelperPins": 7,
+    "noRepeatedTestsOrServicesOnResume": true
+  },
+  "correctedFinding": {
+    "id": "IR03-OBSERVE-DELIVERY-1",
+    "status": "REPAIRED_AND_REGRESSED",
+    "source": "src/client-runtime/client.ts:206",
+    "red": "asset-observe-controls2.results.json",
+    "green": [
+      "asset-observe-controls3.results.json",
+      "observe-renewal-controls4.results.json"
+    ],
+    "actualSuccessor": "../native-actual/native-deadlines2-outcomes.json:installed-sdk-one-shot-observe-withholds-after-final-session-consumed-share-expiry"
+  },
+  "controlledEvidence": {
+    "independentAssetHandlers": 9,
+    "independentSDK": 3,
+    "independentCIBootstrap": 32,
+    "modernizedAuthFixtures": 1585,
+    "currentConfiguredRootSDKUnit": 6633,
+    "currentRootSuites": 118,
+    "allSkipped": 0,
+    "noOverlappingCountSum": true,
+    "currentUI9": "controlled clear/replacement/ordinary error cases; prior actual UI8 candidate remains distinct"
+  },
+  "cleanup": {
+    "restoreDeploy": "../native-actual/deploy-restored-sdk5.json",
+    "restoreTypecheckEnabled": true,
+    "restoreExitCode": 0,
+    "ownedQAHelperAndRoutesRemoved": true,
+    "scopesRetired": 2,
+    "rolesDenied": 4,
+    "ownedActiveAssetBytes": 0,
+    "ownedActiveAssetJobs": 0,
+    "priorAccounts": 49,
+    "allAccounts": 51,
+    "newZeroLiabilityAccounts": 2,
+    "priorUncertainAttempts": 65,
+    "preexistingHeldSlots": 2,
+    "exactIdCountersAndFencesUnchanged": true,
+    "rawJSONByteHashesNotTreatedAsSemanticEquality": true,
+    "mainDevCredentialsGraphRetainedFor16Final": true,
+    "noFinalPhysicalRetirementClaim": true
+  },
+  "history": "C7 missing original backing/custody and all reds remain; prospective pins do not repair history; retired ceremony not reinstated",
+  "exclusions": [
+    "no genuine async video/callback functional PASS",
+    "no production qualification from provisional V2/private evidence",
+    "no full Task13/14/16 or full-goal acceptance",
+    "no existing-Cortex compatibility bridge/second memory writer",
+    "no product/service/paid/Git/tracker mutations by reviewer"
+  ],
+  "evidenceLocations": [
+    "report2.md",
+    "handoff1.json",
+    "selected-evidence-observation1.json",
+    "../native-actual/final-native-report2.json",
+    "../native-actual/evidence-index-final2.json",
+    "../native-actual/native-deadlines2-outcomes.json",
+    "../native-actual/native03-restored-final2.json",
+    "../../task15-integration-functional-v2-20261008/root-revocation-observe1/source-final1.json",
+    "../../task16-ci-runtime-functional-v2-20261009/legacy-unit-modernization1/summary.json",
+    "../../task16-ci-runtime-functional-v2-20261009/root-sdk-unit2/report2.json"
+  ]
+}

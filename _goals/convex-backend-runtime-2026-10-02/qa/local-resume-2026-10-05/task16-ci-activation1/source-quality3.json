@@ -1,0 +1,116 @@
+{
+  "status": "SOURCE_READY_NATIVE_ACTIVATION_PENDING",
+  "closedAt": "2026-10-09T05:39:55.508Z",
+  "controlledCases": 38,
+  "failed": 0,
+  "skipped": 0,
+  "commands": [
+    {
+      "name": "source-controls3.log",
+      "args": [
+        "--test",
+        "scripts/ci/verify-disposable-targets.test.mjs",
+        "scripts/ci/runtime-fixtures.test.mjs",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs",
+        "scripts/ci/remote-agent.test.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 124
+    },
+    {
+      "name": "source-lint4.log",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "--no-ignore",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs",
+        "scripts/ci/remote-agent.mjs",
+        "scripts/ci/remote-agent.test.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 598
+    }
+  ],
+  "executorPins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.github/workflows/pr-checks.yml",
+      "bytes": 38044,
+      "sha256": "052506e8daab696cbe5ad6ba5bf5ca3b6abbf48fdb2cd2f1439a3616e3045f7f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/workflow-runtime-fixtures.test.mjs",
+      "bytes": 6951,
+      "sha256": "e26805a9bc9fe9af12f16c48878b0d906db5dd04cd3a02d887d4e32339bdf881"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/remote-agent.mjs",
+      "bytes": 5903,
+      "sha256": "35fb942f4459d46b0f806c787880e1a9b962fdcec1be6fd770ee5de0c4d1a5ac"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/remote-agent.test.mjs",
+      "bytes": 4696,
+      "sha256": "f8692efa8f3a5cbf9cf010f9f464d962c602cdc48bec4acb6deab5a5f5b87604"
+    }
+  ],
+  "modulePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/jest.config.js",
+      "bytes": 3779,
+      "sha256": "0303101e99a1e821d6b9c641be86c8b7b530d93a0aa394791932a6bd2ae98209"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/helpers/setup.ts",
+      "bytes": 2620,
+      "sha256": "edad742c6592d649e6164c59a63b6a04cc6abdab937fbfa0d2a1e3260f1fbb80"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/jest.config.js",
+      "bytes": 1730,
+      "sha256": "69140389fe49bfe2779b8a518c711cb118cd761b3e3be930654c10ec447b5bad"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/environment.test.ts",
+      "bytes": 2718,
+      "sha256": "44e9b30d59e53905571b905e1cdef0ee9a99928c54ac98ec387ef11da987f2f1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/remote-runtime.test.ts",
+      "bytes": 8820,
+      "sha256": "d2783eb9fe8321b37494835a1295808479d26538a823f7b2d79b944d76b0295f"
+    }
+  ],
+  "rawLogs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-activation1/source-controls3.log",
+      "bytes": 3594,
+      "sha256": "626625970d47f734974f49654a87c55fd29775ec36a9a011316885928d4ceb38"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-activation1/source-lint4.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "priorQuality": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-activation1/source-quality2.json",
+    "bytes": 2997,
+    "sha256": "7475fcc7684b51540914365ccafbf93a8cba5b596d6ea5d1275de71d11515264"
+  },
+  "serviceEffects": {
+    "githubSettings": 0,
+    "dispatch": 0,
+    "deployment": 0,
+    "publish": 0,
+    "model": 0
+  },
+  "proofDeadline": "2026-10-09T08:50:12.383Z",
+  "remaining": [
+    "Root safe source commit/push exacthead",
+    "fresh owned/unrelated run queue check",
+    "fresh dedicated dev target identity",
+    "exact five new secrets and public vars",
+    "one guarded actual CI dispatch and finite outcome/cleanup"
+  ]
+}

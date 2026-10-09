@@ -1,0 +1,84 @@
+{
+  "status": "CURRENT_SELECTED_SOURCE_CONTROLS_PASS",
+  "controlledCases": 38,
+  "failed": 0,
+  "skipped": 0,
+  "commands": [
+    {
+      "name": "source-controls2.log",
+      "args": [
+        "--test",
+        "scripts/ci/verify-disposable-targets.test.mjs",
+        "scripts/ci/runtime-fixtures.test.mjs",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs",
+        "scripts/ci/remote-agent.test.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 184
+    },
+    {
+      "name": "source-syntax2.log",
+      "args": [
+        "--check",
+        "scripts/ci/remote-agent.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 18
+    },
+    {
+      "name": "source-lint3.log",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "--no-ignore",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs",
+        "scripts/ci/remote-agent.mjs",
+        "scripts/ci/remote-agent.test.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 578
+    }
+  ],
+  "pins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.github/workflows/pr-checks.yml",
+      "bytes": 38020,
+      "sha256": "478c9f3724982cc361c6c1b15bba487f8d2911bd63395a04f7cd8f0e77d2c524"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/workflow-runtime-fixtures.test.mjs",
+      "bytes": 6902,
+      "sha256": "181f494f6bff57cc5b940fd93442acd0c12c924d3881203e1871e959ddf6bb42"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/remote-agent.mjs",
+      "bytes": 5903,
+      "sha256": "35fb942f4459d46b0f806c787880e1a9b962fdcec1be6fd770ee5de0c4d1a5ac"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/remote-agent.test.mjs",
+      "bytes": 4696,
+      "sha256": "f8692efa8f3a5cbf9cf010f9f464d962c602cdc48bec4acb6deab5a5f5b87604"
+    }
+  ],
+  "rawLogs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-activation1/source-controls2.log",
+      "bytes": 3587,
+      "sha256": "f27390206d7715d1070c1b098c96849f47f8a795cc3cc63c66c937531c73a208"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-activation1/source-syntax2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-activation1/source-lint3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "serviceOrModelCalls": 0
+}

@@ -1,252 +1,130 @@
-import { describe, expect, it, jest } from '@jest/globals';
-import * as artifacts from '../../../convex-dev/artifacts';
-import * as attachments from '../../../convex-dev/attachments';
-import { runtimeAssetUnavailable, internalAssetUnavailable } from '../../../convex-dev/runtimeAssetUnavailableAuth';
+import { beforeEach, afterEach, describe, expect, it, jest } from '@jest/globals';
 import { ConvexError, type Value } from 'convex/values';
 import { fixture, invoke } from '../runtimeRegistryAuth/fixture';
+import { runtimeAssetUnavailable, internalAssetUnavailable } from '../../../convex-dev/runtimeAssetUnavailableAuth';
+import { artifacts, attachments, assetCase, assetCapability, openedAuthorityTests, openedFaultTests, assertCurrentArgs, installMockRoot, type NativeCall } from '../../helpers/current-closure-fixtures';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
-import ts from 'typescript';
-import { execFileSync } from 'node:child_process';
-import path from 'node:path';
-
-type Native = { isPublic?: boolean; isInternal?: boolean; isQuery?: boolean; exportArgs(): string };
-type Validator = { type: string; value?: unknown; tableName?: string };
 const selected = ['setFileRef', 'generateArtifactUploadUrl', 'completeArtifactUpload', 'getArtifactFileUrl', 'detachFile'];
 const internal = new Set(['artifacts:setFileRef', 'artifacts:generateArtifactUploadUrl', 'artifacts:getArtifactFileUrl', 'attachments:generateUploadUrl', 'attachments:getUrl', 'attachments:purgeAll']);
-const calls = [
-  ...Object.entries(artifacts).filter(([name]) => selected.includes(name)).map(([name, registration]) => ({ path: 'artifacts:' + name, registration: registration as unknown as Native })),
-  ...Object.entries(attachments).map(([name, registration]) => ({ path: 'attachments:' + name, registration: registration as unknown as Native })),
+const calls: NativeCall[] = [
+  ...Object.entries(artifacts).filter(([name]) => selected.includes(name)).map(([name, registration]) => ({ path: 'artifacts:' + name, registration: registration as unknown as NativeCall['registration'] })),
+  ...Object.entries(attachments).map(([name, registration]) => ({ path: 'attachments:' + name, registration: registration as unknown as NativeCall['registration'] })),
 ];
-const unavailable = { version: 1, code: 'CAPABILITY_UNAVAILABLE', message: 'Asset capability unavailable.', retryable: false, outcome: 'not_dispatched' };
+const opened = calls.filter(call => !internal.has(call.path));
+beforeEach(() => installMockRoot()); afterEach(() => { jest.restoreAllMocks(); });
+type Validator = { type: string; value?: unknown; tableName?: string };
 function sample(v: Validator): unknown {
   switch (v.type) {
-    case 'string': return 'same-id'; case 'number': return 1; case 'boolean': return true;
-    case 'null': return null; case 'literal': return v.value;
-    case 'array': return [sample(v.value as Validator)];
-    case 'union': return sample((v.value as Validator[])[0]);
+    case 'string': return 'same-id'; case 'number': return 1; case 'boolean': return true; case 'null': return null; case 'literal': return v.value;
+    case 'array': return [sample(v.value as Validator)]; case 'union': return sample((v.value as Validator[])[0]);
     case 'object': return Object.fromEntries(Object.entries(v.value as Record<string, { fieldType: Validator; optional: boolean }>).filter(([, f]) => !f.optional).map(([k, f]) => [k, sample(f.fieldType)]));
-    case 'id': return v.tableName + ':fixture'; case 'any': return {};
-    default: throw new Error('Unsupported validator ' + v.type);
+    case 'id': return v.tableName + ':fixture'; case 'any': return {}; default: throw new Error('Unsupported validator ' + v.type);
   }
 }
-function args(call: typeof calls[number]): Record<string, unknown> {
-  return { ...(sample(JSON.parse(call.registration.exportArgs()) as Validator) as Record<string, unknown>), tenantId: 'tenant-a', memorySpaceId: 'space-a' };
+function args(call: NativeCall): Record<string, unknown> {
+  const validator = JSON.parse(call.registration.exportArgs()) as Validator; const fields = validator.value as Record<string, unknown>;
+  return { ...(sample(validator) as Record<string, unknown>), ...(fields.tenantId ? { tenantId: 'tenant-a' } : {}), ...(fields.memorySpaceId ? { memorySpaceId: 'space-a' } : {}) };
 }
-function trapped(capabilities = ['storage:read', 'storage:write']) {
-  const f = fixture(capabilities);
-  const controls = new Set(['runtimeAuthPrincipals', 'runtimeAuthMemberships', 'runtimeAuthGrants', 'runtimeAuthScopes', 'runtimeAuthTombstones']);
-  const attempts: string[] = [];
-  const fail = (label: string): never => { attempts.push(label); throw new Error('PRIVATE SECRET EFFECT'); };
-  const query = f.db.query.bind(f.db); f.db.query = table => { if (!controls.has(table)) fail('query:' + table); return query(table); };
-  const get = f.db.get.bind(f.db); f.db.get = async (table, id) => { if (!controls.has(table)) fail('get:' + table); return await get(table, id); };
-  f.db.beforeWrite = table => fail('write:' + table);
-  f.db.delete = async () => fail('delete');
-  const effect = new Proxy(() => undefined, { get: (_target, key) => fail('effect:' + String(key)), apply: () => fail('effect:call') });
-  Object.assign(f.ctx, { scheduler: effect, storage: effect, runQuery: effect, runMutation: effect, runAction: effect });
-  return { ...f, attempts };
-}
-async function outcome(call: typeof calls[number], f: ReturnType<typeof trapped>, input: unknown, code: string) {
-  let error: unknown;
-  try { await invoke(call.registration, f.ctx, input); } catch (caught) { error = caught; }
-  expect(error).toBeInstanceOf(ConvexError);
-  const data = (error as ConvexError<Value>).data;
-  if (code === 'CAPABILITY_UNAVAILABLE') expect(data).toEqual(unavailable);
-  else expect(data).toEqual({ version: 1, code, message: code === 'REGISTRY_OPERATION_FAILED' ? 'Registry operation failed' : 'Access denied or invalid registry input', retryable: false, outcome: code === 'REGISTRY_OPERATION_FAILED' ? 'failed' : 'not_dispatched' });
-  expect(JSON.stringify(data)).not.toMatch(/PRIVATE|SECRET|GETTER|PROXY|storageId|same-id/);
-  expect(f.attempts).toEqual([]); expect(f.db.writes).toBe(0);
-  expect(f.db.traces.every(t => t.table.startsWith('runtimeAuth'))).toBe(true);
-}
-it('covers all original17 actual handlers: eleven public, six internal with no public aliases', () => {
-  expect(calls).toHaveLength(17); expect(calls.filter(c => c.registration.isPublic)).toHaveLength(11);
-  for (const c of calls) { expect(!!c.registration.isInternal).toBe(internal.has(c.path)); expect(!!c.registration.isPublic).toBe(!internal.has(c.path)); }
+it('inventories all 18 current handlers, including new catalog create, with six internal raw-storage aliases', () => {
+  expect(calls).toHaveLength(18); expect(opened).toHaveLength(12);
+  for (const call of calls) { expect(!!call.registration.isInternal).toBe(internal.has(call.path)); expect(!!call.registration.isPublic).toBe(!internal.has(call.path)); }
+  expect(opened.every(call => call.registration.isMutation)).toBe(true);
 });
-for (const call of calls) describe(call.path, () => {
-  it('healthy matching storage authority is fixed unavailable before any old effect', async () => {
-    const f = trapped(); await outcome(call, f, args(call), 'CAPABILITY_UNAVAILABLE');
-    expect(f.db.traces.length > 0).toBe(!internal.has(call.path));
+openedAuthorityTests(opened, assetCapability, args);
+openedFaultTests(opened, args);
+for (const call of opened) describe(call.path, () => {
+  it('uses the current catalog and produces its protected outcome without raw-storage delivery', async () => {
+    const { f, args, asset, name, module } = await assetCase(call); const before = f.db.writes;
+    assertCurrentArgs(call, args);
+    const result = await f.call(call.registration, args);
+    if (module === 'artifacts') {
+      expect(result).toMatchObject({ success: true, artifactId: 'artifact-a', version: expect.any(Number) });
+      const row = f.db.table('artifacts')[0];
+      if (name === 'detachFile') { expect(row.fileRef).toBeUndefined(); expect(result).toMatchObject({ fileDeleted: false, retainedHistory: true }); }
+      else expect(row.fileRef).toMatchObject({ assetId: asset.assetId, versionId: asset.versionId, size: asset.sizeBytes });
+      expect(f.db.writes).toBeGreaterThan(before);
+    } else if (['create', 'attach', 'get'].includes(name)) expect(result).toMatchObject({ attachmentId: expect.any(String), tenantId: 'tenant-a', memorySpaceId: 'space-a', asset });
+    else if (name === 'list') expect(result).toMatchObject({ attachments: [expect.objectContaining({ attachmentId: 'attachment-a', asset })], total: 1, hasMore: false });
+    else if (name === 'count') expect(result).toBe(1);
+    else if (name === 'remove') { expect(result).toEqual({ deleted: true, attachmentId: 'attachment-a' }); expect(f.db.table('attachments')[0].tombstonedAt).toBeDefined(); }
+    else if (name === 'removeMany') { expect(result).toEqual({ deleted: 1 }); expect(f.db.table('attachments')[0].tombstonedAt).toBeDefined(); }
+    else expect(result).toEqual([expect.objectContaining({ attachmentId: 'attachment-a', asset })]);
+    expect(f.deleted).toEqual([]); expect(f.stores).toBe(1); expect(f.blobs.size).toBe(1);
+    expect(f.db.table('runtimeAssetVersions')).toHaveLength(1);
   });
-  if (internal.has(call.path)) {
-    it('internal helper is uniformly unavailable without identity, scope or any DB access', async () => {
-      const f = trapped([]); f.ctx.auth.getUserIdentity = async () => { throw new Error('PRIVATE'); }; f.db.beforeRead = () => { throw new Error('PRIVATE'); };
-      await outcome(call, f, args(call), 'CAPABILITY_UNAVAILABLE'); expect(f.db.traces).toEqual([]);
-    });
-    return;
-  }
-  it.each(['missing', 'forgedIssuer', 'forgedSubject', 'expired', 'revoked', 'grantDeleted', 'capability', 'oppositeStorage', 'tenant', 'space', 'scopeDeleted', 'scopeEpoch', 'tenantDeleted', 'principalDeleted', 'principalRevoked', 'membershipRevoked', 'membershipDeleted', 'tombstone'])('denies %s', async variant => {
-    const f = trapped(); const input = args(call);
-    if (variant === 'missing') f.ctx.auth.getUserIdentity = async () => null;
-    if (variant === 'forgedIssuer') f.ctx.auth.getUserIdentity = async () => ({ issuer: 'forged', subject: 'user-a', tokenIdentifier: 'fake' });
-    if (variant === 'forgedSubject') f.ctx.auth.getUserIdentity = async () => ({ issuer: 'https://host.test', subject: 'forged', tokenIdentifier: 'fake' });
-    if (variant === 'expired') f.grant.expiresAt = Date.now() - 1;
-    if (variant === 'revoked') f.grant.revokedAt = 1;
-    if (variant === 'grantDeleted') f.grant.deletedAt = 1;
-    if (variant === 'capability') f.grant.capabilities = ['read', 'write', 'admin', 'run', 'tool'];
-    if (variant === 'oppositeStorage') f.grant.capabilities = [call.registration.isQuery ? 'storage:write' : 'storage:read'];
-    if (variant === 'tenant') input.tenantId = 'tenant-b';
-    if (variant === 'space') input.memorySpaceId = 'space-b';
-    if (variant === 'scopeDeleted') f.db.table('runtimeAuthScopes')[1].deletedAt = 1;
-    if (variant === 'scopeEpoch') f.db.table('runtimeAuthScopes')[1].epoch = 2;
-    if (variant === 'tenantDeleted') f.db.table('runtimeAuthScopes')[0].deletedAt = 1;
-    if (variant === 'principalDeleted') f.principal.deletedAt = 1;
-    if (variant === 'principalRevoked') f.principal.revokedAt = 1;
-    if (variant === 'membershipRevoked') f.membership.revokedAt = 1;
-    if (variant === 'membershipDeleted') f.membership.deletedAt = 1;
-    if (variant === 'tombstone') f.db.seed('runtimeAuthTombstones', { tenantId: 'tenant-a', memorySpaceId: 'space-a', resourceType: 'memorySpace', resourceId: 'space-a', deletedAt: 1 });
-    await outcome(call, f, input, variant === 'missing' ? 'UNAUTHENTICATED' : 'FORBIDDEN');
+  it('foreign resource ownership and caller labels cannot be adopted, returned or mutated', async () => {
+    const { f, args, name, module } = await assetCase(call);
+    if (module === 'artifacts') f.db.table('artifacts')[0].ownerPrincipalId = 'foreign-principal';
+    else if (['create', 'attach'].includes(name)) {
+      if (name === 'attach') args.userId = 'forged-owner-label';
+      else { f.db.table('runtimeAssetVersions')[0].ownerPrincipalId = 'foreign-principal'; f.db.table('runtimeAssetReferences').forEach(row => { row.ownerPrincipalId = 'foreign-principal'; }); }
+    } else f.db.table('attachments')[0].ownerPrincipalId = 'foreign-principal';
+    const before = f.db.writes;
+    if (['list', 'count', 'getByConversation', 'getByMessage'].includes(name) && module === 'attachments') {
+      const result = await f.call(call.registration, args);
+      if (name === 'count') expect(result).toBe(0);
+      else if (name === 'list') expect(result).toEqual({ attachments: [], total: 0, hasMore: false });
+      else expect(result).toEqual([]);
+    } else await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+    expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
   });
-  it('private IDs and caller owner labels never affect unavailable or grant denial', async () => {
-    for (const label of ['user-a', 'other-owner', '']) for (const id of ['same-id', 'foreign-id', 'absent-id']) {
-      const f = trapped(); const input = args(call); const fields = (JSON.parse(call.registration.exportArgs()) as { value: Record<string, unknown> }).value;
-      for (const key of ['artifactId', 'attachmentId', 'conversationId', 'messageId', 'memoryId']) if (fields[key]) input[key] = id;
-      if (fields.attachmentIds) input.attachmentIds = [id]; if (fields.userId) input.userId = label;
-      for (const table of ['artifacts', 'attachments', 'conversations', 'memories', 'conversationShares', '_storage', 'runtimeAssets', 'users']) f.db.seed(table, { tenantId: 'tenant-b', memorySpaceId: 'space-a', artifactId: id, attachmentId: id, ownerPrincipalId: label, private: 'SECRET' });
-      await outcome(call, f, input, 'CAPABILITY_UNAVAILABLE'); f.grant.capabilities = ['read', 'write']; await outcome(call, f, input, 'FORBIDDEN');
-    }
+  it('derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects', async () => {
+    const { f, args } = await assetCase(call); delete args.tenantId;
+    const fields = (JSON.parse(call.registration.exportArgs()) as { value: Record<string, { optional: boolean }> }).value;
+    if (fields.memorySpaceId.optional) delete args.memorySpaceId;
+    assertCurrentArgs(call, args);
+    await f.call(call.registration, args);
+    const before = f.db.writes; const storage = f.deleted.length;
+    const membership = f.db.seed('runtimeAuthMemberships', { ...f.membership, _id: 'runtimeAuthMemberships:ambiguous', tenantId: 'tenant-b' });
+    f.db.seed('runtimeAuthScopes', { tenantId: 'tenant-b', epoch: 1 });
+    f.db.seed('runtimeAuthScopes', { tenantId: 'tenant-b', memorySpaceId: 'space-a', epoch: 1 });
+    f.db.seed('runtimeAuthGrants', { ...f.grant, _id: 'runtimeAuthGrants:ambiguous', membershipId: membership._id, tenantId: 'tenant-b' });
+    await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+    expect(f.db.writes).toBe(before); expect(f.deleted).toHaveLength(storage);
+    const tenant = fixture(['storage:read', 'storage:write', 'read', 'write'], true);
+    const otherMembership = tenant.db.seed('runtimeAuthMemberships', { ...tenant.membership, _id: 'runtimeAuthMemberships:other-tenant', tenantId: 'tenant-b' });
+    tenant.db.seed('runtimeAuthScopes', { tenantId: 'tenant-b', epoch: 1 }); tenant.db.seed('runtimeAuthScopes', { tenantId: 'tenant-b', memorySpaceId: 'space-a', epoch: 1 });
+    tenant.db.seed('runtimeAuthGrants', { ...tenant.grant, _id: 'runtimeAuthGrants:other-tenant', membershipId: otherMembership._id, tenantId: 'tenant-b' });
+    await expect(Promise.resolve().then(() => invoke(call.registration, tenant.ctx, args))).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(tenant.db.writes).toBe(0);
   });
-  it('omitted unique trusted scope works; ambiguous space, ambiguous tenant and tenant-only authority deny', async () => {
-    const f = trapped(); const input = args(call); delete input.tenantId; delete input.memorySpaceId;
-    await outcome(call, f, input, 'CAPABILITY_UNAVAILABLE');
-    f.db.seed('runtimeAuthScopes', { tenantId: 'tenant-a', memorySpaceId: 'space-b', epoch: 1 });
-    f.db.seed('runtimeAuthGrants', { ...f.grant, _id: 'runtimeAuthGrants:grant-b', memorySpaceId: 'space-b' });
-    await outcome(call, f, input, 'FORBIDDEN');
-    const g = trapped(); const membership = g.db.seed('runtimeAuthMemberships', { ...g.membership, _id: 'runtimeAuthMemberships:membership-b', tenantId: 'tenant-b' });
-    g.db.seed('runtimeAuthScopes', { tenantId: 'tenant-b', epoch: 1 }); g.db.seed('runtimeAuthScopes', { tenantId: 'tenant-b', memorySpaceId: 'space-a', epoch: 1 });
-    g.db.seed('runtimeAuthGrants', { ...g.grant, _id: 'runtimeAuthGrants:grant-b', membershipId: membership._id, tenantId: 'tenant-b' });
-    await outcome(call, g, input, 'FORBIDDEN');
-    const tenant = fixture(['storage:read', 'storage:write'], true); const h = trapped(); h.db.rows = tenant.db.rows; await outcome(call, h, input, 'FORBIDDEN');
-  });
-  it.each(['identity', 'control'])('opaque %s failures never become denial or readiness and never invoke diagnostic getters', async location => {
-    let getters = 0;
-    const errors = [new Error('PRIVATE SECRET'), new ConvexError('PRIVATE SECRET native diagnostic'), new ConvexError(unavailable), Object.defineProperty({}, 'data', { get() { getters++; throw new Error('GETTER'); } }), new Proxy({}, { getOwnPropertyDescriptor() { throw new Error('PROXY'); } }), new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' })];
-    for (const error of errors) {
-      const f = trapped(); if (location === 'identity') f.ctx.auth.getUserIdentity = async () => { throw error; }; else f.db.beforeRead = () => { throw error; };
-      await outcome(call, f, args(call), 'REGISTRY_OPERATION_FAILED');
-    }
-    expect(getters).toBe(0);
-  });
-  it('malicious identity and control-row getters abort opaquely without revealing values', async () => {
-    for (const location of ['identity', 'control']) {
-      const f = trapped(); let getters = 0;
-      if (location === 'identity') f.ctx.auth.getUserIdentity = async () => Object.defineProperty({ issuer: 'https://host.test', subject: 'user-a', tokenIdentifier: 'fake' }, 'issuer', { get() { getters++; throw new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' }); } });
-      else Object.defineProperty(f.principal, 'version', { get() { getters++; throw new Error('PRIVATE GETTER SECRET'); } });
-      await outcome(call, f, args(call), 'REGISTRY_OPERATION_FAILED'); expect(getters).toBe(location === 'identity' ? 0 : 1);
-    }
-  });
-  it.each(['grant', 'principal', 'scope', 'membership', 'expiry', 'tombstone', 'fault'])('late %s fences stop readiness before old body', async variant => {
-    const f = trapped(); let reads = 0;
-    f.db.beforeRead = table => { if (table === 'runtimeAuthPrincipals' && ++reads === 2) {
-      if (variant === 'grant') f.grant.version = 2;
-      if (variant === 'principal') f.principal.version = 2;
-      if (variant === 'scope') f.db.table('runtimeAuthScopes')[1].epoch = 2;
-      if (variant === 'membership') f.membership.version = 2;
-      if (variant === 'expiry') f.grant.expiresAt = Date.now() - 1;
-      if (variant === 'tombstone') f.db.seed('runtimeAuthTombstones', { tenantId: 'tenant-a', memorySpaceId: 'space-a', resourceType: 'memorySpace', resourceId: 'space-a', deletedAt: 1 });
-      if (variant === 'fault') throw new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' });
-    } };
-    await outcome(call, f, args(call), variant === 'fault' ? 'REGISTRY_OPERATION_FAILED' : 'FORBIDDEN');
-  });
-  it('an exact FORBIDDEN getter on a pinned native control read stays opaque infrastructure failure', async () => {
-    const f = trapped(); const get = f.db.get.bind(f.db);
-    f.db.get = async (table, id) => {
-      const row = await get(table, id);
-      if (row && table === 'runtimeAuthPrincipals') return Object.defineProperty({ ...row }, 'version', { enumerable: true, get() { throw new ConvexError({ version: 1, code: 'FORBIDDEN', message: 'Access denied', retryable: false, outcome: 'not_dispatched' }); } });
-      return row;
-    };
-    await outcome(call, f, args(call), 'REGISTRY_OPERATION_FAILED');
-  });
-  it('expiry reached during the last read of the final matching sweep denies', async () => {
-    const f = trapped(); let now = 1000; let tombstones = 0; f.grant.expiresAt = 1001;
-    const clock = jest.spyOn(Date, 'now').mockImplementation(() => now);
-    f.db.beforeRead = table => { if (table === 'runtimeAuthTombstones' && ++tombstones === 6) now = 1001; };
-    try { await outcome(call, f, args(call), 'FORBIDDEN'); expect(tombstones).toBe(6); } finally { clock.mockRestore(); }
-  });
-  it('expiry at the final database await cannot reveal readiness', async () => {
-    const f = trapped(); let now = 1000; f.grant.expiresAt = 1001;
-    const clock = jest.spyOn(Date, 'now').mockImplementation(() => now);
-    f.db.beforeRead = table => { if (table === 'runtimeAuthTombstones') now = 1001; };
-    try { await outcome(call, f, args(call), 'FORBIDDEN'); } finally { clock.mockRestore(); }
+  it.each(['grant', 'principal', 'scope', 'membership', 'expiry', 'tombstone'])('late %s fence rejects before a protected result or effect', async variant => {
+    const { f, args } = await assetCase(call); const before = f.db.writes;
+    const get = f.db.get.bind(f.db); let hit = false;
+    // The asset fixture deliberately freezes its installed get seam. A context
+    // adapter injects at the actual pinned read without changing that fixture.
+    const adapter = Object.create(f.db) as typeof f.db;
+    Object.defineProperty(adapter, 'get', { value: async (table: string, id: string) => {
+      if (!hit && table === 'runtimeAuthPrincipals') {
+        hit = true;
+        if (variant === 'grant') f.grant.version = 2;
+        if (variant === 'principal') f.principal.version = 2;
+        if (variant === 'scope') f.db.table('runtimeAuthScopes')[1].epoch = 2;
+        if (variant === 'membership') f.membership.version = 2;
+        if (variant === 'expiry') f.grant.expiresAt = Date.now();
+        if (variant === 'tombstone') f.db.seed('runtimeAuthTombstones', { tenantId: 'tenant-a', memorySpaceId: 'space-a', resourceType: 'memorySpace', resourceId: 'space-a', deletedAt: 1 });
+      }
+      return await get(table, id);
+    } });
+    f.ctx.db = adapter as unknown as typeof f.ctx.db;
+    await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+    expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
   });
 });
-it('both adapter guards reject and never resolve Promise<never>', async () => {
-  const f = trapped(); await expect(runtimeAssetUnavailable(f.ctx, 'storage:read', { tenantId: 'tenant-a', memorySpaceId: 'space-a' })).rejects.toMatchObject({ data: unavailable });
-  await expect(internalAssetUnavailable()).rejects.toMatchObject({ data: unavailable });
+for (const call of calls.filter(call => internal.has(call.path))) it(`${call.path} remains uniformly fail closed before every legacy effect`, async () => {
+  const f = fixture([]); const attempts: string[] = []; f.ctx.auth.getUserIdentity = async () => { attempts.push('identity'); throw new Error('PRIVATE'); };
+  f.db.beforeRead = table => { attempts.push(table); throw new Error('PRIVATE'); }; f.db.beforeWrite = table => { attempts.push(table); throw new Error('EFFECT'); };
+  const code = call.path.startsWith('attachments:') ? 'PRIVATE_ASSET_HTTP_REQUIRED' : 'CAPABILITY_UNAVAILABLE';
+  const error = await Promise.resolve().then(() => invoke(call.registration, f.ctx, args(call))).then(() => undefined, (failure: unknown) => failure);
+  expect(error).toBeInstanceOf(ConvexError); expect((error as ConvexError<Value>).data).toMatchObject({ version: 1, code, retryable: false, outcome: 'not_dispatched' });
+  expect(attempts).toEqual([]); expect(f.db.writes).toBe(0);
 });
-const qa = '_goals/convex-backend-runtime-2026-10-02/qa/task03b2f-asset-foundation/original/';
-function declarations(source: string) {
-  const ast = ts.createSourceFile('source.ts', source, ts.ScriptTarget.Latest, true); const result = new Map<string, { declaration: string; validators: Map<string, string> }>();
-  for (const s of ast.statements) if (ts.isVariableStatement(s)) for (const d of s.declarationList.declarations) {
-    const c = d.initializer; if (!c || !ts.isCallExpression(c) || !ts.isObjectLiteralExpression(c.arguments[0])) continue;
-    const a = c.arguments[0].properties.find(p => p.name?.getText(ast) === 'args');
-    if (!a || !ts.isPropertyAssignment(a) || !ts.isObjectLiteralExpression(a.initializer)) continue;
-    result.set(d.name.getText(ast), { declaration: s.getText(ast), validators: new Map(a.initializer.properties.filter(ts.isPropertyAssignment).map(p => [p.name.getText(ast), p.initializer.getText(ast)])) });
-  }
-  return result;
-}
-it('native exportArgs matches every original installed Convex validator field and preserves required selectors', () => {
-  const frozen = JSON.parse(fs.readFileSync(qa + 'native-validators17.json', 'utf8')) as { registrations: { path: string; args: { type: string; value: Record<string, unknown> } }[] };
-  expect(frozen.registrations).toHaveLength(17);
-  for (const row of frozen.registrations) {
-    const call = calls.find(c => c.path === row.path)!;
-    const current = JSON.parse(call.registration.exportArgs()) as { type: string; value: Record<string, unknown> };
-    expect(current.type).toBe(row.args.type);
-    for (const [field, validator] of Object.entries(row.args.value)) expect(current.value[field]).toEqual(validator);
-    for (const field of Object.keys(current.value).filter(k => !(k in row.args.value))) {
-      expect(['tenantId', 'memorySpaceId']).toContain(field);
-      expect(current.value[field]).toEqual({ fieldType: { type: 'string' }, optional: true });
-    }
-  }
-});
-it('accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added', () => {
-  const accepted = JSON.parse(fs.readFileSync(qa + 'accepted22.json', 'utf8')) as { path: string; declaration: string; sha256: string }[];
-  // Preserve the exact accepted historical declarations while separately proving
-  // the sole current native index repair; no declaration is normalized.
-  const archivedArtifact = '_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/archive/convex-dev/artifacts.ts';
-  expect(crypto.createHash('sha256').update(fs.readFileSync(archivedArtifact)).digest('hex')).toBe('15959b6cbc5126425c40a16d7a473cf0c353211b78b677e51660720abe7a9c14');
-  const current = declarations(fs.readFileSync(archivedArtifact, 'utf8')); expect(accepted).toHaveLength(22);
-  for (const row of accepted) { const text = current.get(row.path.split(':')[1])!.declaration; expect(text).toBe(row.declaration); expect(crypto.createHash('sha256').update(text).digest('hex')).toBe(row.sha256); }
-  fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), { recursive: true });
-  const directory = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), 'cortex-asset-index-preservation-'));
-  try {
-    const composition = JSON.parse(execFileSync(process.execPath,
-      ['_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs', directory],
-      { encoding: 'utf8' }));
-    expect(composition.exactCurrentRepair.wholeByteAuthorizedEdits).toBe(3);
-    expect(composition.exactCurrentRepair.postHashes).toEqual({
-      'convex-dev/schema.ts': '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
-      'convex-dev/runtimeArtifactAuth.ts': 'aa75122698632dfb836b10a12251de7c580f58aa8c16d866913f07fc657962c8',
-      'convex-dev/artifacts.ts': '3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3',
-    });
-    expect(composition.exactCurrentRepair.tables).toBe(26);
-    expect(composition.exactCurrentRepair.indexes).toBe(173);
-    expect(composition.exactCurrentRepair.duplicateSequences).toBe(0);
-    expect(composition.exactCurrentRepair.currentTamperControls).toEqual([
-      'changed tenant scope', 'extra index', 'changed candidate index', 'changed purge space bound', 'changed other declaration',
-    ]);
-    expect(composition.negativeControls).toBe(4);
-    const nativeSchema = JSON.parse(fs.readFileSync(composition.exactCurrentRepair.nativeWitness, 'utf8'));
-    expect(nativeSchema.duplicates).toEqual([]);
-    expect(nativeSchema.definitions.find((table: { table: string }) => table.table === 'artifacts').indexes
-      .filter((index: { fields: string[] }) => index.fields.join(',') === 'tenantId,memorySpaceId'))
-      .toEqual([{ indexDescriptor: 'by_tenant_space', fields: ['tenantId', 'memorySpaceId'] }]);
-    // The composer rejects any predicate/contract/index/declaration drift through
-    // exact whole-byte current proof and compares all native contracts unchanged.
-  } finally { fs.rmSync(directory, { recursive: true, force: true }); }
-  expect(fs.existsSync(directory)).toBe(false);
-  for (const module of ['artifacts', 'attachments']) {
-    const before = declarations(fs.readFileSync(qa + module + '.ts', 'utf8')); const after = declarations(fs.readFileSync('convex-dev/' + module + '.ts', 'utf8'));
-    expect([...after.keys()]).toEqual([...before.keys()]);
-    for (const [name, original] of before) {
-      const validators = after.get(name)!.validators;
-      for (const [field, literal] of original.validators) expect(validators.get(field)).toBe(literal);
-      expect([...validators.keys()].filter(k => !original.validators.has(k)).every(k => ['tenantId', 'memorySpaceId'].includes(k))).toBe(true);
-    }
-  }
+it('unavailable adapters still reject; historical assets and original 17 registrations remain unchanged in their archive', async () => {
+  const f = fixture(['storage:read']);
+  await expect(runtimeAssetUnavailable(f.ctx, 'storage:read', { tenantId: 'tenant-a', memorySpaceId: 'space-a' })).rejects.toMatchObject({ data: { code: 'CAPABILITY_UNAVAILABLE' } });
+  await expect(internalAssetUnavailable()).rejects.toMatchObject({ data: { code: 'CAPABILITY_UNAVAILABLE' } });
+  const qa = '_goals/convex-backend-runtime-2026-10-02/qa/task03b2f-asset-foundation/original/';
+  expect(JSON.parse(fs.readFileSync(qa + 'native-validators17.json', 'utf8')).registrations).toHaveLength(17);
   const hashes = JSON.parse(fs.readFileSync(qa + 'source-hashes.json', 'utf8')) as Record<string, string>;
-  for (const [path, hash] of Object.entries(hashes)) {
-    const actual = path.endsWith('/artifacts.ts') || path.endsWith('/attachments.ts') ? qa + path.split('/').pop()
-      : path === 'convex-dev/runtimeArtifactAuth.ts' || path === 'convex-dev/schema.ts'
-        ? '_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/archive/' + path : path;
-    expect(crypto.createHash('sha256').update(fs.readFileSync(actual)).digest('hex')).toBe(hash);
-  }
+  for (const file of ['artifacts.ts', 'attachments.ts']) expect(crypto.createHash('sha256').update(fs.readFileSync(qa + file)).digest('hex')).toBe(hashes['convex-dev/' + file]);
 });

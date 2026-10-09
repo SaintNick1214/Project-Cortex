@@ -1,0 +1,20 @@
+{
+  "status": "READONLY_EXPORT_SELECTOR_DIAGNOSIS",
+  "args": [
+    "node_modules/convex/bin/main.js",
+    "data",
+    "runtimeBudgetAccounts",
+    "--deployment",
+    "steady-snake-253",
+    "--limit",
+    "500",
+    "--format",
+    "jsonArray"
+  ],
+  "exitCode": 1,
+  "signal": null,
+  "stderr": "✖ Error fetching GET  https://api.convex.dev/api/deployment/steady-snake-253/team_and_project 401 Unauthorized: AccessTokenInvalid: Access Token could not be decoded\nAuthenticate with `npx convex dev`\n",
+  "stdoutBytes": 0,
+  "models": 0,
+  "mutations": 0
+}

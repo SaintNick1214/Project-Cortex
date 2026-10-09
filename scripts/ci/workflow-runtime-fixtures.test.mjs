@@ -20,15 +20,77 @@ test("workflow parses and guards both development targets before auth writes or 
   assert.equal(jobs["setup-and-purge"].env.CONVEX_DEPLOY_KEY_CLI, "${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY_CLI }}");
 });
 
-test("consumer jobs issue scoped JWTs without deployment operator keys and retain required suite discovery", () => {
+test("consumer jobs issue scoped JWTs without operator keys and preserve honest complete discovery", () => {
   for (const job of ["test-typescript", "test-cli", "test-vercel-ai-provider"]) {
     const value = jobs[job];
     assert.equal(Object.hasOwn(value.env, "CONVEX_DEPLOY_KEY"), false);
     assert.equal(value.steps.some(step => /runtime-fixtures.mjs tokens/.test(step.run ?? "")), true);
-    assert.equal(value.steps.some(step => /testPathPattern|runTestsByPath|passWithNoTests/.test(step.run ?? "")), false);
+    assert.equal(value.steps.some(step => /--listTests/.test(step.run ?? "")), true);
+    assert.equal(value.steps.some(step => /passWithNoTests/.test(step.run ?? "")), false);
   }
   assert.equal(jobs["test-typescript"].steps.some(step => /--shard=/.test(step.run ?? "")), true);
-  assert.equal(jobs["test-cli"].steps.some(step => step.run === "npm run test:e2e --workspace=@cortexmemory/cli"), true);
+  for (const job of ["test-typescript", "test-cli"]) {
+    assert.equal(jobs[job].steps.filter(step => /--runTestsByPath tests\/integration\/runtime-ci\.test\.ts/.test(step.run ?? "")).length, 1);
+  }
+});
+
+test("only SDK shard1 invokes the actual suite; other shards still cover every current unit", () => {
+  const steps = jobs["test-typescript"].steps;
+  const units = steps.find(step => /--shard=/.test(step.run ?? ""));
+  assert.ok(units.run.includes("--testPathPatterns=tests/unit/"));
+  assert.equal(units.env.CONVEX_URL, "https://unit.invalid");
+  const paid = steps.find(step => /--runTestsByPath/.test(step.run ?? ""));
+  assert.equal(paid.if, "matrix.shard == 1");
+  assert.ok(paid.run.includes("240s"));
+  assert.ok(paid.run.includes("--kill-after=5s"));
+});
+
+test("legacy direct-provider and unauthenticated CLI loops cannot be activated by the new secrets", () => {
+  assert.equal(source.includes("OPENAI_API_KEY"), false);
+  assert.equal(jobs["test-vercel-ai-provider"].steps.some(step => /^npm test --workspace/.test(step.run ?? "")), false);
+  assert.equal(jobs["test-cli"].steps.some(step => /npm run test:e2e/.test(step.run ?? "")), false);
+  const provider = jobs["test-vercel-ai-provider"].steps.find(step => /Run provider unit/.test(step.name ?? ""));
+  assert.ok(provider.run.includes("test:unit"));
+  assert.ok(provider.run.includes("test:integration"));
+  assert.equal(provider.env.CONVEX_URL, "https://unit.invalid");
+  assert.equal(provider.env.CORTEX_TEST_AUTH_TOKEN, "");
+  assert.equal(jobs["test-cli"].steps.some(step => /npm run test:fast/.test(step.run ?? "")), true);
+});
+
+test("selected Jest suites must close naturally rather than inherit forced exit", () => {
+  const selected = ["test-typescript", "test-cli", "test-vercel-ai-provider"]
+    .flatMap(name => jobs[name].steps)
+    .flatMap(step => (step.run ?? "").split("\n"))
+    .filter(line => /--runTestsByPath|--maxWorkers=|npm run test:(unit|integration|fast)/.test(line));
+  assert.equal(selected.length, 7);
+  for (const command of selected) assert.ok(command.includes("--forceExit=false"), command);
+});
+
+test("provider actual path is isolated from old E2E and uses public scoped Agent publication before one bounded contract", () => {
+  const steps = jobs["test-vercel-ai-provider"].steps;
+  const publication = steps.findIndex(step => /remote-agent\.mjs/.test(step.run ?? ""));
+  const actual = steps.findIndex(step => /--selectProjects e2e-remote/.test(step.run ?? ""));
+  const built = steps.findIndex(step => step.run === "npm run build --workspace=@cortexmemory/vercel-ai-provider");
+  assert.ok(publication >= 0 && actual > publication);
+  assert.ok(built >= 0 && actual > built, "actual remote must consume declared built package exports");
+  assert.ok(steps[actual].run.includes("--runTestsByPath tests/e2e/remote-runtime.test.ts"));
+  assert.ok(steps[actual].run.includes("210s"));
+  assert.equal(steps[actual].env.DEBUG, "true");
+  for (const step of [steps[publication], steps[actual]]) {
+    assert.equal(step.env.CORTEX_CI_AUTH_PRIVATE_KEY, "");
+    assert.equal(Object.hasOwn(step.env, "CONVEX_DEPLOY_KEY"), false);
+  }
+  assert.ok(steps.some(step => (step.with?.path ?? "").includes("ci-provider-remote-results.json")));
+});
+
+test("bounded consumers preserve complete-run serialization and independent cleanup after cancellation", () => {
+  assert.equal(workflow.concurrency.group, "cortex-shared-ci-backends");
+  assert.equal(workflow.concurrency["cancel-in-progress"], false);
+  for (const name of ["setup-and-purge", "test-typescript", "test-vercel-ai-provider", "test-cli", "cleanup-runtime-fixtures"]) {
+    assert.ok(Number.isSafeInteger(jobs[name]["timeout-minutes"]));
+    assert.ok(jobs[name]["timeout-minutes"] <= 15);
+  }
+  assert.ok(jobs["cleanup-runtime-fixtures"].if.includes("'cancelled'"));
 });
 
 test("cleanup waits for every consumer, runs after failure, and is a required final result", () => {

@@ -1,0 +1,39 @@
+{
+  "status": "PASS_IMPORTS_ONLY",
+  "rows": [
+    {
+      "subpath": ".",
+      "esm": "./dist/src/index.js",
+      "cjs": "./dist/src/index.cjs",
+      "types": "./dist/src/index.d.ts",
+      "checkedExports": [
+        "createCortexMemory",
+        "createCortexMemoryAsync",
+        "CortexMemoryProvider"
+      ]
+    },
+    {
+      "subpath": "./react",
+      "esm": "./dist/react/index.js",
+      "cjs": "./dist/react/index.cjs",
+      "types": "./dist/react/index.d.ts",
+      "checkedExports": [
+        "useLayerTracking",
+        "useArtifacts",
+        "useArtifact"
+      ]
+    },
+    {
+      "subpath": "./remote",
+      "esm": "./dist/remote/index.js",
+      "cjs": "./dist/remote/index.cjs",
+      "types": "./dist/remote/index.d.ts",
+      "checkedExports": [
+        "CortexRemoteTransport"
+      ]
+    }
+  ],
+  "constructorsCalled": 0,
+  "serviceCalls": 0,
+  "modelCalls": 0
+}

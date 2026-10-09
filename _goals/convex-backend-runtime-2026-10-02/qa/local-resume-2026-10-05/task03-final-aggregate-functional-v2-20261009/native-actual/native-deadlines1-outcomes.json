@@ -1,0 +1,422 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "groups": [
+    {
+      "name": "fresh-scoped-identity-and-private-operator-boundary",
+      "status": "PASS",
+      "session": {
+        "version": 1,
+        "tenantId": "task03-aggregate-20261009",
+        "memorySpaceId": "aggregate03-20261009",
+        "principalId": "n571f33jngwtkpn28vkh03p8rd8fyer0",
+        "userId": "n571f33jngwtkpn28vkh03p8rd8fyer0",
+        "deliveryExpiresAt": 1791529224011
+      },
+      "noIdentity": {
+        "name": "ConvexError",
+        "message": "[Request ID: eeeb58eafc970105] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:161:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "UNAUTHENTICATED",
+          "message": "Verified identity required",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "wrongScope": {
+        "name": "ConvexError",
+        "message": "[Request ID: bbf1036be058569e] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "ordinaryInternalProvision": {
+        "name": "Error",
+        "message": "[Request ID: 6f8307341618a0d8] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+      },
+      "profile": {
+        "version": 1,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        }
+      },
+      "modelCalls": 0
+    },
+    {
+      "name": "current-native-private-storage-http-and-provider-materialization",
+      "status": "PASS",
+      "asset": {
+        "version": 1,
+        "assetId": "asset:218547cef8da6eda9003fae5370c600e72004f1110e4865700d4b86ad593889f",
+        "versionId": "asset:218547cef8da6eda9003fae5370c600e72004f1110e4865700d4b86ad593889f:version:1",
+        "assetVersion": 1,
+        "contentHash": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f",
+        "sizeBytes": 1496,
+        "mimeType": "image/png",
+        "mediaKind": "image",
+        "filename": "aggregate03-private.png",
+        "lineage": {
+          "kind": "upload",
+          "requestId": "aggregate03-frame"
+        }
+      },
+      "http": {
+        "status": 200,
+        "bytes": 1496,
+        "sha256": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f"
+      },
+      "privateInput": {
+        "metadata": {
+          "assetId": "asset:218547cef8da6eda9003fae5370c600e72004f1110e4865700d4b86ad593889f",
+          "assetVersion": 1,
+          "contentHash": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f",
+          "filename": "aggregate03-private.png",
+          "lineage": {
+            "kind": "upload",
+            "requestId": "aggregate03-frame"
+          },
+          "mediaKind": "image",
+          "mimeType": "image/png",
+          "sizeBytes": 1496,
+          "version": 1,
+          "versionId": "asset:218547cef8da6eda9003fae5370c600e72004f1110e4865700d4b86ad593889f:version:1"
+        },
+        "outcome": "returned",
+        "protocolBytes": 2071,
+        "providerDispatches": 0,
+        "trace": [
+          {
+            "delayed": false,
+            "name": "runtimeAssets:providerAuthorization",
+            "releasedAt": 1791522028820,
+            "returnedDeliveryExpiresAt": null,
+            "rpcReturnedAt": 1791522028820,
+            "startedAt": 1791522028724
+          },
+          {
+            "delayed": false,
+            "name": "runtimeAssets:downloadCheckpoint",
+            "releasedAt": 1791522028934,
+            "returnedDeliveryExpiresAt": 1791529224011,
+            "rpcReturnedAt": 1791522028934,
+            "startedAt": 1791522028848
+          }
+        ]
+      },
+      "actualProviderDispatches": 0
+    },
+    {
+      "name": "actual-http-action-withholds-bytes-after-final-rpc-grant-cutoff",
+      "status": "PASS",
+      "QAOnlyRoute": true,
+      "productHandlerForwarded": true,
+      "response": {
+        "version": 1,
+        "code": "FORBIDDEN"
+      },
+      "statusCode": 403,
+      "trace": [
+        {
+          "name": "runtimeAssets:downloadAuthorization",
+          "startedAt": 1791522029330,
+          "rpcReturnedAt": 1791522029496,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522029497,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:downloadCheckpoint",
+          "startedAt": 1791522029527,
+          "rpcReturnedAt": 1791522029625,
+          "returnedDeliveryExpiresAt": 1791522033979,
+          "releasedAt": 1791522034020,
+          "delayed": true
+        }
+      ],
+      "crossing": {
+        "name": "runtimeAssets:downloadCheckpoint",
+        "startedAt": 1791522029527,
+        "rpcReturnedAt": 1791522029625,
+        "returnedDeliveryExpiresAt": 1791522033979,
+        "releasedAt": 1791522034020,
+        "delayed": true
+      },
+      "bytesDisclosed": 0,
+      "modelCalls": 0
+    },
+    {
+      "name": "private-provider-input-withheld-after-final-real-rpc-cutoff",
+      "status": "PASS",
+      "result": {
+        "code": "FORBIDDEN",
+        "outcome": "withheld",
+        "providerDispatches": 0,
+        "trace": [
+          {
+            "delayed": false,
+            "name": "runtimeAssets:providerAuthorization",
+            "releasedAt": 1791522034816,
+            "returnedDeliveryExpiresAt": null,
+            "rpcReturnedAt": 1791522034815,
+            "startedAt": 1791522034728
+          },
+          {
+            "delayed": true,
+            "name": "runtimeAssets:downloadCheckpoint",
+            "releasedAt": 1791522039172,
+            "returnedDeliveryExpiresAt": 1791522039131,
+            "rpcReturnedAt": 1791522034921,
+            "startedAt": 1791522034845
+          }
+        ]
+      },
+      "actualProviderDispatches": 0,
+      "fakeClock": false
+    },
+    {
+      "name": "actual-http-upload-suppresses-ready-dto-after-confirmed-storage-commit",
+      "status": "PASS",
+      "QAOnlyRoute": true,
+      "trace": [
+        {
+          "name": "runtimeAssets:uploadAuthorization",
+          "startedAt": 1791522039636,
+          "rpcReturnedAt": 1791522039706,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522039706,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:uploadCheckpoint",
+          "startedAt": 1791522039706,
+          "rpcReturnedAt": 1791522039775,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522039775,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:beginUpload",
+          "startedAt": 1791522039775,
+          "rpcReturnedAt": 1791522039853,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522039853,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:stageStorage",
+          "startedAt": 1791522040036,
+          "rpcReturnedAt": 1791522040129,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522040129,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:finalize",
+          "startedAt": 1791522040129,
+          "rpcReturnedAt": 1791522040234,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522040234,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:storedDeliveryCheckpoint",
+          "startedAt": 1791522040234,
+          "rpcReturnedAt": 1791522040318,
+          "returnedDeliveryExpiresAt": 1791522044220,
+          "releasedAt": 1791522040318,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:downloadCheckpoint",
+          "startedAt": 1791522040318,
+          "rpcReturnedAt": 1791522040390,
+          "returnedDeliveryExpiresAt": 1791522044220,
+          "releasedAt": 1791522044260,
+          "delayed": true
+        }
+      ],
+      "response": {
+        "version": 1,
+        "code": "FORBIDDEN"
+      },
+      "jobId": "asset:86fb3b5d25d44bfb2dcc7d07e9986983fa710ec120727471826ccb2135a29f52",
+      "state": "ready",
+      "physicalBytesRetained": true,
+      "metadataDisclosed": false,
+      "modelCalls": 0
+    },
+    {
+      "name": "qa-generated-byte-ready-delivery-fenced-after-stored-checkpoint",
+      "status": "PASS",
+      "generatedByQA": true,
+      "providerOutputClaim": false,
+      "result": {
+        "code": "FORBIDDEN",
+        "generatedByQA": true,
+        "outcome": "withheld",
+        "providerDispatches": 0,
+        "trace": [
+          {
+            "delayed": false,
+            "name": "runtimeAssets:beginGenerated",
+            "releasedAt": 1791522044890,
+            "returnedDeliveryExpiresAt": null,
+            "rpcReturnedAt": 1791522044890,
+            "startedAt": 1791522044798
+          },
+          {
+            "delayed": false,
+            "name": "runtimeAssets:stageStorage",
+            "releasedAt": 1791522045207,
+            "returnedDeliveryExpiresAt": null,
+            "rpcReturnedAt": 1791522045207,
+            "startedAt": 1791522045110
+          },
+          {
+            "delayed": false,
+            "name": "runtimeAssets:finalize",
+            "releasedAt": 1791522045311,
+            "returnedDeliveryExpiresAt": null,
+            "rpcReturnedAt": 1791522045311,
+            "startedAt": 1791522045207
+          },
+          {
+            "delayed": true,
+            "name": "runtimeAssets:storedDeliveryCheckpoint",
+            "releasedAt": 1791522049601,
+            "returnedDeliveryExpiresAt": 1791522049560,
+            "rpcReturnedAt": 1791522045401,
+            "startedAt": 1791522045311
+          },
+          {
+            "delayed": false,
+            "name": "runtimeAssets:abandonJob",
+            "releasedAt": 1791522049661,
+            "returnedDeliveryExpiresAt": null,
+            "rpcReturnedAt": 1791522049661,
+            "startedAt": 1791522049601
+          }
+        ]
+      },
+      "jobId": "asset:dc7e3d5d041fe33104a22ab171f47d94006a18d46cadfb0a6b7d7fdb2b244ab8",
+      "physicalBytesRetained": true,
+      "modelCalls": 0
+    },
+    {
+      "name": "canonical-artifact-anchor-and-full-exhausted-observer-share-revocation",
+      "status": "PASS",
+      "QAOnlyProjectionNotModelOutput": true,
+      "runId": "run:aggregate03-unpaid-observation",
+      "nativeMessageId": "kx78xkc7we2hhhzr7m7q4zn2f18fzczc",
+      "artifactWitness": {
+        "artifactId": "aggregate03-anchored",
+        "artifactVersion": 2,
+        "metadataHash": "8f2f5e4dbbb11c99f8aa316f138380b31ee75bb1735618fb19a714d28217554b",
+        "version": 1
+      },
+      "positiveParts": [
+        {
+          "sequence": 1,
+          "part": {
+            "type": "text",
+            "text": "UNPAID_TASK03_PROJECTION_SENTINEL"
+          }
+        }
+      ],
+      "exhaustedCursor": 1,
+      "fullDenial": {
+        "name": "ConvexError",
+        "message": "[Request ID: 3b6a6d5e59df8009] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../custom/backend/runtimeDataAuth.ts:25:0)\n    at managedConversationAccess (../../custom/backend/runtimeDataAuth.ts:186:0)\n    at async checkConversation (../../custom/backend/runtimeTranscript.ts:48:0)\n    at async currentControlRun (../../custom/backend/runs.ts:43:0)\n    at async observeHandler (../../custom/backend/runtimeAgent.ts:740:72)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "exhaustedDenial": {
+        "name": "ConvexError",
+        "message": "[Request ID: 118e13d66b4eab91] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../custom/backend/runtimeDataAuth.ts:25:0)\n    at managedConversationAccess (../../custom/backend/runtimeDataAuth.ts:186:0)\n    at async checkConversation (../../custom/backend/runtimeTranscript.ts:48:0)\n    at async currentControlRun (../../custom/backend/runs.ts:43:0)\n    at async observeHandler (../../custom/backend/runtimeAgent.ts:740:72)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "modelCalls": 0
+    },
+    {
+      "name": "installed-sdk-one-shot-observe-withholds-after-final-session-consumed-share-expiry",
+      "status": "PASS",
+      "callerPortDecorator": true,
+      "serverHTTPClaim": false,
+      "realOfficialRPCs": true,
+      "fakeClock": false,
+      "shortShareId": "share:e37ce7e9-ee1f-4552-b7a3-1921b3ceb43c",
+      "shortShareExpiresAt": 1791522062116,
+      "viewerActorStillCurrent": {
+        "deliveryExpiresAt": 1791529224263,
+        "memorySpaceId": "aggregate03-20261009",
+        "principalId": "n5743wyj5fkt0ap2r58axkbk958fycp5",
+        "tenantId": "task03-aggregate-20261009",
+        "userId": "n5743wyj5fkt0ap2r58axkbk958fycp5",
+        "version": 1
+      },
+      "denial": {
+        "name": "CortexRuntimeError",
+        "message": "Cortex runtime: AUTHORITY_EXPIRED"
+      },
+      "rpcTrace": [
+        {
+          "name": "runtimeClient:session",
+          "began": 1791522056165,
+          "returnedAt": 1791522056391,
+          "releasedAt": 1791522056391,
+          "delayed": false,
+          "observedDeadline": null
+        },
+        {
+          "name": "runtimeAgent:observe",
+          "began": 1791522056391,
+          "returnedAt": 1791522056663,
+          "releasedAt": 1791522056663,
+          "delayed": false,
+          "observedDeadline": 1791522062116
+        },
+        {
+          "name": "runtimeClient:session",
+          "began": 1791522056663,
+          "returnedAt": 1791522056837,
+          "releasedAt": 1791522062177,
+          "delayed": true,
+          "observedDeadline": 1791522062116
+        }
+      ],
+      "protectedPartsReturnedToCaller": false,
+      "modelCalls": 0
+    }
+  ],
+  "error": {
+    "name": "AssertionError",
+    "message": "The input did not match the regular expression /FORBIDDEN|STALE_CONTEXT/. Input:\n\n'{\"name\":\"ConvexError\",\"message\":\"[Request ID: 587c535214628167] Server Error\\\\nUncaught ConvexError: {\\\\\"version\\\\\":1,\\\\\"code\\\\\":\\\\\"STALE_TRANSCRIPT\\\\\",\\\\\"message\\\\\":\\\\\"Conversation operation denied.\\\\\",\\\\\"retryable\\\\\":false,\\\\\"outcome\\\\\":\\\\\"not_dispatched\\\\\"}\\\\n    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:37:0)\\\\n    at verifyMessage (../../custom/backend/runtimeTranscript.ts:125:0)\\\\n    at readArtifactContext (../../custom/backend/runtimeArtifactContext.ts:33:4)\\\\n    at async handler (../../custom/backend/task03Deadline.ts:70:22)\\\\n\",\"data\":{\"code\":\"STALE_TRANSCRIPT\",\"message\":\"Conversation operation denied.\",\"outcome\":\"not_dispatched\",\"retryable\":false,\"version\":1}}'\n"
+  },
+  "modelCalls": 0,
+  "noPaidRetry": true,
+  "scope": {
+    "tenantId": "task03-aggregate-20261009",
+    "memorySpaceId": "aggregate03-20261009"
+  },
+  "cleanupPending": true
+}

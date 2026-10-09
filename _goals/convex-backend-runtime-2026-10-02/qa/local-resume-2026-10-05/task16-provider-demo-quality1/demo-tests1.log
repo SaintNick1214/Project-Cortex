@@ -1,0 +1,14 @@
+Running 2 projects:
+- integration
+- unit
+Error: OFFLINE_QUALITY_NETWORK_PROHIBITED
+    at Socket.blocked [as connect] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs:14:31)
+    at Object.connect (node:net:249:17)
+    at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-haste-map/build/index.js:1942:26
+    at new Promise (<anonymous>)
+    at canConnect (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-haste-map/build/index.js:1941:10)
+    at resolveAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-haste-map/build/index.js:1824:46)
+    at getWatchmanAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-haste-map/build/index.js:1811:27)
+    at HasteMap._crawl (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-haste-map/build/index.js:3547:108)
+    at HasteMap._buildFileMap (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-haste-map/build/index.js:3524:17)
+    at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-haste-map/build/index.js:3469:33

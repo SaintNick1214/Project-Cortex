@@ -1,0 +1,29 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/independent-review1/jest.config.mjs",
+    "--runTestsByPath",
+    "tests/unit/runtimeAssets/action-delivery.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/independent-review1/observe-delivery-independent1.test.ts",
+    "--runInBand",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/independent-review1/asset-observe-controls2.results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "processTimeoutSeconds": 120,
+  "testDeadlineMs": 60000,
+  "forceExit": false,
+  "selected": "nine existing real asset handlers and current SDK one-shot consumed-deadline counter controls",
+  "outcomeClass": "CONTROLLED_NO_NATIVE_SERVICE_OR_PROVIDER_CALLS",
+  "exitCode": 1,
+  "elapsedSeconds": 6.472,
+  "processClosed": true
+}

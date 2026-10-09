@@ -1,0 +1,22 @@
+{
+  "status": "PRESERVED_FAIL",
+  "closedAtUtc": "2026-10-09T05:15:44.026813+00:00",
+  "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/jest.config.js",
+  "sha256": "80ce126ba5a24eee2a511f1c2ed0be8a916c0b544d3d8140ee892759241167fa",
+  "passedAssertions": 252,
+  "failedToLoadSuites": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/memory-flow.test.ts",
+      "message": "  \u25cf Test suite failed to run\n\n    ReferenceError: jest is not defined\n\n    \u001b[0m \u001b[90m 69 |\u001b[39m }\u001b[33m;\u001b[39m\n     \u001b[90m 70 |\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 71 |\u001b[39m jest\u001b[33m.\u001b[39mmock(\u001b[32m\"@cortexmemory/sdk\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m ({\n     \u001b[90m    |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 72 |\u001b[39m   \u001b[33mCortex\u001b[39m\u001b[33m:\u001b[39m jest\u001b[33m.\u001b[39mfn()\u001b[33m.\u001b[39mmockImplementation(() \u001b[33m=>\u001b[39m mockCortex)\u001b[33m,\u001b[39m\n     \u001b[90m 73 |\u001b[39m   \u001b[33mCypherGraphAdapter\u001b[39m\u001b[33m:\u001b[39m jest\u001b[33m.\u001b[39mfn()\u001b[33m.\u001b[39mmockImplementation(() \u001b[33m=>\u001b[39m ({\n     \u001b[90m 74 |\u001b[39m     connect\u001b[33m:\u001b[39m jest\u001b[33m.\u001b[39mfn()\u001b[33m.\u001b[39mmockResolvedValue(undefined)\u001b[33m,\u001b[39m\u001b[0m\n\n      at tests/integration/memory-flow.test.ts:71:1\n"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/streaming-flow.test.ts",
+      "message": "  \u25cf Test suite failed to run\n\n    ReferenceError: jest is not defined\n\n    \u001b[0m \u001b[90m 47 |\u001b[39m }\u001b[33m;\u001b[39m\n     \u001b[90m 48 |\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 49 |\u001b[39m jest\u001b[33m.\u001b[39mmock(\u001b[32m\"@cortexmemory/sdk\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m ({\n     \u001b[90m    |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 50 |\u001b[39m   \u001b[33mCortex\u001b[39m\u001b[33m:\u001b[39m jest\u001b[33m.\u001b[39mfn()\u001b[33m.\u001b[39mmockImplementation(() \u001b[33m=>\u001b[39m mockCortex)\u001b[33m,\u001b[39m\n     \u001b[90m 51 |\u001b[39m   \u001b[33mCypherGraphAdapter\u001b[39m\u001b[33m:\u001b[39m jest\u001b[33m.\u001b[39mfn()\u001b[33m.\u001b[39mmockImplementation(() \u001b[33m=>\u001b[39m ({\n     \u001b[90m 52 |\u001b[39m     connect\u001b[33m:\u001b[39m jest\u001b[33m.\u001b[39mfn()\u001b[33m.\u001b[39mmockResolvedValue(undefined)\u001b[33m,\u001b[39m\u001b[0m\n\n      at tests/integration/streaming-flow.test.ts:49:1\n"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/layer-streaming.test.ts",
+      "message": "  \u25cf Test suite failed to run\n\n    ReferenceError: jest is not defined\n\n    \u001b[0m \u001b[90m 88 |\u001b[39m }\u001b[33m;\u001b[39m\n     \u001b[90m 89 |\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 90 |\u001b[39m jest\u001b[33m.\u001b[39mmock(\u001b[32m\"@cortexmemory/sdk\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m ({\n     \u001b[90m    |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 91 |\u001b[39m   \u001b[33mCortex\u001b[39m\u001b[33m:\u001b[39m jest\u001b[33m.\u001b[39mfn()\u001b[33m.\u001b[39mmockImplementation(() \u001b[33m=>\u001b[39m mockCortex)\u001b[33m,\u001b[39m\n     \u001b[90m 92 |\u001b[39m   \u001b[33mCypherGraphAdapter\u001b[39m\u001b[33m:\u001b[39m jest\u001b[33m.\u001b[39mfn()\u001b[33m.\u001b[39mmockImplementation(() \u001b[33m=>\u001b[39m ({\n     \u001b[90m 93 |\u001b[39m     connect\u001b[33m:\u001b[39m jest\u001b[33m.\u001b[39mfn()\u001b[33m.\u001b[39mmockResolvedValue(undefined)\u001b[33m,\u001b[39m\u001b[0m\n\n      at tests/integration/layer-streaming.test.ts:90:1\n"
+    }
+  ],
+  "diagnosis": "Hoisted jest.mock suites selected under VM ESM; use existing commonJsConfig for integration project only. No changed assertions or discovery."
+}

@@ -1,0 +1,89 @@
+{
+  "createdAtUtc": "2026-10-09T05:32:28.903Z",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "scope": "Full current CLI build/required canonical template sync, all24offline unit+command files, typecheck/lint; no actualservice or full17 grant",
+  "actualServices": false,
+  "secretEnvironment": false,
+  "results": [
+    {
+      "name": "cli-build-and-sync1",
+      "command": [
+        "node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "startedAtUtc": "2026-10-09T05:32:22.876Z",
+      "closedAtUtc": "2026-10-09T05:32:24.169Z",
+      "elapsedMs": 1294,
+      "pid": 30664,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "cli-build-and-sync1.log"
+    },
+    {
+      "name": "cli-fast1",
+      "command": [
+        "node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:fast",
+        "--",
+        "--runInBand",
+        "--forceExit=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-cli-quality1/cli-fast1-results.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "startedAtUtc": "2026-10-09T05:32:24.170Z",
+      "closedAtUtc": "2026-10-09T05:32:28.903Z",
+      "elapsedMs": 4733,
+      "pid": 30721,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "cli-fast1.log"
+    },
+    {
+      "name": "cli-types1",
+      "command": [
+        "node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "startedAtUtc": "2026-10-09T05:32:24.171Z",
+      "closedAtUtc": "2026-10-09T05:32:25.276Z",
+      "elapsedMs": 1105,
+      "pid": 30722,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "cli-types1.log"
+    },
+    {
+      "name": "cli-lint1",
+      "command": [
+        "node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "startedAtUtc": "2026-10-09T05:32:24.171Z",
+      "closedAtUtc": "2026-10-09T05:32:25.799Z",
+      "elapsedMs": 1628,
+      "pid": 30723,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "log": "cli-lint1.log"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "createdAtUtc": "2026-10-09T05:23:14.643Z",
+  "head": "66d8e43ba8d3056bd41aa8a6beb85a8a3162e658",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "scope": "Root complete lint, backend typecheck, existing packed ESM/CJS/browser export contracts against current SDK5 distribution; no actual-service or full17 grant",
+  "actualServices": false,
+  "secretEnvironment": false,
+  "results": [
+    {
+      "name": "root-lint1",
+      "command": [
+        "node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-09T05:22:44.548Z",
+      "closedAtUtc": "2026-10-09T05:23:14.643Z",
+      "elapsedMs": 30095,
+      "pid": 28406,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "log": "root-lint1.log"
+    },
+    {
+      "name": "backend-types1",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-09T05:22:44.549Z",
+      "closedAtUtc": "2026-10-09T05:22:51.426Z",
+      "elapsedMs": 6877,
+      "pid": 28407,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "backend-types1.log"
+    },
+    {
+      "name": "packed-public-contracts1",
+      "command": [
+        "node",
+        "scripts/verify-public-contracts.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-09T05:22:44.550Z",
+      "closedAtUtc": "2026-10-09T05:22:46.863Z",
+      "elapsedMs": 2313,
+      "pid": 28408,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "packed-public-contracts1.log"
+    }
+  ]
+}

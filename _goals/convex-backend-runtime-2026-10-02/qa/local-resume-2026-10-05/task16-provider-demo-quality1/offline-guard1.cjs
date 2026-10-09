@@ -1,0 +1,21 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const sensitiveEnvFile = name => typeof name === 'string' && /^\.env(?:\.|$)/.test(path.basename(name));
+const check = name => {
+  if (sensitiveEnvFile(name) && fs.existsSync(name)) throw new Error('OFFLINE_QUALITY_ENV_FILE_PROHIBITED');
+};
+const readSync = fs.readFileSync.bind(fs);
+fs.readFileSync = function(name, ...args) { check(name); return readSync(name, ...args); };
+const read = fs.readFile.bind(fs);
+fs.readFile = function(name, ...args) { check(name); return read(name, ...args); };
+const readAsync = fs.promises.readFile.bind(fs.promises);
+fs.promises.readFile = function(name, ...args) { check(name); return readAsync(name, ...args); };
+process.loadEnvFile = () => { throw new Error('OFFLINE_QUALITY_ENV_FILE_PROHIBITED'); };
+const blocked = () => { throw new Error('OFFLINE_QUALITY_NETWORK_PROHIBITED'); };
+require('node:net').Socket.prototype.connect = blocked;
+require('node:tls').connect = blocked;
+require('node:http').request = blocked;
+require('node:https').request = blocked;
+require('node:http').get = blocked;
+require('node:https').get = blocked;
+globalThis.fetch = blocked;

@@ -9,10 +9,10 @@ export type RuntimeFactory = (options: CortexRuntimeClientOptions) => RuntimeCli
 export interface RuntimeConfig { deploymentUrl: string; tenantId?: string; memorySpaceId?: string; agentId: string; agentVersion: number; timeoutMs: number }
 export class AppError extends Error { constructor(readonly code: string, readonly status: 400 | 401 | 403 | 413 | 499 | 504 = 400) { super(code); } }
 export function identifier(value: unknown): string {
-  if (typeof value !== "string" || !value.trim() || value.length > 256 || /[\x00-\x1f]/.test(value)) throw new AppError("INVALID_INPUT");
+  if (typeof value !== "string" || !value.trim() || value.length > 256 || [...value].some(character => character.charCodeAt(0) < 32)) throw new AppError("INVALID_INPUT");
   return value;
 }
-export function runtimeConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConfig {
+export function runtimeConfig(env: Readonly<Record<string, string | undefined>> = process.env): RuntimeConfig {
   let url: URL; try { url = new URL(env.CONVEX_URL ?? env.NEXT_PUBLIC_CONVEX_URL ?? ""); } catch { throw new AppError("CONVEX_URL_REQUIRED"); }
   if (url.username || url.password || url.search || url.hash || !(url.protocol === "https:" || url.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname))) throw new AppError("INVALID_CONVEX_URL");
   const version = Number(env.AGENT_VERSION ?? env.NEXT_PUBLIC_CORTEX_AGENT_VERSION ?? "1"), timeoutMs = Number(env.RUNTIME_TIMEOUT_MS ?? "30000");
@@ -24,7 +24,7 @@ export function runtimeConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConf
 export function bearer(header: string | undefined): string {
   const match = /^Bearer ([^\s]{1,32768})$/i.exec(header ?? ""); if (!match) throw new AppError("UNAUTHENTICATED", 401); return match[1];
 }
-export async function hostToken(env: NodeJS.ProcessEnv = process.env): Promise<string> {
+export async function hostToken(env: Readonly<Record<string, string | undefined>> = process.env): Promise<string> {
   // Reread the host-managed file for every official refresh callback. Never print tokens.
   let token = env.CORTEX_AUTH_TOKEN;
   if (env.CORTEX_AUTH_TOKEN_FILE) {

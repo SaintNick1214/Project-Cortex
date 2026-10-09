@@ -1,0 +1,326 @@
+---
+id: backend-runtime
+title: Backend runtime (development)
+sidebar_position: 7
+---
+
+# Cortex backend runtime
+
+This guide describes the unpublished `feat/convex-backend-runtime-completion`
+candidate in Project-Cortex. Its SDK/provider packages currently declare `0.37.0`.
+Use matching local packages from that candidate; this guide does not change the
+website's separate released CLI, app or template installation instructions.
+Final cross-layer qualification and package release remain pending. Async video
+is currently unavailable on the qualified development target; an unavailable
+capability does not count as a working video implementation.
+
+## What the backend owns
+
+Convex runs the qualified Agent, Workflow/Workpool jobs, backend tools and
+asynchronous memory pipeline. The host application supplies verified identity,
+submits user input and observes a retained run. It does not execute another model
+or tool loop, produce embeddings, or write the same exchange to memory again.
+
+There is one canonical executable transcript. Administrator-selected write locks
+control manual changes. Unlocked edits create tracked revisions; downstream
+context and derived memory must match the current source revision. Deletion,
+revocation and tombstones fence background work and prevent stale resurrection.
+Run IDs, conversation IDs, asset IDs and local reconnect snapshots are selectors;
+they are never permission to read a resource.
+
+## Install and configure a development backend
+
+Use Node.js at least `24.15.0` and the candidate's declared npm `12.2.0` toolchain.
+Build the matching SDK/backend distribution, CLI and provider before using local
+archives. Read the candidate's `cortex backend --help` for the additive plan,
+installation and explicit development registration/provisioning commands.
+
+Use `cortex backend install <host> --plan` to inspect the changes and
+`cortex backend install <host>` to apply an unambiguous plan. Use
+`backend register --target <target.json>` and `backend provision --target
+<target.json> --principal <principal.json>` for explicit disposable development
+registration and trusted grants. These commands require management access and
+a matching `dev:` deployment key in the selected environment variables. They
+verify the exact team/project/deployment tuple before dispatch.
+
+`backend configure <host> --url <deployment-origin> --http-url
+<http-action-origin> --agent-id <id> --agent-version <version> --space <space>`
+appends only public metadata. It writes `NEXT_PUBLIC_CORTEX_HTTP_URL` for the
+canonical UI, preserves existing environment values, and refuses conflicting
+origins. Supply host access tokens through the application's authentication
+flow; configure never saves those tokens.
+
+Inspect an installation plan before applying it to an existing host. The
+installer composes the Cortex table map and qualified components with the host's
+schema, custom functions directory and component configuration. It preserves
+unrelated tables/indexes, functions, HTTP/auth routes, environment values and
+scripts. Ambiguous merges require an explicit source repair; replacing the host
+schema or copying a second whole Convex directory is not a recovery strategy.
+
+Developer setup has four distinct responsibilities:
+
+1. Register the additive Agent and Workflow/Workpool backend on an explicitly
+   selected development target. Verify its actual team, project, development
+   type and origin before registration or fixture mutation.
+2. Configure the host's verified JWT issuer/audience and JWKS or supported host
+   authentication integration. Provision trusted principal/grant records through
+   operator administration. Browser JWT claims cannot provision a principal,
+   grant administrator access or select another tenant.
+3. Install current model qualification evidence and versioned per-function
+   policy/budgets, then publish an executable Agent definition. A published model
+   name or catalog entry does not establish interface/capability compatibility.
+4. Configure the same installation's private HTTP action origin for assets and
+   media. Configure optional graph workers separately when graph projection is
+   required. Text execution does not require a graph database or media service.
+
+The client receives the Convex deployment URL, optional memory-space selector,
+published Agent ID/version and HTTP action origin. Deployment keys, Gateway
+credentials, graph passwords, callback secrets and upstream inference keys stay
+outside the browser. A host token callback supplies a short-lived access token
+and refreshes it through the host authentication provider.
+
+## TypeScript run client
+
+The runtime entry point is browser safe. The host supplies authentication rather
+than embedding a development deployment key in its application.
+
+```ts
+import { CortexRuntimeClient } from "@cortexmemory/sdk/runtime";
+import type { RuntimeObservation } from "@cortexmemory/sdk/runtime";
+
+export async function openRun(options: {
+  deploymentUrl: string;
+  assetHttpUrl: string;
+  memorySpaceId: string;
+  agentId: string;
+  agentVersion: number;
+  fetchToken: (request: { forceRefreshToken: boolean }) => Promise<string | null>;
+  text: string;
+  render: (observation: RuntimeObservation) => void;
+  clearPrivateViews: () => void;
+  onError: (error: unknown) => void;
+}) {
+  const client = new CortexRuntimeClient({
+    deploymentUrl: options.deploymentUrl,
+    assetHttpUrl: options.assetHttpUrl,
+    scope: { memorySpaceId: options.memorySpaceId },
+    fetchToken: options.fetchToken,
+    onAuthChange: authenticated => {
+      if (!authenticated) options.clearPrivateViews();
+    },
+  });
+  let stop = () => {};
+  try {
+    const session = await client.session();
+    const handle = await client.submit({
+      version: 1,
+      agentId: options.agentId,
+      agentVersion: options.agentVersion,
+      clientRequestId: crypto.randomUUID(),
+      parts: [{ type: "text", text: options.text }],
+    });
+    stop = client.watchObservation(handle, options.render, error => {
+      options.clearPrivateViews();
+      options.onError(error);
+    });
+    await client.start(handle, { streaming: true });
+    return { client, session, handle, disconnect: stop };
+  } catch (error) {
+    stop();
+    await client.close();
+    throw error;
+  }
+}
+```
+
+Disconnecting an observer does not cancel its backend run. Reattach with
+`client.attach(runId)` and observe its verified handle/cursor; do not submit the
+same message under a new request ID. Cancel a run explicitly with
+`client.cancel(handle)`. Keep the client open while observing, and call
+`client.close()` when the owning host view/session ends.
+
+The official token handshake is bounded by `authTimeoutMs` (default 10 seconds).
+`AUTHENTICATION_TIMEOUT` means the handshake did not finish; it does not invent
+a server rejection. RPC observation is bounded by `requestTimeoutMs` (default
+12 seconds). `RPC_DEADLINE_EXCEEDED` is an uncertain outcome and does not cancel
+or retry a server mutation. Recover the existing run/job identity rather than
+automatically issuing a new paid request.
+
+Fresh protected reads return server-derived authorization deadlines when their
+grant, share or retained source expires. The client refuses late delivery and
+clears owned observers, requests and Blob previews at expiry. The host must also
+clear its private views in `onAuthChange(false)`. Refresh the same authenticated
+session with `client.refreshAuth()` after the host token callback can supply a
+fresh token; an identity/scope change invalidates old handles and pending views.
+
+Runtime membership or resource access can be revoked while the host JWT remains
+valid. Clear the current view's protected state when its operation reports
+`FORBIDDEN`, `UNAUTHENTICATED`, `AUTHORITY_EXPIRED` or `SESSION_CHANGED`, then close
+that view's client. Ignore completions from superseded connections or reads so
+an old denial cannot close a newly authenticated view. Ordinary network errors
+can keep the current authorized view available for recovery.
+
+For configured input/tool approval, approve the existing backend operation;
+approval is not client-side tool execution. The administrator selects the
+published Agent's models, tools, memory mode and deadlines. Caller-supplied
+model/provider/options, scope claims, tool results or generated context cannot
+override those choices.
+
+## AI SDK 7 and React
+
+Use `CortexRemoteTransport` from
+`@cortexmemory/vercel-ai-provider/remote` with AI SDK 7's `useChat`. Supply an
+authenticated `CortexRuntimeClient` and a published Agent ID/version. The
+transport projects server text, tool phases, retained artifact/media references,
+approvals and separate run/memory/graph status.
+
+The canonical quickstart demonstrates connect/token refresh, chat, tool/input
+approval, observer disconnect/reconnect, existing-run attachment, managed memory
+search, stage readiness and optional media tools. It needs no provider key.
+Canonical transcript pages and durable job/artifact reads rebuild state after a
+reload. Local snapshots contain bounded references rather than media bytes or
+upstream URLs, and still require fresh server authorization when restored.
+
+## Response completion and memory consistency
+
+`responseStatus` is independent of `memoryStatus` and `graphStatus`. A response
+can finish while indexing is pending or has failed; the UI can finish rendering
+without waiting for all asynchronous memory work.
+
+Eligible approved transcript history and authorized pending sources can augment
+indexed context. Ordered commits advance contiguous scoped watermarks; a later
+successful event cannot jump over a pending, failed or missing earlier event.
+An Agent's strict mode requires only its explicitly configured stages and
+captured cutoffs. It does not silently degrade to a weaker memory mode.
+
+Read fresh profile/index metadata with `client.getEmbeddingProfile()`. An
+`expectedProfileId` is a mismatch guard, not a requested replacement profile.
+`client.memoryReadiness({ strictStages: ["facts", "vectors"] })` performs an
+explicit stage check without inference. Space-wide counters require an
+appropriate space or tenant grant; an own-only actor uses its run's stage status.
+Incomplete stages and unavailable capabilities remain explicit errors.
+
+`client.recall({ text, requestId, limit })` uses a governed backend query
+embedding against matching profile/index provenance. Clean-slate sources,
+canonical chunks and profile-specific vector generations retain matching
+revision/hash provenance. This design includes no legacy transcript, deployment,
+data or embedding migration.
+
+## Private files, retained artifacts and media jobs
+
+Private bytes stay in Convex-owned storage. The application limit is
+**20,000,000 decoded bytes** for upload and authenticated delivery. Backend,
+protocol and provider-input limits can be smaller. A file under the application
+limit is not automatically eligible for every provider input.
+
+```ts
+import type { CortexRuntimeClient } from "@cortexmemory/sdk/runtime";
+
+export async function uploadPrivateFile(client: CortexRuntimeClient, file: File) {
+  return client.uploadAsset(file, {
+    requestId: crypto.randomUUID(),
+    mimeType: file.type || "application/octet-stream",
+    filename: file.name,
+  });
+}
+```
+
+An immutable `{ assetId, version }` identifies a private file version. The SDK
+freshly authorizes metadata and downloads through the configured authenticated
+HTTP action origin, checks MIME/size/hash, and can create a bounded local Blob
+preview with `client.createAssetUrl(reference)`. Revoke the returned preview on
+close/unmount. Authentication changes and client close also revoke owned URLs.
+There are no public storage URLs, external media storage or embedded base64
+transcripts.
+
+`client.submitMediaJob({ requestId, kind, prompt, inputAsset? })` saves a pending
+job and artifact before generation. The backend selects qualified fixed options.
+The current image profile accepts a text prompt. The video profile can use an
+authorized immutable PNG with its smaller provider-input limit. This includes
+no image understanding, OCR or visual embeddings.
+
+Read retained state using `getMediaJob`, `listMediaJobs` and `getArtifact`.
+`reconcileMediaJob` polls/downloads an existing acknowledged operation and can
+recover a missed callback. Private authenticated callbacks are validated,
+deduplicated and ordered against the saved operation. An unknown submission
+does not trigger another generation on polling, reconnect or replay.
+
+`cancelMediaJob` fences local delivery. Unsupported upstream cancellation is
+reported separately; the provider may continue running and incur costs. Assets,
+artifact versions, history and ownership remain governed by revocation,
+deletion/tombstone fencing and retained-reference cleanup.
+
+## Billing and capability boundaries
+
+### Titles, documents, code, sheets and suggestions
+
+The development runtime exposes durable content jobs. ChatSDK and other hosts
+submit an intent; Cortex executes its governed model calls and commits retained
+artifact versions. No application inference credentials or application tool loop
+are required. The administrator selects policies for `conversation.title`,
+`artifact.text`, `artifact.code`, `artifact.sheet` and `artifact.suggestions`.
+
+```ts
+import type { CortexRuntimeClient } from "@cortexmemory/sdk/runtime";
+
+export async function generateDocument(
+  client: CortexRuntimeClient,
+  requestId: string,
+  prompt: string,
+  conversationId?: string,
+) {
+  return client.submitContentJob({
+    version: 1,
+    requestId,
+    intent: "text",
+    prompt,
+    ...(conversationId === undefined ? {} : { conversationId }),
+  });
+}
+```
+
+Keep the same request ID for the same intent. Read the retained result with
+`getContentJob(jobId)` or `listContentJobs({ conversationId })`; disconnecting
+the UI does not transfer job ownership to the browser. `cancelContentJob` fences
+local publication. `reconcileContentJob` recovers an existing operation and
+never retries an unknown provider submission as a new generation.
+
+Suggestions require an exact `{ artifactId, version }` input. Apply an explicitly
+selected suggestion with `applyContentSuggestion({ jobId, suggestionId,
+artifactVersion })`; concurrent edits or a stale version require a new reviewed
+intent. Output remains a retained artifact, not a client-only document.
+Automatic conversation titles share their real parent run budget and operation.
+An explicit document/code/sheet request owns one logical job budget, including
+its secondary title call. Replays and fallback cannot reset those budgets.
+These ChatSDK/template flows have scoped independent acceptance. Full
+authorization, cross-layer media outcomes and the final goal audit remain open.
+
+### Reservations, unknown outcomes and fallbacks
+
+Every billable call has a versioned operation/interface/capability/model policy
+and an admitted budget, including memory extraction/resolution/summarization,
+query embeddings, title/artifact/suggestion generation and media secondary calls.
+Replay uses the same semantic identity; fallback receives its own policy and
+reservation rather than bypassing the primary call's controls.
+
+Missing cost information is conservative incurred uncertainty. An unknown
+upstream outcome can retain a liability and concurrency slot. A local timeout,
+cancel or elapsed deadline alone does not prove provider terminality, justify a
+refund or authorize another paid attempt. Retained costs and unsupported
+capabilities stay visible instead of becoming invented zero-cost success.
+
+Neo4j/Memgraph remain optional external projection services with authorized
+workers, ordered outbox events, retry/strict-stage failure and transitive
+dependency retirement. Ordinary application orchestration remains in Convex.
+Decisions/Jev and Python implementation/parity are excluded from this runtime.
+
+## Qualification status
+
+Builds and mocked/unit checks establish source/package behavior; they do not
+establish real authentication, storage, graph, inference or browser outcomes.
+Current backend-runtime receipts and scoped independent verdicts live under
+`_goals/convex-backend-runtime-2026-10-02/qa/` in the candidate checkout.
+Final aggregate authorization, cross-layer adversarial outcomes and final
+independent acceptance remain required. Template acceptance is recorded
+separately and does not establish full-goal completion. Production
+deployment and package publication are not part of this development goal.

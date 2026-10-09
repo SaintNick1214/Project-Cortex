@@ -1,0 +1,1432 @@
+{
+  "version": 2,
+  "closedAtUtc": "2026-10-09T05:10:18.995Z",
+  "status": "CURRENT_SDK5_AUTHORIZATION_CLASS_PACKET_CLOSED_PENDING_SINGLE_NONAUTHOR_JUDGMENT",
+  "originalTask": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/tasks/03-authorization.md",
+    "requirements": 5,
+    "criteria": 3
+  },
+  "candidate": {
+    "sdkTarball": {
+      "file": "/Users/SaintNick/.codex/tmp/cortex-task03-sdk5-pack-5a2b308e-182f-4ae7-bd78-854683b344eb/cortexmemory-sdk-0.37.0.tgz",
+      "bytes": 1042242,
+      "sha256": "22f198191d9566eae59f5c1312b85f413dfaffff56526fad97849f5654347565",
+      "name": "@cortexmemory/sdk",
+      "version": "0.37.0",
+      "unpackedBackend": "/Users/SaintNick/.codex/tmp/cortex-task03-sdk5-pack-5a2b308e-182f-4ae7-bd78-854683b344eb/unpacked/package/dist/backend/v1",
+      "manifestSha256": "a2e00efd329c173994bc757f3fcd1f004cdd41563d75b092782f447256f79486"
+    },
+    "backendFiles": 107,
+    "tables": 68,
+    "httpRoutes": [
+      "GET /cortex/assets/download",
+      "OPTIONS /cortex/assets/download",
+      "OPTIONS /cortex/assets/upload",
+      "POST /cortex/assets/upload",
+      "POST /cortex/media/video/webhook"
+    ],
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "clientSourceSha256": "a9d6b73033d71341209115ef38b504240b441da431e525b8a30af01b84ce16c1",
+    "compositeSource": "sdk5-composite-source-manifest.json",
+    "inventory": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/registration-map.json",
+      "sourceDigest": "f4d67ee6e5cf1767d9e7f7f9c67bc3478efa1b59c555b7cd923d3266d792a7c0",
+      "registrations": 461,
+      "public": 270,
+      "internal": 191,
+      "httpRoutes": 5
+    },
+    "sixRootSourcePins": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-revocation-observe1/source-final1.json",
+    "UI9NativeBrowserClaim": false,
+    "UI9ProtectedViewClear": "current meaningful controlled cases; earlier Root actual UI8 auth clearing remains exact historical candidate"
+  },
+  "native": {
+    "newUnpaidGroups": 9,
+    "newModelCalls": 0,
+    "newModelAttempts": 0,
+    "results": "native-deadlines2-outcomes.json",
+    "firstOracleFailure": "native-deadlines1-outcomes.json",
+    "QAOnlyHttpRouteAndActionDecorators": "real native RPC forwarded once + bounded real-clock delay; no fake clock; source/preimage in deadline-fixture1-install.json and cleanup source restoration",
+    "observerProjection": "explicit unpaid seeded projection plus genuine official Agent file-only message; not model/provider completion evidence",
+    "sdkFinalSessionDecorator": "official client port actual RPC once, caller-side delivery delay; not a backend HTTP result"
+  },
+  "classes": [
+    {
+      "id": "identity_scope",
+      "order": 1,
+      "surface": "runtimeClient:session / mutable:get",
+      "assertion": "Current owner positive; noJWT, forged/expired/ungranted JWT, ambiguous omitted tenant, same label in other tenant denied; caller userId metadata cannot change actor.",
+      "evidence": "Existing foundation + CI representative outcomes; rerun current changed fresh session/deadline path.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-functional-v2-20261008/run2/native-smoke-results.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/modern-ci2-outcomes.json"
+        ],
+        "newUnpaidGroups": [
+          {
+            "name": "fresh-scoped-identity-and-private-operator-boundary",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          }
+        ],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "registry_config",
+      "order": 2,
+      "surface": "contexts:get/update; governance:getPolicy/setPolicy",
+      "assertion": "Current scoped read/admin positive, foreign/own-only admin denied, wrong memory space denied, row counts unchanged on denied mutations.",
+      "evidence": "Foundation shared registry/config class; current fresh metadata registration delta.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-functional-v2-20261008/run3/native-smoke-results.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/modern-ci2-outcomes.json"
+        ],
+        "newUnpaidGroups": [],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "transcript_share",
+      "order": 3,
+      "surface": "runtimeTranscript:messages/exportPage / conversations:getMessage / snapshots:get",
+      "assertion": "Authorized shared canView vs canExport redaction; noJWT/foreign denied; revoke share, delete canonical anchor, retention expiry deny same arguments.",
+      "evidence": "05/08 actual; current fresh registration/source/artifact ancestry delta.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/native-actual/history-outcomes.json"
+        ],
+        "newUnpaidGroups": [
+          {
+            "name": "canonical-artifact-anchor-and-full-exhausted-observer-share-revocation",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          },
+          {
+            "name": "installed-sdk-one-shot-observe-withholds-after-final-session-consumed-share-expiry",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          }
+        ],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "tracked_write",
+      "order": 4,
+      "surface": "runtimeTranscript:edit/setPolicy",
+      "assertion": "Current admin unlock positive; nonadmin unlock denies; unlocked foreign edit and manual vectors denied; old derived receipt cannot recreate edited/deleted source.",
+      "evidence": "05/10 actual shared canonical guard; no model necessary.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/native-actual/core-outcomes.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/report-final1.json"
+        ],
+        "newUnpaidGroups": [
+          {
+            "name": "registered-native-message-deletion-invalidates-artifact-context-and-exhausted-observer",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          }
+        ],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "fresh_subscription",
+      "order": 5,
+      "surface": "runtimeClient:signal + runtimeAgent:observe",
+      "assertion": "Two observers on existing completed run: signal has marker/deadline only, fresh payload positive; exhausted cursor still denies after source/media/artifact revoke; timer removes cached delivery on real grant/share expiry.",
+      "evidence": "07/14/CI actual plus current controlled artifact/media cases; current signal/TTL native delta.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-functional-v2-20261008/run2/native-smoke-results.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/current-native-successor-report2.json"
+        ],
+        "newUnpaidGroups": [
+          {
+            "name": "installed-sdk-one-shot-observe-withholds-after-final-session-consumed-share-expiry",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          }
+        ],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "auth_refresh_logout",
+      "order": 6,
+      "surface": "versioned SDK and legacy observer adapters",
+      "assertion": "Same issuer/subject renewed token keeps scope; changed principal suppresses in-flight result; expired refresh settles finite; logout closes subscription/preview, no ambient credentials.",
+      "evidence": "09/14 actual; current SDK/root deadline successor.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/current-native-successor-report2.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-chat-browser1/report1.json"
+        ],
+        "newUnpaidGroups": [
+          {
+            "name": "installed-sdk-one-shot-observe-withholds-after-final-session-consumed-share-expiry",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          }
+        ],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "run_and_paid_control",
+      "order": 7,
+      "surface": "runs:submit; runtimeAgent:start/approveTool/cancel",
+      "assertion": "Existing current run positive; foreign/noJWT tool/input approval denied, current definition revoke and cancelled/expired attempt cannot admit new paid operation; current owner safe cancel after grant replacement.",
+      "evidence": "07/09 actual; no new billable effect for negatives.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-report-final1.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-hono3-outcomes.json"
+        ],
+        "newUnpaidGroups": [],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "governed_memory_delivery",
+      "order": 8,
+      "surface": "runtimeMemory:recall / memories:search",
+      "assertion": "Healthy current result; revoke exact consumed facts/memory share before final hydration denies, action time after final server deadline cannot return private data; unsupported/current-cold profile explicit before dispatch.",
+      "evidence": "08/10 actual source/currentness; current action delivery deadline boundary CODE-control then native timing seam.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/report-final1.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/managed-revoke6.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/current-native-successor-report2.json"
+        ],
+        "newUnpaidGroups": [],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "ingestion_commit",
+      "order": 9,
+      "surface": "runtimeIngestion:retry/reconcile (internal worker)",
+      "assertion": "Current source positive; delete/revoke between persisted confirmed draft and atomic commit denies, no model retry, unchanged budget; facts/vector readiness separately current.",
+      "evidence": "08/10 actual, reused durable saved draft fixture; public internal visibility denied.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/report-final1.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/managed-edit6.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/managed-delete6.json"
+        ],
+        "newUnpaidGroups": [],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "graph_service",
+      "order": 10,
+      "surface": "runtimeGraph:claim/current/complete/expansion",
+      "assertion": "Verified service connector positive; noJWT/user/foreign/wrong connector denied; real expired service grant still-valid lease denied; source/owner deletion forces current tombstone and late remote write fenced on both engines.",
+      "evidence": "11 actual covers both managed engines/current mutations; zero inference.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-report1.json"
+        ],
+        "newUnpaidGroups": [],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "asset_raw_http",
+      "order": 11,
+      "surface": "POST /cortex/assets/upload; GET /cortex/assets/download",
+      "assertion": "Current owner exact hash/MIME positive; noJWT/foreign/revoked/expired/consumed canExport share denied, streamed >20M before ready; action clock crosses final checkpoint deadline never publishes body/DTO.",
+      "evidence": "12 actual bytes/cap/current revocation; post-final-RPC action deadline is pending authorized repair+native successor.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/final-native-report1.json"
+        ],
+        "newUnpaidGroups": [
+          {
+            "name": "current-native-private-storage-http-and-provider-materialization",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          },
+          {
+            "name": "actual-http-action-withholds-bytes-after-final-rpc-grant-cutoff",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          },
+          {
+            "name": "actual-http-upload-suppresses-ready-dto-after-confirmed-storage-commit",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          }
+        ],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "asset_refs",
+      "order": 12,
+      "surface": "runtimeAssets:get/remove; attachments:create/remove; Agent file parts",
+      "assertion": "Existing attachment/artifact/Agent owners independently retain immutable bytes; noJWT/foreign refs denied; remove last owner cleans only owned bytes; same-version metadata expires through consumed share even permanent actor grant.",
+      "evidence": "12 actual; current resource deadline metadata/client preview delta.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/final-native-report1.json"
+        ],
+        "newUnpaidGroups": [
+          {
+            "name": "current-native-private-storage-http-and-provider-materialization",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          },
+          {
+            "name": "private-provider-input-withheld-after-final-real-rpc-cutoff",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          },
+          {
+            "name": "qa-generated-byte-ready-delivery-fenced-after-stored-checkpoint",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          }
+        ],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "artifact_history",
+      "order": 13,
+      "surface": "artifacts:get/getVersion/undo/redo/deleteArtifact",
+      "assertion": "Valid exact version/linked canExport anchor positive; deleted message or revoked export denies trusted artifact.read and public/exhausted delivery; historical asset refs retain then final cleanup.",
+      "evidence": "12 native version/expiry; current artifact_read anchor/perms CODE-only awaiting current installed negative.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/final-native-report1.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-ui-document-suggestions1-outcomes.json"
+        ],
+        "newUnpaidGroups": [
+          {
+            "name": "canonical-artifact-anchor-and-full-exhausted-observer-share-revocation",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          },
+          {
+            "name": "registered-native-message-deletion-invalidates-artifact-context-and-exhausted-observer",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          }
+        ],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "image_job",
+      "order": 14,
+      "surface": "runtimeMediaJobs:submit/get/cancel/reconcile",
+      "assertion": "Existing ready image artifact/hash positive; noJWT/foreign denied; cancelled parent/deleted source/expired job cannot join output, terminal evidence kept unknown/ incurred and rejected orphan removed; replay zero extra call/version.",
+      "evidence": "13 actual image and V2 provisional run; atomic expiry/cursor current controlled successor requires current installed check.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/image-scoped-report1.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/actual-agent-media-v2-qualification-record1.json"
+        ],
+        "newUnpaidGroups": [],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "video_callback",
+      "order": 15,
+      "surface": "POST /cortex/media/video/webhook",
+      "assertion": "Invalid signature/stale timestamp/wrong job/operation cannot mutate; early callback no secret handle returns safe unavailable; genuine saved signed callback + polling and materialized video positive.",
+      "evidence": "HMAC CODE-only; genuine async start returned503, positive callback/poll completion remains BLOCKED, never counted PASS.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "Only positive requires genuine available async identity; blocked capability stays incomplete",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/image-scoped-report1.json"
+        ],
+        "newUnpaidGroups": [],
+        "scope": "Official HMAC/current callback guards controlled + prior actual forged-route denial. Genuine provider callback/poll materialization remains unavailable503; no capability PASS.",
+        "status": "SECURITY_EVIDENCE_CLOSED_CAPABILITY_POSITIVE_BLOCKED"
+      }
+    },
+    {
+      "id": "secondary_content",
+      "order": 16,
+      "surface": "runtimeContentJobs:submit/applySuggestion/reconcile",
+      "assertion": "Current five intents and exact version application positive; noJWT/foreign/forged parent/account/current deletion denial; one common account and confirmed-secondary warning fallback replay no double version/model.",
+      "evidence": "15 current real5intents/8calls and controls; automatic parent title native dynamic import failure source-fixed, verify current closure separately.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-intents1-outcomes.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-controls1-outcomes.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-browser-agent9-outcomes.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-ui-document-suggestions1-outcomes.json"
+        ],
+        "newUnpaidGroups": [],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "internal_operator_visibility",
+      "order": 17,
+      "surface": "runtimeAuth:provision/deleteScope; model ledger; private storage/provider input",
+      "assertion": "Ordinary verified host token cannot call internal provision/admin/provider input/ledger/child Agent helpers; trusted disposable operator cleanup exact tenant+space preserves unrelated host/tombstones/financial rows.",
+      "evidence": "03/05/12/15/CI actual; no restoration of public admin.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-functional-v2-20261008/run2/native-smoke-results.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-auth-native-outcomes2.json",
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/retirement3-outcomes.json"
+        ],
+        "newUnpaidGroups": [
+          {
+            "name": "fresh-scoped-identity-and-private-operator-boundary",
+            "source": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+            "status": "PASS"
+          }
+        ],
+        "scope": "Prior raw outcomes retain their exact source/target/qualification applicability. Current temporal/anchor deltas bind the SDK5 native fixture groups; no per-alias actual execution claim.",
+        "status": "ACTUAL_DISTINCT_CLASS_EVIDENCE_AND_APPLICABLE_REUSE_CLOSED"
+      }
+    },
+    {
+      "id": "unavailable_paths",
+      "order": 18,
+      "surface": "a2a:*; factHistory:*; agents:computeStats; memorySpaces:getStats; facts:semanticSearch",
+      "assertion": "Authorized typed unavailability/unsupported profile and noJWT/foreign deny before private hydration/effects; do not mark feature positive.",
+      "evidence": "Foundation actual authorized readiness; static always-throw contract mapped separately from functionality.",
+      "status": "CLOSED_EXECUTOR_EVIDENCE_NOT_ACCEPTANCE",
+      "newPaidCallRequired": "No for representative negatives; reuse current completed native fixtures where possible",
+      "currentEvidence": {
+        "reused": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-functional-v2-20261008/run3/native-smoke-results.json"
+        ],
+        "newUnpaidGroups": [],
+        "scope": "Typed authorized unavailability before effects is safety coverage only, not functional feature acceptance.",
+        "status": "AUTHORIZED_UNAVAILABILITY_SAFETY_ONLY"
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "id": 1,
+      "evidence": "Frozen source1/source2 inventories + current internal-only delta, prior bootstrap and current scoped setup/closure"
+    },
+    {
+      "id": 2,
+      "evidence": "461 registrations/270 public/191 internal/five HTTP, exact static guard classes and18 current distinct-class native/reuse rows"
+    },
+    {
+      "id": 3,
+      "evidence": "Prior actual verified JWT role negatives/refresh/logout and current exact scoped SDK5 session, opaque signal and one-shot delivery fencing"
+    },
+    {
+      "id": 4,
+      "evidence": "Actual Task05 admin locks/revisions/canonical writes, current genuine file-only canonical anchor removal/exhausted observer denial, guarded current paid/account paths reused"
+    },
+    {
+      "id": 5,
+      "evidence": "Actual source/grant/graph late writes, private storage ownership, current real HTTP action deadlines, current consumed artifact/share/SDK cutoff, callback security distinctly scoped from external async capability"
+    }
+  ],
+  "cleanup": {
+    "status": "CANONICAL_SDK5_REGISTRATION_AND_SCOPED_CLEANUP_PASS",
+    "projectId": 3174742,
+    "sourceManifest": "installed-sdk5-source-manifest.json",
+    "restoredEnabledDeploy": "deploy-restored-sdk5.json",
+    "all107PinsAndHostPreimagesMatch": true,
+    "QAHttpRoutesRemoved": true,
+    "QAInternalHelperRemoved": true,
+    "hostHealth": {
+      "status": 200,
+      "value": "host-route-preserved"
+    },
+    "removedRouteStatus": 404,
+    "removedHelper": {
+      "name": "Error",
+      "message": "[Request ID: 25e3609f612df020] Server Error\nCould not find public function for 'task03Deadline:snapshot'.\n"
+    },
+    "denials": [
+      {
+        "role": "owner",
+        "scope": {
+          "tenantId": "task03-aggregate-20261009",
+          "memorySpaceId": "aggregate03-20261009"
+        },
+        "code": "FORBIDDEN"
+      },
+      {
+        "role": "viewer",
+        "scope": {
+          "tenantId": "task03-aggregate-20261009",
+          "memorySpaceId": "aggregate03-20261009"
+        },
+        "code": "FORBIDDEN"
+      },
+      {
+        "role": "operator",
+        "scope": {
+          "tenantId": "task03-aggregate-20261009",
+          "memorySpaceId": "aggregate03-20261009"
+        },
+        "code": "FORBIDDEN"
+      },
+      {
+        "role": "foreign",
+        "scope": {
+          "tenantId": "task03-aggregate-20261009-foreign",
+          "memorySpaceId": "aggregate03-20261009-foreign"
+        },
+        "code": "FORBIDDEN"
+      }
+    ],
+    "ownedScopes": [
+      {
+        "tenantId": "task03-aggregate-20261009-foreign",
+        "memorySpaceId": "aggregate03-20261009-foreign",
+        "epoch": 2,
+        "deletedAt": 1791522197809
+      },
+      {
+        "tenantId": "task03-aggregate-20261009",
+        "memorySpaceId": "aggregate03-20261009",
+        "epoch": 2,
+        "deletedAt": 1791522197565
+      }
+    ],
+    "activeAssetBytes": 0,
+    "activeAssetJobs": 0,
+    "financial": {
+      "allTargetRootWindowCounterAttemptFencesUnchanged": true,
+      "accountCount": 51,
+      "modelAttemptCount": 65,
+      "priorFinancialSha256": "b44e338d8ee9ee1b3f29871bcac18021b918efd01784bbbfa5ea7f5a97171db9",
+      "afterFinancialSha256": "5c93e8d5d20ede7b09fbe4072860f036d6693394c7d7dda4587e21ee9809eebc",
+      "new03Accounts": [
+        {
+          "id": "nx70pn8s5f2eajv6tmwr5fks8x8fyp4g",
+          "tenantId": "task03-aggregate-20261009",
+          "kind": "run",
+          "root": {
+            "acceptanceHash": "edf29226c2303e29788a3b9f4823345eeec413d87a155bbce2c2e2f397f013dd",
+            "artifactRevision": "42a526fa07db310726c62ef730341df31141022befdba8ea0db5c19ea0f80f34",
+            "canonical": "{\"acceptanceHash\":\"edf29226c2303e29788a3b9f4823345eeec413d87a155bbce2c2e2f397f013dd\",\"artifactRevision\":\"42a526fa07db310726c62ef730341df31141022befdba8ea0db5c19ea0f80f34\",\"budgetWindowMs\":86400000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":1791466719260,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1791553119260,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"task10-large-8192-3072-v1\",\"checkedAt\":1791487866561,\"embeddingProfile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":3072,\"indexName\":\"by_large_embedding_v1\",\"modelId\":\"openai/text-embedding-3-large\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-large-3072-v1\"},\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"expiresAt\":1791574266561,\"inputBound\":{\"documentHash\":\"0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f\",\"featureEnvelope\":\"profile-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"revision\":1,\"ruleId\":\"profile-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":131072,\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-large\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"checkedAt\":1791508879849,\"evidenceHash\":\"88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"5b9ca54ce04c75df6e5e48fc4088f9c30018d3aec8c4d24e45771e3571d53dd0\",\"featureEnvelope\":\"agent-tools-chat-v2\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":256,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":1,\"registryVersion\":\"cortex-media-tools-v2\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Create one governed image and return its durable job and artifact references.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"prompt\\\":{\\\"maxLength\\\":1024,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"prompt\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"media_image_generate\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Create one governed video job and return its durable job and artifact references.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"prompt\\\":{\\\"maxLength\\\":1024,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"prompt\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"media_video_generate\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Read authorized artifact metadata and immutable asset references.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"artifactId\\\":{\\\"maxLength\\\":256,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"artifactId\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"artifact_read\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"checkedAt\":1791505052086,\"evidenceHash\":\"2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"251ae6fcfcefac6fe253d90c843d12e7d2da787ba57347bd449bc1af9d3ab239\",\"featureEnvelope\":\"media-image-v1\",\"nativeTransformHash\":\"9df096ebc65b79f4202a3ba051b6136fbfc8d3cd0ae07984a7dba4f52f8f92fd\",\"proofHash\":\"2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f\",\"revision\":1,\"ruleId\":\"media-native-utf8-v1\"},\"mediaContract\":{\"callbacks\":false,\"inputProtocol\":\"none\",\"maximumInputAssetBytes\":0,\"maximumResultBytes\":20000000,\"options\":{\"kind\":\"image\",\"n\":1,\"outputFormat\":\"png\",\"quality\":\"low\",\"size\":\"1024x1024\"},\"terminalIdentity\":\"requested-only\",\"usage\":\"optional\",\"version\":1},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617\",\"manifestId\":\"task13-agent-media-v2-3c1dcff16463\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\",\"media_image_generate\",\"media_video_generate\",\"artifact_read\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\",\"image\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\",\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":2000000,\"outputTokens\":512,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v9-agent-media-v2\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v9-agent-media-v2\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9-agent-media-v2\",\"rules\":{\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"toolRegistryVersion\":\"cortex-media-tools-v2\"}},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"media.image.generate\",\"policyId\":\"task13-agent-image-shared3m\",\"rules\":{\"allowedModels\":[\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[],\"capabilities\":[\"image\"],\"fallbackModels\":[],\"interfaces\":[\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"pins\":{\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\"}},\"scope\":\"deployment\",\"version\":13}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\"},{\"allowedOptions\":[],\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"capabilities\":[\"image\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":2000000,\"provenance\":\"Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"receiptId\":\"OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463\"}],\"revision\":13}",
+            "evidenceHash": "88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617",
+            "hash": "040eafdf09fde2c3e954df50e31a9ec9413356854979e89a49b0c86c6026b437",
+            "manifestId": "task13-agent-media-v2-3c1dcff16463",
+            "revision": 13
+          },
+          "windowId": "[\"task03-aggregate-20261009\",1791504000000,1791590400000]",
+          "windowStart": 1791504000000,
+          "windowEnd": 1791590400000,
+          "limitUnits": 3000000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 0,
+          "activeConcurrency": 0,
+          "current": true,
+          "cancelled": false
+        },
+        {
+          "id": "nx78hbyjhtepng7ecbv0b871bx8fznfz",
+          "tenantId": "task03-aggregate-20261009",
+          "kind": "tenant",
+          "root": {
+            "acceptanceHash": "edf29226c2303e29788a3b9f4823345eeec413d87a155bbce2c2e2f397f013dd",
+            "artifactRevision": "42a526fa07db310726c62ef730341df31141022befdba8ea0db5c19ea0f80f34",
+            "canonical": "{\"acceptanceHash\":\"edf29226c2303e29788a3b9f4823345eeec413d87a155bbce2c2e2f397f013dd\",\"artifactRevision\":\"42a526fa07db310726c62ef730341df31141022befdba8ea0db5c19ea0f80f34\",\"budgetWindowMs\":86400000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":1791466719260,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1791553119260,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"task10-large-8192-3072-v1\",\"checkedAt\":1791487866561,\"embeddingProfile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":3072,\"indexName\":\"by_large_embedding_v1\",\"modelId\":\"openai/text-embedding-3-large\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-large-3072-v1\"},\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"expiresAt\":1791574266561,\"inputBound\":{\"documentHash\":\"0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f\",\"featureEnvelope\":\"profile-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"revision\":1,\"ruleId\":\"profile-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":131072,\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-large\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"checkedAt\":1791508879849,\"evidenceHash\":\"88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"5b9ca54ce04c75df6e5e48fc4088f9c30018d3aec8c4d24e45771e3571d53dd0\",\"featureEnvelope\":\"agent-tools-chat-v2\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":256,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":1,\"registryVersion\":\"cortex-media-tools-v2\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Create one governed image and return its durable job and artifact references.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"prompt\\\":{\\\"maxLength\\\":1024,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"prompt\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"media_image_generate\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Create one governed video job and return its durable job and artifact references.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"prompt\\\":{\\\"maxLength\\\":1024,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"prompt\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"media_video_generate\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Read authorized artifact metadata and immutable asset references.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"artifactId\\\":{\\\"maxLength\\\":256,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"artifactId\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"artifact_read\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"checkedAt\":1791505052086,\"evidenceHash\":\"2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"251ae6fcfcefac6fe253d90c843d12e7d2da787ba57347bd449bc1af9d3ab239\",\"featureEnvelope\":\"media-image-v1\",\"nativeTransformHash\":\"9df096ebc65b79f4202a3ba051b6136fbfc8d3cd0ae07984a7dba4f52f8f92fd\",\"proofHash\":\"2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f\",\"revision\":1,\"ruleId\":\"media-native-utf8-v1\"},\"mediaContract\":{\"callbacks\":false,\"inputProtocol\":\"none\",\"maximumInputAssetBytes\":0,\"maximumResultBytes\":20000000,\"options\":{\"kind\":\"image\",\"n\":1,\"outputFormat\":\"png\",\"quality\":\"low\",\"size\":\"1024x1024\"},\"terminalIdentity\":\"requested-only\",\"usage\":\"optional\",\"version\":1},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617\",\"manifestId\":\"task13-agent-media-v2-3c1dcff16463\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\",\"media_image_generate\",\"media_video_generate\",\"artifact_read\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\",\"image\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\",\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":2000000,\"outputTokens\":512,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v9-agent-media-v2\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v9-agent-media-v2\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9-agent-media-v2\",\"rules\":{\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"toolRegistryVersion\":\"cortex-media-tools-v2\"}},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"media.image.generate\",\"policyId\":\"task13-agent-image-shared3m\",\"rules\":{\"allowedModels\":[\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[],\"capabilities\":[\"image\"],\"fallbackModels\":[],\"interfaces\":[\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"pins\":{\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\"}},\"scope\":\"deployment\",\"version\":13}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\"},{\"allowedOptions\":[],\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"capabilities\":[\"image\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":2000000,\"provenance\":\"Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"receiptId\":\"OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463\"}],\"revision\":13}",
+            "evidenceHash": "88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617",
+            "hash": "040eafdf09fde2c3e954df50e31a9ec9413356854979e89a49b0c86c6026b437",
+            "manifestId": "task13-agent-media-v2-3c1dcff16463",
+            "revision": 13
+          },
+          "windowId": "[\"task03-aggregate-20261009\",1791504000000,1791590400000]",
+          "windowStart": 1791504000000,
+          "windowEnd": 1791590400000,
+          "limitUnits": 10000000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 0,
+          "activeConcurrency": 0,
+          "current": true,
+          "cancelled": false
+        }
+      ]
+    },
+    "centralPrivateCredentials": [
+      {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd/credentials.json",
+        "mode": "0600",
+        "retained": true,
+        "secretValuesPublished": false
+      },
+      {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd/auth.json",
+        "mode": "0600",
+        "retained": true,
+        "secretValuesPublished": false
+      },
+      {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd/jwt-private.pem",
+        "mode": "0600",
+        "retained": true,
+        "secretValuesPublished": false
+      }
+    ],
+    "newCredentialFiles": 0,
+    "ownedClientsAndScriptsClosed": true,
+    "paidCalls": 0,
+    "readmissions": 0,
+    "mainTargetDisposition": "retained for16/final; physical retirement outstanding",
+    "graphServiceDisposition": "exact owned containers retained for16/final; not touched by03",
+    "olderUnknownLiabilitiesAndHeldSlots": "unchanged; no Task03 settlement/cancellation/slot-release claim"
+  },
+  "financial": {
+    "new03Calls": 0,
+    "priorAllTargetFinancialIdentityAndCountersUnchanged": true,
+    "priorFinancialProof": "cleanup-native03-1-before.json/after.json + native03-restored-final2.json",
+    "new03AccountsEmptyZeroLiability": true,
+    "olderHeldUnknownSlotsAndLiability": "retained unchanged, not new03 work or claimed terminal completion"
+  },
+  "preservedFailures": [
+    "deploy-deadline-fixture1.json: unused QA type import; corrected fixture only, no typecheck disable",
+    "native-deadlines1-outcomes.json: valid STALE_TRANSCRIPT rejected by too-narrow oracle; read-only closure, no repeated deletion",
+    "native03-restored-verification1-failure.json: array order across official CLI/native DB query; exact ID/root/window/counter equality closes sorted read-only2",
+    "all34 prior raw failures and candidate boundaries remain immutable"
+  ],
+  "limitations": [
+    "No public endpoint Cartesian/native-alias execution claim; static inventory plus distinct guard/effect classes",
+    "No fabricated production V2/media qualification or unknown-cost refund/slot-release",
+    "Genuine async callback/poll/materialization remains externally unavailable503, preventing full13/14/16 and full-goal completion",
+    "Task03 judgment reserved to the existing independent reviewer; no tracker/Git/task acceptance by executor",
+    "Dev3174742/central0700-0600 credentials and exact graph services explicitly retained16/final; physical retirement outstanding"
+  ],
+  "receipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-functional-v2-20261008/run2/native-smoke-results.json",
+      "bytes": 7517,
+      "sha256": "8948981ea42fd72035ea0b7cfc836e9fe6e38c69526fe6de9f06cce72cfbb0cd",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-functional-v2-20261008/run3/native-smoke-results.json",
+      "bytes": 6790,
+      "sha256": "92f4eb044529e15c2c88d9e2fd8e5a1cce81b07f16117e3eec65182262f855ef",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/native-actual/core-outcomes.json",
+      "bytes": 1358,
+      "sha256": "0e112036adedb1eeb051a009aa7efda7099fed9f492ac796b297f527ba35081b",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/native-actual/history-outcomes.json",
+      "bytes": 1339,
+      "sha256": "a32cd6eaafd0b902cf0c31913c252af4db36af76b81a1e2e627ca6dcfddce2c9",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/native-actual/report.json",
+      "bytes": 19214,
+      "sha256": "1cfd9bc1a34a0173075e65cc173e77c6335460cb92a0ee38f0da4eaaf455a055",
+      "evidenceClass": "prior actual native/service outcome, source-scoped to its own manifest"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-report-final1.json",
+      "bytes": 13992,
+      "sha256": "f24aabf64b4d1108ed7428768d26cb47c59f65435d6a09da19f69ef638b4e747",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/report-final1.json",
+      "bytes": 16756,
+      "sha256": "62f3a842229f17462803da1df8f9fea19163077be112b5cb9064f7b9b3a7790b",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/report-final1.json",
+      "bytes": 4684,
+      "sha256": "2378762e9f44fcb94bd499fda18bff722710006e8041fc72d8cf5e9773991968",
+      "evidenceClass": "prior actual native/service outcome, source-scoped to its own manifest"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/managed-small4-closed.json",
+      "bytes": 57963,
+      "sha256": "d5073067be4df1384194c766d72e2bcb9ae9432a7fc6013f64520806df89e585",
+      "evidenceClass": "prior actual native/service outcome, source-scoped to its own manifest"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/managed-switch6-closed.json",
+      "bytes": 46384,
+      "sha256": "4250df8ba3f8450543763c818d76b771ae2366a48da3dcb4187455f32495a15f",
+      "evidenceClass": "prior actual native/service outcome, source-scoped to its own manifest"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/managed-large6.json",
+      "bytes": 84314,
+      "sha256": "9d15c46237289f4a0d53f0020845308872b9f60d6168b9fb4bf1cc690968ac47",
+      "evidenceClass": "prior actual native/service outcome, source-scoped to its own manifest"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/managed-edit6.json",
+      "bytes": 84442,
+      "sha256": "58e37b1ba8796d0aea9a3788fcffc881b369a3c982584fb5fe15798dccf2c0e9",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/managed-delete6.json",
+      "bytes": 84568,
+      "sha256": "6d4f9ae203821382c105314f2f0db9160341cd48689c935092d042b54ef0a1b7",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/managed-revoke6.json",
+      "bytes": 67730,
+      "sha256": "64c298252325eb8e7d4cd0d204afd6270eda8d34750cfb15530405bfa2f6c2b9",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-report1.json",
+      "bytes": 11450,
+      "sha256": "e1eaa72a6dd64814c0560866c015918483c98d7070d1842dbe8ad8792efd4f68",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/final-native-report1.json",
+      "bytes": 19084,
+      "sha256": "58715b817fe566e4252d0a00c4bc5aee0e897a4f142e37a572b688b3d1f93f0b",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/image-scoped-report1.json",
+      "bytes": 15624,
+      "sha256": "31c3e0d8242ecaae84bdb94bcad7de7cfbdb8f6bc37f10adb1feeb8b0994e1b3",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/actual-agent-media-v2-qualification-record1.json",
+      "bytes": 154958,
+      "sha256": "1c0c6f88a69c1f37e46a3efebc0960e290695451e1a4723724ea0c5c5bfe2101",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/current-native-successor-report2.json",
+      "bytes": 7607,
+      "sha256": "e91d48e206bbe646c4c01caad282f8e74e9f5ba91c6665e3306fbe5aeaed734d",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-outcomes.json",
+      "bytes": 3512,
+      "sha256": "752de2f10850381efa8739d3b289041d44062cbf5b379533557812fbb04e70ba",
+      "evidenceClass": "prior actual native/service outcome, source-scoped to its own manifest"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-auth-native-outcomes2.json",
+      "bytes": 3315,
+      "sha256": "a546bf89087bec9ba2aa6b1ec19bf2e8169e5ff20ccbfa5908f48197e641fae1",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-intents1-outcomes.json",
+      "bytes": 5091,
+      "sha256": "fa97adf2149528bfb4280971795c244253adb4410b03b6c8bc62c56434578688",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-controls1-outcomes.json",
+      "bytes": 873,
+      "sha256": "ba9d9887691ed5d81b5bf7ce3bc9074ceab43375076fe671631df229eabbdbcb",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-browser-agent5-outcomes.json",
+      "bytes": 297,
+      "sha256": "9a600bed5252b4ae628cc9e00f65b2717d0be0cff04bc58238b06415101eb3c3",
+      "evidenceClass": "prior actual native/service outcome, source-scoped to its own manifest"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/modern-ci2-outcomes.json",
+      "bytes": 945,
+      "sha256": "bf683a618a1322cfcff7495cb4b39411dab2dcd867c57c7f17c4fb6771a5ee1c",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/sdk-modern-suite2-results.json",
+      "bytes": 4146,
+      "sha256": "8476c847e0a646632668e27ebe320339db7c418c15ec8bc3f51233bb5943c83d",
+      "evidenceClass": "prior actual native/service outcome, source-scoped to its own manifest"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/cli-modern-suite2-results.json",
+      "bytes": 4146,
+      "sha256": "41e6af6d757ff95559a65008e1473e18deac0d45dac081136a14595d5c186b4c",
+      "evidenceClass": "prior actual native/service outcome, source-scoped to its own manifest"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/retirement3-outcomes.json",
+      "bytes": 1712,
+      "sha256": "22d85dac494bf56fac54299d1924c930d4f3f602c13d597c12897c95c33f0ef5",
+      "evidenceClass": "additional exact native raw outcome; source-scoped"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run3.results.json",
+      "bytes": 1357,
+      "sha256": "86009cbabb0f0fa054b64e903aab59e5cf1271272728010c45974b21cd498afe",
+      "evidenceClass": "controlled registered-handler outcome; no service effect"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run2.results.json",
+      "bytes": 1356,
+      "sha256": "226760e11d8bc70d2539e8826f65a4164472ae043f3fe7e707d5ce7c02a77038",
+      "evidenceClass": "controlled registered-handler outcome; no service effect"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run3.results.json",
+      "bytes": 1344,
+      "sha256": "32e650b9f99118782a09e56717424930daa67a93998c0584d2cfea12cd7a61f0",
+      "evidenceClass": "controlled registered-handler outcome; no service effect"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run3.results.json",
+      "bytes": 2194,
+      "sha256": "f63118c2a3dda3e6b3eef23e2b5a6daa731609402facf7c4e3ea8ee549976ea0",
+      "evidenceClass": "controlled registered-handler outcome; no service effect"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run2.results.json",
+      "bytes": 1352,
+      "sha256": "160e2d13f775f2731dcdbfa7c3efb37a969cdb829411ce0c08e882fc5f69152a",
+      "evidenceClass": "controlled registered-handler outcome; no service effect"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run2.results.json",
+      "bytes": 1757,
+      "sha256": "3350f3563e58d183a3991292ea2ba5b4600c1ec8f6c151a3af6f8e3fcd80f7b7",
+      "evidenceClass": "controlled registered-handler outcome; no service effect"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-chat-browser1/report1.json",
+      "bytes": 16738,
+      "sha256": "b90a7d958848666bcc19ac89b508eb9196f6c93d68f0afc358354e8a3f8dbd46",
+      "evidenceClass": "current source/controlled/native applicability receipt"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-hono3-outcomes.json",
+      "bytes": 315441,
+      "sha256": "1523a5961979a8146ecdea10848ea6f5d5db80972c74f867f391d50b15c24585",
+      "evidenceClass": "current source/controlled/native applicability receipt"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-ui-document-suggestions1-outcomes.json",
+      "bytes": 83185,
+      "sha256": "f2b539b5b8be7c3659458bff71b4ee3a418f27d08f1319770e31ac818ac616f3",
+      "evidenceClass": "current source/controlled/native applicability receipt"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-browser-agent9-outcomes.json",
+      "bytes": 134543,
+      "sha256": "a81cc036c3285f69612dc3c2c1e7d3de5e6894a2b4d9a65c0ac7f9da3c150a4b",
+      "evidenceClass": "current source/controlled/native applicability receipt"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/final-native-report2.json",
+      "bytes": 36964,
+      "sha256": "d859506c0113300f8e85e5e36fb90481c072756cbda663da6f00eadaeb0e5164",
+      "evidenceClass": "current source/controlled/native applicability receipt"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-revocation-observe1/source-final1.json",
+      "bytes": 1821,
+      "sha256": "25c28153495f77016cfdeadec4b42b2f72da0414783d6771fce134ccb3223145",
+      "evidenceClass": "current source/controlled/native applicability receipt"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-revocation-observe1/sdk-checks3.json",
+      "bytes": 2620,
+      "sha256": "3e12cb00147b3122ed4c8ac4a644c72f2e0bb8cdf2d09dfd32126faf8cda2386",
+      "evidenceClass": "current source/controlled/native applicability receipt"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-revocation-observe1/checks-green3.json",
+      "bytes": 2715,
+      "sha256": "57059976dd77d021cd3fbf1bfc78ce9b4904ea9e9455c2b8d6e9bbeb994e0c86",
+      "evidenceClass": "current source/controlled/native applicability receipt"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/build-sdk5.json",
+      "bytes": 364,
+      "sha256": "75173758ce714eef40135f933ef22510a16dbabecb05627aa19ea06d235c25bf",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/build-sdk5.mjs",
+      "bytes": 6300,
+      "sha256": "9b5ec1bc5bb2c609bfe0f468e0aa5237649d5954828c79624a36e764998d33c3",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/build-sdk5.stderr.log",
+      "bytes": 333,
+      "sha256": "6a1a7884452b5cb1d30e789ae652ef774de3e96a9f5686c2116a8f50a01b22cf",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/build-sdk5.stdout.log",
+      "bytes": 2112,
+      "sha256": "0d12f77a11f3ec27a2e38feba9b8efae6c6f1e8830a08b28fc17eb5f49c3422f",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1-after.json",
+      "bytes": 994404,
+      "sha256": "f7b821f3509d0f875042b0f3644e71f3650bbf0625bd5f689f473b7b16233288",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1-before.json",
+      "bytes": 994404,
+      "sha256": "f7b821f3509d0f875042b0f3644e71f3650bbf0625bd5f689f473b7b16233288",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1-issued0.json",
+      "bytes": 219,
+      "sha256": "bcba6282a40161c05c27c0ba151731f19f7d7b2ca3219dc9428248c102a6782f",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1-issued1.json",
+      "bytes": 235,
+      "sha256": "6707808ce671661055450dc25f6f12a9f27fe05a1f91a1c49093e5c264014f9a",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1-outcomes.json",
+      "bytes": 5927,
+      "sha256": "2699442dbd0263f0b5df0c8e2b1d7005b51ce65e65969a4bd21cf6e39cc6d54a",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1-retired0.json",
+      "bytes": 128,
+      "sha256": "1faa6cf51483dce8551d8b22ff76a21014e913385f92fb9318f1e4914fcafe63",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1-retired1.json",
+      "bytes": 144,
+      "sha256": "9c873f68f26ade068aa9671725e77dbffa4357f982e10a91642c114502b3280b",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1-source-restoration.json",
+      "bytes": 634,
+      "sha256": "b864177eb0a59588da6c62639c685a398533e1f10e986e12e06638a4eb3130cd",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1-target-verified.json",
+      "bytes": 288,
+      "sha256": "8a485634a1f93b27ad1bfb62299486df3e8636903326d4e1674d51092a28cea5",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/cleanup-native03-1.mjs",
+      "bytes": 4819,
+      "sha256": "69afe4724825152f8bd1fefa3e63cfd36282dd653e85542fe083b1bd914cae83",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/close-native-aggregate2.mjs",
+      "bytes": 14154,
+      "sha256": "dc2cc548ff9c4e02554c1e0ed95b99ab938c24b273428d21bd86a353ee38d6d4",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/close-native-deadlines2.mjs",
+      "bytes": 2585,
+      "sha256": "3a8fbc6cb27c997ed82303c26fa10afa3126a743545bc894e0be7f7b38859970",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/common.mjs",
+      "bytes": 2303,
+      "sha256": "69fdc9a9a4e35b3d8664a3d1485442b21d7e8c0efa2f0bf72ec46a48848b4a4e",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deadline-fixture1-http-preimage.ts",
+      "bytes": 358,
+      "sha256": "bd0a41c8ea2d71a04e7b5e3a373cccf3cddf63233e2704e0f8984caac8522592",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deadline-fixture1-install.json",
+      "bytes": 770,
+      "sha256": "b4c61d241aed804c6074345400b85962cc9142a262895d9d9949093bb1191f08",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deadline-fixture1-target-verified.json",
+      "bytes": 288,
+      "sha256": "fbf5a030ceeb1c517dc5a0e5f0ce8b40c5201f859e8374b80f3703ebe987f7b0",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deadline-fixture2-install.json",
+      "bytes": 343,
+      "sha256": "818ed8a1355ab7a72aca619413e7db5dc8c754e34cb145c587ddfb35627bdc73",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-deadline-fixture1-target-verified.json",
+      "bytes": 288,
+      "sha256": "55dfcb2f7a90340d7a9dfc6a82af4d8d1892bd3f91e8597008fb40ef3ca25777",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-deadline-fixture1.json",
+      "bytes": 644,
+      "sha256": "af0b67dcdbf9a25705d9ba4100d460fd4fc0c0601bf9a75a6fe76399df28c2da",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-deadline-fixture1.stderr.log",
+      "bytes": 1009,
+      "sha256": "737281bb35bac2887057e6be8f498b001670c6885a03fe2cb5ab8ac7b056f926",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-deadline-fixture1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-deadline-fixture2-target-verified.json",
+      "bytes": 288,
+      "sha256": "ec4a03fa0278baacb6791f5cc8dc2daf5ac9055735dfb7dac7ff3bb7a1a122e7",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-deadline-fixture2.json",
+      "bytes": 643,
+      "sha256": "11294907dfbdd2c910128a88519f33776d49f84dc62c7705be69bf89246eb757",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-deadline-fixture2.stderr.log",
+      "bytes": 505,
+      "sha256": "43b239db5032b73bf02b783a6357ccd7ef39d40cd2b626e1616b0d240ea51f67",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-deadline-fixture2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-restored-sdk5-target-verified.json",
+      "bytes": 288,
+      "sha256": "01d1673f93bbb15cd5b47bb7526ffde1061b996ae3713ffd078161bdf2c82cd5",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-restored-sdk5.json",
+      "bytes": 644,
+      "sha256": "090235f1394e93eb7713e0558c46c33b4c4fa37e54a7c3f05b45e1f5a00f3a02",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-restored-sdk5.stderr.log",
+      "bytes": 506,
+      "sha256": "8e11d4327c94955d2a002b39f79fa90b26caf332c26bdaefa5bfb2395e7a7e1d",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-restored-sdk5.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-sdk5-target-verified.json",
+      "bytes": 288,
+      "sha256": "f3eb3596e69f156180c81bc66ecaba6e4802e31aea746740e7ea12bc6b314ee3",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-sdk5.json",
+      "bytes": 644,
+      "sha256": "0dbf3e737bb467c7c77c107ab0eb402916f06ec460abe04511867406afb34c8a",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-sdk5.mjs",
+      "bytes": 2476,
+      "sha256": "777e6e3ee4a0bd0af3c243bf372ceeb5002b7cbf1c64efd7828375dfcd77c7ca",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-sdk5.stderr.log",
+      "bytes": 505,
+      "sha256": "91d2bd3c89340e4efed2b357daf0bf444efa8a183e34feb161713ec69c6e97a0",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/deploy-sdk5.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/install-deadline-fixture1.mjs",
+      "bytes": 2201,
+      "sha256": "cb0c87b7b16ce205a24247d78a37c728ae47ebf81900ac8f195ab72d1c90ec85",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/install-packages-sdk5.json",
+      "bytes": 161,
+      "sha256": "896987a537e68c1cdf9e84c2ab42d237479547cc92b695513068ebffbfe4f5e2",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/install-packages-sdk5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/install-packages-sdk5.stdout.log",
+      "bytes": 28,
+      "sha256": "7c1e35593c02abee716dae324bc536ca3d066f7445e3c6cc2d91f4e2bc877be3",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/install-sdk5-owned-preimages.json",
+      "bytes": 34593,
+      "sha256": "5e5150a4bf01ff9992300f5ce240e7f559757ce2f2d7860fac1ec7644d1b2179",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/install-sdk5-retry.json",
+      "bytes": 172,
+      "sha256": "e529d84e25f3d5bd62d3cbe07325c2a3b80f131d8c4804f84783cf593e758bd8",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/install-sdk5-target-verified.json",
+      "bytes": 288,
+      "sha256": "b30ba207877bc0faed5964e73454efbeb13123cd15d5e3309bcd2ed5c20aedf8",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/install-sdk5.mjs",
+      "bytes": 8660,
+      "sha256": "2d2ff81cdea817063d979b74cbdb51e51f515fff179531dadb052888e9a12f68",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/installed-sdk5-source-manifest.json",
+      "bytes": 29842,
+      "sha256": "f4dae2a1b7085828ec6b170e242cf89095f31a9294b8969e0c64e8c95c24fb8c",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-financial-before.json",
+      "bytes": 951616,
+      "sha256": "b389b250b7f5cd68d1c9f50e58e01ba8d0cd192cf73d3424ab22f99a3aae2e98",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-outcomes.json",
+      "bytes": 16477,
+      "sha256": "919f0812ca8c0764508788ea60e3b1459d1772314703fdea624e3edbb8f61c72",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-progress1.json",
+      "bytes": 2692,
+      "sha256": "b38e26386cd3f6ca73f4aa36724a3e485c7be7cea4e27c6e02e5b2917fd390e8",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-progress2.json",
+      "bytes": 4974,
+      "sha256": "179409591a5eeb05d25ef29ad61dab2a6497624d5d5862cce1de5ef844375d6e",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-progress3.json",
+      "bytes": 6149,
+      "sha256": "6a115ab1ff6ed41c36036698783b79d5a569cd15687664bab3ab6351500d896d",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-progress4.json",
+      "bytes": 7048,
+      "sha256": "8dc3878ddc181ad282ecc26ec2be6caadf90887831918557cd74357dd3ef8376",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-progress5.json",
+      "bytes": 9371,
+      "sha256": "262e8fd5b657cd2b478b9185221fc11ec5506cfd2cdbd88f3f7ff023cbf51abd",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-progress6.json",
+      "bytes": 11277,
+      "sha256": "03edfe11482f84b7febd045c2684ea016c6e92aa0c925fb60b73394c29d13305",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-progress7.json",
+      "bytes": 13705,
+      "sha256": "5d873640391f2d0ac19b6753acc6d90b70ed29c484386a855fe3b165c18fc214",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-progress8.json",
+      "bytes": 15349,
+      "sha256": "73ea87b27d20b4bddd4fdaac040f5850bf23efe2bd403b595c919cd34105ec93",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-setup.json",
+      "bytes": 2334,
+      "sha256": "5e993bd083524386a8fb18d6806d061d6e604ea810f169c870365373c9f68157",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1-target-verified.json",
+      "bytes": 288,
+      "sha256": "7181b04b7b90a565701555519da6252207135e4558bdda71f8e49c789d793dbe",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines1.mjs",
+      "bytes": 16685,
+      "sha256": "f203d7d6059e9e64861813627c9c8275e8071827eb56e8bff7169a4d6e495845",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-financial-after.json",
+      "bytes": 994404,
+      "sha256": "f7b821f3509d0f875042b0f3644e71f3650bbf0625bd5f689f473b7b16233288",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-outcomes.json",
+      "bytes": 17937,
+      "sha256": "69066cdffbcb4b3ed1bfacb5cb893db0a06995554485167b114c3f8af57cc991",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native-deadlines2-target-verified.json",
+      "bytes": 288,
+      "sha256": "1397f6701cd86bd3413bcd273e57de0296ad923ba29b15759444addecfde6ea8",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored-final2.json",
+      "bytes": 46051,
+      "sha256": "c17cd12c302562fe56555f4518d29dd0a51af87599b1036178b4ed77e2a51aa0",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored-runtimeauthscopes.json",
+      "bytes": 455,
+      "sha256": "fa1a9ae1ef167b97992c12f78d80ebfd643cbff2ad30c57c4a40033da5cdd55a",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored-runtimebudgetaccounts.json",
+      "bytes": 459,
+      "sha256": "f7b6a46b65fe5c57eb2cd2ca41bc3e8989ff2e32a9491bede2e0f558c7ba19c4",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored-runtimemodelattempts.json",
+      "bytes": 458,
+      "sha256": "883773376b95db5ce01fc04b90c77826557d0243060da33d0f89039d4c2978ef",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored-target-verified.json",
+      "bytes": 288,
+      "sha256": "f10f60339079a8516b6789d420e6bddb77b27d670e2bd6d6ba1ba652f57d0625",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored-verification1-failure.json",
+      "bytes": 484,
+      "sha256": "1287e6eb47dab0ea688160db78c83cc4dbc8c7da052dda9f04653b172b167b9c",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored2-runtimeauthscopes.json",
+      "bytes": 455,
+      "sha256": "604695e8debe11674d25919ffc068b47c03474c35948cac79d9c43f5c2953c8d",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored2-runtimebudgetaccounts.json",
+      "bytes": 459,
+      "sha256": "80af134d1b26157168368aa2a5e43a96a4e0e8a3e6a17e58a4468d91ff02ee11",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored2-runtimemodelattempts.json",
+      "bytes": 458,
+      "sha256": "e5d41863c671f06db6bdfad42245bbf683e032790786056a7e975bb4a26ee231",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/native03-restored2-target-verified.json",
+      "bytes": 288,
+      "sha256": "7f99bc11d950d80274bf3711ce8e0869c470a504df8f93a653256d365e3ff504",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/pack-sdk5.json",
+      "bytes": 510,
+      "sha256": "e31a55fe4d1303ea3d2c08459fdbe026290fd89484dcedf79d10bdc0a6757f19",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/pack-sdk5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/pack-sdk5.stdout.log",
+      "bytes": 25605,
+      "sha256": "e10f76702a7f86f4e52836ab5f168afdc510bdf482231e4be92200566fce677c",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/packages5.json",
+      "bytes": 1870,
+      "sha256": "4139db537dd3c9e6710983ea612a3a9eaad7b47addd079896b27fc7498901df3",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/sdk5-composite-source-manifest.json",
+      "bytes": 6952,
+      "sha256": "029396ab3c9166908fe705f56870e468a4cc56ee2dc29299002634680d69994d",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/sdk5-packed-contracts.json",
+      "bytes": 281,
+      "sha256": "229acf699c17daa52ed4085ebca4aa8ad69a66edd955ca4e11f774686ac33e35",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/sdk5-packed-contracts.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/sdk5-packed-contracts.stdout.log",
+      "bytes": 93,
+      "sha256": "53f758d02c5e084ed281c5c9c8d07def6439bb6ae283b29958633a37c58d61ed",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/task03Deadline.fixture.ts",
+      "bytes": 8569,
+      "sha256": "d3f99a5c51b81655905f8b1ee1334e52abf97d8e4432e53d743c15d73264a9d1",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/verify-native03-restoration1.mjs",
+      "bytes": 6534,
+      "sha256": "5c3e7b9a854a30e20565b5939500282086d6b5029259a053f112df1cc7bcf5e9",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/native-actual/verify-native03-restoration2.mjs",
+      "bytes": 6678,
+      "sha256": "b4be5057ebf5410a99fb099c1f7970b9d7b220ff33b7391c540387526c4eb718",
+      "evidenceClass": "current native/build/fixture/raw receipt; see explicit scope"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/source-manifest1.json",
+      "bytes": 679,
+      "sha256": "9aacbea59abf3f4781fa77c8628592b2bad7186e2a49c9629dac1accf544362a",
+      "evidenceClass": "two asset product paths + meaningful test"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/inventory-addendum1.json",
+      "bytes": 1412,
+      "sha256": "13211071ae08cbd02371eba0970f2c9907633810bee863a24d5b3d7f235c9343",
+      "evidenceClass": "current internal-registration inventory delta"
+    }
+  ],
+  "noRepeatedPaidCatalog": true,
+  "noHistoricalSourceRepair": true
+}

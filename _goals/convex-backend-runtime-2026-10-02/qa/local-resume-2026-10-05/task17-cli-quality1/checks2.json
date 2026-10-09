@@ -1,0 +1,73 @@
+{
+  "createdAtUtc": "2026-10-09T05:42:12.147Z",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "scope": "Exact CLI lint correction: equivalent C0 identifier guard and structural readonly environment types; failed lint plus affected Basic compiler and existing configuration/auth/client ownership controls. Prior all24/366 CLI suite remains valid without repetition.",
+  "originalRed": "checks1.json",
+  "actualServices": false,
+  "results": [
+    {
+      "name": "cli-lint2",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "command": [
+        "node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "startedAtUtc": "2026-10-09T05:42:10.588Z",
+      "closedAtUtc": "2026-10-09T05:42:12.147Z",
+      "elapsedMs": 1555,
+      "pid": 32733,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "processAbsent": true,
+      "log": "cli-lint2.log"
+    },
+    {
+      "name": "basic-types2",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic",
+      "command": [
+        "node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "startedAtUtc": "2026-10-09T05:42:10.593Z",
+      "closedAtUtc": "2026-10-09T05:42:11.942Z",
+      "elapsedMs": 1349,
+      "pid": 32734,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "processAbsent": true,
+      "log": "basic-types2.log"
+    },
+    {
+      "name": "basic-cortex2",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--config",
+        "vitest.config.ts",
+        "src/__tests__/cortex.test.ts",
+        "--reporter=json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-cli-quality1/basic-cortex2-results.json"
+      ],
+      "startedAtUtc": "2026-10-09T05:42:10.593Z",
+      "closedAtUtc": "2026-10-09T05:42:11.025Z",
+      "elapsedMs": 431,
+      "pid": 32735,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "processAbsent": true,
+      "log": "basic-cortex2.log"
+    }
+  ]
+}

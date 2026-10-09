@@ -1,0 +1,258 @@
+{
+  "groups": [
+    {
+      "name": "fresh-scoped-identity-and-private-operator-boundary",
+      "status": "PASS",
+      "session": {
+        "version": 1,
+        "tenantId": "task03-aggregate-20261009",
+        "memorySpaceId": "aggregate03-20261009",
+        "principalId": "n571f33jngwtkpn28vkh03p8rd8fyer0",
+        "userId": "n571f33jngwtkpn28vkh03p8rd8fyer0",
+        "deliveryExpiresAt": 1791529224011
+      },
+      "noIdentity": {
+        "name": "ConvexError",
+        "message": "[Request ID: eeeb58eafc970105] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:161:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "UNAUTHENTICATED",
+          "message": "Verified identity required",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "wrongScope": {
+        "name": "ConvexError",
+        "message": "[Request ID: bbf1036be058569e] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "ordinaryInternalProvision": {
+        "name": "Error",
+        "message": "[Request ID: 6f8307341618a0d8] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+      },
+      "profile": {
+        "version": 1,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        }
+      },
+      "modelCalls": 0
+    },
+    {
+      "name": "current-native-private-storage-http-and-provider-materialization",
+      "status": "PASS",
+      "asset": {
+        "version": 1,
+        "assetId": "asset:218547cef8da6eda9003fae5370c600e72004f1110e4865700d4b86ad593889f",
+        "versionId": "asset:218547cef8da6eda9003fae5370c600e72004f1110e4865700d4b86ad593889f:version:1",
+        "assetVersion": 1,
+        "contentHash": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f",
+        "sizeBytes": 1496,
+        "mimeType": "image/png",
+        "mediaKind": "image",
+        "filename": "aggregate03-private.png",
+        "lineage": {
+          "kind": "upload",
+          "requestId": "aggregate03-frame"
+        }
+      },
+      "http": {
+        "status": 200,
+        "bytes": 1496,
+        "sha256": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f"
+      },
+      "privateInput": {
+        "metadata": {
+          "assetId": "asset:218547cef8da6eda9003fae5370c600e72004f1110e4865700d4b86ad593889f",
+          "assetVersion": 1,
+          "contentHash": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f",
+          "filename": "aggregate03-private.png",
+          "lineage": {
+            "kind": "upload",
+            "requestId": "aggregate03-frame"
+          },
+          "mediaKind": "image",
+          "mimeType": "image/png",
+          "sizeBytes": 1496,
+          "version": 1,
+          "versionId": "asset:218547cef8da6eda9003fae5370c600e72004f1110e4865700d4b86ad593889f:version:1"
+        },
+        "outcome": "returned",
+        "protocolBytes": 2071,
+        "providerDispatches": 0,
+        "trace": [
+          {
+            "delayed": false,
+            "name": "runtimeAssets:providerAuthorization",
+            "releasedAt": 1791522028820,
+            "returnedDeliveryExpiresAt": null,
+            "rpcReturnedAt": 1791522028820,
+            "startedAt": 1791522028724
+          },
+          {
+            "delayed": false,
+            "name": "runtimeAssets:downloadCheckpoint",
+            "releasedAt": 1791522028934,
+            "returnedDeliveryExpiresAt": 1791529224011,
+            "rpcReturnedAt": 1791522028934,
+            "startedAt": 1791522028848
+          }
+        ]
+      },
+      "actualProviderDispatches": 0
+    },
+    {
+      "name": "actual-http-action-withholds-bytes-after-final-rpc-grant-cutoff",
+      "status": "PASS",
+      "QAOnlyRoute": true,
+      "productHandlerForwarded": true,
+      "response": {
+        "version": 1,
+        "code": "FORBIDDEN"
+      },
+      "statusCode": 403,
+      "trace": [
+        {
+          "name": "runtimeAssets:downloadAuthorization",
+          "startedAt": 1791522029330,
+          "rpcReturnedAt": 1791522029496,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522029497,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:downloadCheckpoint",
+          "startedAt": 1791522029527,
+          "rpcReturnedAt": 1791522029625,
+          "returnedDeliveryExpiresAt": 1791522033979,
+          "releasedAt": 1791522034020,
+          "delayed": true
+        }
+      ],
+      "crossing": {
+        "name": "runtimeAssets:downloadCheckpoint",
+        "startedAt": 1791522029527,
+        "rpcReturnedAt": 1791522029625,
+        "returnedDeliveryExpiresAt": 1791522033979,
+        "releasedAt": 1791522034020,
+        "delayed": true
+      },
+      "bytesDisclosed": 0,
+      "modelCalls": 0
+    },
+    {
+      "name": "private-provider-input-withheld-after-final-real-rpc-cutoff",
+      "status": "PASS",
+      "result": {
+        "code": "FORBIDDEN",
+        "outcome": "withheld",
+        "providerDispatches": 0,
+        "trace": [
+          {
+            "delayed": false,
+            "name": "runtimeAssets:providerAuthorization",
+            "releasedAt": 1791522034816,
+            "returnedDeliveryExpiresAt": null,
+            "rpcReturnedAt": 1791522034815,
+            "startedAt": 1791522034728
+          },
+          {
+            "delayed": true,
+            "name": "runtimeAssets:downloadCheckpoint",
+            "releasedAt": 1791522039172,
+            "returnedDeliveryExpiresAt": 1791522039131,
+            "rpcReturnedAt": 1791522034921,
+            "startedAt": 1791522034845
+          }
+        ]
+      },
+      "actualProviderDispatches": 0,
+      "fakeClock": false
+    },
+    {
+      "name": "actual-http-upload-suppresses-ready-dto-after-confirmed-storage-commit",
+      "status": "PASS",
+      "QAOnlyRoute": true,
+      "trace": [
+        {
+          "name": "runtimeAssets:uploadAuthorization",
+          "startedAt": 1791522039636,
+          "rpcReturnedAt": 1791522039706,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522039706,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:uploadCheckpoint",
+          "startedAt": 1791522039706,
+          "rpcReturnedAt": 1791522039775,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522039775,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:beginUpload",
+          "startedAt": 1791522039775,
+          "rpcReturnedAt": 1791522039853,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522039853,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:stageStorage",
+          "startedAt": 1791522040036,
+          "rpcReturnedAt": 1791522040129,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522040129,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:finalize",
+          "startedAt": 1791522040129,
+          "rpcReturnedAt": 1791522040234,
+          "returnedDeliveryExpiresAt": null,
+          "releasedAt": 1791522040234,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:storedDeliveryCheckpoint",
+          "startedAt": 1791522040234,
+          "rpcReturnedAt": 1791522040318,
+          "returnedDeliveryExpiresAt": 1791522044220,
+          "releasedAt": 1791522040318,
+          "delayed": false
+        },
+        {
+          "name": "runtimeAssets:downloadCheckpoint",
+          "startedAt": 1791522040318,
+          "rpcReturnedAt": 1791522040390,
+          "returnedDeliveryExpiresAt": 1791522044220,
+          "releasedAt": 1791522044260,
+          "delayed": true
+        }
+      ],
+      "response": {
+        "version": 1,
+        "code": "FORBIDDEN"
+      },
+      "jobId": "asset:86fb3b5d25d44bfb2dcc7d07e9986983fa710ec120727471826ccb2135a29f52",
+      "state": "ready",
+      "physicalBytesRetained": true,
+      "metadataDisclosed": false,
+      "modelCalls": 0
+    }
+  ],
+  "modelCalls": 0
+}

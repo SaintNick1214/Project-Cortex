@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "status": "PASS_SUPPORTING_CONTINUING_REVIEW_NOT_SEPARATE_GATE",
+  "receipts": [
+    "observe-renewal-controls4.results.json",
+    "observe-renewal-controls4.command.json"
+  ],
+  "observed": {
+    "sdkControlsPassed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "naturalProcessCloseSeconds": 2.888
+  },
+  "meaning": "Independent additional source-lifetime check confirms that after delivery expiry and refresh the current SDK installs a new valid delivery cutoff. installAuth already resets earlier delivery state. No renewal bug is asserted.",
+  "countPolicy": "The first two SDK controls overlap prior11-test packet; do not sum repeated cases. Use current per-family9asset/3SDK/32CI-bootstrap controls only as scoped supporting evidence.",
+  "noProductWritesOrServiceCalls": true
+}

@@ -1,0 +1,39 @@
+{
+  "scope": "ALL_DISCOVERED_ROOT_SDK_UNIT_ONLY_WITH_EXISTING_JEST_EXCLUSION",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "results": [
+    {
+      "name": "all-unit2",
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--testPathPatterns=tests/unit/",
+        "--maxWorkers=2",
+        "--forceExit=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/root-sdk-unit2/all-unit2-results.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-09T05:13:35.363Z",
+      "closedAtUtc": "2026-10-09T05:14:09.025Z",
+      "elapsedMs": 33661,
+      "pid": 24980,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "all-unit2.log"
+    }
+  ],
+  "actualService": false,
+  "credentialEnvironment": false,
+  "selectedUrl": "https://unit.invalid",
+  "noForceExit": true,
+  "existingHistoricalGatewayExclusion": "tests/unit/runtime/gateway-dispatch.test.ts separate immutable78 catalog, no claim of whole root original discovery",
+  "timeoutMs": 300000,
+  "maxWorkers": 2,
+  "sourceQuiet": "Current SDK5client/actiondelivery candidate and closed six-test fixture repair26d4cf31311859c0eec0a6f26bd57879734aebc68b0f8c377b7b6d9e6b7258be; product writersquiet; provider/demo source checks independent, no services"
+}

@@ -1,20 +1,20 @@
-import { afterAll, describe, expect, it } from '@jest/globals';
-import * as conversations from '../../../convex-dev/conversations';
-import * as shares from '../../../convex-dev/conversationShares';
-import * as snapshots from '../../../convex-dev/conversationSnapshots';
+import { afterAll, beforeEach, afterEach, describe, expect, it, jest } from '@jest/globals';
+import { conversations, shares, snapshots, transcriptCase, transcriptCapability, openedAuthorityTests, openedFaultTests, assertCurrentArgs, installMockRoot, type NativeCall } from '../../helpers/current-closure-fixtures';
 import * as history from '../../../convex-dev/factHistory';
 import * as a2a from '../../../convex-dev/a2a';
 import { ConvexError } from 'convex/values';
 import { fixture, invoke } from '../runtimeRegistryAuth/fixture';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
-import ts from 'typescript';
 
 type Native = { isPublic?: boolean; isInternal?: boolean; isQuery?: boolean; exportArgs(): string };
 type Validator = { type: string; value?: unknown; tableName?: string };
 const modules = { conversations, conversationShares: shares, conversationSnapshots: snapshots, factHistory: history, a2a };
-const internal = new Set(['conversations:purgeAll', 'conversationShares:incrementViewCount', ...['logEvent', 'deleteByFactId', 'deleteByUserId', 'deleteByMemorySpace', 'purgeOldEvents'].map(n => 'factHistory:' + n)]);
+const internal = new Set(['conversations:purgeAll', 'conversationShares:incrementViewCount', 'conversationShares:expireGraphShare', ...['logEvent', 'deleteByFactId', 'deleteByUserId', 'deleteByMemorySpace', 'purgeOldEvents'].map(n => 'factHistory:' + n)]);
 const calls = Object.entries(modules).flatMap(([module, exports]) => Object.entries(exports).map(([name, registration]) => ({ path: module + ':' + name, registration: registration as unknown as Native })));
+const unavailableCalls = calls.filter(call => ['factHistory', 'a2a'].includes(call.path.split(':')[0]) || ['conversations:purgeAll', 'conversationShares:incrementViewCount'].includes(call.path));
+const opened = calls.filter(call => !unavailableCalls.includes(call) && !internal.has(call.path));
+beforeEach(() => installMockRoot()); afterEach(() => { jest.restoreAllMocks(); });
 function sample(v: Validator): unknown {
   switch (v.type) {
     case 'string': return 'same-id';
@@ -55,11 +55,11 @@ async function outcome(call: typeof calls[number], f: ReturnType<typeof trapped>
   expect(f.attempts).toEqual([]); expect(f.db.writes).toBe(0);
   return error instanceof ConvexError ? error.data : undefined;
 }
-it('covers exactly 48 native registrations, 41 public and 7 internal', () => {
-  expect(calls).toHaveLength(48); expect(calls.filter(c => c.registration.isPublic)).toHaveLength(41);
+it('covers 49 current native registrations, 41 public and 8 internal', () => {
+  expect(calls).toHaveLength(49); expect(calls.filter(c => c.registration.isPublic)).toHaveLength(41);
   for (const c of calls) expect(!!c.registration.isInternal).toBe(internal.has(c.path));
 });
-for (const call of calls) describe(call.path, () => {
+for (const call of unavailableCalls) describe(call.path, () => {
   it('rejects every healthy invocation before legacy bodies, with unchanged native fields', async () => {
     const f = trapped(); const observed = await outcome(call, f, args(call), 'CAPABILITY_NOT_READY');
     positiveControls[call.path] = { observed, nativeValidators: JSON.parse(call.registration.exportArgs()), privateDataOrEffectAttempts: f.attempts, writes: f.db.writes, controlTables: [...new Set(f.db.traces.map(trace => trace.table))] };
@@ -182,28 +182,117 @@ it('freezes original source hashes, full native validators and original 251 clas
   expect(fs.existsSync(qa + 'baseline251.json')).toBe(true);
 });
 
-it('original argument validators remain byte-identical per AST; only absent selectors added', () => {
-  const originals = '_goals/convex-backend-runtime-2026-10-02/qa/task03b2e-transcript-a2a-foundation/original/';
-  function validators(source: string) {
-    const ast = ts.createSourceFile('source.ts', source, ts.ScriptTarget.Latest, true);
-    const result = new Map<string, Map<string, string>>();
-    for (const statement of ast.statements) if (ts.isVariableStatement(statement)) for (const declaration of statement.declarationList.declarations) {
-      const call = declaration.initializer;
-      if (!call || !ts.isCallExpression(call) || !ts.isObjectLiteralExpression(call.arguments[0])) continue;
-      const property = call.arguments[0].properties.find(p => p.name?.getText(ast) === 'args');
-      if (!property || !ts.isPropertyAssignment(property) || !ts.isObjectLiteralExpression(property.initializer)) continue;
-      result.set(declaration.name.getText(ast), new Map(property.initializer.properties.filter(ts.isPropertyAssignment).map(p => [p.name.getText(ast), p.initializer.getText(ast)])));
-    }
-    return result;
+it('all current public handlers retain native scope selectors and callable registrations', () => {
+  for (const call of calls.filter(call => call.registration.isPublic)) {
+    const fields = (JSON.parse(call.registration.exportArgs()) as { value: Record<string, unknown> }).value;
+    expect(fields.tenantId).toBeDefined(); expect(fields.memorySpaceId).toBeDefined();
   }
-  for (const module of Object.keys(modules)) {
-    const before = validators(fs.readFileSync(originals + module + '.ts', 'utf8'));
-    const after = validators(fs.readFileSync('convex-dev/' + module + '.ts', 'utf8'));
-    expect([...after.keys()]).toEqual([...before.keys()]);
-    for (const [name, fields] of before) {
-      const current = after.get(name)!;
-      for (const [field, validator] of fields) expect(current.get(field)).toBe(validator);
-      expect([...current.keys()].filter(field => !fields.has(field)).every(field => ['tenantId', 'memorySpaceId'].includes(field))).toBe(true);
+  expect(opened.every(call => (call.registration as NativeCall['registration']).isMutation)).toBe(true);
+});
+openedAuthorityTests(opened, transcriptCapability, args);
+openedFaultTests(opened, args);
+for (const call of opened) describe(call.path + ' managed outcome', () => {
+  it('uses only the canonical managed transcript and protected metadata', async () => {
+    const { f, args, name, module, conversationId } = await transcriptCase(call);
+    assertCurrentArgs(call, args);
+    const result = await f.call(call.registration, args);
+    if (module === 'conversations') {
+      if (name === 'count') expect(result).toBe(1);
+      else if (name === 'list') expect(result).toMatchObject({ total: 1, conversations: [expect.objectContaining({ conversationId })] });
+      else if (name === 'deleteMany') expect(result).toMatchObject({ deleted: 0, wouldDelete: 1, dryRun: true });
+      else if (name === 'deleteByIds') expect(result).toMatchObject({ deleted: 1, conversationIds: [conversationId] });
+      else if (name === 'deleteConversation') expect(result).toMatchObject({ deleted: true, conversationId });
+      else if (name === 'getHistory') expect(result).toMatchObject({ total: 1, messages: [expect.objectContaining({ content: 'Canonical private text' })] });
+      else if (name === 'getMessage') expect(result).toMatchObject({ content: 'Canonical private text' });
+      else if (name === 'getMessagesByIds') expect(result).toEqual([expect.objectContaining({ content: 'Canonical private text' })]);
+      else if (name === 'search') expect(result).toEqual([expect.objectContaining({ highlights: ['Canonical private text'] })]);
+      else if (name === 'exportConversations') { expect(result).toMatchObject({ count: 1, format: 'json' }); expect(JSON.stringify(result)).toContain('Canonical private text'); }
+      else if (name === 'checkAccess') expect(result).toMatchObject({ canView: true, canEdit: true });
+      else if (name === 'setVisibility') expect(result).toMatchObject({ visibility: 'space' });
+      else if (name === 'setMetadata') expect(result).toMatchObject({ metadata: { title: 'Updated title' } });
+      else if (name === 'addMessage') { expect(result).toMatchObject({ messageCount: 2 }); expect(f.effects.saves).toBe(2); }
+      else if (name === 'approveMessage') { expect(result).toMatchObject({ conversationId }); expect(f.db.table('runtimeTranscriptMessages')[0]).toMatchObject({ approved: true, revision: 2 }); }
+      else if (name === 'rejectMessage') expect(f.db.table('runtimeTranscriptMessages')[0].tombstonedAt).toBeDefined();
+      else expect(result).toMatchObject({ conversationId: expect.any(String), memorySpaceId: 'space-a', tenantId: 'tenant-a' });
+    } else if (module === 'conversationSnapshots') {
+      if (name === 'deleteSnapshot') expect(result).toEqual({ deleted: true });
+      else if (name.startsWith('list')) expect(result).toEqual([expect.objectContaining({ snapshotId: expect.any(String), conversationId })]);
+      else if (name === 'get') expect(result).toMatchObject({ conversationId, messages: [expect.objectContaining({ content: 'Canonical private text' })] });
+      else expect(result).toMatchObject({ snapshotId: expect.any(String), conversationId });
+    } else if (name === 'checkAccess') expect(result).toMatchObject({ hasAccess: true, permissions: { canView: true } });
+    else if (name.startsWith('list')) expect(result).toEqual([expect.objectContaining({ shareId: expect.any(String), conversationId })]);
+    else expect(result).toMatchObject({ shareId: expect.any(String), conversationId, status: name === 'revoke' ? 'revoked' : 'active' });
+    expect(f.db.table('conversations')).toEqual([]); expect(f.db.table('conversationShares')).toEqual([]); expect(f.db.table('conversationSnapshots')).toEqual([]);
+    expect(JSON.stringify(result)).not.toMatch(/authorityReference|threadId|PROVIDER_SECRET|HIDDEN/);
+  });
+  it('same-ID foreign ownership and forged actor labels cannot expose or change canonical history', async () => {
+    const { f, args, module, name } = await transcriptCase(call);
+    if (module === 'conversations' && ['create', 'getOrCreate'].includes(name)) (args.participants as { userId: string }).userId = 'forged-owner';
+    else f.db.table('runtimeConversations')[0].ownerPrincipalId = 'foreign-principal';
+    const writes = f.db.writes; const effects = { ...f.effects };
+    const result = await f.call(call.registration, args).then(value => ({ resolved: true, value }), (error: unknown) => ({ resolved: false, error }));
+    if (!result.resolved) expect((result as { error: unknown }).error).toMatchObject({ data: { code: 'FORBIDDEN' } });
+    else {
+      const value = (result as { value: unknown }).value;
+      if (module === 'conversations' && name === 'count') expect(value).toBe(0);
+      else if (module === 'conversations' && name === 'list') expect(value).toMatchObject({ total: 0, conversations: [] });
+      else if (module === 'conversations' && name === 'deleteMany') expect(value).toMatchObject({ deleted: 0, wouldDelete: 0 });
+      else if (module === 'conversations' && name === 'exportConversations') expect(value).toMatchObject({ count: 0, data: '[]' });
+      else if (call.path === 'conversations:findConversation') expect(value).toBeNull();
+      else expect(value).toEqual([]);
     }
-  }
+    expect(f.db.writes).toBe(writes); expect(f.effects).toEqual(effects);
+    expect(f.db.table('conversations')).toEqual([]);
+  });
+  it.each(['grant', 'principal', 'membership', 'scope', 'expiry', 'tombstone'])('late %s cannot use the pinned admitted generation', async variant => {
+    const { f, args } = await transcriptCase(call); const writes = f.db.writes; const effects = { ...f.effects };
+    const get = f.db.get.bind(f.db); let hit = false;
+    f.db.get = async (table, id) => {
+      if (!hit && table === 'runtimeAuthPrincipals') {
+        hit = true;
+        if (variant === 'grant') f.grant.version = 2;
+        if (variant === 'principal') f.principal.version = 2;
+        if (variant === 'membership') f.membership.version = 2;
+        if (variant === 'scope') f.db.table('runtimeAuthScopes')[1].epoch = 2;
+        if (variant === 'expiry') f.grant.expiresAt = Date.now();
+        if (variant === 'tombstone') f.db.seed('runtimeAuthTombstones', { tenantId: 'tenant-a', memorySpaceId: 'space-a', resourceType: 'memorySpace', resourceId: 'space-a', deletedAt: 1 });
+      }
+      return await get(table, id);
+    };
+    const result = await f.call(call.registration, args).then(value => ({ resolved: true, value }), (error: unknown) => ({ resolved: false, error }));
+    expect(hit).toBe(true);
+    if (!result.resolved) expect((result as { error: unknown }).error).toMatchObject({ data: { code: 'FORBIDDEN' } });
+    else {
+      // Scoped list adapters deliberately omit rows whose pinned authority is stale.
+      const value = (result as { value: unknown }).value;
+      if (call.path === 'conversations:count') expect(value).toBe(0);
+      else if (call.path === 'conversations:list') expect(value).toMatchObject({ total: 0, conversations: [] });
+      else if (call.path === 'conversations:deleteMany') expect(value).toMatchObject({ deleted: 0, wouldDelete: 0 });
+      else if (call.path === 'conversations:exportConversations') expect(value).toMatchObject({ count: 0, data: '[]' });
+      else if (call.path === 'conversations:findConversation') expect(value).toBeNull();
+      else expect(value).toEqual([]);
+    }
+    expect(f.db.writes).toBe(writes); expect(f.effects).toEqual(effects);
+  });
+  it('denies an ambiguous omitted scope without writes or native effects', async () => {
+    const { f, args } = await transcriptCase(call); delete args.tenantId;
+    const fields = (JSON.parse(call.registration.exportArgs()) as { value: Record<string, { optional: boolean }> }).value;
+    if (fields.memorySpaceId.optional) delete args.memorySpaceId;
+    assertCurrentArgs(call, args);
+    const membership = f.db.seed('runtimeAuthMemberships', { ...f.membership, _id: 'runtimeAuthMemberships:second', tenantId: 'tenant-b' });
+    f.db.seed('runtimeAuthScopes', { tenantId: 'tenant-b', epoch: 1 }); f.db.seed('runtimeAuthScopes', { tenantId: 'tenant-b', memorySpaceId: 'space-a', epoch: 1 });
+    f.db.seed('runtimeAuthGrants', { ...f.grant, _id: 'runtimeAuthGrants:second', membershipId: membership._id, tenantId: 'tenant-b' });
+    const writes = f.db.writes; const effects = { ...f.effects };
+    await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+    expect(f.db.writes).toBe(writes); expect(f.effects).toEqual(effects);
+  });
+});
+it('internal share expiry checks its exact metadata before scheduling, with no public alias', async () => {
+  const f = await transcriptCase(calls.find(call => call.path === 'conversationShares:get')!);
+  const row = f.f.db.table('runtimeConversationShares')[0]; row.expiresAt = Date.now() + 1000;
+  await f.f.call(shares.expireGraphShare, { tenantId: 'tenant-a', memorySpaceId: 'space-a', shareId: f.share.shareId, expiresAt: row.expiresAt });
+  expect(f.f.scheduled.at(-1)).toMatchObject({ name: 'conversationShares:expireGraphShare', args: { expiresAt: row.expiresAt } });
+  const scheduled = f.f.scheduled.length;
+  await f.f.call(shares.expireGraphShare, { tenantId: 'tenant-b', memorySpaceId: 'space-a', shareId: f.share.shareId, expiresAt: row.expiresAt });
+  expect(f.f.scheduled).toHaveLength(scheduled);
 });

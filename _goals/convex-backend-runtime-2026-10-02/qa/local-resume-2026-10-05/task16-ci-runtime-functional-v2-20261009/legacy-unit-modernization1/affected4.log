@@ -1,0 +1,247 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:21204) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeUnavailableAuth/closure.test.ts (5.828 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● conversations:findConversation managed outcome › uses only the canonical managed transcript and protected metadata
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "participants",
+    + ]
+
+      134 | export function assertCurrentArgs(call: NativeCall, args: Record<string, unknown>) {
+      135 |   const fields = (JSON.parse(call.registration.exportArgs()) as { value: Record<string, { optional: boolean }> }).value;
+    > 136 |   expect(Object.keys(args).filter(key => !(key in fields))).toEqual([]);
+          |                                                             ^
+      137 |   for (const [key, field] of Object.entries(fields)) if (!field.optional) expect(args[key]).toBeDefined();
+      138 | }
+      139 |
+
+      at assertCurrentArgs (tests/helpers/current-closure-fixtures.ts:136:61)
+      at Object.<anonymous> (tests/unit/runtimeUnavailableAuth/closure.test.ts:197:5)
+
+PASS tests/unit/memory-observer.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/tenant-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.8s | 1186/1187 passed | /tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ✅     2.2s | 356/356 passed | /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ✅     0.6s | 20/20 passed | /tests/unit/memory-observer.test.ts
+  ✅     0.3s | 2/2 passed | /tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ✅     0.2s | 17/17 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+  ✅     0.2s | 3/3 passed | /tests/unit/tenant-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 0.6%) - Memory Orchestration Observer Edge Cases handles async observer methods
+    /tests/unit/memory-observer.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.3%) - conversations:addMessage managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.2%) - artifacts:completeArtifactUpload uses the current catalog and produces its protected outcome without raw-storage delivery
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.2%) - conversations:addMessage managed outcome denies an ambiguous omitted scope without writes or native effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.1%) - attachments:getByConversation late membership fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.1%) - conversations:approveMessage managed outcome late grant cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.1%) - conversations:getHistory managed outcome late membership cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks observer.onRememberStart is called (not onOrchestrationStart)
+    /tests/unit/memory-observer.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - attachments:getByIds late principal fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - conversations:deleteConversation managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - conversationSnapshots:create managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks all layer events include phase: 'remember'
+    /tests/unit/memory-observer.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks observer.onRememberComplete called (not onOrchestrationComplete)
+    /tests/unit/memory-observer.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks remember works without observer
+    /tests/unit/memory-observer.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks emits layer events for key remember layers
+    /tests/unit/memory-observer.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks layer events progress from in_progress to complete
+    /tests/unit/memory-observer.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks observer errors don't fail remember operation
+    /tests/unit/memory-observer.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - conversations:addMessage managed outcome late grant cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - conversations:rejectMessage managed outcome late membership cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - conversationShares:listByConversation managed outcome same-ID foreign ownership and forged actor labels cannot expose or change canonical history
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.28s (3.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      9.42s
+  Test suites:        6
+  Individual tests:   723
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 5 passed, 6 total
+Tests:       1 failed, 1584 passed, 1585 total
+Snapshots:   0 total
+Time:        9.42 s
+Ran all test suites within paths "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts", "tests/unit/runtimeArtifactAuth/inventory.test.ts", "tests/unit/tenant-scope.test.ts", "tests/unit/runtimeAuth/provisioning.test.ts", "tests/unit/memory-observer.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/legacy-unit-modernization1/affected4-results.json

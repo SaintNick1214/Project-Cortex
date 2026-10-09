@@ -30,8 +30,12 @@ const envPaths = [
   path.resolve(currentDir, "../../../../.env"),
 ];
 
-for (const envPath of envPaths) {
-  dotenv.config({ path: envPath });
+// Keep explicitly selected CI/actual test environments isolated from local files.
+const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+if (!explicitEnvironment) {
+  for (const envPath of envPaths) {
+    dotenv.config({ path: envPath });
+  }
 }
 
 // Extend Jest timeout for E2E tests (individual tests can override)

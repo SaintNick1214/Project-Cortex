@@ -1,0 +1,45 @@
+{
+  "status": "CURRENT_SELECTED_SOURCE_CONTROLS_PASS",
+  "controlledCases": 33,
+  "failed": 0,
+  "skipped": 0,
+  "typesRequired": false,
+  "syntaxExitCode": 0,
+  "scopedLintExitCode": 0,
+  "initialLintScope": "project ignores scripts; original lint1 warning retained, actual lint2 used explicit --no-ignore",
+  "commands": [
+    "node --test scripts/ci/verify-disposable-targets.test.mjs scripts/ci/runtime-fixtures.test.mjs scripts/ci/workflow-runtime-fixtures.test.mjs",
+    "node --check scripts/ci/workflow-runtime-fixtures.test.mjs",
+    "node node_modules/eslint/bin/eslint.js --no-ignore scripts/ci/workflow-runtime-fixtures.test.mjs"
+  ],
+  "pins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.github/workflows/pr-checks.yml",
+      "bytes": 36983,
+      "sha256": "8c7d95d74b7dd923a6ed8075f766412d265e693b5b44787573168284ea2485fe"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/workflow-runtime-fixtures.test.mjs",
+      "bytes": 5319,
+      "sha256": "2bba1fcbfc842750b02e45d0ce7377082ad9152f361c63dafb8bd32387ba74b4"
+    }
+  ],
+  "rawLogs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-activation1/source-controls1.log",
+      "bytes": 3025,
+      "sha256": "a6ec30ade52c56dde33e1f8c602296648f4b8242c5a0a8a336f06858c76f5ae3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-activation1/source-lint1.log",
+      "bytes": 325,
+      "sha256": "61674dfe9132ee287c0cebc6de98dfb67d77ffb3c566e91cc99e969c1e058efb"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-activation1/source-lint2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "serviceOrModelCalls": 0
+}

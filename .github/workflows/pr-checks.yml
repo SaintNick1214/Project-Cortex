@@ -239,6 +239,7 @@ jobs:
   # STAGE 2: Deploy Convex & Purge Database (runs once before all tests)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   setup-and-purge:
+    timeout-minutes: 15
     env:
       CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
       CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}
@@ -371,6 +372,7 @@ jobs:
   # STAGE 3: TypeScript SDK Tests (sharded across 5 parallel runners)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-typescript:
+    timeout-minutes: 15
     env:
       CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
       CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}
@@ -420,28 +422,39 @@ jobs:
           npm install --global npm@12.2.0
           npm ci
 
-      # Stagger shard starts to reduce concurrent load on shared Convex backend.
-      # 2-second increments allow each runner to begin its test subset
-      # before the next starts, avoiding thundering herd on database operations.
-      - name: Stagger shard start
-        run: |
-          DELAY=$(( (${{ matrix.shard }} - 1) * 2 ))
-          echo "Staggering shard ${{ matrix.shard }} start by ${DELAY}s"
-          sleep $DELAY
+      - name: Preserve complete SDK test discovery (legacy live tests are not current runtime acceptance)
+        run: node --experimental-vm-modules node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-sdk-discovery.json
+        env:
+          CONVEX_URL: https://unit.invalid
+          CONVEX_URL_CLI: https://unit.invalid
 
-      - name: Issue scoped verified-host JWTs into private runner environment
-        run: node scripts/ci/runtime-fixtures.mjs tokens sdk
-
-      - name: Run tests (shard ${{ matrix.shard }}/5)
+      - name: Run every current SDK unit suite (shard ${{ matrix.shard }}/5)
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js \
-            --testPathIgnorePatterns=debug \
+            --testPathPatterns=tests/unit/ \
             --shard=${{ matrix.shard }}/5 \
-            --maxWorkers=75%
+            --maxWorkers=75% --forceExit=false
         env:
-          CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          CONVEX_TEST_MODE: managed
+          CONVEX_URL: https://unit.invalid
+          CONVEX_URL_CLI: https://unit.invalid
+          CORTEX_CI_AUTH_PRIVATE_KEY: ""
+
+      - name: Issue scoped verified-host JWTs for the single SDK actual suite
+        if: matrix.shard == 1
+        run: node scripts/ci/runtime-fixtures.mjs tokens sdk
+
+      - name: Run authenticated registered SDK runtime integration (no legacy app-side model loop)
+        if: matrix.shard == 1
+        run: timeout --signal=TERM --kill-after=5s 240s node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/integration/runtime-ci.test.ts --runInBand --forceExit=false --json --outputFile=ci-sdk-runtime-results.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-sdk-discovery-and-runtime-${{ matrix.shard }}
+          path: |
+            ci-sdk-discovery.json
+            ci-sdk-runtime-results.json
+          retention-days: 14
 
       # Only build package once (on shard 1 to avoid redundant builds)
       - name: Build package
@@ -451,6 +464,7 @@ jobs:
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-vercel-ai-provider:
+    timeout-minutes: 15
     env:
       CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
       CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}
@@ -501,17 +515,53 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
-      - name: Run Vercel AI Provider tests
-        run: npm test --workspace=@cortexmemory/vercel-ai-provider
+      - name: Preserve complete provider discovery (legacy direct-provider E2E is not selected)
+        working-directory: packages/vercel-ai-provider
+        run: node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-provider-discovery.json
         env:
-          CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CONVEX_URL: https://unit.invalid
+          CONVEX_URL_CLI: https://unit.invalid
+
+      - name: Run provider unit, React, remote and mocked integration contracts
+        run: |
+          npm run test:unit --workspace=@cortexmemory/vercel-ai-provider -- --runInBand --forceExit=false
+          npm run test:integration --workspace=@cortexmemory/vercel-ai-provider -- --runInBand --forceExit=false
+        env:
+          CONVEX_URL: https://unit.invalid
+          CONVEX_URL_CLI: https://unit.invalid
+          CORTEX_CI_AUTH_PRIVATE_KEY: ""
+          CORTEX_TEST_FIXTURE: ""
+          CORTEX_TEST_AUTH_TOKEN: ""
+          CORTEX_TEST_READER_TOKEN: ""
+          CORTEX_TEST_OUTSIDER_TOKEN: ""
+
+      - name: Build Vercel AI Provider declared package exports
+        run: npm run build --workspace=@cortexmemory/vercel-ai-provider
+
+      - name: Publish and verify the existing qualified V1 remote Agent with scoped owner authority
+        run: timeout --signal=TERM --kill-after=5s 30s node scripts/ci/remote-agent.mjs > ci-provider-agent.json
+        env:
+          CORTEX_CI_AUTH_PRIVATE_KEY: ""
+
+      - name: Exercise one actual backend remote request through the official AI SDK7 parser
+        working-directory: packages/vercel-ai-provider
+        run: timeout --signal=TERM --kill-after=5s 210s node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects e2e-remote --runTestsByPath tests/e2e/remote-runtime.test.ts --runInBand --forceExit=false --watchman=false --json --outputFile=ci-provider-remote-results.json
+        env:
+          CORTEX_CI_AUTH_PRIVATE_KEY: ""
+          DEBUG: "true"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-provider-discovery-and-runtime
+          path: |
+            ci-provider-agent.json
+            packages/vercel-ai-provider/ci-provider-discovery.json
+            packages/vercel-ai-provider/ci-provider-remote-results.json
+          retention-days: 14
 
       - name: Lint Vercel AI Provider
         run: npm run lint --workspace=@cortexmemory/vercel-ai-provider
-
-      - name: Build Vercel AI Provider
-        run: npm run build --workspace=@cortexmemory/vercel-ai-provider
 
       - name: Verify package contents
         run: npm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider
@@ -520,6 +570,7 @@ jobs:
   # STAGE 3: CLI Tests (parallel with other test jobs)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-cli:
+    timeout-minutes: 15
     env:
       CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
       CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}
@@ -567,17 +618,34 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
+      - name: Preserve complete CLI test discovery (legacy unauthenticated workflows are not selected)
+        working-directory: packages/cortex-cli
+        run: node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-cli-discovery.json
+        env:
+          CONVEX_URL: https://unit.invalid
+          CONVEX_URL_CLI: https://unit.invalid
+
+      - name: Run CLI unit and command contracts without live credentials
+        run: npm run test:fast --workspace=@cortexmemory/cli -- --runInBand --forceExit=false
+        env:
+          CONVEX_URL: https://unit.invalid
+          CONVEX_URL_CLI: https://unit.invalid
+          CORTEX_CI_AUTH_PRIVATE_KEY: ""
+
       - name: Issue scoped verified-host JWTs into private runner environment
         run: node scripts/ci/runtime-fixtures.mjs tokens cli
 
-      - name: Run CLI unit tests
-        run: npm run test:unit --workspace=@cortexmemory/cli
+      - name: Run authenticated registered runtime integration on the distinct CLI target
+        run: timeout --signal=TERM --kill-after=5s 240s node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/integration/runtime-ci.test.ts --runInBand --forceExit=false --json --outputFile=ci-cli-runtime-results.json
 
-      - name: Run CLI E2E tests
-        run: npm run test:e2e --workspace=@cortexmemory/cli
-        env:
-          CONVEX_URL_CLI: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
-          CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-cli-discovery-and-runtime
+          path: |
+            packages/cortex-cli/ci-cli-discovery.json
+            ci-cli-runtime-results.json
+          retention-days: 14
 
       - name: Lint CLI
         run: npm run lint --workspace=@cortexmemory/cli
@@ -605,10 +673,11 @@ jobs:
         run: npm pack --dry-run --workspace=@cortexmemory/cli
 
   cleanup-runtime-fixtures:
+    timeout-minutes: 10
     name: Retire exact CI fixture authority
     runs-on: ubuntu-latest
     needs: [setup-and-purge, code-quality, test-typescript, test-vercel-ai-provider, test-cli]
-    if: always() && (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'failure')
+    if: always() && (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'failure' || needs.setup-and-purge.result == 'cancelled')
     env:
       CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
       CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}

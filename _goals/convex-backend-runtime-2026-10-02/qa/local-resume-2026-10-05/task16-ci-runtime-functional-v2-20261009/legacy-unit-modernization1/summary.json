@@ -1,0 +1,105 @@
+{
+  "generatedAtUtc": "2026-10-09T05:12:06.129207+00:00",
+  "scope": "Six assigned root SDK unit fixtures plus one test-only helper",
+  "branch": "feat/convex-backend-runtime-completion",
+  "head": "66d8e43ba8d3056bd41aa8a6beb85a8a3162e658",
+  "candidateSha256": "26d4cf31311859c0eec0a6f26bd57879734aebc68b0f8c377b7b6d9e6b7258be",
+  "files": {
+    "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts": "5fdf540dcb114b36890d35a9cef04e207b322e491110ab2ab832b095359d1336",
+    "tests/unit/runtimeUnavailableAuth/closure.test.ts": "cde07a2f41c01ce143f13a781495b2e404cc3f77be92029483556909e8f34ee7",
+    "tests/unit/runtimeArtifactAuth/inventory.test.ts": "e45f2ae11e9b25155ac735dbdb41fcbf6f4b8c8b0ae1e3a58a0c92f1491341f9",
+    "tests/unit/tenant-scope.test.ts": "92be4fbb92206665ae8faeae233d7abe861d21ca96d879e6287330390984b12d",
+    "tests/unit/runtimeAuth/provisioning.test.ts": "26ed0b9f12f25c94bafff281cc8ee853e05c5dd9758d009b4dc9051b35db8f70",
+    "tests/unit/memory-observer.test.ts": "b46b366331bfc37b8022a7b3555ccdfeec583d1a71bab53fa75a3b4977d30f45",
+    "tests/helpers/current-closure-fixtures.ts": "604d64dcd1ee0ced53cea44eb882320fe6f64f56c448f36840c00add525223c3"
+  },
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "typescript": "6.0.3",
+  "eslint": "10.11.0",
+  "jest": "30.5.2",
+  "preimagesVerified": true,
+  "originalObserverBodyPreserved": true,
+  "originalObserverBodySha256": "98545cbb79bc37ee7d0543ea6d0059135eb2fb173bd6789f8af2904534514bdb",
+  "tests": {
+    "passed": 1585,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 6,
+    "byFile": [
+      {
+        "path": "tests/unit/runtimeUnavailableAuth/closure.test.ts",
+        "status": "passed",
+        "tests": 1187
+      },
+      {
+        "path": "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+        "status": "passed",
+        "tests": 356
+      },
+      {
+        "path": "tests/unit/memory-observer.test.ts",
+        "status": "passed",
+        "tests": 20
+      },
+      {
+        "path": "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+        "status": "passed",
+        "tests": 2
+      },
+      {
+        "path": "tests/unit/runtimeAuth/provisioning.test.ts",
+        "status": "passed",
+        "tests": 17
+      },
+      {
+        "path": "tests/unit/tenant-scope.test.ts",
+        "status": "passed",
+        "tests": 3
+      }
+    ]
+  },
+  "checks": {
+    "affected5": {
+      "receipt": "affected5-command.json",
+      "exitCode": 0,
+      "elapsedMs": 11863,
+      "timedOut": false,
+      "processClosed": true
+    },
+    "type5": {
+      "receipt": "type5-command.json",
+      "exitCode": 0,
+      "elapsedMs": 12858,
+      "timedOut": false,
+      "processClosed": true
+    },
+    "lint5": {
+      "receipt": "lint5-command.json",
+      "exitCode": 0,
+      "elapsedMs": 6778,
+      "timedOut": false,
+      "processClosed": true
+    }
+  },
+  "ownedProcessClosure": [
+    {
+      "pid": 21550,
+      "exists": false
+    },
+    {
+      "pid": 21571,
+      "exists": false
+    },
+    {
+      "pid": 21572,
+      "exists": false
+    }
+  ],
+  "actualService": false,
+  "fullRootGate": false,
+  "noProductWrites": true,
+  "noGitMutations": true,
+  "historicalFailuresRelabeled": false,
+  "nativeBuildPackServices": "Coordinator/native task ownership, outside this scope"
+}

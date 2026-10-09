@@ -1,0 +1,29 @@
+Running one project: e2e-remote
+(node:30506) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL e2e-remote tests/e2e/remote-runtime.test.ts
+  ✕ one verified remote request retains canonical AI SDK7 output, reconnects/replays its existing handle and denies a signed outsider
+
+  ● one verified remote request retains canonical AI SDK7 output, reconnects/replays its existing handle and denies a signed outsider
+
+    ACTUAL_RUNTIME_FIXTURE_REQUIRED: provision scoped dev fixtures and issue verified-host JWTs before this suite
+
+    [0m [90m  8 |[39m   identities[33m:[39m [33mRecord[39m[33m<[39m[33mFixtureRole[39m[33m,[39m { subject[33m:[39m string[33m;[39m tenantId[33m:[39m string[33m;[39m memorySpaceId[33m:[39m string }[33m>[39m[33m;[39m
+     [90m  9 |[39m }
+    [31m[1m>[22m[39m[90m 10 |[39m [36mconst[39m fail [33m=[39m ()[33m:[39m never [33m=>[39m { [36mthrow[39m [36mnew[39m [33mError[39m([32m"ACTUAL_RUNTIME_FIXTURE_REQUIRED: provision scoped dev fixtures and issue verified-host JWTs before this suite"[39m)[33m;[39m }[33m;[39m
+     [90m    |[39m                                   [31m[1m^[22m[39m
+     [90m 11 |[39m [36mfunction[39m record(value[33m:[39m unknown)[33m:[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m [33m|[39m undefined {
+     [90m 12 |[39m   [36mreturn[39m value [33m!==[39m [36mnull[39m [33m&&[39m [36mtypeof[39m value [33m===[39m [32m"object"[39m [33m&&[39m [33m![39m[33mArray[39m[33m.[39misArray(value) [33m?[39m value [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m [33m:[39m undefined[33m;[39m
+     [90m 13 |[39m }[0m
+
+      at fail (../../tests/helpers/runtime-fixtures.ts:10:35)
+      at actualRuntimeFixture (../../tests/helpers/runtime-fixtures.ts:18:89)
+      at configuration (tests/e2e/remote-runtime.test.ts:19:19)
+      at Object.<anonymous> (tests/e2e/remote-runtime.test.ts:49:18)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        1.42 s
+Ran all test suites within paths "tests/e2e/remote-runtime.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-remote-prereq-outcomes1.json

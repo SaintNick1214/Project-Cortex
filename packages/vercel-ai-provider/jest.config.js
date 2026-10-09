@@ -6,6 +6,7 @@
  * - unit-remote: ESM tests using the actual AI SDK 7 stream parser
  * - integration: Integration tests with mocked SDK but real component interactions
  * - e2e: End-to-end tests with real Convex backend and LLM calls
+ * - e2e-remote: Verified backend-owned runtime contract, without application inference keys
  */
 
 const baseConfig = {
@@ -85,7 +86,7 @@ export default {
       },
     },
     {
-      ...baseConfig,
+      ...commonJsConfig,
       displayName: "integration",
       testMatch: ["<rootDir>/tests/integration/**/*.test.ts"],
       testTimeout: 30000,
@@ -97,10 +98,25 @@ export default {
       ...baseConfig,
       displayName: "e2e",
       testMatch: ["<rootDir>/tests/e2e/**/*.test.ts"],
+      testPathIgnorePatterns: ["<rootDir>/tests/e2e/remote-runtime\\.test\\.ts$"],
       testTimeout: 180000, // 3 minutes for E2E tests hitting real APIs
       testEnvironmentOptions: {
         JEST_PROJECT: "e2e",
       },
+    },
+    {
+      ...baseConfig,
+      displayName: "e2e-remote",
+      testMatch: ["<rootDir>/tests/e2e/remote-runtime.test.ts"],
+      testTimeout: 180000,
+      transform: {
+        "^.+\\.tsx?$": ["ts-jest", { useESM: true, tsconfig: {
+          rootDir: "../..", target: "ES2022", module: "ESNext", moduleResolution: "bundler",
+          lib: ["ES2023", "DOM"], strict: true, esModuleInterop: true, skipLibCheck: true,
+          jsx: "react-jsx", types: ["node", "jest"],
+        } }],
+      },
+      testEnvironmentOptions: { JEST_PROJECT: "e2e-remote" },
     },
   ],
   // Coverage thresholds

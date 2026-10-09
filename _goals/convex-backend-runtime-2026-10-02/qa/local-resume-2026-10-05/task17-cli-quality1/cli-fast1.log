@@ -1,0 +1,544 @@
+npm notice run @cortexmemory/cli@0.37.0 test:fast
+npm notice run node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects unit commands --runInBand --forceExit=false --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-cli-quality1/cli-fast1-results.json
+Running 2 projects:
+- commands
+- unit
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:30745) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS commands tests/commands/setup-status.test.ts
+  setup and status commands
+    setup command parsing
+      ✓ should parse setup command (2 ms)
+      ✓ should parse setup --auto
+      ✓ should parse setup --local
+      ✓ should parse setup --cloud
+    config command parsing
+      ✓ should parse config show (1 ms)
+      ✓ should parse config show with JSON format
+      ✓ should parse config set (1 ms)
+      ✓ should parse config test
+      ✓ should parse config deployments
+      ✓ should parse config path
+    status command parsing
+      ✓ should parse status command
+      ✓ should parse status with JSON format
+      ✓ should parse status --check
+      ✓ should parse status --verbose
+
+PASS commands tests/commands/memory.test.ts
+  memory commands
+    argument parsing
+      ✓ should parse memory list command with required space (1 ms)
+      ✓ should parse memory list with all options
+      ✓ should require space option for list (6 ms)
+      ✓ should parse search command with query
+      ✓ should parse get command with memory ID
+      ✓ should parse delete command with cascade option (1 ms)
+    default values
+      ✓ should use default limit of 50
+      ✓ should use default format of table
+      ✓ should override defaults with explicit values
+
+PASS commands tests/commands/spaces.test.ts
+  spaces commands
+    argument parsing
+      ✓ should parse spaces list command (2 ms)
+      ✓ should parse spaces list with filters (1 ms)
+      ✓ should parse spaces create with required type
+      ✓ should parse spaces create with all options (1 ms)
+      ✓ should require type for create (1 ms)
+      ✓ should parse spaces get with space ID (1 ms)
+      ✓ should parse spaces delete with cascade
+      ✓ should parse spaces archive with reason
+      ✓ should parse add-participant with required options
+
+PASS commands tests/commands/conversations.test.ts
+  conversations commands
+    argument parsing
+      ✓ should parse conversations list (1 ms)
+      ✓ should parse conversations list with alias (1 ms)
+      ✓ should parse conversations list with filters
+      ✓ should parse conversations get
+      ✓ should parse conversations get with message limit
+      ✓ should parse conversations delete
+      ✓ should parse conversations export
+      ✓ should parse conversations count
+
+PASS commands tests/commands/facts.test.ts
+  facts commands
+    argument parsing
+      ✓ should parse facts list with required space (2 ms)
+      ✓ should parse facts list with type filter
+      ✓ should require space for list (1 ms)
+      ✓ should parse facts search with query
+      ✓ should parse facts get with fact ID
+      ✓ should parse facts delete with confirmation skip
+      ✓ should parse facts export with all options
+
+PASS commands tests/commands/db.test.ts
+  db commands
+    argument parsing
+      ✓ should parse db stats command (2 ms)
+      ✓ should parse db stats with JSON format (1 ms)
+      ✓ should parse db clear with confirmation skip
+      ✓ should parse db backup with options
+      ✓ should parse db restore with required input
+      ✓ should parse db restore with dry-run
+      ✓ should require input for restore (1 ms)
+      ✓ should parse db export with options (1 ms)
+      ✓ should parse global deployment option
+
+PASS commands tests/commands/users.test.ts
+  users commands
+    argument parsing
+      ✓ should parse users list command (2 ms)
+      ✓ should parse users list with custom limit
+      ✓ should parse users list with --no-stats
+      ✓ should parse users get with user ID (1 ms)
+      ✓ should parse users get with --include-history
+      ✓ should parse users delete with cascade option
+      ✓ should parse users delete with dry-run
+      ✓ should parse users delete-many with multiple IDs (1 ms)
+
+  console.log
+    [2m   Preserved existing convex.json[22m
+
+      at createConvexJson (src/utils/init/file-operations.ts:62:13)
+
+PASS unit src/utils/__tests__/additive-backend.test.ts
+  additive backend installation
+    ✓ registers a fresh host with explicit verified JWT settings and keeps runtime directives (14 ms)
+    ✓ rejects an ordinary scanned component helper before host writes (6 ms)
+    ✓ preserves a custom directory, unrelated tables/indexes, schema options, functions, auth, HTTP and components (8 ms)
+    ✓ retries a complete installation without writes, duplicate schema spreads or duplicate providers (7 ms)
+    ✓ imports every declared component directly from the root config, including Workflow (7 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (3 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (4 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (3 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (4 ms)
+    ✓ an atomic schema-write failure retains the original host schema and supports partial retry (7 ms)
+    ✓ recovers an interrupted per-file install by replanning identical completed files (5 ms)
+    ✓ refuses schema.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses schema.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses schema.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses runs.ts conflicts before product writes and publishes a precise merge proposal (4 ms)
+    ✓ preserves existing provider configuration on conflicting issuer settings (3 ms)
+    ✓ detects a host edit after planning before any installation writes (6 ms)
+    ✓ refuses out-of-project custom directories and symbolic links (3 ms)
+    ✓ refuses tampered distribution sources before product writes (3 ms)
+    ✓ supports official inline public JWKS while retaining the explicit audience (4 ms)
+    ✓ rejects private material in inline JWKS before any installation writes (3 ms)
+    ✓ requires an explicit application audience for a new Cortex provider (3 ms)
+    ✓ reports absent auth as incomplete capability rather than installing permissive auth (4 ms)
+    ✓ createConvexJson preserves existing custom configuration byte-for-byte (8 ms)
+  additive authenticated HTTP routes
+    ✓ installs a fresh real Convex router and retries without duplicate routes or writes (26 ms)
+    ✓ preserves custom host HTTP handlers and permits a different method on the same path (12 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ rejects wrong, duplicate or deferred managed registration without adopting it (3 ms)
+    ✓ rejects wrong, duplicate or deferred managed registration without adopting it (4 ms)
+    ✓ rejects wrong, duplicate or deferred managed registration without adopting it (3 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (3 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (3 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (3 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (3 ms)
+    ✓ rejects computed helper handlers instead of executing arbitrary router mutations (3 ms)
+    ✓ retains host HTTP after atomic write failure and recovers a partial install once (11 ms)
+    ✓ checks the host HTTP preimage before installing any source (3 ms)
+  additive fixed media webhook
+    ✓ composes all five real router registrations while preserving a custom host and zero-write retry (11 ms)
+    ✓ accepts a direct named alias of only the fixed webhook export (7 ms)
+    ✓ rejects an unqualified media import before any host write: import { arbitrary as videoWebhook } from "../runtimeMediaHttp"; (4 ms)
+    ✓ rejects an unqualified media import before any host write: import videoWebhook from "../runtimeMediaHttp"; (3 ms)
+    ✓ rejects an unqualified media import before any host write: import * as videoWebhook from "../runtimeMediaHttp"; (3 ms)
+    ✓ rejects an unqualified media import before any host write: import { videoWebhook } from "../foreign"; (3 ms)
+    ✓ binds the new handler exclusively to its fixed route: GET /cortex/media/video/webhook (3 ms)
+    ✓ binds the new handler exclusively to its fixed route: POST /cortex/arbitrary (4 ms)
+    ✓ binds the new handler exclusively to its fixed route: POST /cortex/media/video/webhook (3 ms)
+    ✓ rejects overlapping local bindings from the asset and media modules (3 ms)
+    ✓ preserves a conflicting host exact or prefix route before all source writes (4 ms)
+    ✓ preserves a conflicting host exact or prefix route before all source writes (3 ms)
+    ✓ rejects a manifest omitting the fifth helper route before installation (3 ms)
+    ✓ rejects a webhook module missing from the digest-bound source manifest (3 ms)
+  generated Convex module layout
+    ✓ installs valid shared paths with working rewritten imports, original provenance and unchanged public/host bindings (195 ms)
+    ✓ rejects a file normalization collision before replacing any previous distribution (138 ms)
+    ✓ rejects a directory normalization collision before replacing any previous distribution (133 ms)
+
+PASS commands tests/commands/host-retry.test.ts
+  ✓ never retries a committed retained user version after uncertain post-effect session delivery (3 ms)
+
+  console.log
+    [32m   Preserved host environment and configured runtime endpoints[39m
+
+      at createEnvFile (src/utils/init/env-generator.ts:72:11)
+
+  console.log
+    [36m
+       Installing Vercel AI quickstart...[39m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:227:11)
+
+  console.log
+    [36m
+       Installing Vercel AI quickstart...[39m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:227:11)
+
+- Copying quickstart files...
+✔ Quickstart files copied
+- Configuring package.json...
+✔ Package.json configured
+  console.log
+    [2m   Configured runtime endpoint; backend/auth/private HTTP readiness remains required[22m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:246:11)
+
+  console.log
+    [2m   Added 'quickstart' script to package.json[22m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:250:11)
+
+PASS unit src/utils/__tests__/backend-setup.test.ts
+  modern additive setup
+    ✓ real plan/install retains custom host functions, schema, config, auth, HTTP, env and scripts (15 ms)
+    ✓ fresh command installs the exact reviewed JWT provider without claiming live capability (5 ms)
+    ✓ an ambiguous host merge produces a proposal before any backend/env/script write (4 ms)
+    ✓ operator register refuses management-verified production before any command dispatch (4 ms)
+    ✓ configure appends only public metadata and preserves exact existing env bytes/idempotence (2 ms)
+    ✓ configure writes the HTTP endpoint key consumed by the runtime quickstart (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"OPENAI_API_KEY":"private"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_TOKEN":"private"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CONVEX_URL":"https://user:secret@safe.convex.cloud"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CONVEX_URL":"https://safe.convex.cloud?token=private"} before writes (1 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CORTEX_HTTP_URL":"https://safe.convex.site/path"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CORTEX_AGENT_ID":"id\nTOKEN=private"} before writes (1 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CORTEX_AGENT_VERSION":"0"} before writes (2 ms)
+    ✓ init env and quickstart env have no inference credentials and preserve host scripts/env (3 ms)
+    ✓ quickstart refuses an existing host-owned app before any template overwrite or backend copy (3 ms)
+    ✓ local quickstart preparation copies the actual app without any backend, credential or host-script overwrite (14 ms)
+    ✓ explicit setup JSON validates closed provider/target/grant fields and rejects unsupported selectors (2 ms)
+  development lifecycle authority
+    ✓ removes inherited production authority and pins an explicitly matching development key (2 ms)
+    ✓ refuses prod:safe|private on start without spawning or production deployment (1 ms)
+    ✓ refuses legacy-private on start without spawning or production deployment (2 ms)
+    ✓ refuses dev:foreign|private on start without spawning or production deployment (2 ms)
+    ✓ refuses dev:safe|private
+INJECT=value on start without spawning or production deployment (1 ms)
+
+PASS unit src/utils/__tests__/config-validation.test.ts
+  validateAndCleanConfig
+    ✓ should return modified=false when config is valid and unchanged (1 ms)
+    ✓ should remove deployments with missing projectPath
+    ✓ should remove apps with missing path
+    ✓ should reassign default to alphabetically first deployment when default is removed
+    ✓ should set default to empty string when all deployments are removed
+    ✓ should keep default unchanged when a non-default deployment is removed
+    ✓ should retain host deployment on session auth error (401)
+    ✓ should retain host deployment on session auth error (403) (1 ms)
+    ✓ should retain host deployment on session auth error (message contains "unauthorized")
+    ✓ should keep deployment on network error (ECONNREFUSED)
+    ✓ should keep deployment on network error (ETIMEDOUT)
+    ✓ should keep deployment on server errors (500/502/503/504)
+    ✓ should keep deployment on timeout (AbortController) (52 ms)
+    ✓ should handle partial failures correctly (51 ms)
+    ✓ should skip Convex validation when checkConvex is false
+    ✓ should respect custom timeout option (103 ms)
+    ✓ should include correct deployment names in removed list (1 ms)
+    ✓ should include correct app names in removed list
+    ✓ should save config when modified (1 ms)
+    ✓ should NOT save config when not modified (1 ms)
+    ✓ should handle deployment without projectPath (remote-only)
+    ✓ should handle deployment without url
+    ✓ should handle config with no apps property
+    ✓ should handle empty deployments object
+    ✓ should handle "forbidden" error message
+    ✓ should handle "invalid key" error message (1 ms)
+    ✓ should handle "access denied" error message
+  loadConfigWithValidation
+    ✓ should combine load and validate (2 ms)
+    ✓ should skip Convex validation when checkConvex is false
+    ✓ should pass timeout option through
+
+PASS unit src/utils/__tests__/operator.test.ts
+  ✓ uses internal stats only after two exact management readbacks and preserves truncated counts (4 ms)
+  ✓ retirement selects only exact tenant AND space, never table clears or global purge (1 ms)
+  ✓ propagates operator failure without secret diagnostics, zero counts or mutation retries (2 ms)
+  ✓ recognizes the CLI's empty null retirement output while statistics still require JSON (2 ms)
+  ✓ rejects production/mismatched keys before any management or internal operation (1 ms)
+  ✓ rejects a changed live target before dispatch
+  ✓ rejects missing scoped retirement fields before management or mutation (1 ms)
+
+PASS unit src/utils/__tests__/client.test.ts
+  client utilities
+    getDeploymentInfo
+      ✓ should return local deployment info (1 ms)
+      ✓ should return cloud deployment info
+      ✓ should return staging deployment info (no key)
+      ✓ should detect localhost as local
+      ✓ should detect 127.0.0.1 as local (1 ms)
+      ✓ should use default deployment when none specified
+      ✓ should respect url override from options
+      ✓ should detect key presence correctly
+
+PASS unit src/utils/__tests__/formatting.test.ts
+  formatting utilities
+    formatJSON
+      ✓ should format objects as pretty JSON
+      ✓ should format arrays
+      ✓ should handle null
+      ✓ should handle strings
+    formatCSV
+      ✓ should format array of objects as CSV
+      ✓ should handle custom headers
+      ✓ should escape values with commas
+      ✓ should escape values with quotes (1 ms)
+      ✓ should handle empty array
+      ✓ should wrap single object in array
+    formatTimestamp
+      ✓ should format timestamp as locale string (16 ms)
+      ✓ should handle current timestamp
+    formatRelativeTime
+      ✓ should format recent time as "just now"
+      ✓ should format minutes ago
+      ✓ should format hours ago
+      ✓ should format days ago
+    formatBytes
+      ✓ should format bytes
+      ✓ should format kilobytes
+      ✓ should format megabytes
+      ✓ should format gigabytes
+      ✓ should handle zero
+    formatCount
+      ✓ should format singular (2 ms)
+      ✓ should format plural
+      ✓ should auto-pluralize without explicit plural
+      ✓ should format large numbers with commas
+
+PASS unit src/utils/__tests__/host-token-files.test.ts
+  ✓ rejects a private FIFO before credential timeout and exits naturally without a pending open (57 ms)
+
+PASS unit src/utils/__tests__/validation.test.ts
+  validation utilities
+    validateMemorySpaceId
+      ✓ should accept valid memory space IDs (1 ms)
+      ✓ should reject empty string (1 ms)
+      ✓ should reject null/undefined
+      ✓ should reject IDs with invalid characters
+      ✓ should reject IDs that are too long
+    validateUserId
+      ✓ should accept valid user IDs
+      ✓ should reject empty string
+      ✓ should reject IDs that are too long (1 ms)
+    validateMemoryId
+      ✓ should accept valid memory IDs
+      ✓ should reject empty string
+    validateConversationId
+      ✓ should accept valid conversation IDs
+      ✓ should reject empty string
+    validateFactId
+      ✓ should accept valid fact IDs
+      ✓ should reject empty string
+    validateMemorySpaceType
+      ✓ should accept valid types (1 ms)
+      ✓ should reject invalid types
+    validateMemorySpaceStatus
+      ✓ should accept valid statuses
+      ✓ should reject invalid statuses
+    validateFactType
+      ✓ should accept valid fact types
+      ✓ should reject invalid fact types
+    validateOutputFormat
+      ✓ should accept valid formats
+      ✓ should reject invalid formats (1 ms)
+    validateLimit
+      ✓ should accept valid limits
+      ✓ should reject zero or negative
+      ✓ should reject limits exceeding max
+      ✓ should respect custom max
+    validateUrl
+      ✓ should accept valid URLs
+      ✓ should reject invalid URLs (1 ms)
+    validateFilePath
+      ✓ should accept valid file paths
+      ✓ should reject empty paths
+    validateSearchQuery
+      ✓ should accept valid queries
+      ✓ should reject empty queries
+      ✓ should reject queries that are too long
+    parseArrayArg
+      ✓ should parse comma-separated values (1 ms)
+      ✓ should handle single value
+      ✓ should handle empty string
+      ✓ should filter out empty values
+    parseKeyValueArg
+      ✓ should parse key=value pairs
+      ✓ should handle single pair
+      ✓ should handle empty string
+      ✓ should handle whitespace
+
+PASS unit src/utils/__tests__/host-client.test.ts
+  ✓ requires an actual host credential before constructing any SDK client; deploy keys do not authenticate (2 ms)
+  ✓ never shares client identity for two principals at the same URL and closes each exact owned client
+  ✓ fences query delivery before command code can receive or print delayed A data (1 ms)
+  ✓ fences mutation delivery before command code can receive or print delayed A data
+  ✓ fences action delivery before command code can receive or print delayed A data
+  ✓ checks resource delivery deadlines after awaited session confirmation and suppresses expired values
+  ✓ closes on operation failure without turning it into success
+  ✓ forwards official force-refresh requests to a host callback and rejects a changed verified scope
+  ✓ rereads a private rotated token file and rejects insecure files/symlinks without token content (1 ms)
+  ✓ pins configured selector scope against verified server metadata, not labels or decoded claims
+
+PASS unit src/utils/__tests__/shell.test.ts
+  shell utilities
+    isValidProjectName
+      ✓ should accept valid project names with lowercase letters (1 ms)
+      ✓ should accept names with numbers
+      ✓ should accept names with hyphens and underscores
+      ✓ should reject names with uppercase letters (1 ms)
+      ✓ should reject names with spaces
+      ✓ should reject names with special characters
+      ✓ should reject empty string
+      ✓ should accept single character names
+      ✓ should accept long names
+    isLocalConvexUrl
+      ✓ should return true for localhost URLs
+      ✓ should return true for 127.0.0.1 URLs
+      ✓ should return false for cloud URLs
+      ✓ should return false for other URLs (1 ms)
+      ✓ should handle URLs with paths
+      ✓ should be case insensitive for localhost
+
+PASS unit src/utils/__tests__/auth-config.test.ts
+  ✓ persists the host environment selector only, never reads or saves its token contents (1 ms)
+  ✓ persists only an absolute private token file pointer (1 ms)
+  ✓ refuses token contents passed as a file setting or direct token setting before persistence (1 ms)
+  ✓ scope settings remain bounded selectors, never local authority (1 ms)
+
+PASS unit src/utils/__tests__/development-target.test.ts
+  verified disposable development operations
+    ✓ accepts exact official management readbacks without any mutation (1 ms)
+    ✓ rejects wrong target metadata {"deploymentType":"prod"} before mutation (1 ms)
+    ✓ rejects wrong target metadata {"deploymentType":"preview"} before mutation
+    ✓ rejects wrong target metadata {"projectId":99} before mutation (1 ms)
+    ✓ rejects wrong target metadata {"teamId":99} before mutation
+    ✓ rejects wrong target metadata {"name":"foreign-test-456"} before mutation
+    ✓ rejects wrong target metadata {"deploymentUrl":"https://foreign-test-456.convex.cloud"} before mutation
+    ✓ rejects wrong target metadata {"kind":"local"} before mutation
+    ✓ refuses a development deployment without explicit disposable ownership (1 ms)
+    ✓ refuses credential-bearing or non-Convex URLs before management reads
+    ✓ refuses forged receipts even when their public metadata looks correct
+    ✓ refuses mismatched/production/legacy deploy key prod:safe-test-123|key
+    ✓ refuses mismatched/production/legacy deploy key dev:foreign-test-123|key
+    ✓ refuses mismatched/production/legacy deploy key legacy-key
+    ✓ refuses mismatched/production/legacy deploy key dev:safe-test-123|key
+OTHER=value
+    ✓ rechecks live target state immediately before dispatch and fences a changed deployment (1 ms)
+    ✓ rejects expired prospective verification
+    ✓ returns actionable incomplete-capability details and permits a fully configured core (1 ms)
+
+PASS unit src/utils/__tests__/config.test.ts
+  config utilities
+    getDeployment
+      ✓ should return deployment by name (1 ms)
+      ✓ should return default deployment when name not provided
+      ✓ should return null for non-existent deployment
+    resolveConfig
+      ✓ should use URL from options if provided
+      ✓ should use deployment from options
+      ✓ should use default deployment when no options
+      ✓ should throw for non-existent deployment (2 ms)
+      ✓ should use format from options
+      ✓ should use format from config when not in options
+      ✓ should handle quiet option
+      ✓ should handle debug option
+    listDeployments
+      ✓ should list all deployments
+      ✓ should include deployment names
+      ✓ should mark default deployment
+      ✓ should indicate which deployments have keys (1 ms)
+  environment variable overrides
+    ✓ should be tested in integration tests with actual config loading
+  listApps
+    ✓ should return empty array when no apps configured
+    ✓ should list all configured apps
+  discoverUnregisteredApps
+    ✓ should return empty array when no deployments have projectPath
+    ✓ should return empty array when projectPath does not exist
+    ✓ should return empty array when config has no deployments
+    ✓ should have correct interface for DiscoveredApp (1 ms)
+
+PASS unit src/utils/__tests__/db-maintenance.test.ts
+  ✓ preserves actual truncated counts from internal operator results (2 ms)
+  ✓ does not swallow failed stats or fabricate zero counts (1 ms)
+  ✓ requires exact tenant, space and explicit confirmation before lifecycle retirement (1 ms)
+  ✓ legacy global clear and partial restore fail before any public/internal effect
+  ✓ rejects incomplete/malformed counts and full backup rather than pretending completion (1 ms)
+
+PASS unit src/utils/__tests__/env-file.test.ts
+  env-file utilities
+    serializeEnvFile
+      ✓ should serialize lines back to string (1 ms)
+      ✓ should handle empty lines array
+      ✓ should preserve original formatting
+    setEnvVar
+      ✓ should add new variable
+      ✓ should update existing variable (1 ms)
+      ✓ should insert before trailing empty lines
+      ✓ should handle empty lines array
+      ✓ should handle URL values with special characters
+    removeEnvVar
+      ✓ should remove existing variable
+      ✓ should do nothing if variable does not exist
+      ✓ should preserve comments and empty lines
+      ✓ should remove all occurrences with same key
+    getDeploymentEnvKeys
+      ✓ should return local keys for local deployment (1 ms)
+      ✓ should return local keys for LOCAL (uppercase)
+      ✓ should return cloud keys for cloud deployment
+      ✓ should return cloud keys for production deployment
+      ✓ should return cloud keys for prod deployment
+      ✓ should return custom keys for custom deployment names
+      ✓ should sanitize special characters in custom names
+      ✓ should handle names with numbers
+      ✓ should handle mixed case input
+
+PASS unit src/utils/__tests__/npm-metadata.test.ts
+  npm registry metadata
+    ✓ reads npm 11 object responses (1 ms)
+    ✓ reads npm 12 array responses
+    ✓ uses the last matching version when npm returns several
+    ✓ rejects unusable registry metadata: [] (1 ms)
+    ✓ rejects unusable registry metadata: null (1 ms)
+    ✓ rejects unusable registry metadata: "0.36.0"
+
+Test Suites: 24 passed, 24 total
+Tests:       366 passed, 366 total
+Snapshots:   0 total
+Time:        4.217 s
+Ran all test suites in 2 projects.
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-cli-quality1/cli-fast1-results.json

@@ -34,6 +34,7 @@ export default [
       "dev-docs/**/*", // Exclude dev documentation
       "Internal Docs/**/*", // Exclude internal docs
       "work/**/*", // Private scratch files and generated qualification probes
+      ".codex/tmp/**/*", // Disposable copied hosts are checked separately from canonical source
       "_goals/**/qa/**/*", // Frozen evidence and standalone fixtures use their scoped lint configs
       // Immutable old Gateway assertions run separately under the mandatory guarded
       // historical 78-outcome catalog, outside this current typed parser project.

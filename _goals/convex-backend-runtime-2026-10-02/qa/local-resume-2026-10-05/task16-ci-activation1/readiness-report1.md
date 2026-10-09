@@ -1,0 +1,7 @@
+CI activation remains pending the live provider remote contract, safe pushed source, and the five new secrets/five public variables. Both current dedicated targets are freshly verified sole cloud development targets under team325340. Current built default9 exactly matches the accepted manifest and historical V3/V5 proofs, with earliest expiry 2026-10-09T08:50:12.383Z; this inspection does not extend currentness.
+
+Complete read-only discovery: SDK228 files, provider17, CLI29. The new bounded wiring selects all118 current SDK units plus the authenticated runtime suite on SDK shard1 and CLI; CLI24 offline controls; provider8 unit/React/remote plus4 mocked integration, with its one real remote contract still pending. Historical live/direct-key tests remain in source and discovery and are explicitly nonselected, not passed. Source controls33/33 and actual scoped lint passed; the initial ignored lint warning remains recorded.
+
+Repository active queue was empty at inspection. PR135 current unsafe head66d8e43b has completed failed PR Checks run37887357452; no cancellation or settings change was issued. Future activation requires a safe pushed head and a fresh queue check. Serial complete-run concurrency, per-target always cleanup and exact scope retirement remain, with finite timeouts.
+
+No deployment, new authority, JWT, provider or other service mutation occurred. Existing 14 actual registered modern CI cases and their accounting remain historical candidate evidence. Full original16 remains open, including the genuine async video503 capability gap.
