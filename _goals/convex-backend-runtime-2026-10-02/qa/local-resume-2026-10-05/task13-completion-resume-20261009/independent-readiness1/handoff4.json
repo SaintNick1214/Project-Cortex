@@ -1,0 +1,504 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/fresh_goal_review",
+  "continuingFinalAudit": true,
+  "policy": "acceptance-policy v2",
+  "exactProductCommit": "8ca8f15c96900a4824298c7b63eee02fab0b7ea5",
+  "candidateDigest": "5dbbf14a3cb31e9f256519b447c92bd1b30b74ffc934d39fe1f7e9e4f5d4c255",
+  "workflowSha256": "1ac5fae648009ac47eefb5f75714c0a736ac3c6fec566ca1654a524ac197a0fa",
+  "completedScope": {
+    "verdict": "PASS",
+    "scores": {
+      "requirementFulfillment": 4,
+      "testQuality": 4,
+      "completeness": 4,
+      "codeQuality": 4,
+      "patternAdherence": 4,
+      "mean": 4
+    },
+    "knownReachableBreakingFindings": []
+  },
+  "originalFullGoal": {
+    "verdict": "ISSUES_FOUND",
+    "task13Task14Task16Task17": "NEEDS_REVISION",
+    "complete": false,
+    "scores": {
+      "requirementFulfillment": 3,
+      "testQuality": 4,
+      "completeness": 3,
+      "codeQuality": 4,
+      "patternAdherence": 4,
+      "mean": 3.6
+    },
+    "mandatoryMinimaFailed": [
+      "requirementFulfillment",
+      "completeness"
+    ],
+    "ungrantedCriteria": [
+      "13A1",
+      "13A2",
+      "13A4",
+      "14A1",
+      "16A3",
+      "17A2"
+    ],
+    "newCriteriaGrants": [],
+    "counts": {
+      "acceptedTasks": 13,
+      "totalTasks": 17,
+      "acceptedCriteria": 55,
+      "totalCriteria": 61,
+      "goalCriteria": 12
+    }
+  },
+  "packetsClosedBeforeVerdict": {
+    "collector": {
+      "path": "../current-ci2/collector-handoff1.json",
+      "sha256": "935074ccf778367bcefc6ee7401789b731e829b383e0cb4af2eb8b84e7d102ff"
+    },
+    "native": {
+      "path": "../current-ci2/native-after1/handoff1.json",
+      "sha256": "098be42e325ffd8a2a560c87745656510e678722a93b33ab91e355f29099a415",
+      "reportSha256": "520ea01cf67e068cf8f913bff9488dafeecff0dcd5383c2873b6f894bb7cfb51"
+    }
+  },
+  "currentCi": {
+    "runId": 37999830726,
+    "status": "SUCCESS",
+    "jobsSuccessful": 19,
+    "cleanupJobId": 114061833353,
+    "securityRunId": 37999830718,
+    "securityConclusion": "SUCCESS_WITH_OPTIONAL_LIMITS",
+    "executingTestsSkipped": 0,
+    "counts": {
+      "sdkControlled": 7492,
+      "sdkActual": 7,
+      "cliControlled": 1840,
+      "cliActual": 7,
+      "providerControlled": 360,
+      "providerActual": 1,
+      "rootGraph": 53,
+      "providerGraph": 4,
+      "privacy": 217,
+      "catalog": 24,
+      "selectedOfflineContracts": 77,
+      "basicUnits": 112
+    },
+    "freshEnabledCodegenBuilds": [
+      "basic",
+      "canonical",
+      "chat"
+    ],
+    "canonicalChatUnits": "UNSELECTED_BASIC_ONLY_MATRIX",
+    "allSelectedTestCommandsNaturallyClosed": true,
+    "discoveryOnlyForcedExitPreserved": true,
+    "actualAsyncQualified": false
+  },
+  "accounting": {
+    "baseline": "../current-ci1/native-after1",
+    "current": "../current-ci2/native-after1",
+    "independentExactIdCapturedFieldComparison": {
+      "sdk": {
+        "accountsMatched": 28,
+        "operationsMatched": 39,
+        "attemptsMatched": 39
+      },
+      "cli": {
+        "accountsMatched": 16,
+        "operationsMatched": 20,
+        "attemptsMatched": 20
+      },
+      "missing": 0,
+      "changed": 0
+    },
+    "currentTotals": {
+      "sdk": {
+        "accounts": 35,
+        "operations": 50,
+        "attempts": 50
+      },
+      "cli": {
+        "accounts": 20,
+        "operations": 25,
+        "attempts": 25
+      }
+    },
+    "newConfirmedCalls": 16,
+    "newUncertainMicroUsd": 1600000,
+    "totalDedicatedUncertainMicroUsd": 7500000,
+    "uncertaintyByTarget": {
+      "sdk": 5000000,
+      "cli": 2500000
+    },
+    "reservedLedgerAmounts": 0,
+    "settledLedgerAmounts": 0,
+    "activeConcurrency": 0,
+    "unreleasedSlots": 0,
+    "fullOriginalAllowanceNotReservedLedgerMoney": true,
+    "agentTitleParentRunAccountShared": true,
+    "refundResetHistoryRewrite": false,
+    "mainHistoricalHeld2SeparateAndUntouched": true
+  },
+  "authorityCleanup": {
+    "intendedScopes": 4,
+    "rolesPerTarget": [
+      "owner",
+      "reader",
+      "outsider"
+    ],
+    "bothTargetsFreshDenials": true,
+    "retirement": true,
+    "physicalDeletion": false,
+    "globalPurge": false,
+    "retainedChildrenParentFenced": true
+  },
+  "originalTasks": [
+    {
+      "task": "01",
+      "originalRequirementCount": 3,
+      "originalCriterionCount": 3,
+      "requirementDisposition": "R1–R3 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Task01 bounded qualification; current exact installed stack/core actual evidence, without inferring extension availability."
+    },
+    {
+      "task": "02",
+      "originalRequirementCount": 4,
+      "originalCriterionCount": 3,
+      "requirementDisposition": "R1–R4 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Shared nonrecursive backend domain; current governed extraction/embedding supplements unchanged normalization/source rules."
+    },
+    {
+      "task": "03",
+      "originalRequirementCount": 5,
+      "originalCriterionCount": 3,
+      "requirementDisposition": "R1–R5 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Prior03-final distinct guard/effect classes; current privacy217, actual JWT/foreign denials and retired roles. New expirePoll is guarded/internal."
+    },
+    {
+      "task": "04",
+      "originalRequirementCount": 3,
+      "originalCriterionCount": 3,
+      "requirementDisposition": "R1–R3 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Versioned policy and once-only budgets/replay; current native calls/title parent accounting and exact old roots/windows."
+    },
+    {
+      "task": "05",
+      "originalRequirementCount": 4,
+      "originalCriterionCount": 3,
+      "requirementDisposition": "R1–R4 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "One canonical writer/lock/tracked revisions; actual SDK/CLI stale-revision and provider same-handle transcript replay."
+    },
+    {
+      "task": "06",
+      "originalRequirementCount": 4,
+      "originalCriterionCount": 3,
+      "requirementDisposition": "R1–R4 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "All three current fresh enabled official installs plus unchanged custom-host/conflict/full-runtime compiler preservation controls."
+    },
+    {
+      "task": "07",
+      "originalRequirementCount": 5,
+      "originalCriterionCount": 4,
+      "requirementDisposition": "R1–R5 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Prior actual tools/observers/recovery; current genuine backend Agent response/reconnect/replay. Metadata-only artifact_read is not content quotation."
+    },
+    {
+      "task": "08",
+      "originalRequirementCount": 5,
+      "originalCriterionCount": 4,
+      "requirementDisposition": "R1–R5 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Prior actual forced lag/pending-tail/order/holes/deletion; current real extraction/embeddings and complete durable memory."
+    },
+    {
+      "task": "09",
+      "originalRequirementCount": 4,
+      "originalCriterionCount": 5,
+      "requirementDisposition": "R1–R4 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Prior text/tool/UI/refreshed JWT/strict barriers; current remote parser/outsider/replay. No new forced-lag or browser scene inferred."
+    },
+    {
+      "task": "10",
+      "originalRequirementCount": 5,
+      "originalCriterionCount": 4,
+      "requirementDisposition": "R1–R5 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Prior actual managed1536/3072 profiles; current governed matching source/profile provenance and arbitrary-vector refusal."
+    },
+    {
+      "task": "11",
+      "originalRequirementCount": 4,
+      "originalCriterionCount": 3,
+      "requirementDisposition": "R1–R4 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Prior actual ordered fencing/retry/deletion; current Neo4j/Memgraph53+4 naturally close under bounded invocations."
+    },
+    {
+      "task": "12",
+      "originalRequirementCount": 6,
+      "originalCriterionCount": 4,
+      "requirementDisposition": "R1–R6 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Prior real private20M delivery/retention/lineage; unchanged source/actual plus affected asset controls. No new media generation."
+    },
+    {
+      "task": "13",
+      "originalRequirementCount": 5,
+      "originalCriterionCount": 4,
+      "requirementDisposition": "Source/partial actual; full R1–R5 incomplete",
+      "acceptedCriteria": [
+        "A3"
+      ],
+      "ungrantedCriteria": [
+        "A1",
+        "A2",
+        "A4"
+      ],
+      "currentApplicability": "Source recovery/cost/error repairs pass; image/safety evidence stays scoped. Genuine async and linked-local outcomes still absent."
+    },
+    {
+      "task": "14",
+      "originalRequirementCount": 3,
+      "originalCriterionCount": 4,
+      "requirementDisposition": "Source/partial actual; full R1–R3 incomplete",
+      "acceptedCriteria": [
+        "A2",
+        "A3",
+        "A4"
+      ],
+      "ungrantedCriteria": [
+        "A1"
+      ],
+      "currentApplicability": "Artifact/reconnect/delayed-memory/browser boundaries retained; complete async TS/UI equivalence remains absent."
+    },
+    {
+      "task": "15",
+      "originalRequirementCount": 4,
+      "originalCriterionCount": 4,
+      "requirementDisposition": "R1–R4 supported",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ],
+      "ungrantedCriteria": [],
+      "currentApplicability": "Prior separate app/title/content/artifact flows; current fresh apps, CLI/catalog and preserved host/payload contracts."
+    },
+    {
+      "task": "16",
+      "originalRequirementCount": 4,
+      "originalCriterionCount": 4,
+      "requirementDisposition": "R1/R2 partial; R3/R4 covered",
+      "acceptedCriteria": [
+        "A1",
+        "A2",
+        "A4"
+      ],
+      "ungrantedCriteria": [
+        "A3"
+      ],
+      "currentApplicability": "Current outcome/discovery/replay/security/cleanup evidence; async conjunction remains missing despite retrieval/graph/private-byte subparts."
+    },
+    {
+      "task": "17",
+      "originalRequirementCount": 4,
+      "originalCriterionCount": 3,
+      "requirementDisposition": "R1/R2 supported; R3/R4 full gate incomplete",
+      "acceptedCriteria": [
+        "A1",
+        "A3"
+      ],
+      "ungrantedCriteria": [
+        "A2"
+      ],
+      "currentApplicability": "Qualified examples/source5 handoff and scope safeguards retained; required async qualification/full-goal verdict remains missing."
+    }
+  ],
+  "originalGoalPillars": [
+    {
+      "number": 1,
+      "pillar": "Authenticated scoped backend run/context/tool; keyless TS",
+      "status": "SUPPORTED",
+      "evidenceAndLimit": "Current verified SDK/CLI/Agent remote request plus separately applicable prior backend-tool/context receipts."
+    },
+    {
+      "number": 2,
+      "pillar": "One canonical executable transcript and tracked administrator unlock",
+      "status": "SUPPORTED",
+      "evidenceAndLimit": "Current canonical lock/unlock/stale revision and same-handle transcript replay; no second writer or migration."
+    },
+    {
+      "number": 3,
+      "pillar": "Authorized typed output/observers/reconnect/final/cancel/approval",
+      "status": "PARTIAL_EXTENSION",
+      "evidenceAndLimit": "Existing text/tool/artifact/approval/cancel outcomes retained; complete required async extension parity still absent."
+    },
+    {
+      "number": 4,
+      "pillar": "Response independent of indexing; durable registration/tail/strict barrier",
+      "status": "SUPPORTED",
+      "evidenceAndLimit": "Prior actual forced lag/contiguous hole/tail receipts; current memory COMPLETE is not a new forced-delay proof."
+    },
+    {
+      "number": 5,
+      "pillar": "Stable event/source/version/stage/tombstone integrity",
+      "status": "SUPPORTED",
+      "evidenceAndLimit": "Prior ordering/deletion/source fences plus current replay/receipts/stage completion; retirement does not recreate deleted authority."
+    },
+    {
+      "number": 6,
+      "pillar": "Every billable and secondary operation governed",
+      "status": "SUPPORTED",
+      "evidenceAndLimit": "Current16 confirmed calls and Agent/title shared parent account; full uncertainty retained. No new paid facts.resolve/media result inferred."
+    },
+    {
+      "number": 7,
+      "pillar": "Clean-slate source/chunk/vector/profile/index/current authorization",
+      "status": "SUPPORTED",
+      "evidenceAndLimit": "Prior actual compatible managed profiles plus current source/profile provenance, query/embedding replay and invalid-vector denial."
+    },
+    {
+      "number": 8,
+      "pillar": "Image AND durable async video/private20M/provenance/TS/UI",
+      "status": "BLOCKED_ASYNC",
+      "evidenceAndLimit": "Image/asset safety remains scoped; genuine video submit/callback/poll/download/materialization and full parity are missing."
+    },
+    {
+      "number": 9,
+      "pillar": "Verified principals/grants/alternate paths/revocation/deletion",
+      "status": "SUPPORTED",
+      "evidenceAndLimit": "Prior03-final plus current actual JWT/privacy217/retired roles; new internal watchdog shared guard controls; C7 history unrepaired."
+    },
+    {
+      "number": 10,
+      "pillar": "Shared backend domain; AI SDK7 remote UI without a second loop",
+      "status": "PARTIAL_EXTENSION",
+      "evidenceAndLimit": "Current official-parser canonical/reconnect/replay and prior domain/keyless evidence; complete async client equivalence remains blocked."
+    },
+    {
+      "number": 11,
+      "pillar": "Additive fresh-host installation",
+      "status": "SUPPORTED",
+      "evidenceAndLimit": "Current three genuine typecheck-enabled installs/builds and retained custom-host/stale/conflict preservation controls; no existing-Cortex upgrades."
+    },
+    {
+      "number": 12,
+      "pillar": "All required quality/modules/UI/actual services and final verdict",
+      "status": "BLOCKED_REQUIRED_SERVICE",
+      "evidenceAndLimit": "All selected available current checks pass; required genuine async service outcomes and successful whole-goal approval do not exist."
+    }
+  ],
+  "limitations": {
+    "asyncEnablement": "UNCONFIRMED",
+    "supportDraft": "UNSENT",
+    "noNewPaidFactsResolveImageVideo": true,
+    "currentProviderForcedLag": false,
+    "supplementalConsolePointer": "../current-ci2/native-after1/supplemental-log-availability1.json",
+    "optionalSemgrep": "CRASH_UNAVAILABLE",
+    "sarif": "UNAVAILABLE_SKIPPED",
+    "openApiScorecard": "UNSELECTED",
+    "zeroVulnerabilitiesClaim": false,
+    "c7OriginalBackingCustody": "MISSING_UNREPAIRED_HISTORICAL",
+    "source5Website": "UNPUBLISHED_QUALIFIED_HANDOFF",
+    "source3Browser": "SEPARATELY_SCOPED_HISTORICAL",
+    "websiteExternallyAdvancedDocsDiffEmpty": true,
+    "priorFailuresPreserved": true,
+    "stoppedGraphVolumesNotLiveWorker": true
+  },
+  "priorCoherentSourceReview": [
+    "report2.md",
+    "report3.md"
+  ],
+  "noNewPreparationCustodyCensusGate": true,
+  "reviewerEffects": {
+    "productEdits": 0,
+    "tests": 0,
+    "gitMutations": 0,
+    "readOnlyGitRefChecks": 1,
+    "serviceQueries": 0,
+    "serviceMutations": 0,
+    "models": 0,
+    "browserActions": 0,
+    "credentialReads": 0,
+    "newWrites": [
+      "final-audit4.md",
+      "handoff4.json"
+    ]
+  },
+  "report": "final-audit4.md"
+}

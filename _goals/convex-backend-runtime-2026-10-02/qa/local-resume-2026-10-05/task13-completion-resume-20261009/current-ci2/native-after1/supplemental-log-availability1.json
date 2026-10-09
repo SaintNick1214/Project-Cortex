@@ -1,0 +1,48 @@
+{
+  "timestampUtc": "2026-10-09T23:06:06.621811+00:00",
+  "scope": "Supplemental QA log availability correction; original native capture/report/handoff are preserved unchanged. No service call or new acceptance.",
+  "supersedesAvailabilityClaim": "native-after1/final-native-report1.json providerActual.preciseConsoleOutcomeNotPresentInAvailableCollectedLogs=true is superseded by the now-collected exact raw provider result.",
+  "source": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci2/logs/collector-pr-job-114060664935.log",
+    "sha256": "ab45efe088e545b1d7b2de5f03aac0e9dee069f819c3f510875f7152c23a8bf6",
+    "oneBasedLine": 1054
+  },
+  "actualProviderResult": {
+    "status": "ACTUAL_PROVIDER_REMOTE_CONTRACT_PASS",
+    "requestId": "provider-remote-37999830726-1",
+    "handle": {
+      "version": 1,
+      "tenantId": "cortex-ci-37999830726-1-sdk",
+      "memorySpaceId": "cortex-ci-37999830726-1-sdk-space",
+      "principalId": "nh7c9jehxw4dgr922x9620d8x58fyndx",
+      "runId": "run:1722e3ec6d88f547e7015d54111d2ccd2c6c397d44501e47e95bc759537e49f7",
+      "conversationId": "conversation:1722e3ec6d88f547e7015d54111d2ccd2c6c397d44501e47e95bc759537e49f7",
+      "agentId": "agent:98d74c369318999afe66d027ebce18da14a1e7769994e77bf68fdbe45cc407ee",
+      "agentVersion": 1,
+      "definitionHash": "d28e66af18b1393c11d09ff53624161d7da8128828b56aa3115c5f168b8625b9"
+    },
+    "responseStatus": "complete",
+    "memoryStatus": "complete",
+    "graphStatus": "not_requested",
+    "attemptNumber": 1,
+    "reconnectCursor": 0,
+    "canonicalTextSha256": "137d4ec4daa73bdc188bb7952b04e4b3d371d808b00bfbd927884e01ad946270",
+    "transcriptMessageIds": [
+      "kx717dhgq5cc0ad5ndjz70x2gd8fyzre",
+      "kx7fasyrz4jkwpmdns2nja1gcx8fzfpe"
+    ],
+    "observations": [
+      {
+        "response": "complete",
+        "memory": "complete",
+        "graph": "not_requested",
+        "cursor": 8,
+        "attempt": 1
+      }
+    ],
+    "replaySameHandleAndTranscript": true,
+    "outsiderForbidden": true,
+    "clientProviderCredentials": false
+  },
+  "coverageLimit": "Current observations show response and memory already complete at first cursor8. This genuine result proves canonical output/reconnect/replay/outsider denial/eventual completion, not a forced pending-memory lag scene. Earlier actual delayed-memory coverage remains separately scoped."
+}

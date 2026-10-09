@@ -1,0 +1,430 @@
+{
+  "capturedAt": "2026-10-09T22:33:42.631275+00:00",
+  "run": {
+    "conclusion": "",
+    "createdAt": "2026-10-09T22:33:08Z",
+    "databaseId": 37999830718,
+    "headSha": "8ca8f15c96900a4824298c7b63eee02fab0b7ea5",
+    "jobs": [
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 114054923500,
+        "name": "API Security Scan (Semgrep)",
+        "startedAt": "2026-10-09T22:33:11Z",
+        "status": "in_progress",
+        "steps": [
+          {
+            "completedAt": "2026-10-09T22:33:13Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-09T22:33:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T22:33:21Z",
+            "conclusion": "success",
+            "name": "Pull returntocorp/semgrep-agent:v1",
+            "number": 2,
+            "startedAt": "2026-10-09T22:33:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Checkout code",
+            "number": 3,
+            "startedAt": "2026-10-09T22:33:21Z",
+            "status": "in_progress"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Run Semgrep",
+            "number": 4,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Upload SARIF file",
+            "number": 5,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Post Checkout code",
+            "number": 10,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          }
+        ],
+        "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37999830718/job/114054923500"
+      },
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 114054923751,
+        "name": "CodeQL Analysis (javascript-typescript)",
+        "startedAt": "2026-10-09T22:33:11Z",
+        "status": "in_progress",
+        "steps": [
+          {
+            "completedAt": "2026-10-09T22:33:14Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-09T22:33:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Checkout repository",
+            "number": 2,
+            "startedAt": "2026-10-09T22:33:14Z",
+            "status": "in_progress"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Initialize CodeQL",
+            "number": 3,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Setup Node.js (for JS/TS)",
+            "number": 4,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Use declared npm version",
+            "number": 5,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Install dependencies (for JS/TS)",
+            "number": 6,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Autobuild",
+            "number": 7,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Perform CodeQL Analysis",
+            "number": 8,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Post Checkout repository",
+            "number": 16,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          }
+        ],
+        "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37999830718/job/114054923751"
+      },
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 114054923752,
+        "name": "OpenAPI Security Audit",
+        "startedAt": "2026-10-09T22:33:11Z",
+        "status": "in_progress",
+        "steps": [
+          {
+            "completedAt": "2026-10-09T22:33:13Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-09T22:33:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T22:33:19Z",
+            "conclusion": "success",
+            "name": "Build 42Crunch/api-security-audit-action@v4",
+            "number": 2,
+            "startedAt": "2026-10-09T22:33:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Checkout code",
+            "number": 3,
+            "startedAt": "2026-10-09T22:33:19Z",
+            "status": "in_progress"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Check for OpenAPI specs",
+            "number": 4,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Run 42Crunch API Security Audit",
+            "number": 5,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Post Checkout code",
+            "number": 10,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          }
+        ],
+        "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37999830718/job/114054923752"
+      },
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 114054923841,
+        "name": "Dependency Review",
+        "startedAt": "2026-10-09T22:33:11Z",
+        "status": "in_progress",
+        "steps": [
+          {
+            "completedAt": "2026-10-09T22:33:14Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-09T22:33:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Checkout code",
+            "number": 2,
+            "startedAt": "2026-10-09T22:33:14Z",
+            "status": "in_progress"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Dependency Review",
+            "number": 3,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Post Checkout code",
+            "number": 6,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          }
+        ],
+        "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37999830718/job/114054923841"
+      },
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 114054923843,
+        "name": "License Compliance",
+        "startedAt": "2026-10-09T22:33:11Z",
+        "status": "in_progress",
+        "steps": [
+          {
+            "completedAt": "2026-10-09T22:33:12Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-09T22:33:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Checkout code",
+            "number": 2,
+            "startedAt": "2026-10-09T22:33:12Z",
+            "status": "in_progress"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Setup Node.js",
+            "number": 3,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Use declared npm version",
+            "number": 4,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Install dependencies",
+            "number": 5,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Check licenses",
+            "number": 6,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Post Checkout code",
+            "number": 12,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          }
+        ],
+        "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37999830718/job/114054923843"
+      },
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 114054923845,
+        "name": "Secret Scanning",
+        "startedAt": "2026-10-09T22:33:11Z",
+        "status": "in_progress",
+        "steps": [
+          {
+            "completedAt": "2026-10-09T22:33:12Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-09T22:33:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Checkout code",
+            "number": 2,
+            "startedAt": "2026-10-09T22:33:12Z",
+            "status": "in_progress"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Run Gitleaks",
+            "number": 3,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Post Checkout code",
+            "number": 6,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          }
+        ],
+        "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37999830718/job/114054923845"
+      },
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 114054923862,
+        "name": "Dependency Vulnerability Scan",
+        "startedAt": "2026-10-09T22:33:11Z",
+        "status": "in_progress",
+        "steps": [
+          {
+            "completedAt": "2026-10-09T22:33:14Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-09T22:33:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Checkout code",
+            "number": 2,
+            "startedAt": "2026-10-09T22:33:14Z",
+            "status": "in_progress"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Run Trivy vulnerability scanner",
+            "number": 3,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Upload Trivy results to GitHub Security tab",
+            "number": 4,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "name": "Post Checkout code",
+            "number": 8,
+            "startedAt": "0001-01-01T00:00:00Z",
+            "status": "pending"
+          }
+        ],
+        "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37999830718/job/114054923862"
+      },
+      {
+        "completedAt": "2026-10-09T22:33:09Z",
+        "conclusion": "skipped",
+        "databaseId": 114054924549,
+        "name": "Supply Chain Security (Scorecard)",
+        "startedAt": "2026-10-09T22:33:09Z",
+        "status": "completed",
+        "steps": [],
+        "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37999830718/job/114054924549"
+      }
+    ],
+    "name": "Security Scans",
+    "status": "in_progress",
+    "updatedAt": "2026-10-09T22:33:12Z",
+    "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37999830718"
+  }
+}

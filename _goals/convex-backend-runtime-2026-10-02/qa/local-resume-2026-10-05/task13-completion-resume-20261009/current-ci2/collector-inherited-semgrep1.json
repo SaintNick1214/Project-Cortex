@@ -1,0 +1,22 @@
+{
+  "status": "OPTIONAL_INHERITED_SCAN_UNAVAILABLE",
+  "jobId": 114054923500,
+  "jobConclusion": "success",
+  "raw": "logs/collector-security-job-114054923500.log",
+  "errorLines": [
+    {
+      "line": 370,
+      "text": "2026-10-09T22:34:47.2364675Z invalid rule severity value: MEDIUM"
+    },
+    {
+      "line": 401,
+      "text": "2026-10-09T22:34:47.2384609Z     raise ValueError(f\"invalid rule severity value: {value}\")"
+    },
+    {
+      "line": 402,
+      "text": "2026-10-09T22:34:47.2385212Z ValueError: invalid rule severity value: MEDIUM"
+    }
+  ],
+  "sarifUpload": "skipped",
+  "rerunOrSourceRepair": false
+}
