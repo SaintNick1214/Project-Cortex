@@ -27,7 +27,10 @@ const shared = path => /^(?:src|convex-dev)\//.test(path) || /^(?:package(?:-loc
 export function changedCiPaths(baseSha, headSha, cwd = process.cwd()) {
   if (!/^[a-f0-9]{40}$/.test(baseSha ?? '') || !/^[a-f0-9]{40}$/.test(headSha ?? '') || /^0+$/.test(headSha)) throw new Error('Exact base and nonzero head commits required');
   const args = /^0+$/.test(baseSha) ? ['ls-files', '-z'] : ['diff', '--no-renames', '--name-only', '-z', baseSha, headSha];
-  return execFileSync('git', args, { cwd, encoding: 'utf8' }).split('\0').filter(Boolean);
+  // Preserved QA and immutable payload history can exceed Node's inherited 1MiB
+  // stdout buffer. Retain the complete list within finite byte/time bounds;
+  // an exceeded bound still refuses rather than silently truncating selection.
+  return execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, timeout: 30000 }).split('\0').filter(Boolean);
 }
 
 export function selectCi({ eventName, event = {}, repository, actor, ref, files, fullCi = false }) {

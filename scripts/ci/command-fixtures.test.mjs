@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { existsSync, linkSync, lstatSync, mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
-import { checksumFor, cleanupCommandFixtures, dependencyBinding, npmRootFromPath, prepareCommandFixtures } from "./command-fixtures.mjs";
+import { checksumFor, cleanupCommandFixtures, dependencyBinding, npmRootFromPath, prepareCommandFixtures, probeSupportedRuntime, supportsFixtureRuntime } from "./command-fixtures.mjs";
 
 const repository = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 function owned(testContext) {
@@ -21,6 +22,17 @@ test("official checksum selection requires exactly one exact safe file and accep
   for (const text of [`${sha}  other.tar.xz`, `${sha}  ${file}\n${sha}  ${file}`, `not-a-hash ${file}`]) {
     assert.throws(() => checksumFor(text, file), /CHECKSUM_INVALID/);
   }
+});
+test("supported fixture runtime uses the actual running binary version and digest with the declared semver boundary", () => {
+  const npmRoot = npmRootFromPath();
+  for (const [version, supported] of [
+    ["20.0.0", false], ["20.20.2", false], ["22.16.0", false], ["24.14.9", false],
+    ["24.15.0", true], ["24.21.0", true], ["25.0.0", true], ["24.15.0-rc.1", false], ["invalid", false],
+  ]) assert.equal(supportsFixtureRuntime(version, npmRoot), supported, version);
+  const node = realpathSync(process.execPath), proof = probeSupportedRuntime(node, npmRoot);
+  assert.equal(proof.version, process.versions.node);
+  assert.equal(proof.requiredRange, ">=24.15.0");
+  assert.equal(proof.binarySHA256, createHash("sha256").update(readFileSync(node)).digest("hex"));
 });
 
 test("current dependency view selects actual CLI overrides and binds genuine built SDK bytes", () => {
@@ -50,6 +62,23 @@ test("existing, symlink and source outputs are refused without touching unrelate
     await assert.rejects(prepareCommandFixtures({ directory }), /OUTPUT_/);
   }
   assert.equal(readFileSync(join(existing, "sentinel"), "utf8"), "unchanged");
+});
+test("actual workflow launch delivers an absent environment output as a script argument without native Node preloading", t => {
+  const root = owned(t), existing = join(root, "existing"), envFile = join(root, "not-yet-created-env");
+  mkdirSync(existing); writeFileSync(join(existing, "sentinel"), "unchanged");
+  for (const name of ["pr-checks.yml", "managed-ci.yml"]) {
+    const workflow = readFileSync(join(repository, ".github/workflows", name), "utf8");
+    const launch = workflow.match(/run: (node(?: --)? scripts\/ci\/command-fixtures\.mjs) prepare/);
+    assert.ok(launch, "Actual workflow preparation launch required");
+    const result = spawnSync(process.execPath, [...launch[1].split(" ").slice(1), "prepare", "--directory", existing, "--env-file", envFile], {
+      cwd: repository, encoding: "utf8", timeout: 10000,
+      env: { PATH: process.env.PATH, HOME: root, TMPDIR: root, CI: "true" },
+    });
+    assert.equal(result.error, undefined); assert.equal(result.signal, null); assert.equal(result.status, 1);
+    assert.match(result.stderr, /COMMAND_FIXTURE_OUTPUT_ALREADY_EXISTS/);
+    assert.equal(existsSync(envFile), false);
+    assert.equal(readFileSync(join(existing, "sentinel"), "utf8"), "unchanged");
+  }
 });
 
 test("cleanup refuses unowned roots and links, and is harmless for absent output", t => {

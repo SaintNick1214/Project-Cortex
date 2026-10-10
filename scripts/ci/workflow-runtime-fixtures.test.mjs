@@ -99,6 +99,7 @@ test("CLI command fixtures consume the built executable and are cleaned before a
   assert.equal(steps[cleanup].if, "always()");
   assert.equal(steps[cleanup].env.CORTEX_CI_AUTH_PRIVATE_KEY, "");
   assert.ok(steps[prepare].run.includes('"$RUNNER_TEMP/cortex-cli-command-fixtures"'));
+  assert.match(steps[prepare].run, /^node -- /);
   assert.ok(steps[cleanup].run.includes('"$RUNNER_TEMP/cortex-cli-command-fixtures"'));
 });
 

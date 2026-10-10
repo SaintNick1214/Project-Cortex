@@ -183,6 +183,53 @@ test('change extraction rejects absent or non-commit inputs before invoking Git'
   assert.throws(() => changedCiPaths('a'.repeat(40), 'b'.repeat(40), '/missing/cortex-ci-fixture'));
 });
 
+test('complete change extraction retains product endpoints after more than1MiB of preserved history', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'cortex-ci-large-paths-'));
+  const git = (...args) => execFileSync('git', args, { cwd: directory, encoding: 'utf8' });
+  try {
+    git('init', '--quiet'); git('config', 'user.name', 'CI fixture'); git('config', 'user.email', 'fixture@example.invalid');
+    git('commit', '--allow-empty', '--quiet', '-m', 'empty fixture');
+    const baseSha = git('rev-parse', 'HEAD').trim();
+    const blob = execFileSync('git', ['hash-object', '-w', '--stdin'], { cwd: directory, input: 'fixture\n', encoding: 'utf8' }).trim();
+    const expected = Array.from({ length: 12000 }, (_, index) => `_goals/preserved/${'e'.repeat(80)}/${String(index).padStart(5, '0')}/receipt.json`);
+    expected.push('src/retained-product.ts');
+    assert.ok(Buffer.byteLength(expected.join('\0') + '\0') > 1024 * 1024);
+    execFileSync('git', ['update-index', '-z', '--index-info'], { cwd: directory, input: expected.map(path => `100644 ${blob}\t${path}\0`).join(''), encoding: 'utf8' });
+    git('commit', '--quiet', '-m', 'large preserved path history and product source');
+    const headSha = git('rev-parse', 'HEAD').trim();
+    const files = changedCiPaths(baseSha, headSha, directory);
+    assert.deepEqual(files, expected);
+    const input = pr({ files }); input.event.pull_request.draft = true;
+    const selection = selectCi(input);
+    assert.equal(selection.sdk, true);
+    assert.equal(selection.delivery.sdk, true);
+    assert.ok(selection.selected.includes('offline-packages'));
+    assert.ok(selection.deferred.includes('test-typescript'));
+    assert.deepEqual(changedCiPaths('0'.repeat(40), headSha, directory), expected);
+  } finally { rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('four bounded offline shards retain every discovered unit exactly once without relaxing exit or case deadlines', () => {
+  const workflow = load(readFileSync('.github/workflows/pr-checks.yml', 'utf8'));
+  const job = workflow.jobs['code-quality'];
+  assert.deepEqual(job.strategy.matrix.shard, [1, 2, 3, 4]);
+  assert.equal(job.strategy['fail-fast'], false);
+  const command = job.steps.find(step => step.name === 'Pure SDK unit contracts without live environment loading').run;
+  assert.match(command, /timeout --signal=TERM --kill-after=5s 240s node scripts\/ci-contract\.mjs offline-unit --shard=\$\{\{ matrix\.shard \}\}\/4/);
+  const observed = [];
+  for (const shard of job.strategy.matrix.shard) {
+    const run = spawnSync(process.execPath, [resolve('scripts/ci-contract.mjs'), 'offline-unit', '--listTests', '--json', `--shard=${shard}/4`], { cwd: resolve('.'), encoding: 'utf8', timeout: 30000 });
+    assert.equal(run.error, undefined); assert.equal(run.signal, null); assert.equal(run.status, 0, run.stderr);
+    const paths = JSON.parse(run.stdout).map(path => path.slice(resolve('.').length + 1).replaceAll('\\', '/'));
+    assert.ok(paths.length > 0); observed.push(...paths);
+  }
+  assert.equal(new Set(observed).size, observed.length);
+  assert.deepEqual(observed.sort(), offlineUnitFiles);
+  const config = readFileSync('jest.config.mjs', 'utf8');
+  assert.match(config, /testTimeout: 60000/);
+  assert.match(readFileSync('scripts/ci-contract.mjs', 'utf8'), /forceExit: false/);
+});
+
 test('failed, cancelled, skipped, missing or incomplete selected jobs cannot pass', () => {
   const selected = selectCi(pr());
   for (const job of ciJobs) for (const result of ['failure', 'cancelled', 'skipped', undefined, 'in_progress']) {

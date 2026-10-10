@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { isSupportedNodeVersion } from "../../src/utils/node-runtime.js";
 const cli = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 let base: string;
 let root: string;
@@ -24,8 +25,8 @@ beforeAll(() => {
   guard = input("CORTEX_RUNTIME_GUARD");
   minimum = input("CORTEX_RUNTIME_NODE_MINIMUM");
   const minimumProbe = spawnSync(minimum, ["--version"], {encoding: "utf8", timeout: 10000});
-  if (minimumProbe.error || minimumProbe.status !== 0 || minimumProbe.stdout.trim() !== "v24.15.0")
-    throw new Error("RUNTIME_PROOF_MINIMUM_UNVERIFIED: supply actual Node24.15.0");
+  if (minimumProbe.error || minimumProbe.signal || minimumProbe.status !== 0 || !isSupportedNodeVersion(minimumProbe.stdout.trim()))
+    throw new Error("RUNTIME_PROOF_MINIMUM_UNVERIFIED: supply an actual supported Node>=24.15.0");
   unsupported["20.0.0"] = input("CORTEX_RUNTIME_NODE20_0");
   unsupported["20.20.2"] = input("CORTEX_RUNTIME_NODE20_20");
   if (process.env.CORTEX_RUNTIME_NODE22_16) unsupported["22.16.0"] = input("CORTEX_RUNTIME_NODE22_16");
@@ -68,7 +69,7 @@ it.each(refusedVersions.flatMap(version => [[], ["--version"], ["--help"], ["doc
     expect(existsSync(join(root, "home/.cortexrc"))).toBe(false);
   },
 );
-it("supported minimum reports application import failure plainly without formatter fallback", () => {
+it("selected supported runtime reports application import failure plainly without formatter fallback", () => {
   // cli-main deliberately absent: the supported branch must attempt the import.
   const result = run(minimum, ["--version"]);
   expect(result.status).toBe(1);

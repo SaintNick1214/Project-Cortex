@@ -27,11 +27,19 @@ function physicalFile(file) {
   return stat;
 }
 
-function probe(node, version) {
+function probe(node, version, compatible = actual => actual === version) {
   physicalFile(node);
   const result = spawnSync(node, ["--version"], { encoding: "utf8", timeout: 10000, maxBuffer: 4096, env: childEnv() });
-  if (result.error || result.signal || result.status !== 0 || result.stdout.trim() !== `v${version}`) fail("NODE_VERSION_UNVERIFIED");
-  return { version, binarySHA256: hash(node) };
+  const actual = /^v(\d+\.\d+\.\d+)$/.exec(result.stdout?.trim() ?? "")?.[1];
+  if (result.error || result.signal || result.status !== 0 || !actual || !compatible(actual)) fail("NODE_VERSION_UNVERIFIED");
+  return { version: actual, binarySHA256: hash(node) };
+}
+export function supportsFixtureRuntime(version, npmRoot = npmRootFromPath()) {
+  const semver = createRequire(join(npmRoot, "package.json"))("semver");
+  return semver.satisfies(version, ">=24.15.0");
+}
+export function probeSupportedRuntime(node, npmRoot = npmRootFromPath()) {
+  return { ...probe(node, undefined, version => supportsFixtureRuntime(version, npmRoot)), requiredRange: ">=24.15.0" };
 }
 
 export function npmRootFromPath(path = process.env.PATH ?? "") {
@@ -168,7 +176,7 @@ export async function prepareCommandFixtures({ directory, root = repository, npm
   physicalDirectory(npmRoot);
   const npm = json(join(npmRoot, "package.json"));
   if (npm.name !== "npm" || npm.version !== "12.2.0") fail("NPM_12_2_REQUIRED");
-  const minimumProof = probe(minimum, "24.15.0");
+  const minimumProof = probeSupportedRuntime(minimum, npmRoot);
   const binding = dependencyBinding(root, npmRoot);
   if (node20Paths) for (const version of ["20.0.0", "20.20.2"]) probe(node20Paths[version], version);
   if (envFile) {

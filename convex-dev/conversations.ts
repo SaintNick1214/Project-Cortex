@@ -4,6 +4,7 @@ import { mutation, internalMutation } from "./_generated/server";
 import type { QueryCtx } from "./_generated/server";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { ManagedConversation } from "./runtimeTranscript";
+import type { Conversation, Message } from "../src/types";
 import { bindDataActor, dataAuthorityReference, managedConversationAccess, requireDataAuthority } from "./runtimeDataAuth";
 import { internalUnavailable } from "./runtimeUnavailableAuth";
 import { approveRegisteredMessage, bridgeFor, checkConversation, conversationById, createManagedConversation, deleteManagedConversation,
@@ -21,16 +22,16 @@ function metadataInput(value: unknown) {
     || detached.tags !== undefined && (!Array.isArray(detached.tags) || detached.tags.length > 32 || detached.tags.some(tag => typeof tag !== "string"))) transcriptDenied("INVALID_INPUT");
   return canonical;
 }
-function view(row: ManagedConversation): import("../src/types").Conversation & { manualWriteLocked: boolean; historyRevision: number } {
+function view(row: ManagedConversation): Conversation & { manualWriteLocked: boolean; historyRevision: number } {
   return { _id: row._id, conversationId: row.conversationId, memorySpaceId: row.memorySpaceId, tenantId: row.tenantId, type: row.type,
     participants: { userId: row.ownerPrincipalId, userIds: row.participants, ...(row.legacyAgentLabel ? { agentId: row.legacyAgentLabel } : {}) },
-    messages: [] as import("../src/types").Message[], messageCount: row.messageCount,
+    messages: [] as Message[], messageCount: row.messageCount,
     metadata: row.metadataCanonical ? JSON.parse(row.metadataCanonical) as Record<string, unknown> : undefined,
     visibility: row.visibility, collaborativeSettings: { requireApproval: row.requireApproval, approvedParticipants: row.participants },
     manualWriteLocked: row.manualWriteLocked, historyRevision: row.historyRevision, createdAt: row.createdAt, updatedAt: row.updatedAt };
 }
 async function history(ctx: ReadCtx, conversation: ManagedConversation, reference: RuntimeAuthorityReference) {
-  const messages: (import("../src/types").Message & { revision: number })[] = []; let cursor: string | null = null;
+  const messages: (Message & { revision: number })[] = []; let cursor: string | null = null;
   do { const page = await readTranscriptPage(ctx, conversation, reference, cursor, 100);
     for (const message of page.page) { const bridge = await bridgeFor(ctx, conversation, message.id); if (!bridge) transcriptDenied("STALE_TRANSCRIPT");
       messages.push({ id: bridge.legacyMessageId ?? message.id, role: message.role === "assistant" ? "agent" : "user", content: message.parts.flatMap(part => part.type === "text" ? [part.text] : []).join("\n"), timestamp: bridge.createdAt,

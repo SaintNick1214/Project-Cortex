@@ -360,6 +360,10 @@ jobs:
     name: 'Code Quality (Lint, Types & Offline Unit)'
     if: inputs.queue_probe != true
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     permissions:
       contents: read
     steps:
@@ -379,7 +383,7 @@ jobs:
       - name: Pure SDK unit contracts without live environment loading
         run: |
           npm run build:backend
-          timeout --signal=TERM --kill-after=5s 240s node scripts/ci-contract.mjs offline-unit
+          timeout --signal=TERM --kill-after=5s 240s node scripts/ci-contract.mjs offline-unit --shard=${{ matrix.shard }}/4
 
   offline-packages:
     name: Offline CLI and provider contracts
@@ -415,7 +419,7 @@ jobs:
           sudo apt-get install --yes zsh fish
         if: needs.detect-changes.outputs.cli == 'true'
       - name: Prepare isolated command fixtures from current built dependencies
-        run: node scripts/ci/command-fixtures.mjs prepare --directory "$RUNNER_TEMP/cortex-cli-command-fixtures" --env-file "$GITHUB_ENV"
+        run: node -- scripts/ci/command-fixtures.mjs prepare --directory "$RUNNER_TEMP/cortex-cli-command-fixtures" --env-file "$GITHUB_ENV"
         env:
           CORTEX_CI_AUTH_PRIVATE_KEY: ''
         if: needs.detect-changes.outputs.cli == 'true'

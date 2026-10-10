@@ -57,6 +57,13 @@ hashes before installing. Ordinary/frozen demo installs and transitive provider-
 closure validation remain required. Runtime setup uses Node 24.21.0, npm 12.2.0
 and a lockfile-based npm download cache, never a shared `node_modules` cache.
 
+CLI command fixtures bind the selected supported positive Node binary's actual
+version and digest and require Node >=24.15.0. The retained `MINIMUM` input and
+`minimum` receipt field identify that positive runtime; a Node 24.21.0 CI receipt
+does not claim an exact 24.15.0 floor run. Legacy Node 20 binaries retain their
+official checksum and exact version checks. Workflow launches use `node --` so
+the environment output flag reaches the fixture script without native preloading.
+
 Functional sparse checkouts omit captured `_goals` and `work` files. Their source
 evidence is preserved. Security scanning retains its full Git history.
 

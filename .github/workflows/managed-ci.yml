@@ -359,7 +359,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes zsh fish
       - name: Prepare isolated command fixtures from current built dependencies
-        run: node scripts/ci/command-fixtures.mjs prepare --directory "$RUNNER_TEMP/cortex-cli-command-fixtures" --env-file "$GITHUB_ENV"
+        run: node -- scripts/ci/command-fixtures.mjs prepare --directory "$RUNNER_TEMP/cortex-cli-command-fixtures" --env-file "$GITHUB_ENV"
         env:
           CORTEX_CI_AUTH_PRIVATE_KEY: ''
       - name: Run CLI unit and command contracts without live credentials
