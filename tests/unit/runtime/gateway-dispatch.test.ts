@@ -41,7 +41,7 @@ function fixture(embedding = false) {
   const r = resolution(embedding); const b = { ...binding, operationKey: embedding ? "embedding.query" as const : "agent.respond" as const };
   const events: string[] = []; const receipts: string[] = []; const admissions: (GatewayBinding & { requestCanonical: string })[] = []; let disposition: "reserved" | "uncertain" | "inflight" | "replay" = "reserved";
   const nativeCalls: LanguageModelV4CallOptions[] = []; let nativeCount = 0; let revoked = false; let captureFails = false; let changedPermit = false; let changedAdmit = false; let ledgerSettled = false;
-  const accounting = { settledUnits: 0, uncertainUnits: 10000, activeSlots: 1, attached: undefined as string | undefined, outputVisible: false }; const attachments: Parameters<GatewayLedgerPort["attachTerminalResult"]>[0][] = [];
+  const accounting = { settledUnits: 0, uncertainUnits: 10000, activeSlots: 1, attached: undefined as string | undefined, outputVisible: false }; const attachments: Parameters<GatewayLedgerPort["attachTerminalResult"]>[0][] = []; const attachmentAttempts: Parameters<GatewayLedgerPort["attachTerminalResult"]>[0][] = [];
   const ledger: GatewayLedgerPort = {
     resolve: async () => { events.push("resolve"); if (revoked) throw new Error("revoked"); return r; },
     admit: async (args) => {
@@ -55,8 +55,9 @@ function fixture(embedding = false) {
     },
     checkpoint: async (args) => { events.push("checkpoint"); disposition = "uncertain"; return { dispatchPermit: true, dispatchIdentity: "dispatch", snapshot: r.snapshot, requestCanonical: changedPermit ? "{}" : args.requestCanonical }; },
     markVisible: async (args) => { events.push(args.outputVisible ? "visible" : "current"); if (ledgerSettled) throw new Error("B visibility requires pending state"); if (revoked) throw new Error("revoked"); return { recorded: true }; },
-    attachTerminalResult: async (args) => { events.push("attach"); attachments.push(args);
+    attachTerminalResult: async (args) => { events.push("attach"); attachmentAttempts.push(args);
       if (revoked || !ledgerSettled) return { attached: false, resultWithheld: true };
+      attachments.push(args);
       accounting.attached = args.privateResultCanonical; accounting.outputVisible = true;
       return { attached: true, resultWithheld: false }; },
   };
@@ -74,7 +75,7 @@ function fixture(embedding = false) {
     { type: "finish", finishReason: { unified: "stop", raw: "stop" }, usage: generated().usage } ];
     return new ReadableStream<LanguageModelV4StreamPart>({ start(c) { items.forEach((x) => c.enqueue(x)); c.close(); } });
   }
-  return { r, b, events, receipts, accounting, attachments, admissions, nativeCalls, model, composition, streamParts, count: () => nativeCount,
+  return { r, b, events, receipts, accounting, attachments, attachmentAttempts, admissions, nativeCalls, model, composition, streamParts, count: () => nativeCount,
     disposition: (x: typeof disposition) => { disposition = x; }, revoke: () => { revoked = true; }, captureFail: () => { captureFails = true; }, captureResume: () => { captureFails = false; }, changedPermit: () => { changedPermit = true; }, changedAdmit: () => { changedAdmit = true; } };
 }
 beforeEach(() => { tokenLookup.mockClear(); });
@@ -150,7 +151,7 @@ describe("bounded governed Gateway middleware", () => {
     const f = fixture(); const capture = f.composition.terminalSink.capture; f.composition.terminalSink.capture = async (e) => { const result = await capture(e); f.revoke(); return result; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" }); expect(f.receipts).toHaveLength(1); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture", "attach"]);
     expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
-    expect(f.attachments).toEqual([]); expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
+    expect(f.attachmentAttempts).toHaveLength(1); expect(f.attachments).toEqual([]); expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
   });
   it("missing durable capture withholds output, retains checkpoint and never assumes admin recovery", async () => {
     const f = fixture(); f.captureFail(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
@@ -240,10 +241,11 @@ describe("bounded governed Gateway middleware", () => {
   it.each(["model", "input", "output"])("native %s qualification overrun preserves complete charge and withholds result", async (kind) => {
     const f = fixture(); const body = raw(); if (kind === "model") body.model = "openai/unqualified-model";
     if (kind === "input") body.usage.prompt_tokens = 100; if (kind === "output") body.usage.completion_tokens = 100;
-    f.model.doGenerate = async () => generated("answer", body); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    const nativeGenerate = f.model.doGenerate;
+    f.model.doGenerate = async (input) => { const result = await nativeGenerate(input); return { ...result, response: { ...result.response, body } }; }; const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "QUALIFICATION_OVERRUN" }); expect(f.receipts).toHaveLength(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005"); expect(f.events).not.toContain("attach"); expect(f.events).not.toContain("visible");
     expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
-    expect(f.attachments).toEqual([]); expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
+    expect(f.attachmentAttempts).toEqual([]); expect(f.attachments).toEqual([]); expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
   });
 
   it("owner retries retained sanitized terminal persistence without inference or unauthorized settlement", async () => {

@@ -2,7 +2,7 @@
 
 The canonical home uses AI SDK7 `useChat` with `CortexRemoteTransport`. The backend owns the Agent conversation, tool approvals, memory ingestion, title generation and artifact jobs. The app never calls an inference provider or writes a second conversation or memory copy.
 
-Install with Node24.15/npm12.2 using `npm ci --ignore-scripts`. Copy `.env.local.example` and set your owned backend URLs and selectors. Use the Cortex CLI's reviewed additive installer; preserve host auth, functions, schema and HTTP routes. `npm run dev` starts only Next.js. It does not deploy or start Docker.
+Use Node24.15 or newer and the app's declared pnpm10.33. Run `pnpm install --frozen-lockfile --ignore-scripts` in the canonical repository checkout, or `pnpm install --ignore-scripts` in a generated template without a lockfile. Copy `.env.local.example` and set your owned backend URLs and selectors. Use the Cortex CLI's reviewed additive installer; preserve host auth, functions, schema and HTTP routes. `pnpm dev` starts only Next.js. It does not deploy or start Docker.
 
 Your host identity provider must issue a JWT accepted by the backend's existing `auth.config.ts`. An administrator must provision a current membership and grant, publish an Agent definition and install qualified model policies. Paste the JWT into the password input to connect; it stays in memory. Refresh uses the official Convex auth callback. Expiry, revocation and sign-out clear protected displays. Environment selectors do not grant authority.
 
@@ -14,4 +14,4 @@ HTTP consumers send `Authorization: Bearer <host JWT>` on every request. `POST /
 
 Previous app-side model factories, execution tools, unauthenticated SDK singleton and votes/share examples are retired. Retained editors and Auth.js examples do not grant Cortex authority. The canonical UI and HTTP generation routes are remote replacements.
 
-Run `npm test`, `npx tsc --noEmit`, `npm run build` and scoped `ultracite check` for affected files. Offline checks do not attest provider availability or native OCC. Installed CLI/backend/browser evidence is separate; unavailable async video is not completed media.
+Run `pnpm test`, `pnpm exec tsc --noEmit`, `pnpm run build` and `pnpm run lint` for affected files. Offline checks do not attest provider availability or native OCC. Installed CLI/backend/browser evidence is separate; unavailable async video is not completed media.
