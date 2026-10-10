@@ -11,7 +11,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 /** @typedef {import('../contract.js').TemplateCatalog} TemplateCatalog */
 /** @typedef {import('../contract.js').SourceFileReceipt} SourceFileReceipt */
 
-const releaseRange = "^0.38.0";
+const releaseRange = "^0.39.0";
 const versions = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*)?$/;
 const managers = { basic: "npm", "vercel-ai-quickstart": "npm", "chat-sdk": "pnpm" };
 const excludedDirectories = new Set([
@@ -165,7 +165,7 @@ function rewriteManifest(bytes, selection) {
       if (typeof value !== "string" || !value.trim()) fail("CATALOG_DEPENDENCY_INVALID");
       if (name === "@cortexmemory/sdk" || name === "@cortexmemory/vercel-ai-provider") {
         if (specs.has(name)) fail("CATALOG_DEPENDENCY_DUPLICATE");
-        if (!value.startsWith("file:") && value !== releaseRange) fail("CATALOG_RELEASE_SPEC_INVALID");
+        if (!/^(?:file:|link:)/.test(value) && value !== releaseRange) fail("CATALOG_RELEASE_SPEC_INVALID");
         dependencies[name] = releaseRange;
         specs.set(name, releaseRange);
       } else if (/^(?:file:|link:|workspace:|\.\.?\/|\/)/.test(value)) fail("CATALOG_LOCAL_DEPENDENCY_REFUSED");

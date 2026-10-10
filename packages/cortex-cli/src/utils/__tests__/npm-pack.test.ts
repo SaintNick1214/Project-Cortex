@@ -1,7 +1,7 @@
 import { expect, it } from "@jest/globals";
 import { parseNpmPackFilename } from "../npm-pack.js";
-const expected={name:"@cortexmemory/sdk",version:"0.38.0"};
-const entry={...expected,id:"@cortexmemory/sdk@0.38.0",filename:"cortexmemory-sdk-0.38.0.tgz"};
+const expected={name:"@cortexmemory/sdk",version:"0.39.0"};
+const entry={...expected,id:"@cortexmemory/sdk@0.39.0",filename:"cortexmemory-sdk-0.39.0.tgz"};
 it.each([{value:[entry]},{value:{[expected.name]:entry}}])("accepts the exact observed npm array/object ABI: %j",({value})=>{
   expect(parseNpmPackFilename(JSON.stringify(value),expected)).toBe(entry.filename);
 });

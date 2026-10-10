@@ -31,7 +31,7 @@ async function tree(dir:string):Promise<Record<string,string>> {
 describe("current canonical catalog prospective integration",()=>{
   it("validates the selected actual SDK source without extraction or module execution",async()=>{
     const view=await readTemplateBackendCandidate(inputs().sdkPackage);
-    expect(validateSdkPackage(inputs().sdkPackage,view).version).toBe("0.38.0");
+    expect(validateSdkPackage(inputs().sdkPackage,view).version).toBe("0.39.0");
     expect(Object.keys(view.files)).toContain("schema.ts");
     if (view.artifact) expect(view.artifact.path).toBe(inputs().sdkPackage);
     else expect(view.files["schema.ts"]).toEqual(await fs.readFile(path.join(inputs().sdkPackage,"convex-dev/schema.ts")));
@@ -40,9 +40,9 @@ describe("current canonical catalog prospective integration",()=>{
   it.each(["basic","vercel-ai-quickstart","chat-sdk"] as const)("%s full schema/app preflight is write-free at an absent destination",async id=>{
     const parent=await root(),target=path.join(parent,"prospective"),before=await tree(parent);
     const prepared=await prepareTemplateInit(target,id,inputs());
-    expect(prepared.template.version).toBe("1.3.0");
+    expect(prepared.template.version).toBe("1.4.0");
     const integration=await prepareTemplateIntegration(prepared,{dryRun:true,graph:"none"});
-    expect(integration?.summary).toMatchObject({sdkVersion:"0.38.0",packageManager:id==="chat-sdk"?"pnpm":"npm"});
+    expect(integration?.summary).toMatchObject({sdkVersion:"0.39.0",packageManager:id==="chat-sdk"?"pnpm":"npm"});
     expect(integration?.summary?.conflicts).toEqual([]);
     expect((await applyPreparedTemplateInit(prepared,{dryRun:true})).status).toBe("dry-run");
     expect(await tree(parent)).toEqual(before);
@@ -57,7 +57,7 @@ describe("current canonical catalog prospective integration",()=>{
     expect(outputs.map(o=>o.identity)).toEqual([outputs[0].identity,outputs[0].identity]);
     expect(await tree(first)).toEqual(await tree(second));
     expect(services.install).not.toHaveBeenCalled();
-    expect((await readTemplateBaseline(first,"basic"))?.identity.version).toBe("1.3.0");
+    expect((await readTemplateBaseline(first,"basic"))?.identity.version).toBe("1.4.0");
   });
   it.each(["basic","vercel-ai-quickstart","chat-sdk"] as const)("%s immutable 1.2 payload remains explicitly selectable without implicit runtime integration",async id=>{
     const target=path.join(await root(),"retained-legacy"),prepared=await prepareTemplateInit(target,id,{...inputs(),templateVersion:"1.2.0"});

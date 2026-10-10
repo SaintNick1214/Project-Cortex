@@ -44,7 +44,7 @@ const sdk = () => {
   fs.mkdirSync(path.join(root, "convex-dev/_generated"));
   fs.writeFileSync(
     path.join(root, "package.json"),
-    JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+    JSON.stringify({ name: "@cortexmemory/sdk", version: "0.39.0" }),
   );
   fs.writeFileSync(
     path.join(root, "convex-dev/schema.ts"),
@@ -148,7 +148,7 @@ describe("ownership planner outcomes", () => {
     const ownership = JSON.parse(
       fs.readFileSync(path.join(project, BACKEND_MANIFEST), "utf8"),
     );
-    expect(ownership.sdk.version).toBe("0.38.0");
+    expect(ownership.sdk.version).toBe("0.39.0");
     expect(fs.statSync(path.join(project, BACKEND_MANIFEST)).mode & 0o777).toBe(
       0o600,
     );
@@ -238,12 +238,12 @@ describe("ownership planner outcomes", () => {
     const source = sdk();
     fs.writeFileSync(
       path.join(source, "package.json"),
-      '{"name":"other","version":"0.38.0"}',
+      '{"name":"other","version":"0.39.0"}',
     );
     expect(() => validateSdkPackage(source)).toThrow("identity");
     fs.writeFileSync(
       path.join(source, "package.json"),
-      '{"name":"@cortexmemory/sdk","version":"0.38.0"}',
+      '{"name":"@cortexmemory/sdk","version":"0.39.0"}',
     );
     fs.appendFileSync(
       path.join(source, "convex-dev/admin.ts"),
@@ -367,7 +367,7 @@ describe("installer preservation", () => {
     const manifest = JSON.parse(
       fs.readFileSync(path.join(project, "package.json"), "utf8"),
     );
-    expect(manifest.version).toBe("1.3.0");
+    expect(manifest.version).toBe("1.4.0");
     expect(manifest.scripts.build).toBe("tsc");
     expect(manifest.scripts["build:convex"]).toBe("convex deploy");
     const minimal = path.join(root, "backend-only");
@@ -480,7 +480,7 @@ describe("defensive admin binding validation", () => {
       path.join(source, "package.json"),
       JSON.stringify({
         name: "@cortexmemory/sdk",
-        version: "0.38.0",
+        version: "0.39.0",
         main: "./not-to-load.js",
       }),
     );
@@ -490,7 +490,7 @@ describe("defensive admin binding validation", () => {
     );
     expect(validateSdkPackage(source)).toEqual({
       name: "@cortexmemory/sdk",
-      version: "0.38.0",
+      version: "0.39.0",
       sourceHash: expect.stringMatching(/^[a-f0-9]{64}$/),
     });
   });

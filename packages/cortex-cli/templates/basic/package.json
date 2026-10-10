@@ -1,6 +1,6 @@
 {
   "name": "{{PROJECT_NAME}}",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Verified Cortex backend-run CLI and authenticated HTTP example",
   "type": "module",
   "scripts": {
@@ -19,7 +19,7 @@
     "lint": "tsc --noEmit && tsc -p tsconfig.test.json && node --check dev-runner.mjs"
   },
   "dependencies": {
-    "@cortexmemory/sdk": "^0.38.0",
+    "@cortexmemory/sdk": "file:../../../..",
     "@hono/node-server": "^2.1.3",
     "convex": "^1.46.0",
     "dotenv": "^18.0.5",

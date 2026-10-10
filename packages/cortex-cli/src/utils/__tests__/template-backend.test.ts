@@ -300,7 +300,7 @@ describe("immutable 1.2 legacy template composition against exact incoming SDK s
       }
       fs.writeFileSync(
         path.join(source, "package.json"),
-        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.39.0" }),
       );
       const helper = path.join(source, "convex-dev/lib/domainScope.ts");
       if (change === "modified")
@@ -341,7 +341,7 @@ describe("immutable 1.2 legacy template composition against exact incoming SDK s
       }
       fs.writeFileSync(
         path.join(source, "package.json"),
-        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.39.0" }),
       );
       const target = path.join(source, "convex-dev", name);
       if (change === "modified")
@@ -445,7 +445,7 @@ describe("immutable 1.2 legacy template composition against exact incoming SDK s
       }
       fs.writeFileSync(
         path.join(source, "package.json"),
-        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.39.0" }),
       );
       const target = path.join(source, "convex-dev/admin.ts");
       let text = fs.readFileSync(target, "utf8");
@@ -826,7 +826,7 @@ describe("immutable 1.2 legacy template composition against exact incoming SDK s
     }
     fs.writeFileSync(
       path.join(source, "package.json"),
-      JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+      JSON.stringify({ name: "@cortexmemory/sdk", version: "0.39.0" }),
     );
     const project = fixture(),
       plan = planTemplateBackend(project, source, "chat-sdk");

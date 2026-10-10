@@ -102,7 +102,7 @@ describe("modern additive setup", () => {
     const pkg = '{"scripts":{"quickstart":"host-start","build":"host-build"},"host":true}';
     await fs.writeFile(path.join(host, "package.json"), pkg);
     await fs.outputFile(path.join(host, "custom/backend/host.ts"), "host-function");
-    const config = await prepareVercelAIQuickstart(host, "0.38.0", "https://safe.convex.cloud");
+    const config = await prepareVercelAIQuickstart(host, "0.39.0", "https://safe.convex.cloud");
     expect(config).toMatchObject({ projectPath: host, path: "quickstart", enabled: true });
     expect(await fs.pathExists(path.join(host, "quickstart/app/page.tsx"))).toBe(true);
     expect(await fs.pathExists(path.join(host, "quickstart/convex"))).toBe(false);

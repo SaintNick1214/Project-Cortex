@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { appendFileSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { publishReleasePlan, validateReleasePlan } from './release-contract.mjs';
 const sourceSha = process.env.SOURCE_SHA;
@@ -6,8 +6,11 @@ const plan = JSON.parse(readFileSync('release-plan.json', 'utf8'));
 validateReleasePlan(plan, sourceSha);
 if (execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim() !== sourceSha) throw new Error('Checkout/source mismatch');
 const run = (command, args, cwd = '.') => execFileSync(command, args, { cwd, stdio: 'inherit' });
-await publishReleasePlan({
+const outcomes = new Map();
+let failure;
+try { await publishReleasePlan({
   plan, sourceSha,
+  onOutcome: (pkg, state) => outcomes.set(pkg.key, { name: pkg.name, version: pkg.version, state }),
   publish: pkg => {
     // Never resynchronize retired mirrors or rewrite independent app locks here.
     const manifest = JSON.parse(readFileSync(`${pkg.folder}/package.json`, 'utf8'));
@@ -26,4 +29,8 @@ await publishReleasePlan({
     try { execFileSync('gh', ['release', 'view', tag], { stdio: 'pipe' }); }
     catch { run('gh', ['release', 'create', tag, '--title', `${pkg.name} ${pkg.version}`, '--notes', `Automatically built and tested from ${sourceSha}. Install ${pkg.name}@${pkg.version}. Documentation: https://docs.cortexmemory.dev`]); }
   },
-});
+}); } catch (error) { failure = error; }
+const summary = `## Package publication outcome\n\nOutcome: **${failure ? 'publication/recovery failure' : outcomes.size ? 'publication/recovery completed' : 'nothing to publish'}**; source: \`${sourceSha}\`.\n\n` + [...outcomes.values()].map(pkg => `- ${pkg.name}@${pkg.version}: ${pkg.state}`).join('\n') + (failure ? '\n\nA step failed. Published/accepted versions above are not republished on recovery; inspect the failed step and rerun the exact-main security contract.\n' : '\n');
+if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
+console.log(summary);
+if (failure) throw failure;

@@ -5,7 +5,8 @@ import yaml from "js-yaml";
 import cliJestConfig from "../../packages/cortex-cli/jest.config.js";
 
 const source = readFileSync(new URL("../../.github/workflows/pr-checks.yml", import.meta.url), "utf8");
-const workflow = yaml.load(source), jobs = workflow.jobs;
+const managedSource = readFileSync(new URL("../../.github/workflows/managed-ci.yml", import.meta.url), "utf8");
+const workflow = yaml.load(source), managed = yaml.load(managedSource), jobs = { ...workflow.jobs, ...managed.jobs };
 
 test("workflow parses and guards both development targets before auth writes or service effects", () => {
   const steps = jobs["setup-and-purge"].steps;
@@ -14,9 +15,9 @@ test("workflow parses and guards both development targets before auth writes or 
   for (const step of steps.filter(step => /auth-config|convex deploy|runtime-fixtures.mjs provision/.test(step.run ?? ""))) {
     assert.ok(steps.indexOf(step) > guard);
   }
-  assert.equal(source.includes("secrets.CONVEX_URL"), false);
-  assert.equal(source.includes("secrets.CONVEX_DEPLOY_KEY"), false);
-  assert.equal(source.includes("admin:clearTable"), false);
+  assert.equal((source + managedSource).includes("secrets.CONVEX_URL"), false);
+  assert.equal((source + managedSource).includes("secrets.CONVEX_DEPLOY_KEY"), false);
+  assert.equal((source + managedSource).includes("admin:clearTable"), false);
   assert.equal(jobs["setup-and-purge"].env.CONVEX_DEPLOY_KEY, "${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY }}");
   assert.equal(jobs["setup-and-purge"].env.CONVEX_DEPLOY_KEY_CLI, "${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY_CLI }}");
 });
@@ -49,7 +50,7 @@ test("only SDK shard1 invokes the actual suite; other shards still cover every c
 });
 
 test("legacy direct-provider and unauthenticated CLI loops cannot be activated by the new secrets", () => {
-  assert.equal(source.includes("OPENAI_API_KEY"), false);
+  assert.equal((source + managedSource).includes("OPENAI_API_KEY"), false);
   assert.equal(jobs["test-vercel-ai-provider"].steps.some(step => /^npm test --workspace/.test(step.run ?? "")), false);
   assert.equal(jobs["test-cli"].steps.some(step => /npm run test:e2e/.test(step.run ?? "")), false);
   const provider = jobs["test-vercel-ai-provider"].steps.find(step => /Run provider unit/.test(step.name ?? ""));
@@ -66,7 +67,7 @@ test("selected Jest suites must close naturally rather than inherit forced exit"
   const selected = ["test-typescript", "test-cli", "test-vercel-ai-provider"]
     .flatMap(name => jobs[name].steps)
     .flatMap(step => (step.run ?? "").split("\n"))
-    .filter(line => /--runTestsByPath|--maxWorkers=|npm run test:(unit|integration|fast)/.test(line));
+    .filter(line => /--runTestsByPath|--forceExit=false|npm run test:(unit|integration|fast)/.test(line));
   assert.equal(selected.length, 7);
   for (const command of selected) {
     if (command.includes("npm run test:fast")) {
@@ -119,8 +120,10 @@ test("provider actual path is isolated from old E2E and uses public scoped Agent
 });
 
 test("bounded consumers preserve complete-run serialization and independent cleanup after cancellation", () => {
-  assert.equal(workflow.concurrency.group, "cortex-shared-ci-backends");
-  assert.equal(workflow.concurrency["cancel-in-progress"], false);
+  assert.equal(workflow.concurrency, undefined);
+  assert.equal(managed.concurrency.group, "cortex-shared-ci-backends");
+  assert.equal(managed.concurrency["cancel-in-progress"], false);
+  assert.equal(managed.concurrency.queue, "max");
   for (const name of ["setup-and-purge", "test-typescript", "test-vercel-ai-provider", "test-cli", "cleanup-runtime-fixtures"]) {
     assert.ok(Number.isSafeInteger(jobs[name]["timeout-minutes"]));
     assert.ok(jobs[name]["timeout-minutes"] <= 15);
@@ -130,11 +133,13 @@ test("bounded consumers preserve complete-run serialization and independent clea
 
 test("cleanup waits for every consumer, runs after failure, and is a required final result", () => {
   const cleanup = jobs["cleanup-runtime-fixtures"];
-  for (const job of ["test-typescript", "test-cli", "test-vercel-ai-provider", "code-quality"]) assert.equal(cleanup.needs.includes(job), true);
+  for (const job of ["test-typescript", "test-cli", "test-vercel-ai-provider"]) assert.equal(cleanup.needs.includes(job), true);
+  assert.equal(cleanup.needs.includes("code-quality"), false, "offline parent jobs must remain outside the managed lock");
   assert.equal(cleanup.if.includes("always()"), true);
   assert.equal(cleanup.if.includes("'failure'"), true);
-  assert.equal(jobs["all-checks-passed"].needs.includes("cleanup-runtime-fixtures"), true);
-  assert.equal(jobs["all-checks-passed"].steps[0].run.includes('test "${{ needs.cleanup-runtime-fixtures.result }}" = "success"'), true);
+  assert.equal(jobs["managed-outcomes"].needs.includes("cleanup-runtime-fixtures"), true);
+  assert.equal(jobs["all-checks-passed"].needs.includes("managed-tests"), true);
+  assert.equal(jobs["all-checks-passed"].steps.at(-1).env.CI_PARENT, "true");
 });
 
 test("each target cleanup still runs when the other cleanup fails", () => {

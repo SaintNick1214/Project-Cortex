@@ -11,7 +11,7 @@ async function fixture(t) {
   const root = await promises.mkdtemp(path.join(os.tmpdir(), "catalog-file-race-"));
   t.after(() => promises.rm(root, { recursive: true, force: true }));
   const target = path.join(root, "package.json");
-  await promises.writeFile(target, JSON.stringify({ name: "fixture", version: "1.1.0", dependencies: { "@cortexmemory/sdk": "^0.38.0", convex: "1.46.0" } }));
+  await promises.writeFile(target, JSON.stringify({ name: "fixture", version: "1.1.0", dependencies: { "@cortexmemory/sdk": "^0.39.0", convex: "1.46.0" } }));
   const selection = { id: "basic", version: "1.1.0", source: root, provenance: "fixture/basic", manager: "npm", envNames: [], backend: true, graph: true };
   return { root, target, selection };
 }

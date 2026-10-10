@@ -66,7 +66,7 @@ function catalog(
         schemaVersion: 1,
         apiVersion: 1,
         provenance: "canonical/basic@1.1.0",
-        compatibility: { sdk: "^0.38.0", convex: "1.46.0" },
+        compatibility: { sdk: "^0.39.0", convex: "1.46.0" },
         envNames: ["CONVEX_URL"],
         envExamples: [".env.local.example"],
         backend,
@@ -87,7 +87,7 @@ const app = (text = "old") => ({
     name: "{{PROJECT_NAME}}",
     version: "1.1.0",
     private: true,
-    dependencies: { "@cortexmemory/sdk": "^0.38.0", convex: "1.46.0" },
+    dependencies: { "@cortexmemory/sdk": "^0.39.0", convex: "1.46.0" },
     scripts: { start: "node src/main.js" },
   }),
   "src/main.js": text,
@@ -1068,12 +1068,12 @@ describe("final runtime dependency compatibility", () => {
     ["@cortexmemory/vercel-ai-provider", "^0.36.0"], ["@cortexmemory/vercel-ai-provider", null],
   ] as const)("unchanged upstream cannot retain incompatible or deleted %s (%s) on update/repeated init", async (name,spec) => {
     const data=app(),manifest=JSON.parse(data["package.json"]);
-    if(name.includes("provider")) manifest.dependencies[name]="^0.38.0";
+    if(name.includes("provider")) manifest.dependencies[name]="^0.39.0";
     data["package.json"]=JSON.stringify(manifest);
     const a=await fixture(data),b=await fixture(data,"1.2.0");
     if(name.includes("provider"))for(const source of [a,b]) {
       const file=path.join(source,"catalog.json"),value=JSON.parse(await fs.readFile(file,"utf8"));
-      value.templates[0].compatibility.provider="^0.38.0";await fs.writeFile(file,JSON.stringify(value));
+      value.templates[0].compatibility.provider="^0.39.0";await fs.writeFile(file,JSON.stringify(value));
     }
     const target=path.join(await root(),"app");await applyPreparedTemplateInit(await prepareTemplateInit(target,"basic",{templatesPackage:a}));
     const file=path.join(target,"package.json"),local=JSON.parse(await fs.readFile(file,"utf8"));
@@ -1092,11 +1092,11 @@ describe("final runtime dependency compatibility", () => {
     const a=await fixture(),b=await fixture(app(),"1.2.0"),target=path.join(await root(),"app");
     await applyPreparedTemplateInit(await prepareTemplateInit(target,"basic",{templatesPackage:a}));
     const file=path.join(target,"package.json"),local=JSON.parse(await fs.readFile(file,"utf8"));
-    local.dependencies["@cortexmemory/sdk"]="~0.38.0";local.dependencies.unrelated="^0.1.0";
+    local.dependencies["@cortexmemory/sdk"]="~0.39.0";local.dependencies.unrelated="^0.1.0";
     await fs.writeFile(file,JSON.stringify(local));
     const prepared=await prepareTemplateUpdate(target,{templatesPackage:b,to:"1.2.0"});expect(prepared.plan.conflicts).toEqual([]);
     await applyPreparedTemplateUpdate(prepared);const result=JSON.parse(await fs.readFile(file,"utf8"));
-    expect(result.dependencies["@cortexmemory/sdk"]).toBe("~0.38.0");expect(result.dependencies.unrelated).toBe("^0.1.0");
+    expect(result.dependencies["@cortexmemory/sdk"]).toBe("~0.39.0");expect(result.dependencies.unrelated).toBe("^0.1.0");
     expect((await prepareTemplateInit(target,"basic",{templatesPackage:b})).existingPlan?.changes).toEqual([]);
   });
 });

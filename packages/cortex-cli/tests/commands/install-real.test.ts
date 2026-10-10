@@ -99,7 +99,7 @@ describe("real installer registry and binary", () => {
     const result = run(["init", directory, ...options, "--format", "json"]);
     expect(result.status).toBe(0);
     const output = JSON.parse(result.stdout);
-    expect(output.sdkVersion).toBe("0.38.0");
+    expect(output.sdkVersion).toBe("0.39.0");
     expect(output.convexVersion).toBe("1.46.0");
     expect(output.deployment).toBe("staged");
     const manifest = JSON.parse(
@@ -370,7 +370,7 @@ it("built npm failure restores scaffold and unpublished registry version never f
   );
   expect(unavailable.status).toBe(1);
   expect(unavailable.stderr).toContain(
-    "@cortexmemory/sdk@0.38.0 registry release unavailable",
+    "@cortexmemory/sdk@0.39.0 registry release unavailable",
   );
   expect(unavailable.stderr).toContain("No older SDK fallback");
   expect(fs.existsSync(directory)).toBe(false);
@@ -378,7 +378,7 @@ it("built npm failure restores scaffold and unpublished registry version never f
 
 it.each([
   {"@cortexmemory/sdk":{name:"@cortexmemory/sdk",version:"0.37.0",filename:"sdk.tgz"}},
-  {"@cortexmemory/sdk":{name:"@cortexmemory/sdk",version:"0.38.0",filename:"../escape.tgz"}},
+  {"@cortexmemory/sdk":{name:"@cortexmemory/sdk",version:"0.39.0",filename:"../escape.tgz"}},
 ])("built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: %j",packed=>{
   const suffix=packed["@cortexmemory/sdk"].version+packed["@cortexmemory/sdk"].filename.replace(/[^A-Za-z0-9]/g,""),bin=path.join(root,"pack-refusal-"+suffix),host=path.join(root,"pack-host-"+suffix);
   fs.mkdirSync(bin);fs.mkdirSync(host);

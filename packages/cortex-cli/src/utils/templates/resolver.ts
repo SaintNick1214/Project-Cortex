@@ -26,8 +26,8 @@ export interface TemplateRuntimeVersions {
   convex: string;
 }
 export const templateRuntimeVersions: TemplateRuntimeVersions = {
-  sdk: "0.38.0",
-  provider: "0.38.0",
+  sdk: "0.39.0",
+  provider: "0.39.0",
   convex: "1.46.0",
 };
 export interface ResolvedCatalog {

@@ -76,7 +76,7 @@ export function registerDeployCommands(
     program
       .command("update")
       .description(
-        "Plan/apply selected dependency versions (default pinned SDK 0.38.0 + Convex 1.46.0 pair)",
+        "Plan/apply selected dependency versions (default pinned SDK 0.39.0 + Convex 1.46.0 pair)",
       ),
   ).action((options: ManagementOptions & Record<string, unknown>) =>
     updateAction(config, options),

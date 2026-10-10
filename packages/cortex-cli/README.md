@@ -4,16 +4,16 @@ CLI for installing the Cortex SDK, managing one selected Convex project, and per
 
 ## Installation and compatibility
 
-These examples describe CLI **0.38.0**, with SDK/provider **0.38.0**, Convex **1.46.0**, and the independently versioned `@cortexmemory/templates` **1.1.0** catalog. The CLI requires **Node.js 24.15.0 or newer**. SDK and application runtime requirements are declared by their own packages; the CLI floor does not change those requirements.
+These examples describe CLI **0.39.0**, with SDK/provider **0.39.0**, Convex **1.46.0**, and the independently versioned `@cortexmemory/templates` **1.3.0** catalog. The CLI requires **Node.js 24.15.0 or newer**. SDK and application runtime requirements are declared by their own packages; the CLI floor does not change those requirements.
 
 ```bash
-npm install -g @cortexmemory/cli@0.38.0
+npm install -g @cortexmemory/cli@0.39.0
 # Or install a matching published release in your project:
-npm install --save-dev @cortexmemory/cli@0.38.0
+npm install --save-dev @cortexmemory/cli@0.39.0
 npx cortex --help
 ```
 
-For an unpublished release, install the matching local SDK/provider/catalog/CLI archives explicitly. SDK installation and update accept `--sdk-package` for a fixed 0.38.0 directory or tarball; template commands also accept `--provider-package` and `--templates-package`. An unavailable registry release is an error; an older SDK is not substituted. CLI native management uses the selected project's installed Convex 1.46.0 executable rather than a global or arbitrary downloaded executable.
+For an unpublished release, install the matching local SDK/provider/catalog/CLI archives explicitly. SDK installation and update accept `--sdk-package` for a fixed 0.39.0 directory or tarball; template commands also accept `--provider-package` and `--templates-package`. An unavailable registry release is an error; an older SDK is not substituted. CLI native management uses the selected project's installed Convex 1.46.0 executable rather than a global or arbitrary downloaded executable.
 
 ## Quick start
 
@@ -77,8 +77,8 @@ For the recognized prior Next app shim that lacks `MutationCtx`, update the app/
 SDK dependency updates, template updates, and graph container lifecycle are separate operations.
 
 ```bash
-cortex update -d local --sdk-version 0.38.0 --convex-version 1.46.0 --sync --dry-run
-cortex update -d local --sdk-version 0.38.0 --convex-version 1.46.0 --sync --yes
+cortex update -d local --sdk-version 0.39.0 --convex-version 1.46.0 --sync --dry-run
+cortex update -d local --sdk-version 0.39.0 --convex-version 1.46.0 --sync --yes
 cortex schema status .
 cortex schema sync . --dry-run
 cortex schema sync .
@@ -87,7 +87,7 @@ cortex schema migrate -d local --dry-run --format json
 cortex schema migrate -d local --format json
 ```
 
-`update` defaults to the pinned SDK 0.38.0/Convex 1.46.0 pair. `convex update` is an alias with the same target/options. `--sync` explicitly synchronizes the owned SDK backend after dependency application. Without it, dependency changes do not imply a backend push. `schema status` inspects installed source; `schema sync` respects the configured functions directory, ownership, and user-edit conflicts. `--overwrite` explicitly backs up and replaces conflicting backend files only. Known canonical Next/Chat layouts use the supported composition; unrelated schemas are not merged by guessing.
+`update` defaults to the pinned SDK 0.39.0/Convex 1.46.0 pair. `convex update` is an alias with the same target/options. `--sync` explicitly synchronizes the owned SDK backend after dependency application. Without it, dependency changes do not imply a backend push. `schema status` inspects installed source; `schema sync` respects the configured functions directory, ownership, and user-edit conflicts. `--overwrite` explicitly backs up and replaces conflicting backend files only. Known canonical Next/Chat layouts use the supported composition; unrelated schemas are not merged by guessing.
 
 `schema references` reports deployed reference coverage. `schema migrate` explicitly resumes the supported backfill, using fixed deployment administrator authority; its dry-run reads the plan without deployment writes. Installation/status/help do not start migration. Operational tables `cortexReferenceTargets`, `cortexReferenceEdges`, `cortexReferenceState`, and `cortexErasureReceipts` hold reference/provenance/control state; they are disclosed exclusions from the user-content export, not additional user-content families.
 
@@ -254,7 +254,7 @@ FSL-1.1-Apache-2.0
 
 ## Verified backend runtime
 
-New runtime applications use the separate template channel (`cortex templates init`) and the current SDK's complete `dist/backend/v1` distribution. Installation composes runtime tables, components and authenticated HTTP routes alongside app-private schema and registrations. Differing host bytes require a reviewed merge. CLI build never mirrors app templates; immutable 1.2.0 payloads remain available separately from new 1.3.0 runtime sources. Legacy payload integration retains its existing reviewed SDK source checks.
+New runtime applications use the separate template channel (`cortex templates init`) and the current SDK's complete `dist/backend/v1` distribution. Installation composes runtime tables, components and authenticated HTTP routes alongside app-private schema and registrations. Differing host bytes require a reviewed merge. CLI build never mirrors app templates; immutable 1.2.0 and 1.3.0 payloads remain available separately from new 1.4.0 runtime sources. Legacy payload integration retains its existing reviewed SDK source checks.
 
 For ordinary runtime operations, provide `--token-env CORTEX_AUTH_TOKEN` or `--token-file /private/current-owner.jwt` (mode 0600 regular file), and optional `--tenant-id`/`--memory-space-id` verified selectors. The token is reread and the server session checked around each RPC. An explicit token source never falls back to a configured deployment key; caller labels cannot establish runtime authority. A configured deployment key without a token source selects the separate administrative SDK operator channel; `--scope-user`/`--tenant` select data scope there and do not authenticate the caller. Public SDK memory orchestration refuses app-side model/tool callbacks; ordinary Agent runs own that work in the backend. Explicit legacy administration retains its separate supported SDK operations.
 

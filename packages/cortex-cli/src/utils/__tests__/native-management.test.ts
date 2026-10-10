@@ -90,7 +90,7 @@ function sdk(root: string): void {
   fs.mkdirSync(path.join(dir, "convex-dev"), { recursive: true });
   fs.writeFileSync(
     path.join(dir, "package.json"),
-    '{"name":"@cortexmemory/sdk","version":"0.38.0"}',
+    '{"name":"@cortexmemory/sdk","version":"0.39.0"}',
   );
   fs.writeFileSync(
     path.join(dir, "convex-dev/schema.ts"),
@@ -492,7 +492,7 @@ describe("authority and real native registry", () => {
     const report = await diagnose(config, { graph: true });
     expect(report.ok).toBe(true);
     expect(report.node).toEqual({ version: process.version, supported: isSupportedNodeVersion(process.versions.node) });
-    expect(report.dependencies.sdk).toBe("0.38.0");
+    expect(report.dependencies.sdk).toBe("0.39.0");
     expect(report.dependencies.convex).toBe("1.46.0");
     expect(report.backend.compatibility).toBe("unknown");
     expect(report.graph.status).toBe("external-prerequisites");
@@ -533,11 +533,11 @@ describe("authority and real native registry", () => {
     ).rejects.toThrow("exact versions");
     jest.spyOn(console, "log").mockImplementation(() => {});
     await updatePackages(config, { dryRun: true });
-    await updatePackages(config, { sdkVersion: "0.38.0", dryRun: true });
+    await updatePackages(config, { sdkVersion: "0.39.0", dryRun: true });
     expect(fs.existsSync(path.join(root, "convex"))).toBe(false);
     fs.writeFileSync(path.join(root, "yarn.lock"), "keep");
     await expect(
-      updatePackages(config, { sdkVersion: "0.38.0", dryRun: true }),
+      updatePackages(config, { sdkVersion: "0.39.0", dryRun: true }),
     ).rejects.toThrow("lockfile");
   });
 });

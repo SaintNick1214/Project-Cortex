@@ -28,7 +28,7 @@ function resolution(embedding = false): GatewayResolution {
     policies: [{ policyId: "d", version: 1, scope: "deployment", rules: { modelId, nativeInterface, allowedModels: [modelId], interfaces: [nativeInterface], capabilities: q.capabilities, allowedOptions: q.allowedOptions, allowedTools: [], fallbackModels: [], limits, pins } }], qualifications: [q] });
   return { snapshot, storageLimits: { canonicalBytes: 180000, privateResultBytes: 60000, embeddingValuesPerCall: 1 }, dispatchEvidence: {
     receiptId: "fixture", modelId, nativeInterface, evidenceHash: hash, providerVersion: "0.2.1", priceRevision: "price1", boundRevision: "bound1", checkedAt: 0, expiresAt: 100000,
-    terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1",
+    terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1", supportsStream: true,
     inputBound: { ruleId: embedding ? "default-embedding-utf8-v1" : "plain-chat-cookbook-utf8-v1", featureEnvelope: embedding ? "default-embedding-v1" : "plain-chat-v1", revision: 1, proofHash: hash, documentHash: hash, nativeTransformHash: hash },
     resultBound: { maximumPrivateResultBytes: 60000, maximumOutputTokens: 64, maximumEmbeddingValues: 1, proofHash: hash } } };
 }
@@ -41,6 +41,7 @@ function fixture(embedding = false) {
   const r = resolution(embedding); const b = { ...binding, operationKey: embedding ? "embedding.query" as const : "agent.respond" as const };
   const events: string[] = []; const receipts: string[] = []; const admissions: (GatewayBinding & { requestCanonical: string })[] = []; let disposition: "reserved" | "uncertain" | "inflight" | "replay" = "reserved";
   const nativeCalls: LanguageModelV4CallOptions[] = []; let nativeCount = 0; let revoked = false; let captureFails = false; let changedPermit = false; let changedAdmit = false; let ledgerSettled = false;
+  const accounting = { settledUnits: 0, uncertainUnits: 10000, activeSlots: 1, attached: undefined as string | undefined, outputVisible: false }; const attachments: Parameters<GatewayLedgerPort["attachTerminalResult"]>[0][] = [];
   const ledger: GatewayLedgerPort = {
     resolve: async () => { events.push("resolve"); if (revoked) throw new Error("revoked"); return r; },
     admit: async (args) => {
@@ -54,10 +55,15 @@ function fixture(embedding = false) {
     },
     checkpoint: async (args) => { events.push("checkpoint"); disposition = "uncertain"; return { dispatchPermit: true, dispatchIdentity: "dispatch", snapshot: r.snapshot, requestCanonical: changedPermit ? "{}" : args.requestCanonical }; },
     markVisible: async (args) => { events.push(args.outputVisible ? "visible" : "current"); if (ledgerSettled) throw new Error("B visibility requires pending state"); if (revoked) throw new Error("revoked"); return { recorded: true }; },
-    settle: async (args) => { events.push("settle"); if (revoked) throw new Error("revoked"); const receipt = JSON.parse(args.receiptCanonical) as { costSource: string; privateResultCanonical?: string };
-      ledgerSettled = receipt.costSource !== "unavailable"; return { state: receipt.costSource === "unavailable" ? "uncertain" : "settled", resultWithheld: !receipt.privateResultCanonical }; },
+    attachTerminalResult: async (args) => { events.push("attach"); attachments.push(args);
+      if (revoked || !ledgerSettled) return { attached: false, resultWithheld: true };
+      accounting.attached = args.privateResultCanonical; accounting.outputVisible = true;
+      return { attached: true, resultWithheld: false }; },
   };
-  const composition: GatewayComposition = { ledger, now: () => 1000, terminalSink: { capture: async (e) => { events.push("capture"); if (captureFails) throw new Error("sink unavailable"); receipts.push(e.receiptCanonical); return { evidenceId: "durable-evidence" }; } } };
+  const composition: GatewayComposition = { ledger, now: () => 1000, terminalSink: { capture: async (e) => { events.push("capture"); if (captureFails) throw new Error("sink unavailable"); receipts.push(e.receiptCanonical); const receipt = JSON.parse(e.receiptCanonical) as { costSource: string; aggregateCostUsd?: string };
+      ledgerSettled = receipt.costSource !== "unavailable"; accounting.activeSlots = 0;
+      accounting.uncertainUnits = ledgerSettled ? 0 : 10000; accounting.settledUnits = ledgerSettled ? Math.ceil(Number(receipt.aggregateCostUsd) * 1e6) : 0;
+      return { evidenceId: "durable-evidence" }; } } };
   const model: LanguageModelV4 = { specificationVersion: "v4", modelId: r.snapshot.modelId, provider: "convexGateway.chat", supportedUrls: {},
     doGenerate: async (input) => { events.push("native"); nativeCount++; nativeCalls.push(input); return generated(); },
     doStream: async (input) => { events.push("native"); nativeCount++; nativeCalls.push(input); return { stream: streamParts() }; } };
@@ -68,7 +74,7 @@ function fixture(embedding = false) {
     { type: "finish", finishReason: { unified: "stop", raw: "stop" }, usage: generated().usage } ];
     return new ReadableStream<LanguageModelV4StreamPart>({ start(c) { items.forEach((x) => c.enqueue(x)); c.close(); } });
   }
-  return { r, b, events, receipts, admissions, nativeCalls, model, composition, streamParts, count: () => nativeCount,
+  return { r, b, events, receipts, accounting, attachments, admissions, nativeCalls, model, composition, streamParts, count: () => nativeCount,
     disposition: (x: typeof disposition) => { disposition = x; }, revoke: () => { revoked = true; }, captureFail: () => { captureFails = true; }, captureResume: () => { captureFails = false; }, changedPermit: () => { changedPermit = true; }, changedAdmit: () => { changedAdmit = true; } };
 }
 beforeEach(() => { tokenLookup.mockClear(); });
@@ -86,7 +92,7 @@ describe("bounded governed Gateway middleware", () => {
   it("dispatches detached normalized values after exact admission+checkpoint; sanitizes reasoning", async () => {
     const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const original = params();
     const admitted = f.composition.ledger.admit; f.composition.ledger.admit = async (args) => { (original.prompt[0]!.content as { text: string }[])[0]!.text = "MUTATED"; return admitted(args); };
-    const result = await h.model.doGenerate(original); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture", "visible", "settle"]);
+    const result = await h.model.doGenerate(original); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture", "attach"]);
     expect(f.nativeCalls[0]!.prompt).toEqual([{ role: "user", content: [{ type: "text", text: "hello" }] }]); expect(result.content).toEqual([{ type: "text", text: "answer" }]);
     expect(JSON.stringify(result)).not.toContain("SECRET_REASONING"); expect(JSON.parse(f.admissions[0]!.requestCanonical)).toMatchObject({ semanticId: "stable-semantic", inputTokens: 15, outputTokens: 16, reservationUnits: 10000, options: { maxRetries: 0 } }); expect(f.receipts[0]).not.toContain("SECRET_REASONING"); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005");
     expect(JSON.parse(f.receipts[0]!)).not.toHaveProperty("privateResultCanonical"); await h.lifecycle.complete();
@@ -140,9 +146,11 @@ describe("bounded governed Gateway middleware", () => {
     const stale = structuredClone(f.r); stale.dispatchEvidence = { ...stale.dispatchEvidence, expiresAt: 1 }; expect(() => governGatewayLanguageModel(f.model, f.composition, f.b, stale)).toThrow();
     expect(() => governGatewayLanguageModel({ ...f.model, provider: "openai.responses" }, f.composition, f.b, f.r)).toThrow(); expect(f.events).toEqual([]);
   });
-  it("captures known charge durably before revocation denies ordinary settle", async () => {
+  it("captures known charge durably before revocation withholds current attachment", async () => {
     const f = fixture(); const capture = f.composition.terminalSink.capture; f.composition.terminalSink.capture = async (e) => { const result = await capture(e); f.revoke(); return result; };
-    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" }); expect(f.receipts).toHaveLength(1); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture", "visible", "settle"]);
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" }); expect(f.receipts).toHaveLength(1); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture", "attach"]);
+    expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
+    expect(f.attachments).toEqual([]); expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
   });
   it("missing durable capture withholds output, retains checkpoint and never assumes admin recovery", async () => {
     const f = fixture(); f.captureFail(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
@@ -233,7 +241,9 @@ describe("bounded governed Gateway middleware", () => {
     const f = fixture(); const body = raw(); if (kind === "model") body.model = "openai/unqualified-model";
     if (kind === "input") body.usage.prompt_tokens = 100; if (kind === "output") body.usage.completion_tokens = 100;
     f.model.doGenerate = async () => generated("answer", body); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
-    await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "QUALIFICATION_OVERRUN" }); expect(f.receipts).toHaveLength(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005"); expect(f.events).toContain("settle"); expect(f.events).not.toContain("visible");
+    await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "QUALIFICATION_OVERRUN" }); expect(f.receipts).toHaveLength(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005"); expect(f.events).not.toContain("attach"); expect(f.events).not.toContain("visible");
+    expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
+    expect(f.attachments).toEqual([]); expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
   });
 
   it("owner retries retained sanitized terminal persistence without inference or unauthorized settlement", async () => {
@@ -277,13 +287,17 @@ describe("C2 owned cancellation and finite RPC lifetime", () => {
     expect(parts).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005");
   });
   it("deadline bounds an unreleased authority RPC; late completion cannot reopen the observer", async () => {
-    const f = fixture(); f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
+    jest.useFakeTimers();
+    try {
+    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming;
+    f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
     const entered = gate<void>(); const release = gate<void>(); f.composition.ledger.markVisible = async () => { entered.resolve(); await release.promise; return { recorded: true }; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const result = await h.model.doStream(params()); await entered.promise;
     let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
-    await pause(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
+    await jest.advanceTimersByTimeAsync(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
     expect(h.lifecycle.signal.aborted).toBe(true); expect({ finishedAtDeadline, parts }).toEqual({ finishedAtDeadline: true, parts: [] });
     expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1);
+    } finally { jest.useRealTimers(); }
   });
 });
 
@@ -296,7 +310,9 @@ describe("C2 finite terminal persistence and retained RPC outcomes", () => {
     await entered.promise; await rejected; expect(h.lifecycle.pendingWork().capture).toBe(1); expect(f.receipts).toEqual([]);
     await expect(h.lifecycle.retryPendingTerminalEvidence()).rejects.toMatchObject({ code: "TERMINAL_CAPTURE_PENDING" }); expect(calls).toBe(1);
     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" }); expect(f.count()).toBe(1);
-    release.resolve(); await pause(0); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(true); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false);
+    // The original flight's late acknowledgment clears pendingEvidence. A retry
+    // then reports false because there is no retained evidence to issue again.
+    release.resolve(); await pause(0); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false);
     expect(calls).toBe(1); expect(f.receipts).toHaveLength(1); expect(h.lifecycle.pendingWork().capture).toBe(0); expect(f.events).not.toContain("settle"); await h.lifecycle.complete();
   });
   it("late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence", async () => {
@@ -315,38 +331,38 @@ describe("C2 finite terminal persistence and retained RPC outcomes", () => {
     } finally { process.off("unhandledRejection", onUnhandled); }
   });
   it("slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated", async () => {
-    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.settle; let calls = 0; let outputs = 0;
-    f.composition.ledger.settle = async (args) => { calls++; entered.resolve(); await release.promise; return prior(args); };
+    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.attachTerminalResult; let calls = 0; let outputs = 0;
+    f.composition.ledger.attachTerminalResult = async (args) => { calls++; entered.resolve(); await release.promise; return prior(args); };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()).then((result) => { outputs++; return result; }); const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
-    await entered.promise; await rejected; await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+    await entered.promise; await rejected; await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "CLEANUP_PENDING" });
     expect(f.receipts).toHaveLength(1); expect(h.lifecycle.pendingWork().settlement).toBe(1); release.resolve(); await pause(0);
-    expect(outputs).toBe(0); expect(calls).toBe(1); expect(f.events.filter((x) => x === "settle")).toHaveLength(1); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false); await h.lifecycle.complete();
+    expect(outputs).toBe(0); expect(calls).toBe(1); expect(f.events.filter((x) => x === "attach")).toHaveLength(1); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false); await h.lifecycle.complete();
     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" }); expect(f.count()).toBe(1);
   });
   it("late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection", async () => {
     const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>(); const unhandled: unknown[] = []; let calls = 0;
     const onUnhandled = (error: unknown) => { unhandled.push(error); }; process.on("unhandledRejection", onUnhandled);
-    f.composition.ledger.settle = async () => { calls++; entered.resolve(); await release.promise; throw new Error("SECRET_REMOTE_SETTLEMENT"); };
+    f.composition.ledger.attachTerminalResult = async () => { calls++; entered.resolve(); await release.promise; throw new Error("SECRET_REMOTE_SETTLEMENT"); };
     try {
       const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()); const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING", message: "Governed model call did not complete for delivery." });
       await entered.promise; await rejected; release.resolve(); await pause(0); await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
       expect(unhandled).toEqual([]); expect(f.receipts).toHaveLength(1); expect(calls).toBe(1); expect(f.count()).toBe(1); expect(h.lifecycle.pendingWork().settlement).toBe(0);
     } finally { process.off("unhandledRejection", onUnhandled); }
   });
-  it("cancel while terminal visibility is paused retains charge and never attaches or delivers the generated private result", async () => {
-    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.markVisible; const settled: string[] = []; const priorSettle = f.composition.ledger.settle;
-    f.composition.ledger.markVisible = async (args) => { await prior(args); entered.resolve(); await release.promise; return { recorded: true }; };
-    f.composition.ledger.settle = async (args) => { settled.push(args.receiptCanonical); return priorSettle(args); };
-    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()); const rejected = expect(operation).rejects.toBeInstanceOf(Error);
-    await entered.promise; h.lifecycle.cancel(); await rejected; expect(f.receipts).toHaveLength(1); expect(settled).toHaveLength(1); expect(JSON.parse(settled[0]!)).not.toHaveProperty("privateResultCanonical");
-    release.resolve(); await pause(0); expect(f.count()).toBe(1); expect(h.lifecycle.pendingWork().authority).toBe(0);
+  it("cancel during capture retains full charge and never issues private attachment", async () => {
+    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.terminalSink.capture;
+    f.composition.terminalSink.capture = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()); const rejected = expect(operation).rejects.toMatchObject({ code: "RUN_CANCELLED" });
+    await entered.promise; h.lifecycle.cancel(); release.resolve(); await rejected;
+    expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
+    expect(f.attachments).toEqual([]); expect(f.count()).toBe(1);
   });
   it("cancel while settlement is paused fences final output even when the issued current-authority RPC later succeeds", async () => {
-    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.settle; let outputs = 0;
-    f.composition.ledger.settle = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
+    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.attachTerminalResult; let outputs = 0;
+    f.composition.ledger.attachTerminalResult = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()).then((result) => { outputs++; return result; }); const rejected = expect(operation).rejects.toMatchObject({ code: "RUN_CANCELLED" });
     await entered.promise; h.lifecycle.cancel(); release.resolve(); await rejected;
-    expect(outputs).toBe(0); expect(f.receipts).toHaveLength(1); expect(f.events.filter((x) => x === "settle")).toHaveLength(1); expect(f.count()).toBe(1);
+    expect(outputs).toBe(0); expect(f.receipts).toHaveLength(1); expect(f.events.filter((x) => x === "attach")).toHaveLength(1); expect(f.count()).toBe(1);
   });
   it("observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite", async () => {
     const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } }; const canceled = gate<void>();
@@ -395,13 +411,26 @@ describe("C2 initial native hook ownership", () => {
 });
 
 describe("C2 terminal visibility shares the finite persistence budget", () => {
-  it("a delayed final visibility cannot consume the full model timeout after capture", async () => {
-    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>();
-    f.composition.ledger.markVisible = async () => { entered.resolve(); await release.promise; return { recorded: true }; };
-    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()); const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
-    await entered.promise; let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
-    await pause(70); expect(completed).toBe(true); await rejected; expect(f.receipts).toHaveLength(1); expect(f.events).not.toContain("settle");
-    release.resolve(); await completion; await pause(0); expect(h.lifecycle.pendingWork().authority).toBe(0); expect(f.count()).toBe(1);
+  it("a delayed issued private attachment cannot restart persistence or reopen client delivery", async () => {
+    jest.useFakeTimers({ now: 1000 });
+    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming;
+    const entered = gate<void>(); const release = gate<void>(); let attachments = 0; let outputs = 0;
+    f.composition.ledger.attachTerminalResult = async () => { attachments++; entered.resolve(); await release.promise; return { attached: true, resultWithheld: false }; };
+    try {
+      const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+      const operation = h.model.doGenerate(params()).then(result => { outputs++; return result; });
+      const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+      await entered.promise;
+      let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
+      await jest.advanceTimersByTimeAsync(70);
+      expect(completed).toBe(true); await rejected;
+      expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
+      expect(f.receipts).toHaveLength(1); expect(attachments).toBe(1); expect(outputs).toBe(0);
+      expect(h.lifecycle.pendingWork().settlement).toBe(1);
+      release.resolve(); await completion; await jest.advanceTimersByTimeAsync(0);
+      expect(h.lifecycle.pendingWork().settlement).toBe(0); expect(outputs).toBe(0); expect(attachments).toBe(1);
+      expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
+    } finally { release.resolve(); jest.useRealTimers(); }
   });
 });
 
@@ -419,12 +448,12 @@ describe("C2 replay and final stream output eligibility", () => {
     if (kind === "cancel") h.lifecycle.cancel(); await rejected; release.resolve(); await pause(0); expect(outputs).toBe(0); expect(f.count()).toBe(0); expect(h.lifecycle.pendingWork().authority).toBe(0); expect(tokenLookup).not.toHaveBeenCalled();
   });
   it("cancel during final settlement preserves earlier eligible text but suppresses text-end and finish", async () => {
-    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.settle;
-    f.composition.ledger.settle = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
+    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.attachTerminalResult;
+    f.composition.ledger.attachTerminalResult = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const result = await h.model.doStream(params()); const reader = result.stream.getReader();
     expect((await reader.read()).value?.type).toBe("text-start"); expect((await reader.read()).value?.type).toBe("text-delta"); await entered.promise;
     h.lifecycle.cancel(); release.resolve(); const later: LanguageModelV4StreamPart[] = [];
     try { for (;;) { const part = await reader.read(); if (part.done) break; later.push(part.value); } } catch { /* Local output is closed. */ }
-    await h.lifecycle.complete().catch(() => undefined); expect(later).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.events.filter((x) => x === "settle")).toHaveLength(1); expect(f.count()).toBe(1);
+    await h.lifecycle.complete().catch(() => undefined); expect(later).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.events.filter((x) => x === "attach")).toHaveLength(1); expect(f.count()).toBe(1);
   });
 });

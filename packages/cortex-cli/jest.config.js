@@ -2,6 +2,8 @@
 
 // Shared configuration that all projects inherit
 const sharedConfig = {
+  // Each project crawls only its declared test/source roots, including in multi-project runs.
+  roots: ["<rootDir>/tests", "<rootDir>/src"],
   preset: "ts-jest/presets/default-esm",
   testEnvironment: "node",
   extensionsToTreatAsEsm: [".ts"],
@@ -25,7 +27,6 @@ const sharedConfig = {
 
 export default {
   ...sharedConfig,
-  roots: ["<rootDir>/tests", "<rootDir>/src"],
   testMatch: ["**/*.test.ts"],
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   setupFiles: ["<rootDir>/tests/env.ts"],

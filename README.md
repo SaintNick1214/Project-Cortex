@@ -15,8 +15,8 @@ This branch has not been released or deployed to production.
 
 ## Package and application versions
 
-This checkout declares **0.38.0** for the SDK, CLI and AI provider. Application sources
-declare **1.3.0**; the independent `@cortexmemory/templates` catalog declares **1.2.0**.
+This checkout declares **0.39.0** for the SDK, CLI and AI provider. Application sources
+declare **1.4.0**; the independent `@cortexmemory/templates` catalog declares **1.3.0**.
 These source versions do not establish registry publication or installed compatibility.
 Use matching released packages, or matching local archives for this unpublished branch.
 

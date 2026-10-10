@@ -4,13 +4,7 @@ export default {
   testEnvironment: "node",
   roots: ["<rootDir>/tests"],
   testMatch: ["**/*.test.ts"],
-  // Immutable old Gateway assertions run separately under the mandatory guarded
-  // historical 78-outcome catalog. gateway-terminal-composition.test.ts remains
-  // in this current runner against the actual Gateway; no historical mapping.
-  testPathIgnorePatterns: [
-    "/node_modules/",
-    "^<rootDir>/tests/unit/runtime/gateway-dispatch\\.test\\.ts$",
-  ],
+  testPathIgnorePatterns: ["/node_modules/"],
   setupFiles: ["<rootDir>/tests/env.ts"],
   setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
   collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts"],

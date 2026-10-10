@@ -10,7 +10,7 @@ test("append retains old bytes and selects a distinct version; same-version chan
   t.after(() => fs.rm(temporary, { recursive: true, force: true }));
   const source = path.join(temporary, "source"); await fs.mkdir(source);
   const select = version => ({id:"basic",version,source,provenance:`fixture/basic@${version}`,manager:"npm",envNames:[],backend:true,graph:false});
-  const manifest = version => JSON.stringify({name:"fixture",version,type:"module",dependencies:{"@cortexmemory/sdk":"^0.38.0",convex:"1.46.0"}});
+  const manifest = version => JSON.stringify({name:"fixture",version,type:"module",dependencies:{"@cortexmemory/sdk":"^0.39.0",convex:"1.46.0"}});
   await fs.writeFile(path.join(source,"package.json"),manifest("1.2.0")); await fs.writeFile(path.join(source,"main.js"),"export const value = 1;\n");
   const old = await assembleCatalog([select("1.2.0")],"1.1.0"); const published = path.join(temporary,"catalog"); await writeAssembly(published,old);
   const oldCatalog = await fs.readFile(path.join(published,"catalog.json"));

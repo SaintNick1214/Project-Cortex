@@ -11,7 +11,7 @@ import {
 } from "./template-backend.js";
 
 export const BACKEND_MANIFEST = ".cortex/backend.json";
-export const SDK_VERSION = "0.38.0";
+export const SDK_VERSION = "0.39.0";
 // Reviewed current runtime admin helpers; registrations still require the strict grammar.
 const SDK_ADMIN_RUNTIME_SOURCE_HASH = "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345";
 export interface BackendOwnership {
