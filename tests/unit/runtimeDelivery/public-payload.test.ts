@@ -13,7 +13,7 @@ beforeEach(() => { installMockRoot(); jest.spyOn(Date, "now").mockReturnValue(cl
 afterEach(() => { jest.restoreAllMocks(); });
 
 it("every inventoried supported payload registration is a fresh mutation, rather than a subscription payload", async () => {
-  const inventory = JSON.parse(await readFile(resolve("_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-query-expiry-functional-v2-20261008/author/read-inventory1.json"), "utf8")) as { converted: { module: string; name: string }[] };
+  const inventory = JSON.parse(await readFile(resolve("tests/fixtures/runtime-qualification/read-inventory1.json"), "utf8")) as { converted: { module: string; name: string }[] };
   expect(inventory.converted).toHaveLength(95);
   for (const entry of inventory.converted) {
     const module = await import(`../../../convex-dev/${entry.module}`);

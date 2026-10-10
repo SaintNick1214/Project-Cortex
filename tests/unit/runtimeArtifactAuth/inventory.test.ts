@@ -48,7 +48,7 @@ test("current actual artifact registrations expose guarded mutations and interna
 });
 
 test("the archived original inventory remains historical evidence, independent of current source bytes", () => {
-  const original = "_goals/convex-backend-runtime-2026-10-02/qa/task03b2f-asset-foundation/original/native-validators17.json";
+  const original = "tests/fixtures/runtime-qualification/asset-original/native-validators17.json";
   const archived = JSON.parse(fs.readFileSync(original, "utf8")) as { registrations: { path: string }[] };
   expect(archived.registrations).toHaveLength(17);
   expect(archived.registrations.some(row => row.path === "attachments:create")).toBe(false);

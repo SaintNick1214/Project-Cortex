@@ -1,7 +1,7 @@
 /** Exact authorized transformation; historical baseline bytes and handler bodies remain pinned. */
 import ts from "typescript";
 import fs from "node:fs";
-export const freshReadQa = "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-query-expiry-functional-v2-20261008/author";
+export const freshReadQa = "tests/fixtures/runtime-qualification";
 export function expectedFreshRegistrationSource(module: string, baseline: string): string {
   const inventory = JSON.parse(fs.readFileSync(`${freshReadQa}/read-inventory1.json`, "utf8")) as { converted: { module: string; name: string }[] };
   const names = new Set(inventory.converted.filter(row => row.module === module).map(row => row.name));

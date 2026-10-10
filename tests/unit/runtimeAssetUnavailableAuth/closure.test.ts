@@ -126,10 +126,10 @@ it('unavailable adapters still reject; historical assets and original 17 registr
   const f = fixture(['storage:read']);
   await expect(runtimeAssetUnavailable(f.ctx, 'storage:read', { tenantId: 'tenant-a', memorySpaceId: 'space-a' })).rejects.toMatchObject({ data: { code: 'CAPABILITY_UNAVAILABLE' } });
   await expect(internalAssetUnavailable()).rejects.toMatchObject({ data: { code: 'CAPABILITY_UNAVAILABLE' } });
-  const qa = '_goals/convex-backend-runtime-2026-10-02/qa/task03b2f-asset-foundation/original/';
+  const qa = 'tests/fixtures/runtime-qualification/asset-original/';
   expect(JSON.parse(fs.readFileSync(qa + 'native-validators17.json', 'utf8')).registrations).toHaveLength(17);
   const hashes = JSON.parse(fs.readFileSync(qa + 'source-hashes.json', 'utf8')) as Record<string, string>;
-  for (const file of ['artifacts.ts', 'attachments.ts']) expect(crypto.createHash('sha256').update(fs.readFileSync(qa + file)).digest('hex')).toBe(hashes['convex-dev/' + file]);
+  for (const file of ['artifacts.ts', 'attachments.ts']) expect(crypto.createHash('sha256').update(fs.readFileSync(qa + file + '.txt')).digest('hex')).toBe(hashes['convex-dev/' + file]);
 });
 it('maintained current composition preserves every current native table and the unique artifact scope index', async () => {
   await withComposedCatalog((_directory, files) => {
