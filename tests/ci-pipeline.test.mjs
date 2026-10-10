@@ -188,6 +188,7 @@ test('complete change extraction retains product endpoints after more than1MiB o
   const git = (...args) => execFileSync('git', args, { cwd: directory, encoding: 'utf8' });
   try {
     git('init', '--quiet'); git('config', 'user.name', 'CI fixture'); git('config', 'user.email', 'fixture@example.invalid');
+    git('config', 'commit.gpgsign', 'false');
     git('commit', '--allow-empty', '--quiet', '-m', 'empty fixture');
     const baseSha = git('rev-parse', 'HEAD').trim();
     const blob = execFileSync('git', ['hash-object', '-w', '--stdin'], { cwd: directory, input: 'fixture\n', encoding: 'utf8' }).trim();
