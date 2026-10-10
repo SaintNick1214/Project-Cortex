@@ -12,7 +12,7 @@ import ora from "ora";
 import type { AppConfig } from "../../types.js";
 import { execCommand } from "../shell.js";
 import { appendRuntimeEnvironment } from "./backend-setup.js";
-import { resolveCatalogSource, resolveTemplateCatalog, selectResolvedTemplate, satisfiesTemplateRange } from "../templates/index.js";
+import { resolveCatalogSource, resolveTemplateCatalog, selectResolvedTemplate, assertTemplateCompatibility } from "../templates/index.js";
 
 /**
  * Default port for the quickstart app
@@ -162,8 +162,7 @@ export async function prepareVercelAIQuickstart(
 
   const catalog = await resolveTemplateCatalog(await resolveCatalogSource({}));
   const selected = selectResolvedTemplate(catalog, "vercel-ai-quickstart");
-  if (!satisfiesTemplateRange(sdkVersion, selected.template.compatibility.sdk))
-    throw new Error("Quickstart SDK version is incompatible with the selected catalog template");
+  assertTemplateCompatibility(selected.template, { ...catalog.runtimeVersions, sdk: sdkVersion });
 
   // Copy template files
   const copySpinner = ora("Copying quickstart files...").start();

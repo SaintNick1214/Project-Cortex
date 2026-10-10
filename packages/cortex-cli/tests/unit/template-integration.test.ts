@@ -59,11 +59,10 @@ describe("current canonical catalog prospective integration",()=>{
     expect(services.install).not.toHaveBeenCalled();
     expect((await readTemplateBaseline(first,"basic"))?.identity.version).toBe("1.4.0");
   });
-  it.each(["basic","vercel-ai-quickstart","chat-sdk"] as const)("%s immutable 1.2 payload remains explicitly selectable without implicit runtime integration",async id=>{
-    const target=path.join(await root(),"retained-legacy"),prepared=await prepareTemplateInit(target,id,{...inputs(),templateVersion:"1.2.0"});
-    expect(prepared.template.version).toBe("1.2.0");
-    expect((await applyPreparedTemplateInit(prepared,{dryRun:true})).status).toBe("dry-run");
-    if(id!=="basic") await expect(prepareTemplateIntegration(prepared,{dryRun:true,graph:"none"})).rejects.toThrow(/Unreviewed SDK|Canonical app contract changed/);
+  it.each(["basic","vercel-ai-quickstart","chat-sdk"] as const)("%s immutable 1.2 payload refuses the real current SDK before any effect",async id=>{
+    const parent=await root(),target=path.join(parent,"retained-legacy"),before=await tree(parent);
+    await expect(prepareTemplateInit(target,id,{...inputs(),templateVersion:"1.2.0"})).rejects.toThrow("TEMPLATE_COMPATIBILITY_REFUSED");
+    expect(await tree(parent)).toEqual(before);
     await expect(fs.stat(target)).rejects.toMatchObject({code:"ENOENT"});
   });
   it("failed integration remains partial on rerun; file recovery never repeats integration or dependencies",async()=>{

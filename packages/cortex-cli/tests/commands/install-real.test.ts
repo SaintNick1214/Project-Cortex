@@ -106,7 +106,7 @@ describe("real installer registry and binary", () => {
       fs.readFileSync(path.join(directory, "package.json"), "utf8"),
     );
     expect(manifest.scripts.build).toBe("tsc");
-    expect(manifest.version).toBe("1.3.0");
+    expect(manifest.version).toBe("1.4.0");
     expect(fs.existsSync(path.join(directory, ".env.local"))).toBe(false);
     expect(fs.existsSync(path.join(directory, "convex/_generated"))).toBe(
       false,

@@ -17,7 +17,7 @@ import {
   type TemplateIdentity,
   type TemplateId,
 } from "./contract.js";
-import { compareTemplateVersions, exactTemplateVersion, satisfiesTemplateRange } from "./versions.js";
+import { compareTemplateVersions, exactTemplateVersion, isTemplateRange, satisfiesTemplateRange } from "./versions.js";
 import { readRegularFile, UnsafeFileError } from "../safe-file.js";
 
 export interface TemplateRuntimeVersions {
@@ -38,6 +38,18 @@ export interface ResolvedCatalog {
   catalogBytes: Buffer;
   catalogHash: string;
   payloads: Map<string, Map<string, PackageFile>>;
+  runtimeVersions: TemplateRuntimeVersions;
+}
+/** Admission is tied to the selected tuple and the actual candidate versions. */
+export function assertTemplateCompatibility(
+  template: CatalogTemplate,
+  versions: TemplateRuntimeVersions,
+): void {
+  for (const component of ["sdk", "provider", "convex"] as const) {
+    const range = template.compatibility[component];
+    if (range !== undefined && !satisfiesTemplateRange(versions[component], range))
+      throw new TemplateError("TEMPLATE_COMPATIBILITY_REFUSED");
+  }
 }
 function object(bytes: Buffer): Record<string, unknown> {
   try {
@@ -193,6 +205,8 @@ export async function resolveTemplateCatalog(
     entries = await payloadEntries(reader),
     payloads = new Map<string, Map<string, PackageFile>>(),
     used = new Set<string>();
+  for (const component of ["sdk", "provider", "convex"] as const)
+    exactTemplateVersion(versions[component]);
   let catalog: TemplateCatalog | undefined;
   for (const item of raw.templates as CatalogTemplate[]) {
     if (!item || typeof item !== "object")
@@ -205,7 +219,9 @@ export async function resolveTemplateCatalog(
         catalogVersion: packageVersion,
         catalogHash,
       },
-      (range, component) => satisfiesTemplateRange(versions[component], range),
+      // Verify every immutable tuple, including older epochs that are incompatible
+      // with today's runtime. Preparation checks the selected tuple separately.
+      (range) => isTemplateRange(range),
     );
     const prefix = `payloads/${chosen.id}/${chosen.version}/`,
       files = [...entries].filter(([name]) => name.startsWith(prefix));
@@ -250,6 +266,7 @@ export async function resolveTemplateCatalog(
     catalogBytes,
     catalogHash,
     payloads,
+    runtimeVersions: { ...versions },
   };
 }
 export function selectResolvedTemplate(

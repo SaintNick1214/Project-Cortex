@@ -112,6 +112,13 @@ describe("modern additive setup", () => {
     expect(await fs.readFile(path.join(host, "package.json"), "utf8")).toBe(pkg);
     expect(await fs.readFile(path.join(host, "custom/backend/host.ts"), "utf8")).toBe("host-function");
   });
+  it("current quickstart refuses an incompatible SDK before any app, environment or host-script effect", async () => {
+    const pkg = '{"scripts":{"quickstart":"host-start","build":"host-build"},"host":true}';
+    await fs.writeFile(path.join(host, "package.json"), pkg);
+    await expect(prepareVercelAIQuickstart(host, "0.38.0", "https://safe.convex.cloud")).rejects.toThrow("TEMPLATE_COMPATIBILITY_REFUSED");
+    expect(await fs.readdir(host)).toEqual(["package.json"]);
+    expect(await fs.readFile(path.join(host, "package.json"), "utf8")).toBe(pkg);
+  });
   it("explicit setup JSON validates closed provider/target/grant fields and rejects unsupported selectors", () => {
     expect(parseJwtProvider(provider)).toEqual(provider);
     expect(() => parseJwtProvider({ ...provider, token: "private" })).toThrow("fields"); expect(() => parseDevelopmentTarget({ teamId: 1, projectId: 2, deploymentName: "safe", deploymentUrl: "https://safe.convex.cloud", disposable: false })).toThrow("disposable");
