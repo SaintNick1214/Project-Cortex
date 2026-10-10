@@ -381,7 +381,7 @@ test('demo artifacts build once and preserve ordinary installs, closure validati
   const parent = load(readFileSync('.github/workflows/pr-checks.yml', 'utf8'));
   const child = load(readFileSync('.github/workflows/managed-ci.yml', 'utf8'));
   const setup = load(readFileSync('.github/actions/cortex-setup/action.yml', 'utf8'));
-  assert.equal(setup.runs.steps[0].with['node-version'], '24.15.0');
+  assert.equal(setup.runs.steps[0].with['node-version'], '24.21.0');
   assert.equal(setup.runs.steps[0].with['cache-dependency-path'], 'package-lock.json');
   assert.equal(setup.runs.steps[1].run, 'npm install --global npm@12.2.0');
   const demos = parent.jobs['demo-contracts'].steps;

@@ -39,7 +39,7 @@ backend/model secrets, performs no service mutation and cannot qualify delivery.
 Demo jobs reuse SDK/provider archives and the built CLI composer from one exact
 candidate artifact. Verify the manifest's source SHA, package identities and byte
 hashes before installing. Ordinary/frozen demo installs and transitive provider-to-SDK
-closure validation remain required. Runtime setup uses Node 24.15.0, npm 12.2.0
+closure validation remain required. Runtime setup uses Node 24.21.0, npm 12.2.0
 and a lockfile-based npm download cache, never a shared `node_modules` cache.
 
 Functional sparse checkouts omit captured `_goals` and `work` files. Their source
