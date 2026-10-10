@@ -8,6 +8,8 @@ import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 
+const runtimeTemplateVersions = ["1.3.0", "1.4.0", "1.4.1"];
+
 function run(command, args, cwd, capture = false) {
   return execFileSync(command, args, {
     cwd, encoding: "utf8", timeout: 10 * 60 * 1000,
@@ -66,14 +68,14 @@ export async function prepareCiDemoBackend({ directory, sdkDirectory, cliSource,
     manifest.name === "@cortexmemory/vercel-ai-quickstart" ? "vercel-ai-quickstart" : undefined;
   if (manifest.dependencies?.["@cortexmemory/vercel-ai-provider"] && !template)
     throw new Error("Unrecognized canonical demo for backend preparation");
-  if (!["1.2.0", "1.3.0"].includes(manifest.version))
-    throw new Error("Backend preparation requires an explicit canonical template version (1.2.0 or 1.3.0)");
+  if (manifest.version !== "1.2.0" && !runtimeTemplateVersions.includes(manifest.version))
+    throw new Error("Backend preparation requires an explicit canonical template version (1.2.0, 1.3.0, 1.4.0 or 1.4.1)");
   const cliRoot = await realpath(resolve(cliSource));
   const cliManifest = JSON.parse(await readFile(join(cliRoot, "package.json"), "utf8"));
   if (cliManifest.name !== "@cortexmemory/cli" || !/^\d+\.\d+\.\d+$/.test(cliManifest.version))
     throw new Error("Backend preparation requires an explicit built Cortex CLI package");
   let plan;
-  if (manifest.version === "1.3.0") {
+  if (runtimeTemplateVersions.includes(manifest.version)) {
     const { planRuntimeBackend, applySelectedBackendPlan } = await import(pathToFileURL(join(cliRoot, "dist/utils/runtime-backend.js")).href);
     plan = await planRuntimeBackend(directory, sdkDirectory);
     if (plan.conflicts.length) throw new Error(`Runtime backend preparation conflicts: ${plan.conflicts.join("; ")}`);
@@ -94,7 +96,7 @@ export async function prepareCiDemoBackend({ directory, sdkDirectory, cliSource,
     if (plan.conflicts.length) throw new Error(`Legacy backend preparation conflicts: ${plan.conflicts.join("; ")}`);
     applyBackendPlan(plan);
   }
-  console.log(`Prepared ${template ?? "basic"} ${manifest.version === "1.3.0" ? "runtime" : "legacy private"} backend from the installed candidate; native Convex codegen is still required.`);
+  console.log(`Prepared ${template ?? "basic"} ${runtimeTemplateVersions.includes(manifest.version) ? "runtime" : "legacy private"} backend from the installed candidate; native Convex codegen is still required.`);
   return plan;
 }
 
@@ -118,7 +120,7 @@ export async function installCiDemo({ directory, sdkArchive, providerArchive, cl
 
   // Emitted Convex files are compiled in the app. Their dependencies must be
   // direct app edges before a strict package manager resolves the candidate.
-  if (manifest.version === "1.3.0") {
+  if (runtimeTemplateVersions.includes(manifest.version)) {
     const backend = JSON.parse(run("tar", ["-xOf", artifacts[0].file, "package/dist/backend/v1/manifest.json"], undefined, true));
     if (!backend.dependencies || typeof backend.dependencies !== "object" || Array.isArray(backend.dependencies)
       || Object.entries(backend.dependencies).some(([name, version]) => !name || typeof version !== "string" || !version))

@@ -111,8 +111,9 @@ async function backendFixture(version) {
   return { directory, demo, sdk, cli, manifest };
 }
 
-test("1.3 runtime preparation awaits the selected additive composer and preserves the private app registration", async () => {
-  const f = await backendFixture("1.3.0");
+for (const version of ["1.3.0", "1.4.0", "1.4.1"]) {
+test(`${version} runtime preparation awaits the selected additive composer and preserves the private app registration`, async () => {
+  const f = await backendFixture(version);
   try {
     const shim = await readFile(join(f.demo, "convex/sdk.registration.ts"));
     const plan = await prepareCiDemoBackend({ directory: f.demo, sdkDirectory: f.sdk, cliSource: f.cli, manifest: f.manifest });
@@ -123,6 +124,7 @@ test("1.3 runtime preparation awaits the selected additive composer and preserve
     await assert.rejects(readFile(join(f.demo, "legacy-selection.json")), { code: "ENOENT" });
   } finally { await rm(f.directory, { recursive: true, force: true }); }
 });
+}
 
 test("immutable 1.2 explicitly retains the recognized legacy private composer even with runtime bytes present", async () => {
   const f = await backendFixture("1.2.0");
@@ -151,9 +153,10 @@ test("runtime composition missing its distribution fails without falling back to
 });
 
 test("unreviewed template versions and unknown provider templates refuse before composition", async () => {
-  const f = await backendFixture("1.4.0");
+  const f = await backendFixture("1.4.2");
   try {
-    await assert.rejects(prepareCiDemoBackend({ directory: f.demo, sdkDirectory: f.sdk, cliSource: f.cli, manifest: f.manifest }), /explicit canonical template version/);
+    for (const version of ["1.4.2", "1.5.0", "2.0.0"])
+      await assert.rejects(prepareCiDemoBackend({ directory: f.demo, sdkDirectory: f.sdk, cliSource: f.cli, manifest: { ...f.manifest, version } }), /explicit canonical template version/);
     await assert.rejects(prepareCiDemoBackend({ directory: f.demo, sdkDirectory: f.sdk, cliSource: f.cli, manifest: { ...f.manifest, name: "unknown", version: "1.3.0" } }), /Unrecognized canonical demo/);
     await assert.rejects(readFile(join(f.demo, "legacy-selection.json")), { code: "ENOENT" });
     await assert.rejects(readFile(join(f.demo, "runtime-selection.json")), { code: "ENOENT" });
@@ -213,8 +216,9 @@ test("selected npm and pnpm override conflicts refuse before backend writes whil
   } finally { await rm(f.directory, { recursive: true, force: true }); }
 });
 
-test("pnpm resolves emitted runtime dependencies as direct app edges before the frozen install", async () => {
-  const f = await fixture("pnpm@10.33.0");
+for (const version of ["1.3.0", "1.4.0", "1.4.1"]) for (const manager of ["npm@12.2.0", "pnpm@10.33.0"]) {
+test(`${manager} ${version} resolves emitted runtime dependencies as direct app edges before the frozen install`, async () => {
+  const f = await fixture(manager);
   try {
     const dependency = join(f.directory, "runtime-dependency");
     await mkdir(dependency);
@@ -224,7 +228,7 @@ test("pnpm resolves emitted runtime dependencies as direct app edges before the 
     await mkdir(backendDirectory, {recursive:true});
     await writeFile(join(backendDirectory, "manifest.json"), JSON.stringify({dependencies:{"runtime-fixture-dependency":`file:${dependency}`}}));
     execFileSync("tar", ["-czf", f.archives.sdk, "-C", join(f.directory, "sdk"), "package"]);
-    f.manifest.version="1.3.0";
+    f.manifest.version=version;
     // An existing app edge must not supersede the selected runtime contract.
     f.manifest.dependencies["runtime-fixture-dependency"] = "file:missing-old-runtime";
     f.manifest.devDependencies = { "runtime-fixture-dependency": "file:missing-dev-runtime" };
@@ -241,3 +245,4 @@ test("pnpm resolves emitted runtime dependencies as direct app edges before the 
     assert.equal(resolved.trim(),"runtime dependency");
   } finally { await rm(f.directory, {recursive:true,force:true}); }
 });
+}
