@@ -1,0 +1,418 @@
+name: Managed CI lifecycle
+
+on:
+  workflow_call:
+    inputs:
+      candidate-sha:
+        type: string
+        required: true
+      selection:
+        type: string
+        default: ''
+      queue_probe:
+        type: boolean
+        default: false
+    secrets:
+      CONVEX_URL:
+        required: false
+      CONVEX_DEPLOY_KEY:
+        required: false
+      CONVEX_URL_CLI:
+        required: false
+      CONVEX_DEPLOY_KEY_CLI:
+        required: false
+      OPENAI_API_KEY:
+        required: false
+    outputs:
+      receipt:
+        description: Exact-SHA managed leaf outcomes; queue probes emit no functional receipt
+        value: ${{ jobs.managed-outcomes.outputs.receipt }}
+
+# Same resource key as older callers; the entire called lifecycle owns this lock.
+# queue:max preserves up to 100 pending runs instead of replacing an older candidate.
+concurrency:
+  group: cortex-shared-ci-backends
+  cancel-in-progress: false
+  queue: max
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  queue-probe:
+    name: Queue-only lifecycle probe (no functional proof)
+    if: inputs.queue_probe == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Hold the real lifecycle lock without secrets or service operations
+        run: |
+          date -u '+lock-start %Y-%m-%dT%H:%M:%SZ'
+          sleep 25
+          date -u '+lock-end %Y-%m-%dT%H:%M:%SZ'
+          echo 'Queue-only receipt: no functional, service or delivery proof.' >> "$GITHUB_STEP_SUMMARY"
+
+  setup-and-purge:
+    name: Prepare disposable test databases
+    runs-on: ubuntu-latest
+    if: |
+      inputs.queue_probe != true && contains(fromJSON(inputs.selection).selected, 'setup-and-purge') &&
+      (github.event_name == 'push' ||
+       (!endsWith(github.actor, '[bot]') &&
+        !startsWith(github.actor, 'dependabot') &&
+        !startsWith(github.actor, 'renovate') &&
+        github.event.sender.type != 'Bot' &&
+        (github.event_name == 'workflow_dispatch' ||
+         (github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.user.type != 'Bot' &&
+          !endsWith(github.event.pull_request.user.login, '[bot]') &&
+          github.event.pull_request.draft == false))))
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.candidate-sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+
+      - uses: ./.github/actions/cortex-setup
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Refuse stale candidates before any shared preparation
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CI_CANDIDATE_SHA: ${{ inputs.candidate-sha }}
+        run: node scripts/ci-managed.mjs freshness
+
+      - name: Deploy Convex backend
+        run: npx convex deploy --yes
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Purge test database
+        run: |
+          echo "🧹 Purging all test data before serialized test execution..."
+          npx tsx scripts/cleanup-test-data.ts
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
+          CORTEX_CI_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL }}
+
+      # CLI-dedicated Convex instance (isolated from main SDK tests)
+      - name: Deploy CLI Convex backend
+        run: npx convex deploy --yes
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL_CLI }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
+
+      - name: Purge CLI test database
+        run: |
+          echo "🧹 Purging CLI test database..."
+          npx tsx scripts/cleanup-test-data.ts
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
+          CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
+          CORTEX_CI_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Managed SDK shards remain serialized within this lifecycle
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  test-typescript:
+    name: Test TypeScript SDK (Shard ${{ matrix.shard }}/5)
+    runs-on: ubuntu-latest
+    needs: setup-and-purge
+    if: |
+      always() &&
+      needs.setup-and-purge.result == 'success' &&
+      (github.event_name == 'push' ||
+       (!endsWith(github.actor, '[bot]') &&
+        !startsWith(github.actor, 'dependabot') &&
+        !startsWith(github.actor, 'renovate') &&
+        github.event.sender.type != 'Bot' &&
+        (github.event_name == 'workflow_dispatch' ||
+         (github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.user.type != 'Bot' &&
+          !endsWith(github.event.pull_request.user.login, '[bot]') &&
+          github.event.pull_request.draft == false)))) &&
+      inputs.queue_probe != true && contains(fromJSON(inputs.selection).selected, 'test-typescript')
+    permissions:
+      contents: read
+
+    strategy:
+      matrix:
+        shard: [1, 2, 3, 4, 5]
+      # Unique fixture IDs do not isolate deployment-wide lifecycle/range reads.
+      # Concurrent writers caused native OCC disconnects and unknown erasure outcomes.
+      max-parallel: 1
+      fail-fast: false # Continue other shards even if one fails
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.candidate-sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+
+      - uses: ./.github/actions/cortex-setup
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Require actual managed and paid coverage prerequisites
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          test -n "$CONVEX_URL"
+          test -n "$CONVEX_DEPLOY_KEY"
+          test -n "$OPENAI_API_KEY"
+
+      - name: Run tests (shard ${{ matrix.shard }}/5)
+        run: |
+          node --experimental-vm-modules node_modules/jest/bin/jest.js \
+            --testPathIgnorePatterns='/node_modules/|debug|/tests/unit/runtime/gateway-dispatch\.test\.ts$|/tests/graph/managed-runtime-safety\.test\.ts$|/tests/(user-export|fact-history-provenance|facts-revision-scope|domain-scope|domain-operations|memorySpaces|operation-sequences|gdprCascade)\.test\.ts$' \
+            --shard=${{ matrix.shard }}/5 \
+            --runInBand
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CONVEX_TEST_MODE: managed
+          CORTEX_TEST_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL }}
+
+      # Only build package once (on shard 1 to avoid redundant builds)
+      - name: Build package
+        if: matrix.shard == 1
+        run: npm run build
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  test-vercel-ai-provider:
+    name: Test Vercel AI Provider
+    runs-on: ubuntu-latest
+    # Provider integrations also write to the SDK's shared deployment.
+    needs: [setup-and-purge, test-typescript]
+    if: |
+      always() &&
+      needs.setup-and-purge.result == 'success' &&
+      (github.event_name == 'push' ||
+       (!endsWith(github.actor, '[bot]') &&
+        !startsWith(github.actor, 'dependabot') &&
+        !startsWith(github.actor, 'renovate') &&
+        github.event.sender.type != 'Bot' &&
+        (github.event_name == 'workflow_dispatch' ||
+         (github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.user.type != 'Bot' &&
+          !endsWith(github.event.pull_request.user.login, '[bot]') &&
+          github.event.pull_request.draft == false)))) &&
+      inputs.queue_probe != true && contains(fromJSON(inputs.selection).selected, 'test-vercel-ai-provider') &&
+      (needs.test-typescript.result == 'success' ||
+       (!contains(fromJSON(inputs.selection).selected, 'test-typescript') && needs.test-typescript.result == 'skipped'))
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.candidate-sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+
+      - uses: ./.github/actions/cortex-setup
+
+      - name: Install all workspace dependencies
+        run: npm ci
+
+      - name: Require actual managed provider and paid coverage prerequisites
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          test -n "$CONVEX_URL"
+          test -n "$CONVEX_DEPLOY_KEY"
+          test -n "$OPENAI_API_KEY"
+
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Build main SDK first
+        run: npm run build
+
+      - name: Run Vercel AI Provider tests
+        run: |
+          npm run test:unit --workspace=@cortexmemory/vercel-ai-provider -- --runInBand
+          npm run test:integration --workspace=@cortexmemory/vercel-ai-provider -- --runInBand
+          npm run test:e2e --workspace=@cortexmemory/vercel-ai-provider -- --runInBand
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          CORTEX_TEST_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Lint Vercel AI Provider
+        run: npm run lint --workspace=@cortexmemory/vercel-ai-provider
+
+      - name: Build Vercel AI Provider
+        run: npm run build --workspace=@cortexmemory/vercel-ai-provider
+
+      - name: Verify package contents
+        run: npm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 3: CLI Tests (parallel with other test jobs)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  test-cli:
+    name: Test Cortex CLI
+    runs-on: ubuntu-latest
+    needs: setup-and-purge
+    if: |
+      always() &&
+      needs.setup-and-purge.result == 'success' &&
+      (github.event_name == 'push' ||
+       (!endsWith(github.actor, '[bot]') &&
+        !startsWith(github.actor, 'dependabot') &&
+        !startsWith(github.actor, 'renovate') &&
+        github.event.sender.type != 'Bot' &&
+        (github.event_name == 'workflow_dispatch' ||
+         (github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.user.type != 'Bot' &&
+          !endsWith(github.event.pull_request.user.login, '[bot]') &&
+          github.event.pull_request.draft == false)))) &&
+      inputs.queue_probe != true && contains(fromJSON(inputs.selection).selected, 'test-cli')
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.candidate-sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+
+      - uses: ./.github/actions/cortex-setup
+
+      - name: Install all workspace dependencies
+        run: npm ci
+
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Build main SDK first
+        run: npm run build
+
+      - name: Build CLI
+        run: npm run build --workspace=@cortexmemory/cli
+
+      - name: Run CLI unit tests
+        run: npm run test:unit --workspace=@cortexmemory/cli -- --runInBand
+
+      - name: Run CLI E2E tests
+        run: npm run test:e2e --workspace=@cortexmemory/cli -- --runInBand
+        env:
+          CONVEX_URL_CLI: ${{ secrets.CONVEX_URL_CLI }}
+          CORTEX_TEST_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
+          CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
+
+      - name: Lint CLI
+        run: npm run lint --workspace=@cortexmemory/cli
+
+      - name: Verify CLI version matches package.json
+        run: |
+          echo "🔍 Verifying CLI version synchronization..."
+          PACKAGE_VERSION=$(node -p "require('./packages/cortex-cli/package.json').version")
+          CLI_VERSION=$(node packages/cortex-cli/dist/index.js --version)
+          echo "  package.json version: $PACKAGE_VERSION"
+          echo "  CLI --version output:  $CLI_VERSION"
+          if [[ "$PACKAGE_VERSION" != "$CLI_VERSION" ]]; then
+            echo ""
+            echo "❌ Version mismatch detected!"
+            echo "   The CLI is reporting a different version than package.json."
+            echo "   This can happen if VERSION was hardcoded instead of read from package.json."
+            exit 1
+          fi
+          echo "✅ CLI version matches package.json"
+
+      - name: Verify package contents
+        run: npm pack --dry-run --workspace=@cortexmemory/cli
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 4: All Checks Passed (final gate)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  managed-outcomes:
+    name: Require complete managed outcomes
+    needs: [setup-and-purge, test-typescript, test-vercel-ai-provider, test-cli]
+    if: always() && inputs.queue_probe != true
+    runs-on: ubuntu-latest
+    outputs:
+      receipt: ${{ steps.aggregate.outputs.receipt }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.candidate-sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+        with:
+          cache: 'false'
+      - name: Require selected leaves success and intentional skips
+        id: aggregate
+        env:
+          CI_SELECTION: ${{ inputs.selection }}
+          CI_CANDIDATE_SHA: ${{ inputs.candidate-sha }}
+          CI_NEEDS: ${{ toJSON(needs) }}
+        run: node scripts/ci-managed.mjs aggregate

@@ -1,0 +1,16 @@
+name: Declared Cortex runtime
+description: Node and npm pins with the lockfile-keyed package download store
+inputs:
+  cache:
+    description: Cache npm downloads using the root lockfile
+    default: 'true'
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '24.21.0'
+        cache: ${{ inputs.cache == 'true' && 'npm' || '' }}
+        cache-dependency-path: package-lock.json
+    - shell: bash
+      run: npm install --global npm@12.2.0
