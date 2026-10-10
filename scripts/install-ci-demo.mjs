@@ -8,7 +8,7 @@ import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 
-const runtimeTemplateVersions = ["1.3.0", "1.4.0", "1.4.1"];
+const runtimeTemplateVersions = ["1.3.0", "1.4.0", "1.4.1", "1.4.2"];
 
 function run(command, args, cwd, capture = false) {
   return execFileSync(command, args, {
@@ -69,7 +69,7 @@ export async function prepareCiDemoBackend({ directory, sdkDirectory, cliSource,
   if (manifest.dependencies?.["@cortexmemory/vercel-ai-provider"] && !template)
     throw new Error("Unrecognized canonical demo for backend preparation");
   if (manifest.version !== "1.2.0" && !runtimeTemplateVersions.includes(manifest.version))
-    throw new Error("Backend preparation requires an explicit canonical template version (1.2.0, 1.3.0, 1.4.0 or 1.4.1)");
+    throw new Error("Backend preparation requires an explicit canonical template version (1.2.0, 1.3.0, 1.4.0, 1.4.1 or 1.4.2)");
   const cliRoot = await realpath(resolve(cliSource));
   const cliManifest = JSON.parse(await readFile(join(cliRoot, "package.json"), "utf8"));
   if (cliManifest.name !== "@cortexmemory/cli" || !/^\d+\.\d+\.\d+$/.test(cliManifest.version))
