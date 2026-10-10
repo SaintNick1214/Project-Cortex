@@ -1,0 +1,189 @@
+✔ pack parser supports the npm12 package-keyed output and legacy single-package array (0.770541ms)
+✔ pack parser refuses missing or multiple archives, wrong identity and unsafe filenames (0.887333ms)
+✔ real candidate archives preserve SHA, byte hashes, package identities and built composer files (96.582708ms)
+✔ candidate manifest refuses wrong-sha (24.91925ms)
+✔ candidate manifest refuses wrong-schema (19.635417ms)
+✔ candidate manifest refuses missing-entry (22.205959ms)
+✔ candidate manifest refuses extra-entry (18.685542ms)
+✔ candidate manifest refuses wrong-size (21.217042ms)
+✔ candidate manifest refuses wrong-checksum (20.772041ms)
+✔ candidate manifest refuses wrong-package (19.38425ms)
+✔ candidate manifest refuses wrong-version (24.712417ms)
+✔ candidate manifest refuses malformed-json (17.5105ms)
+✔ candidate refuses missing-file before consumer install (18.067625ms)
+✔ candidate refuses extra-file before consumer install (18.162291ms)
+✔ candidate refuses changed-bytes before consumer install (19.521125ms)
+✔ candidate refuses symlink-file before consumer install (20.16275ms)
+✔ candidate refuses composer-mismatch before consumer install (40.213791ms)
+✔ archive refuses symlink-entry even with a matching checksum (48.424375ms)
+✔ archive refuses hardlink-entry even with a matching checksum (50.120125ms)
+✔ archive refuses wrong-prefix even with a matching checksum (42.0065ms)
+✔ archive refuses duplicate-entry even with a matching checksum (43.004625ms)
+✔ real traversal archive is refused before extraction even with matching manifest bytes (40.524458ms)
+✔ a checksummed CLI artifact still requires the complete composer entrypoints (45.588084ms)
+✔ exact checkout validation rejects invalid or different commits and succeeds for HEAD (17.165583ms)
+✔ artifact creation packs an isolated exact checkout, ignores prepack scripts and refuses replacement (762.183042ms)
+✔ artifact executable refuses malformed commands and wrong candidate before extracting (81.905667ms)
+✔ full and provider-only lifecycle receipts retain exact selected and observed leaves (0.938375ms)
+✔ every selected leaf fails closed on failure, cancellation, missing and unexpected skip (0.175959ms)
+✔ unselected leaves must be observed skipped and unknown jobs are rejected (0.068083ms)
+✔ malformed, deferred, untrusted and preparation-only selections cannot yield a receipt (0.14525ms)
+✔ live ready PR lookup verifies the same exact candidate through a read-only endpoint (0.338416ms)
+✔ moved candidate is refused before preparation (0.16225ms)
+✔ draft candidate is refused before preparation (0.080375ms)
+✔ closed candidate is refused before preparation (0.051459ms)
+✔ fork candidate is refused before preparation (0.068708ms)
+✔ bot candidate is refused before preparation (0.082208ms)
+✔ missing-sha candidate is refused before preparation (0.06075ms)
+✔ unavailable candidate is refused before preparation (0.056375ms)
+✔ main pushes and manual branches compare their current Git ref commit (1.029916ms)
+✔ invalid trust, candidate and ref metadata never performs a lookup (0.468083ms)
+✔ managed aggregate executable writes an observed receipt and returns failure for missing leaves (90.066708ms)
+✔ trusted opened candidate retains full backend/consumer qualification (1.677541ms)
+✔ trusted ready_for_review candidate retains full backend/consumer qualification (0.274209ms)
+✔ trusted synchronize candidate retains full backend/consumer qualification (0.124167ms)
+✔ trusted reopened candidate retains full backend/consumer qualification (0.229292ms)
+✔ drafts defer every affected service while root and consumer offline checks execute (0.215792ms)
+✔ fork receives stable secret-free checks and unavailable service coverage (0.286333ms)
+✔ dependabot receives stable secret-free checks and unavailable service coverage (0.074041ms)
+✔ bot-author receives stable secret-free checks and unavailable service coverage (0.049334ms)
+✔ bot-sender receives stable secret-free checks and unavailable service coverage (0.063917ms)
+✔ missing-actor receives stable secret-free checks and unavailable service coverage (0.085917ms)
+✔ documentation, security and release helpers avoid unrelated managed/demo/native work (0.3335ms)
+✔ convex-dev/schema.ts conservatively covers every consumer (0.050208ms)
+✔ convex-dev/_generated/api.d.ts conservatively covers every consumer (0.028334ms)
+✔ convex.json conservatively covers every consumer (0.025542ms)
+✔ src/index.ts conservatively covers every consumer (0.026417ms)
+✔ package-lock.json conservatively covers every consumer (0.019042ms)
+✔ package.json conservatively covers every consumer (0.0225ms)
+✔ tsconfig.json conservatively covers every consumer (0.020208ms)
+✔ jest.config.mjs conservatively covers every consumer (0.019333ms)
+✔ .github/workflows/pr-checks.yml conservatively covers every consumer (0.021584ms)
+✔ .github/workflows/managed-ci.yml conservatively covers every consumer (0.02275ms)
+✔ .github/actions/setup/action.yml conservatively covers every consumer (0.020584ms)
+✔ scripts/prepare-ci-backend.mjs conservatively covers every consumer (0.021042ms)
+✔ scripts/ci-contract.mjs conservatively covers every consumer (0.018708ms)
+✔ scripts/ci-managed.mjs conservatively covers every consumer (0.032458ms)
+✔ scripts/ci-candidate-artifacts.mjs conservatively covers every consumer (0.036708ms)
+✔ scripts/ci/prepare-fixtures.mjs conservatively covers every consumer (0.024959ms)
+✔ tests/ci-managed.test.mjs conservatively covers every consumer (0.026042ms)
+✔ tests/ci-candidate-artifacts.test.mjs conservatively covers every consumer (0.021833ms)
+✔ provider changes cover both provider consumers without unrelated SDK/native suites (0.04ms)
+✔ CLI/template/catalog changes preserve composer, candidate and catalog closure (0.466417ms)
+✔ main always qualifies full coverage, including docs-only and bot main pushes (0.05575ms)
+✔ manual full validation is explicit; bot dispatch cannot obtain managed secrets (0.054375ms)
+✔ release flags preserve existing exact-source package-path channels (0.130083ms)
+✔ invalid events, incomplete trust metadata and invalid relative paths fail closed (0.348833ms)
+✔ actual workflow extraction retains both endpoints: SDK source to documentation (181.458292ms)
+✔ actual workflow extraction retains both endpoints: test source to documentation (141.592416ms)
+✔ actual workflow extraction retains both endpoints: CLI source to provider (158.029875ms)
+✔ actual workflow extraction retains both endpoints: provider source to template catalog (144.600333ms)
+✔ change extraction rejects absent or non-commit inputs before invoking Git (2.450084ms)
+✔ failed, cancelled, skipped, missing or incomplete selected jobs cannot pass (0.430583ms)
+✔ backend preparation failure preserves observed independent offline results and fails service proof (0.087917ms)
+✔ intentional skips are bounded; unknown/missing/unexpected jobs are not silently accepted (0.133875ms)
+✔ offline allowlist exists and excludes live Gateway/lifecycle tests (0.728125ms)
+✔ CLI selection and final aggregate execute the coverage policy, including a failed exit (132.783291ms)
+✔ parent combines actual complete managed leaves with independent offline and candidate outcomes (0.4605ms)
+✔ parent requires caller success and exact successful inner receipt, with every leaf present (0.6595ms)
+✔ parent intentional skips, unclassified jobs and leaf spoofing are bounded (0.111708ms)
+✔ candidate artifacts are required whenever selected demos consume their packages (0.063291ms)
+✔ parent executable applies reusable receipt policy and cannot certify queue-only receipt (53.433417ms)
+✖ one called workflow owns preparation through every selected managed leaf and aggregate (5.438291ms)
+✔ queue probes pass no secrets and can never produce a passing functional aggregate (1.132625ms)
+✔ demo artifacts build once and preserve ordinary installs, closure validation and source sparsity (1.5925ms)
+✖ actual provider preflight shell refuses every missing prerequisite before selected paid coverage (4.017292ms)
+✔ template-only delivery keeps SDK/provider/CLI unchanged (1.142125ms)
+✔ SDK delivery updates its dependent packages but not the catalog channel (0.097125ms)
+✔ first catalog publication accepts only a structured npm 404 (0.303791ms)
+✔ invalid registry metadata or mismatched source cannot authorize publication (0.145666ms)
+✔ changes superseded by an earlier main delivery are included using registry gitHead (0.122791ms)
+✔ partial retry does not republish already accepted SDK but finishes dependents (0.151125ms)
+✔ catalog becomes visible before the CLI depending on it is published (0.167916ms)
+✔ visibility timeout stops downstream publication and release tags (0.148542ms)
+✔ a failed npm publish is not retried as if it succeeded (0.107834ms)
+✔ delivery gate requires exact-head latest workflows and separate CodeQL success (0.358791ms)
+✔ newest failed/pending workflow attempts and CodeQL results defeat older success (0.232916ms)
+✔ wrong source, branch, repository and uploaded-check app cannot authorize delivery (0.765625ms)
+✔ all Snyk contexts require their newest result, independent of response order (0.20925ms)
+✔ filtered CodeQL retrieval survives 652 unrelated checks and paginates runs/statuses (15.337375ms)
+✔ check pagination cannot hide a newer failed uploaded CodeQL result (0.295708ms)
+✔ API failures, malformed/truncated data and a moving main fail closed (0.284625ms)
+✔ event replays explain dev integration, scheduled scans and failed upstream workflows (0.280875ms)
+✔ late CodeQL after either final wake-up reconciles without another event (0.262875ms)
+✔ pending prerequisites expire after bounded reads; failure never polls past a finding (0.328833ms)
+✔ manual dry-plan and recovery require exact current main and all the same gates (0.226709ms)
+✔ superseding main and newer tests invalidate a previously selected artifact (0.080333ms)
+✔ dry-plan writes a reviewable plan without modifying manifests or publishing (1121.870916ms)
+✔ publication outcomes retain accepted partial work and await effects before dependents (0.287125ms)
+✔ readiness command produces gate outputs and redacted failure summaries over HTTP (248.189959ms)
+✔ all PR actors and draft/fork origins require scans, PR upload and reviewed dependency policy (1.942708ms)
+✔ non-PR dependency review skip is explicit; only non-PR Dependabot upload is unavailable (0.962209ms)
+✔ every required scanner and Dependency Review failure/cancellation/absence/skip blocks (0.165ms)
+✔ legitimate skip must itself be observed and Scorecard cannot certify mandatory coverage (0.093167ms)
+✔ valid SARIF including findings is accepted; execution errors and malformed artifacts fail (0.296166ms)
+✔ native Semgrep findings are reported without introducing a new exit threshold or tool alias (0.360834ms)
+✔ only classified CE PartialParsing warnings remain visible without suppressing findings (0.331292ms)
+✔ crash/invalid configuration status, wrong version, zero coverage and invalid output block (0.722584ms)
+✔ actual child exit/signal and missing executable propagate after stale output removal (52.398083ms)
+✔ CLI aggregate exits nonzero on cancellation and writes actionable summaries (54.285625ms)
+✔ workflow requires supported token-free scan/upload contract and preserves scanner policies (0.52275ms)
+ℹ tests 130
+ℹ suites 0
+ℹ pass 128
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1592.010459
+
+✖ failing tests:
+
+test at tests/ci-pipeline.test.mjs:344:1
+✖ one called workflow owns preparation through every selected managed leaf and aggregate (5.438291ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'setup-and-purge',
+      'test-typescript',
+      'test-vercel-ai-provider',
+      'test-cli',
+  +   'cleanup-runtime-fixtures'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/ci-pipeline.test.mjs:350:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'setup-and-purge', 'test-typescript', 'test-vercel-ai-provider', 'test-cli', 'cleanup-runtime-fixtures' ],
+    expected: [ 'setup-and-purge', 'test-typescript', 'test-vercel-ai-provider', 'test-cli' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/ci-pipeline.test.mjs:410:1
+✖ actual provider preflight shell refuses every missing prerequisite before selected paid coverage (4.017292ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(preflightIndex >= 0 && paidIndex > preflightIndex)
+  
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/ci-pipeline.test.mjs:415:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

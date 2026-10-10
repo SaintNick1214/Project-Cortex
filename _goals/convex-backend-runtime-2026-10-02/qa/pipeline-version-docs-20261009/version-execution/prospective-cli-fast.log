@@ -1,0 +1,2303 @@
+npm notice run @cortexmemory/cli@0.39.0 test:fast
+npm notice run node scripts/test-runner.js fast --runInBand --watchman=false --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/prospective-cli-fast-results.json
+Running 2 projects:
+- commands
+- unit
+(node:88244) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.error
+    [2m   Using: one (delete-many)[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at Object.<anonymous> (tests/commands/users-real.test.ts:242:5)
+
+  console.error
+    [2m   Using: one (export)[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at tests/commands/users-real.test.ts:396:5
+
+  console.error
+    [2m   Using: one (export)[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at tests/commands/users-real.test.ts:396:5
+
+  console.error
+    [2m   Using: one (export)[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at tests/commands/users-real.test.ts:396:5
+
+  console.error
+    [2m   Using: one (export)[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at tests/commands/users-real.test.ts:396:5
+
+PASS commands tests/commands/users-real.test.ts (8.909 s)
+  ✓ production users ["list", "--no-stats", "--limit", "2", "--offset", "3"] returns SDK outcome and exact arguments (37 ms)
+  ✓ production users ["get", "user-one", "--include-history"] returns SDK outcome and exact arguments (19 ms)
+  ✓ production users ["delete", "user-one", "--cascade", "--yes", "--dry-run"] returns SDK outcome and exact arguments (17 ms)
+  ✓ production users ["delete-many", "user-one", "user-two", "--cascade", "--yes"] returns SDK outcome and exact arguments (42 ms)
+  ✓ production users ["stats", "user-one"] returns SDK outcome and exact arguments (32 ms)
+  ✓ production users ["update", "user-one", "--data", "{\"nested\":{\"x\":1}}"] returns SDK outcome and exact arguments (27 ms)
+  ✓ production users ["create", "user-one", "--data", "{\"name\":\"New\"}"] returns SDK outcome and exact arguments (29 ms)
+  ✓ production users ["exists", "user-one"] returns SDK outcome and exact arguments (30 ms)
+  ✓ production users ["list", "--no-stats", "--limit", "2", "--offset", "3"] propagates SDK failure and closes transport (46 ms)
+  ✓ production users ["get", "user-one", "--include-history"] propagates SDK failure and closes transport (27 ms)
+  ✓ production users ["delete", "user-one", "--cascade", "--yes", "--dry-run"] propagates SDK failure and closes transport (27 ms)
+  ✓ production users ["delete-many", "user-one", "user-two", "--cascade", "--yes"] propagates SDK failure and closes transport (29 ms)
+  ✓ production users ["stats", "user-one"] propagates SDK failure and closes transport (24 ms)
+  ✓ production users ["update", "user-one", "--data", "{\"nested\":{\"x\":1}}"] propagates SDK failure and closes transport (25 ms)
+  ✓ production users ["create", "user-one", "--data", "{\"name\":\"New\"}"] propagates SDK failure and closes transport (26 ms)
+  ✓ production users ["exists", "user-one"] propagates SDK failure and closes transport (43 ms)
+  ✓ users globals select correct authenticated target at root (21 ms)
+  ✓ users globals select correct authenticated target at group (14 ms)
+  ✓ users globals select correct authenticated target at leaf (19 ms)
+  ✓ users empty page retains machine-readable paging metadata (14 ms)
+  ✓ users counts page every space and do not cap conversation/fact totals at 1000 (17 ms)
+  ✓ users list does not swallow partial counting failures (16 ms)
+  ✓ users stats does not swallow partial counting failures (14 ms)
+  ✓ users list surfaces hasMore and exports original fields in JSON (18 ms)
+  ✓ users get fails on missing profile (23 ms)
+  ✓ users stats fails on missing profile (15 ms)
+  ✓ users delete fails on missing profile (18 ms)
+  ✓ users exists emits false result then fails; duplicate create never updates (31 ms)
+  ✓ users cascade incomplete verification and partial bulk deletion fail (29 ms)
+  ✓ users --no-verify explicitly forwards false (16 ms)
+  ✓ users rejects non-object profile data null before client (32 ms)
+  ✓ users rejects non-object profile data [] before client (29 ms)
+  ✓ users rejects non-object profile data 2 before client (31 ms)
+  ✓ users rejects non-object profile data true before client (30 ms)
+  ✓ users rejects non-object profile data "x" before client (30 ms)
+  ✓ users rejects non-object profile data bad before client (30 ms)
+  ✓ users update validates file, exclusivity and retains supplied object (60 ms)
+  ✓ users rejects invalid limit 1.5 before SDK (7 ms)
+  ✓ users rejects invalid limit 1e2 before SDK (8 ms)
+  ✓ users rejects invalid limit 1x before SDK (8 ms)
+  ✓ users rejects invalid limit 0 before SDK (6 ms)
+  ✓ users rejects invalid limit 1001 before SDK (8 ms)
+  ✓ users rejects invalid limit -1 before SDK (7 ms)
+  ✓ users ["get", "user-one", "--include-history"] rejects missing positional ID (8 ms)
+  ✓ users ["delete", "user-one", "--cascade", "--yes", "--dry-run"] rejects missing positional ID (7 ms)
+  ✓ users ["stats", "user-one"] rejects missing positional ID (10 ms)
+  ✓ users ["update", "user-one", "--data", "{\"nested\":{\"x\":1}}"] rejects missing positional ID (8 ms)
+  ✓ users ["create", "user-one", "--data", "{\"name\":\"New\"}"] rejects missing positional ID (9 ms)
+  ✓ users ["exists", "user-one"] rejects missing positional ID (9 ms)
+  ✓ actual binary invalid inputs exit nonzero before any network mutation (1485 ms)
+  ✓ users bulk result redacts configured credentials and preserves per-user failure (46 ms)
+  ✓ users confirmation cancellation and failed exact cascade confirmation do not instantiate clients (123 ms)
+  ✓ users stats rejects pagination without progress (21 ms)
+  ✓ users unknown explicit target never instantiates a client (17 ms)
+  ✓ users quiet preserves JSON and suppresses hints (31 ms)
+  ✓ users default table keeps full nested profile values readable (38 ms)
+  ✓ complete export persists canonical raw/history events and recoverable binary chunks with exact receipt (47 ms)
+  ✓ complete export resolves exact target credentials and tenant at root (24 ms)
+  ✓ complete export resolves exact target credentials and tenant at group (27 ms)
+  ✓ complete export resolves exact target credentials and tenant at leaf (23 ms)
+  ✓ complete export honors scoped use different from default and singleton selection (60 ms)
+  ✓ complete export invalid --tenant has zero client/stream/file effects (9 ms)
+  ✓ complete export invalid --tenant has zero client/stream/file effects (11 ms)
+  ✓ complete export invalid --format has zero client/stream/file effects (16 ms)
+  ✓ complete export invalid --format has zero client/stream/file effects (9 ms)
+  ✓ complete export invalid -d has zero client/stream/file effects (15 ms)
+  ✓ complete export missing key and ambiguous target fail before client or staging (35 ms)
+  ✓ complete export missing positional ID and unsupported credential flags have zero effects (22 ms)
+  ✓ complete export refuses missing manifest without publishing either destination state (36 ms)
+  ✓ complete export refuses missing header without publishing either destination state (34 ms)
+  ✓ complete export refuses duplicate header without publishing either destination state (37 ms)
+  ✓ complete export refuses duplicate manifest without publishing either destination state (33 ms)
+  ✓ complete export refuses post-terminal data without publishing either destination state (36 ms)
+  ✓ complete export refuses missing blob end without publishing either destination state (42 ms)
+  ✓ complete export refuses duplicate record without publishing either destination state (35 ms)
+  ✓ complete export refuses wrong version without publishing either destination state (41 ms)
+  ✓ complete export refuses wrong user without publishing either destination state (44 ms)
+  ✓ complete export refuses wrong scope without publishing either destination state (34 ms)
+  ✓ complete export refuses incomplete terminal without publishing either destination state (36 ms)
+  ✓ complete export refuses malformed terminal without publishing either destination state (48 ms)
+  ✓ complete export refuses wrong counts without publishing either destination state (38 ms)
+  ✓ complete export refuses bad sequence without publishing either destination state (32 ms)
+  ✓ complete export refuses bad chunk data without publishing either destination state (35 ms)
+  ✓ complete export refuses bad checksum without publishing either destination state (31 ms)
+  ✓ complete export refuses bad raw codec without publishing either destination state (40 ms)
+  ✓ complete export open disk failure preserves final bytes and joins cleanup (34 ms)
+  ✓ complete export write disk failure preserves final bytes and joins cleanup (42 ms)
+  ✓ complete export zero-write disk failure preserves final bytes and joins cleanup (37 ms)
+  ✓ complete export sync disk failure preserves final bytes and joins cleanup (41 ms)
+  ✓ complete export close disk failure preserves final bytes and joins cleanup (57 ms)
+  ✓ complete export rename disk failure preserves final bytes and joins cleanup (49 ms)
+  ✓ complete export read failure emits no receipt and awaits iterator return (18 ms)
+  ✓ complete export late-read failure emits no receipt and awaits iterator return (17 ms)
+  ✓ complete export wrong-key failure emits no receipt and awaits iterator return (19 ms)
+  ✓ complete export serializer failure emits no receipt and awaits iterator return (19 ms)
+  ✓ complete export SIGINT aborts actual iterator and joins resource/listener cleanup (16 ms)
+  ✓ complete export SIGTERM aborts actual iterator and joins resource/listener cleanup (15 ms)
+  ✓ complete export reports staging cleanup failure and never publishes or deletes unrelated stage (18 ms)
+  ✓ complete export late falsey throw undefined is failure with no published file or receipt (33 ms)
+  ✓ complete export late falsey throw null is failure with no published file or receipt (37 ms)
+  ✓ complete export late falsey throw 0 is failure with no published file or receipt (34 ms)
+  ✓ complete export late falsey throw false is failure with no published file or receipt (38 ms)
+  ✓ complete export late falsey throw  is failure with no published file or receipt (38 ms)
+  ✓ complete export iterator return failure refuses publication after terminal completion (17 ms)
+  ✓ complete export canonical text seam retains UTF16 arbitrary event keys and empty binary (35 ms)
+  ✓ complete export abort observed at awaited sync blocks the synchronous commit (29 ms)
+  ✓ complete export abort observed at awaited close blocks the synchronous commit (28 ms)
+  ✓ complete export exclusive stage collision preserves both final and unowned stage (18 ms)
+  ✓ complete export retains artifact version order and every version referrer on deduplicated storage (34 ms)
+  ✓ actual registered export leaf help states administrator/version1/supported/history/binary/scope/consistency without config or client effects (5 ms)
+  ✓ users delete cascade binds the selected endpoint/key and exact whitespace-preserving tenant without exists (15 ms)
+  ✓ users delete-many cascade binds the selected endpoint/key and exact whitespace-preserving tenant without exists (12 ms)
+  ✓ users delete rejects missing administrator authority and malformed tenant before client/transport (28 ms)
+  ✓ users delete-many rejects missing administrator authority and malformed tenant before client/transport (24 ms)
+  ✓ users profile-only rejects a maintenance tenant and retains ordinary existence/delete behavior (21 ms)
+  ✓ users bulk later-target preflight rejection invokes one whole-bulk request with zero individual mutations (36 ms)
+  ✓ users bulk stopped receipt retains exact committed/unstarted/unknown sets (unknown=false) and never retries (14 ms)
+  ✓ users bulk stopped receipt retains exact committed/unstarted/unknown sets (unknown=true) and never retries (13 ms)
+  ✓ users bulk dry-run/no-verify retains incomplete truth without implying verified deletion (32 ms)
+  ✓ users single cascade failure emits original receipt and sanitized cause before rejection (17 ms)
+  ✓ users partial CSV remains a single valid row containing the original receipt and quoted sets (16 ms)
+  ✓ users selected project graph directory marker refuses before effects (18 ms)
+  ✓ users selected project graph file marker refuses before effects (16 ms)
+  ✓ users selected project graph symlink marker refuses before effects (14 ms)
+  ✓ users uses only selected explicit graph path: absent marker is off; unrelated cwd marker is not read (13 ms)
+  ✓ users graph filesystem errors propagate before client rather than silently treating graph as off (1 ms)
+  ✓ I156 users delete missing exact selected profile refuses before any erasure and closes readonly signal (12 ms)
+  ✓ I156 users delete-many missing exact selected profile refuses before any erasure and closes readonly signal (12 ms)
+  ✓ I156 users delete native missing-profile refusal is actionable and does not erase foreign/tenantless profiles (18 ms)
+  ✓ I156 users delete-many native missing-profile refusal is actionable and does not erase foreign/tenantless profiles (16 ms)
+  ✓ I156 bulk checks all exact tenantless profiles before the one SDK whole-bulk operation (15 ms)
+  ✓ I156 readonly inspection denial/ambiguity remains a refusal with no fabricated profile or erasure (31 ms)
+  ✓ I156 missing profile dry-run refuses rather than reporting an empty complete preview (15 ms)
+  ✓ Task21 ordinary scope flags at root reach AuthContext and never derive caller from users target (15 ms)
+  ✓ Task21 ordinary scope flags at group reach AuthContext and never derive caller from users target (17 ms)
+  ✓ Task21 ordinary scope flags at leaf reach AuthContext and never derive caller from users target (19 ms)
+  ✓ Task21 closest ordinary explicit scope wins over ancestors but maintenance tenant conflicts refuse before client (23 ms)
+  ✓ Task21 maintenance caller scope never substitutes the target user and does not require a caller (30 ms)
+  ✓ Task21 invalid ordinary caller options "--scope-user" refuse before clients or target reads (10 ms)
+  ✓ Task21 invalid ordinary caller options "--tenant" refuse before clients or target reads (8 ms)
+  ✓ Task21 invalid ordinary caller options "--graph-sync" refuse before clients or target reads (7 ms)
+  ✓ Task21 ordinary profile-only explicit tenant now uses caller AuthContext rather than a maintenance transport (16 ms)
+
+PASS commands tests/commands/bootstrap-admission-real.test.ts (43.661 s)
+  ✓ I111 built nested project load/use/write and sibling selection stay scoped (2735 ms)
+  ✓ I111 packed nested project load/use/write and sibling selection stay scoped (2458 ms)
+  ✓ I111 built ancestor owned/executable admission refuses effects from nested cwd (516 ms)
+  ✓ I111 packed ancestor owned/executable admission refuses effects from nested cwd (522 ms)
+  ✓ I111 built legacy cwd selection preserves target or refuses changed endpoint before effects (2289 ms)
+  ✓ I111 packed legacy cwd selection preserves target or refuses changed endpoint before effects (2396 ms)
+  ✓ cold parser route remains env/config free (279 ms)
+  ✓ cold parser route remains env/config free (279 ms)
+  ✓ cold parser route remains env/config free (291 ms)
+  ✓ cold parser route remains env/config free (284 ms)
+  ✓ cold parser route remains env/config free (284 ms)
+  ✓ cold parser route remains env/config free (293 ms)
+  ✓ cold parser route remains env/config free (278 ms)
+  ✓ cold parser route remains env/config free (282 ms)
+  ✓ protected JSON default selection skips FIFO env and shadowed executable (292 ms)
+  ✓ protected JSON singleton selection skips FIFO env and shadowed executable (307 ms)
+  ✓ protected JSON scoped selection skips FIFO env and shadowed executable (310 ms)
+  ✓ protected JSON explicit selection skips FIFO env and shadowed executable (347 ms)
+  ✓ protected JSON inherited selection skips FIFO env and shadowed executable (356 ms)
+  ✓ db protected capture never falls through ordinary native export (294 ms)
+  ✓ convex protected capture never falls through ordinary native export (303 ms)
+  ✓ I108 db standalone provenance built refuses an ordinary unowned target before effects (304 ms)
+  ✓ I108 db standalone provenance packed refuses an ordinary unowned target before effects (340 ms)
+  ✓ I108 convex standalone provenance built refuses an ordinary unowned target before effects (335 ms)
+  ✓ I108 convex standalone provenance packed refuses an ordinary unowned target before effects (305 ms)
+  ✓ I108 db provenance refuses executable-only configuration before evaluation (283 ms)
+  ✓ I108 convex provenance refuses executable-only configuration before evaluation (275 ms)
+  ✓ I108 db import without provenance keeps benign ordinary env and archive validation (290 ms)
+  ✓ I108 convex import without provenance keeps benign ordinary env and archive validation (321 ms)
+  ✓ snapshot create is protected without existing sessions (284 ms)
+  ✓ snapshot create with JSON reaches explicit unavailable boundary without resources (298 ms)
+  ✓ snapshot status admits exact session fixture and refuses absent runtime (301 ms)
+  ✓ snapshot resume admits exact session fixture and refuses absent runtime (291 ms)
+  ✓ snapshot release admits exact session fixture and refuses absent runtime (291 ms)
+  ✓ snapshot stop admits exact session fixture and refuses absent runtime (292 ms)
+  ✓ snapshot discard admits exact session fixture and refuses absent runtime (291 ms)
+  ✓ db import admits session-bound project outside cwd (302 ms)
+  ✓ convex import admits session-bound project outside cwd (304 ms)
+  ✓ db capture explicit project outside cwd remains protected (295 ms)
+  ✓ convex capture explicit project outside cwd remains protected (289 ms)
+  ✓ db capture forbids explicit env-file before even stat (292 ms)
+  ✓ convex capture forbids explicit env-file before even stat (279 ms)
+  ✓ genuine owned registry plus active JS is ambiguity, never imported (264 ms)
+  ✓ protected js active source rejects before executable/process/env effects (275 ms)
+  ✓ protected meta-js active source rejects before executable/process/env effects (288 ms)
+  ✓ protected meta-json active source rejects before executable/process/env effects (289 ms)
+  ✓ protected import active source rejects before executable/process/env effects (277 ms)
+  ✓ protected yaml active source rejects before executable/process/env effects (293 ms)
+  ✓ unsafe active config symlink refuses with bounded zero env effects (287 ms)
+  ✓ unsafe active config oversize refuses with bounded zero env effects (281 ms)
+  ✓ unsafe active config fifo refuses with bounded zero env effects (279 ms)
+  ✓ unsafe active config unreadable refuses with bounded zero env effects (282 ms)
+  ✓ retained missing metadata cannot permit an ordinary JS bypass (299 ms)
+  ✓ retained malformed metadata cannot permit an ordinary JS bypass (317 ms)
+  ✓ retained incomplete metadata cannot permit an ordinary JS bypass (326 ms)
+  ✓ retained epoch metadata cannot permit an ordinary JS bypass (322 ms)
+  ✓ retained mode metadata cannot permit an ordinary JS bypass (350 ms)
+  ✓ ordinary trusted JS and dotenv evaluation remain automatic with positive open/process sentinels (358 ms)
+  ✓ ordinary JS can observe loaded env and user/project precedence (314 ms)
+  ✓ ordinary JS returned forged owned metadata fails without private authority/fallback (301 ms)
+  ✓ protected scoped use persists exact canonical scope without env/config effects (327 ms)
+  ✓ protected config formatting save retains binding and user/source ownership (320 ms)
+  ✓ protected identity mutation refuses before config/env writes (294 ms)
+  ✓ relocated ignored-hook CLI candidate runs actual protected index with fixture dependencies (399 ms)
+  ✓ actual executable launcher places Node boundary before protected env-file FIFO (740 ms)
+  ✓ actual npm-bin launcher places Node boundary before protected env-file FIFO (530 ms)
+  ✓ actual npm-sh launcher places Node boundary before protected env-file FIFO (567 ms)
+  ✓ protected index skips env directory without even stat (313 ms)
+  ✓ protected index skips env symlink without even stat (311 ms)
+  ✓ protected index skips env unreadable without even stat (316 ms)
+  ✓ ordinary executable meta factory remains automatic after ordinary-only proof (329 ms)
+  ✓ restore session explicit project mismatch refuses association before env/native effects (303 ms)
+  ✓ protected capture requires actual explicit alias rather than config/default fallback (300 ms)
+  ✓ db explicit normal selector cannot downgrade a restore-session import (299 ms)
+  ✓ convex explicit normal selector cannot downgrade a restore-session import (299 ms)
+  ✓ I95 actual index proposed creating session refuses JS/default/env before effects (303 ms)
+  ✓ I95 actual index proposed private-paused session refuses JS/default/env before effects (298 ms)
+  ✓ I95 actual index proposed failed session refuses JS/default/env before effects (303 ms)
+  ✓ I95 actual index proposed unknown session refuses JS/default/env before effects (311 ms)
+  ✓ I95 actual index proposed stopped session refuses JS/default/env before effects (337 ms)
+  ✓ I95 actual index proposed native-running-confirmed session refuses JS/default/env before effects (308 ms)
+  ✓ I95 actual index proposed explicit placements preserve zero effects (300 ms)
+  ✓ I95 actual index proposed explicit placements preserve zero effects (318 ms)
+  ✓ I95 actual index proposed explicit placements preserve zero effects (315 ms)
+  ✓ I95 actual index inherited proposed user-source blocks current JS (301 ms)
+  ✓ I95 actual index inherited JSON project association blocks current JS (297 ms)
+  ✓ I95 actual index explicit project blocks proposal JS outside cwd (292 ms)
+  ✓ I95 actual index proposed scoped-use selection blocks unrelated JS (266 ms)
+  ✓ I95 actual index inherited proposed default blocks current JS (263 ms)
+  ✓ I95 actual index explicit proposed alias blocks unresolved foreign association (259 ms)
+  ✓ I95 actual index proposed metadata applies to active executable meta configuration (273 ms)
+  ✓ I95 unrelated proposed scope retains ordinary JS/env positive controls (338 ms)
+  ✓ I95 closest explicit ordinary target excludes a foreign proposed ancestor (312 ms)
+  ✓ I95 exact explicit ordinary JSON alias retains env despite same-project proposal (267 ms)
+  ✓ I95 exact unrelated JSON source/project keeps same-name ordinary alias (331 ms)
+  ✓ I95 inherited symlink project reference associates a differently named proposed session (309 ms)
+  ✓ I95 already protected proposal never resolves irrelevant env regular project reference (278 ms)
+  ✓ I95 already protected proposal never resolves irrelevant env fifo project reference (262 ms)
+  ✓ I95R2 unknown proposed mixed regular references env-first never inspect env (254 ms)
+  ✓ I95R2 unknown proposed mixed regular references project-first never inspect env (246 ms)
+  ✓ I95R2 unknown proposed mixed fifo references env-first never inspect env (249 ms)
+  ✓ I95R2 unknown proposed mixed fifo references project-first never inspect env (254 ms)
+  ✓ I95R2 unknown proposed mixed symlink references env-first never inspect env (248 ms)
+  ✓ I95R2 unknown proposed mixed symlink references project-first never inspect env (253 ms)
+  ✓ I95R2 env-named canonical .env.local reference refuses before lookup (253 ms)
+  ✓ I95R2 env-named canonical .env.custom reference refuses before lookup (253 ms)
+  ✓ I95R2 env-named canonical nested/../.env.local reference refuses before lookup (274 ms)
+  ✓ I95R2 empty ordinary JSON target retains automatic env with env-named project field (257 ms)
+  ✓ I95R2 foreign-explicit ordinary JSON target retains automatic env with env-named project field (255 ms)
+
+PASS commands tests/commands/config-real.test.ts (67.078 s)
+  ✓ actual registered handler receives globals at every position: "-d" (36 ms)
+  ✓ actual registered handler receives globals at every position: "config" (13 ms)
+  ✓ actual registered handler receives globals at every position: "config" (12 ms)
+  ✓ config show/list retain stale/auth-failing entries and bytes, redact secrets, emit parseable JSON (41 ms)
+  ✓ deprecated config toggles always throw before save or client creation (22 ms)
+  ✓ quiet suppresses selection and validation hints without dropping JSON (17 ms)
+  ✓ real domain registry rejects strict limit 1.5 before selection/network (7 ms)
+  ✓ real domain registry rejects strict limit 2abc before selection/network (7 ms)
+  ✓ real domain registry rejects strict limit Infinity before selection/network (7 ms)
+  ✓ real domain registry rejects strict limit 0 before selection/network (8 ms)
+  ✓ real domain registry rejects strict limit 1001 before selection/network (6 ms)
+  ✓ valid conversations txt export is accepted by the registry validation before target failure (12 ms)
+  ✓ actual binary missing target fails with empty stdout: "users" (286 ms)
+  ✓ actual binary missing target fails with empty stdout: "spaces" (295 ms)
+  ✓ actual binary missing target fails with empty stdout: "memory" (278 ms)
+  ✓ actual binary missing target fails with empty stdout: "facts" (280 ms)
+  ✓ actual binary missing target fails with empty stdout: "conversations" (276 ms)
+  ✓ actual binary missing target fails with empty stdout: "db" (274 ms)
+  ✓ actual binary rejects malformed config and invalid options with nonzero status (1114 ms)
+  ✓ actual binary persists/readbacks scoped use, default changes, private mode and redacted show (2004 ms)
+  ✓ actual binary unknown target/toggles fail without modifying config or opening transport (2126 ms)
+  ✓ built readonly show/list retain bytes on unreachable target with parseable redacted JSON (748 ms)
+  ✓ built connection failure is structured, nonzero, redacted and leaves config intact (346 ms)
+  ✓ root/leaf debug diagnostic paths stay off JSON stdout (686 ms)
+  ✓ built use mutations and reset emit one JSON result without prose (1597 ms)
+  ✓ registered use CSV quotes its deployments array as one cell (44 ms)
+  ✓ built configuration credential/env saves are private and machine results redact the value (371 ms)
+  ✓ built invalid credential input fails before config/env creation (388 ms)
+  ✓ actual registry binds admin credential to effective endpoint {"url":"http://127.0.0.1:3"} (14 ms)
+  ✓ actual registry binds admin credential to effective endpoint {"url":"http://127.0.0.1:1/"} (11 ms)
+  ✓ actual registry binds admin credential to effective endpoint {"url":"http://127.0.0.1:3","key":"project-secret"} (29 ms)
+  ✓ registered key/url/remove handlers honor explicit target at root (84 ms)
+  ✓ registered key/url/remove handlers honor explicit target at group (82 ms)
+  ✓ registered key/url/remove handlers honor explicit target at leaf (73 ms)
+  ✓ built key/url/remove handlers honor explicit target at root and preserve other aliases (1080 ms)
+  ✓ built key/url/remove handlers honor explicit target at group and preserve other aliases (1097 ms)
+  ✓ built key/url/remove handlers honor explicit target at leaf and preserve other aliases (993 ms)
+  ✓ built set-key refuses conflicting target selectors before any write (308 ms)
+  ✓ built set-url refuses conflicting target selectors before any write (298 ms)
+  ✓ built remove-deployment refuses conflicting target selectors before any write (285 ms)
+  ✓ built use refuses conflicting target selectors before any write (273 ms)
+  ✓ built invalid set-key alias emits only stderr including quiet JSON (532 ms)
+  ✓ built invalid set-url alias emits only stderr including quiet JSON (533 ms)
+  ✓ built invalid use alias emits only stderr including quiet JSON (539 ms)
+  ✓ built effective remove/reset refuses inherited or mixed alias (overlay false) and preserves config/env/readback (518 ms)
+  ✓ built effective remove/reset refuses inherited or mixed alias (overlay true) and preserves config/env/readback (525 ms)
+  ✓ built URL change removes previous owned config/env key; same endpoint retains key (570 ms)
+  ✓ built convex-url setter drops old credential in user source; project partial URL change never copies user key (536 ms)
+  ✓ built agreeing positional/flag targets are accepted and scoped use honors flag-only target (532 ms)
+  ✓ registered remaining target mutations honor root selectors, requested readback and other-alias preservation (83 ms)
+  ✓ registered remaining target mutations honor group selectors, requested readback and other-alias preservation (79 ms)
+  ✓ registered remaining target mutations honor leaf selectors, requested readback and other-alias preservation (94 ms)
+  ✓ binary remaining target mutations honor root selectors, requested readback and other-alias preservation (1370 ms)
+  ✓ binary remaining target mutations honor group selectors, requested readback and other-alias preservation (1382 ms)
+  ✓ binary remaining target mutations honor leaf selectors, requested readback and other-alias preservation (1373 ms)
+  ✓ registered root unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (173 ms)
+  ✓ registered group unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (186 ms)
+  ✓ registered leaf unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (171 ms)
+  ✓ binary root unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (3467 ms)
+  ✓ binary group unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (3519 ms)
+  ✓ binary leaf unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (3487 ms)
+  ✓ registered absent alias constructor cannot mutate defaults, targets, files or functions (116 ms)
+  ✓ registered absent alias __proto__ cannot mutate defaults, targets, files or functions (131 ms)
+  ✓ registered absent alias prototype cannot mutate defaults, targets, files or functions (118 ms)
+  ✓ registered absent alias toString cannot mutate defaults, targets, files or functions (127 ms)
+  ✓ registered absent alias hasOwnProperty cannot mutate defaults, targets, files or functions (138 ms)
+  ✓ registered absent alias missing cannot mutate defaults, targets, files or functions (129 ms)
+  ✓ binary absent alias constructor cannot mutate defaults, targets, files or functions (2404 ms)
+  ✓ binary absent alias __proto__ cannot mutate defaults, targets, files or functions (2321 ms)
+  ✓ binary absent alias prototype cannot mutate defaults, targets, files or functions (2414 ms)
+  ✓ binary absent alias toString cannot mutate defaults, targets, files or functions (2416 ms)
+  ✓ binary absent alias hasOwnProperty cannot mutate defaults, targets, files or functions (2317 ms)
+  ✓ binary absent alias missing cannot mutate defaults, targets, files or functions (2348 ms)
+  ✓ registered legitimate owned prototype-style alias works through creation, updates, default/use and removal (153 ms)
+  ✓ binary legitimate owned prototype-style alias works through creation, updates, default/use and removal (2422 ms)
+  ✓ registered convex config setters honor scoped/default/singleton fallback and stale defaults fail without writes (240 ms)
+  ✓ binary convex config setters honor scoped/default/singleton fallback and stale defaults fail without writes (2915 ms)
+  ✓ registered unsupported creation aliases fail before files and selector-free global settings/reset remain functional (106 ms)
+  ✓ binary unsupported creation aliases fail before files and selector-free global settings/reset remain functional (1838 ms)
+  ✓ registered env-mirroring callers normalize duplicates and ordinary loader forms with exact literal readback (100 ms)
+  ✓ binary env-mirroring callers normalize duplicates and ordinary loader forms with exact literal readback (1100 ms)
+  ✓ registered add-deployment normalizes URL/key duplicates; removal clears export/space/colon/local deployment variants (86 ms)
+  ✓ binary add-deployment normalizes URL/key duplicates; removal clears export/space/colon/local deployment variants (1103 ms)
+  ✓ registered unsupported literal encoding uniformly refuses before config/env/current writes (148 ms)
+  ✓ binary unsupported literal encoding uniformly refuses before config/env/current writes (2653 ms)
+  ✓ built startup and action debug respect quiet at root with owned env fixture (522 ms)
+  ✓ built startup and action debug respect quiet at group with owned env fixture (544 ms)
+  ✓ built startup and action debug respect quiet at leaf with owned env fixture (530 ms)
+
+  console.log
+    [2m   Preserved existing convex.json[22m
+
+      at createConvexJson (src/utils/init/file-operations.ts:62:13)
+
+PASS unit src/utils/__tests__/additive-backend.test.ts
+  additive backend installation
+    ✓ registers a fresh host with explicit verified JWT settings and keeps runtime directives (28 ms)
+    ✓ rejects an ordinary scanned component helper before host writes (6 ms)
+    ✓ preserves a custom directory, unrelated tables/indexes, schema options, functions, auth, HTTP and components (8 ms)
+    ✓ retries a complete installation without writes, duplicate schema spreads or duplicate providers (7 ms)
+    ✓ imports every declared component directly from the root config, including Workflow (7 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (3 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (3 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (3 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (3 ms)
+    ✓ an atomic schema-write failure retains the original host schema and supports partial retry (10 ms)
+    ✓ recovers an interrupted per-file install by replanning identical completed files (5 ms)
+    ✓ refuses schema.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses schema.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses schema.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses runs.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ preserves existing provider configuration on conflicting issuer settings (3 ms)
+    ✓ detects a host edit after planning before any installation writes (2 ms)
+    ✓ refuses out-of-project custom directories and symbolic links (3 ms)
+    ✓ refuses tampered distribution sources before product writes (2 ms)
+    ✓ supports official inline public JWKS while retaining the explicit audience (4 ms)
+    ✓ rejects private material in inline JWKS before any installation writes (2 ms)
+    ✓ requires an explicit application audience for a new Cortex provider (3 ms)
+    ✓ reports absent auth as incomplete capability rather than installing permissive auth (4 ms)
+    ✓ createConvexJson preserves existing custom configuration byte-for-byte (3 ms)
+  additive authenticated HTTP routes
+    ✓ installs a fresh real Convex router and retries without duplicate routes or writes (27 ms)
+    ✓ preserves custom host HTTP handlers and permits a different method on the same path (13 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ rejects wrong, duplicate or deferred managed registration without adopting it (3 ms)
+    ✓ rejects wrong, duplicate or deferred managed registration without adopting it (4 ms)
+    ✓ rejects wrong, duplicate or deferred managed registration without adopting it (3 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (3 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (3 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (2 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (3 ms)
+    ✓ rejects computed helper handlers instead of executing arbitrary router mutations (4 ms)
+    ✓ retains host HTTP after atomic write failure and recovers a partial install once (12 ms)
+    ✓ checks the host HTTP preimage before installing any source (4 ms)
+  additive fixed media webhook
+    ✓ composes all five real router registrations while preserving a custom host and zero-write retry (12 ms)
+    ✓ accepts a direct named alias of only the fixed webhook export (7 ms)
+    ✓ rejects an unqualified media import before any host write: import { arbitrary as videoWebhook } from "../runtimeMediaHttp"; (3 ms)
+    ✓ rejects an unqualified media import before any host write: import videoWebhook from "../runtimeMediaHttp"; (3 ms)
+    ✓ rejects an unqualified media import before any host write: import * as videoWebhook from "../runtimeMediaHttp"; (3 ms)
+    ✓ rejects an unqualified media import before any host write: import { videoWebhook } from "../foreign"; (3 ms)
+    ✓ binds the new handler exclusively to its fixed route: GET /cortex/media/video/webhook (3 ms)
+    ✓ binds the new handler exclusively to its fixed route: POST /cortex/arbitrary (3 ms)
+    ✓ binds the new handler exclusively to its fixed route: POST /cortex/media/video/webhook (3 ms)
+    ✓ rejects overlapping local bindings from the asset and media modules (3 ms)
+    ✓ preserves a conflicting host exact or prefix route before all source writes (3 ms)
+    ✓ preserves a conflicting host exact or prefix route before all source writes (4 ms)
+    ✓ rejects a manifest omitting the fifth helper route before installation (3 ms)
+    ✓ rejects a webhook module missing from the digest-bound source manifest (3 ms)
+  generated Convex module layout
+    ✓ pins the required Node declarations to the existing SDK declaration base version (149 ms)
+    ✓ refuses a missing or ambiguous Node declaration before replacing the previous distribution: null (287 ms)
+    ✓ refuses a missing or ambiguous Node declaration before replacing the previous distribution: * (285 ms)
+    ✓ refuses a missing or ambiguous Node declaration before replacing the previous distribution: >=26.6.4 (273 ms)
+    ✓ installs valid shared paths with working rewritten imports, original provenance and unchanged public/host bindings (190 ms)
+    ✓ rejects a file normalization collision before replacing any previous distribution (138 ms)
+    ✓ rejects a directory normalization collision before replacing any previous distribution (141 ms)
+  prospective app-private schema composition
+    ✓ plans without creating an absent destination and composes private app tables without changing registrations (7 ms)
+    ✓ rejects a hidden private-app collision and dynamic spread before any installation (4 ms)
+
+FAIL unit tests/unit/template-catalog.test.ts
+  ✓ default channel selects newest numeric release while exact old versions remain available (13 ms)
+  verified offline catalog resolution
+    ✓ resolves exact directory/tarball identity and all payload bytes without extraction (10 ms)
+    ✓ refuses unavailable/nonexact catalog latest without fallback (3 ms)
+    ✓ refuses unavailable/nonexact catalog ^1.0.0 without fallback (1 ms)
+    ✓ refuses unavailable/nonexact catalog 1.0 without fallback (2 ms)
+    ✓ refuses unavailable/nonexact catalog 1.0.1 without fallback (1 ms)
+    ✓ selects the current channel and retains exact prior releases (4 ms)
+    ✓ refuses invalid identity source before project writes (2 ms)
+    ✓ refuses invalid dependency source before project writes (1 ms)
+    ✓ refuses invalid lifecycle source before project writes (2 ms)
+    ✓ refuses invalid schema source before project writes (2 ms)
+    ✓ refuses invalid hash source before project writes (2 ms)
+    ✓ refuses invalid undeclared source before project writes (2 ms)
+    ✓ refuses invalid link source before project writes (2 ms)
+    ✓ refuses invalid manager source before project writes (2 ms)
+    ✓ refuses later-template invalid payload even when the requested first template is valid (1 ms)
+    ✓ rejects archive link/device/fifo kind 1 in memory (1 ms)
+    ✓ rejects archive link/device/fifo kind 2 in memory
+    ✓ rejects archive link/device/fifo kind 3 in memory
+    ✓ rejects archive link/device/fifo kind 6 in memory
+    ✓ rejects archive path ../escape without extraction
+    ✓ rejects archive path /absolute without extraction
+    ✓ rejects archive path a\b without extraction (1 ms)
+    ✓ rejects archive path a/../b without extraction
+    ✓ detects corrupt checksum and truncated archive
+    ✓ calls an explicit registry adapter only with the requested exact version (2 ms)
+    ✓ matches stable compatibility 0.38.1 ^0.38.0 => true
+    ✓ matches stable compatibility 0.39.0 ^0.38.0 => false
+    ✓ matches stable compatibility 1.46.0 >=1.31.6 <2.0.0 => true
+    ✓ matches stable compatibility 1.30.0 >=1.31.6 => false
+    ✓ matches stable compatibility 1.46.0 latest => false
+  ownership orchestration and command outcomes
+    ✓ dry-run creates no project/metadata/env and never constructs integration/install (4 ms)
+    ✓ atomically initializes rendered ownership and repeated init preserves local edits without writes (8 ms)
+    ✓ existing unowned destination and wrong ownership refuse without replacing user files (3 ms)
+    ✕ explicit candidates validate identity/capability/version and rendered bytes record the actual override (4 ms)
+    ✓ preflights all divergent changes and unknown/unowned data before any installer/backend effect (7 ms)
+    ✓ updates exact new owned files, preserves custom identity/scripts/env, and no-op is idempotent (49 ms)
+    ✓ update dependency failure rolls back owned payload/baseline and reports unknown dependency effects (37 ms)
+    ✓ required integration preflight refusal has zero project effects (2 ms)
+    ✓ new-project post-publish install failure is nonzero partial and retains truthful recoverable ownership (4 ms)
+    ✓ command registry contains exactly three leaves and forwards exact selectors to the matching manager (4 ms)
+    ✓ command emits partial result then rejects instead of reporting a completed install (4 ms)
+    ✓ command list is an offline observation and update missing ownership refuses (3 ms)
+  exact registry and matching manager execution
+    ✓ caches only a verified exact release outside projects and reuses it offline (3 ms)
+    ✓ failed registry selection never publishes or leaves a temporary download (1 ms)
+    ✓ registry path and release mismatch refuse before cache publication (3 ms)
+    ✓ command dry-run cannot construct a registry download or dependency installation
+    ✓ invokes only the declared npm manager and reports its actual nonzero result (1 ms)
+    ✓ invokes only the declared pnpm manager and reports its actual nonzero result
+    ✓ npm refuses the existing pnpm-lock.yaml manager conflict before executing (1 ms)
+    ✓ pnpm refuses the existing package-lock.json manager conflict before executing
+    ✓ joins an actual private finite child, returns exact stdout, and removes signal listeners (23 ms)
+    ✓ actual executable-not-found closes and refuses with a fixed diagnostic (1 ms)
+  repeated ownership operations
+    ✓ repeated init and same-version update do not construct or repeat dependency/backend/graph effects (9 ms)
+    ✓ pre-aborted new init leaves no project, temporary stage, metadata or dependency effects (2 ms)
+  catalog capability admission
+    ✓ a graph-capable payload does not implicitly enable graph services (4 ms)
+    ✓ missing rendered app manifest refuses without creating a project (2 ms)
+  npm-sensitive canonical storage mappings
+    ✓ renders .gitignore and next-env bytes from fixed content aliases and rejects forged mappings before effects (6 ms)
+  final runtime dependency compatibility
+    ✓ unchanged upstream cannot retain incompatible or deleted @cortexmemory/sdk (^0.36.0) on update/repeated init (10 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted @cortexmemory/sdk (null) on update/repeated init (10 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted convex (1.45.0) on update/repeated init (9 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted convex (null) on update/repeated init (10 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted @cortexmemory/vercel-ai-provider (^0.36.0) on update/repeated init (11 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted @cortexmemory/vercel-ai-provider (null) on update/repeated init (10 ms)
+    ✓ compatible runtime overrides and unrelated user dependency overrides remain unchanged (22 ms)
+
+  ● ownership orchestration and command outcomes › explicit candidates validate identity/capability/version and rendered bytes record the actual override
+
+    TemplateError: TEMPLATE_COMPATIBILITY_REFUSED
+
+    [0m [90m 343 |[39m   [36mconst[39m version [33m=[39m exactTemplateVersion(manifest[33m.[39mversion)[33m;[39m
+     [90m 344 |[39m   [36mif[39m ([33m![39msatisfiesTemplateRange(version[33m,[39m range))
+    [31m[1m>[22m[39m[90m 345 |[39m     [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_COMPATIBILITY_REFUSED"[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 346 |[39m   [36mconst[39m declaredEntry [33m=[39m (value[33m:[39munknown[33m,[39m fallback[33m:[39mstring)[33m:[39mstring [33m=>[39m {
+     [90m 347 |[39m     [36mif[39m (value [33m===[39m undefined) [36mreturn[39m fallback[33m;[39m
+     [90m 348 |[39m     [36mif[39m ([36mtypeof[39m value [33m!==[39m [32m"string"[39m [33m||[39m [33m![39mvalue[33m.[39mstartsWith([32m"./dist/"[39m)) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_CANDIDATE_EXPORT_INVALID"[39m)[33m;[39m[0m
+
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:345:11)
+      at rendered (src/utils/templates/service.ts:108:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:286:17)
+      at Object.<anonymous> (tests/unit/template-catalog.test.ts:465:18)
+
+  console.info
+    task05 private compiled entry: /private/tmp/cortex-cli-tests-RiuqBS/tmp/cortex-actual-cli-YaPE58/cli/dist/index.js
+
+      at Object.<anonymous> (tests/commands/memory-real.test.ts:199:11)
+
+  console.error
+    [2m   Using: one (clear)[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/memory.ts:74:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at Object.<anonymous> (tests/commands/memory-real.test.ts:854:5)
+
+PASS commands tests/commands/memory-real.test.ts (10.959 s)
+  ✓ production memory ["list", "-s", "space-one", "-u", "user-one", "-l", "2"] emits the SDK outcome and exact arguments (27 ms)
+  ✓ production memory ["search", "full", "-s", "space-one", "-u", "user-one", "-l", "3"] emits the SDK outcome and exact arguments (14 ms)
+  ✓ production memory ["get", "mem-one", "-s", "space-one", "--include-conversation"] emits the SDK outcome and exact arguments (13 ms)
+  ✓ production memory ["delete", "mem-one", "-s", "space-one", "--cascade", "--yes"] emits the SDK outcome and exact arguments (17 ms)
+  ✓ production memory ["clear", "-s", "space-one", "-u", "user-one", "--source", "tool", "--yes"] emits the SDK outcome and exact arguments (13 ms)
+  ✓ production memory ["export", "-s", "space-one", "-u", "user-one", "--include-facts", "-o", "memory-export.json"] emits the SDK outcome and exact arguments (24 ms)
+  ✓ production memory ["stats", "-s", "space-one"] emits the SDK outcome and exact arguments (12 ms)
+  ✓ production memory ["archive", "mem-one", "-s", "space-one", "--yes"] emits the SDK outcome and exact arguments (14 ms)
+  ✓ production memory ["restore", "mem-one", "-s", "space-one"] emits the SDK outcome and exact arguments (12 ms)
+  ✓ production memory ["list", "-s", "space-one", "-u", "user-one", "-l", "2"] propagates the SDK failure and closes (13 ms)
+  ✓ production memory ["search", "full", "-s", "space-one", "-u", "user-one", "-l", "3"] propagates the SDK failure and closes (12 ms)
+  ✓ production memory ["get", "mem-one", "-s", "space-one", "--include-conversation"] propagates the SDK failure and closes (12 ms)
+  ✓ production memory ["delete", "mem-one", "-s", "space-one", "--cascade", "--yes"] propagates the SDK failure and closes (13 ms)
+  ✓ production memory ["clear", "-s", "space-one", "-u", "user-one", "--source", "tool", "--yes"] propagates the SDK failure and closes (11 ms)
+  ✓ production memory ["export", "-s", "space-one", "-u", "user-one", "--include-facts", "-o", "memory-export.json"] propagates the SDK failure and closes (12 ms)
+  ✓ production memory ["stats", "-s", "space-one"] propagates the SDK failure and closes (12 ms)
+  ✓ production memory ["archive", "mem-one", "-s", "space-one", "--yes"] propagates the SDK failure and closes (13 ms)
+  ✓ production memory ["restore", "mem-one", "-s", "space-one"] propagates the SDK failure and closes (12 ms)
+  ✓ production memory registry preserves each retained leaf and tested option (4 ms)
+  ✓ memory effective globals select the target at root (9 ms)
+  ✓ memory effective globals select the target at group (9 ms)
+  ✓ memory effective globals select the target at leaf (11 ms)
+  ✓ memory nearest explicit global value wins (8 ms)
+  ✓ memory rejects partial or unsafe limit 1x before client (6 ms)
+  ✓ memory rejects partial or unsafe limit 1.2 before client (6 ms)
+  ✓ memory rejects partial or unsafe limit 1e2 before client (5 ms)
+  ✓ memory rejects partial or unsafe limit 0 before client (5 ms)
+  ✓ memory rejects partial or unsafe limit -1 before client (6 ms)
+  ✓ memory rejects partial or unsafe limit 1001 before client (7 ms)
+  ✓ memory rejects partial or unsafe limit 9007199254740993 before client (6 ms)
+  ✓ memory invalid format and unknown deployment never instantiate a client (14 ms)
+  ✓ memory missing selected deployment fails nonzero instead of succeeding (9 ms)
+  ✓ memory clear uses complete SDK bulk result and refuses partial completion (13 ms)
+  ✓ memory clear count failure never mutates (13 ms)
+  ✓ memory empty clear and cancelled clear never mutate and close transport (23 ms)
+  ✓ memory delete confirmation cancels before client creation (14 ms)
+  ✓ memory absent get and false delete are honest failures (24 ms)
+  ✓ actual memory binary rejects malformed input before network and emits no stdout (761 ms)
+  ✓ actual compiled memory binary emits parseable success JSON and nonzero SDK failure (666 ms)
+  ✓ memory clear forwards retained source conversation (11 ms)
+  ✓ memory clear forwards retained source system (35 ms)
+  ✓ memory clear forwards retained source tool (13 ms)
+  ✓ memory clear forwards retained source a2a (12 ms)
+  ✓ memory clear forwards retained source fact-extraction (11 ms)
+  ✓ memory rejects invalid source, space, user and empty query before client (51 ms)
+  ✓ memory export preserves all 1201 records and returned CSV bytes including facts (68 ms)
+  ✓ memory export refuses mismatched SDK format and surfaces filesystem failure (24 ms)
+  ✓ memory archive cancellation and false archive/restore fail honestly (39 ms)
+  ✓ memory JSON keeps empty results and full enriched source records (25 ms)
+  ✓ memory table and CSV keep readable full content (30 ms)
+  ✓ memory partial clear emits a structured receipt before nonzero failure (12 ms)
+  ✓ memory empty record ID and unsafe export path fail before SDK (25 ms)
+  ✓ memory stats retains recent activity and propagates its read failure (26 ms)
+  ✓ memory stats reports the five native sources using only supported count filters (12 ms)
+  ✓ memory stats refuses inconsistent observations rather than inventing a residual count (11 ms)
+  ✓ actual compiled memory ["list", "-s", "space-one", "-u", "user-one", "-l", "2"] preserves JSON outcomes and failure exits (658 ms)
+  ✓ actual compiled memory ["search", "full", "-s", "space-one", "-u", "user-one", "-l", "3"] preserves JSON outcomes and failure exits (675 ms)
+  ✓ actual compiled memory ["get", "mem-one", "-s", "space-one", "--include-conversation"] preserves JSON outcomes and failure exits (657 ms)
+  ✓ actual compiled memory ["delete", "mem-one", "-s", "space-one", "--cascade", "--yes"] preserves JSON outcomes and failure exits (660 ms)
+  ✓ actual compiled memory ["clear", "-s", "space-one", "-u", "user-one", "--source", "tool", "--yes"] preserves JSON outcomes and failure exits (1002 ms)
+  ✓ actual compiled memory ["export", "-s", "space-one", "-u", "user-one", "--include-facts", "-o", "memory-export.json"] preserves JSON outcomes and failure exits (676 ms)
+  ✓ actual compiled memory ["stats", "-s", "space-one"] preserves JSON outcomes and failure exits (654 ms)
+  ✓ actual compiled memory ["archive", "mem-one", "-s", "space-one", "--yes"] preserves JSON outcomes and failure exits (672 ms)
+  ✓ actual compiled memory ["restore", "mem-one", "-s", "space-one"] preserves JSON outcomes and failure exits (653 ms)
+  ✓ production memory ["list", "-s", "space-one", "-u", "user-one", "-l", "2"] retains useful table output (36 ms)
+  ✓ production memory ["search", "full", "-s", "space-one", "-u", "user-one", "-l", "3"] retains useful table output (13 ms)
+  ✓ production memory ["get", "mem-one", "-s", "space-one", "--include-conversation"] retains useful table output (12 ms)
+  ✓ production memory ["delete", "mem-one", "-s", "space-one", "--cascade", "--yes"] retains useful table output (12 ms)
+  ✓ production memory ["clear", "-s", "space-one", "-u", "user-one", "--source", "tool", "--yes"] retains useful table output (11 ms)
+  ✓ production memory ["stats", "-s", "space-one"] retains useful table output (13 ms)
+  ✓ production memory ["archive", "mem-one", "-s", "space-one", "--yes"] retains useful table output (12 ms)
+  ✓ production memory ["restore", "mem-one", "-s", "space-one"] retains useful table output (12 ms)
+  ✓ memory export atomically replaces the destination with a private complete file (16 ms)
+  ✓ memory open failure preserves destination and removes staging files (14 ms)
+  ✓ memory write failure preserves destination and removes staging files (11 ms)
+  ✓ memory sync failure preserves destination and removes staging files (12 ms)
+  ✓ memory close failure preserves destination and removes staging files (16 ms)
+  ✓ memory rename failure preserves destination and removes staging files (17 ms)
+  ✓ memory rejects malformed/incomplete export payload json not JSON before opening files (11 ms)
+  ✓ memory rejects malformed/incomplete export payload json {} before opening files (11 ms)
+  ✓ memory rejects malformed/incomplete export payload json [] before opening files (10 ms)
+  ✓ memory rejects malformed/incomplete export payload json [] before opening files (12 ms)
+  ✓ memory rejects malformed/incomplete export payload csv id,value
+row,"unterminated before opening files (11 ms)
+  ✓ memory rejects malformed/incomplete export payload csv id,value
+row,value,extra before opening files (12 ms)
+  ✓ memory rejects malformed/incomplete export payload csv id,value
+row,"closed"junk before opening files (11 ms)
+  ✓ memory rejects malformed/incomplete export payload csv id,value
+row,value before opening files (10 ms)
+  ✓ memory delete preserves named Task22 partial failure and closes without retry (13 ms)
+  ✓ memory deleteMany preserves named Task22 partial failure and closes without retry (11 ms)
+  ✓ memory archive preserves named Task22 partial failure and closes without retry (11 ms)
+  ✓ memory archive preserves the Task22 receipt and restore claims only the restored memory (25 ms)
+
+FAIL unit src/utils/__tests__/template-backend.test.ts
+  immutable 1.2 legacy template composition against exact incoming SDK source
+    ✕ assembles chat-sdk with separate ownership, preserves sentinels and is idempotent (4 ms)
+    ✕ assembles vercel-ai-quickstart with separate ownership, preserves sentinels and is idempotent (4 ms)
+    ✕ binds every private app module for chat-sdk and refuses changed or missing handlers before writes (1 ms)
+    ✕ binds every private app module for vercel-ai-quickstart and refuses changed or missing handlers before writes (3 ms)
+    ✓ preserves raw source bytes, rejects unknown recursive bytes and ignores generated input (114 ms)
+    ✓ refuses a modified domain helper before template writes (29 ms)
+    ✓ refuses a missing domain helper before template writes (23 ms)
+    ✓ refuses lib/referenceLifecycle.ts when modified before any template writes (23 ms)
+    ✓ refuses lib/referenceLifecycle.ts when missing before any template writes (22 ms)
+    ✓ refuses referenceMaintenance.ts when modified before any template writes (24 ms)
+    ✓ refuses referenceMaintenance.ts when missing before any template writes (21 ms)
+    ✓ refuses memories.ts when modified before any template writes (24 ms)
+    ✓ refuses memories.ts when missing before any template writes (22 ms)
+    ✓ refuses runtimeDataAuth.ts when modified before any template writes (29 ms)
+    ✓ refuses runtimeDataAuth.ts when missing before any template writes (22 ms)
+    ✓ refuses domainErasure.ts when modified before any template writes (34 ms)
+    ✓ refuses domainErasure.ts when missing before any template writes (20 ms)
+    ✓ refuses lib/domainErasureScope.ts when modified before any template writes (21 ms)
+    ✓ refuses lib/domainErasureScope.ts when missing before any template writes (20 ms)
+    ✓ refuses lib/domainPaging.ts when modified before any template writes (22 ms)
+    ✓ refuses lib/domainPaging.ts when missing before any template writes (20 ms)
+    ✓ refuses lib/graphSync.ts when modified before any template writes (23 ms)
+    ✓ refuses lib/graphSync.ts when missing before any template writes (21 ms)
+    ✓ refuses lib/memoryVectorScope.ts when modified before any template writes (24 ms)
+    ✓ refuses lib/memoryVectorScope.ts when missing before any template writes (35 ms)
+    ✕ retains internal maintenance and operator registrations with the Basic raw layout (10 ms)
+    ✓ retains mixed aliases and separate type imports with only module-string changes
+    ✓ refuses an unreviewed alias change to the admin lifecycle hook before writes (15 ms)
+    ✓ refuses an unreviewed helper change to the admin lifecycle hook before writes (14 ms)
+    ✓ refuses an unreviewed origin change to the admin lifecycle hook before writes (14 ms)
+    ✓ refuses an unreviewed body change to the admin lifecycle hook before writes (15 ms)
+    ✕ keeps modified prior-epoch outputs protected and refuses unknown epochs (2 ms)
+    ✓ refuses unknown import import { query, MutationCtx } from "./_generated/server"; (1 ms)
+    ✓ refuses unknown import import { query, type UnknownCtx } from "./_generated/server";
+    ✓ refuses unknown import import { query as read, mutation as read } from "./_generated/server";
+    ✓ refuses unknown import import * as server from "./_generated/server";
+    ✓ refuses unknown import import { httpAction } from "./_generated/server";
+    ✓ refuses unknown import import { query } from "convex/server";
+    ✓ refuses unknown import import { query } from "./_generated/server"; import("evil"); (1 ms)
+    ✕ admits only exact prior chat-sdk app epoch and requires the current template shim (2 ms)
+    ✕ admits only exact prior vercel-ai-quickstart app epoch and requires the current template shim (2 ms)
+    ✕ I181 migrates the exact prior Chat app epoch only after explicit intact template update (1 ms)
+    ✕ dry-run is zero-write, and rollback restores every managed target (2 ms)
+    ✕ refuses shim race before writes (2 ms)
+    ✕ refuses schema race before writes (2 ms)
+    ✕ refuses config race before writes (2 ms)
+    ✕ refuses manifest race before writes (1 ms)
+    ✕ migrates only the exact reviewed old composer ledger for chat-sdk and stays idempotent (2 ms)
+    ✕ migrates only the exact reviewed old composer ledger for vercel-ai-quickstart and stays idempotent (3 ms)
+    ✕ refuses unknown-ledger before migration writes (1 ms)
+    ✕ refuses edited-old-schema before migration writes (2 ms)
+    ✕ allows app schema edits without SDK ownership, and detects modified composer/helper/retired outputs (2 ms)
+    ✕ keeps prior/new provenance independent across additions, changes, retirement and reintroduction (2 ms)
+    ✕ refuses unknown wrappers, collisions, paths, shim changes and legacy Vercel with exact preservation (5 ms)
+    ✓ rejects unexpected SDK JavaScript and source/module-set races before apply writes (35 ms)
+    ✕ explicitly converts unchanged recognized Chat format1 without arbitrary merge
+    ✕ rejects forged extra ledger before writes (2 ms)
+    ✕ rejects forged mapping ledger before writes (2 ms)
+    ✕ rejects forged sourceHash ledger before writes (1 ms)
+    ✕ rejects forged outputHash ledger before writes (3 ms)
+    ✕ rejects forged retired ledger before writes (2 ms)
+    ✕ rejects forged configDisposition ledger before writes (1 ms)
+    ✕ rejects forged contractHash ledger before writes (2 ms)
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › assembles chat-sdk with separate ownership, preserves sentinels and is idempotent
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:148:16
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › assembles vercel-ai-quickstart with separate ownership, preserves sentinels and is idempotent
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:148:16
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › binds every private app module for chat-sdk and refuses changed or missing handlers before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:204:16
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › binds every private app module for vercel-ai-quickstart and refuses changed or missing handlers before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:204:16
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › retains internal maintenance and operator registrations with the Basic raw layout
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at Object.<anonymous> (src/utils/__tests__/template-backend.test.ts:400:18)
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › keeps modified prior-epoch outputs protected and refuses unknown epochs
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at Object.<anonymous> (src/utils/__tests__/template-backend.test.ts:486:22)
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › admits only exact prior chat-sdk app epoch and requires the current template shim
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:525:22
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › admits only exact prior vercel-ai-quickstart app epoch and requires the current template shim
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:525:22
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › I181 migrates the exact prior Chat app epoch only after explicit intact template update
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at Object.<anonymous> (src/utils/__tests__/template-backend.test.ts:539:22)
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › dry-run is zero-write, and rollback restores every managed target
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at Object.<anonymous> (src/utils/__tests__/template-backend.test.ts:566:14)
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › refuses shim race before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:582:16
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › refuses schema race before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:582:16
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › refuses config race before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:582:16
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › refuses manifest race before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:582:16
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › migrates only the exact reviewed old composer ledger for chat-sdk and stays idempotent
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:604:24
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › migrates only the exact reviewed old composer ledger for vercel-ai-quickstart and stays idempotent
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:604:24
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › refuses unknown-ledger before migration writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:639:24
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › refuses edited-old-schema before migration writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:639:24
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › allows app schema edits without SDK ownership, and detects modified composer/helper/retired outputs
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at Object.<anonymous> (src/utils/__tests__/template-backend.test.ts:664:22)
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › keeps prior/new provenance independent across additions, changes, retirement and reintroduction
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at Object.<anonymous> (src/utils/__tests__/template-backend.test.ts:686:22)
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › refuses unknown wrappers, collisions, paths, shim changes and legacy Vercel with exact preservation
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at Object.<anonymous> (src/utils/__tests__/template-backend.test.ts:801:22)
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › explicitly converts unchanged recognized Chat format1 without arbitrary merge
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at Object.<anonymous> (src/utils/__tests__/template-backend.test.ts:867:22)
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › rejects forged extra ledger before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:898:22
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › rejects forged mapping ledger before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:898:22
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › rejects forged sourceHash ledger before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:898:22
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › rejects forged outputHash ledger before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:898:22
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › rejects forged retired ledger before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:898:22
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › rejects forged configDisposition ledger before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:898:22
+
+  ● immutable 1.2 legacy template composition against exact incoming SDK source › rejects forged contractHash ledger before writes
+
+    Use a fixed @cortexmemory/sdk@0.39.0 candidate; package identity/version rejected
+
+    [0m [90m 308 |[39m   )[33m;[39m
+     [90m 309 |[39m   [36mif[39m (manifest[33m.[39mname [33m!==[39m [32m"@cortexmemory/sdk"[39m [33m||[39m manifest[33m.[39mversion [33m!==[39m [33mSDK_VERSION[39m)
+    [31m[1m>[22m[39m[90m 310 |[39m     [36mthrow[39m [36mnew[39m [33mError[39m(
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 311 |[39m       [32m`Use a fixed @cortexmemory/sdk@${SDK_VERSION} candidate; package identity/version rejected`[39m[33m,[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m   [36mconst[39m files [33m=[39m view[33m?[39m[33m.[39mfiles [33m?[39m[33m?[39m discoverBackendFiles(sdkPath)[33m;[39m[0m
+
+      at validateSdkPackage (src/utils/schema-sync.ts:310:11)
+      at planBackendSync (src/utils/schema-sync.ts:390:15)
+      at planTemplateBackend (src/utils/template-backend.ts:3329:10)
+      at src/utils/__tests__/template-backend.test.ts:898:22
+
+  console.info
+    task05 private compiled entry: /private/tmp/cortex-cli-tests-RiuqBS/tmp/cortex-actual-cli-y8IvPS/cli/dist/index.js
+
+      at Object.<anonymous> (tests/commands/facts-real.test.ts:199:11)
+
+  console.error
+    [2m   Using: one (clear)[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/facts.ts:74:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at Object.<anonymous> (tests/commands/facts-real.test.ts:837:5)
+
+PASS commands tests/commands/facts-real.test.ts (9.324 s)
+  ✓ production facts ["list", "-s", "space-one", "-u", "user-one", "-t", "knowledge", "-l", "2"] emits the SDK outcome and exact arguments (22 ms)
+  ✓ production facts ["search", "comma", "-s", "space-one", "-t", "knowledge", "-l", "3"] emits the SDK outcome and exact arguments (13 ms)
+  ✓ production facts ["get", "fact-one", "-s", "space-one"] emits the SDK outcome and exact arguments (13 ms)
+  ✓ production facts ["delete", "fact-one", "-s", "space-one", "--yes"] emits the SDK outcome and exact arguments (42 ms)
+  ✓ production facts ["export", "-s", "space-one", "-t", "knowledge", "-o", "facts-export.json"] emits the SDK outcome and exact arguments (21 ms)
+  ✓ production facts ["count", "-s", "space-one", "-t", "knowledge"] emits the SDK outcome and exact arguments (13 ms)
+  ✓ production facts ["clear", "-s", "space-one", "-t", "knowledge", "--yes"] emits the SDK outcome and exact arguments (12 ms)
+  ✓ production facts ["list", "-s", "space-one", "-u", "user-one", "-t", "knowledge", "-l", "2"] propagates the SDK failure and closes (13 ms)
+  ✓ production facts ["search", "comma", "-s", "space-one", "-t", "knowledge", "-l", "3"] propagates the SDK failure and closes (13 ms)
+  ✓ production facts ["get", "fact-one", "-s", "space-one"] propagates the SDK failure and closes (12 ms)
+  ✓ production facts ["delete", "fact-one", "-s", "space-one", "--yes"] propagates the SDK failure and closes (12 ms)
+  ✓ production facts ["export", "-s", "space-one", "-t", "knowledge", "-o", "facts-export.json"] propagates the SDK failure and closes (11 ms)
+  ✓ production facts ["count", "-s", "space-one", "-t", "knowledge"] propagates the SDK failure and closes (13 ms)
+  ✓ production facts ["clear", "-s", "space-one", "-t", "knowledge", "--yes"] propagates the SDK failure and closes (12 ms)
+  ✓ production facts registry preserves each retained leaf and tested option (4 ms)
+  ✓ facts effective globals select the target at root (9 ms)
+  ✓ facts effective globals select the target at group (9 ms)
+  ✓ facts effective globals select the target at leaf (10 ms)
+  ✓ facts nearest explicit global value wins (9 ms)
+  ✓ facts rejects partial or unsafe limit 1x before client (5 ms)
+  ✓ facts rejects partial or unsafe limit 1.2 before client (6 ms)
+  ✓ facts rejects partial or unsafe limit 1e2 before client (5 ms)
+  ✓ facts rejects partial or unsafe limit 0 before client (5 ms)
+  ✓ facts rejects partial or unsafe limit -1 before client (6 ms)
+  ✓ facts rejects partial or unsafe limit 1001 before client (7 ms)
+  ✓ facts rejects partial or unsafe limit 9007199254740993 before client (5 ms)
+  ✓ facts invalid format and unknown deployment never instantiate a client (14 ms)
+  ✓ facts missing selected deployment fails nonzero instead of succeeding (9 ms)
+  ✓ facts clear removes complete mixed history and preserves foreign scopes (25 ms)
+  ✓ facts clear removes complete superseded-only history and preserves foreign scopes (24 ms)
+  ✓ facts clear uses complete SDK bulk result and refuses partial completion (14 ms)
+  ✓ facts clear count failure never mutates (12 ms)
+  ✓ facts empty clear and cancelled clear never mutate and close transport (24 ms)
+  ✓ facts delete confirmation cancels before client creation (14 ms)
+  ✓ facts absent get and false delete are honest failures (24 ms)
+  ✓ actual facts binary rejects malformed input before network and emits no stdout (767 ms)
+  ✓ actual compiled facts binary emits parseable success JSON and nonzero SDK failure (668 ms)
+  ✓ facts exports 1201 full records via export and count uses true count only (87 ms)
+  ✓ facts CSV is the SDK bytes with format-aware filename and explicit path retained (31 ms)
+  ✓ facts export refuses format mismatch and failed file writes (23 ms)
+  ✓ facts validates retained type/user and empty search query before client (88 ms)
+  ✓ facts JSON retains empty results and original comma/quote/newline values (37 ms)
+  ✓ facts partial clear emits a structured receipt before nonzero failure (12 ms)
+  ✓ facts empty record ID and unsafe export path fail before SDK (23 ms)
+  ✓ actual compiled facts ["list", "-s", "space-one", "-u", "user-one", "-t", "knowledge", "-l", "2"] preserves JSON outcomes and failure exits (668 ms)
+  ✓ actual compiled facts ["search", "comma", "-s", "space-one", "-t", "knowledge", "-l", "3"] preserves JSON outcomes and failure exits (657 ms)
+  ✓ actual compiled facts ["get", "fact-one", "-s", "space-one"] preserves JSON outcomes and failure exits (685 ms)
+  ✓ actual compiled facts ["delete", "fact-one", "-s", "space-one", "--yes"] preserves JSON outcomes and failure exits (671 ms)
+  ✓ actual compiled facts ["export", "-s", "space-one", "-t", "knowledge", "-o", "facts-export.json"] preserves JSON outcomes and failure exits (660 ms)
+  ✓ actual compiled facts ["count", "-s", "space-one", "-t", "knowledge"] preserves JSON outcomes and failure exits (661 ms)
+  ✓ actual compiled facts ["clear", "-s", "space-one", "-t", "knowledge", "--yes"] preserves JSON outcomes and failure exits (997 ms)
+  ✓ production facts ["list", "-s", "space-one", "-u", "user-one", "-t", "knowledge", "-l", "2"] retains useful table output (17 ms)
+  ✓ production facts ["search", "comma", "-s", "space-one", "-t", "knowledge", "-l", "3"] retains useful table output (13 ms)
+  ✓ production facts ["get", "fact-one", "-s", "space-one"] retains useful table output (16 ms)
+  ✓ production facts ["delete", "fact-one", "-s", "space-one", "--yes"] retains useful table output (12 ms)
+  ✓ production facts ["count", "-s", "space-one", "-t", "knowledge"] retains useful table output (39 ms)
+  ✓ production facts ["clear", "-s", "space-one", "-t", "knowledge", "--yes"] retains useful table output (12 ms)
+  ✓ facts export atomically replaces the destination with a private complete file (17 ms)
+  ✓ facts open failure preserves destination and removes staging files (12 ms)
+  ✓ facts write failure preserves destination and removes staging files (12 ms)
+  ✓ facts sync failure preserves destination and removes staging files (13 ms)
+  ✓ facts close failure preserves destination and removes staging files (16 ms)
+  ✓ facts rename failure preserves destination and removes staging files (16 ms)
+  ✓ facts rejects malformed/incomplete export payload json not JSON before opening files (11 ms)
+  ✓ facts rejects malformed/incomplete export payload json {} before opening files (14 ms)
+  ✓ facts rejects malformed/incomplete export payload json [] before opening files (11 ms)
+  ✓ facts rejects malformed/incomplete export payload json [] before opening files (12 ms)
+  ✓ facts rejects malformed/incomplete export payload csv id,value
+row,"unterminated before opening files (11 ms)
+  ✓ facts rejects malformed/incomplete export payload csv id,value
+row,value,extra before opening files (13 ms)
+  ✓ facts rejects malformed/incomplete export payload csv id,value
+row,"closed"junk before opening files (11 ms)
+  ✓ facts rejects malformed/incomplete export payload csv id,value
+row,value before opening files (12 ms)
+  ✓ facts deleteMany preserves named Task22 partial failure and closes without retry (11 ms)
+
+  console.info
+    task05 private compiled entry: /private/tmp/cortex-cli-tests-RiuqBS/tmp/cortex-actual-cli-NRrTcx/cli/dist/index.js
+
+      at Object.<anonymous> (tests/commands/conversations-real.test.ts:199:11)
+
+  console.error
+    [2m   Using: one (clear)[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/conversations.ts:74:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at Object.<anonymous> (tests/commands/conversations-real.test.ts:820:5)
+
+PASS commands tests/commands/conversations-real.test.ts (9.183 s)
+  ✓ production conversations ["list", "-s", "space-one", "-u", "user-one", "-t", "user-agent", "-l", "2"] emits the SDK outcome and exact arguments (23 ms)
+  ✓ production conversations ["get", "conv-one", "-m", "2"] emits the SDK outcome and exact arguments (14 ms)
+  ✓ production conversations ["delete", "conv-one", "--yes"] emits the SDK outcome and exact arguments (44 ms)
+  ✓ production conversations ["export", "conv-one", "-o", "conversations-export.json"] emits the SDK outcome and exact arguments (28 ms)
+  ✓ production conversations ["count", "-s", "space-one", "-u", "user-one", "-t", "agent-agent"] emits the SDK outcome and exact arguments (13 ms)
+  ✓ production conversations ["clear", "-s", "space-one", "-u", "user-one", "--yes"] emits the SDK outcome and exact arguments (13 ms)
+  ✓ production conversations ["messages", "conv-one", "-l", "2"] emits the SDK outcome and exact arguments (12 ms)
+  ✓ production conversations ["list", "-s", "space-one", "-u", "user-one", "-t", "user-agent", "-l", "2"] propagates the SDK failure and closes (14 ms)
+  ✓ production conversations ["get", "conv-one", "-m", "2"] propagates the SDK failure and closes (12 ms)
+  ✓ production conversations ["delete", "conv-one", "--yes"] propagates the SDK failure and closes (12 ms)
+  ✓ production conversations ["export", "conv-one", "-o", "conversations-export.json"] propagates the SDK failure and closes (11 ms)
+  ✓ production conversations ["count", "-s", "space-one", "-u", "user-one", "-t", "agent-agent"] propagates the SDK failure and closes (13 ms)
+  ✓ production conversations ["clear", "-s", "space-one", "-u", "user-one", "--yes"] propagates the SDK failure and closes (12 ms)
+  ✓ production conversations ["messages", "conv-one", "-l", "2"] propagates the SDK failure and closes (11 ms)
+  ✓ production conversations registry preserves each retained leaf and tested option (4 ms)
+  ✓ conversations effective globals select the target at root (9 ms)
+  ✓ conversations effective globals select the target at group (11 ms)
+  ✓ conversations effective globals select the target at leaf (9 ms)
+  ✓ conversations nearest explicit global value wins (9 ms)
+  ✓ conversations rejects partial or unsafe limit 1x before client (5 ms)
+  ✓ conversations rejects partial or unsafe limit 1.2 before client (6 ms)
+  ✓ conversations rejects partial or unsafe limit 1e2 before client (5 ms)
+  ✓ conversations rejects partial or unsafe limit 0 before client (7 ms)
+  ✓ conversations rejects partial or unsafe limit -1 before client (5 ms)
+  ✓ conversations rejects partial or unsafe limit 1001 before client (5 ms)
+  ✓ conversations rejects partial or unsafe limit 9007199254740993 before client (6 ms)
+  ✓ conversations invalid format and unknown deployment never instantiate a client (15 ms)
+  ✓ conversations missing selected deployment fails nonzero instead of succeeding (9 ms)
+  ✓ conversations clear uses complete SDK bulk result and refuses partial completion (10 ms)
+  ✓ conversations clear count failure never mutates (11 ms)
+  ✓ conversations empty clear and cancelled clear never mutate and close transport (25 ms)
+  ✓ conversations delete confirmation cancels before client creation (12 ms)
+  ✓ conversations absent get and false delete are honest failures (24 ms)
+  ✓ actual conversations binary rejects malformed input before network and emits no stdout (765 ms)
+  ✓ actual compiled conversations binary emits parseable success JSON and nonzero SDK failure (667 ms)
+  ✓ convs alias executes production messages with stored append order and history offset preserved (46 ms)
+  ✓ conversation message and get limits reject partial numeric input before client (67 ms)
+  ✓ conversations list/count validates type and clear requires a scope before client (39 ms)
+  ✓ conversation export keeps all messages and TXT default filename matches content (49 ms)
+  ✓ conversation export refuses missing/truncated records and propagates write failure (36 ms)
+  ✓ conversations empty list and messages preserve paging metadata in JSON (25 ms)
+  ✓ conversations clear supports user-only filter without a capped list (11 ms)
+  ✓ conversations partial clear emits a structured receipt before nonzero failure (13 ms)
+  ✓ conversations empty record ID and unsafe export path fail before SDK (26 ms)
+  ✓ actual compiled conversations ["list", "-s", "space-one", "-u", "user-one", "-t", "user-agent", "-l", "2"] preserves JSON outcomes and failure exits (661 ms)
+  ✓ actual compiled conversations ["get", "conv-one", "-m", "2"] preserves JSON outcomes and failure exits (633 ms)
+  ✓ actual compiled conversations ["delete", "conv-one", "--yes"] preserves JSON outcomes and failure exits (633 ms)
+  ✓ actual compiled conversations ["export", "conv-one", "-o", "conversations-export.json"] preserves JSON outcomes and failure exits (703 ms)
+  ✓ actual compiled conversations ["count", "-s", "space-one", "-u", "user-one", "-t", "agent-agent"] preserves JSON outcomes and failure exits (650 ms)
+  ✓ actual compiled conversations ["clear", "-s", "space-one", "-u", "user-one", "--yes"] preserves JSON outcomes and failure exits (1018 ms)
+  ✓ actual compiled conversations ["messages", "conv-one", "-l", "2"] preserves JSON outcomes and failure exits (651 ms)
+  ✓ production conversations ["list", "-s", "space-one", "-u", "user-one", "-t", "user-agent", "-l", "2"] retains useful table output (15 ms)
+  ✓ production conversations ["get", "conv-one", "-m", "2"] retains useful table output (11 ms)
+  ✓ production conversations ["delete", "conv-one", "--yes"] retains useful table output (14 ms)
+  ✓ production conversations ["count", "-s", "space-one", "-u", "user-one", "-t", "agent-agent"] retains useful table output (11 ms)
+  ✓ production conversations ["clear", "-s", "space-one", "-u", "user-one", "--yes"] retains useful table output (11 ms)
+  ✓ production conversations ["messages", "conv-one", "-l", "2"] retains useful table output (11 ms)
+  ✓ conversations export atomically replaces the destination with a private complete file (30 ms)
+  ✓ conversations open failure preserves destination and removes staging files (13 ms)
+  ✓ conversations write failure preserves destination and removes staging files (12 ms)
+  ✓ conversations sync failure preserves destination and removes staging files (11 ms)
+  ✓ conversations close failure preserves destination and removes staging files (18 ms)
+  ✓ conversations rename failure preserves destination and removes staging files (18 ms)
+  ✓ conversations delete preserves named Task22 partial failure and closes without retry (10 ms)
+  ✓ conversations deleteMany preserves named Task22 partial failure and closes without retry (11 ms)
+
+PASS unit tests/unit/templates-ownership.test.ts
+  catalog, archive and rendered ownership data
+    ✓ hashes exact binary bytes and renders only documented parameters into the recorded baseline (2 ms)
+    ✓ refuses protected/nonportable payload path ""
+    ✓ refuses protected/nonportable payload path "../escape"
+    ✓ refuses protected/nonportable payload path "/absolute"
+    ✓ refuses protected/nonportable payload path "a/../b"
+    ✓ refuses protected/nonportable payload path "a\\b" (1 ms)
+    ✓ refuses protected/nonportable payload path "C:escape"
+    ✓ refuses protected/nonportable payload path "a//b"
+    ✓ refuses protected/nonportable payload path "a/"
+    ✓ refuses protected/nonportable payload path "node_modules/x"
+    ✓ refuses protected/nonportable payload path "convex/_generated/api.ts" (3 ms)
+    ✓ refuses protected/nonportable payload path ".convex/state"
+    ✓ refuses protected/nonportable payload path ".cortex/backend.json"
+    ✓ refuses protected/nonportable payload path ".git/config"
+    ✓ refuses protected/nonportable payload path ".next/cache"
+    ✓ refuses protected/nonportable payload path ".env"
+    ✓ refuses protected/nonportable payload path "src/.env.local"
+    ✓ refuses protected/nonportable payload path "package-lock.json"
+    ✓ refuses protected/nonportable payload path "pnpm-lock.yaml" (1 ms)
+    ✓ refuses protected/nonportable payload path "x y"
+    ✓ allows only explicit credential-free example names, and rejects malformed parameters/baseline hashes
+    ✓ validates exact archive files/counts/kinds/hashes/modes before extraction (1 ms)
+    ✓ rejects archive symlink instead of following it
+    ✓ rejects archive hardlink instead of following it (1 ms)
+    ✓ rejects case/path collisions and file parents in payload data
+    ✓ selects exact catalog/template identity and delegates declared range checks, never latest fallback (1 ms)
+  semantic package ownership and pure three-way planning
+    ✓ merges only owned keys, preserves app identity/policy/user keys, and removes unchanged owned dependencies
+    ✓ preserves local edits when upstream is unchanged or equals local; refuses divergent owned edits/deletions/new keys
+    ✓ uses explicit compatibility for preserved version overrides and rejects cross-map ownership conflicts (1 ms)
+    ✓ refuses manager migration and invalid manifests without normalizing user JSON
+    ✓ plans all unchanged/upstream/local/equal combinations and unchanged deletion without touching inputs (1 ms)
+    ✓ preflights every conflict, including modified deletions and unowned byte-identical collisions unless explicitly adopted
+    ✓ uses semantic package merge even when the local package is byte-identical to old (1 ms)
+    ✓ refuses baseline manager/parameter changes and retains executable file-kind ownership
+    ✓ refuses an unrequested local manager switch even when upstream package bytes are unchanged
+    ✓ refuses case-only old/new collisions instead of deleting a newly adopted file on case-insensitive filesystems
+  owned filesystem apply, dry-run and recovery
+    ✓ dry-run compares the whole plan with zero tree/baseline/env/lock/install writes (4 ms)
+    ✓ applies/deletes owned files, keeps env/user/lock state, advances rendered baseline, and repeats as no-op (50 ms)
+    ✓ refuses conflicts and stale ownership/source before any apply (4 ms)
+    ✓ rejects linked source/parents and missing ownership before writing outside the target (1 ms)
+    ✓ rolls back file/deletion/directory/baseline changes on explicit dependency failure and reports separate dependency uncertainty (54 ms)
+    ✓ reports successful explicit install separately and refuses pre-aborted apply with zero writes (44 ms)
+    ✓ preserves concurrent edits, retains an incomplete rollback journal, and recovers without repeating dependency effects (66 ms)
+    ✓ recovers an interrupted applying journal and rejects malformed/unowned recovery input before effects (21 ms)
+    ✓ preflights a new file's conflicting parent before applying any earlier planned write (4 ms)
+    ✓ advances only upstream baseline across a no-file-change update and still detects later divergence (19 ms)
+    ✓ clears a completed interrupted journal without replay or losing its known dependency result (3 ms)
+    ✓ persists explicit identical adoption without rewriting the adopted source bytes (25 ms)
+
+PASS unit src/utils/__tests__/bootstrap-admission.test.ts
+  ✓ actual closest explicit target wins at registered placements (9 ms)
+  ✓ actual closest explicit target wins at registered placements (8 ms)
+  ✓ actual closest explicit target wins at registered placements (4 ms)
+  ✓ actual root explicit option beats absent leaf value (4 ms)
+  ✓ aliases and reserved flags use actual registry grammar (3 ms)
+  ✓ aliases and reserved flags use actual registry grammar (3 ms)
+  ✓ aliases and reserved flags use actual registry grammar (3 ms)
+  ✓ aliases and reserved flags use actual registry grammar (4 ms)
+  ✓ aliases and reserved flags use actual registry grammar (3 ms)
+  ✓ same argv yields equal immutable intents in both real factory modes before handlers (12 ms)
+  ✓ I108 db standalone provenance protects an unowned ordinary target before handlers (11 ms)
+  ✓ I108 convex standalone provenance protects an unowned ordinary target before handlers (11 ms)
+  ✓ deferred protected restore grammar is explicit in help (4 ms)
+  ✓ different second-pass identity refuses before ordinary hooks and handler (5 ms)
+  ✓ admission-only earliest hook suppresses subsequently registered hooks (3 ms)
+  ✓ both factory modes contain identical full registration/alias/argument/option grammar (19 ms)
+  ✓ resolver is observational until execution propagation (3 ms)
+  ✓ safe composition preserves project credential binding and unknown field/source ownership (3 ms)
+  ✓ complete registry is distinct from absent registry and retained-session unknown (2 ms)
+  ✓ registry completeness/identity fails closed: extra-summary (1 ms)
+  ✓ registry completeness/identity fails closed: wrong-record (2 ms)
+  ✓ registry completeness/identity fails closed: wrong-source (1 ms)
+  ✓ registry completeness/identity fails closed: unknown-field (2 ms)
+  ✓ registry completeness/identity fails closed: symlink-directory (1 ms)
+  ✓ scoped selection reads exact scope and preserves legacy non-target semantics (1 ms)
+  ✓ stale protected scoped selection refuses rather than falls back (2 ms)
+  ✓ direct loader/scope reuse the data-only context and refuse newly active executable shadow (5 ms)
+  ✓ changed JSON content and changed registry epoch invalidate reload/save (5 ms)
+  ✓ source-safe permitted save refreshes admitted provenance for safe reload (13 ms)
+  ✓ protected source-safe save cannot strip a genuine registered binding (3 ms)
+  ✓ direct no-context loader admits JSON safely before any explorer (3 ms)
+  ✓ I111 nested owned admission uses the ancestor scope and never executes its shadowed JS (5 ms)
+  ✓ I111 retained ancestor proposal blocks active executable discovery from nested cwd (2 ms)
+  ✓ serialized caller-provided admission context is rejected (2 ms)
+  ✓ actual direct createClient rejects unverified owned endpoint before fetch/socket construction (3 ms)
+  ✓ actual direct createClient raw URL override cannot downgrade owned declaration (3 ms)
+  ✓ same bytes with replaced inode invalidate protected reload before effects (2 ms)
+  ✓ private metadata permission change invalidates protected reload (2 ms)
+  ✓ owner epoch mutation cannot preserve a registered binding or permit fallback (3 ms)
+  ✓ ctime-only same-mode metadata update retains actual stable source identity/bytes (2 ms)
+  ✓ create with absent project source records permitted project JSON registration location (5 ms)
+  ✓ I95 retained proposed creating session blocks no-context executable admission (1 ms)
+  ✓ I95 retained proposed private-paused session blocks no-context executable admission (2 ms)
+  ✓ I95 retained proposed failed session blocks no-context executable admission (2 ms)
+  ✓ I95 retained proposed unknown session blocks no-context executable admission (1 ms)
+  ✓ I95 retained proposed stopped session blocks no-context executable admission (1 ms)
+  ✓ I95 retained proposed native-running-confirmed session blocks no-context executable admission (2 ms)
+  ✓ I95 direct loadConfig cannot evaluate a genuine proposed session source (2 ms)
+  ✓ I95 direct getConfigScope cannot evaluate a genuine proposed session source (1 ms)
+  ✓ I95 real explicit proposed placements block before configuration (5 ms)
+  ✓ I95 real explicit proposed placements block before configuration (4 ms)
+  ✓ I95 real explicit proposed placements block before configuration (5 ms)
+  ✓ I95 inherited proposed user-source association blocks unrelated-cwd executable (2 ms)
+  ✓ I95 inherited JSON project reference makes proposed association reachable (2 ms)
+  ✓ I95 explicit project overlay is examined before executable evaluation (6 ms)
+  ✓ I95 proposed scoped selection is examined before an unrelated executable (3 ms)
+  ✓ I95 inherited proposed default candidate is examined before executable (2 ms)
+  ✓ I95 exact unrelated explicit JSON target retains ordinary admission (4 ms)
+  ✓ I95 explicit JSON source/project disproves a foreign same-name proposal (4 ms)
+  ✓ I95 unrelated proposed project does not globally retire ordinary executable config (5 ms)
+  ✓ I95 inherited symlink project reference associates a differently named proposal (2 ms)
+  ✓ I95R2 unknown mixed references env-first refuse before no-context effects (2 ms)
+  ✓ I95R2 unknown mixed references project-first refuse before no-context effects (2 ms)
+  ✓ I95R2 direct loadConfig refuses unresolved env reference before effects (2 ms)
+  ✓ I95R2 direct getConfigScope refuses unresolved env reference before effects (2 ms)
+  ✓ I95R2 normalized env reference .env.custom refuses before effects (2 ms)
+  ✓ I95R2 normalized env reference nested/../.env.local refuses before effects (2 ms)
+
+[/private/tmp/cortex-cli-tests-RiuqBS/tmp/cortex-native-management-RZ2IJZ/bad.zip]
+  End-of-central-directory signature not found.  Either this file is not
+  a zipfile, or it constitutes one disk of a multi-part archive.  In the
+  latter case the central directory and zipfile comment will be found on
+  the last disk(s) of this archive.
+zipinfo:  cannot find zipfile directory in one of /private/tmp/cortex-cli-tests-RiuqBS/tmp/cortex-native-management-RZ2IJZ/bad.zip or
+          /private/tmp/cortex-cli-tests-RiuqBS/tmp/cortex-native-management-RZ2IJZ/bad.zip.zip, and cannot find /private/tmp/cortex-cli-tests-RiuqBS/tmp/cortex-native-management-RZ2IJZ/bad.zip.ZIP, period.
+PASS unit src/utils/__tests__/native-management.test.ts
+  selected installed-bin process boundary
+    ✓ uses only project pinned bin, literal hostile argv and isolated exact authority (27 ms)
+    ✓ resolves npm pinned package and runs literal argv with selected environment (25 ms)
+    ✓ resolves pnpm-relative pinned package and runs literal argv with selected environment (26 ms)
+    ✓ resolves pnpm-absolute pinned package and runs literal argv with selected environment (25 ms)
+    ✓ refuses installed package external-link before execution (5 ms)
+    ✓ refuses installed package intermediate-escape before execution (4 ms)
+    ✓ refuses installed package node-modules-link before execution (2 ms)
+    ✓ refuses installed package dangling-link before execution (3 ms)
+    ✓ refuses installed package manifest-link before execution (2 ms)
+    ✓ refuses installed package bin-link before execution (2 ms)
+    ✓ refuses installed package manifest-directory before execution (2 ms)
+    ✓ refuses installed package bin-directory before execution (4 ms)
+    ✓ refuses installed package missing-bin before execution (2 ms)
+    ✓ refuses installed package malformed-manifest before execution (3 ms)
+    ✓ refuses installed package wrong-name before execution (3 ms)
+    ✓ refuses installed package invalid-bin-metadata before execution (3 ms)
+    ✓ refuses installed package traversal-bin before execution (3 ms)
+    ✓ refuses installed package absolute-bin before execution (3 ms)
+    ✓ rejects absent, wrong-version and symlinked bins without execution (2 ms)
+    ✓ returns exact child failure, signal and timeout statuses (149 ms)
+    ✓ redacts credentials across split output chunks and bounds invalid inputs (57 ms)
+    ✓ exclusive signal lease refuses concurrent child before spawn, without removing listeners (27 ms)
+    ✓ supervises SIGINT and preserves an unrelated process (26 ms)
+    ✓ sanitizes every inherited selector and unsafe Node loader
+  authority and real native registry
+    ✓ rejects implicit mutations, project mismatch, wrong local URL/key/identity and flag conflicts (3 ms)
+    ✓ binds production URL/key/name and explicit intent; unsupported prod flag never reaches native (100 ms)
+    ✓ local dry-run performs no child/selection/schema/package/state writes (6 ms)
+    ✓ explicit sync conflicts are fatal; default/skip-sync does not guess source ownership (4 ms)
+    ✓ retired stop fails before any target/bin access (7 ms)
+    ✓ retired db backup fails before any target/bin access (5 ms)
+    ✓ retired db restore fails before any target/bin access (5 ms)
+    ✓ retired convex init fails before any target/bin access (8 ms)
+    ✓ guarded clear alias rejects unknown flags before target/bin access (3 ms)
+    ✓ retired update option --app x refuses before target (8 ms)
+    ✓ retired update option --apps-only refuses before target (6 ms)
+    ✓ retired update option --deployments-only refuses before target (7 ms)
+    ✓ retired update option --dev refuses before target (11 ms)
+    ✓ retired update option --sync-template refuses before target (6 ms)
+    ✓ retired update option --provider-version 1.0.0 refuses before target (7 ms)
+    ✓ literal compatibility env assignment preserves all equals and masks echoed values (40 ms)
+    ✓ logs bound 0 refuses before native effects (4 ms)
+    ✓ logs bound -1 refuses before native effects (4 ms)
+    ✓ logs bound 2.5 refuses before native effects (4 ms)
+    ✓ logs bound 1001 refuses before native effects (3 ms)
+    ✓ logs bound bad refuses before native effects (7 ms)
+    ✓ doctor/status report real versions and unknown backend compatibility without config writes (3 ms)
+    ✓ doctor shares the exact minimum including unsupported minor versions (3 ms)
+    ✓ targeted dependency plan rejects invalid versions/managers and uses accepted SDK validation (4 ms)
+  native ZIP and lifecycle refusal
+    ✓ verifies native ZIP paths and rejects legacy incomplete formats (12 ms)
+    ✓ refuses ambiguous/dry-run/no-yes and lifecycle snapshots before any import (11 ms)
+    ✓ refuses protected runtime archive cortexErasureReceipts before native effects (5 ms)
+    ✓ refuses protected runtime archive runtimeAuthGrants before native effects (6 ms)
+    ✓ refuses protected runtime archive runtimeMemorySources before native effects (5 ms)
+    ✓ refuses protected runtime archive runtimeModelOperations before native effects (6 ms)
+    ✓ refuses composed protected runtime schemas before native effects (5 ms)
+    ✓ refuses lifecycle-capable deployed targets even when local schema/ZIP lack ledgers (28 ms)
+    ✓ refuses deployed protected runtime even when archive and installed schema are old (28 ms)
+    ✓ exports only unoccupied ZIP paths and propagates failures (22 ms)
+
+PASS commands tests/commands/spaces-real.test.ts
+  ✓ production spaces ["list", "--type", "team", "--status", "active", "--limit", "2", "--offset", "3"] returns SDK outcome and exact args (23 ms)
+  ✓ production spaces ["create", "space-one", "--type", "team", "--name", "Space", "--metadata", "{\"kept\":true}"] returns SDK outcome and exact args (14 ms)
+  ✓ production spaces ["get", "space-one"] returns SDK outcome and exact args (13 ms)
+  ✓ production spaces ["delete", "space-one", "--cascade", "--reason", "Owned cleanup", "--yes"] returns SDK outcome and exact args (20 ms)
+  ✓ production spaces ["archive", "space-one", "--reason", "Finished", "--yes"] returns SDK outcome and exact args (13 ms)
+  ✓ production spaces ["reactivate", "space-one"] returns SDK outcome and exact args (14 ms)
+  ✓ production spaces ["stats", "space-one"] returns SDK outcome and exact args (13 ms)
+  ✓ production spaces ["participants", "space-one"] returns SDK outcome and exact args (16 ms)
+  ✓ production spaces ["add-participant", "space-one", "--id", "p-two", "--type", "tool"] returns SDK outcome and exact args (12 ms)
+  ✓ production spaces ["remove-participant", "space-one", "--id", "p-one", "--yes"] returns SDK outcome and exact args (13 ms)
+  ✓ production spaces ["update", "space-one", "--name", "Next", "--status", "archived", "--metadata", "{\"new\":1}"] returns SDK outcome and exact args (13 ms)
+  ✓ production spaces ["count", "--type", "team", "--status", "active"] returns SDK outcome and exact args (14 ms)
+  ✓ production spaces ["search", "Space", "--type", "team", "--status", "active", "--limit", "2"] returns SDK outcome and exact args (12 ms)
+  ✓ production spaces ["list", "--type", "team", "--status", "active", "--limit", "2", "--offset", "3"] propagates SDK failure and closes transport (13 ms)
+  ✓ production spaces ["create", "space-one", "--type", "team", "--name", "Space", "--metadata", "{\"kept\":true}"] propagates SDK failure and closes transport (12 ms)
+  ✓ production spaces ["get", "space-one"] propagates SDK failure and closes transport (12 ms)
+  ✓ production spaces ["delete", "space-one", "--cascade", "--reason", "Owned cleanup", "--yes"] propagates SDK failure and closes transport (15 ms)
+  ✓ production spaces ["archive", "space-one", "--reason", "Finished", "--yes"] propagates SDK failure and closes transport (12 ms)
+  ✓ production spaces ["reactivate", "space-one"] propagates SDK failure and closes transport (13 ms)
+  ✓ production spaces ["stats", "space-one"] propagates SDK failure and closes transport (12 ms)
+  ✓ production spaces ["participants", "space-one"] propagates SDK failure and closes transport (37 ms)
+  ✓ production spaces ["add-participant", "space-one", "--id", "p-two", "--type", "tool"] propagates SDK failure and closes transport (30 ms)
+  ✓ production spaces ["remove-participant", "space-one", "--id", "p-one", "--yes"] propagates SDK failure and closes transport (14 ms)
+  ✓ production spaces ["update", "space-one", "--name", "Next", "--status", "archived", "--metadata", "{\"new\":1}"] propagates SDK failure and closes transport (13 ms)
+  ✓ production spaces ["count", "--type", "team", "--status", "active"] propagates SDK failure and closes transport (14 ms)
+  ✓ production spaces ["search", "Space", "--type", "team", "--status", "active", "--limit", "2"] propagates SDK failure and closes transport (15 ms)
+  ✓ spaces access rejection blocks all command reads/mutations and closes the selected client (15 ms)
+  ✓ spaces globals select authenticated target at root (10 ms)
+  ✓ spaces globals select authenticated target at group (10 ms)
+  ✓ spaces globals select authenticated target at leaf (11 ms)
+  ✓ spaces empty list/search/participants are valid JSON without human headings (41 ms)
+  ✓ spaces get fails for absent space before mutations (13 ms)
+  ✓ spaces stats fails for absent space before mutations (15 ms)
+  ✓ spaces participants fails for absent space before mutations (13 ms)
+  ✓ spaces update fails for absent space before mutations (13 ms)
+  ✓ spaces remove-participant fails for absent space before mutations (13 ms)
+  ✓ spaces failed SDK deletion result exits failure; no cascade fails before client (28 ms)
+  ✓ spaces metadata merge preserves existing keys; status-only update does not overwrite metadata (25 ms)
+  ✓ spaces participant preserves attribution shape and rejects absent participant removal (27 ms)
+  ✓ spaces invalid metadata null fails before SDK creation (25 ms)
+  ✓ spaces invalid metadata [] fails before SDK creation (28 ms)
+  ✓ spaces invalid metadata true fails before SDK creation (26 ms)
+  ✓ spaces invalid metadata "x" fails before SDK creation (26 ms)
+  ✓ spaces invalid metadata bad fails before SDK creation (25 ms)
+  ✓ spaces invalid options "list" fail before client (13 ms)
+  ✓ spaces invalid options "list" fail before client (13 ms)
+  ✓ spaces invalid options "count" fail before client (16 ms)
+  ✓ spaces invalid options "search" fail before client (13 ms)
+  ✓ spaces invalid options "search" fail before client (12 ms)
+  ✓ spaces invalid options "update" fail before client (13 ms)
+  ✓ spaces invalid options "add-participant" fail before client (16 ms)
+  ✓ spaces invalid options "add-participant" fail before client (13 ms)
+  ✓ spaces invalid options "remove-participant" fail before client (13 ms)
+  ✓ spaces invalid options "update" fail before client (13 ms)
+  ✓ spaces invalid options "update" fail before client (15 ms)
+  ✓ spaces invalid options "list" fail before client (13 ms)
+  ✓ spaces invalid options "list" fail before client (6 ms)
+  ✓ spaces invalid options "search" fail before client (7 ms)
+  ✓ spaces ["create", "space-one", "--type", "team", "--name", "Space", "--metadata", "{\"kept\":true}"] rejects missing positional ID/query (6 ms)
+  ✓ spaces ["get", "space-one"] rejects missing positional ID/query (6 ms)
+  ✓ spaces ["delete", "space-one", "--cascade", "--reason", "Owned cleanup", "--yes"] rejects missing positional ID/query (7 ms)
+  ✓ spaces ["archive", "space-one", "--reason", "Finished", "--yes"] rejects missing positional ID/query (8 ms)
+  ✓ spaces ["reactivate", "space-one"] rejects missing positional ID/query (7 ms)
+  ✓ spaces ["stats", "space-one"] rejects missing positional ID/query (6 ms)
+  ✓ spaces ["participants", "space-one"] rejects missing positional ID/query (7 ms)
+  ✓ spaces ["add-participant", "space-one", "--id", "p-two", "--type", "tool"] rejects missing positional ID/query (6 ms)
+  ✓ spaces ["remove-participant", "space-one", "--id", "p-one", "--yes"] rejects missing positional ID/query (6 ms)
+  ✓ spaces ["update", "space-one", "--name", "Next", "--status", "archived", "--metadata", "{\"new\":1}"] rejects missing positional ID/query (9 ms)
+  ✓ spaces ["search", "Space", "--type", "team", "--status", "active", "--limit", "2"] rejects missing positional ID/query (7 ms)
+  ✓ spaces duplicates fail before register and list/search warn on truncation (44 ms)
+  ✓ actual binary invalid space options exit nonzero before network mutation (1254 ms)
+  ✓ spaces cancelled delete/archive/participant removal never instantiate clients (43 ms)
+  ✓ spaces unknown explicit target fails before client (21 ms)
+  ✓ spaces quiet preserves JSON and suppresses hints (51 ms)
+  ✓ spaces default table keeps full metadata and participant details readable (19 ms)
+  ✓ spaces cascade binds selected authority/exact tenant without an ordinary-scope get (14 ms)
+  ✓ spaces dry-run and explicit no-verify preserve original incomplete receipt without false success claims (34 ms)
+  ✓ spaces incomplete verified receipt is printed intact before command rejection (16 ms)
+  ✓ spaces stopped partial/unknown receipt is emitted redacted with no resend (unknown=false) (12 ms)
+  ✓ spaces stopped partial/unknown receipt is emitted redacted with no resend (unknown=true) (12 ms)
+  ✓ spaces authority/tenant refusal and cancelled confirmation create neither client nor erasure transport (39 ms)
+  ✓ spaces selected project directory graph marker refuses before primary effects (15 ms)
+  ✓ spaces selected project symlink graph marker refuses before primary effects (13 ms)
+  ✓ spaces absent selected marker works but non-ENOENT metadata failure refuses before effects (14 ms)
+
+PASS unit src/utils/__tests__/schema-install.test.ts
+  ownership planner outcomes
+    ✓ recursively copies configured backend preserving generated/custom files, then is idempotent (10 ms)
+    ✓ preflights every conflict and scopes explicit overwrite recovery (7 ms)
+    ✓ dry-run preserves exact tree and refuses race changes (3 ms)
+    ✓ rolls back disk failure including created directories (7 ms)
+    ✓ rejects traversal, project/file symlinks, malformed ownership and SDK links (4 ms)
+    ✓ rejects wrong candidate identity and public raw admin (2 ms)
+  installer preservation
+    ✓ stages and repeats npm installation preserving scripts/settings/secrets/local state/lock (12 ms)
+    ✓ refuses pnpm-lock.yaml before any writes (2 ms)
+    ✓ refuses yarn.lock before any writes (1 ms)
+    ✓ refuses bun.lock before any writes (1 ms)
+    ✓ refuses npm-shrinkwrap.json before any writes (2 ms)
+    ✓ rejects managers/malformed sections and incompatible options (1 ms)
+    ✓ basic init excludes secrets/artifacts and compiles only; backend-only has no app (33 ms)
+  defensive admin binding validation
+    ✓ refuses alternate origin before staging with exact project preservation (3 ms)
+    ✓ refuses renamed imports before staging with exact project preservation (2 ms)
+    ✓ refuses ambiguous aliases before staging with exact project preservation (3 ms)
+    ✓ refuses duplicate origin before staging with exact project preservation (3 ms)
+    ✓ refuses namespace import before staging with exact project preservation (2 ms)
+    ✓ refuses top-level rebinding before staging with exact project preservation (3 ms)
+    ✓ refuses nested shadowing before staging with exact project preservation (2 ms)
+    ✓ refuses additional exports before staging with exact project preservation (2 ms)
+    ✓ accepts canonical bindings statically without loading the package entrypoint (2 ms)
+  configuration snapshot preflight
+    ✓ refuses stale functions with no apply writes and preserved ownership/targets (6 ms)
+    ✓ refuses stale bytes with no apply writes and preserved ownership/targets (6 ms)
+    ✓ refuses stale removed with no apply writes and preserved ownership/targets (5 ms)
+    ✓ refuses stale absent-to-present with no apply writes and preserved ownership/targets (6 ms)
+    ✓ refuses stale config-symlink with no apply writes and preserved ownership/targets (7 ms)
+    ✓ refuses stale directory-symlink with no apply writes and preserved ownership/targets (6 ms)
+    ✓ refuses a config change at manifest read 2 before installer writes, preserving the user's new config (3 ms)
+    ✓ refuses a config change at manifest read 3 before installer writes, preserving the user's new config (4 ms)
+
+PASS unit src/utils/__tests__/native-logs.test.ts
+  bounded internal native logs compatibility
+    ✓ makes one exact selected admin read, last-N complete events and credential redaction (17 ms)
+    ✓ empty chunk is valid with precise zero returned count and clean real-registry JSON (19 ms)
+    ✓ requires key/installed version and rejects overlap/invalid lines before requests (2 ms)
+    ✓ refuses redirects and never forwards the selected key to another server (5 ms)
+    ✓ HTTP 401 is sanitized nonzero failure, never empty success (3 ms)
+    ✓ HTTP 403 is sanitized nonzero failure, never empty success (2 ms)
+    ✓ HTTP 404 is sanitized nonzero failure, never empty success (6 ms)
+    ✓ HTTP 500 is sanitized nonzero failure, never empty success (7 ms)
+    ✓ refuses incompatible MIME and malformed JSON (6 ms)
+    ✓ unsupported event envelope refuses: 0 (1 ms)
+    ✓ unsupported event envelope refuses: 1
+    ✓ unsupported event envelope refuses: 2
+    ✓ unsupported event envelope refuses: 3
+    ✓ unsupported event envelope refuses: 4
+    ✓ unsupported event envelope refuses: 5
+    ✓ unsupported event envelope refuses: 6
+    ✓ unsupported event envelope refuses: 7
+    ✓ unsupported event envelope refuses: 8
+    ✓ unsupported event envelope refuses: 9
+    ✓ accepts full completion essentials and optional nulls, refusing missing usage/invalid OCC
+    ✓ enforces depth/node limits and streamed byte cap without Content-Length (12 ms)
+    ✓ renders hostile Unicode/newlines in CSV and table without changing complete events (1 ms)
+    ✓ preserves complete long function and multiline Unicode messages in table
+    ✓ preserves complete long function and multiline Unicode messages in csv (1 ms)
+    ✓ preserves complete long function and multiline Unicode messages in json
+    ✓ preserves complete long function and multiline Unicode messages in jsonl
+    ✓ preserves failure text and explicitly requested success summaries in table/CSV
+    ✓ renders one wide Unicode value and 999 short events without value-width padding amplification (7 ms)
+    ✓ table charges exact UTF8 output including final LF and rejects overflow before stdout or success coverage (8 ms)
+    ✓ csv charges exact UTF8 output including final LF and rejects overflow before stdout or success coverage (8 ms)
+    ✓ json charges exact UTF8 output including final LF and rejects overflow before stdout or success coverage (17 ms)
+    ✓ jsonl charges exact UTF8 output including final LF and rejects overflow before stdout or success coverage (12 ms)
+    ✓ preflights CSV quote expansion without allocating over-budget encoded fields or reporting success (51 ms)
+    ✓ applies the fixed 70-second deadline through stalled headers and clears its lease/timer (4 ms)
+    ✓ applies the fixed 70-second deadline through stalled body and clears its lease/timer (2 ms)
+    ✓ aborts repeated signals idempotently and disposes the reader/lease (3 ms)
+    ✓ handler rejection is sanitized and repeated signals call it once
+
+PASS unit tests/unit/graph-plan.test.ts
+  offline graph planning
+    ✓ none and skip require no observations, external tools or writes (2 ms)
+    ✓ rejects conflicting options 0 (2 ms)
+    ✓ rejects conflicting options 1
+    ✓ rejects conflicting options 2 (1 ms)
+    ✓ rejects conflicting options 3
+    ✓ rejects conflicting options 4
+    ✓ rejects conflicting options 5 (1 ms)
+    ✓ rejects conflicting options 6
+    ✓ rejects conflicting options 7
+    ✓ rejects conflicting options 8 (1 ms)
+    ✓ rejects conflicting options 9
+    ✓ rejects conflicting options 10 (1 ms)
+    ✓ rejects conflicting options 11
+    ✓ refuses invalid port 0
+    ✓ refuses invalid port -1
+    ✓ refuses invalid port 65536 (1 ms)
+    ✓ refuses invalid port 1.2
+    ✓ refuses invalid port NaN
+    ✓ refuses invalid port Infinity (1 ms)
+    ✓ normalizes validated local ports and supported existing IPv6/TLS URIs
+    ✓ refuses unsafe URI 0 without echoing credentials
+    ✓ refuses unsafe URI 1 without echoing credentials
+    ✓ refuses unsafe URI 2 without echoing credentials
+    ✓ refuses unsafe URI 3 without echoing credentials
+    ✓ refuses unsafe URI 4 without echoing credentials (1 ms)
+    ✓ refuses unsafe URI 5 without echoing credentials
+    ✓ refuses unsafe URI 6 without echoing credentials
+    ✓ refuses unsafe URI 7 without echoing credentials
+    ✓ refuses unsafe URI 8 without echoing credentials
+    ✓ refuses unsupported provider and Memgraph routing URI
+    ✓ uses deterministic project-specific fixed names (1 ms)
+    ✓ refuses unselected/noncanonical project 0 (1 ms)
+    ✓ refuses unselected/noncanonical project 1
+    ✓ refuses unselected/noncanonical project 2
+    ✓ refuses unselected/noncanonical project 3
+    ✓ refuses unselected/noncanonical project 4 (1 ms)
+    ✓ refuses unselected/noncanonical project 5
+    ✓ renders pinned, loopback, project-owned neo4j Compose (1 ms)
+    ✓ renders pinned, loopback, project-owned memgraph Compose
+    ✓ validates public Compose ports/provider before rendering (2 ms)
+    ✓ preserves neo4j private credential bytes and excludes them from public plan
+    ✓ preserves memgraph private credential bytes and excludes them from public plan
+    ✓ supports explicit existing-server credentials without local restrictions (1 ms)
+    ✓ refuses missing/NUL/local incompatible credentials with fixed diagnostics (1 ms)
+    ✓ existing mode remains read-only without project files, Compose or initialization
+    ✓ refuses missing project, occupied ports and unowned env without overwrite (1 ms)
+    ✓ reuses exact owned neo4j configuration without credential/volume replacement (1 ms)
+    ✓ reuses exact owned memgraph configuration without credential/volume replacement
+    ✓ refuses manifest drift/unknown fields 0
+    ✓ refuses manifest drift/unknown fields 1 (1 ms)
+    ✓ refuses manifest drift/unknown fields 2
+    ✓ refuses manifest drift/unknown fields 3
+    ✓ refuses manifest drift/unknown fields 4
+    ✓ refuses manifest drift/unknown fields 5
+    ✓ refuses altered owned files 0 (1 ms)
+    ✓ refuses altered owned files 1
+    ✓ refuses altered owned files 2
+    ✓ refuses altered owned files 3 (1 ms)
+    ✓ refuses unowned files/resources rather than adopt them
+    ✓ validates owned resources and only reuses occupied ports with their observations (1 ms)
+    ✓ refuses foreign container identity/context 0
+    ✓ refuses foreign container identity/context 1 (1 ms)
+    ✓ refuses foreign container identity/context 2
+    ✓ refuses foreign container identity/context 3
+    ✓ refuses foreign container identity/context 4 (1 ms)
+    ✓ refuses foreign container identity/context 5
+    ✓ refuses foreign volume, duplicate resource and wrong project (1 ms)
+
+FAIL commands tests/commands/install-real.test.ts (8.348 s)
+  ✓ built path refuses a destination symlink without touching its target (543 ms)
+  ✕ built explicit legacy backend-only init propagates native exit 0 and strips inherited target environment (374 ms)
+  ✕ built explicit legacy backend-only init propagates native exit 7 and strips inherited target environment (350 ms)
+  ✓ built npm failure restores scaffold and unpublished registry version never falls back (879 ms)
+  ✓ built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: {"@cortexmemory/sdk":{"name":"@cortexmemory/sdk","version":"0.37.0","filename":"sdk.tgz"}} (530 ms)
+  ✓ built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: {"@cortexmemory/sdk":{"name":"@cortexmemory/sdk","version":"0.39.0","filename":"../escape.tgz"}} (614 ms)
+  real installer registry and binary
+    ✓ registers install and all retained schema leaves through the actual program (235 ms)
+    ✕ built non-TTY basic init writes deterministic files without prompts, secrets or generated bindings (697 ms)
+    ✓ built existing-project install preserves data/config/lock and repeats byte-identically (1426 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--template" before destination creation (310 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--template" before destination creation (371 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--start" before destination creation (406 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--cloud" before destination creation (364 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--graph" before destination creation (306 ms)
+    ✕ current runtime dry-run/collision refuse writes; explicit legacy overwrite retains its exact backup (438 ms)
+
+  ● real installer registry and binary › built non-TTY basic init writes deterministic files without prompts, secrets or generated bindings
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+    [0m [90m  98 |[39m     [36mconst[39m directory [33m=[39m path[33m.[39mjoin(root[33m,[39m [32m"built basic"[39m)[33m;[39m
+     [90m  99 |[39m     [36mconst[39m result [33m=[39m run([[32m"init"[39m[33m,[39m directory[33m,[39m [33m...[39moptions[33m,[39m [32m"--format"[39m[33m,[39m [32m"json"[39m])[33m;[39m
+    [31m[1m>[22m[39m[90m 100 |[39m     expect(result[33m.[39mstatus)[33m.[39mtoBe([35m0[39m)[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 101 |[39m     [36mconst[39m output [33m=[39m [33mJSON[39m[33m.[39mparse(result[33m.[39mstdout)[33m;[39m
+     [90m 102 |[39m     expect(output[33m.[39msdkVersion)[33m.[39mtoBe([32m"0.39.0"[39m)[33m;[39m
+     [90m 103 |[39m     expect(output[33m.[39mconvexVersion)[33m.[39mtoBe([32m"1.46.0"[39m)[33m;[39m[0m
+
+      at Object.<anonymous> (tests/commands/install-real.test.ts:100:27)
+
+  ● real installer registry and binary › current runtime dry-run/collision refuse writes; explicit legacy overwrite retains its exact backup
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+    [0m [90m 213 |[39m       [32m"json"[39m[33m,[39m
+     [90m 214 |[39m     ])[33m;[39m
+    [31m[1m>[22m[39m[90m 215 |[39m     expect(dry[33m.[39mstatus)[33m.[39mtoBe([35m0[39m)[33m;[39m
+     [90m     |[39m                        [31m[1m^[22m[39m
+     [90m 216 |[39m     expect([33mJSON[39m[33m.[39mparse(dry[33m.[39mstdout)[33m.[39mdryRun)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 217 |[39m     expect(fs[33m.[39mexistsSync(directory))[33m.[39mtoBe([36mfalse[39m)[33m;[39m
+     [90m 218 |[39m     fs[33m.[39mmkdirSync(directory)[33m;[39m[0m
+
+      at Object.<anonymous> (tests/commands/install-real.test.ts:215:24)
+
+  ● built explicit legacy backend-only init propagates native exit 0 and strips inherited target environment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+    [0m [90m 307 |[39m       }[33m,[39m
+     [90m 308 |[39m     )[33m;[39m
+    [31m[1m>[22m[39m[90m 309 |[39m     expect(result[33m.[39mstatus)[33m.[39mtoBe(exit [33m===[39m [35m0[39m [33m?[39m [35m0[39m [33m:[39m [35m1[39m)[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 310 |[39m     [36mconst[39m native [33m=[39m [33mJSON[39m[33m.[39mparse(
+     [90m 311 |[39m       fs[33m.[39mreadFileSync(path[33m.[39mjoin(directory[33m,[39m [32m"native-proof.json"[39m)[33m,[39m [32m"utf8"[39m)[33m,[39m
+     [90m 312 |[39m     )[33m;[39m[0m
+
+      at tests/commands/install-real.test.ts:309:27
+
+  ● built explicit legacy backend-only init propagates native exit 7 and strips inherited target environment
+
+    ENOENT: no such file or directory, open '/private/tmp/cortex-cli-tests-RiuqBS/tmp/cortex-task02-command-ayQJy9/native-outcome-7/native-proof.json'
+
+    [0m [90m 309 |[39m     expect(result[33m.[39mstatus)[33m.[39mtoBe(exit [33m===[39m [35m0[39m [33m?[39m [35m0[39m [33m:[39m [35m1[39m)[33m;[39m
+     [90m 310 |[39m     [36mconst[39m native [33m=[39m [33mJSON[39m[33m.[39mparse(
+    [31m[1m>[22m[39m[90m 311 |[39m       fs[33m.[39mreadFileSync(path[33m.[39mjoin(directory[33m,[39m [32m"native-proof.json"[39m)[33m,[39m [32m"utf8"[39m)[33m,[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 312 |[39m     )[33m;[39m
+     [90m 313 |[39m     expect(native)[33m.[39mtoEqual({
+     [90m 314 |[39m       args[33m:[39m [[32m"dev"[39m[33m,[39m [32m"--once"[39m[33m,[39m [32m"--typecheck"[39m[33m,[39m [32m"enable"[39m][33m,[39m[0m
+
+      at tests/commands/install-real.test.ts:311:10
+
+  console.error
+    [2m   Using: shared[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Object.<anonymous> (src/utils/__tests__/config-sources.test.ts:197:17)
+
+  console.error
+    [2m   Using: second[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Object.<anonymous> (src/utils/__tests__/config-sources.test.ts:200:11)
+
+  console.error
+    [2m   Using: shared[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Object.<anonymous> (src/utils/__tests__/config-sources.test.ts:202:11)
+
+  console.error
+    [2m   Using: shared[22m
+
+    [0m [90m 158 |[39m     )[33m;[39m
+     [90m 159 |[39m   [36mif[39m ([33m![39moptions[33m.[39mquiet)
+    [31m[1m>[22m[39m[90m 160 |[39m     console[33m.[39merror(
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 161 |[39m       pc[33m.[39mdim(
+     [90m 162 |[39m         [32m`   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`[39m[33m,[39m
+     [90m 163 |[39m       )[33m,[39m[0m
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Object.<anonymous> (src/utils/__tests__/config-sources.test.ts:208:11)
+
+PASS unit src/utils/__tests__/config-sources.test.ts
+  ✓ project URL priority preserves metadata but never inherits another endpoint credential (18 ms)
+  ✓ mutates effective project without copying user credentials/entries or changing user bytes (24 ms)
+  ✓ user/project saves are private, complete, atomic and retain unknown fields (10 ms)
+  ✓ rejects malformed/unsafe user source { (1 ms)
+  ✓ rejects malformed/unsafe user source [] (1 ms)
+  ✓ rejects malformed/unsafe user source {"deployments":{"bad":{"url":"file:///secret"}}} (1 ms)
+  ✓ rejects malformed/unsafe user source {"__proto__":{"polluted":true}} (1 ms)
+  ✓ rejects malformed project and invalid values without overwriting (6 ms)
+  ✓ validates shape/bounds (2 ms)
+  ✓ validates shape/bounds
+  ✓ validates shape/bounds (1 ms)
+  ✓ validates shape/bounds
+  ✓ validates shape/bounds
+  ✓ rejects dangerous prototype and empty URL/key saves without writes (13 ms)
+  ✓ scoped use cannot leak to another project, and legacy selection is retained (30 ms)
+  ✓ selection precedence explicit > scoped use > default > singleton; wrong/missing/ambiguous fail (23 ms)
+  ✓ environment URLs never override configured deployment selection (8 ms)
+  ✓ refuses inherited or mixed-source deletion before touching either source (overlay false) (9 ms)
+  ✓ refuses inherited or mixed-source deletion before touching either source (overlay true) (7 ms)
+  ✓ same endpoint inherits credentials; explicit project credential is endpoint-specific ({"url":"http://127.0.0.1:43210/"}) (6 ms)
+  ✓ same endpoint inherits credentials; explicit project credential is endpoint-specific ({"futureField":"project"}) (6 ms)
+  ✓ same endpoint inherits credentials; explicit project credential is endpoint-specific ({"url":"https://project.invalid","key":"intentional-project-secret"}) (5 ms)
+  ✓ user URL mutation update drops carried old credential on reload (16 ms)
+  ✓ user URL mutation convex-url drops carried old credential on reload (17 ms)
+  ✓ user URL mutation effective drops carried old credential on reload (13 ms)
+  ✓ an intentional distinct new key persists with a changed endpoint (13 ms)
+  ✓ changing project-owned endpoint removes its own stale key without touching user source (11 ms)
+  ✓ absent alias constructor never resolves or changes defaults/prototypes (13 ms)
+  ✓ absent alias __proto__ never resolves or changes defaults/prototypes (13 ms)
+  ✓ absent alias prototype never resolves or changes defaults/prototypes (12 ms)
+  ✓ absent alias toString never resolves or changes defaults/prototypes (16 ms)
+  ✓ absent alias hasOwnProperty never resolves or changes defaults/prototypes (17 ms)
+  ✓ absent alias missing never resolves or changes defaults/prototypes (17 ms)
+  ✓ explicitly owned toString alias merges, updates, and sets default as a real entry (29 ms)
+  ✓ config value targets honor explicit, scoped, default and singleton fallback; stale targets never write (95 ms)
+  ✓ registerApp rejects unsafe aliases before any source write (5 ms)
+
+PASS unit src/utils/__tests__/client-scope-graph.test.ts
+  ✓ operator scope labels select caller data, independently of selected target and deployment authority (2 ms)
+  ✓ invalid ordinary scope or graph option {"tenant":"A"} refuses before config/adapter/client (1 ms)
+  ✓ invalid ordinary scope or graph option {"scopeUser":" "} refuses before config/adapter/client (1 ms)
+  ✓ invalid ordinary scope or graph option {"tenant":" ","maintenance":true} refuses before config/adapter/client
+  ✓ invalid ordinary scope or graph option {"graphSync":"bad"} refuses before config/adapter/client (1 ms)
+  ✓ maintenance exact tenant without caller never fabricates an AuthContext (1 ms)
+  ✓ graph off ignores selected marker and never imports reader, constructs adapter or consumes ambient tuples
+  ✓ auto without explicit selected configuration is off, while required refuses without client
+  ✓ configured graph resolves a complete explicit tuple/empty env and readonly schema before callback (1 ms)
+  ✓ graph connect failure is sanitized and precedes SDK/primary effects (1 ms)
+  ✓ graph schema failure is sanitized and precedes SDK/primary effects (1 ms)
+  ✓ concurrent idempotent disposal awaits the same SDK drain then exactly one adapter disconnect
+  ✓ operation error wins over cleanup error; cleanup errors never expose password and successful operation cannot hide them (1 ms)
+  ✓ SDK cleanup failure still attempts owned graph disconnect (1 ms)
+  ✓ same-process concurrent commands own distinct targets/scopes and cannot close another active operation
+  ✓ maintenance graph participant is the owned selected adapter plus one fixed target transport closed before shutdown (1 ms)
+  ✓ synchronous construction masks both paid automation gates and restores exact presence/bytes (present=false)
+  ✓ synchronous construction masks both paid automation gates and restores exact presence/bytes (present=true) (1 ms)
+  ✓ throwing synchronous constructor restores both ambient gates and disposes already-connected owned graph
+  ✓ never-resolving SDK shutdown has a finite failed observation, attempts graph cleanup, and clears its timer (1 ms)
+  ✓ connection diagnostics retain structured failed observations when required cleanup never resolves (connected=true) (1 ms)
+  ✓ connection diagnostics retain structured failed observations when required cleanup never resolves (connected=false) (3 ms)
+
+  console.log
+    [32m   Preserved host environment and configured runtime endpoints[39m
+
+      at createEnvFile (src/utils/init/env-generator.ts:66:11)
+
+  console.log
+    [36m
+       Installing Vercel AI quickstart...[39m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:156:11)
+
+  console.log
+    [36m
+       Installing Vercel AI quickstart...[39m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:156:11)
+
+FAIL unit src/utils/__tests__/backend-setup.test.ts
+  modern additive setup
+    ✓ real plan/install retains custom host functions, schema, config, auth, HTTP, env and scripts (19 ms)
+    ✓ fresh command installs the exact reviewed JWT provider without claiming live capability (6 ms)
+    ✓ an ambiguous host merge produces a proposal before any backend/env/script write (4 ms)
+    ✓ operator register refuses management-verified production before any command dispatch (2 ms)
+    ✓ configure appends only public metadata and preserves exact existing env bytes/idempotence (3 ms)
+    ✓ configure writes the HTTP endpoint key consumed by the runtime quickstart (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"OPENAI_API_KEY":"private"} before writes (3 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_TOKEN":"private"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CONVEX_URL":"https://user:secret@safe.convex.cloud"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CONVEX_URL":"https://safe.convex.cloud?token=private"} before writes (1 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CORTEX_HTTP_URL":"https://safe.convex.site/path"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CORTEX_AGENT_ID":"id\nTOKEN=private"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CORTEX_AGENT_VERSION":"0"} before writes (2 ms)
+    ✓ init env and quickstart env have no inference credentials and preserve host scripts/env (4 ms)
+    ✓ quickstart refuses an existing host-owned app before any template overwrite or backend copy (3 ms)
+    ✕ local quickstart preparation copies the actual app without any backend, credential or host-script overwrite (179 ms)
+    ✓ explicit setup JSON validates closed provider/target/grant fields and rejects unsupported selectors (3 ms)
+  development lifecycle authority
+    ✓ removes inherited production authority and pins an explicitly matching development key (2 ms)
+    ✓ refuses prod:safe|private on start without spawning or production deployment (3 ms)
+    ✓ refuses legacy-private on start without spawning or production deployment (1 ms)
+    ✓ refuses dev:foreign|private on start without spawning or production deployment (1 ms)
+    ✓ refuses dev:safe|private
+INJECT=value on start without spawning or production deployment (2 ms)
+
+  ● modern additive setup › local quickstart preparation copies the actual app without any backend, credential or host-script overwrite
+
+    TemplateError: TEMPLATE_COMPATIBILITY_REFUSED
+
+    [0m [90m 330 |[39m       ([36mtypeof[39m range [33m!==[39m [32m"string"[39m [33m||[39m [33m![39mcompatible(range[33m,[39m component))
+     [90m 331 |[39m     )
+    [31m[1m>[22m[39m[90m 332 |[39m       [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_COMPATIBILITY_REFUSED"[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 333 |[39m   }
+     [90m 334 |[39m   [36mreturn[39m {
+     [90m 335 |[39m     [33m...[39mstructuredClone(chosen)[33m,[39m[0m
+
+      at selectCatalogTemplate (src/utils/templates/contract.ts:332:13)
+      at resolveTemplateCatalog (src/utils/templates/resolver.ts:200:20)
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:163:19)
+      at Object.<anonymous> (src/utils/__tests__/backend-setup.test.ts:105:20)
+
+PASS unit tests/helpers/test-runner.test.js
+  ✓ refuses invalid/missing explicit target undefined without generic fallback (2 ms)
+  ✓ refuses invalid/missing explicit target "" without generic fallback (1 ms)
+  ✓ refuses invalid/missing explicit target " " without generic fallback
+  ✓ refuses invalid/missing explicit target "https://user:synthetic@example.com" without generic fallback
+  ✓ refuses invalid/missing explicit target "https://x.invalid/path" without generic fallback
+  ✓ refuses invalid/missing explicit target "https://x.invalid?q=1" without generic fallback (1 ms)
+  ✓ refuses invalid/missing explicit target "https://x.invalid/#fragment" without generic fallback
+  ✓ refuses invalid/missing explicit target "file:///tmp" without generic fallback
+  ✓ refuses invalid/missing explicit target "not-url" without generic fallback
+  ✓ uses only the explicit valid target, and offline setup removes targets (1 ms)
+  ✓ refuses unqualified live administrative credentials before creating a child {} (32 ms)
+  ✓ refuses unqualified live administrative credentials before creating a child {"CORTEX_TEST_EXPECTED_CONVEX_URL":"https://other.invalid","CONVEX_DEPLOY_KEY":"synthetic-test-key"} (5 ms)
+  ✓ refuses unqualified live administrative credentials before creating a child {"CORTEX_TEST_EXPECTED_CONVEX_URL":"http://127.0.0.1:3217"} (4 ms)
+  ✓ refuses unqualified live administrative credentials before creating a child {"CORTEX_TEST_EXPECTED_CONVEX_URL":"http://127.0.0.1:3217","CONVEX_DEPLOY_KEY":"\nsynthetic-test-key"} (4 ms)
+  ✓ drops inherited target/credential/preload canaries and keeps only explicit public tool inputs (1 ms)
+  ✓ sets fresh private HOME before actual setup imports, joins exit0 and cleans owned roots (39 ms)
+  ✓ sets fresh private HOME before actual setup imports, joins exit7 and cleans owned roots (39 ms)
+  ✓ refuses live startup and forceExit before spawning a child (4 ms)
+  ✓ live setup rejects a malformed dedicated target before any test/service module is admitted (39 ms)
+  ✓ imports real live setup with the explicit target and forwards useful Jest/watch flags (39 ms)
+  ✓ forwards cancellation, awaits the actual child exit, then removes HOME (109 ms)
+  ✓ gives the actual child a canonical bootstrap root under an owned symlinked TMPDIR (75 ms)
+  ✓ explicit runtime environment keeps one exact fixture URL and JWTs while excluding operator and ambient target selectors
+
+PASS unit tests/unit/graph-service.test.ts
+  one shared graph service
+    ✓ none and skip need no project, Docker, SDK, driver or writes (2 ms)
+    ✓ enabled skip conflicts before every effect (2 ms)
+    ✓ new-directory dry run creates no project or service (1 ms)
+    ✓ neo4j setup and repeat retain credentials/volume; lifecycle validates exact ownership (14 ms)
+    ✓ memgraph setup and repeat retain credentials/volume; lifecycle validates exact ownership (9 ms)
+    ✓ failed first start retains private files but retry initializes missing actual users (5 ms)
+    ✓ existing open authentication refuses without user or file mutation (1 ms)
+    ✓ repeat never recreates an existing authenticated user (6 ms)
+    ✓ busy port refuses before file/container writes (1 ms)
+    ✓ symlink escape and user-owned dotenv refuse before writes or startup (2 ms)
+    ✓ genuine classified wrong auth closes sessions/drivers and stops only newly started owner (2 ms)
+    ✓ existing setup/status only authenticate/verify, persist private selected source and refuse start/stop (5 ms)
+
+PASS unit src/utils/__tests__/native-short-options.test.ts (21.13 s)
+  ✓ restores actual option ownership ["start"] local=-l (9 ms)
+  ✓ restores actual option ownership ["dev"] local=-l (4 ms)
+  ✓ restores actual option ownership ["deploy"] local=-l (4 ms)
+  ✓ restores actual option ownership ["deploy"] prod=-p (5 ms)
+  ✓ restores actual option ownership ["convex","deploy"] local=-l (4 ms)
+  ✓ restores actual option ownership ["convex","deploy"] prod=-p (9 ms)
+  ✓ restores actual option ownership ["convex","dev"] local=-l (4 ms)
+  ✓ restores actual option ownership ["convex","logs"] local=-l (3 ms)
+  ✓ restores actual option ownership ["convex","logs"] prod=-p (4 ms)
+  ✓ restores actual option ownership ["convex","logs"] lines=-n (4 ms)
+  ✓ restores actual option ownership ["convex","logs"] tail=-t (3 ms)
+  ✓ restores actual option ownership ["convex","dashboard"] local=-l (4 ms)
+  ✓ restores actual option ownership ["convex","dashboard"] prod=-p (3 ms)
+  ✓ restores actual option ownership ["convex","env"] list=-l (4 ms)
+  ✓ restores actual option ownership ["convex","env"] set=-s (5 ms)
+  ✓ restores actual option ownership ["convex","env"] prod=-p (4 ms)
+  ✓ restores actual option ownership ["update"] app=-a (4 ms)
+  ✓ restores actual option ownership ["convex","update"] app=-a (4 ms)
+  ✓ restores actual option ownership ["start"] foreground=-f (3 ms)
+  ✓ does not give local/prod short aliases to leaves without baseline ownership (24 ms)
+  ✓ registry action preserves root/leaf collisions ["-f","csv","start","-f","--format","json"] (8 ms)
+  ✓ registry action preserves root/leaf collisions ["-f","csv","start","-f"] (7 ms)
+  ✓ registry action preserves root/leaf collisions ["convex","env","-l","--local"] (5 ms)
+  ✓ registry action preserves root/leaf collisions ["-d","prod","convex","env","-l","-p"] (6 ms)
+  ✓ emitted CLI short/long actions agree: ["dev","-l","--once"] (673 ms)
+  ✓ emitted CLI short/long actions agree: ["start","-l","-f","--once"] (820 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","dev","-l","--once"] (1140 ms)
+  ✓ emitted CLI short/long actions agree: ["deploy","-l","--dry-run"] (1109 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","deploy","-l","--dry-run"] (1287 ms)
+  ✓ emitted CLI short/long actions agree: ["deploy","-d","prod","-p","--dry-run"] (1834 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","deploy","-d","prod","-p","--dry-run"] (1035 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","logs","-l","-n","1","-t"] (1195 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","logs","-d","prod","-p","-n","2","-t"] (1867 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","logs","-l","-n","1","--format","json"] (1607 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","dashboard","-l","--print-url"] (1420 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","dashboard","-d","prod","-p","--print-url"] (960 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","env","-l"] (773 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","env","-s","TOKEN=a=b;世界"] (664 ms)
+  ✓ emitted CLI short/long actions agree: ["convex","env","-d","prod","-p","-l"] (646 ms)
+  ✓ emitted CLI short/long actions agree: ["-f","csv","start","-f","-l","--once","--format","json"] (674 ms)
+  ✓ invalid/retired short flags fail before effects: ["update","-a","legacy"] (286 ms)
+  ✓ invalid/retired short flags fail before effects: ["convex","update","-a","legacy"] (301 ms)
+  ✓ invalid/retired short flags fail before effects: ["start","-f","--graph-only"] (293 ms)
+  ✓ invalid/retired short flags fail before effects: ["convex","env","-l","-s","TOKEN=x"] (285 ms)
+  ✓ invalid/retired short flags fail before effects: ["convex","env","-s","bad"] (292 ms)
+  ✓ invalid/retired short flags fail before effects: ["convex","logs","-n","0"] (290 ms)
+  ✓ invalid/retired short flags fail before effects: ["convex","logs","-n","1001"] (303 ms)
+  ✓ invalid/retired short flags fail before effects: ["deploy","-p","--dry-run"] (298 ms)
+  ✓ invalid/retired short flags fail before effects: ["dev","-l","-d","prod","--once"] (301 ms)
+  ✓ invalid/retired short flags fail before effects: ["start","-f","--format","invalid"] (296 ms)
+
+PASS unit src/utils/__tests__/env-file.test.ts
+  env-file utilities
+    serializeEnvFile
+      ✓ should serialize lines back to string (1 ms)
+      ✓ should handle empty lines array
+      ✓ should preserve original formatting (1 ms)
+    setEnvVar
+      ✓ should add new variable
+      ✓ should update existing variable (1 ms)
+      ✓ should insert before trailing empty lines
+      ✓ should handle empty lines array
+      ✓ should handle URL values with special characters
+    removeEnvVar
+      ✓ should remove existing variable
+      ✓ should do nothing if variable does not exist
+      ✓ should preserve comments and empty lines (1 ms)
+      ✓ should remove all occurrences with same key
+    getDeploymentEnvKeys
+      ✓ should return local keys for local deployment
+      ✓ should return local keys for LOCAL (uppercase)
+      ✓ should return cloud keys for cloud deployment
+      ✓ should return cloud keys for production deployment
+      ✓ should return cloud keys for prod deployment
+      ✓ should return custom keys for custom deployment names
+      ✓ should sanitize special characters in custom names (4 ms)
+      ✓ should handle names with numbers
+      ✓ should handle mixed case input
+  dotenv loader readback and owned filesystem persistence
+    ✓ parser preserves exact bytes, multiline embedded assignments and all ordinary loader forms (1 ms)
+    ✓ helper collapses duplicates to requested effective URL/key, preserves unrelated bytes, mode600 and idempotency (15 ms)
+    ✓ stale key clearing/removal recognizes export TWO_CONVEX_DEPLOY_KEY=stale without editing unrelated multiline content (17 ms)
+    ✓ stale key clearing/removal recognizes  TWO_CONVEX_DEPLOY_KEY = stale without editing unrelated multiline content (14 ms)
+    ✓ stale key clearing/removal recognizes TWO_CONVEX_DEPLOY_KEY =stale without editing unrelated multiline content (24 ms)
+    ✓ stale key clearing/removal recognizes TWO_CONVEX_DEPLOY_KEY: stale without editing unrelated multiline content (14 ms)
+    ✓ stale key clearing/removal recognizes TWO_CONVEX_DEPLOY_KEY="first
+TWO_CONVEX_URL=embedded
+last" without editing unrelated multiline content (14 ms)
+    ✓ standard dotenv serialization roundtrips accepted literal "synthetic#suffix" exactly
+    ✓ standard dotenv serialization roundtrips accepted literal " synthetic-leading" exactly
+    ✓ standard dotenv serialization roundtrips accepted literal "synthetic-trailing " exactly
+    ✓ standard dotenv serialization roundtrips accepted literal " edge#space " exactly (1 ms)
+    ✓ standard dotenv serialization roundtrips accepted literal "literal'quote#hash" exactly
+    ✓ standard dotenv serialization roundtrips accepted literal "literal\"quote#hash" exactly
+    ✓ standard dotenv serialization roundtrips accepted literal "literal`tick#hash" exactly
+    ✓ standard dotenv serialization roundtrips accepted literal "literal\\n#hash" exactly
+    ✓ standard dotenv serialization roundtrips accepted literal "literal'\"\\n#hash" exactly
+    ✓ standard dotenv serialization roundtrips accepted literal "" exactly
+    ✓ standard dotenv serialization roundtrips accepted literal "a=b:c" exactly
+    ✓ unrepresentable quote combinations or controls reject without any env file write (2 ms)
+
+npm error Lifecycle script `test:fast` failed with error:
+npm error code 143
+npm error path /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli
+npm error workspace @cortexmemory/cli@0.39.0
+npm error location /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli
+npm error command failed
+npm error command sh -c node scripts/test-runner.js fast --runInBand --watchman=false --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/prospective-cli-fast-results.json

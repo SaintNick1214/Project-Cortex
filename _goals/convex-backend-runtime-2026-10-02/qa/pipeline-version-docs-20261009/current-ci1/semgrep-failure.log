@@ -1,0 +1,757 @@
+﻿2026-10-10T02:40:53.8595677Z Current runner version: '2.337.0'
+2026-10-10T02:40:53.8622377Z ##[group]Runner Image Provisioner
+2026-10-10T02:40:53.8623337Z Hosted Compute Agent
+2026-10-10T02:40:53.8623945Z Version: 20261002.596
+2026-10-10T02:40:53.8625329Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-10T02:40:53.8626121Z Build Date: 2026-10-02T22:28:27Z
+2026-10-10T02:40:53.8626913Z Worker ID: {0f331c81-272c-4fae-abcc-b3324e4a66be}
+2026-10-10T02:40:53.8627639Z Region: eastus2
+2026-10-10T02:40:53.8628241Z Cloud: Azure
+2026-10-10T02:40:53.8628853Z ##[endgroup]
+2026-10-10T02:40:53.8630535Z ##[group]Operating System
+2026-10-10T02:40:53.8631282Z Ubuntu
+2026-10-10T02:40:53.8631829Z 24.04.5
+2026-10-10T02:40:53.8632358Z LTS
+2026-10-10T02:40:53.8632995Z ##[endgroup]
+2026-10-10T02:40:53.8633578Z ##[group]Runner Image
+2026-10-10T02:40:53.8634513Z Image: ubuntu-24.04
+2026-10-10T02:40:53.8635240Z Version: 20261004.327.1
+2026-10-10T02:40:53.8636664Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-10T02:40:53.8638276Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-10T02:40:53.8639357Z ##[endgroup]
+2026-10-10T02:40:53.8640640Z ##[group]GITHUB_TOKEN Permissions
+2026-10-10T02:40:53.8642960Z Contents: read
+2026-10-10T02:40:53.8643609Z Metadata: read
+2026-10-10T02:40:53.8644459Z SecurityEvents: write
+2026-10-10T02:40:53.8645111Z ##[endgroup]
+2026-10-10T02:40:53.8647188Z Secret source: Actions
+2026-10-10T02:40:53.8648335Z Cache mode: write
+2026-10-10T02:40:53.8649039Z Prepare workflow directory
+2026-10-10T02:40:53.9884781Z Prepare all required actions
+2026-10-10T02:40:53.9933085Z Getting action download info
+2026-10-10T02:40:54.1792055Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-10T02:40:54.2829943Z Download action repository 'actions/setup-python@v6' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-10T02:40:54.3571895Z Download action repository 'github/codeql-action@v4' (SHA:24c54180a607b1449ed407dd24f251e4e9147c8d)
+2026-10-10T02:40:54.6461744Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-10T02:40:55.1843847Z Complete job name: API Security Scan (Semgrep)
+2026-10-10T02:40:55.6823751Z ##[group]Run actions/checkout@v6
+2026-10-10T02:40:55.6825438Z with:
+2026-10-10T02:40:55.6826237Z   persist-credentials: false
+2026-10-10T02:40:55.6827260Z   repository: SaintNick1214/Project-Cortex
+2026-10-10T02:40:55.6835691Z   token: ***
+2026-10-10T02:40:55.6836478Z   ssh-strict: true
+2026-10-10T02:40:55.6837259Z   ssh-user: git
+2026-10-10T02:40:55.6838026Z   clean: true
+2026-10-10T02:40:55.6838847Z   sparse-checkout-cone-mode: true
+2026-10-10T02:40:55.6839826Z   fetch-depth: 1
+2026-10-10T02:40:55.6840613Z   fetch-tags: false
+2026-10-10T02:40:55.6841445Z   show-progress: true
+2026-10-10T02:40:55.6842263Z   lfs: false
+2026-10-10T02:40:55.6843026Z   submodules: false
+2026-10-10T02:40:55.6843873Z   set-safe-directory: true
+2026-10-10T02:40:55.6844999Z   allow-unsafe-pr-checkout: false
+2026-10-10T02:40:55.6846259Z ##[endgroup]
+2026-10-10T02:40:55.7912570Z Syncing repository: SaintNick1214/Project-Cortex
+2026-10-10T02:40:55.7916788Z ##[group]Getting Git version info
+2026-10-10T02:40:55.7919162Z Working directory is '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-10T02:40:55.7922426Z [command]/usr/bin/git version
+2026-10-10T02:40:55.7967393Z git version 2.55.0
+2026-10-10T02:40:55.7991184Z ##[endgroup]
+2026-10-10T02:40:55.8007050Z Temporarily overriding HOME='/home/runner/work/_temp/c1d623ed-62a9-4ba1-867a-4267b041c20b' before making global git config changes
+2026-10-10T02:40:55.8011728Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T02:40:55.8015963Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-10T02:40:55.8095370Z Deleting the contents of '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-10T02:40:55.8099301Z ##[group]Determining repository object format
+2026-10-10T02:40:55.8101887Z ##[endgroup]
+2026-10-10T02:40:55.8104106Z ##[group]Initializing the repository
+2026-10-10T02:40:55.8106598Z [command]/usr/bin/git init /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-10T02:40:55.8200784Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-10T02:40:55.8204010Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-10T02:40:55.8207988Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-10T02:40:55.8210669Z hint: call:
+2026-10-10T02:40:55.8212106Z hint:
+2026-10-10T02:40:55.8213785Z hint: 	git config --global init.defaultBranch <name>
+2026-10-10T02:40:55.8216364Z hint:
+2026-10-10T02:40:55.8218193Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-10T02:40:55.8220247Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-10T02:40:55.8221755Z hint:
+2026-10-10T02:40:55.8234003Z hint: 	git branch -m <name>
+2026-10-10T02:40:55.8235627Z hint:
+2026-10-10T02:40:55.8237546Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-10T02:40:55.8241153Z Initialized empty Git repository in /home/runner/work/Project-Cortex/Project-Cortex/.git/
+2026-10-10T02:40:55.8246821Z [command]/usr/bin/git remote add origin https://github.com/SaintNick1214/Project-Cortex
+2026-10-10T02:40:55.8299082Z ##[endgroup]
+2026-10-10T02:40:55.8301983Z ##[group]Disabling automatic garbage collection
+2026-10-10T02:40:55.8317336Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-10T02:40:55.8360847Z ##[endgroup]
+2026-10-10T02:40:55.8364035Z ##[group]Setting up auth
+2026-10-10T02:40:55.8366430Z Removing SSH command configuration
+2026-10-10T02:40:55.8369354Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T02:40:55.8407663Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T02:40:55.8877693Z Removing HTTP extra header
+2026-10-10T02:40:55.8887342Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T02:40:55.8939220Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T02:40:55.9189269Z Removing includeIf entries pointing to credentials config files
+2026-10-10T02:40:55.9205635Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T02:40:55.9239641Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T02:40:55.9479293Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-10T02:40:55.9525401Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:40:55.9563373Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:40:55.9600459Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:40:55.9646576Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:40:55.9682667Z ##[endgroup]
+2026-10-10T02:40:55.9685813Z ##[group]Fetching the repository
+2026-10-10T02:40:55.9692495Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +60c9e1572e56e4c7ab3deabef031eecddc849f55:refs/remotes/pull/135/merge
+2026-10-10T02:41:33.0566596Z From https://github.com/SaintNick1214/Project-Cortex
+2026-10-10T02:41:33.0567778Z  * [new ref]           60c9e1572e56e4c7ab3deabef031eecddc849f55 -> pull/135/merge
+2026-10-10T02:41:33.0573060Z ##[endgroup]
+2026-10-10T02:41:33.0573910Z ##[group]Determining the checkout info
+2026-10-10T02:41:33.0579248Z ##[endgroup]
+2026-10-10T02:41:33.0580265Z [command]/usr/bin/git sparse-checkout disable
+2026-10-10T02:41:33.0637963Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-10T02:41:33.0671841Z ##[group]Checking out the ref
+2026-10-10T02:41:33.0676221Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/135/merge
+2026-10-10T02:41:34.3500105Z Updating files:   8% (17844/206551)
+2026-10-10T02:41:34.6440990Z Updating files:   9% (18590/206551)
+2026-10-10T02:41:34.8553934Z Updating files:  10% (20656/206551)
+2026-10-10T02:41:35.0197788Z Updating files:  11% (22721/206551)
+2026-10-10T02:41:35.1973193Z Updating files:  12% (24787/206551)
+2026-10-10T02:41:35.2789942Z Updating files:  13% (26852/206551)
+2026-10-10T02:41:35.3887708Z Updating files:  13% (27691/206551)
+2026-10-10T02:41:35.6615985Z Updating files:  14% (28918/206551)
+2026-10-10T02:41:35.8290637Z Updating files:  15% (30983/206551)
+2026-10-10T02:41:35.9557934Z Updating files:  16% (33049/206551)
+2026-10-10T02:41:36.1121770Z Updating files:  17% (35114/206551)
+2026-10-10T02:41:36.2623265Z Updating files:  18% (37180/206551)
+2026-10-10T02:41:36.2831586Z Updating files:  19% (39245/206551)
+2026-10-10T02:41:36.4055390Z Updating files:  19% (39327/206551)
+2026-10-10T02:41:36.5426218Z Updating files:  20% (41311/206551)
+2026-10-10T02:41:36.7272590Z Updating files:  21% (43376/206551)
+2026-10-10T02:41:36.8326333Z Updating files:  22% (45442/206551)
+2026-10-10T02:41:36.9734604Z Updating files:  23% (47507/206551)
+2026-10-10T02:41:37.0960937Z Updating files:  24% (49573/206551)
+2026-10-10T02:41:37.2150782Z Updating files:  25% (51638/206551)
+2026-10-10T02:41:37.2777745Z Updating files:  26% (53704/206551)
+2026-10-10T02:41:37.3381414Z Updating files:  26% (54854/206551)
+2026-10-10T02:41:38.2795734Z Updating files:  27% (55769/206551)
+2026-10-10T02:41:39.2778163Z Updating files:  27% (57571/206551)
+2026-10-10T02:41:40.2745696Z Updating files:  27% (57691/206551)
+2026-10-10T02:41:40.2791306Z Updating files:  28% (57835/206551)
+2026-10-10T02:41:40.9248900Z Updating files:  28% (57836/206551)
+2026-10-10T02:41:41.0958258Z Updating files:  29% (59900/206551)
+2026-10-10T02:41:41.2765550Z Updating files:  30% (61966/206551)
+2026-10-10T02:41:41.2775050Z Updating files:  31% (64031/206551)
+2026-10-10T02:41:41.7153232Z Updating files:  31% (64044/206551)
+2026-10-10T02:41:41.8981984Z Updating files:  32% (66097/206551)
+2026-10-10T02:41:42.1212518Z Updating files:  33% (68162/206551)
+2026-10-10T02:41:42.2808960Z Updating files:  34% (70228/206551)
+2026-10-10T02:41:42.3542937Z Updating files:  34% (71300/206551)
+2026-10-10T02:41:42.4928149Z Updating files:  35% (72293/206551)
+2026-10-10T02:41:42.5958981Z Updating files:  36% (74359/206551)
+2026-10-10T02:41:42.9682565Z Updating files:  37% (76424/206551)
+2026-10-10T02:41:43.0992180Z Updating files:  38% (78490/206551)
+2026-10-10T02:41:43.2255473Z Updating files:  39% (80555/206551)
+2026-10-10T02:41:43.2775098Z Updating files:  40% (82621/206551)
+2026-10-10T02:41:43.3518080Z Updating files:  40% (83484/206551)
+2026-10-10T02:41:43.4767359Z Updating files:  41% (84686/206551)
+2026-10-10T02:41:44.1477013Z Updating files:  42% (86752/206551)
+2026-10-10T02:41:44.2955512Z Updating files:  43% (88817/206551)
+2026-10-10T02:41:44.4656345Z Updating files:  43% (90836/206551)
+2026-10-10T02:41:45.2559761Z Updating files:  44% (90883/206551)
+2026-10-10T02:41:45.2774877Z Updating files:  45% (92948/206551)
+2026-10-10T02:41:45.4039273Z Updating files:  45% (93260/206551)
+2026-10-10T02:41:45.5828759Z Updating files:  46% (95014/206551)
+2026-10-10T02:41:46.1728670Z Updating files:  47% (97079/206551)
+2026-10-10T02:41:46.2775448Z Updating files:  48% (99145/206551)
+2026-10-10T02:41:46.3457841Z Updating files:  48% (100546/206551)
+2026-10-10T02:41:46.4734190Z Updating files:  49% (101210/206551)
+2026-10-10T02:41:46.5912104Z Updating files:  50% (103276/206551)
+2026-10-10T02:41:46.7160272Z Updating files:  51% (105342/206551)
+2026-10-10T02:41:46.8659093Z Updating files:  52% (107407/206551)
+2026-10-10T02:41:47.0399766Z Updating files:  53% (109473/206551)
+2026-10-10T02:41:47.1722104Z Updating files:  54% (111538/206551)
+2026-10-10T02:41:47.2775209Z Updating files:  55% (113604/206551)
+2026-10-10T02:41:47.3434515Z Updating files:  55% (114720/206551)
+2026-10-10T02:41:47.4648514Z Updating files:  56% (115669/206551)
+2026-10-10T02:41:47.6449219Z Updating files:  57% (117735/206551)
+2026-10-10T02:41:47.9081207Z Updating files:  58% (119800/206551)
+2026-10-10T02:41:48.0853764Z Updating files:  59% (121866/206551)
+2026-10-10T02:41:48.2774637Z Updating files:  60% (123931/206551)
+2026-10-10T02:41:48.3121061Z Updating files:  60% (125626/206551)
+2026-10-10T02:41:48.5948488Z Updating files:  61% (125997/206551)
+2026-10-10T02:41:48.7784123Z Updating files:  62% (128062/206551)
+2026-10-10T02:41:48.9593955Z Updating files:  63% (130128/206551)
+2026-10-10T02:41:49.1340495Z Updating files:  64% (132193/206551)
+2026-10-10T02:41:49.2776549Z Updating files:  65% (134259/206551)
+2026-10-10T02:41:49.3181857Z Updating files:  65% (135894/206551)
+2026-10-10T02:41:49.4953213Z Updating files:  66% (136324/206551)
+2026-10-10T02:41:49.6805089Z Updating files:  67% (138390/206551)
+2026-10-10T02:41:49.8635063Z Updating files:  68% (140455/206551)
+2026-10-10T02:41:50.0544588Z Updating files:  69% (142521/206551)
+2026-10-10T02:41:50.2285124Z Updating files:  70% (144586/206551)
+2026-10-10T02:41:50.2941260Z Updating files:  71% (146652/206551)
+2026-10-10T02:41:50.4878155Z Updating files:  71% (147138/206551)
+2026-10-10T02:41:50.6883707Z Updating files:  72% (148717/206551)
+2026-10-10T02:41:50.7896450Z Updating files:  73% (150783/206551)
+2026-10-10T02:41:50.8773192Z Updating files:  74% (152848/206551)
+2026-10-10T02:41:51.0481072Z Updating files:  75% (154914/206551)
+2026-10-10T02:41:51.2004515Z Updating files:  76% (156979/206551)
+2026-10-10T02:41:51.2777100Z Updating files:  77% (159045/206551)
+2026-10-10T02:41:51.3461956Z Updating files:  77% (160119/206551)
+2026-10-10T02:41:51.5111547Z Updating files:  78% (161110/206551)
+2026-10-10T02:41:51.7255025Z Updating files:  79% (163176/206551)
+2026-10-10T02:41:51.8851728Z Updating files:  80% (165241/206551)
+2026-10-10T02:41:51.9872047Z Updating files:  81% (167307/206551)
+2026-10-10T02:41:52.0795183Z Updating files:  82% (169372/206551)
+2026-10-10T02:41:52.2377300Z Updating files:  83% (171438/206551)
+2026-10-10T02:41:52.2774845Z Updating files:  84% (173503/206551)
+2026-10-10T02:41:52.3829226Z Updating files:  84% (174053/206551)
+2026-10-10T02:41:52.5206553Z Updating files:  85% (175569/206551)
+2026-10-10T02:41:52.6592674Z Updating files:  86% (177634/206551)
+2026-10-10T02:41:52.8381629Z Updating files:  87% (179700/206551)
+2026-10-10T02:41:52.9687108Z Updating files:  88% (181765/206551)
+2026-10-10T02:41:53.1038897Z Updating files:  89% (183831/206551)
+2026-10-10T02:41:53.2347897Z Updating files:  90% (185896/206551)
+2026-10-10T02:41:53.2774852Z Updating files:  91% (187962/206551)
+2026-10-10T02:41:53.3741800Z Updating files:  91% (188652/206551)
+2026-10-10T02:41:53.5770821Z Updating files:  92% (190027/206551)
+2026-10-10T02:41:53.7208384Z Updating files:  93% (192093/206551)
+2026-10-10T02:41:53.8151627Z Updating files:  94% (194158/206551)
+2026-10-10T02:41:53.9242457Z Updating files:  95% (196224/206551)
+2026-10-10T02:41:54.0815473Z Updating files:  96% (198289/206551)
+2026-10-10T02:41:54.2333856Z Updating files:  97% (200355/206551)
+2026-10-10T02:41:54.2773945Z Updating files:  98% (202420/206551)
+2026-10-10T02:41:54.4142688Z Updating files:  98% (203165/206551)
+2026-10-10T02:41:54.6954202Z Updating files:  99% (204486/206551)
+2026-10-10T02:41:54.6954900Z Updating files: 100% (206551/206551)
+2026-10-10T02:41:54.6955269Z Updating files: 100% (206551/206551), done.
+2026-10-10T02:41:54.9789921Z Note: switching to 'refs/remotes/pull/135/merge'.
+2026-10-10T02:41:54.9790495Z 
+2026-10-10T02:41:54.9790963Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-10T02:41:54.9792001Z changes and commit them, and you can discard any commits you make in this
+2026-10-10T02:41:54.9792711Z state without impacting any branches by switching back to a branch.
+2026-10-10T02:41:54.9793124Z 
+2026-10-10T02:41:54.9793399Z If you want to create a new branch to retain commits you create, you may
+2026-10-10T02:41:54.9794074Z do so (now or later) by using -c with the switch command. Example:
+2026-10-10T02:41:54.9794741Z 
+2026-10-10T02:41:54.9794871Z   git switch -c <new-branch-name>
+2026-10-10T02:41:54.9795087Z 
+2026-10-10T02:41:54.9795200Z Or undo this operation with:
+2026-10-10T02:41:54.9795413Z 
+2026-10-10T02:41:54.9795514Z   git switch -
+2026-10-10T02:41:54.9795650Z 
+2026-10-10T02:41:54.9795899Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-10T02:41:54.9796264Z 
+2026-10-10T02:41:54.9796687Z HEAD is now at 60c9e157 Merge fc29f06e697d44711f79a9d3c2bc7c24595585bd into 443148c1d8a63ed820bafe7d87bf21c7e0a2fd21
+2026-10-10T02:41:55.0171593Z ##[endgroup]
+2026-10-10T02:41:55.0227185Z [command]/usr/bin/git log -1 --format=%H
+2026-10-10T02:41:55.0258736Z 60c9e1572e56e4c7ab3deabef031eecddc849f55
+2026-10-10T02:41:55.0269772Z ##[group]Removing auth
+2026-10-10T02:41:55.0270305Z Removing SSH command configuration
+2026-10-10T02:41:55.0277210Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T02:41:55.0313857Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T02:41:55.0771634Z Removing HTTP extra header
+2026-10-10T02:41:55.0777635Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T02:41:55.0820447Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T02:41:55.1276373Z Removing includeIf entries pointing to credentials config files
+2026-10-10T02:41:55.1281233Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T02:41:55.1319057Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-10T02:41:55.1319997Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-10T02:41:55.1321116Z includeif.gitdir:/github/workspace/.git.path
+2026-10-10T02:41:55.1321856Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-10T02:41:55.1329629Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-10T02:41:55.1357914Z /home/runner/work/_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:41:55.1369115Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:41:55.1407791Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-10T02:41:55.1462107Z /home/runner/work/_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:41:55.1469990Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:41:55.1527232Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-10T02:41:55.1553826Z /github/runner_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:41:55.1561767Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:41:55.1606326Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-10T02:41:55.1631393Z /github/runner_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:41:55.1639117Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config
+2026-10-10T02:41:55.1673838Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T02:41:55.2120874Z Removing credentials config '/home/runner/work/_temp/git-credentials-faad63b4-d62c-4091-9db1-de96fcca44fe.config'
+2026-10-10T02:41:55.2131001Z ##[endgroup]
+2026-10-10T02:41:55.3526143Z Prepare all required actions
+2026-10-10T02:41:55.3526734Z Getting action download info
+2026-10-10T02:41:55.4138189Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-10T02:41:55.6211262Z ##[group]Run ./.github/actions/cortex-setup
+2026-10-10T02:41:55.6211561Z with:
+2026-10-10T02:41:55.6211761Z   cache: false
+2026-10-10T02:41:55.6211967Z ##[endgroup]
+2026-10-10T02:41:55.6726163Z ##[start-action display=Run actions/setup-node@v6;id=__self.__actions_setup-node]
+2026-10-10T02:41:55.9287886Z ##[group]Run actions/setup-node@v6
+2026-10-10T02:41:55.9288153Z with:
+2026-10-10T02:41:55.9288351Z   node-version: 24.21.0
+2026-10-10T02:41:55.9288603Z   cache-dependency-path: package-lock.json
+2026-10-10T02:41:55.9288888Z   check-latest: false
+2026-10-10T02:41:55.9291281Z   token: ***
+2026-10-10T02:41:55.9291505Z   package-manager-cache: true
+2026-10-10T02:41:55.9291758Z ##[endgroup]
+2026-10-10T02:41:56.0683181Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+2026-10-10T02:41:56.0687453Z ##[group]Environment details
+2026-10-10T02:41:56.4880033Z node: v24.21.0
+2026-10-10T02:41:56.4880935Z npm: 11.19.0
+2026-10-10T02:41:56.4881164Z yarn: 1.22.22
+2026-10-10T02:41:56.4881643Z ##[endgroup]
+2026-10-10T02:41:56.4890078Z Detected npm as the package manager from package.json's packageManager field. Auto caching has been enabled for npm. If you want to disable it, set package-manager-cache input to false
+2026-10-10T02:41:56.4913852Z [command]/opt/hostedtoolcache/node/24.21.0/x64/bin/npm config get cache
+2026-10-10T02:41:56.6068019Z /home/runner/.npm
+2026-10-10T02:41:56.6940123Z npm cache is not found
+2026-10-10T02:41:56.7042319Z ##[end-action id=__self.__actions_setup-node;outcome=success;conclusion=success;duration_ms=1031]
+2026-10-10T02:41:56.7161686Z ##[start-action display=Run npm install --global npm@12.2.0;id=__self.__run]
+2026-10-10T02:41:56.7267451Z ##[group]Run npm install --global npm@12.2.0
+2026-10-10T02:41:56.7267863Z [36;1mnpm install --global npm@12.2.0[0m
+2026-10-10T02:41:56.7532315Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-10T02:41:56.7532766Z ##[endgroup]
+2026-10-10T02:42:00.8455829Z 
+2026-10-10T02:42:00.8465018Z removed 8 packages, and changed 76 packages in 4s
+2026-10-10T02:42:00.8465496Z 
+2026-10-10T02:42:00.8465809Z 15 packages are looking for funding
+2026-10-10T02:42:00.8466309Z   run `npm fund` for details
+2026-10-10T02:42:00.8966111Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=4180]
+2026-10-10T02:42:00.9701256Z ##[group]Run actions/setup-python@v6
+2026-10-10T02:42:00.9701569Z with:
+2026-10-10T02:42:00.9701769Z   python-version: 3.12
+2026-10-10T02:42:00.9702003Z   check-latest: false
+2026-10-10T02:42:00.9704429Z   token: ***
+2026-10-10T02:42:00.9704648Z   update-environment: true
+2026-10-10T02:42:00.9705088Z   allow-prereleases: false
+2026-10-10T02:42:00.9705312Z   freethreaded: false
+2026-10-10T02:42:00.9705516Z ##[endgroup]
+2026-10-10T02:42:01.1207482Z ##[group]Installed versions
+2026-10-10T02:42:01.1306134Z Successfully set up CPython (3.12.15)
+2026-10-10T02:42:01.1307140Z ##[endgroup]
+2026-10-10T02:42:01.1855894Z ##[group]Run python -m pip install semgrep==1.179.0
+2026-10-10T02:42:01.1857049Z [36;1mpython -m pip install semgrep==1.179.0[0m
+2026-10-10T02:42:01.1987281Z shell: /usr/bin/bash -e {0}
+2026-10-10T02:42:01.1987715Z env:
+2026-10-10T02:42:01.1988153Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:42:01.1988931Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-10T02:42:01.1989670Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:42:01.1990328Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:42:01.1991000Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:42:01.1991711Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-10T02:42:01.1992368Z ##[endgroup]
+2026-10-10T02:42:04.0031301Z Collecting semgrep==1.179.0
+2026-10-10T02:42:04.0882490Z   Downloading semgrep-1.179.0-cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314-none-manylinux_2_34_x86_64.whl.metadata (22 kB)
+2026-10-10T02:42:04.1190879Z Collecting attrs>=21.3 (from semgrep==1.179.0)
+2026-10-10T02:42:04.1325075Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+2026-10-10T02:42:04.1581612Z Collecting boltons~=21.0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.1716753Z   Downloading boltons-21.0.0-py2.py3-none-any.whl.metadata (1.5 kB)
+2026-10-10T02:42:04.1942550Z Collecting click-option-group~=0.5 (from semgrep==1.179.0)
+2026-10-10T02:42:04.2122587Z   Downloading click_option_group-0.5.9-py3-none-any.whl.metadata (5.8 kB)
+2026-10-10T02:42:04.2402441Z Collecting click~=8.4.2 (from semgrep==1.179.0)
+2026-10-10T02:42:04.2539722Z   Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:04.2782206Z Collecting colorama~=0.4.0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.2927204Z   Downloading colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+2026-10-10T02:42:04.3173429Z Collecting exceptiongroup~=1.2.0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.3304091Z   Downloading exceptiongroup-1.2.2-py3-none-any.whl.metadata (6.6 kB)
+2026-10-10T02:42:04.3527474Z Collecting glom>=23.3 (from semgrep==1.179.0)
+2026-10-10T02:42:04.3670380Z   Downloading glom-25.12.0-py3-none-any.whl.metadata (5.2 kB)
+2026-10-10T02:42:04.4103855Z Collecting jsonschema~=4.25.1 (from semgrep==1.179.0)
+2026-10-10T02:42:04.4241022Z   Downloading jsonschema-4.25.1-py3-none-any.whl.metadata (7.6 kB)
+2026-10-10T02:42:04.4524650Z Collecting mcp==1.29.0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.4659839Z   Downloading mcp-1.29.0-py3-none-any.whl.metadata (9.3 kB)
+2026-10-10T02:42:04.4977157Z Collecting opentelemetry-api~=1.37.0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.5129365Z   Downloading opentelemetry_api-1.37.0-py3-none-any.whl.metadata (1.5 kB)
+2026-10-10T02:42:04.5421029Z Collecting opentelemetry-sdk~=1.37.0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.5557360Z   Downloading opentelemetry_sdk-1.37.0-py3-none-any.whl.metadata (1.5 kB)
+2026-10-10T02:42:04.5810059Z Collecting opentelemetry-exporter-otlp-proto-http~=1.37.0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.5943505Z   Downloading opentelemetry_exporter_otlp_proto_http-1.37.0-py3-none-any.whl.metadata (2.3 kB)
+2026-10-10T02:42:04.6235249Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.6368145Z   Downloading opentelemetry_instrumentation_requests-0.66b1-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:04.6614948Z Collecting opentelemetry-instrumentation-threading~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.6744526Z   Downloading opentelemetry_instrumentation_threading-0.66b1-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:04.6997414Z Collecting packaging>=21.0 (from semgrep==1.179.0)
+2026-10-10T02:42:04.7134065Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-10-10T02:42:04.7483811Z Collecting peewee~=3.14 (from semgrep==1.179.0)
+2026-10-10T02:42:04.7613804Z   Downloading peewee-3.19.0-py3-none-any.whl.metadata (7.0 kB)
+2026-10-10T02:42:04.7893299Z Collecting pyjwt<3,>=2.15.0 (from pyjwt[crypto]<3,>=2.15.0->semgrep==1.179.0)
+2026-10-10T02:42:04.8023533Z   Downloading pyjwt-2.15.1-py3-none-any.whl.metadata (3.5 kB)
+2026-10-10T02:42:04.8380139Z Collecting requests~=2.22 (from semgrep==1.179.0)
+2026-10-10T02:42:04.8512003Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-10-10T02:42:04.8938720Z Collecting rich>=13.5.2 (from semgrep==1.179.0)
+2026-10-10T02:42:04.9077607Z   Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+2026-10-10T02:42:05.0742591Z Collecting ruamel.yaml>=0.18.15 (from semgrep==1.179.0)
+2026-10-10T02:42:05.0874628Z   Downloading ruamel_yaml-0.19.1-py3-none-any.whl.metadata (16 kB)
+2026-10-10T02:42:05.1477129Z Collecting ruamel.yaml.clib==0.2.15 (from semgrep==1.179.0)
+2026-10-10T02:42:05.1621351Z   Downloading ruamel_yaml_clib-0.2.15-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (3.5 kB)
+2026-10-10T02:42:05.1839484Z Collecting semantic-version~=2.10.0 (from semgrep==1.179.0)
+2026-10-10T02:42:05.1969501Z   Downloading semantic_version-2.10.0-py2.py3-none-any.whl.metadata (9.7 kB)
+2026-10-10T02:42:05.2391997Z Collecting tomli~=2.4.0 (from semgrep==1.179.0)
+2026-10-10T02:42:05.2522738Z   Downloading tomli-2.4.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+2026-10-10T02:42:05.2789100Z Collecting typing-extensions~=4.2 (from semgrep==1.179.0)
+2026-10-10T02:42:05.2929965Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-10-10T02:42:05.3269669Z Collecting urllib3~=2.0 (from semgrep==1.179.0)
+2026-10-10T02:42:05.3421685Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-10-10T02:42:05.3706885Z Collecting wcmatch~=8.3 (from semgrep==1.179.0)
+2026-10-10T02:42:05.3837988Z   Downloading wcmatch-8.5.2-py3-none-any.whl.metadata (4.8 kB)
+2026-10-10T02:42:05.4115665Z Collecting anyio>=4.5 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.4243966Z   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+2026-10-10T02:42:05.4447522Z Collecting httpx-sse>=0.4 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.4576303Z   Downloading httpx_sse-0.4.3-py3-none-any.whl.metadata (9.7 kB)
+2026-10-10T02:42:05.4846212Z Collecting httpx<1.0.0,>=0.27.1 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.4974869Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2026-10-10T02:42:05.5650128Z Collecting pydantic-settings>=2.5.2 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.5791669Z   Downloading pydantic_settings-2.15.0-py3-none-any.whl.metadata (3.9 kB)
+2026-10-10T02:42:05.7085583Z Collecting pydantic<3.0.0,>=2.11.0 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.7218673Z   Downloading pydantic-2.14.0-py3-none-any.whl.metadata (131 kB)
+2026-10-10T02:42:05.7717732Z Collecting python-multipart>=0.0.9 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.7845876Z   Downloading python_multipart-0.0.32-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:05.8124663Z Collecting sse-starlette>=1.6.1 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.8253643Z   Downloading sse_starlette-3.5.0-py3-none-any.whl.metadata (15 kB)
+2026-10-10T02:42:05.8633750Z Collecting starlette>=0.27 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.8767516Z   Downloading starlette-1.7.0-py3-none-any.whl.metadata (6.6 kB)
+2026-10-10T02:42:05.8996403Z Collecting typing-inspection>=0.4.1 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.9127688Z   Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:05.9470651Z Collecting uvicorn>=0.31.1 (from mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:05.9604677Z   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+2026-10-10T02:42:05.9945726Z Collecting certifi (from httpx<1.0.0,>=0.27.1->mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:06.0077252Z   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+2026-10-10T02:42:06.0333969Z Collecting httpcore==1.* (from httpx<1.0.0,>=0.27.1->mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:06.0464350Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2026-10-10T02:42:06.0717124Z Collecting idna (from httpx<1.0.0,>=0.27.1->mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:06.0848108Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:06.1093834Z Collecting h11>=0.16 (from httpcore==1.*->httpx<1.0.0,>=0.27.1->mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:06.1222055Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-10-10T02:42:06.1465257Z Collecting jsonschema-specifications>=2023.03.6 (from jsonschema~=4.25.1->semgrep==1.179.0)
+2026-10-10T02:42:06.1600483Z   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+2026-10-10T02:42:06.1906099Z Collecting referencing>=0.28.4 (from jsonschema~=4.25.1->semgrep==1.179.0)
+2026-10-10T02:42:06.2047092Z   Downloading referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+2026-10-10T02:42:06.5266802Z Collecting rpds-py>=0.7.1 (from jsonschema~=4.25.1->semgrep==1.179.0)
+2026-10-10T02:42:06.5404428Z   Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+2026-10-10T02:42:06.5756963Z Collecting importlib-metadata<8.8.0,>=6.0 (from opentelemetry-api~=1.37.0->semgrep==1.179.0)
+2026-10-10T02:42:06.5896345Z   Downloading importlib_metadata-8.7.1-py3-none-any.whl.metadata (4.7 kB)
+2026-10-10T02:42:06.6245581Z Collecting zipp>=3.20 (from importlib-metadata<8.8.0,>=6.0->opentelemetry-api~=1.37.0->semgrep==1.179.0)
+2026-10-10T02:42:06.6376080Z   Downloading zipp-4.1.1-py3-none-any.whl.metadata (3.6 kB)
+2026-10-10T02:42:06.6673359Z Collecting googleapis-common-protos~=1.52 (from opentelemetry-exporter-otlp-proto-http~=1.37.0->semgrep==1.179.0)
+2026-10-10T02:42:06.6801558Z   Downloading googleapis_common_protos-1.75.5-py3-none-any.whl.metadata (8.5 kB)
+2026-10-10T02:42:06.7058150Z Collecting opentelemetry-exporter-otlp-proto-common==1.37.0 (from opentelemetry-exporter-otlp-proto-http~=1.37.0->semgrep==1.179.0)
+2026-10-10T02:42:06.7190836Z   Downloading opentelemetry_exporter_otlp_proto_common-1.37.0-py3-none-any.whl.metadata (1.8 kB)
+2026-10-10T02:42:06.7453313Z Collecting opentelemetry-proto==1.37.0 (from opentelemetry-exporter-otlp-proto-http~=1.37.0->semgrep==1.179.0)
+2026-10-10T02:42:06.7594808Z   Downloading opentelemetry_proto-1.37.0-py3-none-any.whl.metadata (2.3 kB)
+2026-10-10T02:42:06.9335728Z Collecting protobuf<7.0,>=5.0 (from opentelemetry-proto==1.37.0->opentelemetry-exporter-otlp-proto-http~=1.37.0->semgrep==1.179.0)
+2026-10-10T02:42:06.9473740Z   Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+2026-10-10T02:42:06.9816325Z Collecting opentelemetry-instrumentation==0.66b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:06.9948637Z   Downloading opentelemetry_instrumentation-0.66b1-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:07.0224495Z Collecting opentelemetry-semantic-conventions==0.66b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.0362120Z   Downloading opentelemetry_semantic_conventions-0.66b1-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:07.0619325Z Collecting opentelemetry-util-http==0.66b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.0752366Z   Downloading opentelemetry_util_http-0.66b1-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.4706117Z Collecting wrapt<3.0.0,>=1.0.0 (from opentelemetry-instrumentation==0.66b1->opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.4845293Z   Downloading wrapt-2.5.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (7.6 kB)
+2026-10-10T02:42:07.4902263Z INFO: pip is looking at multiple versions of opentelemetry-semantic-conventions to determine which version is compatible with other requirements. This could take a while.
+2026-10-10T02:42:07.4913508Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:07.5045056Z   Downloading opentelemetry_instrumentation_requests-0.66b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.5090444Z Collecting opentelemetry-instrumentation==0.66b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.5320537Z   Downloading opentelemetry_instrumentation-0.66b0-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:07.5365929Z Collecting opentelemetry-semantic-conventions==0.66b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.5495227Z   Downloading opentelemetry_semantic_conventions-0.66b0-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:07.5536647Z Collecting opentelemetry-util-http==0.66b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.5666602Z   Downloading opentelemetry_util_http-0.66b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.5724631Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:07.5855737Z   Downloading opentelemetry_instrumentation_requests-0.65b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.5899824Z Collecting opentelemetry-instrumentation==0.65b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.6056823Z   Downloading opentelemetry_instrumentation-0.65b0-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:07.6099306Z Collecting opentelemetry-semantic-conventions==0.65b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.6236007Z   Downloading opentelemetry_semantic_conventions-0.65b0-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:07.6298716Z Collecting opentelemetry-util-http==0.65b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.6432682Z   Downloading opentelemetry_util_http-0.65b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.6485001Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:07.6628381Z   Downloading opentelemetry_instrumentation_requests-0.64b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.6673268Z Collecting opentelemetry-instrumentation==0.64b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.6806947Z   Downloading opentelemetry_instrumentation-0.64b0-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:07.6849343Z Collecting opentelemetry-semantic-conventions==0.64b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.6987184Z   Downloading opentelemetry_semantic_conventions-0.64b0-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:07.7028489Z Collecting opentelemetry-util-http==0.64b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.7175900Z   Downloading opentelemetry_util_http-0.64b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.7223584Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:07.7374553Z   Downloading opentelemetry_instrumentation_requests-0.63b1-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.7430932Z Collecting opentelemetry-instrumentation==0.63b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.7560203Z   Downloading opentelemetry_instrumentation-0.63b1-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:07.7603842Z Collecting opentelemetry-semantic-conventions==0.63b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.7747829Z   Downloading opentelemetry_semantic_conventions-0.63b1-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:07.7790689Z Collecting opentelemetry-util-http==0.63b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.7939385Z   Downloading opentelemetry_util_http-0.63b1-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.7990452Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:07.8119211Z   Downloading opentelemetry_instrumentation_requests-0.63b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.8165151Z Collecting opentelemetry-instrumentation==0.63b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.8294891Z   Downloading opentelemetry_instrumentation-0.63b0-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:07.8338950Z Collecting opentelemetry-semantic-conventions==0.63b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.8476512Z   Downloading opentelemetry_semantic_conventions-0.63b0-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:07.8518141Z Collecting opentelemetry-util-http==0.63b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.8658450Z   Downloading opentelemetry_util_http-0.63b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.8709289Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:07.8846205Z   Downloading opentelemetry_instrumentation_requests-0.62b1-py3-none-any.whl.metadata (2.7 kB)
+2026-10-10T02:42:07.8895117Z Collecting opentelemetry-instrumentation==0.62b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.9033516Z   Downloading opentelemetry_instrumentation-0.62b1-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:07.9077908Z Collecting opentelemetry-semantic-conventions==0.62b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.9229859Z   Downloading opentelemetry_semantic_conventions-0.62b1-py3-none-any.whl.metadata (2.5 kB)
+2026-10-10T02:42:07.9273327Z Collecting opentelemetry-util-http==0.62b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.9404872Z   Downloading opentelemetry_util_http-0.62b1-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:07.9457158Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:07.9589040Z   Downloading opentelemetry_instrumentation_requests-0.62b0-py3-none-any.whl.metadata (2.7 kB)
+2026-10-10T02:42:07.9636289Z Collecting opentelemetry-instrumentation==0.62b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.9764710Z   Downloading opentelemetry_instrumentation-0.62b0-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:07.9808363Z Collecting opentelemetry-semantic-conventions==0.62b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:07.9941222Z   Downloading opentelemetry_semantic_conventions-0.62b0-py3-none-any.whl.metadata (2.5 kB)
+2026-10-10T02:42:07.9983038Z Collecting opentelemetry-util-http==0.62b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.0117535Z   Downloading opentelemetry_util_http-0.62b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.0162313Z INFO: pip is still looking at multiple versions of opentelemetry-semantic-conventions to determine which version is compatible with other requirements. This could take a while.
+2026-10-10T02:42:08.0170954Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:08.0299815Z   Downloading opentelemetry_instrumentation_requests-0.61b0-py3-none-any.whl.metadata (2.7 kB)
+2026-10-10T02:42:08.0345056Z Collecting opentelemetry-instrumentation==0.61b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.0477786Z   Downloading opentelemetry_instrumentation-0.61b0-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:08.0520902Z Collecting opentelemetry-semantic-conventions==0.61b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.0652215Z   Downloading opentelemetry_semantic_conventions-0.61b0-py3-none-any.whl.metadata (2.5 kB)
+2026-10-10T02:42:08.0733428Z Collecting opentelemetry-util-http==0.61b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.0868891Z   Downloading opentelemetry_util_http-0.61b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.0919050Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:08.1052437Z   Downloading opentelemetry_instrumentation_requests-0.60b1-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.1096424Z Collecting opentelemetry-instrumentation==0.60b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.1223397Z   Downloading opentelemetry_instrumentation-0.60b1-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:08.1266208Z Collecting opentelemetry-semantic-conventions==0.60b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.1392708Z   Downloading opentelemetry_semantic_conventions-0.60b1-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:08.1433798Z Collecting opentelemetry-util-http==0.60b1 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.1583197Z   Downloading opentelemetry_util_http-0.60b1-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.1633803Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:08.1764519Z   Downloading opentelemetry_instrumentation_requests-0.60b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.1832178Z Collecting opentelemetry-instrumentation==0.60b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.1962172Z   Downloading opentelemetry_instrumentation-0.60b0-py3-none-any.whl.metadata (7.2 kB)
+2026-10-10T02:42:08.2007138Z Collecting opentelemetry-semantic-conventions==0.60b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.2155581Z   Downloading opentelemetry_semantic_conventions-0.60b0-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:08.2194882Z Collecting opentelemetry-util-http==0.60b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.2322047Z   Downloading opentelemetry_util_http-0.60b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.2372318Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:08.2517779Z   Downloading opentelemetry_instrumentation_requests-0.59b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.2562907Z Collecting opentelemetry-instrumentation==0.59b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.2693628Z   Downloading opentelemetry_instrumentation-0.59b0-py3-none-any.whl.metadata (7.1 kB)
+2026-10-10T02:42:08.2736857Z Collecting opentelemetry-semantic-conventions==0.59b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.2868028Z   Downloading opentelemetry_semantic_conventions-0.59b0-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:08.2938462Z Collecting opentelemetry-util-http==0.59b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.3084549Z   Downloading opentelemetry_util_http-0.59b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.3135208Z Collecting opentelemetry-instrumentation-requests~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:08.3267509Z   Downloading opentelemetry_instrumentation_requests-0.58b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.3314851Z Collecting opentelemetry-instrumentation==0.58b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.3447008Z   Downloading opentelemetry_instrumentation-0.58b0-py3-none-any.whl.metadata (7.1 kB)
+2026-10-10T02:42:08.3490154Z Collecting opentelemetry-semantic-conventions==0.58b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.3619558Z   Downloading opentelemetry_semantic_conventions-0.58b0-py3-none-any.whl.metadata (2.4 kB)
+2026-10-10T02:42:08.3659316Z Collecting opentelemetry-util-http==0.58b0 (from opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.3798001Z   Downloading opentelemetry_util_http-0.58b0-py3-none-any.whl.metadata (2.6 kB)
+2026-10-10T02:42:08.3881459Z Collecting wrapt<2.0.0,>=1.0.0 (from opentelemetry-instrumentation==0.58b0->opentelemetry-instrumentation-requests~=0.58b0->semgrep==1.179.0)
+2026-10-10T02:42:08.4017073Z   Downloading wrapt-1.17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.4 kB)
+2026-10-10T02:42:08.4071660Z INFO: pip is looking at multiple versions of opentelemetry-instrumentation-threading to determine which version is compatible with other requirements. This could take a while.
+2026-10-10T02:42:08.4077460Z Collecting opentelemetry-instrumentation-threading~=0.58b0 (from semgrep==1.179.0)
+2026-10-10T02:42:08.4211613Z   Downloading opentelemetry_instrumentation_threading-0.66b0-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:08.4383301Z   Downloading opentelemetry_instrumentation_threading-0.65b0-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:08.4553394Z   Downloading opentelemetry_instrumentation_threading-0.64b0-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:08.4721099Z   Downloading opentelemetry_instrumentation_threading-0.63b1-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:08.4892127Z   Downloading opentelemetry_instrumentation_threading-0.63b0-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:08.5065525Z   Downloading opentelemetry_instrumentation_threading-0.62b1-py3-none-any.whl.metadata (2.2 kB)
+2026-10-10T02:42:08.5237907Z   Downloading opentelemetry_instrumentation_threading-0.62b0-py3-none-any.whl.metadata (2.2 kB)
+2026-10-10T02:42:08.5277575Z INFO: pip is still looking at multiple versions of opentelemetry-instrumentation-threading to determine which version is compatible with other requirements. This could take a while.
+2026-10-10T02:42:08.5411218Z   Downloading opentelemetry_instrumentation_threading-0.61b0-py3-none-any.whl.metadata (2.2 kB)
+2026-10-10T02:42:08.5628832Z   Downloading opentelemetry_instrumentation_threading-0.60b1-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:08.5798720Z   Downloading opentelemetry_instrumentation_threading-0.60b0-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:08.5980697Z   Downloading opentelemetry_instrumentation_threading-0.59b0-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:08.6152150Z   Downloading opentelemetry_instrumentation_threading-0.58b0-py3-none-any.whl.metadata (2.1 kB)
+2026-10-10T02:42:08.6653955Z Collecting annotated-types>=0.6.0 (from pydantic<3.0.0,>=2.11.0->mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:08.6782783Z   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+2026-10-10T02:42:09.4173816Z Collecting pydantic-core==2.50.0 (from pydantic<3.0.0,>=2.11.0->mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:09.4316463Z   Downloading pydantic_core-2.50.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.5 kB)
+2026-10-10T02:42:09.6334007Z Collecting cryptography>=3.4.0 (from pyjwt[crypto]<3,>=2.15.0->semgrep==1.179.0)
+2026-10-10T02:42:09.6475406Z   Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.4 kB)
+2026-10-10T02:42:09.7845020Z Collecting charset_normalizer<4,>=2 (from requests~=2.22->semgrep==1.179.0)
+2026-10-10T02:42:09.7977455Z   Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+2026-10-10T02:42:09.8334746Z Collecting bracex>=2.1.1 (from wcmatch~=8.3->semgrep==1.179.0)
+2026-10-10T02:42:09.8463992Z   Downloading bracex-3.0.1-py3-none-any.whl.metadata (3.3 kB)
+2026-10-10T02:42:09.9650441Z Collecting cffi>=2.0.0 (from cryptography>=3.4.0->pyjwt[crypto]<3,>=2.15.0->semgrep==1.179.0)
+2026-10-10T02:42:09.9787646Z   Downloading cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+2026-10-10T02:42:10.0012863Z Collecting pycparser (from cffi>=2.0.0->cryptography>=3.4.0->pyjwt[crypto]<3,>=2.15.0->semgrep==1.179.0)
+2026-10-10T02:42:10.0143042Z   Downloading pycparser-3.11-py3-none-any.whl.metadata (8.2 kB)
+2026-10-10T02:42:10.0373424Z Collecting face>=20.1.1 (from glom>=23.3->semgrep==1.179.0)
+2026-10-10T02:42:10.0542841Z   Downloading face-26.0.1-py3-none-any.whl.metadata (1.8 kB)
+2026-10-10T02:42:10.0906530Z Collecting python-dotenv>=0.21.0 (from pydantic-settings>=2.5.2->mcp==1.29.0->semgrep==1.179.0)
+2026-10-10T02:42:10.1040755Z   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+2026-10-10T02:42:10.1367699Z Collecting markdown-it-py>=2.2.0 (from rich>=13.5.2->semgrep==1.179.0)
+2026-10-10T02:42:10.1502725Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+2026-10-10T02:42:10.1812466Z Collecting pygments<3.0.0,>=2.13.0 (from rich>=13.5.2->semgrep==1.179.0)
+2026-10-10T02:42:10.1944987Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-10-10T02:42:10.2163473Z Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.5.2->semgrep==1.179.0)
+2026-10-10T02:42:10.2326848Z   Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-10-10T02:42:10.2654966Z Downloading semgrep-1.179.0-cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314-none-manylinux_2_34_x86_64.whl (70.8 MB)
+2026-10-10T02:42:10.8589280Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 70.8/70.8 MB 124.0 MB/s  0:00:00
+2026-10-10T02:42:10.8760162Z Downloading mcp-1.29.0-py3-none-any.whl (223 kB)
+2026-10-10T02:42:10.8947052Z Downloading ruamel_yaml_clib-0.2.15-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (788 kB)
+2026-10-10T02:42:10.9017338Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 788.2/788.2 kB 138.5 MB/s  0:00:00
+2026-10-10T02:42:10.9157441Z Downloading boltons-21.0.0-py2.py3-none-any.whl (193 kB)
+2026-10-10T02:42:10.9311707Z Downloading click-8.4.2-py3-none-any.whl (119 kB)
+2026-10-10T02:42:10.9501414Z Downloading click_option_group-0.5.9-py3-none-any.whl (11 kB)
+2026-10-10T02:42:10.9661813Z Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+2026-10-10T02:42:10.9827456Z Downloading exceptiongroup-1.2.2-py3-none-any.whl (16 kB)
+2026-10-10T02:42:10.9998619Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-10-10T02:42:11.0148103Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-10-10T02:42:11.0306650Z Downloading jsonschema-4.25.1-py3-none-any.whl (90 kB)
+2026-10-10T02:42:11.0454419Z Downloading opentelemetry_api-1.37.0-py3-none-any.whl (65 kB)
+2026-10-10T02:42:11.0600799Z Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
+2026-10-10T02:42:11.0751707Z Downloading opentelemetry_exporter_otlp_proto_http-1.37.0-py3-none-any.whl (19 kB)
+2026-10-10T02:42:11.0903259Z Downloading opentelemetry_exporter_otlp_proto_common-1.37.0-py3-none-any.whl (18 kB)
+2026-10-10T02:42:11.1059476Z Downloading opentelemetry_proto-1.37.0-py3-none-any.whl (72 kB)
+2026-10-10T02:42:11.1213229Z Downloading googleapis_common_protos-1.75.5-py3-none-any.whl (307 kB)
+2026-10-10T02:42:11.1380786Z Downloading opentelemetry_instrumentation_requests-0.58b0-py3-none-any.whl (12 kB)
+2026-10-10T02:42:11.1572738Z Downloading opentelemetry_semantic_conventions-0.58b0-py3-none-any.whl (207 kB)
+2026-10-10T02:42:11.1724911Z Downloading opentelemetry_instrumentation-0.58b0-py3-none-any.whl (33 kB)
+2026-10-10T02:42:11.1877740Z Downloading opentelemetry_util_http-0.58b0-py3-none-any.whl (7.7 kB)
+2026-10-10T02:42:11.2031842Z Downloading opentelemetry_instrumentation_threading-0.58b0-py3-none-any.whl (9.3 kB)
+2026-10-10T02:42:11.2182684Z Downloading opentelemetry_sdk-1.37.0-py3-none-any.whl (131 kB)
+2026-10-10T02:42:11.2336635Z Downloading peewee-3.19.0-py3-none-any.whl (411 kB)
+2026-10-10T02:42:11.2502940Z Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+2026-10-10T02:42:11.2660699Z Downloading pydantic-2.14.0-py3-none-any.whl (487 kB)
+2026-10-10T02:42:11.2823852Z Downloading pydantic_core-2.50.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.2 MB)
+2026-10-10T02:42:11.2916907Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 304.6 MB/s  0:00:00
+2026-10-10T02:42:11.3053371Z Downloading pyjwt-2.15.1-py3-none-any.whl (33 kB)
+2026-10-10T02:42:11.3202302Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-10-10T02:42:11.3358941Z Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+2026-10-10T02:42:11.3515664Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-10-10T02:42:11.3703418Z Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
+2026-10-10T02:42:11.3873657Z Downloading tomli-2.4.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (253 kB)
+2026-10-10T02:42:11.4041490Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-10T02:42:11.4191572Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-10-10T02:42:11.4363225Z Downloading wcmatch-8.5.2-py3-none-any.whl (39 kB)
+2026-10-10T02:42:11.4511571Z Downloading wrapt-1.17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (88 kB)
+2026-10-10T02:42:11.4696895Z Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+2026-10-10T02:42:11.4867637Z Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+2026-10-10T02:42:11.5018616Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-10-10T02:42:11.5165007Z Downloading bracex-3.0.1-py3-none-any.whl (11 kB)
+2026-10-10T02:42:11.5312290Z Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-10-10T02:42:11.5470575Z Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+2026-10-10T02:42:11.5652919Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 296.3 MB/s  0:00:00
+2026-10-10T02:42:11.5783791Z Downloading cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+2026-10-10T02:42:11.5937647Z Downloading glom-25.12.0-py3-none-any.whl (103 kB)
+2026-10-10T02:42:11.6089000Z Downloading face-26.0.1-py3-none-any.whl (57 kB)
+2026-10-10T02:42:11.6236177Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-10-10T02:42:11.6383529Z Downloading httpx_sse-0.4.3-py3-none-any.whl (9.0 kB)
+2026-10-10T02:42:11.6529457Z Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+2026-10-10T02:42:11.6679690Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-10T02:42:11.6836640Z Downloading pydantic_settings-2.15.0-py3-none-any.whl (69 kB)
+2026-10-10T02:42:11.6994037Z Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+2026-10-10T02:42:11.7171194Z Downloading python_multipart-0.0.32-py3-none-any.whl (30 kB)
+2026-10-10T02:42:11.7316822Z Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+2026-10-10T02:42:11.7467130Z Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+2026-10-10T02:42:11.7626552Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-10T02:42:11.7695517Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 234.4 MB/s  0:00:00
+2026-10-10T02:42:11.7832870Z Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-10-10T02:42:11.8028697Z Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-10-10T02:42:11.8183241Z Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+2026-10-10T02:42:11.8346404Z Downloading ruamel_yaml-0.19.1-py3-none-any.whl (118 kB)
+2026-10-10T02:42:11.8499432Z Downloading sse_starlette-3.5.0-py3-none-any.whl (17 kB)
+2026-10-10T02:42:11.8651381Z Downloading starlette-1.7.0-py3-none-any.whl (78 kB)
+2026-10-10T02:42:11.8819006Z Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+2026-10-10T02:42:11.8966442Z Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+2026-10-10T02:42:11.9116015Z Downloading zipp-4.1.1-py3-none-any.whl (10 kB)
+2026-10-10T02:42:11.9271078Z Downloading pycparser-3.11-py3-none-any.whl (51 kB)
+2026-10-10T02:42:12.2589275Z Installing collected packages: peewee, boltons, zipp, wrapt, urllib3, typing-extensions, tomli, semantic-version, ruamel.yaml.clib, ruamel.yaml, rpds-py, python-multipart, python-dotenv, pyjwt, pygments, pycparser, protobuf, packaging, opentelemetry-util-http, mdurl, idna, httpx-sse, h11, face, exceptiongroup, colorama, click, charset_normalizer, certifi, bracex, attrs, annotated-types, wcmatch, uvicorn, typing-inspection, requests, referencing, pydantic-core, opentelemetry-proto, markdown-it-py, importlib-metadata, httpcore, googleapis-common-protos, glom, click-option-group, cffi, anyio, starlette, rich, pydantic, opentelemetry-exporter-otlp-proto-common, opentelemetry-api, jsonschema-specifications, httpx, cryptography, sse-starlette, pydantic-settings, opentelemetry-semantic-conventions, jsonschema, opentelemetry-sdk, opentelemetry-instrumentation, mcp, opentelemetry-instrumentation-threading, opentelemetry-instrumentation-requests, opentelemetry-exporter-otlp-proto-http, semgrep
+2026-10-10T02:42:17.6078943Z 
+2026-10-10T02:42:17.6141662Z Successfully installed annotated-types-0.8.0 anyio-4.15.1 attrs-26.1.0 boltons-21.0.0 bracex-3.0.1 certifi-2026.7.22 cffi-2.1.1 charset_normalizer-3.5.2 click-8.4.2 click-option-group-0.5.9 colorama-0.4.6 cryptography-50.0.2 exceptiongroup-1.2.2 face-26.0.1 glom-25.12.0 googleapis-common-protos-1.75.5 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 httpx-sse-0.4.3 idna-3.20 importlib-metadata-8.7.1 jsonschema-4.25.1 jsonschema-specifications-2025.9.1 markdown-it-py-4.2.0 mcp-1.29.0 mdurl-0.1.2 opentelemetry-api-1.37.0 opentelemetry-exporter-otlp-proto-common-1.37.0 opentelemetry-exporter-otlp-proto-http-1.37.0 opentelemetry-instrumentation-0.58b0 opentelemetry-instrumentation-requests-0.58b0 opentelemetry-instrumentation-threading-0.58b0 opentelemetry-proto-1.37.0 opentelemetry-sdk-1.37.0 opentelemetry-semantic-conventions-0.58b0 opentelemetry-util-http-0.58b0 packaging-26.3 peewee-3.19.0 protobuf-6.33.6 pycparser-3.11 pydantic-2.14.0 pydantic-core-2.50.0 pydantic-settings-2.15.0 pygments-2.21.0 pyjwt-2.15.1 python-dotenv-1.2.4 python-multipart-0.0.32 referencing-0.37.0 requests-2.34.2 rich-15.0.0 rpds-py-2026.9.1 ruamel.yaml-0.19.1 ruamel.yaml.clib-0.2.15 semantic-version-2.10.0 semgrep-1.179.0 sse-starlette-3.5.0 starlette-1.7.0 tomli-2.4.1 typing-extensions-4.16.0 typing-inspection-0.4.4 urllib3-2.8.0 uvicorn-0.54.0 wcmatch-8.5.2 wrapt-1.17.3 zipp-4.1.1
+2026-10-10T02:42:17.8172932Z ##[group]Run node scripts/security-contract.mjs semgrep
+2026-10-10T02:42:17.8173388Z [36;1mnode scripts/security-contract.mjs semgrep[0m
+2026-10-10T02:42:17.8236824Z shell: /usr/bin/bash -e {0}
+2026-10-10T02:42:17.8237073Z env:
+2026-10-10T02:42:17.8237346Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:42:17.8237796Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-10T02:42:17.8238237Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:42:17.8238615Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:42:17.8239005Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:42:17.8239380Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-10T02:42:17.8239699Z ##[endgroup]
+2026-10-10T02:42:19.3381774Z Paths that match both --include and --exclude will be skipped by Semgrep.
+2026-10-10T02:43:17.5200991Z                
+2026-10-10T02:43:17.5201382Z                
+2026-10-10T02:43:17.5201901Z ┌─────────────┐
+2026-10-10T02:43:17.5202199Z │ Scan Status │
+2026-10-10T02:43:17.5202487Z └─────────────┘
+2026-10-10T02:43:17.5209288Z   Scanning 1931 files tracked by git with 728 Code rules:
+2026-10-10T02:43:17.8739573Z                                                                                                                         
+2026-10-10T02:43:17.8740658Z   Language      Rules   Files          Origin      Rules                                                                
+2026-10-10T02:43:17.8742044Z  ─────────────────────────────        ───────────────────                                                               
+2026-10-10T02:43:17.8745548Z   <multilang>      42    1931          Community     728                                                                
+2026-10-10T02:43:17.8746343Z   ts               87    1835                                                                                           
+2026-10-10T02:43:17.8747060Z   js               81      93                                                                                           
+2026-10-10T02:43:17.8747739Z                                                                                                                         
+2026-10-10T02:44:29.1565251Z                 
+2026-10-10T02:44:29.1565681Z                 
+2026-10-10T02:44:29.1566360Z ┌──────────────┐
+2026-10-10T02:44:29.1566785Z │ Scan Summary │
+2026-10-10T02:44:29.1567197Z └──────────────┘
+2026-10-10T02:44:29.1567676Z ✅ Scan completed successfully.
+2026-10-10T02:44:29.1568181Z  • Findings: 3 (3 blocking)
+2026-10-10T02:44:29.1568647Z  • Rules run: 129
+2026-10-10T02:44:29.1569041Z  • Targets scanned: 1931
+2026-10-10T02:44:29.1569477Z  • Parsed lines: ~99.9%
+2026-10-10T02:44:29.1569871Z  • Scan skipped: 
+2026-10-10T02:44:29.1570368Z    ◦ Not matching --include patterns: 330
+2026-10-10T02:44:29.1570962Z    ◦ Matching --exclude patterns: 203568
+2026-10-10T02:44:29.1571612Z    ◦ Files matching .semgrepignore patterns: 722
+2026-10-10T02:44:29.1572253Z  • Scan was limited to files tracked by git
+2026-10-10T02:44:29.1573152Z  • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+2026-10-10T02:44:29.1573921Z Ran 129 rules on 1931 files: 3 findings.
+2026-10-10T02:44:31.9990204Z Semgrep reported 1 fatal/unclassified scan errors
+2026-10-10T02:44:32.0050229Z ##[error]Process completed with exit code 1.
+2026-10-10T02:44:32.0624638Z ##[group]Run actions/upload-artifact@v4
+2026-10-10T02:44:32.0624956Z with:
+2026-10-10T02:44:32.0625155Z   name: semgrep-results
+2026-10-10T02:44:32.0625406Z   path: semgrep.json
+semgrep.sarif
+
+2026-10-10T02:44:32.0625701Z   if-no-files-found: error
+2026-10-10T02:44:32.0625931Z   compression-level: 6
+2026-10-10T02:44:32.0626137Z   overwrite: false
+2026-10-10T02:44:32.0626344Z   include-hidden-files: false
+2026-10-10T02:44:32.0626564Z env:
+2026-10-10T02:44:32.0626815Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:44:32.0627243Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-10T02:44:32.0627650Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:44:32.0628015Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:44:32.0628380Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-10T02:44:32.0628744Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-10T02:44:32.0629087Z ##[endgroup]
+2026-10-10T02:44:32.2343502Z (node:2716) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-10T02:44:32.2344687Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-10T02:44:32.2395024Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-10T02:44:32.2398531Z The least common ancestor is /home/runner/work/Project-Cortex/Project-Cortex. This will be the root directory of the artifact
+2026-10-10T02:44:32.2400201Z With the provided path, there will be 2 files uploaded
+2026-10-10T02:44:32.2405698Z Artifact name is valid!
+2026-10-10T02:44:32.2406867Z Root directory input is valid!
+2026-10-10T02:44:32.4427729Z Beginning upload of artifact content to blob storage
+2026-10-10T02:44:32.4845124Z (node:2716) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-10T02:44:32.5471164Z Uploaded bytes 152338
+2026-10-10T02:44:32.5660735Z Finished uploading artifact content to blob storage!
+2026-10-10T02:44:32.5662267Z SHA256 digest of uploaded artifact zip is 2bd663b835d1973010afe22b72c898b011107f0719a2da8d9e48fd64b82ad9ac
+2026-10-10T02:44:32.5664141Z Finalizing artifact upload
+2026-10-10T02:44:32.7644934Z Artifact semgrep-results.zip successfully finalized. Artifact ID 11656658624
+2026-10-10T02:44:32.7646566Z Artifact semgrep-results has been successfully uploaded! Final size is 152338 bytes. Artifact ID is 11656658624
+2026-10-10T02:44:32.7652562Z Artifact download URL: https://github.com/SaintNick1214/Project-Cortex/actions/runs/38017845106/artifacts/11656658624
+2026-10-10T02:44:32.8156249Z Post job cleanup.
+2026-10-10T02:44:32.8231702Z ##[start-action display=Run actions/setup-node@v6;id=__cfd041dd-82ac-475c-a55b-2427fa65dc20.__actions_setup-node]
+2026-10-10T02:44:32.8271708Z ##[end-action id=__cfd041dd-82ac-475c-a55b-2427fa65dc20.__actions_setup-node;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-10T02:44:32.9271018Z Post job cleanup.
+2026-10-10T02:44:33.0187838Z [command]/usr/bin/git version
+2026-10-10T02:44:33.0238313Z git version 2.55.0
+2026-10-10T02:44:33.0290937Z Temporarily overriding HOME='/home/runner/work/_temp/e3560a94-a9c3-48f6-8126-e08203b51c75' before making global git config changes
+2026-10-10T02:44:33.0292876Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T02:44:33.0300215Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-10T02:44:33.0343001Z Removing SSH command configuration
+2026-10-10T02:44:33.0352337Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T02:44:33.0395339Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T02:44:33.0972511Z Removing HTTP extra header
+2026-10-10T02:44:33.0980287Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T02:44:33.1021622Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T02:44:33.1505396Z Removing includeIf entries pointing to credentials config files
+2026-10-10T02:44:33.1512862Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T02:44:33.1552577Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T02:44:33.2159655Z Evaluate and set job outputs
+2026-10-10T02:44:33.2211028Z Cleaning up orphan processes
+2026-10-10T02:44:33.2496482Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

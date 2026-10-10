@@ -1,0 +1,75 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "baseUrl": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@cortexmemory/sdk": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/index.d.ts"
+      ],
+      "@cortexmemory/sdk/runtime": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/client-runtime/index.d.ts"
+      ],
+      "@cortexmemory/sdk/runtime/graph": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/graph-runtime/index.d.ts"
+      ],
+      "@cortexmemory/vercel-ai-provider/remote": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/dist/remote/index.d.ts"
+      ],
+      "@ai-sdk/react": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/@ai-sdk/react/dist/index.d.ts"
+      ],
+      "react/jsx-runtime": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@types/react/jsx-runtime.d.ts"
+      ],
+      "react": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@types/react/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-a2a-communication-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-agent-management-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-artifacts-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-attachments-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-auth-context-api-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-context-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-conversation-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-facts-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-facts-operations-1.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-governance-policies-api-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-graph-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-graph-operations-1.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-graph-operations-2.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-immutable-store-api-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-memory-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-memory-space-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-mutable-store-api-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-runtime-client-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-sessions-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-user-operations-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/api-reference-user-operations-1.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/architecture-vector-embeddings-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/core-features-artifacts-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/core-features-assets-and-media-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/core-features-assets-and-media-1.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/core-features-conversation-history-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/core-features-memory-orchestration-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/core-features-semantic-search-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/core-features-streaming-support-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/integrations-auth-providers-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/integrations-vercel-ai-sdk-getting-started-0.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/docs-execution/examples/integrations-vercel-ai-sdk-getting-started-1.tsx"
+  ]
+}

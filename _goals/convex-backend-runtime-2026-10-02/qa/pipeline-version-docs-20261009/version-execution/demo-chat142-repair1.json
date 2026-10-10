@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "newlySupportedRuntimeVersion": "1.4.2",
+  "explicitRuntimeVersions": [
+    "1.3.0",
+    "1.4.0",
+    "1.4.1",
+    "1.4.2"
+  ],
+  "legacyVersion": "1.2.0",
+  "unknownVersions": [
+    "1.4.3",
+    "1.5.0",
+    "2.0.0"
+  ],
+  "red": {
+    "receipt": "demo-chat142-before.log.json",
+    "cases": 24,
+    "passed": 21,
+    "failed": 3,
+    "naturalExit": true,
+    "elapsedSeconds": 5.621
+  },
+  "repair": {
+    "receipt": "demo-chat142-after.log.json",
+    "cases": 24,
+    "passed": 24,
+    "failed": 0,
+    "naturalExit": true,
+    "elapsedSeconds": 5.665
+  },
+  "assertions": [
+    "Selected additive backend composition preserves private app registration",
+    "npm12.2 and pnpm10.33 frozen installs resolve emitted runtime dependencies as direct app edges",
+    "Old supported runtime versions and 1.2 legacy contract retained",
+    "Unknown version/package/override/missing dependency failures preserve pre-effect refusal"
+  ],
+  "limit": "These R fixture receipts verify helper behavior; final committed V source qualification follows separately."
+}

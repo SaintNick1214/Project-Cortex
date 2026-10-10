@@ -1,0 +1,86 @@
+{
+  "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+  "subsequentFixtureOnlyCommit": "7475c8049784b8435692e815fc37bd046d16b431",
+  "runtime": "v24.15.0",
+  "npm": "12.2.0",
+  "kind": "affected CLI source and qualified input closure",
+  "suiteCount": 9,
+  "passedCases": 259,
+  "failedCases": 0,
+  "pendingCases": 0,
+  "naturalExit": true,
+  "elapsedSeconds": 25.057,
+  "deadlineSeconds": 240,
+  "exactDiscovery": "final-repair-cli-affected-discovery.log",
+  "rawAssertions": "final-repair-cli-affected-results.json",
+  "runnerReceipt": "final-repair-cli-affected.log.json",
+  "sdkBuild": "final-repair-sdk-build.log.json",
+  "sdkArtifacts": "final-repair-sdk-artifacts.json",
+  "cliBuild": "final-repair-cli-build.log.json",
+  "inputReceipt": "final-repair-cli-input-receipt.json",
+  "dependencyBinding": "final-repair-cli-input-binding.json",
+  "oldFixtureCleanup": "final-repair-old-input-cleanup.log.json",
+  "currentFixtureCleanup": "final-repair-cli-input-cleanup.log.json",
+  "inputRepairs": [
+    "prospective-manifest-single-link.json",
+    "obsolete-owned-pnpm-sdk-copy-cleanup.json"
+  ],
+  "previousRetainedReds": [
+    "final-cli-fast-results.json",
+    "repaired-cli-affected-results.json",
+    "repaired-cli-affected-single-link-results.json"
+  ],
+  "limits": [
+    "This is the current affected nine-file selection, not a new complete63suite CLI PASS.",
+    "The actual positive runtime executed locally was Node24.15.0; Node24.21 CI execution is owned by root.",
+    "SDK164offline/Gateway275 and provider286 previously passed at5ba; no new fulloffline rerun was required by fixture-only and byte-identical emitted-JS final changes.",
+    "Historical interrupted Documents runs and older service8ca evidence retain their original scopes."
+  ],
+  "files": [
+    {
+      "path": "tests/unit/template-catalog.test.ts",
+      "status": "passed",
+      "cases": 68
+    },
+    {
+      "path": "src/utils/__tests__/template-backend.test.ts",
+      "status": "passed",
+      "cases": 63
+    },
+    {
+      "path": "tests/unit/templates-ownership.test.ts",
+      "status": "passed",
+      "cases": 48
+    },
+    {
+      "path": "tests/commands/install-real.test.ts",
+      "status": "passed",
+      "cases": 15
+    },
+    {
+      "path": "src/utils/__tests__/backend-setup.test.ts",
+      "status": "passed",
+      "cases": 23
+    },
+    {
+      "path": "tests/unit/template-integration.test.ts",
+      "status": "passed",
+      "cases": 12
+    },
+    {
+      "path": "src/utils/__tests__/runtime-backend.test.ts",
+      "status": "passed",
+      "cases": 9
+    },
+    {
+      "path": "src/utils/__tests__/safe-file.test.ts",
+      "status": "passed",
+      "cases": 10
+    },
+    {
+      "path": "tests/commands/node-runtime-real.test.ts",
+      "status": "passed",
+      "cases": 11
+    }
+  ]
+}

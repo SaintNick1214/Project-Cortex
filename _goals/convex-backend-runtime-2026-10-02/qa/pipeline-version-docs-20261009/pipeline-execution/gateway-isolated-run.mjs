@@ -1,0 +1,12 @@
+import { closeSync, openSync, readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import config from '../../../../../jest.config.mjs';
+const qa = '_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/pipeline-execution';
+const run = process.argv[2] ?? 'before';
+const offline = { ...config, rootDir: process.cwd(), setupFiles: [], setupFilesAfterEnv: [], reporters: ['default'], forceExit: false, watchman: false, testTimeout: 10000, testPathIgnorePatterns: ['/node_modules/'] };
+const env = { PATH: process.env.PATH, HOME: process.env.HOME, TMPDIR: process.env.TMPDIR, CI: 'true', CORTEX_TEST_ENV_MODE: 'explicit', CONVEX_URL: 'https://unit.invalid', CONVEX_URL_CLI: 'https://unit.invalid' };
+const log = openSync(`${qa}/gateway-${run}.log`, 'w');
+const result = spawnSync(process.execPath, ['--experimental-vm-modules', 'node_modules/jest/bin/jest.js', '--config', JSON.stringify(offline), '--runInBand', '--forceExit=false', '--runTestsByPath', 'tests/unit/runtime/gateway-dispatch.test.ts', '--json', `--outputFile=${qa}/gateway-${run}.json`], { cwd: process.cwd(), env, stdio: ['ignore', log, log], timeout: 120000 });
+closeSync(log);
+console.log(JSON.stringify({ status: result.status, signal: result.signal, error: result.error?.message, results: (() => { try { const receipt = JSON.parse(readFileSync(`${qa}/gateway-${run}.json`, 'utf8')); return { tests: receipt.numTotalTests, passed: receipt.numPassedTests, failed: receipt.numFailedTests, pending: receipt.numPendingTests }; } catch { return null; } })() }));
+process.exitCode = result.status ?? 1;

@@ -1,0 +1,18 @@
+npm notice run {{PROJECT_NAME}}@1.4.0 lint
+npm notice run tsc --noEmit && tsc -p tsconfig.test.json && node --check dev-runner.mjs
+npm notice run {{PROJECT_NAME}}@1.4.0 build
+npm notice run tsc
+npm notice run {{PROJECT_NAME}}@1.4.0 test:unit
+npm notice run vitest run --config vitest.config.ts
+
+ RUN  v5.0.3 /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/templates/basic
+
+
+ Test Files  10 passed (10)
+      Tests  112 passed (112)
+   Start at  19:15:28
+   Duration  2.67s (tests 60%, import 21%, transform 16%, worker 3%)
+
+    Isolate  10 workers spawned · ~88ms startup each (spawn + environment, per file)
+             at least ~788ms faster with isolate: false — reuses workers across files instead of one per file
+

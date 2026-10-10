@@ -1,0 +1,1641 @@
+{
+  "memory": [
+    {
+      "name": "remember",
+      "signature": "remember(params: RememberParams, options?: RememberOptions): Promise<RememberResult>",
+      "summary": "Remember a conversation exchange (stores in both ACID and Vector)",
+      "source": "src/memory/index.ts",
+      "line": 915
+    },
+    {
+      "name": "rememberStream",
+      "signature": "rememberStream(params: RememberStreamParams, options?: import(\"../types/streaming\").StreamingOptions): Promise<import(\"../types/streaming\").EnhancedRememberStreamResult>",
+      "summary": "Remember a conversation exchange from a streaming response (ENHANCED)",
+      "source": "src/memory/index.ts",
+      "line": 1837
+    },
+    {
+      "name": "forget",
+      "signature": "forget(memorySpaceId: string, memoryId: string, options?: ExtendedForgetOptions): Promise<ForgetResult>",
+      "summary": "Forget a memory (delete from Vector and optionally ACID)",
+      "source": "src/memory/index.ts",
+      "line": 2499
+    },
+    {
+      "name": "get",
+      "signature": "get(memorySpaceId: string, memoryId: string, options?: GetMemoryOptions & { includeConversation?: false }): Promise<MemoryEntry | null>",
+      "summary": "Get memory with optional ACID enrichment",
+      "source": "src/memory/index.ts",
+      "line": 2578
+    },
+    {
+      "name": "get",
+      "signature": "get(memorySpaceId: string, memoryId: string, options: GetMemoryOptions & { includeConversation: true }): Promise<EnrichedMemory | null>",
+      "summary": "",
+      "source": "src/memory/index.ts",
+      "line": 2580
+    },
+    {
+      "name": "get",
+      "signature": "get(memorySpaceId: string, memoryId: string, options: GetMemoryOptions): Promise<MemoryEntry | EnrichedMemory | null>",
+      "summary": "",
+      "source": "src/memory/index.ts",
+      "line": 2582
+    },
+    {
+      "name": "get",
+      "signature": "get(memorySpaceId: string, memoryId: string, options?: GetMemoryOptions): Promise<MemoryEntry | EnrichedMemory | null>",
+      "summary": "",
+      "source": "src/memory/index.ts",
+      "line": 2584
+    },
+    {
+      "name": "search",
+      "signature": "search(memorySpaceId: string, query: string, options?: SearchMemoryOptions & { enrichConversation?: false }): Promise<MemoryEntry[]>",
+      "summary": "Search memories with optional ACID enrichment",
+      "source": "src/memory/index.ts",
+      "line": 2655
+    },
+    {
+      "name": "search",
+      "signature": "search(memorySpaceId: string, query: string, options: SearchMemoryOptions & { enrichConversation: true }): Promise<EnrichedMemory[]>",
+      "summary": "",
+      "source": "src/memory/index.ts",
+      "line": 2657
+    },
+    {
+      "name": "search",
+      "signature": "search(memorySpaceId: string, query: string, options: SearchMemoryOptions): Promise<MemoryEntry[] | EnrichedMemory[]>",
+      "summary": "",
+      "source": "src/memory/index.ts",
+      "line": 2659
+    },
+    {
+      "name": "search",
+      "signature": "search(memorySpaceId: string, query: string, options?: SearchMemoryOptions): Promise<MemoryEntry[] | EnrichedMemory[]>",
+      "summary": "",
+      "source": "src/memory/index.ts",
+      "line": 2661
+    },
+    {
+      "name": "recall",
+      "signature": "recall(params: RecallParams): Promise<RecallResult>",
+      "summary": "Recall context from all memory layers with unified orchestration.",
+      "source": "src/memory/index.ts",
+      "line": 2826
+    },
+    {
+      "name": "store",
+      "signature": "store(memorySpaceId: string, input: StoreMemoryInput): Promise<StoreMemoryResult>",
+      "summary": "Store memory with smart layer detection and optional fact extraction",
+      "source": "src/memory/index.ts",
+      "line": 3237
+    },
+    {
+      "name": "update",
+      "signature": "update(memorySpaceId: string, memoryId: string, updates: { content?: string; embedding?: number[]; importance?: number; tags?: string[]; }, options?: UpdateMemoryOptions): Promise<UpdateMemoryResult>",
+      "summary": "Update a memory with optional fact re-extraction",
+      "source": "src/memory/index.ts",
+      "line": 3322
+    },
+    {
+      "name": "delete",
+      "signature": "delete(memorySpaceId: string, memoryId: string, options?: DeleteMemoryOptions & DomainReadOptions): Promise<DeleteMemoryResult & {partial?: DomainPartial}>",
+      "summary": "Delete a memory with cascade delete of facts",
+      "source": "src/memory/index.ts",
+      "line": 3413
+    },
+    {
+      "name": "list",
+      "signature": "list(filter: ListMemoriesFilter & { enrichFacts?: false }): Promise<MemoryEntry[]>",
+      "summary": "List memories with optional fact enrichment",
+      "source": "src/memory/index.ts",
+      "line": 3438
+    },
+    {
+      "name": "list",
+      "signature": "list(filter: ListMemoriesFilter & { enrichFacts: true }): Promise<EnrichedMemory[]>",
+      "summary": "",
+      "source": "src/memory/index.ts",
+      "line": 3439
+    },
+    {
+      "name": "list",
+      "signature": "list(filter: ListMemoriesFilter): Promise<MemoryEntry[] | EnrichedMemory[]>",
+      "summary": "",
+      "source": "src/memory/index.ts",
+      "line": 3440
+    },
+    {
+      "name": "list",
+      "signature": "list(filter: ListMemoriesFilter): Promise<MemoryEntry[] | EnrichedMemory[]>",
+      "summary": "",
+      "source": "src/memory/index.ts",
+      "line": 3441
+    },
+    {
+      "name": "count",
+      "signature": "count(filter: CountMemoriesFilter): Promise<number>",
+      "summary": "Count memories (delegates to vector.count)",
+      "source": "src/memory/index.ts",
+      "line": 3491
+    },
+    {
+      "name": "updateMany",
+      "signature": "updateMany(filter: { memorySpaceId: string; userId?: string; sourceType?: SourceType; }, updates: { importance?: number; tags?: string[]; }): Promise<UpdateManyResult>",
+      "summary": "Update many memories and track affected facts",
+      "source": "src/memory/index.ts",
+      "line": 3509
+    },
+    {
+      "name": "deleteMany",
+      "signature": "deleteMany(filter: {memorySpaceId: string; tenantId?: string; participantId?: string; userId?: string; sourceType?: SourceType}, options?: DomainReadOptions): Promise<DeleteManyResult & {partial?: DomainPartial}>",
+      "summary": "Delete many memories with batch cascade delete of facts",
+      "source": "src/memory/index.ts",
+      "line": 3554
+    },
+    {
+      "name": "export",
+      "signature": "export(options: ExportMemoriesOptions): Promise<{format: string; data: string; count: number; exportedAt: number}>",
+      "summary": "Export memories with optional fact inclusion",
+      "source": "src/memory/index.ts",
+      "line": 3599
+    },
+    {
+      "name": "archive",
+      "signature": "archive(memorySpaceId: string, memoryId: string, options?: DomainReadOptions & {intent?: MemoryArchiveIntent}): Promise<ArchiveResult & {partial?: DomainPartial; intent: MemoryArchiveIntent}>",
+      "summary": "Archive a memory and mark associated facts as expired",
+      "source": "src/memory/index.ts",
+      "line": 3621
+    },
+    {
+      "name": "restoreFromArchive",
+      "signature": "restoreFromArchive(memorySpaceId: string, memoryId: string, options?: DomainReadOptions): ReturnType<VectorAPI[\"restoreFromArchive\"]>",
+      "summary": "Restore memory from archive",
+      "source": "src/memory/index.ts",
+      "line": 3664
+    },
+    {
+      "name": "getVersion",
+      "signature": "getVersion(memorySpaceId: string, memoryId: string, version: number): Promise<{ memoryId: string; version: number; content: string; embedding?: number[]; timestamp: number; } | null>",
+      "summary": "Get specific version of a memory",
+      "source": "src/memory/index.ts",
+      "line": 3685
+    },
+    {
+      "name": "getHistory",
+      "signature": "getHistory(memorySpaceId: string, memoryId: string): Promise< Array<{ memoryId: string; version: number; content: string; embedding?: number[]; timestamp: number; }> >",
+      "summary": "Get version history of a memory",
+      "source": "src/memory/index.ts",
+      "line": 3717
+    },
+    {
+      "name": "getAtTimestamp",
+      "signature": "getAtTimestamp(memorySpaceId: string, memoryId: string, timestamp: number | Date): Promise<{ memoryId: string; version: number; content: string; embedding?: number[]; timestamp: number; } | null>",
+      "summary": "Get memory version at specific point in time (temporal query)",
+      "source": "src/memory/index.ts",
+      "line": 3756
+    }
+  ],
+  "conversations": [
+    {
+      "name": "create",
+      "signature": "create(input: CreateConversationInput, _options?: CreateConversationOptions): Promise<Conversation>",
+      "summary": "Create a new conversation",
+      "source": "src/conversations/index.ts",
+      "line": 145
+    },
+    {
+      "name": "get",
+      "signature": "get(conversationId: string, options?: GetConversationOptions & DomainReadOptions): Promise<Conversation | null>",
+      "summary": "Get a conversation by ID",
+      "source": "src/conversations/index.ts",
+      "line": 214
+    },
+    {
+      "name": "addMessage",
+      "signature": "addMessage(input: AddMessageInput, _options?: AddMessageOptions): Promise<Conversation>",
+      "summary": "Add a message to a conversation",
+      "source": "src/conversations/index.ts",
+      "line": 248
+    },
+    {
+      "name": "list",
+      "signature": "list(filter?: ListConversationsFilter): Promise<ListConversationsResult>",
+      "summary": "List conversations with optional filters and pagination",
+      "source": "src/conversations/index.ts",
+      "line": 314
+    },
+    {
+      "name": "count",
+      "signature": "count(filter?: CountConversationsFilter): Promise<number>",
+      "summary": "Count conversations",
+      "source": "src/conversations/index.ts",
+      "line": 386
+    },
+    {
+      "name": "delete",
+      "signature": "delete(conversationId: string, options?: DeleteConversationOptions & DomainReadOptions): Promise<ConversationDeletionResult & {partial?: DomainPartial}>",
+      "summary": "Delete a conversation (for GDPR/cleanup)",
+      "source": "src/conversations/index.ts",
+      "line": 423
+    },
+    {
+      "name": "deleteMany",
+      "signature": "deleteMany(filter: {tenantId?: string; userId?: string; memorySpaceId?: string; type?: \"user-agent\" | \"agent-agent\"}, options?: DeleteManyConversationsOptions & DomainReadOptions): Promise<DeleteManyConversationsResult & {partial?: DomainPartial}>",
+      "summary": "Delete many conversations matching filters",
+      "source": "src/conversations/index.ts",
+      "line": 454
+    },
+    {
+      "name": "getMessage",
+      "signature": "getMessage(conversationId: string, messageId: string): Promise<Message | null>",
+      "summary": "Get a specific message by ID",
+      "source": "src/conversations/index.ts",
+      "line": 480
+    },
+    {
+      "name": "getMessagesByIds",
+      "signature": "getMessagesByIds(conversationId: string, messageIds: string[]): Promise<Message[]>",
+      "summary": "Get multiple messages by their IDs",
+      "source": "src/conversations/index.ts",
+      "line": 507
+    },
+    {
+      "name": "findConversation",
+      "signature": "findConversation(params: { memorySpaceId: string; type: \"user-agent\" | \"agent-agent\"; userId?: string; memorySpaceIds?: string[]; }): Promise<Conversation | null>",
+      "summary": "Find an existing conversation by participants",
+      "source": "src/conversations/index.ts",
+      "line": 541
+    },
+    {
+      "name": "getOrCreate",
+      "signature": "getOrCreate(input: CreateConversationInput): Promise<Conversation>",
+      "summary": "Get or create a conversation (atomic)",
+      "source": "src/conversations/index.ts",
+      "line": 596
+    },
+    {
+      "name": "getHistory",
+      "signature": "getHistory(conversationId: string, options?: GetHistoryOptions & DomainReadOptions): Promise<{ messages: Message[]; total: number; hasMore: boolean; conversationId: string; }>",
+      "summary": "Get paginated message history from a conversation",
+      "source": "src/conversations/index.ts",
+      "line": 650
+    },
+    {
+      "name": "search",
+      "signature": "search(input: SearchConversationsInput): Promise<ConversationSearchResult[]>",
+      "summary": "Search conversations by text query",
+      "source": "src/conversations/index.ts",
+      "line": 726
+    },
+    {
+      "name": "export",
+      "signature": "export(options: ExportConversationsOptions & DomainReadOptions): Promise<ExportResult>",
+      "summary": "Export conversations to JSON or CSV",
+      "source": "src/conversations/index.ts",
+      "line": 776
+    },
+    {
+      "name": "checkAccess",
+      "signature": "checkAccess(input: CheckAccessInput): Promise<CheckAccessResult>",
+      "summary": "Check if a user has access to a conversation based on visibility",
+      "source": "src/conversations/index.ts",
+      "line": 817
+    },
+    {
+      "name": "setVisibility",
+      "signature": "setVisibility(input: SetVisibilityInput): Promise<Conversation>",
+      "summary": "Set the visibility of a conversation",
+      "source": "src/conversations/index.ts",
+      "line": 853
+    },
+    {
+      "name": "share",
+      "signature": "share(input: CreateShareInput): Promise<CreateShareResult>",
+      "summary": "Create a share for a conversation",
+      "source": "src/conversations/index.ts",
+      "line": 912
+    },
+    {
+      "name": "revokeShare",
+      "signature": "revokeShare(shareId: string): Promise<RevokeShareResult>",
+      "summary": "Revoke an existing share",
+      "source": "src/conversations/index.ts",
+      "line": 963
+    },
+    {
+      "name": "listShares",
+      "signature": "listShares(conversationId: string, filter?: { status?: ShareStatus }): Promise<ConversationShare[]>",
+      "summary": "List shares for a conversation",
+      "source": "src/conversations/index.ts",
+      "line": 995
+    },
+    {
+      "name": "getShare",
+      "signature": "getShare(shareId: string): Promise<ConversationShare | null>",
+      "summary": "Get a share by its ID",
+      "source": "src/conversations/index.ts",
+      "line": 1030
+    },
+    {
+      "name": "checkShareAccess",
+      "signature": "checkShareAccess(input: { conversationId: string; userId?: string; memorySpaceId?: string; emailDomain?: string; }): Promise<CheckShareAccessResult>",
+      "summary": "Check if a user/space has access to a conversation via share",
+      "source": "src/conversations/index.ts",
+      "line": 1059
+    },
+    {
+      "name": "snapshot",
+      "signature": "snapshot(input: CreateSnapshotInput): Promise<CreateSnapshotResult>",
+      "summary": "Create a snapshot of a conversation",
+      "source": "src/conversations/index.ts",
+      "line": 1100
+    },
+    {
+      "name": "getSnapshot",
+      "signature": "getSnapshot(snapshotId: string): Promise<ConversationSnapshot | null>",
+      "summary": "Get a snapshot by ID",
+      "source": "src/conversations/index.ts",
+      "line": 1129
+    },
+    {
+      "name": "listSnapshots",
+      "signature": "listSnapshots(conversationId: string, options?: { includeArchived?: boolean }): Promise<ConversationSnapshot[]>",
+      "summary": "List snapshots for a conversation",
+      "source": "src/conversations/index.ts",
+      "line": 1146
+    },
+    {
+      "name": "deleteSnapshot",
+      "signature": "deleteSnapshot(snapshotId: string): Promise<{ deleted: boolean }>",
+      "summary": "Delete a snapshot",
+      "source": "src/conversations/index.ts",
+      "line": 1167
+    },
+    {
+      "name": "approveMessage",
+      "signature": "approveMessage(input: ApproveMessageInput): Promise<Conversation>",
+      "summary": "Approve a pending message in a collaborative conversation",
+      "source": "src/conversations/index.ts",
+      "line": 1199
+    },
+    {
+      "name": "rejectMessage",
+      "signature": "rejectMessage(input: ApproveMessageInput): Promise<Conversation>",
+      "summary": "Reject a pending message in a collaborative conversation",
+      "source": "src/conversations/index.ts",
+      "line": 1229
+    }
+  ],
+  "sessions": [
+    {
+      "name": "create",
+      "signature": "create(params: CreateSessionParams): Promise<Session>",
+      "summary": "Create a new session for a user.",
+      "source": "src/sessions/index.ts",
+      "line": 113
+    },
+    {
+      "name": "get",
+      "signature": "get(sessionId: string): Promise<Session | null>",
+      "summary": "Get a session by ID.",
+      "source": "src/sessions/index.ts",
+      "line": 150
+    },
+    {
+      "name": "getOrCreate",
+      "signature": "getOrCreate(userId: string, metadata?: Record<string, unknown>): Promise<Session>",
+      "summary": "Get or create a session for a user.",
+      "source": "src/sessions/index.ts",
+      "line": 192
+    },
+    {
+      "name": "touch",
+      "signature": "touch(sessionId: string): Promise<void>",
+      "summary": "Update session activity timestamp (touch).",
+      "source": "src/sessions/index.ts",
+      "line": 223
+    },
+    {
+      "name": "end",
+      "signature": "end(sessionId: string): Promise<void>",
+      "summary": "End a session.",
+      "source": "src/sessions/index.ts",
+      "line": 246
+    },
+    {
+      "name": "endAll",
+      "signature": "endAll(userId: string, options?: EndAllOptions): Promise<EndSessionsResult>",
+      "summary": "End all sessions for a user.",
+      "source": "src/sessions/index.ts",
+      "line": 287
+    },
+    {
+      "name": "list",
+      "signature": "list(filters: SessionFilters): Promise<Session[]>",
+      "summary": "List sessions with filters.",
+      "source": "src/sessions/index.ts",
+      "line": 327
+    },
+    {
+      "name": "count",
+      "signature": "count(filters: SessionFilters): Promise<number>",
+      "summary": "Count sessions with filters.",
+      "source": "src/sessions/index.ts",
+      "line": 364
+    },
+    {
+      "name": "getActive",
+      "signature": "getActive(userId: string): Promise<Session[]>",
+      "summary": "Get active sessions for a user.",
+      "source": "src/sessions/index.ts",
+      "line": 396
+    },
+    {
+      "name": "expireIdle",
+      "signature": "expireIdle(options?: ExpireSessionsOptions): Promise<{ expired: number }>",
+      "summary": "Request idle session expiration, which requires a trusted backend worker.",
+      "source": "src/sessions/index.ts",
+      "line": 419
+    }
+  ],
+  "users": [
+    {
+      "name": "createExportTransport",
+      "signature": "createExportTransport(options: UserExportTransportOptions): UserExportTransport",
+      "summary": "Creates only the fixed administrative export transport; never changes SDK identity.",
+      "source": "src/users/index.ts",
+      "line": 131
+    },
+    {
+      "name": "createErasureTransport",
+      "signature": "createErasureTransport(options:Parameters<typeof createErasureTransport>[0]): ErasureTransport",
+      "summary": "",
+      "source": "src/users/index.ts",
+      "line": 137
+    },
+    {
+      "name": "serializeExportEvent",
+      "signature": "serializeExportEvent(event: UserExportEvent): string",
+      "summary": "Canonical JSON text for exportData events; publish after the terminal manifest.",
+      "source": "src/users/index.ts",
+      "line": 142
+    },
+    {
+      "name": "exportData",
+      "signature": "exportData(userId: string, options: UserExportDataOptions): AsyncGenerator<UserExportEvent>",
+      "summary": "Administrative complete export. Consume through the terminal manifest before publishing a bundle.",
+      "source": "src/users/index.ts",
+      "line": 147
+    },
+    {
+      "name": "get",
+      "signature": "get(userId: string): Promise<UserProfile | null>",
+      "summary": "Get user profile by ID",
+      "source": "src/users/index.ts",
+      "line": 189
+    },
+    {
+      "name": "update",
+      "signature": "update(userId: string, data: Record<string, unknown>): Promise<UserProfile>",
+      "summary": "Update user profile (creates new version by default)",
+      "source": "src/users/index.ts",
+      "line": 248
+    },
+    {
+      "name": "delete",
+      "signature": "delete(userId: string, options?: DeleteUserOptions): Promise<UserDeleteResult>",
+      "summary": "Delete a profile or explicitly erase its supported exclusive primary scope",
+      "source": "src/users/index.ts",
+      "line": 325
+    },
+    {
+      "name": "list",
+      "signature": "list(filters?: ListUsersFilter): Promise<ListUsersResult>",
+      "summary": "List user profiles with pagination, filtering, and sorting",
+      "source": "src/users/index.ts",
+      "line": 426
+    },
+    {
+      "name": "search",
+      "signature": "search(filters: UserFilters): Promise<UserProfile[]>",
+      "summary": "Search user profiles with filters",
+      "source": "src/users/index.ts",
+      "line": 519
+    },
+    {
+      "name": "count",
+      "signature": "count(filters?: UserFilters): Promise<number>",
+      "summary": "Count user profiles with optional filters",
+      "source": "src/users/index.ts",
+      "line": 595
+    },
+    {
+      "name": "getVersion",
+      "signature": "getVersion(userId: string, version: number): Promise<UserVersion | null>",
+      "summary": "Get specific version of user profile",
+      "source": "src/users/index.ts",
+      "line": 625
+    },
+    {
+      "name": "getHistory",
+      "signature": "getHistory(userId: string): Promise<UserVersion[]>",
+      "summary": "Get version history of user profile",
+      "source": "src/users/index.ts",
+      "line": 664
+    },
+    {
+      "name": "getAtTimestamp",
+      "signature": "getAtTimestamp(userId: string, timestamp: Date): Promise<UserVersion | null>",
+      "summary": "Get user profile at specific timestamp",
+      "source": "src/users/index.ts",
+      "line": 700
+    },
+    {
+      "name": "exists",
+      "signature": "exists(userId: string): Promise<boolean>",
+      "summary": "Check if user profile exists",
+      "source": "src/users/index.ts",
+      "line": 743
+    },
+    {
+      "name": "getOrCreate",
+      "signature": "getOrCreate(userId: string, defaults?: Record<string, unknown>): Promise<UserProfile>",
+      "summary": "Get user profile or create with defaults if doesn't exist",
+      "source": "src/users/index.ts",
+      "line": 767
+    },
+    {
+      "name": "merge",
+      "signature": "merge(userId: string, updates: Record<string, unknown>): Promise<UserProfile>",
+      "summary": "Merge partial updates with existing profile",
+      "source": "src/users/index.ts",
+      "line": 806
+    },
+    {
+      "name": "export",
+      "signature": "export(options?: ExportUsersOptions): Promise<string>",
+      "summary": "Export user profiles with optional related data",
+      "source": "src/users/index.ts",
+      "line": 891
+    },
+    {
+      "name": "updateMany",
+      "signature": "updateMany(userIdsOrFilters: string[] | UserFilters, updates: { data: Record<string, unknown> }, options?: { skipVersioning?: boolean; dryRun?: boolean }): Promise<{ updated: number; userIds: string[] }>",
+      "summary": "Bulk update multiple users by explicit IDs or filters",
+      "source": "src/users/index.ts",
+      "line": 1060
+    },
+    {
+      "name": "deleteMany",
+      "signature": "deleteMany(userIdsOrFilters: string[] | UserFilters, options?: DeleteUserOptions): Promise<{ deleted: number; userIds: string[]; complete: boolean; outcomes: UserDeleteResult[]; unstarted: string[] }>",
+      "summary": "Bulk delete multiple users by explicit IDs or filters",
+      "source": "src/users/index.ts",
+      "line": 1154
+    }
+  ],
+  "contexts": [
+    {
+      "name": "create",
+      "signature": "create(params: CreateContextParams, _options?: CreateContextOptions): Promise<Context>",
+      "summary": "Create a new context",
+      "source": "src/contexts/index.ts",
+      "line": 216
+    },
+    {
+      "name": "get",
+      "signature": "get(contextId: string, options?: { includeChain?: false; includeConversation?: boolean }): Promise<Context | null>",
+      "summary": "Get context by ID",
+      "source": "src/contexts/index.ts",
+      "line": 288
+    },
+    {
+      "name": "get",
+      "signature": "get(contextId: string, options: { includeChain: true; includeConversation: true }): Promise<ContextChain | ContextWithConversation | null>",
+      "summary": "",
+      "source": "src/contexts/index.ts",
+      "line": 292
+    },
+    {
+      "name": "get",
+      "signature": "get(contextId: string, options: { includeChain: true; includeConversation?: false }): Promise<ContextChain | null>",
+      "summary": "",
+      "source": "src/contexts/index.ts",
+      "line": 296
+    },
+    {
+      "name": "get",
+      "signature": "get(contextId: string, options: { includeChain?: boolean; includeConversation?: boolean }): Promise<Context | ContextChain | ContextWithConversation | null>",
+      "summary": "",
+      "source": "src/contexts/index.ts",
+      "line": 300
+    },
+    {
+      "name": "get",
+      "signature": "get(contextId: string, options?: { includeChain?: boolean; includeConversation?: boolean }): Promise<Context | ContextChain | ContextWithConversation | null>",
+      "summary": "",
+      "source": "src/contexts/index.ts",
+      "line": 304
+    },
+    {
+      "name": "update",
+      "signature": "update(contextId: string, updates: UpdateContextParams, _options?: UpdateContextOptions): Promise<Context>",
+      "summary": "Update a context",
+      "source": "src/contexts/index.ts",
+      "line": 337
+    },
+    {
+      "name": "delete",
+      "signature": "delete(contextId: string, options?: DeleteContextOptions & { cascadeChildren?: boolean; orphanChildren?: boolean; }): Promise<{ deleted: boolean; contextId: string; descendantsDeleted: number; orphanedChildren?: string[]; }>",
+      "summary": "Delete a context",
+      "source": "src/contexts/index.ts",
+      "line": 392
+    },
+    {
+      "name": "list",
+      "signature": "list(filter?: ListContextsFilter): Promise<Context[]>",
+      "summary": "List contexts",
+      "source": "src/contexts/index.ts",
+      "line": 446
+    },
+    {
+      "name": "count",
+      "signature": "count(filter?: CountContextsFilter): Promise<number>",
+      "summary": "Count contexts",
+      "source": "src/contexts/index.ts",
+      "line": 501
+    },
+    {
+      "name": "search",
+      "signature": "search(filter?: ListContextsFilter): Promise<Context[]>",
+      "summary": "Search contexts (alias for list with filters)",
+      "source": "src/contexts/index.ts",
+      "line": 539
+    },
+    {
+      "name": "getChain",
+      "signature": "getChain(contextId: string): Promise<ContextChain>",
+      "summary": "Get complete chain from any context",
+      "source": "src/contexts/index.ts",
+      "line": 553
+    },
+    {
+      "name": "getRoot",
+      "signature": "getRoot(contextId: string): Promise<Context>",
+      "summary": "Get root context",
+      "source": "src/contexts/index.ts",
+      "line": 577
+    },
+    {
+      "name": "getChildren",
+      "signature": "getChildren(contextId: string, options?: { status?: \"active\" | \"completed\" | \"cancelled\" | \"blocked\"; recursive?: boolean; }): Promise<Context[]>",
+      "summary": "Get children of a context",
+      "source": "src/contexts/index.ts",
+      "line": 604
+    },
+    {
+      "name": "addParticipant",
+      "signature": "addParticipant(contextId: string, participantId: string): Promise<Context>",
+      "summary": "Add participant to context",
+      "source": "src/contexts/index.ts",
+      "line": 640
+    },
+    {
+      "name": "grantAccess",
+      "signature": "grantAccess(contextId: string, targetMemorySpaceId: string, scope: string): Promise<Context>",
+      "summary": "Grant cross-space access to a context (Collaboration Mode)",
+      "source": "src/contexts/index.ts",
+      "line": 669
+    },
+    {
+      "name": "updateMany",
+      "signature": "updateMany(filters: { memorySpaceId?: string; userId?: string; status?: \"active\" | \"completed\" | \"cancelled\" | \"blocked\"; parentId?: string; rootId?: string; }, updates: { status?: \"active\" | \"completed\" | \"cancelled\" | \"blocked\"; data?: Record<string, unknown>; }): Promise<{ updated: number; contextIds: string[] }>",
+      "summary": "Update many contexts matching filters",
+      "source": "src/contexts/index.ts",
+      "line": 704
+    },
+    {
+      "name": "deleteMany",
+      "signature": "deleteMany(filters: { memorySpaceId?: string; userId?: string; status?: \"active\" | \"completed\" | \"cancelled\" | \"blocked\"; completedBefore?: number; }, options?: { cascadeChildren?: boolean }): Promise<{ deleted: number; contextIds: string[] }>",
+      "summary": "Delete many contexts matching filters",
+      "source": "src/contexts/index.ts",
+      "line": 776
+    },
+    {
+      "name": "export",
+      "signature": "export(filters?: { memorySpaceId?: string; userId?: string; status?: \"active\" | \"completed\" | \"cancelled\" | \"blocked\"; }, options?: { format: \"json\" | \"csv\"; includeChain?: boolean; includeVersionHistory?: boolean; }): Promise<{ format: string; data: string; count: number; exportedAt: number; }>",
+      "summary": "Export contexts to JSON or CSV",
+      "source": "src/contexts/index.ts",
+      "line": 830
+    },
+    {
+      "name": "removeParticipant",
+      "signature": "removeParticipant(contextId: string, participantId: string): Promise<Context>",
+      "summary": "Remove participant from context",
+      "source": "src/contexts/index.ts",
+      "line": 895
+    },
+    {
+      "name": "getByConversation",
+      "signature": "getByConversation(conversationId: string): Promise<Context[]>",
+      "summary": "Get all contexts originating from a specific conversation",
+      "source": "src/contexts/index.ts",
+      "line": 924
+    },
+    {
+      "name": "findOrphaned",
+      "signature": "findOrphaned(): Promise<Context[]>",
+      "summary": "Find contexts whose parent no longer exists",
+      "source": "src/contexts/index.ts",
+      "line": 949
+    },
+    {
+      "name": "getVersion",
+      "signature": "getVersion(contextId: string, version: number): Promise<{ version: number; status: string; data?: Record<string, unknown>; timestamp: number; updatedBy?: string; } | null>",
+      "summary": "Get specific version of a context",
+      "source": "src/contexts/index.ts",
+      "line": 966
+    },
+    {
+      "name": "getHistory",
+      "signature": "getHistory(contextId: string): Promise< Array<{ version: number; status: string; data?: Record<string, unknown>; timestamp: number; updatedBy?: string; }> >",
+      "summary": "Get all versions of a context",
+      "source": "src/contexts/index.ts",
+      "line": 1006
+    },
+    {
+      "name": "getAtTimestamp",
+      "signature": "getAtTimestamp(contextId: string, timestamp: Date): Promise<{ version: number; status: string; data?: Record<string, unknown>; timestamp: number; updatedBy?: string; } | null>",
+      "summary": "Get context state at specific point in time",
+      "source": "src/contexts/index.ts",
+      "line": 1047
+    }
+  ],
+  "a2a": [
+    {
+      "name": "send",
+      "signature": "send(params: A2ASendParams): Promise<A2AMessage>",
+      "summary": "Send a message from one agent to another.",
+      "source": "src/a2a/index.ts",
+      "line": 90
+    },
+    {
+      "name": "request",
+      "signature": "request(params: A2ARequestParams): Promise<A2AResponse>",
+      "summary": "Send a request and wait for response (synchronous request-response).",
+      "source": "src/a2a/index.ts",
+      "line": 142
+    },
+    {
+      "name": "broadcast",
+      "signature": "broadcast(params: A2ABroadcastParams): Promise<A2ABroadcastResult>",
+      "summary": "Broadcast a message to multiple agents.",
+      "source": "src/a2a/index.ts",
+      "line": 241
+    },
+    {
+      "name": "getConversation",
+      "signature": "getConversation(agent1: string, agent2: string, filters?: A2AConversationFilters): Promise<A2AConversation>",
+      "summary": "Get conversation between two agents with filtering.",
+      "source": "src/a2a/index.ts",
+      "line": 288
+    }
+  ],
+  "immutable": [
+    {
+      "name": "store",
+      "signature": "store(entry: ImmutableEntry, _options?: StoreImmutableOptions): Promise<ImmutableRecord>",
+      "summary": "Store immutable data (creates v1 or increments version if exists)",
+      "source": "src/immutable/index.ts",
+      "line": 104
+    },
+    {
+      "name": "get",
+      "signature": "get(type: string, id: string): Promise<ImmutableRecord | null>",
+      "summary": "Get current version of an immutable entry",
+      "source": "src/immutable/index.ts",
+      "line": 138
+    },
+    {
+      "name": "getVersion",
+      "signature": "getVersion(type: string, id: string, version: number): Promise<ImmutableVersionExpanded | null>",
+      "summary": "Get a specific version of an immutable entry",
+      "source": "src/immutable/index.ts",
+      "line": 164
+    },
+    {
+      "name": "getHistory",
+      "signature": "getHistory(type: string, id: string): Promise<ImmutableVersionExpanded[]>",
+      "summary": "Get all versions of an immutable entry",
+      "source": "src/immutable/index.ts",
+      "line": 197
+    },
+    {
+      "name": "list",
+      "signature": "list(filter?: ListImmutableFilter): Promise<ImmutableRecord[]>",
+      "summary": "List immutable entries with optional filters",
+      "source": "src/immutable/index.ts",
+      "line": 229
+    },
+    {
+      "name": "search",
+      "signature": "search(input: SearchImmutableInput): Promise<ImmutableSearchResult[]>",
+      "summary": "Search immutable entries by text query",
+      "source": "src/immutable/index.ts",
+      "line": 268
+    },
+    {
+      "name": "count",
+      "signature": "count(filter?: CountImmutableFilter): Promise<number>",
+      "summary": "Count immutable entries",
+      "source": "src/immutable/index.ts",
+      "line": 296
+    },
+    {
+      "name": "purge",
+      "signature": "purge(type: string, id: string): Promise<{ deleted: boolean; type: string; id: string; versionsDeleted: number; }>",
+      "summary": "Delete (purge) an immutable entry and all its versions",
+      "source": "src/immutable/index.ts",
+      "line": 322
+    },
+    {
+      "name": "getAtTimestamp",
+      "signature": "getAtTimestamp(type: string, id: string, timestamp: number | Date): Promise<ImmutableVersionExpanded | null>",
+      "summary": "Get version that was current at specific timestamp",
+      "source": "src/immutable/index.ts",
+      "line": 368
+    },
+    {
+      "name": "purgeMany",
+      "signature": "purgeMany(filter: { type?: string; userId?: string }): Promise<{ deleted: number; totalVersionsDeleted: number; entries: Array<{ type: string; id: string }>; }>",
+      "summary": "Bulk delete immutable entries matching filters",
+      "source": "src/immutable/index.ts",
+      "line": 401
+    },
+    {
+      "name": "purgeVersions",
+      "signature": "purgeVersions(type: string, id: string, keepLatest: number): Promise<{ versionsPurged: number; versionsRemaining: number; }>",
+      "summary": "Delete old versions while keeping recent ones",
+      "source": "src/immutable/index.ts",
+      "line": 433
+    }
+  ],
+  "mutable": [
+    {
+      "name": "set",
+      "signature": "set(namespace: string, key: string, value: unknown, userId?: string, metadata?: Record<string, unknown>, _options?: SetMutableOptions): Promise<MutableRecord>",
+      "summary": "Set a key to a value (creates or overwrites)",
+      "source": "src/mutable/index.ts",
+      "line": 105
+    },
+    {
+      "name": "get",
+      "signature": "get(namespace: string, key: string): Promise<unknown | null>",
+      "summary": "Get current value for a key",
+      "source": "src/mutable/index.ts",
+      "line": 152
+    },
+    {
+      "name": "getRecord",
+      "signature": "getRecord(namespace: string, key: string): Promise<MutableRecord | null>",
+      "summary": "Get full record (including metadata)",
+      "source": "src/mutable/index.ts",
+      "line": 181
+    },
+    {
+      "name": "update",
+      "signature": "update<T = unknown>(namespace: string, key: string, updater: (current: T) => T): Promise<MutableRecord>",
+      "summary": "Atomic update using updater function",
+      "source": "src/mutable/index.ts",
+      "line": 212
+    },
+    {
+      "name": "increment",
+      "signature": "increment(namespace: string, key: string, amount = 1): Promise<MutableRecord>",
+      "summary": "Increment a numeric value",
+      "source": "src/mutable/index.ts",
+      "line": 258
+    },
+    {
+      "name": "decrement",
+      "signature": "decrement(namespace: string, key: string, amount = 1): Promise<MutableRecord>",
+      "summary": "Decrement a numeric value",
+      "source": "src/mutable/index.ts",
+      "line": 293
+    },
+    {
+      "name": "exists",
+      "signature": "exists(namespace: string, key: string): Promise<boolean>",
+      "summary": "Check if key exists",
+      "source": "src/mutable/index.ts",
+      "line": 328
+    },
+    {
+      "name": "list",
+      "signature": "list(filter: ListMutableFilter): Promise<MutableRecord[]>",
+      "summary": "List keys in namespace",
+      "source": "src/mutable/index.ts",
+      "line": 374
+    },
+    {
+      "name": "count",
+      "signature": "count(filter: CountMutableFilter): Promise<number>",
+      "summary": "Count keys in namespace",
+      "source": "src/mutable/index.ts",
+      "line": 417
+    },
+    {
+      "name": "delete",
+      "signature": "delete(namespace: string, key: string, _options?: DeleteMutableOptions): Promise<{ deleted: boolean; namespace: string; key: string }>",
+      "summary": "Delete a key",
+      "source": "src/mutable/index.ts",
+      "line": 445
+    },
+    {
+      "name": "purge",
+      "signature": "purge(namespace: string, key: string): Promise<{ deleted: boolean; namespace: string; key: string }>",
+      "summary": "Purge a key (alias for delete - for API consistency)",
+      "source": "src/mutable/index.ts",
+      "line": 485
+    },
+    {
+      "name": "purgeNamespace",
+      "signature": "purgeNamespace(namespace: string, options?: PurgeNamespaceOptions): Promise<{ deleted: number; namespace: string; keys?: string[]; dryRun: boolean; }>",
+      "summary": "Purge all keys in a namespace",
+      "source": "src/mutable/index.ts",
+      "line": 518
+    },
+    {
+      "name": "transaction",
+      "signature": "transaction(operations: Array<{ op: \"set\" | \"update\" | \"delete\" | \"increment\" | \"decrement\"; namespace: string; key: string; value?: unknown; amount?: number; }>): Promise<{ success: boolean; operationsExecuted: number; results: unknown[]; }>",
+      "summary": "Execute multiple operations atomically",
+      "source": "src/mutable/index.ts",
+      "line": 562
+    },
+    {
+      "name": "purgeMany",
+      "signature": "purgeMany(filter: PurgeManyFilter): Promise<{ deleted: number; namespace: string; keys: string[]; }>",
+      "summary": "Bulk delete keys matching filters",
+      "source": "src/mutable/index.ts",
+      "line": 631
+    }
+  ],
+  "agents": [
+    {
+      "name": "register",
+      "signature": "register(agent: AgentRegistration): Promise<RegisteredAgent>",
+      "summary": "Register an agent in the registry",
+      "source": "src/agents/index.ts",
+      "line": 212
+    },
+    {
+      "name": "get",
+      "signature": "get(agentId: string, scope?: AgentRegistryScope): Promise<RegisteredAgent | null>",
+      "summary": "Get agent registration by ID",
+      "source": "src/agents/index.ts",
+      "line": 292
+    },
+    {
+      "name": "list",
+      "signature": "list(filters?: AgentFilters): Promise<RegisteredAgent[]>",
+      "summary": "List agents with filters",
+      "source": "src/agents/index.ts",
+      "line": 354
+    },
+    {
+      "name": "search",
+      "signature": "search(filters: AgentFilters): Promise<RegisteredAgent[]>",
+      "summary": "Search agents (alias for list with filters)",
+      "source": "src/agents/index.ts",
+      "line": 462
+    },
+    {
+      "name": "count",
+      "signature": "count(filters?: AgentFilters): Promise<number>",
+      "summary": "Count registered agents",
+      "source": "src/agents/index.ts",
+      "line": 475
+    },
+    {
+      "name": "update",
+      "signature": "update(agentId: string, updates: Partial<AgentRegistration> & { status?: string }): Promise<RegisteredAgent>",
+      "summary": "Update agent registration",
+      "source": "src/agents/index.ts",
+      "line": 501
+    },
+    {
+      "name": "configure",
+      "signature": "configure(agentId: string, config: Record<string, unknown>, scope?: AgentRegistryScope): Promise<void>",
+      "summary": "Configure agent settings",
+      "source": "src/agents/index.ts",
+      "line": 553
+    },
+    {
+      "name": "exists",
+      "signature": "exists(agentId: string, scope?: AgentRegistryScope): Promise<boolean>",
+      "summary": "Check if agent is registered",
+      "source": "src/agents/index.ts",
+      "line": 589
+    },
+    {
+      "name": "unregister",
+      "signature": "unregister(agentId: string, options?: UnregisterAgentOptions & AgentRegistryScope): Promise<UnregisterAgentResult>",
+      "summary": "Unregister agent with optional cascade deletion by participantId",
+      "source": "src/agents/index.ts",
+      "line": 620
+    },
+    {
+      "name": "unregisterMany",
+      "signature": "unregisterMany(filters: AgentFilters, options?: UnregisterAgentOptions): Promise<{ deleted: number; agentIds: string[]; totalDataDeleted?: number; }>",
+      "summary": "Unregister multiple agents matching filters",
+      "source": "src/agents/index.ts",
+      "line": 735
+    },
+    {
+      "name": "updateMany",
+      "signature": "updateMany(filters: AgentFilters, updates: Partial<AgentRegistration>): Promise<{ updated: number; agentIds: string[] }>",
+      "summary": "Update multiple agents matching filters",
+      "source": "src/agents/index.ts",
+      "line": 834
+    },
+    {
+      "name": "export",
+      "signature": "export(options: ExportAgentsOptions): Promise<ExportAgentsResult>",
+      "summary": "Export registered agents matching filters",
+      "source": "src/agents/index.ts",
+      "line": 911
+    }
+  ],
+  "governance": [
+    {
+      "name": "setPolicy",
+      "signature": "setPolicy(policy: GovernancePolicy): Promise<PolicyResult>",
+      "summary": "Set governance policy for organization or memory space",
+      "source": "src/governance/index.ts",
+      "line": 98
+    },
+    {
+      "name": "getPolicy",
+      "signature": "getPolicy(scope?: PolicyScope): Promise<GovernancePolicy>",
+      "summary": "Get current governance policy",
+      "source": "src/governance/index.ts",
+      "line": 201
+    },
+    {
+      "name": "setAgentOverride",
+      "signature": "setAgentOverride(memorySpaceId: string, overrides: Partial<GovernancePolicy>): Promise<void>",
+      "summary": "Override policy for specific memory space",
+      "source": "src/governance/index.ts",
+      "line": 237
+    },
+    {
+      "name": "getTemplate",
+      "signature": "getTemplate(template: ComplianceTemplate): Promise<GovernancePolicy>",
+      "summary": "Get compliance template (GDPR, HIPAA, SOC2, FINRA)",
+      "source": "src/governance/index.ts",
+      "line": 339
+    },
+    {
+      "name": "enforce",
+      "signature": "enforce(options: EnforcementOptions): Promise<EnforcementResult>",
+      "summary": "Validate a manual enforcement request and reject client-side execution.",
+      "source": "src/governance/index.ts",
+      "line": 367
+    },
+    {
+      "name": "simulate",
+      "signature": "simulate(options: SimulationOptions): Promise<SimulationResult>",
+      "summary": "Simulate policy impact without applying",
+      "source": "src/governance/index.ts",
+      "line": 398
+    },
+    {
+      "name": "getComplianceReport",
+      "signature": "getComplianceReport(options: ComplianceReportOptions): Promise<ComplianceReport>",
+      "summary": "Generate compliance report",
+      "source": "src/governance/index.ts",
+      "line": 495
+    },
+    {
+      "name": "getEnforcementStats",
+      "signature": "getEnforcementStats(options: EnforcementStatsOptions): Promise<EnforcementStats>",
+      "summary": "Get enforcement statistics",
+      "source": "src/governance/index.ts",
+      "line": 549
+    }
+  ],
+  "memorySpaces": [
+    {
+      "name": "createErasureTransport",
+      "signature": "createErasureTransport(options:Parameters<typeof createErasureTransport>[0]): ErasureTransport",
+      "summary": "",
+      "source": "src/memorySpaces/index.ts",
+      "line": 54
+    },
+    {
+      "name": "register",
+      "signature": "register(params: RegisterMemorySpaceParams, _options?: RegisterMemorySpaceOptions): Promise<MemorySpace>",
+      "summary": "Register a new memory space",
+      "source": "src/memorySpaces/index.ts",
+      "line": 114
+    },
+    {
+      "name": "get",
+      "signature": "get(memorySpaceId: string): Promise<MemorySpace | null>",
+      "summary": "Get memory space by ID",
+      "source": "src/memorySpaces/index.ts",
+      "line": 180
+    },
+    {
+      "name": "list",
+      "signature": "list(filter?: ListMemorySpacesFilter): Promise<ListMemorySpacesResult>",
+      "summary": "List memory spaces with pagination and sorting",
+      "source": "src/memorySpaces/index.ts",
+      "line": 224
+    },
+    {
+      "name": "count",
+      "signature": "count(filter?: { type?: \"personal\" | \"team\" | \"project\" | \"custom\"; status?: \"active\" | \"archived\"; }): Promise<number>",
+      "summary": "Count memory spaces",
+      "source": "src/memorySpaces/index.ts",
+      "line": 273
+    },
+    {
+      "name": "update",
+      "signature": "update(memorySpaceId: string, updates: { name?: string; metadata?: Record<string, unknown>; status?: \"active\" | \"archived\"; }, _options?: UpdateMemorySpaceOptions): Promise<MemorySpace>",
+      "summary": "Update memory space metadata",
+      "source": "src/memorySpaces/index.ts",
+      "line": 316
+    },
+    {
+      "name": "addParticipant",
+      "signature": "addParticipant(memorySpaceId: string, participant: { id: string; type: string; joinedAt: number; }): Promise<MemorySpace>",
+      "summary": "Add participant to memory space",
+      "source": "src/memorySpaces/index.ts",
+      "line": 372
+    },
+    {
+      "name": "removeParticipant",
+      "signature": "removeParticipant(memorySpaceId: string, participantId: string): Promise<MemorySpace>",
+      "summary": "Remove participant from memory space",
+      "source": "src/memorySpaces/index.ts",
+      "line": 410
+    },
+    {
+      "name": "archive",
+      "signature": "archive(memorySpaceId: string, options?: { reason?: string; metadata?: Record<string, unknown>; }): Promise<MemorySpace>",
+      "summary": "Archive memory space (marks as inactive but preserves data)",
+      "source": "src/memorySpaces/index.ts",
+      "line": 448
+    },
+    {
+      "name": "reactivate",
+      "signature": "reactivate(memorySpaceId: string): Promise<MemorySpace>",
+      "summary": "Reactivate archived memory space",
+      "source": "src/memorySpaces/index.ts",
+      "line": 481
+    },
+    {
+      "name": "delete",
+      "signature": "delete(memorySpaceId: string, options: DeleteMemorySpaceOptions): Promise<DeleteMemorySpaceResult>",
+      "summary": "Delete a memory space and its supported exclusive primary data.",
+      "source": "src/memorySpaces/index.ts",
+      "line": 518
+    },
+    {
+      "name": "getStats",
+      "signature": "getStats(memorySpaceId: string, options?: GetMemorySpaceStatsOptions): Promise<MemorySpaceStats>",
+      "summary": "Get memory space statistics with optional time window and participant breakdown",
+      "source": "src/memorySpaces/index.ts",
+      "line": 558
+    },
+    {
+      "name": "findByParticipant",
+      "signature": "findByParticipant(participantId: string): Promise<MemorySpace[]>",
+      "summary": "Find memory spaces by participant",
+      "source": "src/memorySpaces/index.ts",
+      "line": 594
+    },
+    {
+      "name": "search",
+      "signature": "search(query: string, options?: { type?: \"personal\" | \"team\" | \"project\" | \"custom\"; status?: \"active\" | \"archived\"; limit?: number; }): Promise<MemorySpace[]>",
+      "summary": "Search memory spaces by name or metadata",
+      "source": "src/memorySpaces/index.ts",
+      "line": 629
+    },
+    {
+      "name": "updateParticipants",
+      "signature": "updateParticipants(memorySpaceId: string, updates: { add?: Array<{ id: string; type: string; joinedAt: number }>; remove?: string[]; }): Promise<MemorySpace>",
+      "summary": "Update participants (combined add/remove)",
+      "source": "src/memorySpaces/index.ts",
+      "line": 677
+    }
+  ],
+  "facts": [
+    {
+      "name": "configureBeliefRevision",
+      "signature": "configureBeliefRevision(llmClient?: BeliefRevisionLLMClient, config?: BeliefRevisionConfig): void",
+      "summary": "Configure or update the belief revision service",
+      "source": "src/facts/index.ts",
+      "line": 169
+    },
+    {
+      "name": "hasBeliefRevision",
+      "signature": "hasBeliefRevision(): boolean",
+      "summary": "Check if belief revision is configured and available",
+      "source": "src/facts/index.ts",
+      "line": 198
+    },
+    {
+      "name": "store",
+      "signature": "store(params: StoreFactParams, _options?: StoreFactOptions): Promise<FactRecord>",
+      "summary": "Store a new fact",
+      "source": "src/facts/index.ts",
+      "line": 251
+    },
+    {
+      "name": "storeWithDedup",
+      "signature": "storeWithDedup(params: StoreFactParams, options?: StoreFactWithDedupOptions): Promise<StoreWithDedupResult>",
+      "summary": "Store a fact with cross-session deduplication",
+      "source": "src/facts/index.ts",
+      "line": 353
+    },
+    {
+      "name": "get",
+      "signature": "get(memorySpaceId: string, factId: string, options?: DomainReadOptions): Promise<FactRecord | null>",
+      "summary": "Get fact by ID",
+      "source": "src/facts/index.ts",
+      "line": 466
+    },
+    {
+      "name": "list",
+      "signature": "list(filter: ListFactsFilter): Promise<FactRecord[]>",
+      "summary": "List facts with filters",
+      "source": "src/facts/index.ts",
+      "line": 496
+    },
+    {
+      "name": "count",
+      "signature": "count(filter: CountFactsFilter): Promise<number>",
+      "summary": "Count facts",
+      "source": "src/facts/index.ts",
+      "line": 601
+    },
+    {
+      "name": "search",
+      "signature": "search(memorySpaceId: string, query: string, options?: SearchFactsOptions): Promise<FactRecord[]>",
+      "summary": "Search facts",
+      "source": "src/facts/index.ts",
+      "line": 688
+    },
+    {
+      "name": "semanticSearch",
+      "signature": "semanticSearch(memorySpaceId: string, embedding: number[], options?: SemanticSearchFactsOptions): Promise<FactRecord[]>",
+      "summary": "Semantic search for facts using vector embeddings (v0.30.0+)",
+      "source": "src/facts/index.ts",
+      "line": 808
+    },
+    {
+      "name": "update",
+      "signature": "update(memorySpaceId: string, factId: string, updates: UpdateFactInput, _options?: UpdateFactOptions): Promise<FactRecord>",
+      "summary": "Update fact (creates new version)",
+      "source": "src/facts/index.ts",
+      "line": 873
+    },
+    {
+      "name": "delete",
+      "signature": "delete(memorySpaceId: string, factId: string, _options?: DeleteFactOptions): Promise<{ deleted: boolean; factId: string }>",
+      "summary": "Delete fact (soft delete - marks as invalidated)",
+      "source": "src/facts/index.ts",
+      "line": 984
+    },
+    {
+      "name": "deleteMany",
+      "signature": "deleteMany(params: DeleteManyFactsParams): Promise<DeleteManyFactsResult & {partial?: DomainPartial}>",
+      "summary": "Delete multiple facts matching filters in a single operation",
+      "source": "src/facts/index.ts",
+      "line": 1042
+    },
+    {
+      "name": "getHistory",
+      "signature": "getHistory(memorySpaceId: string, factId: string, selector: Pick<HistorySelector, \"tenantId\"> = {}): Promise<FactRecord[]>",
+      "summary": "Get fact version history",
+      "source": "src/facts/index.ts",
+      "line": 1094
+    },
+    {
+      "name": "queryBySubject",
+      "signature": "queryBySubject(filter: QueryBySubjectFilter): Promise<FactRecord[]>",
+      "summary": "Query facts by subject (entity-centric view)",
+      "source": "src/facts/index.ts",
+      "line": 1167
+    },
+    {
+      "name": "queryByRelationship",
+      "signature": "queryByRelationship(filter: QueryByRelationshipFilter): Promise<FactRecord[]>",
+      "summary": "Query facts by relationship (graph traversal)",
+      "source": "src/facts/index.ts",
+      "line": 1268
+    },
+    {
+      "name": "export",
+      "signature": "export(options: {memorySpaceId: string; format: \"json\" | \"jsonld\" | \"csv\"; factType?: ListFactsFilter[\"factType\"]} & DomainReadOptions): Promise<{format: string; data: string; count: number; exportedAt: number}>",
+      "summary": "Export facts",
+      "source": "src/facts/index.ts",
+      "line": 1370
+    },
+    {
+      "name": "consolidate",
+      "signature": "consolidate(params: { memorySpaceId: string; factIds: string[]; keepFactId: string; tenantId?: string; operationId?: string; expectedFactIds?: Array<{ factId: string; factDocumentId: Id<\"facts\"> }>; }): Promise<{ consolidated: boolean; keptFactId: string; mergedCount: number; }>",
+      "summary": "Consolidate duplicate facts",
+      "source": "src/facts/index.ts",
+      "line": 1393
+    },
+    {
+      "name": "revise",
+      "signature": "revise(params: ReviseParams): Promise<ReviseResult>",
+      "summary": "Revise a fact using the belief revision pipeline",
+      "source": "src/facts/index.ts",
+      "line": 1464
+    },
+    {
+      "name": "checkConflicts",
+      "signature": "checkConflicts(params: ReviseParams): Promise<ConflictCheckResult>",
+      "summary": "Check for conflicts without executing (preview mode)",
+      "source": "src/facts/index.ts",
+      "line": 1541
+    },
+    {
+      "name": "supersede",
+      "signature": "supersede(params: { memorySpaceId: string; oldFactId: string; newFactId: string; reason?: string; tenantId?: string; operationId?: string; expectedOldFactId?: Id<\"facts\">; expectedNewFactId?: Id<\"facts\">; }): Promise<{ superseded: boolean; oldFactId: string; newFactId: string }>",
+      "summary": "Manually supersede a fact",
+      "source": "src/facts/index.ts",
+      "line": 1574
+    },
+    {
+      "name": "retryHistory",
+      "signature": "retryHistory(receipt: HistoryReceipt): inferred",
+      "summary": "Get change history for a fact",
+      "source": "src/facts/index.ts",
+      "line": 1650
+    },
+    {
+      "name": "getHistoryOperationReceipt",
+      "signature": "getHistoryOperationReceipt(memorySpaceId: string, operationId: string, phase: string): inferred",
+      "summary": "",
+      "source": "src/facts/index.ts",
+      "line": 1653
+    },
+    {
+      "name": "history",
+      "signature": "history(factId: string, limit?: number): Promise<FactChangeEvent[]>",
+      "summary": "",
+      "source": "src/facts/index.ts",
+      "line": 1665
+    },
+    {
+      "name": "getChanges",
+      "signature": "getChanges(filter: ChangeFilter): Promise<FactChangeEvent[]>",
+      "summary": "Get change events for a memory space in a time range",
+      "source": "src/facts/index.ts",
+      "line": 1684
+    },
+    {
+      "name": "getSupersessionChain",
+      "signature": "getSupersessionChain(factId: string, selector?: HistorySelector): Promise<SupersessionChainEntry[]>",
+      "summary": "Get the supersession chain for a fact",
+      "source": "src/facts/index.ts",
+      "line": 1701
+    },
+    {
+      "name": "getActivitySummary",
+      "signature": "getActivitySummary(memorySpaceId: string, hours?: number): Promise<ActivitySummary>",
+      "summary": "Get activity summary for a memory space",
+      "source": "src/facts/index.ts",
+      "line": 1721
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "create",
+      "signature": "create(options: CreateArtifactOptions): Promise<Artifact>",
+      "summary": "Sync artifact to graph database (if configured) Update artifact in graph database Delete artifact from graph database Create a new artifact",
+      "source": "src/artifacts/index.ts",
+      "line": 150
+    },
+    {
+      "name": "get",
+      "signature": "get(artifactId: string): Promise<Artifact | null>",
+      "summary": "Get an artifact by ID",
+      "source": "src/artifacts/index.ts",
+      "line": 195
+    },
+    {
+      "name": "update",
+      "signature": "update(artifactId: string, content: string, options?: UpdateArtifactOptions): Promise<Artifact>",
+      "summary": "Update an artifact's content (creates a new version)",
+      "source": "src/artifacts/index.ts",
+      "line": 225
+    },
+    {
+      "name": "delete",
+      "signature": "delete(artifactId: string, hard = false): Promise<DeleteArtifactResult>",
+      "summary": "Delete an artifact",
+      "source": "src/artifacts/index.ts",
+      "line": 277
+    },
+    {
+      "name": "list",
+      "signature": "list(filter: ListArtifactsFilter): Promise<Artifact[]>",
+      "summary": "List artifacts with filtering",
+      "source": "src/artifacts/index.ts",
+      "line": 324
+    },
+    {
+      "name": "count",
+      "signature": "count(filter: CountArtifactsFilter): Promise<number>",
+      "summary": "Count artifacts matching filter",
+      "source": "src/artifacts/index.ts",
+      "line": 367
+    },
+    {
+      "name": "undo",
+      "signature": "undo(artifactId: string): Promise<{ success: boolean; artifactId: string; previousVersion: number; currentVersion: number; canUndo: boolean; canRedo: boolean; }>",
+      "summary": "Undo the last change to an artifact",
+      "source": "src/artifacts/index.ts",
+      "line": 412
+    },
+    {
+      "name": "redo",
+      "signature": "redo(artifactId: string): Promise<{ success: boolean; artifactId: string; previousVersion: number; currentVersion: number; canUndo: boolean; canRedo: boolean; }>",
+      "summary": "Redo a previously undone change",
+      "source": "src/artifacts/index.ts",
+      "line": 465
+    },
+    {
+      "name": "getHistory",
+      "signature": "getHistory(artifactId: string, options?: GetArtifactHistoryOptions): Promise<ArtifactVersion[]>",
+      "summary": "Get the version history of an artifact",
+      "source": "src/artifacts/index.ts",
+      "line": 511
+    },
+    {
+      "name": "getVersion",
+      "signature": "getVersion(artifactId: string, version: number): Promise<ArtifactVersion | null>",
+      "summary": "Get a specific version of an artifact",
+      "source": "src/artifacts/index.ts",
+      "line": 547
+    },
+    {
+      "name": "startStreaming",
+      "signature": "startStreaming(params: StartStreamingParams): Promise<{ success: boolean; sessionId: string; artifactId: string; startedAt: number; previousState: StreamingState; currentState: StreamingState; }>",
+      "summary": "Start a streaming session for an artifact",
+      "source": "src/artifacts/index.ts",
+      "line": 593
+    },
+    {
+      "name": "appendContent",
+      "signature": "appendContent(params: AppendContentParams): Promise<{ success: boolean; artifactId: string; sessionId: string; chunkIndex?: number; chunkBytes: number; totalBytesReceived: number; contentLength: number; progress?: number; timestamp: number; }>",
+      "summary": "Append a content chunk to a streaming artifact",
+      "source": "src/artifacts/index.ts",
+      "line": 639
+    },
+    {
+      "name": "pauseStreaming",
+      "signature": "pauseStreaming(params: StreamingSessionParams): Promise<{ success: boolean; artifactId: string; sessionId: string; pausedAt: number; previousState: string; currentState: string; bytesReceived: number; contentPreserved: boolean; }>",
+      "summary": "Pause an active streaming session",
+      "source": "src/artifacts/index.ts",
+      "line": 686
+    },
+    {
+      "name": "resumeStreaming",
+      "signature": "resumeStreaming(params: StreamingSessionParams): Promise<{ success: boolean; artifactId: string; sessionId: string; resumedAt: number; previousState: string; currentState: string; bytesReceived: number; }>",
+      "summary": "Resume a paused streaming session",
+      "source": "src/artifacts/index.ts",
+      "line": 732
+    },
+    {
+      "name": "cancelStreaming",
+      "signature": "cancelStreaming(params: StreamingSessionParams): Promise<{ success: boolean; artifactId: string; sessionId: string; cancelledAt: number; previousState: StreamingState; currentState: string; contentPreserved: boolean; bytesReceived: number; contentLength: number; }>",
+      "summary": "Cancel an active streaming session",
+      "source": "src/artifacts/index.ts",
+      "line": 776
+    },
+    {
+      "name": "finalizeStreaming",
+      "signature": "finalizeStreaming(params: FinalizeStreamingParams): Promise<{ success: boolean; artifactId: string; sessionId: string; finalizedAt: number; previousState: string; currentState: string; contentLength: number; bytesReceived: number; totalDurationMs: number; versionCreated: boolean; version: number; }>",
+      "summary": "Finalize a streaming session",
+      "source": "src/artifacts/index.ts",
+      "line": 835
+    },
+    {
+      "name": "setStreamingState",
+      "signature": "setStreamingState(artifactId: string, streamingState: StreamingState): Promise<{ success: boolean; artifactId: string; previousState: StreamingState; currentState: StreamingState; updatedAt: number; }>",
+      "summary": "Set the streaming state of an artifact",
+      "source": "src/artifacts/index.ts",
+      "line": 905
+    },
+    {
+      "name": "uploadFile",
+      "signature": "uploadFile(params: { artifactId: string; file: Blob; filename: string; mimeType: string; metadata?: Record<string, unknown>; }): Promise<{ success: boolean; artifactId: string; fileRef: { storageId: string; mimeType: string; size: number; checksum?: string; originalFilename?: string; }; version: number; updatedAt: number; }>",
+      "summary": "Asset upload and delivery require a qualified authenticated backend capability.",
+      "source": "src/artifacts/index.ts",
+      "line": 960
+    },
+    {
+      "name": "getFileUrl",
+      "signature": "getFileUrl(artifactId: string): Promise<string | null>",
+      "summary": "Asset upload and delivery require a qualified authenticated backend capability.",
+      "source": "src/artifacts/index.ts",
+      "line": 1051
+    },
+    {
+      "name": "detachFile",
+      "signature": "detachFile(artifactId: string, deleteFile = false): Promise<{ success: boolean; artifactId: string; previousFileRef: { storageId: string; mimeType: string; size: number; originalFilename?: string; }; /** True only when bytes were removed; retained versions may protect them. */ fileDeleted: boolean; binaryDisposition?: \"deleted\" | \"protected\" | \"missing\"; version: number; updatedAt: number; }>",
+      "summary": "Detach a file from an artifact",
+      "source": "src/artifacts/index.ts",
+      "line": 1084
+    }
+  ],
+  "attachments": [
+    {
+      "name": "generateUploadUrl",
+      "signature": "generateUploadUrl(): Promise<UploadUrlResult>",
+      "summary": "Asset upload and delivery require a qualified authenticated backend capability.",
+      "source": "src/attachments/index.ts",
+      "line": 98
+    },
+    {
+      "name": "attach",
+      "signature": "attach(params: AttachParams): Promise<Attachment>",
+      "summary": "Register an uploaded file as an attachment.",
+      "source": "src/attachments/index.ts",
+      "line": 130
+    },
+    {
+      "name": "get",
+      "signature": "get(attachmentId: string): Promise<Attachment | null>",
+      "summary": "Get an attachment by ID.",
+      "source": "src/attachments/index.ts",
+      "line": 179
+    },
+    {
+      "name": "getUrl",
+      "signature": "getUrl(attachmentId: string): Promise<string | null>",
+      "summary": "Asset upload and delivery require a qualified authenticated backend capability.",
+      "source": "src/attachments/index.ts",
+      "line": 203
+    },
+    {
+      "name": "list",
+      "signature": "list(filter: ListAttachmentsFilter): Promise<ListAttachmentsResult>",
+      "summary": "List attachments with comprehensive filters and pagination.",
+      "source": "src/attachments/index.ts",
+      "line": 245
+    },
+    {
+      "name": "getByConversation",
+      "signature": "getByConversation(conversationId: string, options?: { type?: \"image\" | \"audio\" | \"video\" | \"file\" | \"pdf\"; limit?: number }): Promise<Attachment[]>",
+      "summary": "Get attachments for a specific conversation.",
+      "source": "src/attachments/index.ts",
+      "line": 280
+    },
+    {
+      "name": "getByMessage",
+      "signature": "getByMessage(messageId: string): Promise<Attachment[]>",
+      "summary": "Get attachments for a specific message.",
+      "source": "src/attachments/index.ts",
+      "line": 309
+    },
+    {
+      "name": "count",
+      "signature": "count(filter: { memorySpaceId: string; conversationId?: string; messageId?: string; userId?: string; type?: \"image\" | \"audio\" | \"video\" | \"file\" | \"pdf\"; tenantId?: string; }): Promise<number>",
+      "summary": "Count attachments matching filters.",
+      "source": "src/attachments/index.ts",
+      "line": 334
+    },
+    {
+      "name": "delete",
+      "signature": "delete(attachmentId: string): Promise<boolean>",
+      "summary": "Delete an attachment.",
+      "source": "src/attachments/index.ts",
+      "line": 378
+    },
+    {
+      "name": "deleteMany",
+      "signature": "deleteMany(attachmentIds: string[]): Promise<DeleteManyAttachmentsResult>",
+      "summary": "Bulk delete multiple attachments.",
+      "source": "src/attachments/index.ts",
+      "line": 413
+    },
+    {
+      "name": "upload",
+      "signature": "upload(params: { file: Blob; memorySpaceId: string; userId: string; type: \"image\" | \"audio\" | \"video\" | \"file\" | \"pdf\"; filename: string; mimeType?: string; conversationId?: string; messageId?: string; memoryId?: string; artifactId?: string; dimensions?: { width: number; height: number }; duration?: number; metadata?: Record<string, unknown>; tenantId?: string; }): Promise<Attachment>",
+      "summary": "Upload a file and register it as an attachment in one operation.",
+      "source": "src/attachments/index.ts",
+      "line": 456
+    }
+  ],
+  "graph": []
+}

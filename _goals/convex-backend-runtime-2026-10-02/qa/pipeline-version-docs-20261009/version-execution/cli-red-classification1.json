@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "sourceCommit": "5ba0046864839ccbcff55ea3515951e90276243c",
+  "receipt": "final-cli-fast.log.json",
+  "results": "final-cli-fast-results.json",
+  "naturalExit": true,
+  "elapsedSeconds": 240.323,
+  "deadlineSeconds": 600,
+  "forceExit": false,
+  "suites": {
+    "total": 63,
+    "passed": 57,
+    "failed": 6
+  },
+  "cases": {
+    "total": 1840,
+    "passed": 1792,
+    "failed": 48,
+    "pending": 0
+  },
+  "failures": [
+    {
+      "file": "tests/unit/template-catalog.test.ts",
+      "failed": 1,
+      "cause": "Positive explicit candidate metadata remained 0.38 while selected fixture range is ^0.39. Intentional historical range/identity negatives remain."
+    },
+    {
+      "file": "src/utils/__tests__/template-backend.test.ts",
+      "failed": 29,
+      "cause": "Digest-checked legacy source emits archived SDK package metadata 0.38; product fixed current admission is 0.39. Test-only current metadata overlay preserves all archived source assertions."
+    },
+    {
+      "file": "tests/commands/install-real.test.ts",
+      "failed": 4,
+      "cause": "Two current default selections blocked by catalog-wide old compatibility; two native legacy fixtures blocked by archived SDK version. Basic current expected app version also needed 1.4.0."
+    },
+    {
+      "file": "src/utils/__tests__/backend-setup.test.ts",
+      "failed": 1,
+      "cause": "Catalog-wide preserved old epoch compatibility blocks actual current quickstart before selection."
+    },
+    {
+      "file": "tests/unit/template-integration.test.ts",
+      "failed": 11,
+      "cause": "Current catalog selection blocked by unrelated old epochs; actual built manifest is hardlinked by concurrent Chat pnpm local-file consumer install; immutable old ^0.38 positives wrongly used current SDK and now assert zero-effects refusal."
+    },
+    {
+      "file": "src/utils/__tests__/runtime-backend.test.ts",
+      "failed": 2,
+      "cause": "Secure single-link source reader correctly refuses built distribution hardlinks created by Chat pnpm local-file install."
+    }
+  ],
+  "preservedGuards": [
+    "Catalog-wide structure, paths, source identities, supported stable range syntax and all payload hashes",
+    "Selected SDK/provider/Convex compatibility and dependency declaration binding",
+    "Fixed current SDK package admission",
+    "Single-link regular-file reader",
+    "Native exit propagation and environment stripping",
+    "Composer/source/private registration and ownership invariants"
+  ],
+  "cleanup": {
+    "receipt": "final-cli-input-cleanup.log.json",
+    "naturalExit": true,
+    "elapsedSeconds": 0.042
+  },
+  "limits": [
+    "This red run is never PASS.",
+    "Prior 240-second interrupted a8 CLI run has no assertion-completion credit.",
+    "No live service or historical C7 custody refresh.",
+    "Current repaired source requires a new committed qualification and affected checks."
+  ]
+}
