@@ -105,6 +105,7 @@ export class ConvexMemoryRepository {
       tenantId: this.scope.tenantId, memorySpaceId: this.scope.memorySpaceId, ...(resource ? { resource } : {}) });
   }
   async recheckAuthority(): Promise<void> { await this.authority(); }
+  async assertReadAuthority(): Promise<void> { await this.authority(undefined, "read"); }
   private writeDb(): MutationCtx["db"] {
     if (!this.writer || this.capability !== "write") memoryError("FORBIDDEN", "A write-authorized mutation is required");
     return this.writer;
@@ -429,6 +430,7 @@ export function createActionMemoryRepository(
   return {
     scope,
     recheckAuthority: async () => { await ctx.runQuery(memoryReferences.recheck, args); },
+    assertReadAuthority: async () => { await ctx.runQuery(memoryReferences.recheck, { ...args, capability: "read" }); },
     getSource: async (sourceId) => await ctx.runQuery(memoryReferences.getSource, { ...args, sourceId }),
     putSource: async (source) => await ctx.runMutation(memoryReferences.putSource, { ...args, source }),
     commitDerived: async (input) => await ctx.runMutation(memoryReferences.commitDerived, { ...args, input }),

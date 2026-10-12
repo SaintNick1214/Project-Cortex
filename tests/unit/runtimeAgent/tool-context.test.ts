@@ -45,11 +45,12 @@ it("dynamic recall records exact source witnesses and threads the primary native
   expect(bindings).toEqual([{ runBudgetId: "shared-run", parentOperationId: "model-parent" }]); expect(embed).toHaveBeenCalledTimes(1);
   expect(binding.checkCurrent).toHaveBeenCalled(); expect(binding.writeSource).not.toHaveBeenCalled(); expect(binding.commitDerived).not.toHaveBeenCalled();
 });
-it.each(["revision", "tombstone"])("a %s between a fact read and witness collection denies before embedding or context delivery", async kind => {
+it.each(["revision", "tombstone"])("a %s between the consumed fact read and witness collection withholds context after the single embedding", async kind => {
   const { source, ctx, binding, afterFacts } = await setup();
   afterFacts(() => { if (kind === "revision") source.lineage = { ...(source.lineage as object), sourceRevision: 2 }; else source.tombstonedAt = Date.now(); });
-  await expect(executeServerTool(ctx, binding, "memory.recall", { text: "preferred drink", limit: 2 })).rejects.toThrow();
-  expect(embed).not.toHaveBeenCalled(); expect(binding.writeSource).not.toHaveBeenCalled();
+  // Transcript currentness (including a mismatched source revision) is an authority fence.
+  await expect(executeServerTool(ctx, binding, "memory.recall", { text: "preferred drink", limit: 2 })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+  expect(embed).toHaveBeenCalledTimes(1); expect(binding.writeSource).not.toHaveBeenCalled(); expect(binding.commitDerived).not.toHaveBeenCalled();
 });
 it("deferred current-attempt denial precedes a secondary model call and repository effects", async () => {
   const { ctx, binding } = await setup(); binding.checkCurrent.mockImplementation(async () => { throw new Error("CANCELLED"); });

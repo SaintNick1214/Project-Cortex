@@ -1,4 +1,5 @@
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, jest } from "@jest/globals";
+import { getFunctionName } from "convex/server";
 import type { MemoryModel } from "../../../src/domain/contracts";
 import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } from "../../../convex-dev/runtimeMemoryRepository";
@@ -93,6 +94,73 @@ describe("modern backend memory services", () => {
     expect(recalled.context).toContain("[user]: dark"); expect(recalled.profileId).toBe(DEFAULT_EMBEDDING_PROFILE.profileId);
     expect(f.searches[0]).toMatchObject({ table: "runtimeMemoryVectors", index: "by_default_embedding_v1",
       filter: { key: "scopeProfileOwnerKey", value: JSON.stringify(["tenant-a", "space-a", DEFAULT_EMBEDDING_PROFILE.profileId, f.principal._id]) } });
+  });
+  it("delivers current facts when ordered belief resolution supersedes an unused preflight fact during query embedding", async () => {
+    // Reproduces the observed Run2 ordering in client-checks/run2-fact-source-race.json:
+    // first fact read -> query embedding await -> old fact superseded -> current facts read.
+    // The pure peer controls timing; actual adapter/registered final delivery enforce freshness.
+    const f = setup();
+    f.model.extract = async () => ({ facts: [{ ...result.facts[0]!, subject: "User", predicate: "prefers",
+      fact: "User prefers cobalt jasmine tea as their sandbox tea.", object: "cobalt jasmine tea" }] });
+    await rememberMemory(f.adapters, { text: "My preferred sandbox tea is cobalt jasmine tea. Remember this preference for future chats.", lineage: f.lineage });
+    const oldFact = f.db.table("facts")[0]!;
+    f.model.extract = async () => ({ facts: [{ ...result.facts[0]!, subject: "User", predicate: "prefers",
+      fact: "User prefers sandbox tea.", object: "sandbox tea" }] });
+    await rememberMemory(f.adapters, { text: "What is my preferred sandbox tea? Recall the preference from my earlier chat.",
+      lineage: explicitSourceLineage(memoryScope(f.reference), "request-2") });
+    const currentFact = f.db.table("facts")[1]!;
+    let enterEmbedding!: () => void; let releaseEmbedding!: () => void;
+    const entered = new Promise<void>(resolve => { enterEmbedding = resolve; });
+    const released = new Promise<void>(resolve => { releaseEmbedding = resolve; });
+    const embed = f.model.embed;
+    const queryEmbedding = jest.fn<MemoryModel["embed"]>(async request => {
+      enterEmbedding(); await released; return await embed(request);
+    });
+    f.model.embed = queryEmbedding;
+    const consumed: string[][] = [], factReadLimits: number[] = [];
+    const ctx = { ...f.actionCtx, runQuery: (async (ref, args) => {
+      if (getFunctionName(ref) === "runtimeMemory:readFacts") factReadLimits.push((args as { query: { limit: number } }).query.limit);
+      return await f.actionCtx.runQuery(ref, args);
+    }) as typeof f.actionCtx.runQuery, runMutation: (async (ref, args) => {
+      if (getFunctionName(ref) === "runtimeMemory:finalDelivery") {
+        consumed.push((args as { bindings: { facts: { factId: string }[] } }).bindings.facts.map(fact => fact.factId));
+      }
+      return await f.actionCtx.runMutation(ref, args);
+    }) as typeof f.actionCtx.runMutation };
+    const pending = recallMemory({ ...f.adapters, repository: createActionMemoryRepository(ctx, f.reference, "read") },
+      { text: "sandbox tea", requestId: "recall-race", limit: 10 });
+    await entered;
+    await f.db.patch("facts", oldFact._id, { supersededBy: currentFact.factId, version: 2, updatedAt: 1791840847908 });
+    releaseEmbedding();
+    const recalled = await pending;
+    expect(recalled.items.filter(item => item.type === "fact").map(item => item.id)).toEqual([currentFact.factId]);
+    expect(recalled.context).toContain("User prefers sandbox tea.");
+    expect(consumed).toEqual([[currentFact.factId]]);
+    expect(factReadLimits).toEqual([10]);
+    expect(queryEmbedding).toHaveBeenCalledTimes(1);
+    expect(f.operations.filter(operation => operation.purpose === "embedding.query")).toHaveLength(1);
+    expect(f.policyRequests).toHaveLength(0);
+  });
+  it("retains an independently authorized read preflight for an older injected adapter without assertReadAuthority", async () => {
+    const f = setup(); await rememberMemory(f.adapters, { text: "dark", lineage: f.lineage });
+    const reader = createActionMemoryRepository(f.actionCtx, f.reference, "read");
+    const { assertReadAuthority: _optionalReadCheck, ...repository } = reader;
+    const listFacts = jest.spyOn(repository, "listFacts");
+    const recalled = await recallMemory({ ...f.adapters, repository }, { text: "dark", requestId: "legacy-read", limit: 10 });
+    expect(recalled.context).toContain("User prefers dark mode");
+    expect(listFacts.mock.calls).toEqual([[{ limit: 1 }], [{ limit: 10 }]]);
+    expect(f.operations.filter(operation => operation.purpose === "embedding.query")).toHaveLength(1);
+  });
+  it.each(["current", "legacy"] as const)("%s write-only adapter denies recall before profile selection or embedding", async kind => {
+    const f = setup(); f.grant.capabilities = ["write"];
+    const reader = createActionMemoryRepository(f.actionCtx, f.reference, "write");
+    const { assertReadAuthority: _optionalReadCheck, ...legacy } = reader;
+    const repository = kind === "current" ? reader : legacy;
+    const resolveProfile = jest.fn<NonNullable<MemoryModel["resolveProfile"]>>().mockResolvedValue({ profile: DEFAULT_EMBEDDING_PROFILE });
+    const embed = jest.fn<MemoryModel["embed"]>(f.model.embed);
+    await expect(recallMemory({ ...f.adapters, repository, model: { ...f.model, resolveProfile, embed } },
+      { text: "dark", requestId: "write-only-read", limit: 10 })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(resolveProfile).not.toHaveBeenCalled(); expect(embed).not.toHaveBeenCalled(); expect(f.db.writes).toBe(0);
   });
   it.each(["remember", "recall"])("registered public %s cannot invoke a provider without configured policy", async (operation) => {
     const f = setup();

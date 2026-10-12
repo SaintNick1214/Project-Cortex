@@ -45,7 +45,7 @@ async function fixture(shared = false) {
     dataShare = f.db.seed("runtimeConversationShares", { tenantId: "tenant-a", memorySpaceId: "space-a", conversationId: "shared-conversation",
       grantType: "user", grantedTo: peer._id, state: "active", viewCount: 0, permissions: { ...permissions, canViewFacts: true }, expiresAt: 1001 });
   }
-  const reads = new Map<string, unknown>(); let factsReads = 0;
+  const reads = new Map<string, unknown>(); let factsReads = 0, readAuthorityChecks = 0;
   let beforeDelivery: () => void = () => {};
   let afterDelivery: () => void = () => {};
   const delivered: string[] = [];
@@ -54,11 +54,12 @@ async function fixture(shared = false) {
       const name = getFunctionName(ref); const key = JSON.stringify([name, args]);
       if (!reads.has(key)) reads.set(key, clone(await f.actionCtx.runQuery(ref, args)));
       if (name === "runtimeMemory:readFacts") factsReads++;
+      if (name === "runtimeMemory:checkAuthority" && (args as { capability: string }).capability === "read") readAuthorityChecks++;
       return clone(reads.get(key));
     },
     runMutation: async (ref, args) => {
       const name = getFunctionName(ref); delivered.push(name);
-      if (name === "runtimeMemory:finalDelivery") { expect(factsReads).toBe(2); beforeDelivery(); }
+      if (name === "runtimeMemory:finalDelivery") { expect(factsReads).toBe(1); expect(readAuthorityChecks).toBeGreaterThanOrEqual(2); beforeDelivery(); }
       const result = await f.actionCtx.runMutation(ref, args);
       if (name === "runtimeMemory:finalDelivery") afterDelivery();
       return result;
@@ -76,7 +77,7 @@ it("final delivery is internal-only and unchanged consumed facts/vectors return 
   expect(f.delivered).toEqual(["runtimeMemory:finalDelivery"]); expect(f.db.writes).toBe(writes);
   expect(JSON.stringify([...f.db.rows])).toBe(before); expect(f.policyRequests).toHaveLength(0);
 });
-it.each(["grant-expiry", "principal-revoke", "membership-revoke", "grant-revoke", "source-revision", "source-delete", "fact-revision", "vector-change"] as const)(
+it.each(["grant-expiry", "principal-revoke", "membership-revoke", "grant-revoke", "source-revision", "source-delete", "fact-revision", "fact-superseded", "vector-change"] as const)(
   "cached recall payload is withheld for %s immediately before final delivery", async kind => {
     const f = await fixture(); let expectedWrites = f.db.writes;
     f.beforeDelivery(() => {
@@ -87,6 +88,7 @@ it.each(["grant-expiry", "principal-revoke", "membership-revoke", "grant-revoke"
       else if (kind === "source-revision") { const row = f.db.table("runtimeMemorySources")[0]!; row.lineage = { ...row.lineage as object, sourceRevision: 2 }; }
       else if (kind === "source-delete") f.db.table("runtimeMemorySources")[0]!.tombstonedAt = 1001;
       else if (kind === "fact-revision") f.db.table("facts")[0]!.version = 2;
+      else if (kind === "fact-superseded") f.db.table("facts")[0]!.supersededBy = "new-current-fact";
       else f.db.table("runtimeMemoryVectors")[0]!.embedding = Array.from({ length: 1536 }, () => 0.5);
       expectedWrites = f.db.writes;
     });

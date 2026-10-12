@@ -85,8 +85,10 @@ export async function recallMemory(
   const { repository, model, clock } = adapters;
   const text = normalizeSourceText(input.text);
   await repository.recheckAuthority();
-  // Read methods enforce read independently; a write-only injected adapter cannot dispatch recall.
-  await repository.listFacts({ limit: 1 });
+  // Check read capability before inference without binding discarded facts to delivery.
+  // Older injected adapters retain their independently authorized read preflight.
+  if (repository.assertReadAuthority) await repository.assertReadAuthority();
+  else await repository.listFacts({ limit: 1 });
   const selection = await model.resolveProfile?.("embedding.query") ?? { profile: DEFAULT_EMBEDDING_PROFILE };
   const profile = selection.profile;
   const operationId = `embedding.query:${JSON.stringify([repository.scope.tenantId, repository.scope.memorySpaceId,

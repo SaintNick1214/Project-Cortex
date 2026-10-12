@@ -119,6 +119,8 @@ export interface VectorMatch {
 export interface MemoryRepository {
   readonly scope: TrustedMemoryScope;
   recheckAuthority(): Promise<void>;
+  /** Check read capability before inference without consuming a recall payload. */
+  assertReadAuthority?(): Promise<void>;
   /** Action adapters revalidate the exact consumed rows in a fresh native transaction. */
   finalDelivery?(): Promise<{ version: 1; deliveryExpiresAt?: number }>;
   getSource(sourceId: string): Promise<SourceContent | null>;
