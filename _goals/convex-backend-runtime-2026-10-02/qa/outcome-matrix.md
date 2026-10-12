@@ -1,5 +1,7 @@
 Current integrated applicability: [final independent audit](local-resume-2026-10-05/task16-current-integration-ci1/successor4/independent-final-audit1/report1.md). Completed scope PASS4.0 atcacdb4b8c; full original goal ISSUES FOUND. Accepted 13/17 tasks (76.5%) and55/61 task criteria (90.2%); six async-dependent criteria remain open. Historical matrices below retain their original scopes.
 
+**Current scope update — 2026-10-11:** The user's [video deferral](video-deferral-2026-10-11/scope-amendment.md) supersedes the earlier assumption that Convex can enable asynchronous video for a disposable deployment. The entries below remain historical results. Native video positives/client parity are deferred, never relabeled PASS; image and shared non-video outcomes remain required. The [independent final audit](video-deferral-2026-10-11/final-review.md) approves the revised non-video scope-version3:17/17 tasks,61/61 task criteria and12/12 revised goal criteria. These scoped grants do not overwrite historical original outcomes or accept video.
+
 Current functional-policyv2 matrix: [original12 outcome map](local-resume-2026-10-05/task16-aggregate-outcomes1/current-outcomes2.md). Historical tables and verdicts below retain their original scope/date. Full goal remains incomplete.
 
 # Goal outcome coverage

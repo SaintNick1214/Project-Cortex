@@ -1,5 +1,7 @@
 # Acceptance policy v2 — functional backend-runtime completion
 
+**Current scope amendment (metric version3, 2026-10-11):** The user's direct instruction defers asynchronous Gateway video and its dependent native/client qualification until Convex supports it. [Scope amendment](qa/video-deferral-2026-10-11/scope-amendment.md) governs the video portions of the otherwise retained product requirements below. Scoring, shared safety requirements and required non-video real outcomes are unchanged. Historical original-scope metrics/verdicts remain intact; deferral does not grant acceptance or relabel an unavailable result PASS.
+
 Status: ADOPTED by direct user execution instruction on 2026-10-08. This goal-specific policy supersedes conflicting review scores and disproportionate QA/harness gates in skills, prior plans, task execution annotations and QA refinements. It does not remove any of the original 17 product tasks or 12 product success criteria.
 
 The user requested a lower baseline after observing repeated judge/controller cycles with little implementation progress, and supplied an approved functional-gate proposal from another goal. That other goal's optional restore features and task numbers do not apply here. The user has authorized this policy now; another approval or policy-judge gate is not required.

@@ -1,6 +1,9 @@
 # Task 13: Gateway image and durable asynchronous video jobs
 
-**Status:** Partial independent acceptance: 1/4 original criteria accepted; genuine async-service outcomes and full task remain incomplete.
+**Current acceptance scope — version3, 2026-10-11:** The user defers asynchronous video and its native/client outcome qualification after Convex Support confirms it cannot be enabled. Apply the [exact criterion map](../qa/video-deferral-2026-10-11/scope-amendment.md) to the requirements below. Every non-video requirement and shared safety gate remains. Current scoped acceptance is approved under version3 by the [independent final audit](../qa/video-deferral-2026-10-11/final-review.md); the original checkboxes, partial verdicts and historical completion figures below are preserved and do not become video PASS.
+
+**Status:** ACCEPTED under scope-version3; video requirements deferred. [Independent final audit](../qa/video-deferral-2026-10-11/final-review.md).
+**Historical original-scope status:** Partial independent acceptance: 1/4 original criteria accepted; genuine async-service outcomes and full task remain incomplete.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [09 accepted actual text/UI slice](09-text-client-slice.md), [04 Per-function model policy and admission budgets](04-model-policy.md), [07 Agent execution and durable reactive output](07-agent-streams.md), [12 Convex-owned assets and bounded private delivery](12-asset-lifecycle.md)
 

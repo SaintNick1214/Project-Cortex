@@ -68,14 +68,24 @@ run's memory/graph status but cannot read the whole space's counters.
 
 **Media and artifacts** uploads raw private files with the application limit of
 20,000,000 bytes. The backend also enforces its protocol and provider limits;
-smaller files can fail a particular provider input contract. A video input must be
-a PNG for the currently supported profile. Image generation uses a text prompt.
+smaller files can fail a particular provider input contract. Image generation uses
+a qualified text prompt without an input asset. Its observed descriptor has callbacks
+disabled and requested-only model identity; serving identity and USD charges remain unknown.
 The administrator chooses qualified models, options and budgets. A missing media
 service fails explicitly rather than falling back to an app-side model.
 
+Convex Gateway does not support asynchronous video generation and cannot enable it for
+an individual team or deployment. Video generation is explicitly deferred until official
+support, implementation compatibility qualification, real service outcomes and independent
+acceptance. The retained `video` kind, `media.video.generate` operation and video input,
+signed callback/native polling/provider-download contracts are reserved, not functional
+video capabilities. Private upload and delivery of existing video files remain in scope.
+
 The job list reloads retained state, including canonical chat media references.
-**Recover job status** polls an existing acknowledged operation and can recover
-missed callbacks. It never resubmits an unknown generation. **Cancel local job**
+**Recover job status** preserves the original job identity, can mark expired submissions
+unknown and can resume eligible retained-output recovery. It does not guarantee recovery
+of a lost upstream image result or resubmit an unknown generation. Native polling/download
+and missed-callback recovery remain future video contracts. **Cancel local job**
 fences delivery; the UI separately reports unsupported upstream cancellation and
 retained unknown incurred costs. **Open retained artifact** reads the current
 authorized version. Previews and downloads use authenticated, hash-checked bytes

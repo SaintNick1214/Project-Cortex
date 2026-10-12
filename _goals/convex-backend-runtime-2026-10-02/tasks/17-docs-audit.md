@@ -1,6 +1,9 @@
 # Task 17: Installation documentation, quality and independent final gate
 
-**Status:** Current scoped independent acceptance at cacdb4b8c: 2/3 original criteria accepted; full task remains incomplete because genuine async qualification is blocked.
+**Current acceptance scope — version3, 2026-10-11:** The user defers asynchronous video and its native/client outcome qualification after Convex Support confirms it cannot be enabled. Apply the [exact criterion map](../qa/video-deferral-2026-10-11/scope-amendment.md) to the requirements below. Every non-video requirement and shared safety gate remains. Current scoped acceptance is approved under version3 by the [independent final audit](../qa/video-deferral-2026-10-11/final-review.md); the original checkboxes, partial verdicts and historical completion figures below are preserved and do not become video PASS.
+
+**Status:** ACCEPTED under scope-version3; video requirements deferred. [Independent final audit](../qa/video-deferral-2026-10-11/final-review.md).
+**Historical original-scope status:** Current scoped independent acceptance at cacdb4b8c: 2/3 original criteria accepted; full task remains incomplete because genuine async qualification is blocked.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [15 Additive CLI, quickstart and template integration](15-product-integration.md), [16 Cross-layer live behavior and adversarial outcomes](16-outcome-validation.md)
 

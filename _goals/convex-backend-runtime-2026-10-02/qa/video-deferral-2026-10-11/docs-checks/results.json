@@ -1,0 +1,56 @@
+{
+  "checks": [
+    {
+      "check": "docs-typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "startedAt": "2026-10-12T04:22:40.663912+00:00",
+      "elapsedSeconds": 1.224,
+      "exitCode": 0,
+      "timeoutSeconds": 60,
+      "timedOut": false,
+      "status": "PASS",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/video-deferral-2026-10-11/docs-checks/docs-typecheck.log"
+    },
+    {
+      "check": "strict-docusaurus-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "startedAt": "2026-10-12T04:22:41.888948+00:00",
+      "elapsedSeconds": 5.514,
+      "exitCode": 0,
+      "timeoutSeconds": 150,
+      "timedOut": false,
+      "status": "PASS",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/video-deferral-2026-10-11/docs-checks/strict-docusaurus-build.log"
+    },
+    {
+      "check": "image-example-strict-compile",
+      "command": [
+        "node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--project",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/video-deferral-2026-10-11/docs-checks/image-example-tsconfig.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-12T04:22:47.403693+00:00",
+      "elapsedSeconds": 0.293,
+      "exitCode": 0,
+      "timeoutSeconds": 45,
+      "timedOut": false,
+      "status": "PASS",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/video-deferral-2026-10-11/docs-checks/image-example-strict-compile.log"
+    }
+  ],
+  "selectedChecks": 3,
+  "completedChecks": 3,
+  "status": "PASS"
+}

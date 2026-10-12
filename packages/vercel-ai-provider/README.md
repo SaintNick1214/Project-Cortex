@@ -121,7 +121,14 @@ Governed backend content jobs cover conversation titles, text/code/sheet artifac
 suggestions. Explicit application of a suggestion uses the exact retained artifact
 version. Primary and secondary model calls remain inside the server's operation and
 shared budget controls. Private media delivery is capped at **20,000,000 bytes**.
-Async video still requires an enabled, qualified development Gateway service.
+Image generation uses a qualified text-prompt path with callbacks disabled; its observed
+descriptor records requested-only model identity and leaves serving identity and USD
+charges unknown. Convex Gateway does not support asynchronous video generation and
+cannot enable it for an individual team or deployment. Video generation is explicitly
+deferred until official support, implementation compatibility qualification, real service
+outcomes and independent acceptance. The retained `video` kind, `media.video.generate`
+operation and signed callback/native polling/provider-download contracts are reserved.
+Private upload and delivery of existing video files remain in scope.
 
 ## Exports and compatibility
 

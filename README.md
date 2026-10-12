@@ -156,15 +156,22 @@ separate statuses.
 
 ## Private artifacts and media
 
-Cortex retains artifacts and owns governed image/video jobs. Private uploads, downloads
+Cortex retains artifacts and owns governed image jobs. Private uploads, downloads
 and Blob previews use authenticated Convex HTTP delivery. The storage/delivery limit is
 **20,000,000 bytes**; provider input contracts may be stricter. External media storage,
 image understanding, OCR and visual embeddings are outside this goal.
 
-Image and video capabilities require actual service qualification. Asynchronous video
-is currently blocked on the disposable development Gateway's service availability;
-typed unavailable errors and synchronous video evidence do not complete async jobs.
-Unknown media submissions reconcile the original job rather than dispatching a duplicate.
+Image generation requires actual service qualification and uses a text prompt without
+an input asset. Its observed descriptor has callbacks disabled and requested-only model
+identity; serving identity and USD charges remain unknown. Unknown media submissions
+retain the original job identity rather than dispatching a duplicate.
+
+Convex Gateway does not support asynchronous video generation and cannot enable it for
+an individual team or deployment. Video generation is explicitly deferred until official
+support, implementation compatibility qualification, real service outcomes and independent
+acceptance. The retained `video` kind, `media.video.generate` operation and signed callback,
+native polling and provider-download contracts are reserved, not functional video
+capabilities. Private upload and delivery of existing video files remain in scope.
 
 Gateway/model providers receive the authorized input needed for inference. Optional
 Neo4j/Memgraph projection uses a trusted Node worker and private graph credentials.
