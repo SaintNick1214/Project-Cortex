@@ -24,6 +24,7 @@ try {
   const graphEntry = join(destination, 'dist/graph-runtime/index.js');
   for (const runtime of [await import(pathToFileURL(runtimeEntry)), requirePacked('@cortexmemory/sdk/runtime')]) {
     assert.equal(typeof runtime.CortexRuntimeClient, 'function');
+    assert.equal(typeof runtime.CortexRuntimeClient.prototype.submitAndStart, 'function');
     assert.equal(new runtime.CortexRuntimeError('FORBIDDEN').code, 'FORBIDDEN');
     assert.equal(runtime.RUNTIME_ASSET_MAX_BYTES, 20_000_000);
   }
@@ -59,7 +60,7 @@ try {
   }
   writeFileSync(join(temporary, 'consumer.mts'), `
     import {Cortex, MemoryValidationError, getPresetForPlan} from '@cortexmemory/sdk';
-    import {CortexRuntimeClient, type TextSubmitV1, type RuntimeObservation} from '@cortexmemory/sdk/runtime';
+    import {CortexRuntimeClient, type TextSubmitV1, type RuntimeObservation, type RuntimeAdmissionResult, type RuntimeLatencyEvent} from '@cortexmemory/sdk/runtime';
     import {CortexGraphWorker, type CortexGraphWorkerOptions} from '@cortexmemory/sdk/runtime/graph';
     const cortex = new Cortex({convexUrl:'https://example.convex.cloud'});
     const preset = getPresetForPlan('free');
@@ -79,13 +80,16 @@ try {
     void preset; void error; void verify;
     const request: TextSubmitV1 = {version:1,agentId:'agent',agentVersion:1,clientRequestId:'request',parts:[{type:'text',text:'hello'}]};
     async function runtimeContract(client: CortexRuntimeClient, render: (observation: RuntimeObservation) => void) {
+      const combined: RuntimeAdmissionResult = await client.submitAndStart(request, {streaming:true});
+      combined.handle.runId; combined.run.attemptNumber; combined.start.state;
       const handle = await client.submit(request);
       const disconnect = client.watchObservation(handle, render);
       await client.start(handle, {streaming:true});
       disconnect(); await client.close();
     }
+    function latencyContract(event: RuntimeLatencyEvent) { event.phase; event.atMs; event.rpcId; event.durationMs; }
     function graphContract(options: CortexGraphWorkerOptions) { return new CortexGraphWorker(options); }
-    void runtimeContract; void graphContract;
+    void runtimeContract; void graphContract; void latencyContract;
   `);
   execFileSync(resolve('node_modules/.bin/tsc'), ['--ignoreConfig','--noEmit','--strict','--skipLibCheck','--module','NodeNext','--moduleResolution','NodeNext','--target','ES2022',join(temporary,'consumer.mts')], {stdio:'inherit'});
   const bundled = await build({entryPoints:[entry],platform:'browser',bundle:true,format:'iife',globalName:'CortexSDK',write:false});
@@ -103,6 +107,7 @@ try {
   vm.runInContext(`
     if (typeof process !== 'undefined' || typeof require !== 'undefined') throw Error('Runtime needs Node globals');
     if (typeof CortexRuntime.CortexRuntimeClient !== 'function') throw Error('Runtime constructor missing');
+    if (typeof CortexRuntime.CortexRuntimeClient.prototype.submitAndStart !== 'function') throw Error('Combined admission missing');
     if (CortexRuntime.RUNTIME_ASSET_MAX_BYTES !== 20000000) throw Error('Private delivery cap changed');
     if (new CortexRuntime.CortexRuntimeError('FORBIDDEN').code !== 'FORBIDDEN') throw Error('Typed runtime error missing');
   `, runtimeContext);

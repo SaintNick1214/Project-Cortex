@@ -2,6 +2,8 @@ import { afterEach, expect, it, jest } from "@jest/globals";
 import { createHash } from "node:crypto";
 import { traceRuntimePhase } from "../../../convex-dev/runtimeLatencyTrace";
 import type { RuntimeLatencyMetadata } from "../../../convex-dev/runtimeLatencyTrace";
+// The installed runtime environment is the same one applied around real handlers.
+import { setupEnvironment } from "../../../node_modules/@convex-dev/workflow/dist/client/environment.js";
 
 const initial = process.env.CORTEX_RUNTIME_LATENCY_TRACE;
 afterEach(() => {
@@ -44,4 +46,27 @@ it("hashes nonopaque run/account correlation synchronously and keeps determinist
     expect(second[field as keyof typeof first]).toBe(first[field as keyof typeof first]);
     expect(output.mock.calls[0][0]).not.toContain(value);
   }
+});
+it("defaults tracing off in the actual Workflow0.4.8 deterministic environment and reaches the next product step", () => {
+  process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
+  const output = jest.spyOn(console, "log").mockImplementation(() => {});
+  const originalProcess = process;
+  let absentProcess = false, nextStepReached = false, failure: unknown;
+  const restore = setupEnvironment(() => ({ now: 1234, latest: true }), "latency-workflow-regression");
+  try {
+    absentProcess = typeof process === "undefined";
+    traceRuntimePhase(`run:${"a".repeat(64)}`, 1, "barrier.begin");
+    nextStepReached = true;
+  } catch (error) { failure = error; }
+  finally { restore(); }
+  expect(absentProcess).toBe(true); expect(failure).toBeUndefined(); expect(nextStepReached).toBe(true);
+  expect(process).toBe(originalProcess); expect(output).not.toHaveBeenCalled();
+  traceRuntimePhase(`run:${"a".repeat(64)}`, 1, "context.indexed-probe.begin");
+  expect(output).toHaveBeenCalledTimes(1);
+});
+it("does not swallow errors from native trace dependencies when tracing is enabled", () => {
+  process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
+  const denied = new Error("TRACE_OUTPUT_FAILURE");
+  jest.spyOn(console, "log").mockImplementation(() => { throw denied; });
+  expect(() => traceRuntimePhase(`run:${"a".repeat(64)}`, 1, "context.indexed-probe.begin")).toThrow(denied);
 });

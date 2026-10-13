@@ -1,0 +1,153 @@
+{
+  "observedAt": "2026-10-13T03:17:38.106Z",
+  "target": {
+    "sessionId": "8a1aa585-aff0-4383-acda-c221c6d405e1",
+    "name": "energized-wildcat-602",
+    "id": 6129766,
+    "reference": "dev/cortex-sandbox-8a1aa585-aff0-4383-acda-c221c6d405e1"
+  },
+  "freshVerifications": 3,
+  "run": {
+    "runId": "run:f4d14aabf2582a430af257b90deae750fe96b0e8762ce6a69f69a0363d57a70a",
+    "responseStatus": "FAILED",
+    "failureCode": "EXECUTION_FAILED",
+    "attemptNumber": 1,
+    "createdAt": 1791860705858,
+    "updatedAt": 1791860713618,
+    "outputMessageCount": 0
+  },
+  "execution": {
+    "state": "FAILED",
+    "failureCode": "EXECUTION_FAILED",
+    "workflowId": "jd728h9gjh7jhrazd6wdjnke7h8g64x5"
+  },
+  "workflows": [
+    {
+      "id": "jd728h9gjh7jhrazd6wdjnke7h8g64x5",
+      "generationNumber": 0,
+      "resultKind": "failed",
+      "error": {
+        "sha256": "81a912c7f63b6b1d28f460be89991d56032aa37787b96a7d088074dadd99ec31",
+        "bytes": 393,
+        "classifications": {
+          "dateNow": false,
+          "random": false,
+          "processGlobal": false,
+          "deterministic": false,
+          "argumentValidation": false,
+          "missingRunQuery": false,
+          "missingRunMutation": false,
+          "missingReference": false,
+          "invalidState": false,
+          "staleTranscript": false,
+          "staleContext": false,
+          "forbidden": false,
+          "policyDenied": false,
+          "timeout": false,
+          "transactionLimit": false,
+          "workflow": true,
+          "jsonParse": false,
+          "serialization": false,
+          "browserGlobal": false,
+          "traceHelper": true,
+          "undefinedEnv": true,
+          "typeError": true,
+          "referenceError": false,
+          "convexError": false,
+          "assertionError": false
+        },
+        "knownCodes": [],
+        "stackSourceLocations": [
+          {
+            "file": "../../convex/runtimeLatencyTrace.ts",
+            "line": 10,
+            "column": 17
+          },
+          {
+            "file": "../../convex/runtimeAgent.ts",
+            "line": 194,
+            "column": 10
+          },
+          {
+            "file": "convex-dev/workflow/src/client/workflowMutation.ts",
+            "line": 256,
+            "column": 32
+          },
+          {
+            "file": "convex-dev/workflow/src/client/workflowMutation.ts",
+            "line": 288,
+            "column": 29
+          }
+        ]
+      }
+    }
+  ],
+  "steps": [],
+  "counts": {
+    "agentOperations": 0,
+    "modelOperations": 0,
+    "modelAttempts": 0
+  },
+  "errors": [],
+  "phases": [
+    {
+      "runId": "run:f4d14aabf2582a430af257b90deae750fe96b0e8762ce6a69f69a0363d57a70a",
+      "attemptNumber": 0,
+      "phase": "claim.begin",
+      "at": 1791860705858,
+      "functionPath": "runtimeClient:submitAndStart",
+      "executionId": "bb0c5a74-e510-4456-a18c-3ef65fbc2e90",
+      "decodings": [
+        "single-quote-wrapper",
+        "json-object"
+      ]
+    },
+    {
+      "runId": "run:f4d14aabf2582a430af257b90deae750fe96b0e8762ce6a69f69a0363d57a70a",
+      "attemptNumber": 1,
+      "phase": "claim.end",
+      "at": 1791860705858,
+      "functionPath": "runtimeClient:submitAndStart",
+      "executionId": "bb0c5a74-e510-4456-a18c-3ef65fbc2e90",
+      "decodings": [
+        "single-quote-wrapper",
+        "json-object"
+      ]
+    }
+  ],
+  "logLineStructures": [
+    {
+      "lineType": "object",
+      "lineKeys": [
+        "messages",
+        "isTruncated",
+        "timestamp",
+        "level",
+        "systemMetadata",
+        "componentPath",
+        "udfPath"
+      ],
+      "messageTypes": [
+        "string"
+      ],
+      "messages": 1,
+      "count": 4
+    },
+    {
+      "lineType": "object",
+      "lineKeys": [
+        "messages",
+        "isTruncated",
+        "timestamp",
+        "level",
+        "systemMetadata"
+      ],
+      "messageTypes": [
+        "string"
+      ],
+      "messages": 1,
+      "count": 32
+    }
+  ],
+  "rawPayloadRetained": false
+}

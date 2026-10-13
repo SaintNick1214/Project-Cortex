@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "backend/Gateway and SDK/provider/Basic/browser source independentlyPASS; fresh immutable artifacts/service/UI integration in progress",
+  "phase": "Hosted-cloud priority; first real CLI run failed at Workflow tracing before first step; guard repaired, source review and fresh installed retest pending",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-13T02:33:34.509793+00:00",
+  "updatedAt": "2026-10-13T03:25:57.552Z",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -34,5 +34,28 @@
       "verdict": "PASS4.0",
       "liveLatency": false
     }
-  ]
+  ],
+  "primaryLatencyTarget": "hosted cloud Convex submission to first visible answer text under1000ms",
+  "actualFailedEnvironment": {
+    "id": "8a1aa585-aff0-4383-acda-c221c6d405e1",
+    "database": "energized-wildcat-602",
+    "state": "CLEANED",
+    "runId": "run:f4d14aabf2582a430af257b90deae750fe96b0e8762ce6a69f69a0363d57a70a",
+    "failureCode": "EXECUTION_FAILED",
+    "agentModelAttempts": 0,
+    "asyncMemoryModelAttempts": 2,
+    "firstVisibleMs": null,
+    "sloSampleValid": false,
+    "receipts": [
+      "first-cli-failure-diagnosis.json",
+      "cli-interactive-failure.json",
+      "failed-env-cleanup-final.json"
+    ]
+  },
+  "browserPrerequisite": {
+    "mac": "user unlocked",
+    "surface": "native Safari canonical shell rendered; no login or prompt",
+    "structuredProvider": "IAB unavailable; structured console/network unavailable",
+    "evidence": "browser/readiness-after-unlock.md"
+  }
 }

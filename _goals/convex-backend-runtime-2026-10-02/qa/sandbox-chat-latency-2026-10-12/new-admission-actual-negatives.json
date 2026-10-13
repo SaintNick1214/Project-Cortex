@@ -1,0 +1,227 @@
+{
+  "observedAt": "2026-10-13T03:18:43.054Z",
+  "target": {
+    "name": "energized-wildcat-602",
+    "id": 6129766,
+    "reference": "dev/cortex-sandbox-8a1aa585-aff0-4383-acda-c221c6d405e1"
+  },
+  "cases": [
+    {
+      "role": "unauthenticated",
+      "code": "UNAUTHENTICATED",
+      "denied": true
+    },
+    {
+      "role": "reader",
+      "code": "FORBIDDEN",
+      "denied": true
+    },
+    {
+      "role": "outsider",
+      "code": "FORBIDDEN",
+      "denied": true
+    }
+  ],
+  "before": {
+    "runtimeRuns": 1,
+    "runtimeModelAttempts": 9,
+    "runtimeAgentExecutions": 1,
+    "runtimeRunOutbox": 1
+  },
+  "after": {
+    "runtimeRuns": 1,
+    "runtimeModelAttempts": 9,
+    "runtimeAgentExecutions": 1,
+    "runtimeRunOutbox": 1
+  },
+  "newAdmissionOrBillableAttempts": 0,
+  "relevantRegistration": [
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "request": {
+            "fieldType": {
+              "type": "any"
+            },
+            "optional": false
+          },
+          "streaming": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "runtimeClient.js:submitAndStart",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "boundary": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "anchor": {
+                  "fieldType": {
+                    "type": "object",
+                    "value": {
+                      "order": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "stepOrder": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      }
+                    }
+                  },
+                  "optional": false
+                },
+                "conversationId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "queueSequence": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "runId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                }
+              }
+            },
+            "optional": false
+          },
+          "cutoff": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "excludedSourceKeys": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "string"
+              }
+            },
+            "optional": false
+          },
+          "reference": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "grantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "grantVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "membershipId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "membershipVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "memorySpaceEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                },
+                "memorySpaceId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "principalId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "principalVersion": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantEpoch": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "tenantId": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                }
+              }
+            },
+            "optional": false
+          },
+          "runBudgetId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "runtimeMemoryContext.js:indexedContextAvailability",
+      "returns": null,
+      "visibility": {
+        "kind": "internal"
+      }
+    }
+  ],
+  "scope": "two changed registered routes only; existing historical endpoint inventory not recertified",
+  "paidCalls": 0
+}
