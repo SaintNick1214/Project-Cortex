@@ -1,0 +1,113 @@
+{
+  "schema": "cortex.k12-regression-diagnosis.independent-review.v1",
+  "observedAtUTC": "2026-10-13T21:03:52.644742+00:00",
+  "verdict": "PASS",
+  "scope": "Measured K12 diagnosis and corrected supplement only; not final goal acceptance",
+  "reviewer": "latency_batch_review",
+  "sourceCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "inputHashes": {
+    "version-regression-measured-k12-supplement.md": "11f20ec3f7d8ff93e22cf75fa4130ae23c2ec1772cd2c6519116efba55491b02",
+    "version-regression-published-artifact-receipt.json": "e8cee4b9678789d77f94ecf38f5e543f1379f44b23ba04c6ce1712e68a8512bd",
+    "version-latency-regression-035-037-current.md": "4f2412b1038cc64a79196e604e919aba604b89ead08266e526a82712df3d8d02",
+    "version-latency-regression-035-037-current.json": "ffbfe4f51964369e7f4f5dca6fd66485a25a56e75ef3f49c48237a0ae69bf004",
+    "version-regression-historical-battle-baseline.json": "7b0d86ba8e591909a03636a8ebdee1269dd2ac51c7c2141e8e98c852cc3f0c28",
+    "cloud-k12-delay-chain-first.md": "201d4756dca8fddd0bf774f611adc684051d296ae14a59c919aa99b33824f0ef",
+    "cloud-k12-delay-chain-first.json": "2fb694eccf4babeeef3ef5c0cf4d7b9c5c2ad8a3af0523ced69876be351d36fb",
+    "browser/k12-first-warm-events.json": "31d47003ce3970a2267ac4d56d8c7847dcd7046c6fc7ddbe28f1912687b8a78f",
+    "k12-cli-pure-timing.json": "7280f8754030ac772200c60966f11df602329f1ca529756bac661dd7dde91e8f",
+    "k12-cli-recall-acquisition-boundaries.json": "7224bfd0d3bb54cfa4ac582283c229475f60591725fbf95d8e1e81becb8ed694",
+    "k12-memory-native-v2-four-run-verification-1791924551751.json": "325fe1dfc409c50a8f555e46398aeb3a5572470023a9f36d9816bc17c8861048",
+    "k12-financial-metadata-1791924741658.json": "1b821b9c813c38a918e940ebc2ef132efc206a6df6c6644d866fad5ef3eed8d7",
+    "k12-cleanup-final.json": "d4899494d455adac819da23c4b17af7f5345f2e0855eb55fbca2ab4599bec446",
+    "run-chain-b4508c2e5c02-1791924079183.json": "3bd14dc80d4569f07b9b43ffc19266312aaea25c67839c74c754c749955729bd",
+    "service-log-snapshot-1791924077317.json": "58b399a48e8850305242f0c2887af24b5eae6b85ae314000f0691c30b944966b",
+    "browser/k12-first-events-final.json": "4b5bad4e1629643274efa3a5350e704acba4af6ad810fc5a912b29d61f391e1a",
+    "browser/k12-first-sdk-events.json": "7b0160fe8c5f93c9ef16fe4f9d4dad19adee3d33ec7619624fc8760b74b64729",
+    "run-chain-2fc67ec93869-1791924165216.json": "4a8b6b5b10a067e1cc2ea158e32645af0f850e83581327f8e004487009cc478a",
+    "service-log-snapshot-1791924162410.json": "74cc2ab7bb2d0ccc00491c1da6f8f4518d9ffcf149552b6083211894a5975151",
+    "browser/k12-first-warm-sdk-events.json": "2d0d95b1b55871b3d8590bd4264332496d0547916cd9e1ca8147a9e1b3beb92d",
+    "cloud-k11-delay-chain.json": "d36df7bd2ebb4bac021746f56485b6ef99211957749a91be910b63d0c3ab4fa2",
+    "cloud-k11-delay-chain.md": "bd0300ba565078568081fdf887be0daf6ea5f9b3c5c38f43cd5f3d222ce22765",
+    "service-log-snapshot-1791924454323.json": "e994aac61d1cc28e3d793fdf7fb6835615053c16c857296f620e88df7a2c5454"
+  },
+  "rawChecks": {
+    "traceEvidenceHashesMatch": true,
+    "committedSourceEvidenceHashesMatch": true,
+    "nativeExecutionJoinsVerified": 48,
+    "nativeGatewayPhaseJoinsVerified": 34,
+    "serverPartitionsContinuousAndDisjoint": true,
+    "nestedMetricsNotAdded": true,
+    "browserClientClockSeparate": true,
+    "publishedFourAwaitExpressionsMatchAcrossESMAndCJS": true,
+    "wholeMethodByteEqualityNotClaimed": true,
+    "publishedTreesLackAgentGatewayRuntime": true,
+    "fourExactReplyHashChecks": [
+      {
+        "label": "browser-first",
+        "exactReplyHashMatches": true
+      },
+      {
+        "label": "browser-warm",
+        "exactReplyHashMatches": true
+      },
+      {
+        "label": "cli-first",
+        "exactReplyHashMatches": true
+      },
+      {
+        "label": "cli-warm",
+        "exactReplyHashMatches": true
+      }
+    ],
+    "cliOriginalTimingReceiptMatches": true,
+    "cliAtStampAcquisitionChecks": [
+      {
+        "runId": "run:10bf3d811777605f91fcf158d09370dec37264049a2e9f8ff1b53a5cba075c5e",
+        "recallEnvelopeMs": 5287,
+        "queryEmbeddingAtStampMs": 405,
+        "queryEmbeddingReportedDurationMs": 405,
+        "answerAcquisitionAtStampMs": 551,
+        "answerAcquisitionReportedDurationMs": 551
+      },
+      {
+        "runId": "run:5bd138ad6b3f243a9bcc4116727c8667be14020253f82e7bad9ca63e563af74c",
+        "recallEnvelopeMs": 6717,
+        "queryEmbeddingAtStampMs": 400,
+        "queryEmbeddingReportedDurationMs": 401,
+        "answerAcquisitionAtStampMs": 627,
+        "answerAcquisitionReportedDurationMs": 626
+      }
+    ],
+    "nativeFourRunPositiveChecksPass": true,
+    "financeAttemptCount": 30,
+    "financeActiveSlots": 0,
+    "financeUnknownCeilingsMicroUSD": 4900000,
+    "allAttemptStates": "uncertain",
+    "cleanupExactAbsentAndAllPrivateDirectoriesRemoved": true
+  },
+  "sameReviewCorrections": [
+    "Whole legacy method source is not byte-identical; final supplement says same four awaited recall expressions.",
+    "Current K12 latency hotspots do not establish the unavailable historical causal regression."
+  ],
+  "breakingFindings": [],
+  "unproved": [
+    "Reported historical200ms workload and matched0.35/0.37 baseline.",
+    "Provider internal token/network/model subphase attribution.",
+    "Exact OCC conflicting rows or observer-caused contention.",
+    "Controlled cross-candidate speedup.",
+    "Overall functional/SLO acceptance and final audit."
+  ],
+  "overallUnder1000msVerdict": "FAIL",
+  "finalAudit": "pending",
+  "excluded": "All new UI/start source changes in progress",
+  "localReviewFailure": "Initial report serializer missed datetime import and stopped before any file write; corrected without source/service action.",
+  "reviewerActions": {
+    "productEdits": 0,
+    "services": 0,
+    "paidCalls": 0,
+    "browserActions": 0,
+    "builds": 0,
+    "tests": 0,
+    "gitWrites": 0
+  }
+}

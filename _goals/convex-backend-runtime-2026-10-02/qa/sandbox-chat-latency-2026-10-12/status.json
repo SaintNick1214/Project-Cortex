@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-13T20:54:23.147835+00:00",
+  "updatedAt": "2026-10-13T21:05:22.307573+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -593,5 +593,13 @@
     "cleanupReceipt": "k12-cleanup-final.json",
     "cleanupStatus": "ABSENT",
     "chargesKnown": false
+  },
+  "regressionDiagnosis": {
+    "percent": 100,
+    "independentVerdict": "PASS boundeddiagnosisonly",
+    "review": "k12-regression-diagnosis-independent-review.md",
+    "supplement": "version-regression-measured-k12-supplement.md",
+    "sourceHistoricalCausalBaseline": "unavailable; publishedawaitstructurematchednotwholemethodbytes",
+    "doesNotAcceptUnder1000": true
   }
 }
