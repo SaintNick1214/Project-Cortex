@@ -1,0 +1,55 @@
+{
+  "node": "v24.15.0",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "args": [
+    "--import",
+    "tsx",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config={\"preset\":\"ts-jest/presets/default-esm\",\"testEnvironment\":\"node\",\"roots\":[\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12\"],\"testMatch\":[\"**/*.test.ts\"],\"extensionsToTreatAsEsm\":[\".ts\"],\"transform\":{\"^.+\\\\.(ts|tsx|js)$\":[\"ts-jest\",{\"useESM\":true,\"tsconfig\":{\"allowJs\":true,\"module\":\"ESNext\",\"moduleResolution\":\"bundler\"},\"diagnostics\":false}]},\"moduleNameMapper\":{\"^(\\\\.{1,2}/.*)\\\\.js$\":\"$1\"},\"transformIgnorePatterns\":[\"node_modules/(?!(convex|openai))\"],\"rootDir\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion\",\"watchman\":false}",
+    "--runInBand",
+    "--runTestsByPath",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-instrumentation.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-jest.json"
+  ],
+  "syntaxDiagnostics": 0,
+  "oneControlledRun": true,
+  "serviceCalls": 0,
+  "sourceBefore": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "sha256": "39ccd0fa8970619b80f17b4f6dead62a38adabd0331d114588bf9f90fd9e8875"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "6c3ecab80b4953e0e4f3c94ca4396217ab5a51738da1ab3bb29163450deaa070"
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "865ed4d1d7d2c5fe5beca6f81dd9063382b8b4f626816b40b4e00860944f0eef"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "7aa4fc104e8f882178bb13e2e7f059651a0d4ed9ce9a43d52c941730436d8fae"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "sha256": "a3477f6bb95dcc12f52199e125d47298ae7e1b79b26aa14a9163208d221cf09e"
+    },
+    {
+      "file": "convex-dev/agentDefinitions.ts",
+      "sha256": "7b01997af386827e6e55073abdc7703a1a55fd3b092f9c036382443b5476600a"
+    },
+    {
+      "file": "convex-dev/runtimeAgentFence.ts",
+      "sha256": "3969de14ba28b38409ecccea53719f95186cb1ccceab6a33568077385ddb764d"
+    },
+    {
+      "file": "convex-dev/runtimeTranscript.ts",
+      "sha256": "5c0561422eeff78e70efe63aea359c5d49e97d55924b171291c2271eb1b4ea41"
+    }
+  ],
+  "helperSha256": "e235fcdf6b9479e90ec0eaecd791eca729488beb3a85822a9fd4de0c9f4f5c54",
+  "typecheckClaim": false
+}

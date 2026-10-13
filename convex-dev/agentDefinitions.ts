@@ -11,7 +11,7 @@ import type { ModelOperationKey, TrustedModelPolicyRecord } from "../src/domain/
 import { semanticHash } from "../src/domain/profile";
 import { assertUnicode, boundedIdentifier, clientRequestKey, utf8Bytes } from "../src/domain/transcript";
 import { requireDataAuthority, dataAuthorityReference } from "./runtimeDataAuth";
-import { recheckAuthority } from "./runtimeAuth";
+import { recheckAuthority, readDeploymentPolicyRows } from "./runtimeAuth";
 import { lookupDeploymentManifest } from "./runtimeModelPolicyBootstrap";
 import { NATIVE_TOOL_NAMES_V2 as NATIVE_TOOL_NAMES } from "../src/domain/agent-tools";
 
@@ -78,7 +78,7 @@ async function registry(input: z.infer<typeof definitionInput>): Promise<void> {
 }
 /** Same root/tenant narrowing as the existing policy resolver, with no second budget implementation. */
 async function narrowPolicies(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, definition: ExecutableDefinitionV1): Promise<void> {
-  const roots = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65);
+  const roots = await readDeploymentPolicyRows(ctx);
   const root = roots[0]?.root;
   const manifest = root && lookupDeploymentManifest(root.manifestId, root.revision);
   if (!manifest || !roots.length || roots.length > 64) denied("CAPABILITY_UNAVAILABLE");

@@ -1,0 +1,382 @@
+(node:87361) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/context-policy-read.test.ts (6.378 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● positive routing does no full profile/probe work; standalone empty and child profile query stay unopted
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at assertCurrentEvidence (convex-dev/runtimeModelPolicy.ts:229:56)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:296:3)
+      at bindTrustedBudget (convex-dev/runtimeModelPolicy.ts:371:20)
+      at Function.submitHandler [as _handler] (convex-dev/runs.ts:88:18)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.start (tests/unit/runtimeAgent/context-policy-read.test.ts:36:17)
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-policy-read.test.ts:82:71)
+
+  ● fresh save fence preserves original after-probe qualification-revoked denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+  ● fresh save fence preserves original after-probe qualification-duplicate denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+  ● fresh save fence preserves original after-probe qualification-expired denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+  ● fresh save fence preserves original after-probe root-canonical denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+  ● fresh save fence preserves original after-probe policy-revoked denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+  ● fresh save fence preserves original after-probe policy-duplicate denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+  ● fresh save fence preserves original after-probe revocation denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+  ● fresh save fence preserves original after-probe lease denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+  ● fresh save fence preserves original after-probe memory-appeared denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+  ● fresh save fence preserves original after-probe input-edit denial and transaction rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      101 |   let error: unknown;
+      102 |   try { await f.call(runtime.prepareRoutedContext, args); } catch (value) { error = value; }
+    > 103 |   expect(reached).toBe(true); expect(error).toBeInstanceOf(Error); expect(state(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+          |                   ^
+      104 |   expect(observer.records.some(value => value.startsWith("patch:"))).toBe(false); jest.restoreAllMocks();
+      105 |   return error instanceof Error ? { name: error.name, message: error.message, data: "data" in error ? error.data : undefined } : error;
+      106 | }
+
+      at denial (tests/unit/runtimeAgent/context-policy-read.test.ts:103:19)
+      at tests/unit/runtimeAgent/context-policy-read.test.ts:108:115
+
+PASS tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-routing.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     6.4s | 4/15 passed | /tests/unit/runtimeAgent/context-policy-read.test.ts
+  ✅     2.6s | 52/52 passed | /tests/unit/runtimeAgent/context-routing.test.ts
+  ✅     2.3s | 39/39 passed | /tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ✅     0.8s | 12/12 passed | /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.12s ( 0.9%) - metadata_overflow needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 2. [32m✓[0m    0.09s ( 0.7%) - empty preserves actual result/state/non-metadata order while reducing exact raw rows
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+ 3. [32m✓[0m    0.07s ( 0.6%) - pending_overflow_warn needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 4. [32m✓[0m    0.07s ( 0.6%) - inline empty context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 5. [32m✓[0m    0.07s ( 0.6%) - represented preserves actual result/state/non-metadata order while reducing exact raw rows
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+ 6. [32m✓[0m    0.07s ( 0.5%) - warning preserves actual result/state/non-metadata order while reducing exact raw rows
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+ 7. [32m✓[0m    0.06s ( 0.5%) - metadata overflow routes conservatively at the original bounded 1025-row cap without full pending/profile work
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+ 8. [32m✓[0m    0.06s ( 0.5%) - ineligible falls through to the original exact proof/save outcome
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+ 9. [32m✓[0m    0.06s ( 0.5%) - empty falls through to the original exact proof/save outcome
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+10. [32m✓[0m    0.06s ( 0.5%) - inline pending context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+11. [32m✓[0m    0.06s ( 0.5%) - awaiting_approval falls through to the original exact proof/save outcome
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+12. [32m✓[0m    0.06s ( 0.5%) - represented falls through to the original exact proof/save outcome
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+13. [32m✓[0m    0.06s ( 0.5%) - warning falls through to the original exact proof/save outcome
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+14. [32m✓[0m    0.06s ( 0.5%) - inline pending_unknown context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+15. [32m✓[0m    0.06s ( 0.5%) - inline barrier_warning context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+16. [32m✓[0m    0.05s ( 0.4%) - eligible_index needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+17. [32m✓[0m    0.05s ( 0.4%) - the exact 32-source pending cap remains valid and the original size/cutoff construction is retained
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+18. [32m✓[0m    0.05s ( 0.4%) - fail overflow returns a marker before invalid profile availability, and original durable fail survives later rejection
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+19. [32m✓[0m    0.05s ( 0.4%) - completed indexed routing reaches the same original governed retrieval tuple without saving an empty context
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+20. [32m✓[0m    0.05s ( 0.4%) - strict barriers precede any hint with warning=true and preserve original bounded sleep/deadline
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.27s (10.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      12.30s
+  Test suites:        4
+  Individual tests:   118
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       11 failed, 107 passed, 118 total
+Snapshots:   0 total
+Time:        12.3 s
+Ran all test suites within paths "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts", "tests/unit/runtimeAgent/context-policy-read.test.ts", "tests/unit/runtimeAgent/empty-context-inline.test.ts", "tests/unit/runtimeAgent/context-routing.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-focused-v1-jest.json

@@ -121,6 +121,10 @@ export interface MemoryRepository {
   recheckAuthority(): Promise<void>;
   /** Check read capability before inference without consuming a recall payload. */
   assertReadAuthority?(): Promise<void>;
+  /** Read-only recall branches retain private bookkeeping until both settle.
+   * Commit synchronously in vector-then-fact order; never commit a failed batch.
+   * Wrappers replacing either read must explicitly supply their own staging. */
+  stageRecallReads?(): Pick<MemoryRepository, "searchVectors" | "listFacts"> & { commit(): void };
   /** Action adapters revalidate the exact consumed rows in a fresh native transaction. */
   finalDelivery?(): Promise<{ version: 1; deliveryExpiresAt?: number }>;
   getSource(sourceId: string): Promise<SourceContent | null>;

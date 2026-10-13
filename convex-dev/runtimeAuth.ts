@@ -4,6 +4,7 @@ import { makeFunctionReference } from "convex/server";
 import type { FunctionReference, UserIdentity } from "convex/server";
 import { internalMutation, internalQuery } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
 import type {
   RuntimeActorKind, RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement,
   RuntimeCapability, RuntimeResource, RuntimeResourceAccess, RuntimeResourceType,
@@ -44,8 +45,32 @@ export interface AuthorityReader {
 }
 
 const authorityReadScope: unique symbol = Symbol("cortex.native-authority-read-scope");
+const policyMetadataReadScope: unique symbol = Symbol("cortex.native-policy-metadata-read-scope");
+interface PolicyMetadataReader {
+  deploymentRows(): Promise<Doc<"runtimeModelPolicies">[]>;
+  qualificationRows(receiptId: string, revision: number): Promise<Doc<"runtimeModelQualifications">[]>;
+  fresh(): void;
+}
+type PolicyMetadataContext = Pick<QueryCtx, "db"> & { [policyMetadataReadScope]?: PolicyMetadataReader };
 type AuthorityReadContext = Pick<QueryCtx, "db"> & { [authorityReadScope]?: AuthorityReader };
 export const AUTHORITY_READ_SCOPE_MAX_ENTRIES = 512;
+export const POLICY_METADATA_READ_SCOPE_MAX_ENTRIES = 64;
+/** Exact original bounded raw queries; callers retain every validation predicate. */
+export async function readDeploymentPolicyRows(ctx: Pick<QueryCtx, "db">): Promise<Doc<"runtimeModelPolicies">[]> {
+  const reader = (ctx as PolicyMetadataContext)[policyMetadataReadScope];
+  if (reader) return await reader.deploymentRows();
+  return await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65);
+}
+export async function readQualificationRows(ctx: Pick<QueryCtx, "db">, receiptId: string, revision: number): Promise<Doc<"runtimeModelQualifications">[]> {
+  const reader = (ctx as PolicyMetadataContext)[policyMetadataReadScope];
+  if (reader) return await reader.qualificationRows(receiptId, revision);
+  return await ctx.db.query("runtimeModelQualifications").withIndex("by_receipt", q => q.eq("receiptId", receiptId).eq("version", revision)).take(2);
+}
+/** Only opted-in metadata is cleared: the original context/writer/authority reader is retained. */
+export function freshPolicyMetadataReads<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx): Ctx {
+  (ctx as PolicyMetadataContext)[policyMetadataReadScope]?.fresh();
+  return ctx;
+}
 
 /** Trusted native DB records are plain Convex values. Preserve optional undefined
  * fields and BigInt without relying on a Node-only structuredClone global. */
@@ -63,10 +88,13 @@ function authorityReadKey(method: string, args: readonly (string | undefined)[])
 /** Explicit native invocation only. This reuses raw reads, never an authorization
  * decision: all requirement, generation, expiry and resource predicates still run.
  * Every writer invalidates before/after and suppresses cache use while in flight. */
-export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx): Ctx {
+export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options?: { policyMetadata: true }): Ctx {
   const values = new Map<string, unknown>();
+  const metadata = new Map<string, unknown>();
   let epoch = 0, writers = 0;
-  const invalidate = () => { values.clear(); epoch++; };
+  let metadataEpoch = 0;
+  const freshMetadata = () => { metadata.clear(); metadataEpoch++; };
+  const invalidate = () => { values.clear(); epoch++; freshMetadata(); };
   const read = async <T>(method: string, args: readonly (string | undefined)[], invoke: () => Promise<T>): Promise<T> => {
     const key = authorityReadKey(method, args), started = epoch;
     if (!writers && values.has(key)) return cloneAuthorityValue(values.get(key)) as T;
@@ -84,6 +112,13 @@ export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: 
     getGrant: id => read("getGrant", [id], () => base.getGrant(id)),
     getScope: (tenant, space) => read("getScope", [tenant, space], () => base.getScope(tenant, space)),
     hasTombstone: key => read("hasTombstone", [key.tenantId, key.memorySpaceId, key.resourceType, key.resourceId], () => base.hasTombstone(key)),
+  };
+  const readMetadata = async <T>(key: string, invoke: () => Promise<T>): Promise<T> => {
+    const started = epoch, freshness = metadataEpoch;
+    if (!writers && metadata.has(key)) return cloneAuthorityValue(metadata.get(key)) as T;
+    const value = cloneAuthorityValue(await invoke());
+    if (!writers && epoch === started && metadataEpoch === freshness && metadata.size < POLICY_METADATA_READ_SCOPE_MAX_ENTRIES) metadata.set(key, value);
+    return cloneAuthorityValue(value);
   };
   const writing = async (invoke: () => unknown): Promise<unknown> => {
     invalidate(); writers++;
@@ -105,6 +140,12 @@ export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: 
       : (...args: unknown[]) => Reflect.apply(value, ctx, args) as unknown });
   }
   Object.defineProperty(scoped, authorityReadScope, { value: reader });
+  if (options?.policyMetadata) Object.defineProperty(scoped, policyMetadataReadScope, { value: {
+    deploymentRows: () => readMetadata("deployment", async () => await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65)),
+    qualificationRows: (receiptId: string, revision: number) => readMetadata(JSON.stringify(["qualification", receiptId, revision]), async () =>
+      await ctx.db.query("runtimeModelQualifications").withIndex("by_receipt", q => q.eq("receiptId", receiptId).eq("version", revision)).take(2)),
+    fresh: freshMetadata,
+  } satisfies PolicyMetadataReader });
   return scoped;
 }
 

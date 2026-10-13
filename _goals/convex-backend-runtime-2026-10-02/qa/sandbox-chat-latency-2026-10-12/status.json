@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K13 functional native outcomes verified and exact environment cleaned; hosted latency FAIL; deterministic parallel recall repair in progress",
+  "phase": "Joint parallel-recall and routed-metadata source gate PASS; preparing a fresh hosted candidate",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-13T21:44:13.039Z",
+  "updatedAt": "2026-10-13T22:25:35.232Z",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -615,15 +615,13 @@
     "doesNotAcceptUnder1000": true
   },
   "nextSourceGate": {
-    "verdict": "PASS4.2",
-    "review": "cloud-k13-joint-source-review.md",
-    "backendTests": 1094,
-    "backendSuites": 21,
-    "demoTests": 148,
-    "mirroredTestsOverlap": true,
-    "catalogTests": 24,
-    "zeroSkips": true,
-    "nativeSLOAccepted": false
+    "verdict": "PASS4.0",
+    "sourcePercent": 100,
+    "review": "parallel-policy-joint-source-review.md",
+    "tests": 1855,
+    "suites": 41,
+    "skipped": 0,
+    "nativeQualified": false
   },
   "packagingK13": {
     "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
@@ -691,5 +689,12 @@
     "sourceAccepted": false,
     "nativeAccepted": false,
     "sloAccepted": false
+  },
+  "docsV8": {
+    "verdict": "PASS as part of joint source gate",
+    "review": "parallel-policy-joint-source-review.md",
+    "buildExit": 0,
+    "actualPerformanceRender": true,
+    "publication": false
   }
 }

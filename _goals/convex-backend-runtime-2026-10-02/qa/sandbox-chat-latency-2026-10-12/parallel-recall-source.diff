@@ -1,0 +1,556 @@
+diff --git a/convex-dev/runtimeAgent.ts b/convex-dev/runtimeAgent.ts
+index a947511bc..2bd62832d 100644
+--- a/convex-dev/runtimeAgent.ts
++++ b/convex-dev/runtimeAgent.ts
+@@ -501,24 +501,58 @@ export const prepareContext = internalAction({ args: agentAttempt, handler: asyn
+   const repository = createActionMemoryRepository(ctx, args.reference, "read"); const witnesses = new Map<string, Witness>();
+   const excluded = new Set([...represented, ...pending.sourceKeys]);
+   const provenance = new Map<string, import("../src/domain/contracts").SourceLineage>();
+-  async function remember(sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }, permission: ContextSourcePermission) {
++  type RecallContext = { witnesses: typeof witnesses; provenance: typeof provenance };
++  type RecallReads = Pick<typeof repository, "listFacts" | "searchVectors">;
++  const retained = { witnesses, provenance };
++  async function remember(state: RecallContext, sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }, permission: ContextSourcePermission, priorWitnesses?: typeof witnesses) {
+     const source = await ctx.runQuery(refs.contextSource, { reference: args.reference, sourceId,
+       expected: { sourceEventId: expected.sourceEventId, sourceRevision: expected.sourceRevision, ...(expected.contentHash !== undefined ? { contentHash: expected.contentHash } : {}) },
+       excludedSourceKeys: [...excluded], cutoff, boundary });
+     if (!source) return false;
+     const key = contextSourceKey(scope, source.lineage);
+-    const witness = mergeContextWitness(witnesses.get(sourceId), { sourceId, sourceEventId: source.lineage.sourceEventId,
++    const witness = mergeContextWitness(state.witnesses.get(sourceId) ?? priorWitnesses?.get(sourceId), { sourceId, sourceEventId: source.lineage.sourceEventId,
+       sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, permissions: [permission] });
+     if (!witness) transcriptDenied("STALE_CONTEXT");
+-    witnesses.set(sourceId, witness); provenance.set(key, source.lineage); return true;
++    state.witnesses.set(sourceId, witness); state.provenance.set(key, source.lineage); return true;
+   }
+-  const scoped = { ...repository, listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => {
+-    const facts = await repository.listFacts(query); const selected = [];
+-    for (const fact of facts) if (await remember(fact.lineage.sourceId, fact.lineage, "canViewFacts")) selected.push(fact); return selected;
+-  }, searchVectors: async (...query: Parameters<typeof repository.searchVectors>) => {
+-    const matches = await repository.searchVectors(...query); const selected = [];
+-    for (const match of matches) if (await remember(match.source.lineage.sourceId, { ...match.source.lineage, contentHash: match.source.contentHash }, "canViewMemories")) selected.push(match); return selected;
+-  } };
++  async function selectFacts(reads: RecallReads, state: RecallContext, query: Parameters<typeof repository.listFacts>[0], vectorSettled?: Promise<void>, priorWitnesses?: typeof witnesses) {
++    const facts = await reads.listFacts(query); const selected = [];
++    // Native reads overlap; keep the original vector-first source guard RPCs.
++    await vectorSettled;
++    for (const fact of facts) if (await remember(state, fact.lineage.sourceId, fact.lineage, "canViewFacts", priorWitnesses)) selected.push(fact); return selected;
++  }
++  async function selectVectors(reads: RecallReads, state: RecallContext, query: Parameters<typeof repository.searchVectors>) {
++    const matches = await reads.searchVectors(...query); const selected = [];
++    for (const match of matches) if (await remember(state, match.source.lineage.sourceId, { ...match.source.lineage, contentHash: match.source.contentHash }, "canViewMemories")) selected.push(match); return selected;
++  }
++  const scoped = { ...repository,
++    listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => await selectFacts(repository, retained, query),
++    searchVectors: async (...query: Parameters<typeof repository.searchVectors>) => await selectVectors(repository, retained, query),
++    stageRecallReads: () => {
++      const reads = repository.stageRecallReads();
++      const vectorContext: RecallContext = { witnesses: new Map(), provenance: new Map() };
++      const factContext: RecallContext = { witnesses: new Map(), provenance: new Map() };
++      let releaseVector!: () => void;
++      const vectorSettled = new Promise<void>(resolve => { releaseVector = resolve; });
++      return {
++        searchVectors: async (...query: Parameters<typeof repository.searchVectors>) => {
++          try { return await selectVectors(reads, vectorContext, query); }
++          finally { releaseVector(); }
++        },
++        listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => await selectFacts(reads, factContext, query, vectorSettled, vectorContext.witnesses),
++        commit: () => {
++          for (const branch of [vectorContext, factContext]) {
++            for (const [sourceId, next] of branch.witnesses) {
++              const witness = mergeContextWitness(witnesses.get(sourceId), next);
++              if (!witness) transcriptDenied("STALE_CONTEXT"); witnesses.set(sourceId, witness);
++            }
++            for (const [key, lineage] of branch.provenance) provenance.set(key, lineage);
++          }
++          reads.commit();
++        },
++      };
++    },
++  };
+   const text = current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
+     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
+   const availability = inputs.availability;
+diff --git a/convex-dev/runtimeMemoryRepository.ts b/convex-dev/runtimeMemoryRepository.ts
+index ebd16672c..3f1fe88f5 100644
+--- a/convex-dev/runtimeMemoryRepository.ts
++++ b/convex-dev/runtimeMemoryRepository.ts
+@@ -436,58 +436,85 @@ function stripVector(row: Doc<"runtimeMemoryVectors">): DerivedVector {
+ export function createActionMemoryRepository(
+   ctx: Pick<ActionCtx, "runQuery" | "runMutation" | "vectorSearch">,
+   reference: RuntimeAuthorityReference, capability: "read" | "write",
+-): MemoryRepository {
++): MemoryRepository & Required<Pick<MemoryRepository, "stageRecallReads">> {
+   const scope = memoryScope(reference);
+   const args = { reference, capability };
+   const bindings: MemoryDeliveryBindings = { sources: [], facts: [], vectors: [] };
+-  const captureSource = (source: SourceContent, permission: "canViewFacts" | "canViewMemories") => {
++  const captureSource = (target: MemoryDeliveryBindings, source: SourceContent, permission: "canViewFacts" | "canViewMemories") => {
+     const next = { sourceId: source.lineage.sourceId, sourceEventId: source.lineage.sourceEventId,
+       sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, ownerPrincipalId: source.ownerPrincipalId, permission };
+-    if (!bindings.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(next))) bindings.sources.push(next);
++    if (!target.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(next))) target.sources.push(next);
+   };
+-  return {
++  const listFacts = async (query: FactQuery, target: MemoryDeliveryBindings) => {
++    const facts = await ctx.runQuery(memoryReferences.listFacts, { ...args, capability: "read", query });
++    for (const fact of facts) {
++      const source = await ctx.runQuery(memoryReferences.getSource, { ...args, capability: "read", sourceId: fact.lineage.sourceId });
++      if (!source || !sameReference(source.lineage, fact.lineage) || canonicalMemoryValue(source.lineage) !== canonicalMemoryValue(fact.lineage)
++        || source.ownerPrincipalId !== fact.ownerPrincipalId) memoryError("STALE_SOURCE", "Recalled fact source changed during read");
++      captureSource(target, source, "canViewFacts");
++      const next = { factId: fact.factId, payloadHash: await semanticHash(canonicalMemoryValue(fact)) };
++      if (!target.facts.some(value => value.factId === next.factId && value.payloadHash === next.payloadHash)) target.facts.push(next);
++    }
++    return facts;
++  };
++  const searchVectors = async (query: ProfiledQuery, limit: number, target: MemoryDeliveryBindings) => {
++    boundedLimit(limit); assertSupportedEmbeddingProfile(query.profile); assertEmbeddingVector(query.embedding, query.profile);
++    const readArgs = { ...args, capability: "read" as const };
++    const authority = await ctx.runQuery(memoryReferences.recheck, readArgs);
++    const pin = query.embeddingRunBudgetId ? { runBudgetId: query.embeddingRunBudgetId } : {};
++    await ctx.runQuery(memoryReferences.profileReady, { ...readArgs, profile: query.profile, ...pin });
++    const hits = await ctx.vectorSearch("runtimeMemoryVectors", query.profile.indexName === LARGE_EMBEDDING_PROFILE.indexName ? "by_large_embedding_v1" : "by_default_embedding_v1", {
++      vector: [...query.embedding], limit,
++      // Convex vector filters support eq/or only. This exact canonical tuple encodes conjunction.
++      filter: (q) => authority.resourceAccess === "own"
++        ? q.eq("scopeProfileOwnerKey", vectorOwnerScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId, scope.principalId))
++        : q.eq("scopeProfileKey", vectorScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId)),
++    });
++    // A second internal query rechecks revocation and canonical source currentness after search.
++    const matches = await ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, profile: query.profile, ...pin, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) });
++    for (const match of matches) {
++      captureSource(target, match.source, "canViewMemories");
++      target.vectors.push({ vectorId: match.vector.vectorId, profile: query.profile, ...pin,
++        payloadHash: await semanticHash(canonicalMemoryValue(match.vector)), chunkHash: await semanticHash(canonicalMemoryValue(match.chunk)) });
++    }
++    return matches;
++  };
++  const repository: MemoryRepository & Required<Pick<MemoryRepository, "stageRecallReads">> = {
+     scope,
+     recheckAuthority: async () => { await ctx.runQuery(memoryReferences.recheck, args); },
+     assertReadAuthority: async () => { await ctx.runQuery(memoryReferences.recheck, { ...args, capability: "read" }); },
+     getSource: async (sourceId) => await ctx.runQuery(memoryReferences.getSource, { ...args, sourceId }),
+     putSource: async (source) => await ctx.runMutation(memoryReferences.putSource, { ...args, source }),
+     commitDerived: async (input) => await ctx.runMutation(memoryReferences.commitDerived, { ...args, input }),
+-    listFacts: async (query) => {
+-      const facts = await ctx.runQuery(memoryReferences.listFacts, { ...args, capability: "read", query });
+-      for (const fact of facts) {
+-        const source = await ctx.runQuery(memoryReferences.getSource, { ...args, capability: "read", sourceId: fact.lineage.sourceId });
+-        if (!source || !sameReference(source.lineage, fact.lineage) || canonicalMemoryValue(source.lineage) !== canonicalMemoryValue(fact.lineage)
+-          || source.ownerPrincipalId !== fact.ownerPrincipalId) memoryError("STALE_SOURCE", "Recalled fact source changed during read");
+-        captureSource(source, "canViewFacts");
+-        const next = { factId: fact.factId, payloadHash: await semanticHash(canonicalMemoryValue(fact)) };
+-        if (!bindings.facts.some(value => value.factId === next.factId && value.payloadHash === next.payloadHash)) bindings.facts.push(next);
+-      }
+-      return facts;
+-    },
++    listFacts: async query => await listFacts(query, bindings),
+     finalDelivery: async () => await ctx.runMutation(memoryReferences.finalDelivery, { reference, bindings }),
+     assertProfileReady: async (profile, runBudgetId) => { await ctx.runQuery(memoryReferences.profileReady,
+       { ...args, capability: "read", profile, ...(runBudgetId ? { runBudgetId } : {}) }); },
+-    searchVectors: async (query: ProfiledQuery, limit) => {
+-      boundedLimit(limit); assertSupportedEmbeddingProfile(query.profile); assertEmbeddingVector(query.embedding, query.profile);
+-      const readArgs = { ...args, capability: "read" as const };
+-      const authority = await ctx.runQuery(memoryReferences.recheck, readArgs);
+-      const pin = query.embeddingRunBudgetId ? { runBudgetId: query.embeddingRunBudgetId } : {};
+-      await ctx.runQuery(memoryReferences.profileReady, { ...readArgs, profile: query.profile, ...pin });
+-      const hits = await ctx.vectorSearch("runtimeMemoryVectors", query.profile.indexName === LARGE_EMBEDDING_PROFILE.indexName ? "by_large_embedding_v1" : "by_default_embedding_v1", {
+-        vector: [...query.embedding], limit,
+-        // Convex vector filters support eq/or only. This exact canonical tuple encodes conjunction.
+-        filter: (q) => authority.resourceAccess === "own"
+-          ? q.eq("scopeProfileOwnerKey", vectorOwnerScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId, scope.principalId))
+-          : q.eq("scopeProfileKey", vectorScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId)),
+-      });
+-      // A second internal query rechecks revocation and canonical source currentness after search.
+-      const matches = await ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, profile: query.profile, ...pin, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) });
+-      for (const match of matches) {
+-        captureSource(match.source, "canViewMemories");
+-        bindings.vectors.push({ vectorId: match.vector.vectorId, profile: query.profile, ...pin,
+-          payloadHash: await semanticHash(canonicalMemoryValue(match.vector)), chunkHash: await semanticHash(canonicalMemoryValue(match.chunk)) });
+-      }
+-      return matches;
++    searchVectors: async (query, limit) => await searchVectors(query, limit, bindings),
++    stageRecallReads: () => {
++      const vectorBindings: MemoryDeliveryBindings = { sources: [], facts: [], vectors: [] };
++      const factBindings: MemoryDeliveryBindings = { sources: [], facts: [], vectors: [] };
++      return {
++        searchVectors: async (query, limit) => await searchVectors(query, limit, vectorBindings),
++        listFacts: async query => await listFacts(query, factBindings),
++        commit: () => {
++          // Match serial capture/dedupe exactly, including the source scan order
++          // used by the fresh finalDelivery mutation when several sources fail.
++          for (const branch of [vectorBindings, factBindings]) {
++            for (const source of branch.sources) {
++              if (!bindings.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(source))) bindings.sources.push(source);
++            }
++            for (const fact of branch.facts) {
++              if (!bindings.facts.some(value => value.factId === fact.factId && value.payloadHash === fact.payloadHash)) bindings.facts.push(fact);
++            }
++            bindings.vectors.push(...branch.vectors);
++          }
++        },
++      };
+     },
+   };
++  // A wrapper replacing read methods must explicitly supply its own staging.
++  // Spreading this private seam would bypass that wrapper's guards/bookkeeping.
++  Object.defineProperty(repository, "stageRecallReads", { enumerable: false });
++  return repository;
+ }
+diff --git a/convex-dev/runtimeMemoryServices.ts b/convex-dev/runtimeMemoryServices.ts
+index 02b74d220..564fbef75 100644
+--- a/convex-dev/runtimeMemoryServices.ts
++++ b/convex-dev/runtimeMemoryServices.ts
+@@ -1,5 +1,5 @@
+ /** Modern memory operations share pure domain logic and required backend adapters. */
+-import type { MemoryDomainAdapters, SourceLineage, TrustedMemoryScope, DerivedFact } from "../src/domain/contracts";
++import type { MemoryDomainAdapters, SourceLineage, TrustedMemoryScope, DerivedFact, VectorMatch } from "../src/domain/contracts";
+ import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "../src/domain/profile";
+ import { SOURCE_EXTRACTION_POLICY_VERSION, extractSourceFacts, prepareSourceContent, processingIdentityKey, validateModelEmbeddings } from "../src/domain/sources";
+ import { deduplicateResults, factToRecallItem, formatForLLM, rankResults } from "../src/domain/recall";
+@@ -97,8 +97,24 @@ export async function recallMemory(
+   const result = await model.embed({ purpose: "embedding.query", operationId,
+     policyVersion: profile.profileId, attempt: 1, profile, texts: [text] });
+   validateModelEmbeddings(result, profile, 1);
+-  const vectors = await repository.searchVectors({ text, profile, embedding: result.vectors[0]!, ...(selection.runBudgetId ? { embeddingRunBudgetId: selection.runBudgetId } : {}) }, input.limit);
+-  const facts = await repository.listFacts({ limit: input.limit });
++  const query = { text, profile, embedding: result.vectors[0]!, ...(selection.runBudgetId ? { embeddingRunBudgetId: selection.runBudgetId } : {}) };
++  const staged = repository.stageRecallReads?.();
++  let vectors: readonly VectorMatch[], facts: readonly DerivedFact[];
++  if (staged) {
++    // Invoke each adapter in its own task: a synchronous throw must neither skip
++    // the peer read nor leave its late rejection unowned. Preserve vector priority.
++    const [vectorRead, factRead] = await Promise.allSettled([
++      Promise.resolve().then(() => staged.searchVectors(query, input.limit)),
++      Promise.resolve().then(() => staged.listFacts({ limit: input.limit })),
++    ]);
++    if (vectorRead.status === "rejected") throw vectorRead.reason;
++    if (factRead.status === "rejected") throw factRead.reason;
++    staged.commit(); vectors = vectorRead.value; facts = factRead.value;
++  } else {
++    // Older injected adapters do not promise isolated read bookkeeping.
++    vectors = await repository.searchVectors(query, input.limit);
++    facts = await repository.listFacts({ limit: input.limit });
++  }
+   const vectorItems: RecallItem[] = vectors.map((match) => ({ type: "memory", id: match.chunk.chunkId,
+     content: match.chunk.text, score: match.score, source: "vector", memory: {
+       _id: match.vector.vectorId, memoryId: match.chunk.chunkId, tenantId: match.source.tenantId,
+diff --git a/src/domain/contracts.ts b/src/domain/contracts.ts
+index 56bf1e33c..595d65204 100644
+--- a/src/domain/contracts.ts
++++ b/src/domain/contracts.ts
+@@ -121,6 +121,10 @@ export interface MemoryRepository {
+   recheckAuthority(): Promise<void>;
+   /** Check read capability before inference without consuming a recall payload. */
+   assertReadAuthority?(): Promise<void>;
++  /** Read-only recall branches retain private bookkeeping until both settle.
++   * Commit synchronously in vector-then-fact order; never commit a failed batch.
++   * Wrappers replacing either read must explicitly supply their own staging. */
++  stageRecallReads?(): Pick<MemoryRepository, "searchVectors" | "listFacts"> & { commit(): void };
+   /** Action adapters revalidate the exact consumed rows in a fresh native transaction. */
+   finalDelivery?(): Promise<{ version: 1; deliveryExpiresAt?: number }>;
+   getSource(sourceId: string): Promise<SourceContent | null>;
+diff --git a/tests/unit/runtimeAgent/context-source-composition.test.ts b/tests/unit/runtimeAgent/context-source-composition.test.ts
+index 75326b9e3..e16871751 100644
+--- a/tests/unit/runtimeAgent/context-source-composition.test.ts
++++ b/tests/unit/runtimeAgent/context-source-composition.test.ts
+@@ -7,6 +7,8 @@ import type { SourceContent, MemoryModel, DerivedFact } from "../../../src/domai
+ import { contextSourceKey } from "../../../src/domain/memory-context";
+ import { prepareSourceContent, processingIdentityKey } from "../../../src/domain/sources";
+ import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
++import { canonicalModelJson } from "../../../src/domain/model-policy";
++import type { MemoryDeliveryBindings } from "../../../convex-dev/runtimeMemoryRepository";
+ import { assertNativeArgs } from "./native-arguments";
+ const embed = jest.fn<MemoryModel["embed"]>(async request => ({ profile: request.profile,
+   vectors: request.texts.map(() => Array.from({ length: request.profile.dimensions }, (_, i) => i === 0 ? 1 : 0)) }));
+@@ -82,6 +84,11 @@ async function fixture() {
+   return { ...f, get grant() { return f.grant; }, indexed, start, calls };
+ }
+ type Fixture = Awaited<ReturnType<typeof fixture>>;
++function deferred<T>() {
++  let resolve!: (value: T) => void;
++  const promise = new Promise<T>(yes => { resolve = yes; });
++  return { promise, resolve };
++}
+ async function sourceFixture() {
+   const f = await fixture(), source = await f.source("Original current source", "pair-source");
+   await ingestion.enqueueSourceEvent(f.ctx, f.reference, source); const event = f.db.table("runtimeIngestionEvents")[0];
+@@ -244,4 +251,81 @@ describe("actual Agent recall wiring and fresh completion fences", () => {
+     await expect(invoke(runtime.prepareContext, f.ctx, attempt)).rejects.toThrow("SOURCE_CUTOFF_PORT_FAILED");
+     expect(afterInputs).toBe(true); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined(); expect(embed).toHaveBeenCalledTimes(1);
+   });
++  it.each(["vector-first", "fact-first"])("overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (%s)", async order => {
++    const f = await fixture(), factOnly = await f.indexed("fact-only"), shared = await f.indexed("shared"), vectorOnly = await f.indexed("vector-only");
++    f.db.rows.set("facts", f.db.table("facts").filter(row => row.factId !== "fact:vector-only"));
++    const { attempt } = await f.start(); f.calls.length = 0;
++    const vectorStarted = deferred<void>(), factStarted = deferred<void>(), vectorRelease = deferred<void>(), factRelease = deferred<void>();
++    const vectorRead = deferred<void>(), factRead = deferred<void>(), completed: string[] = [];
++    const query = f.ctx.runQuery.bind(f.ctx);
++    (f.ctx as unknown as ActionCtx).vectorSearch = (async () => f.db.table("runtimeMemoryVectors")
++      .filter(row => row.sourceId !== factOnly.source.lineage.sourceId).map(row => ({ _id: row._id, _score: 0.9 }))) as unknown as ActionCtx["vectorSearch"];
++    f.ctx.runQuery = (async (ref, args) => {
++      let name = ""; try { name = getFunctionName(ref); } catch { return query(ref, args); }
++      if (name === "runtimeMemory:readVectorMatches") { vectorStarted.resolve(); await vectorRelease.promise; }
++      if (name === "runtimeMemory:readFacts") { factStarted.resolve(); await factRelease.promise; }
++      const value = await query(ref, args);
++      if (name === "runtimeMemory:readVectorMatches") { completed.push("vector"); vectorRead.resolve(); }
++      if (name === "runtimeMemory:readFacts") { completed.push("fact"); factRead.resolve(); }
++      return value;
++    }) as MutationCtx["runQuery"];
++    const pending = invoke(runtime.prepareContext, f.ctx, attempt);
++    await Promise.race([Promise.all([vectorStarted.promise, factStarted.promise]), pending.then(() => { throw Error("RECALL_COMPLETED_WITHOUT_BOTH_READS"); })]);
++    expect(f.calls.some(c => c.name === "runtimeMemory:finalDelivery" || c.name === "runtimeAgent:saveContext")).toBe(false);
++    (order === "vector-first" ? vectorRelease : factRelease).resolve(); await (order === "vector-first" ? vectorRead : factRead).promise;
++    (order === "vector-first" ? factRelease : vectorRelease).resolve(); await pending;
++    expect(completed).toEqual(order === "vector-first" ? ["vector", "fact"] : ["fact", "vector"]);
++    expect(f.calls.filter(c => c.name === "runtimeAgent:contextSource").map(c => (c.args as SourceArgs).sourceId)).toEqual(["shared", "vector-only", "fact-only", "shared"]);
++    const owned = f.db.table("runtimeAgentExecutions")[0];
++    expect(owned.sourceWitnesses).toEqual([
++      { ...shared.source.lineage, contentHash: shared.source.contentHash, permissions: ["canViewFacts", "canViewMemories"] },
++      { ...vectorOnly.source.lineage, contentHash: vectorOnly.source.contentHash, permissions: ["canViewMemories"] },
++      { ...factOnly.source.lineage, contentHash: factOnly.source.contentHash, permissions: ["canViewFacts"] },
++    ].map(({ role: _role, trust: _trust, ...witness }) => witness));
++    expect(owned.contextCanonical).toBe(`Indexed Cortex memory (untrusted evidence):\n## Relevant Context\n\n### Known Facts\n- User prefers fact-only (confidence: 91%, recorded: just now)\n- User prefers shared (confidence: 91%, recorded: just now)\n\n### Conversation History\n[user]: Authorized evidence from shared\n[user]: Authorized evidence from vector-only\nSource roles and trust: ${canonicalModelJson([shared.source.lineage, vectorOnly.source.lineage, factOnly.source.lineage])}`);
++    const delivery = f.calls.find(c => c.name === "runtimeMemory:finalDelivery")!.args as { bindings: MemoryDeliveryBindings };
++    expect(delivery.bindings.sources.map(source => [source.sourceId, source.permission])).toEqual([
++      ["shared", "canViewMemories"], ["vector-only", "canViewMemories"], ["fact-only", "canViewFacts"], ["shared", "canViewFacts"],
++    ]);
++    expect(delivery.bindings.facts.map(fact => fact.factId)).toEqual(["fact:fact-only", "fact:shared"]);
++    expect(delivery.bindings.vectors.map(vector => vector.vectorId)).toEqual(["vector:shared", "vector:vector-only"]);
++    expect(embed).toHaveBeenCalledTimes(1);
++  });
++  it.each(["vector", "fact", "both"])("settles %s source guard failures, releases the fact gate, and never delivers or saves", async failed => {
++    const f = await fixture(); await f.indexed(); const { attempt } = await f.start(); f.calls.length = 0;
++    const query = f.ctx.runQuery.bind(f.ctx), guards: string[] = [];
++    const vectorError = Error("VECTOR_SOURCE_GUARD_FAILED"), factError = Error("FACT_SOURCE_GUARD_FAILED");
++    f.ctx.runQuery = (async (ref, args) => {
++      let name = ""; try { name = getFunctionName(ref); } catch { return query(ref, args); }
++      if (name === "runtimeAgent:contextSource") {
++        const branch = (args as SourceArgs).expected.contentHash === undefined ? "fact" : "vector"; guards.push(branch);
++        if (failed === branch || failed === "both") throw branch === "vector" ? vectorError : factError;
++      }
++      return query(ref, args);
++    }) as MutationCtx["runQuery"];
++    await expect(invoke(runtime.prepareContext, f.ctx, attempt)).rejects.toBe(failed === "fact" ? factError : vectorError);
++    expect(guards).toEqual(["vector", "fact"]);
++    expect(f.calls.some(c => c.name === "runtimeMemory:finalDelivery" || c.name === "runtimeAgent:saveContext")).toBe(false);
++    expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined(); expect(embed).toHaveBeenCalledTimes(1);
++  });
++  it.each(["revision", "hash"])("rejects a shared-source %s witness conflict before a later fact guard fault", async conflict => {
++    const f = await fixture(); await f.indexed("shared"); await f.indexed("later"); const { attempt } = await f.start(); f.calls.length = 0;
++    const query = f.ctx.runQuery.bind(f.ctx), factGuards: string[] = [];
++    f.ctx.runQuery = (async (ref, args) => {
++      const value = await query(ref, args);
++      let name = ""; try { name = getFunctionName(ref); } catch { return value; }
++      if (name !== "runtimeAgent:contextSource" || (args as SourceArgs).expected.contentHash !== undefined) return value;
++      const input = args as SourceArgs; factGuards.push(input.sourceId);
++      if (input.sourceId === "later") throw Error("LATER_FACT_GUARD_FAILED");
++      // Only transport output is varied to isolate the witness merger. Current
++      // source/cutoff handler refusals are exercised separately above.
++      const source = value as SourceContent;
++      return conflict === "hash" ? { ...source, contentHash: "0".repeat(64) }
++        : { ...source, lineage: { ...source.lineage, sourceRevision: source.lineage.sourceRevision + 1 } };
++    }) as MutationCtx["runQuery"];
++    await expect(invoke(runtime.prepareContext, f.ctx, attempt)).rejects.toThrow("STALE_CONTEXT");
++    expect(factGuards).toEqual(["shared"]);
++    expect(f.calls.some(c => c.name === "runtimeMemory:finalDelivery" || c.name === "runtimeAgent:saveContext")).toBe(false);
++    expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined(); expect(embed).toHaveBeenCalledTimes(1);
++  });
+ });
+diff --git a/tests/unit/runtimeMemory/services.test.ts b/tests/unit/runtimeMemory/services.test.ts
+index 31c455b1d..69021c4ce 100644
+--- a/tests/unit/runtimeMemory/services.test.ts
++++ b/tests/unit/runtimeMemory/services.test.ts
+@@ -144,7 +144,7 @@ describe("modern backend memory services", () => {
+   it("retains an independently authorized read preflight for an older injected adapter without assertReadAuthority", async () => {
+     const f = setup(); await rememberMemory(f.adapters, { text: "dark", lineage: f.lineage });
+     const reader = createActionMemoryRepository(f.actionCtx, f.reference, "read");
+-    const { assertReadAuthority: _optionalReadCheck, ...repository } = reader;
++    const { assertReadAuthority: _optionalReadCheck, stageRecallReads: _optionalStagedReads, ...repository } = reader;
+     const listFacts = jest.spyOn(repository, "listFacts");
+     const recalled = await recallMemory({ ...f.adapters, repository }, { text: "dark", requestId: "legacy-read", limit: 10 });
+     expect(recalled.context).toContain("User prefers dark mode");
+diff --git a/tests/unit/runtimeMemory/parallel-recall.test.ts b/tests/unit/runtimeMemory/parallel-recall.test.ts
+new file mode 100644
+index 000000000..5ad27f673
+--- /dev/null
++++ b/tests/unit/runtimeMemory/parallel-recall.test.ts
+@@ -0,0 +1,177 @@
++/** Actual read adapters/handlers with controlled DB and model ports; no managed
++ * ANN, provider billing, native OCC, or wall-clock SLO evidence is claimed. */
++import { afterEach, describe, expect, it, jest } from "@jest/globals";
++import { getFunctionName } from "convex/server";
++import type { MemoryModel, MemoryRepository } from "../../../src/domain/contracts";
++import { DEFAULT_EMBEDDING_PROFILE as profile } from "../../../src/domain/profile";
++import { createActionMemoryRepository, memoryScope } from "../../../convex-dev/runtimeMemoryRepository";
++import type { MemoryDeliveryBindings } from "../../../convex-dev/runtimeMemoryRepository";
++import { explicitSourceLineage, recallMemory, rememberMemory } from "../../../convex-dev/runtimeMemoryServices";
++import { memoryFixture } from "./fixture";
++
++afterEach(() => { jest.restoreAllMocks(); });
++function deferred<T>() {
++  let resolve!: (value: T) => void, reject!: (error: unknown) => void;
++  const promise = new Promise<T>((yes, no) => { resolve = yes; reject = no; });
++  return { promise, resolve, reject };
++}
++const embedding = Array.from({ length: profile.dimensions }, (_, i) => i === 0 ? 1 : 0);
++const request = { text: "preferences", requestId: "parallel-query", limit: 10 };
++function peer() {
++  const f = memoryFixture();
++  const { stageRecallReads: _staged, ...unstaged } = createActionMemoryRepository(f.actionCtx, f.reference, "read");
++  const repository: MemoryRepository = unstaged;
++  const calls: string[] = [];
++  const authority = jest.spyOn(repository, "recheckAuthority").mockImplementation(async () => { calls.push("authority"); });
++  const read = jest.spyOn(repository, "assertReadAuthority").mockImplementation(async () => { calls.push("read"); });
++  const ready = jest.spyOn(repository, "assertProfileReady").mockImplementation(async () => { calls.push("ready"); });
++  const vectors = jest.spyOn(repository, "searchVectors").mockImplementation(async () => { calls.push("vectors"); return []; });
++  const facts = jest.spyOn(repository, "listFacts").mockImplementation(async () => { calls.push("facts"); return []; });
++  const delivery = jest.spyOn(repository, "finalDelivery").mockImplementation(async () => { calls.push("delivery"); return { version: 1 }; });
++  repository.stageRecallReads = () => ({ searchVectors: repository.searchVectors, listFacts: repository.listFacts, commit: () => {} });
++  const resolveProfile = jest.fn<NonNullable<MemoryModel["resolveProfile"]>>(async () => { calls.push("profile"); return { profile }; });
++  const embed = jest.fn<MemoryModel["embed"]>(async () => { calls.push("embed"); return { profile, vectors: [embedding] }; });
++  const model: MemoryModel = { resolveProfile, embed, extract: async () => { throw Error("UNEXPECTED_EXTRACT"); }, resolve: async () => { throw Error("UNEXPECTED_RESOLVE"); } };
++  return { repository, model, calls, authority, read, ready, vectors, facts, delivery, resolveProfile, embed,
++    adapters: { repository, model, clock: { now: () => 1000 } } };
++}
++describe("recall guarded branch settlement", () => {
++  it("starts both reads only after every original guard and one validated embedding, and joins before delivery", async () => {
++    const f = peer(), embedded = deferred<Awaited<ReturnType<MemoryModel["embed"]>>>(), embedStarted = deferred<void>();
++    const vectorStarted = deferred<void>(), factStarted = deferred<void>();
++    const vector = deferred<Awaited<ReturnType<MemoryRepository["searchVectors"]>>>(), fact = deferred<Awaited<ReturnType<MemoryRepository["listFacts"]>>>();
++    f.embed.mockImplementation(async () => { f.calls.push("embed"); embedStarted.resolve(); return embedded.promise; });
++    f.vectors.mockImplementation(async () => { f.calls.push("vectors"); vectorStarted.resolve(); return vector.promise; });
++    f.facts.mockImplementation(async () => { f.calls.push("facts"); factStarted.resolve(); return fact.promise; });
++    const pending = recallMemory(f.adapters, request);
++    await embedStarted.promise;
++    expect(f.calls).toEqual(["authority", "read", "profile", "ready", "embed"]);
++    expect(f.vectors).not.toHaveBeenCalled(); expect(f.facts).not.toHaveBeenCalled();
++    embedded.resolve({ profile, vectors: [embedding] }); await Promise.all([vectorStarted.promise, factStarted.promise]);
++    expect(f.vectors).toHaveBeenCalledWith({ text: request.text, profile, embedding }, request.limit);
++    expect(f.facts).toHaveBeenCalledWith({ limit: request.limit });
++    fact.resolve([]); await Promise.resolve(); expect(f.delivery).not.toHaveBeenCalled();
++    vector.resolve([]); expect(await pending).toEqual({ items: [], context: "", profileId: profile.profileId });
++    expect(f.calls).toEqual(["authority", "read", "profile", "ready", "embed", "vectors", "facts", "authority", "delivery"]);
++    expect(f.embed).toHaveBeenCalledTimes(1);
++  });
++  it.each(["request", "limit", "text", "authority", "read", "profile", "ready", "embed", "embedding-profile", "embedding-dimensions", "embedding-nonfinite"])(
++    "starts neither recall branch on %s failure", async failure => {
++      const f = peer(); let input = request;
++      if (failure === "request") input = { ...request, requestId: "" };
++      if (failure === "limit") input = { ...request, limit: 0 };
++      if (failure === "text") input = { ...request, text: " " };
++      const fail = async () => { throw Error(`GUARD_${failure}`); };
++      if (failure === "authority") f.authority.mockImplementation(fail);
++      if (failure === "read") f.read.mockImplementation(fail);
++      if (failure === "profile") f.resolveProfile.mockImplementation(fail);
++      if (failure === "ready") f.ready.mockImplementation(fail);
++      if (failure === "embed") f.embed.mockImplementation(fail);
++      if (failure === "embedding-profile") f.embed.mockResolvedValue({ profile: { ...profile, modelId: "incompatible" }, vectors: [embedding] });
++      if (failure === "embedding-dimensions") f.embed.mockResolvedValue({ profile, vectors: [[1]] });
++      if (failure === "embedding-nonfinite") f.embed.mockResolvedValue({ profile, vectors: [[NaN, ...embedding.slice(1)]] });
++      await expect(recallMemory(f.adapters, input)).rejects.toThrow();
++      expect(f.vectors).not.toHaveBeenCalled(); expect(f.facts).not.toHaveBeenCalled(); expect(f.delivery).not.toHaveBeenCalled();
++      expect(f.embed).toHaveBeenCalledTimes(["embed", "embedding-profile", "embedding-dimensions", "embedding-nonfinite"].includes(failure) ? 1 : 0);
++    });
++  it.each(["vector-first", "fact-first"])("owns both late failures with vector error priority (%s)", async order => {
++    const f = peer(), vectors = deferred<never>(), facts = deferred<never>();
++    const vectorStarted = deferred<void>(), factStarted = deferred<void>();
++    const vectorError = new Error("VECTOR_READ_FAILED"), factError = new Error("FACT_READ_FAILED");
++    f.vectors.mockImplementation(async () => { vectorStarted.resolve(); return vectors.promise; });
++    f.facts.mockImplementation(async () => { factStarted.resolve(); return facts.promise; });
++    let settled = false;
++    const pending = recallMemory(f.adapters, request).then(value => { settled = true; return value; }, error => { settled = true; return error; });
++    await Promise.all([vectorStarted.promise, factStarted.promise]);
++    (order === "vector-first" ? vectors : facts).reject(order === "vector-first" ? vectorError : factError);
++    await Promise.resolve(); await Promise.resolve(); expect(settled).toBe(false); expect(f.delivery).not.toHaveBeenCalled();
++    (order === "vector-first" ? facts : vectors).reject(order === "vector-first" ? factError : vectorError);
++    expect(await pending).toBe(vectorError); expect(f.embed).toHaveBeenCalledTimes(1); expect(f.delivery).not.toHaveBeenCalled();
++  });
++  it.each(["vector", "fact"])("owns a synchronous %s throw and the peer's later rejection", async branch => {
++    const f = peer(), late = deferred<never>(), started = deferred<void>();
++    const vectorError = Error("SYNC_OR_LATE_VECTOR"), factError = Error("SYNC_OR_LATE_FACT");
++    f.vectors.mockImplementation(() => { if (branch === "vector") throw vectorError; started.resolve(); return late.promise; });
++    f.facts.mockImplementation(() => { if (branch === "fact") throw factError; started.resolve(); return late.promise; });
++    let settled = false;
++    const pending = recallMemory(f.adapters, request).catch(error => { settled = true; return error; });
++    await started.promise; await Promise.resolve(); expect(settled).toBe(false);
++    late.reject(branch === "vector" ? factError : vectorError);
++    expect(await pending).toBe(vectorError); expect(f.vectors).toHaveBeenCalledTimes(1); expect(f.facts).toHaveBeenCalledTimes(1); expect(f.delivery).not.toHaveBeenCalled();
++  });
++  it.each(["vector", "fact"])("does not commit or deliver when only %s fails", async branch => {
++    const f = peer(), error = Error(`ONLY_${branch}_FAILED`), commit = jest.fn();
++    f.repository.stageRecallReads = () => ({ searchVectors: f.repository.searchVectors, listFacts: f.repository.listFacts, commit });
++    (branch === "vector" ? f.vectors : f.facts).mockRejectedValue(error);
++    await expect(recallMemory(f.adapters, request)).rejects.toBe(error);
++    expect(commit).not.toHaveBeenCalled(); expect(f.delivery).not.toHaveBeenCalled(); expect(f.embed).toHaveBeenCalledTimes(1);
++  });
++  it("owns both synchronous branch throws and preserves vector priority", async () => {
++    const f = peer(), vectorError = Error("SYNCHRONOUS_VECTOR"), factError = Error("SYNCHRONOUS_FACT");
++    f.vectors.mockImplementation(() => { throw vectorError; }); f.facts.mockImplementation(() => { throw factError; });
++    await expect(recallMemory(f.adapters, request)).rejects.toBe(vectorError);
++    expect(f.vectors).toHaveBeenCalledTimes(1); expect(f.facts).toHaveBeenCalledTimes(1); expect(f.delivery).not.toHaveBeenCalled();
++  });
++  it("keeps unstaged injected adapters serial and does not start facts after vector failure", async () => {
++    const f = peer(), error = Error("LEGACY_VECTOR_FAILED"); delete f.repository.stageRecallReads;
++    f.vectors.mockRejectedValue(error);
++    await expect(recallMemory(f.adapters, request)).rejects.toBe(error);
++    expect(f.vectors).toHaveBeenCalledTimes(1); expect(f.facts).not.toHaveBeenCalled(); expect(f.delivery).not.toHaveBeenCalled();
++    expect(f.embed).toHaveBeenCalledTimes(1);
++  });
++});
++
++async function nativeFixture() {
++  const f = memoryFixture();
++  const model: MemoryModel = { extract: async () => ({ facts: [{ fact: "User likes tea", factType: "preference", subject: "User", predicate: "likes", object: "tea", confidence: 0.91, tags: [], entities: [], relations: [] }] }),
++    resolve: async () => { throw Error("UNEXPECTED_RESOLVE"); }, embed: async request => ({ profile: request.profile, vectors: request.texts.map(() => embedding) }) };
++  const writer = createActionMemoryRepository(f.actionCtx, f.reference, "write");
++  for (const id of ["fact-only", "shared", "vector-only"]) await rememberMemory({ repository: writer, model, clock: { now: () => 1000 } },
++    { text: `Evidence from ${id}`, lineage: explicitSourceLineage(memoryScope(f.reference), id) });
++  const sources = f.db.table("runtimeMemorySources");
++  const ids = sources.map(row => (row.lineage as { sourceId: string }).sourceId);
++  f.db.rows.set("facts", f.db.table("facts").filter(row => (row.lineage as { sourceId: string }).sourceId !== ids[2]));
++  f.db.rows.set("runtimeMemoryVectors", f.db.table("runtimeMemoryVectors").filter(row => row.sourceId !== ids[0]));
++  const bindings: MemoryDeliveryBindings[] = [];
++  const ctx = { ...f.actionCtx, runMutation: (async (ref, args) => {
++    if (getFunctionName(ref) === "runtimeMemory:finalDelivery") bindings.push(JSON.parse(JSON.stringify((args as { bindings: MemoryDeliveryBindings }).bindings)) as MemoryDeliveryBindings);
++    return f.actionCtx.runMutation(ref, args);
++  }) as typeof f.actionCtx.runMutation };
++  return { ...f, model, ctx, bindings, ids };
++}
++describe("actual Action branch bookkeeping", () => {
++  it.each(["vector-first", "fact-first"])("overlaps native reads and keeps exact serial result/context/delivery bindings (%s)", async order => {
++    const f = await nativeFixture();
++    const serial = createActionMemoryRepository(f.ctx, f.reference, "read");
++    // Reference peer forces the accepted serial read/capture order while using
++    // the original actual adapter methods, not the new staging implementation.
++    const serialDone = deferred<void>();
++    serial.stageRecallReads = () => ({ searchVectors: async (...args) => { try { return await serial.searchVectors(...args); } finally { serialDone.resolve(); } },
++      listFacts: async query => { await serialDone.promise; return serial.listFacts(query); }, commit: () => {} });
++    const expected = await recallMemory({ repository: serial, model: f.model, clock: { now: () => 1000 } }, request);
++    const vectorStarted = deferred<void>(), factStarted = deferred<void>(), vectorRelease = deferred<void>(), factRelease = deferred<void>();
++    const completed: string[] = [], vectorRead = deferred<void>(), factRead = deferred<void>();
++    const ctx = { ...f.ctx, runQuery: (async (ref, args) => {
++      const name = getFunctionName(ref);
++      if (name === "runtimeMemory:readFacts") { factStarted.resolve(); await factRelease.promise; }
++      if (name === "runtimeMemory:readVectorMatches") { vectorStarted.resolve(); await vectorRelease.promise; }
++      const value = await f.ctx.runQuery(ref, args);
++      if (name === "runtimeMemory:readFacts") { completed.push("fact"); factRead.resolve(); }
++      if (name === "runtimeMemory:readVectorMatches") { completed.push("vector"); vectorRead.resolve(); }
++      return value;
++    }) as typeof f.ctx.runQuery };
++    const pending = recallMemory({ repository: createActionMemoryRepository(ctx, f.reference, "read"), model: f.model, clock: { now: () => 1000 } }, request);
++    await Promise.all([vectorStarted.promise, factStarted.promise]); expect(f.bindings).toHaveLength(1);
++    (order === "vector-first" ? vectorRelease : factRelease).resolve();
++    // Wait for an actual branch read completion before releasing its peer.
++    await (order === "vector-first" ? vectorRead : factRead).promise;
++    (order === "vector-first" ? factRelease : vectorRelease).resolve();
++    expect(await pending).toEqual(expected); expect(f.bindings[1]).toEqual(f.bindings[0]);
++    expect(completed).toEqual(order === "vector-first" ? ["vector", "fact"] : ["fact", "vector"]);
++    expect(f.bindings[1]!.sources.map(value => [value.sourceId, value.permission])).toEqual([
++      [f.ids[1], "canViewMemories"], [f.ids[2], "canViewMemories"], [f.ids[0], "canViewFacts"], [f.ids[1], "canViewFacts"],
++    ]);
++    expect(f.bindings[1]!.facts).toHaveLength(2); expect(f.bindings[1]!.vectors).toHaveLength(2);
++    expect(expected.items).toHaveLength(4);
++  });
++});

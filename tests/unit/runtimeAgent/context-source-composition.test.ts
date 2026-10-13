@@ -7,6 +7,8 @@ import type { SourceContent, MemoryModel, DerivedFact } from "../../../src/domai
 import { contextSourceKey } from "../../../src/domain/memory-context";
 import { prepareSourceContent, processingIdentityKey } from "../../../src/domain/sources";
 import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
+import { canonicalModelJson } from "../../../src/domain/model-policy";
+import type { MemoryDeliveryBindings } from "../../../convex-dev/runtimeMemoryRepository";
 import { assertNativeArgs } from "./native-arguments";
 const embed = jest.fn<MemoryModel["embed"]>(async request => ({ profile: request.profile,
   vectors: request.texts.map(() => Array.from({ length: request.profile.dimensions }, (_, i) => i === 0 ? 1 : 0)) }));
@@ -82,6 +84,11 @@ async function fixture() {
   return { ...f, get grant() { return f.grant; }, indexed, start, calls };
 }
 type Fixture = Awaited<ReturnType<typeof fixture>>;
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>(yes => { resolve = yes; });
+  return { promise, resolve };
+}
 async function sourceFixture() {
   const f = await fixture(), source = await f.source("Original current source", "pair-source");
   await ingestion.enqueueSourceEvent(f.ctx, f.reference, source); const event = f.db.table("runtimeIngestionEvents")[0];
@@ -243,5 +250,82 @@ describe("actual Agent recall wiring and fresh completion fences", () => {
     jest.spyOn(f.db, "query").mockImplementation(table => { if (afterInputs && table === "runtimeIngestionEvents") throw new Error("SOURCE_CUTOFF_PORT_FAILED"); return query(table); });
     await expect(invoke(runtime.prepareContext, f.ctx, attempt)).rejects.toThrow("SOURCE_CUTOFF_PORT_FAILED");
     expect(afterInputs).toBe(true); expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined(); expect(embed).toHaveBeenCalledTimes(1);
+  });
+  it.each(["vector-first", "fact-first"])("overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (%s)", async order => {
+    const f = await fixture(), factOnly = await f.indexed("fact-only"), shared = await f.indexed("shared"), vectorOnly = await f.indexed("vector-only");
+    f.db.rows.set("facts", f.db.table("facts").filter(row => row.factId !== "fact:vector-only"));
+    const { attempt } = await f.start(); f.calls.length = 0;
+    const vectorStarted = deferred<void>(), factStarted = deferred<void>(), vectorRelease = deferred<void>(), factRelease = deferred<void>();
+    const vectorRead = deferred<void>(), factRead = deferred<void>(), completed: string[] = [];
+    const query = f.ctx.runQuery.bind(f.ctx);
+    (f.ctx as unknown as ActionCtx).vectorSearch = (async () => f.db.table("runtimeMemoryVectors")
+      .filter(row => row.sourceId !== factOnly.source.lineage.sourceId).map(row => ({ _id: row._id, _score: 0.9 }))) as unknown as ActionCtx["vectorSearch"];
+    f.ctx.runQuery = (async (ref, args) => {
+      let name = ""; try { name = getFunctionName(ref); } catch { return query(ref, args); }
+      if (name === "runtimeMemory:readVectorMatches") { vectorStarted.resolve(); await vectorRelease.promise; }
+      if (name === "runtimeMemory:readFacts") { factStarted.resolve(); await factRelease.promise; }
+      const value = await query(ref, args);
+      if (name === "runtimeMemory:readVectorMatches") { completed.push("vector"); vectorRead.resolve(); }
+      if (name === "runtimeMemory:readFacts") { completed.push("fact"); factRead.resolve(); }
+      return value;
+    }) as MutationCtx["runQuery"];
+    const pending = invoke(runtime.prepareContext, f.ctx, attempt);
+    await Promise.race([Promise.all([vectorStarted.promise, factStarted.promise]), pending.then(() => { throw Error("RECALL_COMPLETED_WITHOUT_BOTH_READS"); })]);
+    expect(f.calls.some(c => c.name === "runtimeMemory:finalDelivery" || c.name === "runtimeAgent:saveContext")).toBe(false);
+    (order === "vector-first" ? vectorRelease : factRelease).resolve(); await (order === "vector-first" ? vectorRead : factRead).promise;
+    (order === "vector-first" ? factRelease : vectorRelease).resolve(); await pending;
+    expect(completed).toEqual(order === "vector-first" ? ["vector", "fact"] : ["fact", "vector"]);
+    expect(f.calls.filter(c => c.name === "runtimeAgent:contextSource").map(c => (c.args as SourceArgs).sourceId)).toEqual(["shared", "vector-only", "fact-only", "shared"]);
+    const owned = f.db.table("runtimeAgentExecutions")[0];
+    expect(owned.sourceWitnesses).toEqual([
+      { ...shared.source.lineage, contentHash: shared.source.contentHash, permissions: ["canViewFacts", "canViewMemories"] },
+      { ...vectorOnly.source.lineage, contentHash: vectorOnly.source.contentHash, permissions: ["canViewMemories"] },
+      { ...factOnly.source.lineage, contentHash: factOnly.source.contentHash, permissions: ["canViewFacts"] },
+    ].map(({ role: _role, trust: _trust, ...witness }) => witness));
+    expect(owned.contextCanonical).toBe(`Indexed Cortex memory (untrusted evidence):\n## Relevant Context\n\n### Known Facts\n- User prefers fact-only (confidence: 91%, recorded: just now)\n- User prefers shared (confidence: 91%, recorded: just now)\n\n### Conversation History\n[user]: Authorized evidence from shared\n[user]: Authorized evidence from vector-only\nSource roles and trust: ${canonicalModelJson([shared.source.lineage, vectorOnly.source.lineage, factOnly.source.lineage])}`);
+    const delivery = f.calls.find(c => c.name === "runtimeMemory:finalDelivery")!.args as { bindings: MemoryDeliveryBindings };
+    expect(delivery.bindings.sources.map(source => [source.sourceId, source.permission])).toEqual([
+      ["shared", "canViewMemories"], ["vector-only", "canViewMemories"], ["fact-only", "canViewFacts"], ["shared", "canViewFacts"],
+    ]);
+    expect(delivery.bindings.facts.map(fact => fact.factId)).toEqual(["fact:fact-only", "fact:shared"]);
+    expect(delivery.bindings.vectors.map(vector => vector.vectorId)).toEqual(["vector:shared", "vector:vector-only"]);
+    expect(embed).toHaveBeenCalledTimes(1);
+  });
+  it.each(["vector", "fact", "both"])("settles %s source guard failures, releases the fact gate, and never delivers or saves", async failed => {
+    const f = await fixture(); await f.indexed(); const { attempt } = await f.start(); f.calls.length = 0;
+    const query = f.ctx.runQuery.bind(f.ctx), guards: string[] = [];
+    const vectorError = Error("VECTOR_SOURCE_GUARD_FAILED"), factError = Error("FACT_SOURCE_GUARD_FAILED");
+    f.ctx.runQuery = (async (ref, args) => {
+      let name = ""; try { name = getFunctionName(ref); } catch { return query(ref, args); }
+      if (name === "runtimeAgent:contextSource") {
+        const branch = (args as SourceArgs).expected.contentHash === undefined ? "fact" : "vector"; guards.push(branch);
+        if (failed === branch || failed === "both") throw branch === "vector" ? vectorError : factError;
+      }
+      return query(ref, args);
+    }) as MutationCtx["runQuery"];
+    await expect(invoke(runtime.prepareContext, f.ctx, attempt)).rejects.toBe(failed === "fact" ? factError : vectorError);
+    expect(guards).toEqual(["vector", "fact"]);
+    expect(f.calls.some(c => c.name === "runtimeMemory:finalDelivery" || c.name === "runtimeAgent:saveContext")).toBe(false);
+    expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined(); expect(embed).toHaveBeenCalledTimes(1);
+  });
+  it.each(["revision", "hash"])("rejects a shared-source %s witness conflict before a later fact guard fault", async conflict => {
+    const f = await fixture(); await f.indexed("shared"); await f.indexed("later"); const { attempt } = await f.start(); f.calls.length = 0;
+    const query = f.ctx.runQuery.bind(f.ctx), factGuards: string[] = [];
+    f.ctx.runQuery = (async (ref, args) => {
+      const value = await query(ref, args);
+      let name = ""; try { name = getFunctionName(ref); } catch { return value; }
+      if (name !== "runtimeAgent:contextSource" || (args as SourceArgs).expected.contentHash !== undefined) return value;
+      const input = args as SourceArgs; factGuards.push(input.sourceId);
+      if (input.sourceId === "later") throw Error("LATER_FACT_GUARD_FAILED");
+      // Only transport output is varied to isolate the witness merger. Current
+      // source/cutoff handler refusals are exercised separately above.
+      const source = value as SourceContent;
+      return conflict === "hash" ? { ...source, contentHash: "0".repeat(64) }
+        : { ...source, lineage: { ...source.lineage, sourceRevision: source.lineage.sourceRevision + 1 } };
+    }) as MutationCtx["runQuery"];
+    await expect(invoke(runtime.prepareContext, f.ctx, attempt)).rejects.toThrow("STALE_CONTEXT");
+    expect(factGuards).toEqual(["shared"]);
+    expect(f.calls.some(c => c.name === "runtimeMemory:finalDelivery" || c.name === "runtimeAgent:saveContext")).toBe(false);
+    expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined(); expect(embed).toHaveBeenCalledTimes(1);
   });
 });

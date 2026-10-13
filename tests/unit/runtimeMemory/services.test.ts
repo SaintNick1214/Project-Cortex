@@ -144,7 +144,7 @@ describe("modern backend memory services", () => {
   it("retains an independently authorized read preflight for an older injected adapter without assertReadAuthority", async () => {
     const f = setup(); await rememberMemory(f.adapters, { text: "dark", lineage: f.lineage });
     const reader = createActionMemoryRepository(f.actionCtx, f.reference, "read");
-    const { assertReadAuthority: _optionalReadCheck, ...repository } = reader;
+    const { assertReadAuthority: _optionalReadCheck, stageRecallReads: _optionalStagedReads, ...repository } = reader;
     const listFacts = jest.spyOn(repository, "listFacts");
     const recalled = await recallMemory({ ...f.adapters, repository }, { text: "dark", requestId: "legacy-read", limit: 10 });
     expect(recalled.context).toContain("User prefers dark mode");

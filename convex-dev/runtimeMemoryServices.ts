@@ -1,5 +1,5 @@
 /** Modern memory operations share pure domain logic and required backend adapters. */
-import type { MemoryDomainAdapters, SourceLineage, TrustedMemoryScope, DerivedFact } from "../src/domain/contracts";
+import type { MemoryDomainAdapters, SourceLineage, TrustedMemoryScope, DerivedFact, VectorMatch } from "../src/domain/contracts";
 import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { SOURCE_EXTRACTION_POLICY_VERSION, extractSourceFacts, prepareSourceContent, processingIdentityKey, validateModelEmbeddings } from "../src/domain/sources";
 import { deduplicateResults, factToRecallItem, formatForLLM, rankResults } from "../src/domain/recall";
@@ -97,8 +97,24 @@ export async function recallMemory(
   const result = await model.embed({ purpose: "embedding.query", operationId,
     policyVersion: profile.profileId, attempt: 1, profile, texts: [text] });
   validateModelEmbeddings(result, profile, 1);
-  const vectors = await repository.searchVectors({ text, profile, embedding: result.vectors[0]!, ...(selection.runBudgetId ? { embeddingRunBudgetId: selection.runBudgetId } : {}) }, input.limit);
-  const facts = await repository.listFacts({ limit: input.limit });
+  const query = { text, profile, embedding: result.vectors[0]!, ...(selection.runBudgetId ? { embeddingRunBudgetId: selection.runBudgetId } : {}) };
+  const staged = repository.stageRecallReads?.();
+  let vectors: readonly VectorMatch[], facts: readonly DerivedFact[];
+  if (staged) {
+    // Invoke each adapter in its own task: a synchronous throw must neither skip
+    // the peer read nor leave its late rejection unowned. Preserve vector priority.
+    const [vectorRead, factRead] = await Promise.allSettled([
+      Promise.resolve().then(() => staged.searchVectors(query, input.limit)),
+      Promise.resolve().then(() => staged.listFacts({ limit: input.limit })),
+    ]);
+    if (vectorRead.status === "rejected") throw vectorRead.reason;
+    if (factRead.status === "rejected") throw factRead.reason;
+    staged.commit(); vectors = vectorRead.value; facts = factRead.value;
+  } else {
+    // Older injected adapters do not promise isolated read bookkeeping.
+    vectors = await repository.searchVectors(query, input.limit);
+    facts = await repository.listFacts({ limit: input.limit });
+  }
   const vectorItems: RecallItem[] = vectors.map((match) => ({ type: "memory", id: match.chunk.chunkId,
     content: match.chunk.text, score: match.score, source: "vector", memory: {
       _id: match.vector.vectorId, memoryId: match.chunk.chunkId, tenantId: match.source.tenantId,

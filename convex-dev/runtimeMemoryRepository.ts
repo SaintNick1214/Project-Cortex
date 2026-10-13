@@ -436,58 +436,85 @@ function stripVector(row: Doc<"runtimeMemoryVectors">): DerivedVector {
 export function createActionMemoryRepository(
   ctx: Pick<ActionCtx, "runQuery" | "runMutation" | "vectorSearch">,
   reference: RuntimeAuthorityReference, capability: "read" | "write",
-): MemoryRepository {
+): MemoryRepository & Required<Pick<MemoryRepository, "stageRecallReads">> {
   const scope = memoryScope(reference);
   const args = { reference, capability };
   const bindings: MemoryDeliveryBindings = { sources: [], facts: [], vectors: [] };
-  const captureSource = (source: SourceContent, permission: "canViewFacts" | "canViewMemories") => {
+  const captureSource = (target: MemoryDeliveryBindings, source: SourceContent, permission: "canViewFacts" | "canViewMemories") => {
     const next = { sourceId: source.lineage.sourceId, sourceEventId: source.lineage.sourceEventId,
       sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, ownerPrincipalId: source.ownerPrincipalId, permission };
-    if (!bindings.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(next))) bindings.sources.push(next);
+    if (!target.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(next))) target.sources.push(next);
   };
-  return {
+  const listFacts = async (query: FactQuery, target: MemoryDeliveryBindings) => {
+    const facts = await ctx.runQuery(memoryReferences.listFacts, { ...args, capability: "read", query });
+    for (const fact of facts) {
+      const source = await ctx.runQuery(memoryReferences.getSource, { ...args, capability: "read", sourceId: fact.lineage.sourceId });
+      if (!source || !sameReference(source.lineage, fact.lineage) || canonicalMemoryValue(source.lineage) !== canonicalMemoryValue(fact.lineage)
+        || source.ownerPrincipalId !== fact.ownerPrincipalId) memoryError("STALE_SOURCE", "Recalled fact source changed during read");
+      captureSource(target, source, "canViewFacts");
+      const next = { factId: fact.factId, payloadHash: await semanticHash(canonicalMemoryValue(fact)) };
+      if (!target.facts.some(value => value.factId === next.factId && value.payloadHash === next.payloadHash)) target.facts.push(next);
+    }
+    return facts;
+  };
+  const searchVectors = async (query: ProfiledQuery, limit: number, target: MemoryDeliveryBindings) => {
+    boundedLimit(limit); assertSupportedEmbeddingProfile(query.profile); assertEmbeddingVector(query.embedding, query.profile);
+    const readArgs = { ...args, capability: "read" as const };
+    const authority = await ctx.runQuery(memoryReferences.recheck, readArgs);
+    const pin = query.embeddingRunBudgetId ? { runBudgetId: query.embeddingRunBudgetId } : {};
+    await ctx.runQuery(memoryReferences.profileReady, { ...readArgs, profile: query.profile, ...pin });
+    const hits = await ctx.vectorSearch("runtimeMemoryVectors", query.profile.indexName === LARGE_EMBEDDING_PROFILE.indexName ? "by_large_embedding_v1" : "by_default_embedding_v1", {
+      vector: [...query.embedding], limit,
+      // Convex vector filters support eq/or only. This exact canonical tuple encodes conjunction.
+      filter: (q) => authority.resourceAccess === "own"
+        ? q.eq("scopeProfileOwnerKey", vectorOwnerScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId, scope.principalId))
+        : q.eq("scopeProfileKey", vectorScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId)),
+    });
+    // A second internal query rechecks revocation and canonical source currentness after search.
+    const matches = await ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, profile: query.profile, ...pin, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) });
+    for (const match of matches) {
+      captureSource(target, match.source, "canViewMemories");
+      target.vectors.push({ vectorId: match.vector.vectorId, profile: query.profile, ...pin,
+        payloadHash: await semanticHash(canonicalMemoryValue(match.vector)), chunkHash: await semanticHash(canonicalMemoryValue(match.chunk)) });
+    }
+    return matches;
+  };
+  const repository: MemoryRepository & Required<Pick<MemoryRepository, "stageRecallReads">> = {
     scope,
     recheckAuthority: async () => { await ctx.runQuery(memoryReferences.recheck, args); },
     assertReadAuthority: async () => { await ctx.runQuery(memoryReferences.recheck, { ...args, capability: "read" }); },
     getSource: async (sourceId) => await ctx.runQuery(memoryReferences.getSource, { ...args, sourceId }),
     putSource: async (source) => await ctx.runMutation(memoryReferences.putSource, { ...args, source }),
     commitDerived: async (input) => await ctx.runMutation(memoryReferences.commitDerived, { ...args, input }),
-    listFacts: async (query) => {
-      const facts = await ctx.runQuery(memoryReferences.listFacts, { ...args, capability: "read", query });
-      for (const fact of facts) {
-        const source = await ctx.runQuery(memoryReferences.getSource, { ...args, capability: "read", sourceId: fact.lineage.sourceId });
-        if (!source || !sameReference(source.lineage, fact.lineage) || canonicalMemoryValue(source.lineage) !== canonicalMemoryValue(fact.lineage)
-          || source.ownerPrincipalId !== fact.ownerPrincipalId) memoryError("STALE_SOURCE", "Recalled fact source changed during read");
-        captureSource(source, "canViewFacts");
-        const next = { factId: fact.factId, payloadHash: await semanticHash(canonicalMemoryValue(fact)) };
-        if (!bindings.facts.some(value => value.factId === next.factId && value.payloadHash === next.payloadHash)) bindings.facts.push(next);
-      }
-      return facts;
-    },
+    listFacts: async query => await listFacts(query, bindings),
     finalDelivery: async () => await ctx.runMutation(memoryReferences.finalDelivery, { reference, bindings }),
     assertProfileReady: async (profile, runBudgetId) => { await ctx.runQuery(memoryReferences.profileReady,
       { ...args, capability: "read", profile, ...(runBudgetId ? { runBudgetId } : {}) }); },
-    searchVectors: async (query: ProfiledQuery, limit) => {
-      boundedLimit(limit); assertSupportedEmbeddingProfile(query.profile); assertEmbeddingVector(query.embedding, query.profile);
-      const readArgs = { ...args, capability: "read" as const };
-      const authority = await ctx.runQuery(memoryReferences.recheck, readArgs);
-      const pin = query.embeddingRunBudgetId ? { runBudgetId: query.embeddingRunBudgetId } : {};
-      await ctx.runQuery(memoryReferences.profileReady, { ...readArgs, profile: query.profile, ...pin });
-      const hits = await ctx.vectorSearch("runtimeMemoryVectors", query.profile.indexName === LARGE_EMBEDDING_PROFILE.indexName ? "by_large_embedding_v1" : "by_default_embedding_v1", {
-        vector: [...query.embedding], limit,
-        // Convex vector filters support eq/or only. This exact canonical tuple encodes conjunction.
-        filter: (q) => authority.resourceAccess === "own"
-          ? q.eq("scopeProfileOwnerKey", vectorOwnerScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId, scope.principalId))
-          : q.eq("scopeProfileKey", vectorScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId)),
-      });
-      // A second internal query rechecks revocation and canonical source currentness after search.
-      const matches = await ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, profile: query.profile, ...pin, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) });
-      for (const match of matches) {
-        captureSource(match.source, "canViewMemories");
-        bindings.vectors.push({ vectorId: match.vector.vectorId, profile: query.profile, ...pin,
-          payloadHash: await semanticHash(canonicalMemoryValue(match.vector)), chunkHash: await semanticHash(canonicalMemoryValue(match.chunk)) });
-      }
-      return matches;
+    searchVectors: async (query, limit) => await searchVectors(query, limit, bindings),
+    stageRecallReads: () => {
+      const vectorBindings: MemoryDeliveryBindings = { sources: [], facts: [], vectors: [] };
+      const factBindings: MemoryDeliveryBindings = { sources: [], facts: [], vectors: [] };
+      return {
+        searchVectors: async (query, limit) => await searchVectors(query, limit, vectorBindings),
+        listFacts: async query => await listFacts(query, factBindings),
+        commit: () => {
+          // Match serial capture/dedupe exactly, including the source scan order
+          // used by the fresh finalDelivery mutation when several sources fail.
+          for (const branch of [vectorBindings, factBindings]) {
+            for (const source of branch.sources) {
+              if (!bindings.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(source))) bindings.sources.push(source);
+            }
+            for (const fact of branch.facts) {
+              if (!bindings.facts.some(value => value.factId === fact.factId && value.payloadHash === fact.payloadHash)) bindings.facts.push(fact);
+            }
+            bindings.vectors.push(...branch.vectors);
+          }
+        },
+      };
     },
   };
+  // A wrapper replacing read methods must explicitly supply its own staging.
+  // Spreading this private seam would bypass that wrapper's guards/bookkeeping.
+  Object.defineProperty(repository, "stageRecallReads", { enumerable: false });
+  return repository;
 }

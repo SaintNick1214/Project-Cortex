@@ -1,0 +1,57 @@
+(node:85190) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/parallel-recall.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● actual Action branch bookkeeping › overlaps native reads and keeps exact serial result/context/delivery bindings (vector-first)
+
+    INVALID_INPUT: malformed structured fact
+
+      169 |         !isDenseArray(fact.tags) || fact.tags.some((tag) => typeof tag !== "string") ||
+      170 |         !isDenseArray(fact.entities) || !isDenseArray(fact.relations)) {
+    > 171 |       throw new Error("INVALID_INPUT: malformed structured fact");
+          |             ^
+      172 |     }
+      173 |     for (const entity of fact.entities as unknown[]) {
+      174 |       if (!isRecord(entity) || typeof entity.name !== "string" || !nonempty(entity.name) ||
+
+      at parseSourceFactsResponse (src/domain/sources.ts:171:13)
+      at extractSourceFacts (src/domain/sources.ts:209:10)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:46:64)
+      at nativeFixture (tests/unit/runtimeMemory/parallel-recall.test.ts:115:60)
+      at tests/unit/runtimeMemory/parallel-recall.test.ts:130:15
+
+  ● actual Action branch bookkeeping › overlaps native reads and keeps exact serial result/context/delivery bindings (fact-first)
+
+    INVALID_INPUT: malformed structured fact
+
+      169 |         !isDenseArray(fact.tags) || fact.tags.some((tag) => typeof tag !== "string") ||
+      170 |         !isDenseArray(fact.entities) || !isDenseArray(fact.relations)) {
+    > 171 |       throw new Error("INVALID_INPUT: malformed structured fact");
+          |             ^
+      172 |     }
+      173 |     for (const entity of fact.entities as unknown[]) {
+      174 |       if (!isRecord(entity) || typeof entity.name !== "string" || !nonempty(entity.name) ||
+
+      at parseSourceFactsResponse (src/domain/sources.ts:171:13)
+      at extractSourceFacts (src/domain/sources.ts:209:10)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:46:64)
+      at nativeFixture (tests/unit/runtimeMemory/parallel-recall.test.ts:115:60)
+      at tests/unit/runtimeMemory/parallel-recall.test.ts:130:15
+

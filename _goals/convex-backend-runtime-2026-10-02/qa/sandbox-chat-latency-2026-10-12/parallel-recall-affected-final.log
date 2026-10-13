@@ -1,0 +1,583 @@
+(node:85975) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/vector-delivery-batch.test.ts (15.7 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"facts","acceptedEntryScope":true,"unscopedAuthReads":50,"scopedAuthReads":20,"nonAuthReadWriteOrderEntries":4}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"vectors","acceptedEntryScope":true,"unscopedAuthReads":52,"scopedAuthReads":22,"nonAuthReadWriteOrderEntries":22}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"delivery","acceptedEntryScope":false,"unscopedAuthReads":223,"scopedAuthReads":223,"nonAuthReadWriteOrderEntries":34}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"profile","acceptedEntryScope":true,"unscopedAuthReads":28,"scopedAuthReads":18,"nonAuthReadWriteOrderEntries":9}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+PASS tests/unit/runtimeAgent/tool-context.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-routing.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-source-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-latency.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/execution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/start-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"preparation-authority-fixture-count","unscoped":192,"scoped":28}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:192:11)
+
+PASS tests/unit/runtimeAgent/empty-context-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/resolution-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeIngestion/context-permissions.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/inline-barrier.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/services.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/public-functional.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeIngestion/context.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/parallel-recall.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/repository.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/profiles.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    15.7s | 36/36 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+  ✅     4.6s | 33/33 passed | /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ✅     3.8s | 52/52 passed | /tests/unit/runtimeAgent/context-routing.test.ts
+  ✅     3.5s | 42/42 passed | /tests/unit/runtimeAgent/context-latency.test.ts
+  ✅     3.5s | 53/53 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+  ✅     2.6s | 39/39 passed | /tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ✅     2.3s | 86/86 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     2.0s | 19/19 passed | /tests/unit/runtimeAgent/empty-context-workflow.test.ts
+  ✅     1.8s | 28/28 passed | /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ✅     1.7s | 18/18 passed | /tests/unit/runtimeAgent/start-native.test.ts
+  ✅     1.6s | 21/21 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+  ✅     1.5s | 4/4 passed | /tests/unit/runtimeAgent/tool-context.test.ts
+  ✅     1.4s | 26/26 passed | /tests/unit/runtimeAgent/resolution-composition.test.ts
+  ✅     1.2s | 3/3 passed | /tests/unit/runtimeIngestion/context-permissions.test.ts
+  ✅     1.1s | 7/7 passed | /tests/unit/runtimeAgent/inline-barrier.test.ts
+  ✅     1.0s | 176/176 passed | /tests/unit/runtimeMemory/public-boundary.test.ts
+  ✅     0.9s | 27/27 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     0.9s | 21/21 passed | /tests/unit/runtimeMemory/services.test.ts
+  ✅     0.9s | 22/22 passed | /tests/unit/runtimeMemory/parallel-recall.test.ts
+  ✅     0.9s | 8/8 passed | /tests/unit/runtimeIngestion/context.test.ts
+  ✅     0.9s | 37/37 passed | /tests/unit/runtimeMemory/repository.test.ts
+  ✅     0.9s | 67/67 passed | /tests/unit/runtimeMemory/public-closure.test.ts
+  ✅     0.9s | 14/14 passed | /tests/unit/runtimeMemory/profiles.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    2.09s ( 3.7%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 2. [32m✓[0m    1.94s ( 3.5%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [32m✓[0m    1.42s ( 2.5%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [32m✓[0m    0.19s ( 0.3%) - original delivery outcome and failure precedence matches one/many unchanged vectors with no application or financial effect
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 5. [32m✓[0m    0.18s ( 0.3%) - original delivery outcome and failure precedence does not move profile initialization ahead of an absent or ambiguous canonical row
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 6. [32m✓[0m    0.17s ( 0.3%) - snapshot-local exact profile/budget initialization checks 10 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 7. [32m✓[0m    0.13s ( 0.2%) - per-source delivery lifetimes and native budget fences rechecks final authority after the last per-vector hash without returning partial payload
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 8. [32m✓[0m    0.13s ( 0.2%) - metadata_overflow needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 9. [32m✓[0m    0.13s ( 0.2%) - snapshot-local exact profile/budget initialization matches the original native read-set tables while reducing repeated profile initialization
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+10. [32m✓[0m    0.12s ( 0.2%) - bounded metadata overflow from the actual combined read still reaches original governed retrieval
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+11. [32m✓[0m    0.12s ( 0.2%) - empty eligible indexed context finishes real Agent context without creating a query embedding operation
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+12. [32m✓[0m    0.11s ( 0.2%) - actual Agent recall wiring and fresh completion fences overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (vector-first)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+13. [32m✓[0m    0.11s ( 0.2%) - actual Agent recall wiring and fresh completion fences selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+14. [32m✓[0m    0.11s ( 0.2%) - per-source delivery lifetimes and native budget fences preserves late vector data-permission despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+15. [32m✓[0m    0.11s ( 0.2%) - per-source delivery lifetimes and native budget fences retains native ingestion lease fence (expired=false) inside current profile selection
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+16. [32m✓[0m    0.11s ( 0.2%) - per-source delivery lifetimes and native budget fences retains a consumed share deadline through the last hash and final authority awaits
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+17. [32m✓[0m    0.11s ( 0.2%) - per-source delivery lifetimes and native budget fences retains native Agent account linkage fences at a late distinct group
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+18. [32m✓[0m    0.11s ( 0.2%) - per-source delivery lifetimes and native budget fences preserves late vector unapproved-message despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+19. [32m✓[0m    0.10s ( 0.2%) - per-source delivery lifetimes and native budget fences retains native ingestion lease fence (expired=true) inside current profile selection
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+20. [32m✓[0m    0.10s ( 0.2%) - original delivery outcome and failure precedence does not move a later invalid profile ahead of an earlier vector hash failure
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 7.59s (13.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      55.81s
+  Test suites:        23
+  Individual tests:   627
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 23
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 23 passed, 23 total
+Tests:       839 passed, 839 total
+Snapshots:   0 total
+Time:        55.81 s
+Ran all test suites matching tests/unit/(runtimeMemory|runtimeAgent)/|tests/unit/runtimeIngestion/(context|context-permissions).test.ts$.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-affected-final-jest.json

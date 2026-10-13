@@ -7,7 +7,7 @@ import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference, RuntimeCapability } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { createAuthorityReader, recheckAuthority, createAuthorityReadScope } from "./runtimeAuth";
+import { createAuthorityReader, recheckAuthority, createAuthorityReadScope, readDeploymentPolicyRows, readQualificationRows } from "./runtimeAuth";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
@@ -205,14 +205,14 @@ async function trustedRoot(root: Root): Promise<DeploymentPolicyManifest> {
 }
 
 async function activeRoot(ctx: ReadCtx): Promise<{ manifest: DeploymentPolicyManifest; root: Root; encodings: RootProvenanceEncodings }> {
-  const rows = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65);
+  const rows = await readDeploymentPolicyRows(ctx);
   if (!rows.length || rows.length > 64) fail("CAPABILITY_UNAVAILABLE");
   const root = rows[0]!.root;
   const { manifest, encodings } = await verifiedRoot(root);
   if (rows.length !== manifest.policies.filter((p) => p.scope === "deployment").length || rows.some((row) => row.revokedAt !== undefined || !sameRootEncoded(row.root, root, encodings)
     || !manifest.policies.some((policy) => policy.policyId === row.policyId && policy.version === row.version && canonical(policy) === row.canonical))) fail("POLICY_DENIED");
   for (const qualification of manifest.qualifications) {
-    const row = single(await ctx.db.query("runtimeModelQualifications").withIndex("by_receipt", (q) => q.eq("receiptId", qualification.receiptId).eq("version", root.revision)).take(2));
+    const row = single(await readQualificationRows(ctx, qualification.receiptId, root.revision));
     if (!row || !row.active || row.revokedAt !== undefined || row.canonical !== canonical(qualification) || !sameRootEncoded(row.root, root, encodings)) fail("CAPABILITY_UNAVAILABLE");
   }
   return { manifest, root, encodings };

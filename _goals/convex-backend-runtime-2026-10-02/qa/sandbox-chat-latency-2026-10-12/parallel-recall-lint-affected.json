@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "node_modules/eslint/bin/eslint.js",
+    "src/domain/contracts.ts",
+    "convex-dev/runtimeMemoryServices.ts",
+    "convex-dev/runtimeMemoryRepository.ts",
+    "convex-dev/runtimeAgent.ts",
+    "tests/unit/runtimeMemory/services.test.ts",
+    "tests/unit/runtimeMemory/parallel-recall.test.ts",
+    "tests/unit/runtimeAgent/context-source-composition.test.ts",
+    "--report-unused-disable-directives",
+    "--max-warnings=0"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "exitCode": 0,
+  "elapsedSeconds": 9.464,
+  "environment": {
+    "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "CORTEX_TEST_ENV_MODE": "explicit"
+  },
+  "rawLog": "parallel-recall-lint-affected.log"
+}

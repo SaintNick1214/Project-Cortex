@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--testPathPatterns=tests/unit/(runtimeMemory|runtimeAgent)/|tests/unit/runtimeIngestion/(context|context-permissions).test.ts$",
+    "--runInBand",
+    "--watchman=false",
+    "--forceExit=false",
+    "--json",
+    "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-affected-final-jest.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "exitCode": 0,
+  "elapsedSeconds": 56.155,
+  "environment": {
+    "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "CORTEX_TEST_ENV_MODE": "explicit"
+  },
+  "rawLog": "parallel-recall-affected-final.log"
+}

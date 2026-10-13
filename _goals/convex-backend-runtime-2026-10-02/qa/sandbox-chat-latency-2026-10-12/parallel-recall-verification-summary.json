@@ -1,0 +1,164 @@
+{
+  "numTotalTestSuites": 23,
+  "numPassedTestSuites": 23,
+  "numFailedTestSuites": 0,
+  "numPendingTestSuites": 0,
+  "numTotalTests": 839,
+  "numPassedTests": 839,
+  "numFailedTests": 0,
+  "numPendingTests": 0,
+  "numTodoTests": 0,
+  "frozenFilesMatch": true,
+  "discoveredSuites": 23,
+  "discoveryMatchesExecutedSuites": true,
+  "checks": {
+    "affected-final": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--testPathPatterns=tests/unit/(runtimeMemory|runtimeAgent)/|tests/unit/runtimeIngestion/(context|context-permissions).test.ts$",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-affected-final-jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 56.155,
+      "environment": {
+        "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CORTEX_TEST_ENV_MODE": "explicit"
+      },
+      "rawLog": "parallel-recall-affected-final.log"
+    },
+    "types-frozen": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 18.578,
+      "environment": {
+        "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CORTEX_TEST_ENV_MODE": "explicit"
+      },
+      "rawLog": "parallel-recall-types-frozen.log"
+    },
+    "backend-types-frozen": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--project",
+        "convex-dev/tsconfig.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 12.755,
+      "environment": {
+        "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CORTEX_TEST_ENV_MODE": "explicit"
+      },
+      "rawLog": "parallel-recall-backend-types-frozen.log"
+    },
+    "lint-frozen": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 44.943,
+      "environment": {
+        "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CORTEX_TEST_ENV_MODE": "explicit"
+      },
+      "rawLog": "parallel-recall-lint-frozen.log"
+    },
+    "lint-affected": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/contracts.ts",
+        "convex-dev/runtimeMemoryServices.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeAgent.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeMemory/parallel-recall.test.ts",
+        "tests/unit/runtimeAgent/context-source-composition.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 9.464,
+      "environment": {
+        "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CORTEX_TEST_ENV_MODE": "explicit"
+      },
+      "rawLog": "parallel-recall-lint-affected.log"
+    },
+    "build-frozen": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 32.993,
+      "environment": {
+        "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CORTEX_TEST_ENV_MODE": "explicit"
+      },
+      "rawLog": "parallel-recall-build-frozen.log"
+    },
+    "contracts-frozen": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:contracts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 2.73,
+      "environment": {
+        "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CORTEX_TEST_ENV_MODE": "explicit"
+      },
+      "rawLog": "parallel-recall-contracts-frozen.log"
+    },
+    "diffcheck": {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 0.757,
+      "environment": {
+        "PATH_prefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CORTEX_TEST_ENV_MODE": "explicit"
+      },
+      "rawLog": "parallel-recall-diffcheck.log"
+    }
+  },
+  "verdict": "PASS for bounded offline implementation checks; live/native and latency acceptance not performed"
+}

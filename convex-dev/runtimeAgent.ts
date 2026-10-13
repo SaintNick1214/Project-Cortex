@@ -31,7 +31,7 @@ import { currentRun, currentControlRun, activeAttempt, publicRun } from "./runs"
 import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
-import { recheckAuthority, createAuthorityReadScope } from "./runtimeAuth";
+import { recheckAuthority, createAuthorityReadScope, freshPolicyMetadataReads } from "./runtimeAuth";
 import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
 import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
 import { admitHandler, checkpointHandler, resolveHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
@@ -501,24 +501,58 @@ export const prepareContext = internalAction({ args: agentAttempt, handler: asyn
   const repository = createActionMemoryRepository(ctx, args.reference, "read"); const witnesses = new Map<string, Witness>();
   const excluded = new Set([...represented, ...pending.sourceKeys]);
   const provenance = new Map<string, import("../src/domain/contracts").SourceLineage>();
-  async function remember(sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }, permission: ContextSourcePermission) {
+  type RecallContext = { witnesses: typeof witnesses; provenance: typeof provenance };
+  type RecallReads = Pick<typeof repository, "listFacts" | "searchVectors">;
+  const retained = { witnesses, provenance };
+  async function remember(state: RecallContext, sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }, permission: ContextSourcePermission, priorWitnesses?: typeof witnesses) {
     const source = await ctx.runQuery(refs.contextSource, { reference: args.reference, sourceId,
       expected: { sourceEventId: expected.sourceEventId, sourceRevision: expected.sourceRevision, ...(expected.contentHash !== undefined ? { contentHash: expected.contentHash } : {}) },
       excludedSourceKeys: [...excluded], cutoff, boundary });
     if (!source) return false;
     const key = contextSourceKey(scope, source.lineage);
-    const witness = mergeContextWitness(witnesses.get(sourceId), { sourceId, sourceEventId: source.lineage.sourceEventId,
+    const witness = mergeContextWitness(state.witnesses.get(sourceId) ?? priorWitnesses?.get(sourceId), { sourceId, sourceEventId: source.lineage.sourceEventId,
       sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, permissions: [permission] });
     if (!witness) transcriptDenied("STALE_CONTEXT");
-    witnesses.set(sourceId, witness); provenance.set(key, source.lineage); return true;
+    state.witnesses.set(sourceId, witness); state.provenance.set(key, source.lineage); return true;
   }
-  const scoped = { ...repository, listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => {
-    const facts = await repository.listFacts(query); const selected = [];
-    for (const fact of facts) if (await remember(fact.lineage.sourceId, fact.lineage, "canViewFacts")) selected.push(fact); return selected;
-  }, searchVectors: async (...query: Parameters<typeof repository.searchVectors>) => {
-    const matches = await repository.searchVectors(...query); const selected = [];
-    for (const match of matches) if (await remember(match.source.lineage.sourceId, { ...match.source.lineage, contentHash: match.source.contentHash }, "canViewMemories")) selected.push(match); return selected;
-  } };
+  async function selectFacts(reads: RecallReads, state: RecallContext, query: Parameters<typeof repository.listFacts>[0], vectorSettled?: Promise<void>, priorWitnesses?: typeof witnesses) {
+    const facts = await reads.listFacts(query); const selected = [];
+    // Native reads overlap; keep the original vector-first source guard RPCs.
+    await vectorSettled;
+    for (const fact of facts) if (await remember(state, fact.lineage.sourceId, fact.lineage, "canViewFacts", priorWitnesses)) selected.push(fact); return selected;
+  }
+  async function selectVectors(reads: RecallReads, state: RecallContext, query: Parameters<typeof repository.searchVectors>) {
+    const matches = await reads.searchVectors(...query); const selected = [];
+    for (const match of matches) if (await remember(state, match.source.lineage.sourceId, { ...match.source.lineage, contentHash: match.source.contentHash }, "canViewMemories")) selected.push(match); return selected;
+  }
+  const scoped = { ...repository,
+    listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => await selectFacts(repository, retained, query),
+    searchVectors: async (...query: Parameters<typeof repository.searchVectors>) => await selectVectors(repository, retained, query),
+    stageRecallReads: () => {
+      const reads = repository.stageRecallReads();
+      const vectorContext: RecallContext = { witnesses: new Map(), provenance: new Map() };
+      const factContext: RecallContext = { witnesses: new Map(), provenance: new Map() };
+      let releaseVector!: () => void;
+      const vectorSettled = new Promise<void>(resolve => { releaseVector = resolve; });
+      return {
+        searchVectors: async (...query: Parameters<typeof repository.searchVectors>) => {
+          try { return await selectVectors(reads, vectorContext, query); }
+          finally { releaseVector(); }
+        },
+        listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => await selectFacts(reads, factContext, query, vectorSettled, vectorContext.witnesses),
+        commit: () => {
+          for (const branch of [vectorContext, factContext]) {
+            for (const [sourceId, next] of branch.witnesses) {
+              const witness = mergeContextWitness(witnesses.get(sourceId), next);
+              if (!witness) transcriptDenied("STALE_CONTEXT"); witnesses.set(sourceId, witness);
+            }
+            for (const [key, lineage] of branch.provenance) provenance.set(key, lineage);
+          }
+          reads.commit();
+        },
+      };
+    },
+  };
   const text = current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
   const availability = inputs.availability;
@@ -553,14 +587,14 @@ async function prepareEmptyContextHandler(ctx: MutationCtx, args: Attempt): Prom
   if (utf8Bytes(context) > Math.min(16_384, current.definition.context.maxContextTokens) || witnesses.size > 32) return { state: "FAILED", failureCode: "CONTEXT_OVERFLOW" };
   // Repeat the complete original save fence in this transaction, including its
   // source/witness checks and fresh empty/profile re-probe. No external I/O.
-  await saveContextHandler(ctx, { ...args, context, witnesses: [...witnesses.values()], completeness,
+  await saveContextHandler(freshPolicyMetadataReads(ctx), { ...args, context, witnesses: [...witnesses.values()], completeness,
     ...(failureCode ? { failureCode } : {}), emptyIndexedProfileId: availability.profileId });
   return { state: "COMPLETE" };
 }
 export const prepareEmptyContext = internalMutation({ args: agentAttempt, handler: (ctx, args) => prepareEmptyContextHandler(createAuthorityReadScope(ctx), args) });
 /** Metadata can request the original Action, never certify an empty context. */
 export const prepareRoutedContext = internalMutation({ args: agentAttempt, handler: async (ctx, args): Promise<EmptyContextResult> => {
-  ctx = createAuthorityReadScope(ctx);
+  ctx = createAuthorityReadScope(ctx, { policyMetadata: true });
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
   const repository = new ConvexMemoryRepository(ctx, args.reference, "read"), authority = await repository.authority();
