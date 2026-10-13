@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "scope": "Three-source controlled fixture; raw DB auth get/query method counts, not native DB documents/time.",
+  "records": [
+    {
+      "type": "authority-entry-fixture-count",
+      "entry": "facts",
+      "unscopedAuthReads": 50,
+      "scopedAuthReads": 20,
+      "nonAuthReadWriteOrderEntries": 4
+    },
+    {
+      "type": "authority-entry-fixture-count",
+      "entry": "vectors",
+      "unscopedAuthReads": 52,
+      "scopedAuthReads": 22,
+      "nonAuthReadWriteOrderEntries": 22
+    },
+    {
+      "type": "authority-entry-fixture-count",
+      "entry": "delivery",
+      "unscopedAuthReads": 223,
+      "scopedAuthReads": 28,
+      "nonAuthReadWriteOrderEntries": 34
+    },
+    {
+      "type": "authority-entry-fixture-count",
+      "entry": "profile",
+      "unscopedAuthReads": 28,
+      "scopedAuthReads": 18,
+      "nonAuthReadWriteOrderEntries": 9
+    }
+  ],
+  "sourceReceipt": "cloud-recall-authority-entries-focused-v3.log",
+  "sourceSha256": "617e554acc5d096f816ed5fcf981167297bbc90ca51bdc5fac00236d5c2ff0fa",
+  "countsFromPassingCasesInReceiptWithTwoIndependentLedgerEnumAssertionFailures": true,
+  "finalCorrectedSuitePasses29": true,
+  "nativeProof": false
+}

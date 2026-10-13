@@ -1,0 +1,41 @@
+{
+  "observedAt": "2026-10-13T19:54:35.817602+00:00",
+  "scope": "Selective historicalBattle Zone inspection; original files unchanged and not copied/regenerated",
+  "raw": {
+    "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/Battle Zone/data/results/battle-results.json",
+    "sha256": "8f411d81d600c0055ffbf76a75c29904f0a62f9254d4e30e819dbdc913eaa6e3",
+    "bytes": 10527781,
+    "prospectiveDevice": 16777234,
+    "prospectiveInode": 5791666,
+    "uid": 501,
+    "runId": "battle-1768440770895-8a9afd5c",
+    "startedAt": 1768440770895,
+    "completedAt": 1768441595405,
+    "exchanges": 839,
+    "recallQueries": 549,
+    "sdkCommitStamped": false,
+    "latencyMs": {
+      "min": 748,
+      "p50": 2388,
+      "p95NearestUpperRank": 3313,
+      "max": 6209,
+      "mean": 2442.799635701275
+    },
+    "graphEnabled": true,
+    "parallelMode": true,
+    "userConcurrency": 10,
+    "embeddingEnabled": true
+  },
+  "olderMarkdownReport": {
+    "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/Battle Zone/data/results/battle-report.md",
+    "sha256": "463663f7f18f87db1c75102db4adb1bda11758fa4c5e43191c169b7f2f3ac474",
+    "runId": "battle-1768001108334",
+    "date": "2026-01-09T23:25:08.334Z",
+    "conversations": 50,
+    "recallQueries": 128,
+    "meanRecallMs": 877,
+    "p50RecallMs": 819,
+    "matchesRawRun": false
+  },
+  "interpretation": "Raw 549-query graph-enabled historical run and older 128-query Markdown report are different runs. Neither establishes or disproves the user-reported ~200ms no-graph/plain recall or exact published0.35 timings. No same-environment A/B or C7 historical custody repair is claimed."
+}

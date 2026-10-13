@@ -9,6 +9,7 @@ import { canonicalModelJson } from "../src/domain/model-policy";
 import { semanticHash } from "../src/domain/profile";
 import { getHandler, submitHandler } from "./runs";
 import { transcriptDenied } from "./runtimeTranscript";
+import { createAuthorityReadScope } from "./runtimeAuth";
 
 type Selectors = { tenantId?: string; memorySpaceId?: string };
 
@@ -31,7 +32,7 @@ export async function submitAndStartHandler(ctx: MutationCtx, args: Selectors & 
 }
 export const submitAndStart = mutation({
   args: { request: v.any(), streaming: v.optional(v.boolean()), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
-  handler: submitAndStartHandler,
+  handler: (ctx, args) => submitAndStartHandler(createAuthorityReadScope(ctx), args),
 });
 
 export async function sessionHandler(ctx: MutationCtx, args: Selectors) {

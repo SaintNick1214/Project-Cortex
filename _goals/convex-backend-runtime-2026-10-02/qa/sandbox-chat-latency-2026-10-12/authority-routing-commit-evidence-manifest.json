@@ -1,0 +1,720 @@
+{
+  "observedAt": "2026-10-13T20:25:47.825580+00:00",
+  "sourceHashes": {
+    "convex-dev/runtimeAuth.ts": "a3477f6bb95dcc12f52199e125d47298ae7e1b79b26aa14a9163208d221cf09e",
+    "convex-dev/runtimeAgent.ts": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60",
+    "convex-dev/runtimeMemory.ts": "0a2ebeca8c5d54793d232f5831f7842867ee11aa610be4e269a338f5efcf8e45",
+    "convex-dev/runtimeModelPolicy.ts": "865ed4d1d7d2c5fe5beca6f81dd9063382b8b4f626816b40b4e00860944f0eef",
+    "convex-dev/runtimeClient.ts": "544304c14c4fc69d3a1a9ff94fe561f13da33bbad2a715ec018c0758eb510ae0",
+    "tests/unit/runtimeAuth/authority-read-scope.test.ts": "b233124d5f304d5c9372b16e13b6630e7ff13580fa7c4fa23ea2c4758fa8dede",
+    "tests/unit/runtimeAgent/context-routing.test.ts": "cc59ec56b45652467c834d2f1fa5b3576cad59853b8334e08917db972320d078",
+    "tests/unit/runtimeAgent/resolution-composition.test.ts": "7f979a73397ba4eb60552af4f575baacbabf8c20c31eaff05cc4d1e2eb49bba0",
+    "tests/unit/runtimeAgent/empty-context-inline.test.ts": "33052c90b19a0cbffce2239c9d29643c2680f860e483471308a6fd7a07397db7",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "bf0ddf1f03e1e149c6c6d002ea76d4c60ea0ddfddb72832e36dcedf5a0e02a48"
+  },
+  "qaEntries": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-affected-final.json",
+      "bytes": 650250,
+      "sha256": "20358a294f25c9809afcf220339d0e9abebcc263ad8a39d9834b4e0f2e199b26",
+      "selectedForCommit": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-affected-final.log",
+      "bytes": 20823,
+      "sha256": "8aba54eff3845621988e26bd1a9d7c8c71ebc2273a211d738596e4f4569da0b3",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-affected-v1.json",
+      "bytes": 649701,
+      "sha256": "57478843c14769b689e1dc51f93801067369a119c0b4993776d8c4eb34aee667",
+      "selectedForCommit": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-affected-v1.log",
+      "bytes": 20644,
+      "sha256": "1852699deeba65c640c6bd83f5cc16d56e0d095e6befd44e448764817f716aba",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-agent-preimage.ts",
+      "bytes": 109213,
+      "sha256": "42c6c4e7a3a5a30e213625d83181be6afd3fc55b054d3bc50c1aa3dc555647f7",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-backend-types-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-backend-types-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-checks.json",
+      "bytes": 5433,
+      "sha256": "0dc06064bc243b6c007fa7e758f6ae78b27f0a8305fefe048e836bda04ee2624",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-equivalence.json",
+      "bytes": 4460,
+      "sha256": "ea0d17bd202b441a24d595b21d0b741efd610cc7ffd8d11f399089c03b49581d",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-equivalence.mjs",
+      "bytes": 4215,
+      "sha256": "276dc91156c19dd0d00cfc59797a7d34930ad66aed76fe0ae8a20b5d7dd66e2a",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-eslint-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-eslint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-eslint-v2.log",
+      "bytes": 244,
+      "sha256": "18fa1db6210f1e8a282f75e5ddaacd760f7c11f042478e1318e2b905ccaebb24",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-eslint-v3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-focused-v1.json",
+      "bytes": 16787,
+      "sha256": "afeb6982b9ee59b537989ebb7343607d827485474136ca032fc6934f631f4770",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-focused-v1.log",
+      "bytes": 12050,
+      "sha256": "fcf2e4d1690dd5c7f8f0730d0c1bb02d705ef832602307dbf301c055cbeeb6e7",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-focused-v2.json",
+      "bytes": 111843,
+      "sha256": "f8ec9b255cab15f145fda1bb20f3f7f99a5e7eeaefb3f565153f4edf40fc68aa",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-focused-v2.log",
+      "bytes": 32112,
+      "sha256": "94dc42fa131128afc25856c4d74b97bf3ca9871bdcca761c094a120fe4c02170",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-focused-v3.json",
+      "bytes": 54462,
+      "sha256": "215ad1aa28b771286f460bd9dfe23eda844eaf858b68474356c6d920c909d6a1",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-focused-v3.log",
+      "bytes": 9386,
+      "sha256": "b30cf977c3a6a59c8c0ecb56bb2682da35ebd027e8cf34e7d4bb8776bf4c4ea8",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-report.md",
+      "bytes": 5042,
+      "sha256": "f5af2277d945baf5c4bd3a35b2ec0cb3d89b62175ccfce27d0851450871c5c10",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-root-types-final.log",
+      "bytes": 1081,
+      "sha256": "e1a211ed64ce4bea78a27f8580a2a7c78e2cdac8a3e81c6b26e2bb0e1910d97f",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-root-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-root-types-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-routing-source-review.json",
+      "bytes": 7609,
+      "sha256": "e504454746c148766fda56e7be5674d373b50fab4b8b373dfba008dd326abfe1",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-routing-source-review.md",
+      "bytes": 4084,
+      "sha256": "624387d7701138c432c8d00d111334b56e964496f49c60390af7f2644ef296a0",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-affected-v1-exit.json",
+      "bytes": 1796,
+      "sha256": "6ba3e2d70bb0d75b165b13a5cfd650d1433a0d175099f1e454c8282e816754b5",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-affected-v1.json",
+      "bytes": 152066,
+      "sha256": "eb84df589036dc103e6fe4c0bb05ae107d17272ccbfef372c2b37e36f55ccb76",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-affected-v1.log",
+      "bytes": 2694,
+      "sha256": "a04ccea8cb2624045317a4be3a3417deb516b5820b1119414ec6b89484bcab48",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-backend-types-v1-exit.json",
+      "bytes": 533,
+      "sha256": "20b03ab8ab19cc536e0852afcfb0663fda4e8efc3166e8708ddbdd0f78c939a3",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-checks.json",
+      "bytes": 10304,
+      "sha256": "38b9aa11df451aa2aa3100225d57d969571a9e72396ec48eaab9719118e43c3e",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-discovery-v1-exit.json",
+      "bytes": 1597,
+      "sha256": "c79c0edd6fef6eef899955198ba0afa09dffb75b32d15b28008ef832ed3a38b7",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-discovery-v1.log",
+      "bytes": 1640,
+      "sha256": "a02fcc64f17b49be822b56d4f43a1f25a660080da83055b4a2e634bec7ab2549",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-dispatch-test-change.json",
+      "bytes": 420,
+      "sha256": "b32b009d8050d48d18ae3e0c6c21cacc5b250c3819a35632a920e6b0b6e0e4dc",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-equivalence-final-supplement.json",
+      "bytes": 3613,
+      "sha256": "7bf8062cbc0cf140330f3f4096d634a22b392552009a6fbbe7ece8ce36749593",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-equivalence-final-supplement.mjs",
+      "bytes": 4490,
+      "sha256": "cb69e0c1f33e0a7e9dad9f92cb310d005b874105d114bcf4f0a52bf6f9c9161c",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-equivalence-v1-fail.json",
+      "bytes": 3284,
+      "sha256": "3d078855ec17615f4f6b6652b14c27dc6533d0bc038311d2b2cc56c2d654aaf6",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-equivalence.json",
+      "bytes": 3634,
+      "sha256": "a8306751c640331bc928b3637b741630ed29bb239c0e1b66b7bae39044dc5e3f",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-equivalence.mjs",
+      "bytes": 4489,
+      "sha256": "2966ee60565cc27232c06d134532f3838865c8aff2a85415414980ebf252ba65",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-eslint-v1-exit.json",
+      "bytes": 671,
+      "sha256": "43b946e45e521104e5e91181152c1d93e05a87602c1f5229c4d221fe5c01f7bf",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-eslint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-final-supplement.md",
+      "bytes": 2202,
+      "sha256": "36b1beae1f202c63665ff795790eebaca39cead875c163cb710becc972f6ce6b",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-focused-v1.json",
+      "bytes": 25931,
+      "sha256": "feb3e53ef33e00cf28a7f0a7ead1db1920e928d027489598b792cfe9656c6825",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-focused-v1.log",
+      "bytes": 4516,
+      "sha256": "63e2d90c8adc3659e80c836654ebbb82c7cf91e88ffa41d5746f462fe6bdcca4",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-focused-v2.json",
+      "bytes": 22740,
+      "sha256": "d6ca87539f24663d52ef5c351ca6ff1776f8d33fa22af518e383a156a6961f33",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-focused-v2.log",
+      "bytes": 2042,
+      "sha256": "64b45a97a665880745e61aee57b75c1c6829cf698ae3b6d1a38827d85995e5a5",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-focused-v3.json",
+      "bytes": 22139,
+      "sha256": "5454cdc7de4905b83e120a04babb9db264072cf4429682a90c8b205c2494836c",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-focused-v3.log",
+      "bytes": 950,
+      "sha256": "6de084580b39cec2e8434607c03510230dbd89f04dfd0248c425ea50ece52f26",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-lint-types-v1-exit.json",
+      "bytes": 521,
+      "sha256": "72ca15453ad2e70a5f46d5ec29f66584dc0b2dbe80d9165c9994b2627cc92d5f",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-root-types-final-v1-exit.json",
+      "bytes": 490,
+      "sha256": "5b849c193a07b2f3bc8938f85d0b4c73910cc9ab8a762891529289a1854541fb",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-root-types-final-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-root-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-run-checks.mjs",
+      "bytes": 3081,
+      "sha256": "4dace8fdb9f880746ea909bcda1755fcc25da9d8a601b03ea64fc6b2ccf708e9",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-runtimeAgent.preimage.ts",
+      "bytes": 103646,
+      "sha256": "d2d108e0e019d94e846acf1ea875b8ad7202edbf6bb52e061129b29fc36f7ddd",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-source-report.md",
+      "bytes": 9831,
+      "sha256": "cebd838365cafceb89fc0c5553916c6f8fb96b90fe615d275ed0771979c0e3c4",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation-counts.json",
+      "bytes": 961711,
+      "sha256": "7e9515fe8f868b89aafd2eef62a5bd31fc1918091263465af094f138e871eb17",
+      "selectedForCommit": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation-jest-v1.json",
+      "bytes": 5556,
+      "sha256": "bc5185e0b19db70c58a56df5223545762ef764147dd7b7be39c6d4b8c106df73",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation-jest-v1.log",
+      "bytes": 6565,
+      "sha256": "e11dcb48ab88f7ace7df4161dc23d8c27fd1d314f4acf8a7baf6dbf79491427f",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation-jest-v2.json",
+      "bytes": 1763,
+      "sha256": "a6d606308fe6027e68db9afda64ec19586bfeeaf35398f1a55b86369423500ce",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation-jest-v2.log",
+      "bytes": 4380,
+      "sha256": "e94e6dc17eb2ce7b9038bb6180fa2352d8fd0a99bfbd5edd92b8dc40211fe2fc",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation-report.md",
+      "bytes": 3505,
+      "sha256": "a7499c46b0d09991966f58b037dd63094a448cd52a72750dffcd3cab644261bf",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs",
+      "bytes": 8371,
+      "sha256": "b6fe6269f5499031f3932a37ad41de091c5533af67106fcb0161cd9723f20b2f",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-affected-v1-exit.json",
+      "bytes": 2280,
+      "sha256": "cb7715cf0a2e89c85153f1f76f684d5fea690000d6bb3f17c34723c03ae4fa26",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-affected-v1.json",
+      "bytes": 410696,
+      "sha256": "f649813266c8e3b82cd88d5a8272fc01cbb13280a967bc2cf519e12d1d7472ed",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-affected-v1.log",
+      "bytes": 9113,
+      "sha256": "623ac03a2ba3bd79c2c0baa02e9f8bdc4ca49795986537b26496b363260d286b",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-affected-v2-exit.json",
+      "bytes": 2456,
+      "sha256": "adaf5bd8c12ddba02b7796720d9de449a5a501494ab6aeec7bb8c6f74c03b68d",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-affected-v2.json",
+      "bytes": 431352,
+      "sha256": "49ca7388d0845f513364f5618f680fe17829876a1a6259946dc13fb42c19115f",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-affected-v2.log",
+      "bytes": 2037,
+      "sha256": "cb6796facca03afd6f5b1e5d15b8283318dc41d6e6ef05b9b5944cc8c9e28196",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-backend-types-v1-exit.json",
+      "bytes": 542,
+      "sha256": "a56f4ec11b0f706a9cb9705cb0c983d17e54046cdd708d3d5103f8f1ae766e20",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-backend-types-v2-exit.json",
+      "bytes": 542,
+      "sha256": "46df401eef59a0748141e39d860150e432fb3affebfdd003e2ab9757dcd212ae",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-backend-types-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-checks-final.json",
+      "bytes": 11580,
+      "sha256": "5cf9d50b7b7622cecb0b61401f80a3d1a5b7b40a9f688cd7b4995012fdc29c8b",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-checks.json",
+      "bytes": 11985,
+      "sha256": "330495c80e437c43eaae68308a383af672ef4a692aa2998ffa907592924b4118",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-discovery-v1-exit.json",
+      "bytes": 2072,
+      "sha256": "7ebbba8dcb38e48fbed08695ef7141f05cc4951638379350844d50945c723e29",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-discovery-v1.log",
+      "bytes": 2618,
+      "sha256": "53123342eb0d24de6b754a2ef5203e6eec27f9e2d9f63564770197553d8d90bb",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-discovery-v2-exit.json",
+      "bytes": 2248,
+      "sha256": "e0a475fca1cd1f6e6a94268cac7687bceb55677d6d3ae1d7b12395f257ed857d",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-discovery-v2.log",
+      "bytes": 3050,
+      "sha256": "676898f88c2692d67406d0268f1be933511a7dbe06fd3f21d260739b6af6651c",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-equivalence-final.json",
+      "bytes": 1952,
+      "sha256": "59a7bbeecc5fb4cecdd9928a644120351a323cedea458d31428534c64fd933b3",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-equivalence.json",
+      "bytes": 1871,
+      "sha256": "759533bf675ff6c3b5f1c84ba0fcb65d056b25a60ac30d3f5b368b2724a589dd",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-equivalence.mjs",
+      "bytes": 2580,
+      "sha256": "f03f87ccc711a47a31540063d36de4fe155d27c1abe090a09172a59115d5d047",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-eslint-v1-exit.json",
+      "bytes": 705,
+      "sha256": "e35b9ecab4e063df8554c659c4191c1d7aff935277cf1a3586ac0f325df9ccac",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-eslint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-eslint-v2-exit.json",
+      "bytes": 705,
+      "sha256": "508bdf63035501e93e9fe2ce02efcdc79e4c4f5e273e636574dafad3c72ae82a",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-eslint-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-fixture-counts.json",
+      "bytes": 1203,
+      "sha256": "9290c3131bdc480863cde9954184481a7c7d9d181b4cf80a48f3fd2ac1020124",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-focused-v1.json",
+      "bytes": 29146,
+      "sha256": "4d45fec0c4f9a70fc63676a9e4274cbf4fe848c21c9ca4004eccd641346ab3ad",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-focused-v1.log",
+      "bytes": 10978,
+      "sha256": "9d208d76412b2e4bb30826d2b03d50861e7040431b4cc8dee6e37cb33e9f7bc9",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-focused-v2.json",
+      "bytes": 19597,
+      "sha256": "921f556b7ed4bf9ef736a14d66a9f69811bdb3ad35c078543fb1bd39e638ed91",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-focused-v2.log",
+      "bytes": 5908,
+      "sha256": "22470798b63fb9dfa1e8cf0036f693793260863deffda22be441ed8b11ce1ba7",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-focused-v3.json",
+      "bytes": 17238,
+      "sha256": "600cfb6f9ee71cef0100d7055a45150f0bee4b814595724f8869cdfa2548fdb2",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-focused-v3.log",
+      "bytes": 4552,
+      "sha256": "617e554acc5d096f816ed5fcf981167297bbc90ca51bdc5fac00236d5c2ff0fa",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-lint-types-v1-exit.json",
+      "bytes": 530,
+      "sha256": "1813ecd7b021f19329e86d5026430659055e1a4d0e156b77982ddcb4861ec1c3",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-lint-types-v2-exit.json",
+      "bytes": 530,
+      "sha256": "45040ed57b1ae0b952f2e3c1cdaa81eb5b541bf16e9d3bb6d68918346115c492",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-lint-types-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-root-types-final-v1-exit.json",
+      "bytes": 499,
+      "sha256": "38a38412dc0a43507f1b51b1083648990271b2487e12bb67383d568562ebf967",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-root-types-final-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-root-types-final-v2-exit.json",
+      "bytes": 499,
+      "sha256": "afe6dcd9eb8beaa3075c627de35d92d48e1b15da8325ad64a07314c64cccc638",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-root-types-final-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-run-checks.mjs",
+      "bytes": 3578,
+      "sha256": "d353c3d1a0c2cba18fb8e86d45ebe13a0b8d888c9d136c318d81de21f90e4d09",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-runtimeClient.preimage.ts",
+      "bytes": 6634,
+      "sha256": "2a5bdefc3150d0f0fe557b0c31f36e1f45d7aabab64b3a2c38c3f0a32d33b3a0",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-runtimeMemory.preimage.ts",
+      "bytes": 16474,
+      "sha256": "57b8ef2b492f74423b9ca72cee438c8305a23363f1fcf64c48e42487f7b4b8b0",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-runtimeModelPolicy.preimage.ts",
+      "bytes": 115467,
+      "sha256": "c4a76cef99abffd103004345d93643f184a835ef5a29a3d5142305a33ef2e921",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-source-pins.json",
+      "bytes": 686,
+      "sha256": "e791290782ff6cf55f61904774112bb299c6a94fe44435352e671010dc544d35",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-source-report-prototype.md",
+      "bytes": 8395,
+      "sha256": "f6b8defe0c417de5d7fd5802cb33d09587f8ab38e7325fe11ebe3928e09a2e93",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-source-report.md",
+      "bytes": 7679,
+      "sha256": "d2c4de075123f9d90a6f5500e3e9a0e3706c8158554b4928bfeb496c6aea73ee",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-scope-entry-map.md",
+      "bytes": 6625,
+      "sha256": "192c9c6f72c4d36c748bb3613acac46abc339d42de503595379f41e5a02a5785",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-parallelism-safety-map.md",
+      "bytes": 4905,
+      "sha256": "9c40c328d886319ae9cfd081fd478c43a7ce0a61498b793379e7b7c23d9a189e",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/version-latency-regression-035-037-current.json",
+      "bytes": 18823,
+      "sha256": "ffbfe4f51964369e7f4f5dca6fd66485a25a56e75ef3f49c48237a0ae69bf004",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/version-latency-regression-035-037-current.md",
+      "bytes": 6375,
+      "sha256": "4f2412b1038cc64a79196e604e919aba604b89ead08266e526a82712df3d8d02",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/version-regression-historical-battle-baseline.json",
+      "bytes": 1667,
+      "sha256": "7b0d86ba8e591909a03636a8ebdee1269dd2ac51c7c2141e8e98c852cc3f0c28",
+      "selectedForCommit": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/version-regression-published-artifact-receipt.json",
+      "bytes": 10116,
+      "sha256": "e8cee4b9678789d77f94ecf38f5e543f1379f44b23ba04c6ce1712e68a8512bd",
+      "selectedForCommit": true
+    }
+  ],
+  "scope": "Owned reviewed candidate originals <=512KiB; larger originals retained local with hashes. No C7 transport/custody/backing repair claimed."
+}

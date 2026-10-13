@@ -1,0 +1,65 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:69028) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs
+  ✓ counts exact native API reads in one original model-admission transaction with 0 source witnesses (56 ms)
+  ✓ counts exact native API reads in one original model-admission transaction with 4 source witnesses (59 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.4s | 2/2 passed | /_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.06s ( 2.3%) - counts exact native API reads in one original model-admission transaction with 4 source witnesses
+    /_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs
+
+ 2. [32m✓[0m    0.06s ( 2.2%) - counts exact native API reads in one original model-admission transaction with 0 source witnesses
+    /_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.12s (4.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.54s
+  Test suites:        1
+  Individual tests:   2
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        2.539 s, estimated 9 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation-jest-v2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

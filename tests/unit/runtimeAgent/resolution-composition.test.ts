@@ -56,18 +56,46 @@ async function failure(call: () => Promise<unknown>) {
   }
 }
 describe("Agent-only fresh hydration and native policy resolution", () => {
-  it("retains exact original output, all native/component read order and zero effects", async () => {
-    const x = await fixture(), reads: unknown[] = [], query = x.f.db.query.bind(x.f.db), get = x.f.db.get.bind(x.f.db);
+  it("retains exact output/non-authority read order and first authority lookup order per write epoch", async () => {
+    const x = await fixture(), reads: unknown[] = [], authorityReads: unknown[] = [], query = x.f.db.query.bind(x.f.db), get = x.f.db.get.bind(x.f.db);
+    // This parent is a query with no application writer. Every lookup below is
+    // in epoch zero; mutation epoch invalidation has its own actual-ledger test.
+    const epoch = 0;
     jest.spyOn(x.f.db, "query").mockImplementation(table => {
       reads.push(["query", table]); const builder = query(table), withIndex = builder.withIndex.bind(builder);
-      builder.withIndex = (name, callback) => { reads.push(["index", table, name]); return withIndex(name, callback); };
+      let index = ""; const conditions: unknown[] = [];
+      builder.withIndex = (name, callback) => {
+        reads.push(["index", table, name]); index = name;
+        return withIndex(name, q => {
+          const proxy: object = new Proxy(q as object, { get(target, key) {
+            const value: unknown = Reflect.get(target, key);
+            if (typeof value !== "function") return value;
+            return (...args: unknown[]) => { conditions.push([key, ...args]); Reflect.apply(value,target,args); return proxy; };
+          } });
+          return callback(proxy);
+        });
+      };
+      if (table.startsWith("runtimeAuth")) {
+        const take = builder.take.bind(builder), collect = builder.collect.bind(builder);
+        builder.take = async limit => { authorityReads.push([epoch,"query",table,index,conditions,"take",limit]); return await take(limit); };
+        builder.collect = async () => { authorityReads.push([epoch,"query",table,index,conditions,"collect"]); return await collect(); };
+      }
       return builder;
     });
-    jest.spyOn(x.f.db, "get").mockImplementation(async (table, id) => { reads.push(["get", table, id]); return await get(table, id); });
+    jest.spyOn(x.f.db, "get").mockImplementation(async (table, id) => {
+      reads.push(["get", table, id]); if(table.startsWith("runtimeAuth")) authorityReads.push([epoch,"get",table,id]); return await get(table, id);
+    });
     const component = x.f.ctx.runQuery.bind(x.f.ctx);
     x.f.ctx.runQuery = (async (reference, args) => { reads.push(["component", clone(reference), clone(args)]); return await component(reference, args); }) as typeof x.f.ctx.runQuery;
-    const before = x.state(), combined = await x.call(), composedReads = clone(reads); reads.length = 0;
-    expect(await x.original()).toEqual(combined); expect(reads).toEqual(composedReads); expect(x.state()).toEqual(before);
+    const before = x.state(), combined = await x.call(), composedReads = clone(reads), composedAuthority = clone(authorityReads); reads.length = 0; authorityReads.length = 0;
+    expect(await x.original()).toEqual(combined);
+    const nonAuthority = (events: unknown[]) => events.filter(event => !(Array.isArray(event) && ["query","index","get"].includes(String(event[0])) && typeof event[1] === "string" && event[1].startsWith("runtimeAuth")));
+    const exactKey = (value: unknown) => JSON.stringify(value, (_key,item: unknown) => item === undefined ? ["undefined"] : item);
+    const firstReads = (events: unknown[]) => { const seen = new Set<string>(); return events.filter(event => {const key=exactKey(event);if(seen.has(key))return false;seen.add(key);return true;}); };
+    expect(nonAuthority(reads)).toEqual(nonAuthority(composedReads));
+    expect(firstReads(authorityReads)).toEqual(composedAuthority);
+    expect(composedAuthority.length).toBeLessThan(authorityReads.length);
+    expect(x.state()).toEqual(before); expect(x.f.db.writes).toBe(before.writes);
     expect(combined).toMatchObject({ snapshot: { modelId: "openai/gpt-4o-mini", nativeInterface: "chat" }, storageLimits: { embeddingValuesPerCall: 1 } });
     expect(x.f.db.table("runtimeModelOperations")).toEqual([]); expect(x.f.db.table("runtimeModelAttempts")).toEqual([]);
   });

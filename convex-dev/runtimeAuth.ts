@@ -43,6 +43,71 @@ export interface AuthorityReader {
   hasTombstone(key: TombstoneKey): Promise<boolean>;
 }
 
+const authorityReadScope: unique symbol = Symbol("cortex.native-authority-read-scope");
+type AuthorityReadContext = Pick<QueryCtx, "db"> & { [authorityReadScope]?: AuthorityReader };
+export const AUTHORITY_READ_SCOPE_MAX_ENTRIES = 512;
+
+/** Trusted native DB records are plain Convex values. Preserve optional undefined
+ * fields and BigInt without relying on a Node-only structuredClone global. */
+function cloneAuthorityValue<T>(value: T): T {
+  if (Array.isArray(value)) return value.map(item => cloneAuthorityValue(item)) as T;
+  if (value instanceof ArrayBuffer) return value.slice(0) as T;
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, cloneAuthorityValue(item)])) as T;
+  }
+  return value;
+}
+function authorityReadKey(method: string, args: readonly (string | undefined)[]): string {
+  return JSON.stringify([method, ...args.map(value => value === undefined ? ["undefined"] : ["value", value])]);
+}
+/** Explicit native invocation only. This reuses raw reads, never an authorization
+ * decision: all requirement, generation, expiry and resource predicates still run.
+ * Every writer invalidates before/after and suppresses cache use while in flight. */
+export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx): Ctx {
+  const values = new Map<string, unknown>();
+  let epoch = 0, writers = 0;
+  const invalidate = () => { values.clear(); epoch++; };
+  const read = async <T>(method: string, args: readonly (string | undefined)[], invoke: () => Promise<T>): Promise<T> => {
+    const key = authorityReadKey(method, args), started = epoch;
+    if (!writers && values.has(key)) return cloneAuthorityValue(values.get(key)) as T;
+    const value = cloneAuthorityValue(await invoke());
+    if (!writers && epoch === started && values.size < AUTHORITY_READ_SCOPE_MAX_ENTRIES) values.set(key, value);
+    return cloneAuthorityValue(value);
+  };
+  const base = createUncachedAuthorityReader(ctx);
+  const reader: AuthorityReader = {
+    findPrincipal: (issuer, subject) => read("findPrincipal", [issuer, subject], () => base.findPrincipal(issuer, subject)),
+    getPrincipal: id => read("getPrincipal", [id], () => base.getPrincipal(id)),
+    listMemberships: id => read("listMemberships", [id], () => base.listMemberships(id)),
+    getMembership: id => read("getMembership", [id], () => base.getMembership(id)),
+    listGrants: id => read("listGrants", [id], () => base.listGrants(id)),
+    getGrant: id => read("getGrant", [id], () => base.getGrant(id)),
+    getScope: (tenant, space) => read("getScope", [tenant, space], () => base.getScope(tenant, space)),
+    hasTombstone: key => read("hasTombstone", [key.tenantId, key.memorySpaceId, key.resourceType, key.resourceId], () => base.hasTombstone(key)),
+  };
+  const writing = async (invoke: () => unknown): Promise<unknown> => {
+    invalidate(); writers++;
+    try { return await invoke(); } finally { writers--; invalidate(); }
+  };
+  const db = new Proxy(ctx.db, { get(target, key) {
+    const value: unknown = Reflect.get(target, key, target);
+    if (typeof value !== "function") return value;
+    const invoke = (args: unknown[]): unknown => Reflect.apply(value, target, args) as unknown;
+    return ["insert", "patch", "replace", "delete"].includes(String(key))
+      ? (...args: unknown[]) => writing(() => invoke(args)) : (...args: unknown[]) => invoke(args);
+  } });
+  const scoped = { ...ctx, db };
+  for (const name of ["runQuery", "runMutation"] as const) {
+    const value: unknown = Reflect.get(ctx, name);
+    if (typeof value !== "function") continue;
+    Object.defineProperty(scoped, name, { enumerable: true, value: name === "runMutation"
+      ? (...args: unknown[]) => writing(() => Reflect.apply(value, ctx, args) as unknown)
+      : (...args: unknown[]) => Reflect.apply(value, ctx, args) as unknown });
+  }
+  Object.defineProperty(scoped, authorityReadScope, { value: reader });
+  return scoped;
+}
+
 function deny(code: "UNAUTHENTICATED" | "FORBIDDEN" | "INVALID_INPUT" = "FORBIDDEN"): never {
   throw new ConvexError({ version: 1, code, message: code === "UNAUTHENTICATED"
     ? "Verified identity required" : code === "INVALID_INPUT" ? "Invalid authority configuration" : "Access denied",
@@ -212,6 +277,9 @@ async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): P
 }
 
 export function createAuthorityReader(ctx: Pick<QueryCtx, "db">): AuthorityReader {
+  return (ctx as AuthorityReadContext)[authorityReadScope] ?? createUncachedAuthorityReader(ctx);
+}
+function createUncachedAuthorityReader(ctx: Pick<QueryCtx, "db">): AuthorityReader {
   return {
     findPrincipal: async (issuer, subject) => await boundedSingle(ctx.db.query("runtimeAuthPrincipals")
       .withIndex("by_issuer_subject", (q) => q.eq("issuer", issuer).eq("subject", subject))),

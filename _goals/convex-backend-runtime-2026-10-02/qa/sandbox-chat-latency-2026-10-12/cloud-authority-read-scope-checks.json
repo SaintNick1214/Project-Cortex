@@ -1,0 +1,139 @@
+{
+  "schema": "cortex.authority-read-scope.checks.v1",
+  "observedAtUTC": "2026-10-13T20:14:05.158Z",
+  "sourceBaseline": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+  "agentOwnershipPreimageSha256": "42c6c4e7a3a5a30e213625d83181be6afd3fc55b054d3bc50c1aa3dc555647f7",
+  "status": "SOURCE_IMPLEMENTED_SCOPED_CHECKS_PASS_JOINT_ROOT_TYPES_PENDING",
+  "milestonePercent": 100,
+  "sourceFiles": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "a3477f6bb95dcc12f52199e125d47298ae7e1b79b26aa14a9163208d221cf09e"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+      "sha256": "b233124d5f304d5c9372b16e13b6630e7ff13580fa7c4fa23ea2c4758fa8dede"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "sha256": "7f979a73397ba4eb60552af4f575baacbabf8c20c31eaff05cc4d1e2eb49bba0"
+    }
+  ],
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "activeNativeParents": [
+    "resolveModelOperation",
+    "admitModelOperation",
+    "contextInputs",
+    "prepareEmptyContext",
+    "prepareRoutedContext"
+  ],
+  "contextSourceScoped": false,
+  "maximumRawEntries": 512,
+  "scope": "Explicit symbol-branded cloned native ctx owns a raw reader; default contexts remain original uncached. No materialized authority/model/policy/source/budget/semantic cache.",
+  "writerFences": "Invalidate all raw values before and after every insert/patch/replace/delete and component runMutation, including failed/overlapping writes. No hits/stores during a writer; late reads cannot populate a changed epoch. runQuery is bound but never cached.",
+  "clone": "Manual plain Convex-value clone preserves nested arrays/objects, own undefined, BigInt and ArrayBuffer; no structuredClone global dependency.",
+  "exactControlledLedgerComparisons": [
+    {
+      "witnesses": 0,
+      "originalAuthorityCalls": 326,
+      "scopedAuthorityCalls": 42,
+      "eliminatedCalls": 284
+    },
+    {
+      "witnesses": 4,
+      "originalAuthorityCalls": 1046,
+      "scopedAuthorityCalls": 66,
+      "eliminatedCalls": 980
+    }
+  ],
+  "tests": {
+    "final": {
+      "passed": 1289,
+      "suites": 25,
+      "skipped": 0,
+      "newScopeTests": 31
+    },
+    "receipt": "cloud-authority-read-scope-affected-final.json",
+    "sha256": "20358a294f25c9809afcf220339d0e9abebcc263ad8a39d9834b4e0f2e199b26",
+    "focusedBeforeGetterCase": {
+      "passed": 102,
+      "suites": 3,
+      "skipped": 0,
+      "receipt": "cloud-authority-read-scope-focused-v3.json"
+    }
+  },
+  "quality": [
+    {
+      "name": "root tsc final",
+      "exitCode": 2,
+      "receipt": "cloud-authority-read-scope-root-types-final.log",
+      "scope": "Only concurrent owner file tests/unit/runtimeMemory/authority-scope-entries.test.ts errors at 22 and 100; no owned-file errors. Parent notified. Original failure retained."
+    },
+    {
+      "name": "root tsc preceding",
+      "exitCode": 0,
+      "receipt": "cloud-authority-read-scope-root-types-v2.log"
+    },
+    {
+      "name": "backend tsc final",
+      "exitCode": 0,
+      "receipt": "cloud-authority-read-scope-backend-types-final.log"
+    },
+    {
+      "name": "lint types",
+      "exitCode": 0,
+      "receipt": "cloud-authority-read-scope-lint-types-v1.log"
+    },
+    {
+      "name": "scoped ESLint final",
+      "exitCode": 0,
+      "receipt": "cloud-authority-read-scope-eslint-final.log"
+    }
+  ],
+  "equivalence": {
+    "receipt": "cloud-authority-read-scope-equivalence.json",
+    "sha256": "ea0d17bd202b441a24d595b21d0b741efd610cc7ffd8d11f399089c03b49581d",
+    "oldAuthBodiesUnchanged": 17,
+    "agentDifferencesOnly": "Four registration entry wrappers, one routed context entry statement, import; all remaining Agent bytes match the routing ownership preimage."
+  },
+  "preservedFailures": [
+    {
+      "receipt": "cloud-authority-read-scope-focused-v1.json",
+      "summary": "27/28. Existing TranscriptDb clone erased ArrayBuffer before the new factory; corrected only the new test native get port."
+    },
+    {
+      "receipt": "cloud-authority-read-scope-focused-v2.json",
+      "summary": "53/54. Original literal all-DB-read equality failed after intentional raw reuse; authorized refinement retains exact output/state/non-auth read order and exact first authority identity/arguments/order at epoch zero."
+    },
+    {
+      "receipt": "cloud-authority-read-scope-eslint-v2.log",
+      "summary": "prefer-const naming repair in the refined test."
+    },
+    {
+      "receipt": "cloud-authority-read-scope-root-types-final.log",
+      "summary": "Final root type red remains outside ownership; joint final root type gate pending."
+    },
+    {
+      "receipt": "root routing gate",
+      "summary": "Context source direct second-grant-get revocation witness failed with scope enabled; that source entry was removed, existing assertion preserved, all 46 source composition tests pass."
+    },
+    {
+      "receipt": "historical native outcomes",
+      "summary": "K11 CLI deadline/SLO and previous auth-code mismatches remain unchanged."
+    }
+  ],
+  "independentReview": "Pending parent-owned joint source review; no native/service/latency acceptance",
+  "services": 0,
+  "paidCalls": 0,
+  "deployment": 0,
+  "packageBuilds": 0,
+  "gitWrites": 0,
+  "checkProcessesRetained": 0
+}

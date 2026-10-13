@@ -7,7 +7,7 @@ import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference, RuntimeCapability } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { createAuthorityReader, recheckAuthority } from "./runtimeAuth";
+import { createAuthorityReader, recheckAuthority, createAuthorityReadScope } from "./runtimeAuth";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
@@ -534,7 +534,7 @@ export async function readCurrentEmbeddingProfile(ctx: ReadCtx, reference: Runti
 }
 export const embeddingProfile = internalQuery({ args: { reference: runtimeAuthorityReference,
   operationKey: v.union(v.literal("embedding.memory"), v.literal("embedding.query")), runBudgetId: v.optional(v.string()) },
-  handler: async (ctx, args) => readCurrentEmbeddingProfile(ctx, args.reference, args.operationKey, args.runBudgetId) });
+  handler: async (ctx, args) => readCurrentEmbeddingProfile(createAuthorityReadScope(ctx), args.reference, args.operationKey, args.runBudgetId) });
 const resolveArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, runBudgetId: v.string(), source: v.optional(modelSource), parentOperationId: v.optional(v.id("runtimeModelOperations")) };
 const _resolveInput = v.object(resolveArgs);
 /** Shared native body; each caller supplies its own current read snapshot. */
@@ -556,7 +556,7 @@ export async function resolveHandler(ctx: ReadCtx, args: Infer<typeof _resolveIn
   return { snapshot: resolved.snapshot, dispatchEvidence: evidence(resolved.manifest, resolved.snapshot), storageLimits: { ...MODEL_LEDGER_STORAGE_LIMITS,
     privateResultBytes: resolved.snapshot.semanticProfile?.profileId === LARGE_EMBEDDING_PROFILE.profileId ? 131_072 : MODEL_LEDGER_STORAGE_LIMITS.privateResultBytes } };
 }
-export const resolve = internalQuery({ args: resolveArgs, handler: resolveHandler });
+export const resolve = internalQuery({ args: resolveArgs, handler: (ctx, args) => resolveHandler(createAuthorityReadScope(ctx), args) });
 /** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
 export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, request: ReturnType<typeof validateModelRequest>["request"]): number {
   if (request.outputTokens > proof.resultBound.maximumOutputTokens || (proof.nativeInterface === "embedding" && request.texts.length > proof.resultBound.maximumEmbeddingValues)) fail("POLICY_DENIED");
@@ -715,7 +715,7 @@ export async function admitHandler(ctx: MutationCtx, args: Infer<typeof _admissi
   await ctx.db.patch("runtimeModelOperations", operation._id, { reservedUnits: add(operation.reservedUnits, ceiling) });
   return { status: "reserved" as const, operationId: operation._id, attemptId, snapshot, requestCanonical: canonical(validated.request) };
 }
-export const admit = internalMutation({ args: admitArgs, handler: admitHandler });
+export const admit = internalMutation({ args: admitArgs, handler: (ctx, args) => admitHandler(createAuthorityReadScope(ctx), args) });
 
 function attemptSnapshot(attempt: Attempt, operation: Operation, manifest: DeploymentPolicyManifest): ModelPolicySnapshotV1 {
   const base = snapshotOf(operation);
@@ -783,7 +783,7 @@ export async function checkpointHandler(ctx: MutationCtx, args: Infer<typeof _ch
   await ctx.db.patch("runtimeModelAttempts", attempt._id, { state: "dispatch_pending", checkpointAt: Date.now() });
   return { dispatchPermit: true as const, dispatchIdentity: attempt.dispatchIdentity, snapshot, requestCanonical: canonical(validated.request) };
 }
-export const checkpoint = internalMutation({ args: checkpointArgs, handler: checkpointHandler });
+export const checkpoint = internalMutation({ args: checkpointArgs, handler: (ctx, args) => checkpointHandler(createAuthorityReadScope(ctx), args) });
 export const markVisible = internalMutation({ args: { ...attemptArgs, ...visibilityFields }, handler: async (ctx, args) => {
   const { attempt, operation } = await attemptContext(ctx, args.attemptId);
   await currentOperation(ctx, args.reference, operation);

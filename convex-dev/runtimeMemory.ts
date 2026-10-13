@@ -15,6 +15,7 @@ import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth"
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
+import { createAuthorityReadScope } from "./runtimeAuth";
 
 /** Describes the fresh managed index. Retrieval still requires its qualified, governed query call. */
 export const defaultProfile = mutation({
@@ -41,11 +42,11 @@ export const writeDerived = internalMutation({ args: { ...scopedArgs, input: com
 export const readFacts = internalQuery({ args: { ...scopedArgs, query: v.object({
   subject: v.optional(v.string()), factType: v.optional(v.union(v.literal("preference"), v.literal("identity"), v.literal("knowledge"),
     v.literal("relationship"), v.literal("event"), v.literal("observation"), v.literal("custom"))), limit: v.number(),
-}) }, handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability).listFacts(args.query) });
+}) }, handler: async (ctx, args) => await new ConvexMemoryRepository(createAuthorityReadScope(ctx), args.reference, args.capability).listFacts(args.query) });
 export const checkProfileReady = internalQuery({ args: { ...scopedArgs, profile: embeddingProfile, runBudgetId: v.optional(v.string()) },
-  handler: async (ctx, args) => { await new ConvexMemoryRepository(ctx, args.reference, args.capability).assertProfileReady(args.profile, args.runBudgetId); return null; } });
+  handler: async (ctx, args) => { await new ConvexMemoryRepository(createAuthorityReadScope(ctx), args.reference, args.capability).assertProfileReady(args.profile, args.runBudgetId); return null; } });
 export const readVectorMatches = internalQuery({ args: { ...scopedArgs, profile: embeddingProfile, runBudgetId: v.optional(v.string()), hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })) },
-  handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability).hydrateVectors(args.hits, args.profile, args.runBudgetId) });
+  handler: async (ctx, args) => await new ConvexMemoryRepository(createAuthorityReadScope(ctx), args.reference, args.capability).hydrateVectors(args.hits, args.profile, args.runBudgetId) });
 /** Final action delivery always runs in a fresh transaction after all cached reads and model awaits. */
 export const finalDelivery = internalMutation({ args: { reference: runtimeAuthorityReference, bindings: memoryDeliveryBindings },
   handler: async (ctx, args) => {

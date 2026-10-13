@@ -1,0 +1,90 @@
+{
+  "observedAt": "2026-10-13T20:14:48.667Z",
+  "scope": "Official public npm artifacts: verified integrity, selectively parsed packaged methods; no code executed/installed, no GitHub/service calls, no historical custody repair",
+  "entries": [
+    {
+      "version": "0.35.0",
+      "gitHead": "931d544a88983a0738a4ec8ca844e61a04b6c283",
+      "tarballUrl": "https://registry.npmjs.org/@cortexmemory/sdk/-/sdk-0.35.0.tgz",
+      "integrity": "sha512-g3GzjZJwzNEXgTu3sUw3pZky1AZp6SiwKS8nMW4mgQAQjwJH5TDuDjTzoknloxzEiEoIAFg1mWYmu92oRuqwLA==",
+      "archiveBytes": 504296,
+      "archiveSha256": "13f1f4f28ae2a9a03db59e22a4f4085e2964969491e5171e689a2110790e0eb4",
+      "selected": [
+        {
+          "path": "package/dist/index.cjs",
+          "bytes": 799551,
+          "sha256": "8b0878845c63fc7a2a54682d3def9be8c76f582110fc164c8d8822b678aeadca",
+          "recalls": [
+            {
+              "methodSha256": "493ea570b10eced91a6fd46cc4b80c02dfcf5dc5560ec88bceeeded78481ed05",
+              "awaited": [
+                "this.embeddingGenerator(params.query)",
+                "Promise.all([ // Vector search (uses embedding for semantic matching) // Skip search when limits.memories is 0 to gracefully return empty results sources.vector && limits.memories > 0 ? this.vector.search(params.memorySpaceId, params.query, { embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding userId: params.userId, tags: params.tags, minImportance: params.minImportance, limit: limits.memories, // Use configured per-source limit minScore: 0.3 // Reasonable threshold }) : Promise.resolve([]), // Facts search - USE SEMANTIC when embedding available, TEXT otherwise // Skip search when limits.facts is 0 to gracefully return empty results sources.facts && limits.facts > 0 ? hasEmbedding ? ( // Semantic search for facts (v0.30.0+) - finds semantically related facts this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding, { userId: params.userId, tenantId: effectiveTenantId, minConfidence: params.minConfidence, tags: params.tags, createdAfter: params.createdAfter, createdBefore: params.createdBefore, limit: limits.facts, // Use configured per-source limit minScore: 0.3 // Reasonable threshold }) ) : ( // Fallback to text search when no embedding provided this.facts.search(params.memorySpaceId, params.query, { userId: params.userId, minConfidence: params.minConfidence, tags: params.tags, createdAfter: params.createdAfter, createdBefore: params.createdBefore, limit: limits.facts // Use configured per-source limit }) ) : Promise.resolve([]) ])",
+                "performGraphExpansion( vectorMemories, directFacts, params.memorySpaceId, this.graphAdapter, this.vector, this.facts, graphExpansionConfig, params.query // NEW: Pass query text for entity extraction )",
+                "this.conversations.get(convId)"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "package/dist/index.js",
+          "bytes": 727035,
+          "sha256": "2a31317c5afbddd1dc318d1d541f182b13a5494d510a7d5dffebaf7f55f21d71",
+          "recalls": [
+            {
+              "methodSha256": "493ea570b10eced91a6fd46cc4b80c02dfcf5dc5560ec88bceeeded78481ed05",
+              "awaited": [
+                "this.embeddingGenerator(params.query)",
+                "Promise.all([ // Vector search (uses embedding for semantic matching) // Skip search when limits.memories is 0 to gracefully return empty results sources.vector && limits.memories > 0 ? this.vector.search(params.memorySpaceId, params.query, { embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding userId: params.userId, tags: params.tags, minImportance: params.minImportance, limit: limits.memories, // Use configured per-source limit minScore: 0.3 // Reasonable threshold }) : Promise.resolve([]), // Facts search - USE SEMANTIC when embedding available, TEXT otherwise // Skip search when limits.facts is 0 to gracefully return empty results sources.facts && limits.facts > 0 ? hasEmbedding ? ( // Semantic search for facts (v0.30.0+) - finds semantically related facts this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding, { userId: params.userId, tenantId: effectiveTenantId, minConfidence: params.minConfidence, tags: params.tags, createdAfter: params.createdAfter, createdBefore: params.createdBefore, limit: limits.facts, // Use configured per-source limit minScore: 0.3 // Reasonable threshold }) ) : ( // Fallback to text search when no embedding provided this.facts.search(params.memorySpaceId, params.query, { userId: params.userId, minConfidence: params.minConfidence, tags: params.tags, createdAfter: params.createdAfter, createdBefore: params.createdBefore, limit: limits.facts // Use configured per-source limit }) ) : Promise.resolve([]) ])",
+                "performGraphExpansion( vectorMemories, directFacts, params.memorySpaceId, this.graphAdapter, this.vector, this.facts, graphExpansionConfig, params.query // NEW: Pass query text for entity extraction )",
+                "this.conversations.get(convId)"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "0.37.0",
+      "gitHead": "e7f60eb8eb67659103d947b286c856c0a6b7c98d",
+      "tarballUrl": "https://registry.npmjs.org/@cortexmemory/sdk/-/sdk-0.37.0.tgz",
+      "integrity": "sha512-E8J7zKN0h3aC9zBQrq+/JxE8neR+jxKARnfYw8Mbrgp+UWoFw0WM7bMhRHNzS8nQwYW0ZKoNUd0iXNHX7DsFGw==",
+      "archiveBytes": 508515,
+      "archiveSha256": "389507607e906c79f1d5628e4edde7bc1b656d69eee3c32e5a61b8e6ba7a4985",
+      "selected": [
+        {
+          "path": "package/dist/index.cjs",
+          "bytes": 805937,
+          "sha256": "48ddcd63cdb6cb27fa0842f655d3aa1ce6e45a471d3eff66541c8e2b0dd5d033",
+          "recalls": [
+            {
+              "methodSha256": "6a8d957cd9849e366778e080ebb06188d6f4d79f18844f87c93bd195b9cfe84f",
+              "awaited": [
+                "this.embeddingGenerator(params.query)",
+                "Promise.all([ // Vector search (uses embedding for semantic matching) // Skip search when limits.memories is 0 to gracefully return empty results sources.vector && limits.memories > 0 ? this.vector.search(params.memorySpaceId, params.query, { embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding userId: params.userId, tags: params.tags, minImportance: params.minImportance, limit: limits.memories, // Use configured per-source limit minScore: 0.3 // Reasonable threshold }) : Promise.resolve([]), // Facts search - USE SEMANTIC when embedding available, TEXT otherwise // Skip search when limits.facts is 0 to gracefully return empty results sources.facts && limits.facts > 0 ? hasEmbedding ? ( // Semantic search for facts (v0.30.0+) - finds semantically related facts this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding, { userId: params.userId, tenantId: effectiveTenantId, minConfidence: params.minConfidence, tags: params.tags, createdAfter: params.createdAfter, createdBefore: params.createdBefore, limit: limits.facts, // Use configured per-source limit minScore: 0.3 // Reasonable threshold }) ) : ( // Fallback to text search when no embedding provided this.facts.search(params.memorySpaceId, params.query, { userId: params.userId, minConfidence: params.minConfidence, tags: params.tags, createdAfter: params.createdAfter, createdBefore: params.createdBefore, limit: limits.facts // Use configured per-source limit }) ) : Promise.resolve([]) ])",
+                "performGraphExpansion( vectorMemories, directFacts, params.memorySpaceId, this.graphAdapter, this.vector, this.facts, graphExpansionConfig, params.query // NEW: Pass query text for entity extraction )",
+                "this.conversations.get(convId)"
+              ]
+            }
+          ]
+        },
+        {
+          "path": "package/dist/index.js",
+          "bytes": 733059,
+          "sha256": "e1c84cda3fe37466feb5ce77cbdc04487468e2eafa8b930503d8fbf587063b78",
+          "recalls": [
+            {
+              "methodSha256": "6a8d957cd9849e366778e080ebb06188d6f4d79f18844f87c93bd195b9cfe84f",
+              "awaited": [
+                "this.embeddingGenerator(params.query)",
+                "Promise.all([ // Vector search (uses embedding for semantic matching) // Skip search when limits.memories is 0 to gracefully return empty results sources.vector && limits.memories > 0 ? this.vector.search(params.memorySpaceId, params.query, { embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding userId: params.userId, tags: params.tags, minImportance: params.minImportance, limit: limits.memories, // Use configured per-source limit minScore: 0.3 // Reasonable threshold }) : Promise.resolve([]), // Facts search - USE SEMANTIC when embedding available, TEXT otherwise // Skip search when limits.facts is 0 to gracefully return empty results sources.facts && limits.facts > 0 ? hasEmbedding ? ( // Semantic search for facts (v0.30.0+) - finds semantically related facts this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding, { userId: params.userId, tenantId: effectiveTenantId, minConfidence: params.minConfidence, tags: params.tags, createdAfter: params.createdAfter, createdBefore: params.createdBefore, limit: limits.facts, // Use configured per-source limit minScore: 0.3 // Reasonable threshold }) ) : ( // Fallback to text search when no embedding provided this.facts.search(params.memorySpaceId, params.query, { userId: params.userId, minConfidence: params.minConfidence, tags: params.tags, createdAfter: params.createdAfter, createdBefore: params.createdBefore, limit: limits.facts // Use configured per-source limit }) ) : Promise.resolve([]) ])",
+                "performGraphExpansion( vectorMemories, directFacts, params.memorySpaceId, this.graphAdapter, this.vector, this.facts, graphExpansionConfig, params.query // NEW: Pass query text for entity extraction )",
+                "this.conversations.get(convId)"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

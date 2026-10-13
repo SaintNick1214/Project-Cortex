@@ -1,0 +1,159 @@
+(node:72016) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/resolution-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-source-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.7s | 26/26 passed | /tests/unit/runtimeAgent/resolution-composition.test.ts
+  ✅     2.4s | 46/46 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+  ✅     1.3s | 30/30 passed | /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.09s ( 1.1%) - actual Agent recall wiring and fresh completion fences selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 2. [32m✓[0m    0.07s ( 0.9%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery winning_save without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 3. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery lease without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 4. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery transcript without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 5. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery witness_hash without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 6. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery cancel without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 7. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition hash before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 8. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition revocation before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 9. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition owner before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+10. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition revision before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+11. [32m✓[0m    0.06s ( 0.7%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition tombstone before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+12. [32m✓[0m    0.06s ( 0.7%) - actual Agent recall wiring and fresh completion fences preserves source query fault propagation with no saved context or second embedding attempt
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+13. [32m✓[0m    0.06s ( 0.7%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition profile before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+14. [32m✓[0m    0.06s ( 0.7%) - Agent-only fresh hydration and native policy resolution retains exact output/non-authority read order and first authority lookup order per write epoch
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+15. [32m✓[0m    0.06s ( 0.6%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 4 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+16. [32m✓[0m    0.05s ( 0.6%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 0 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+17. [32m✓[0m    0.05s ( 0.6%) - Agent-only fresh hydration and native policy resolution the real governed constructor retains two fresh resolutions while removing two action RPCs
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+18. [32m✓[0m    0.03s ( 0.4%) - Agent-only fresh hydration and native policy resolution the second real-constructor resolution fences late qualification after the first succeeds
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+19. [32m✓[0m    0.03s ( 0.4%) - Agent-only fresh hydration and native policy resolution the second real-constructor resolution fences late grant after the first succeeds
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+20. [32m✓[0m    0.03s ( 0.3%) - Agent-only fresh hydration and native policy resolution is internal and cannot select a model, policy lane, source, parent, account or request
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.20s (14.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.50s
+  Test suites:        3
+  Individual tests:   102
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 3 passed, 3 total
+Tests:       102 passed, 102 total
+Snapshots:   0 total
+Time:        8.5 s, estimated 10 s
+Ran all test suites within paths "tests/unit/runtimeAuth/authority-read-scope.test.ts", "tests/unit/runtimeAgent/resolution-composition.test.ts", "tests/unit/runtimeAgent/context-source-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-focused-v3.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

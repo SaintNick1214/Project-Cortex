@@ -1,0 +1,215 @@
+{
+  "schema": "cortex.authority-routing.independent-source-review.v1",
+  "observedAtUTC": "2026-10-13T20:24:21.987626+00:00",
+  "verdict": "PASS",
+  "policy": "goal acceptance-policy v2",
+  "scope": "Frozen five production files and five tests; source/test acceptance only",
+  "reviewer": "latency_batch_review (nonauthor)",
+  "baseline": "8e9ccdf010bf67d65b369510a6b0b425759ecbf4",
+  "scores": {
+    "requirements": 4,
+    "codeQuality": 4,
+    "testCoverage": 4,
+    "patternCompliance": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "breakingFindings": [],
+  "sourceFreezeVerified": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "a3477f6bb95dcc12f52199e125d47298ae7e1b79b26aa14a9163208d221cf09e"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60"
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "sha256": "0a2ebeca8c5d54793d232f5831f7842867ee11aa610be4e269a338f5efcf8e45"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "865ed4d1d7d2c5fe5beca6f81dd9063382b8b4f626816b40b4e00860944f0eef"
+    },
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "sha256": "544304c14c4fc69d3a1a9ff94fe561f13da33bbad2a715ec018c0758eb510ae0"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+      "sha256": "b233124d5f304d5c9372b16e13b6630e7ff13580fa7c4fa23ea2c4758fa8dede"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-routing.test.ts",
+      "sha256": "cc59ec56b45652467c834d2f1fa5b3576cad59853b8334e08917db972320d078"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "sha256": "33052c90b19a0cbffce2239c9d29643c2680f860e483471308a6fd7a07397db7"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "sha256": "7f979a73397ba4eb60552af4f575baacbabf8c20c31eaff05cc4d1e2eb49bba0"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+      "sha256": "bf0ddf1f03e1e149c6c6d002ea76d4c60ea0ddfddb72832e36dcedf5a0e02a48"
+    }
+  ],
+  "acceptedEntries": {
+    "runtimeAgent": [
+      "resolveModelOperation",
+      "contextInputs",
+      "prepareEmptyContext",
+      "prepareRoutedContext",
+      "admitModelOperation"
+    ],
+    "runtimeMemory": [
+      "readFacts",
+      "checkProfileReady",
+      "readVectorMatches"
+    ],
+    "runtimeModelPolicy": [
+      "embeddingProfile",
+      "resolve",
+      "admit",
+      "checkpoint"
+    ],
+    "runtimeClient": [
+      "submitAndStart"
+    ]
+  },
+  "unscopedPreserved": [
+    "runtimeMemory:readSource",
+    "runtimeAgent:contextSource",
+    "runtimeClient:session",
+    "runtimeMemory:finalDelivery",
+    "runtimeClient:observeEnvelope"
+  ],
+  "rejectedActivation": [
+    "runtimeMemory:finalDelivery",
+    "runtimeClient:observeEnvelope"
+  ],
+  "independentReadOnlyChecks": {
+    "currentASTBaseline": "8e9ccdf010bf67d65b369510a6b0b425759ecbf4",
+    "originalAuthBodiesExact": 17,
+    "oldWorkflowDeclarationsExact": [
+      "executeTurn",
+      "executeTurnV2",
+      "executeTurnV3"
+    ],
+    "originalEmptyBodyExact": true,
+    "V4ExactV3ExceptContextReference": true,
+    "onlyChangedOldAgentDeclarations": [
+      "resolveModelOperation",
+      "contextInputs",
+      "startExecution",
+      "prepareEmptyContext",
+      "admitModelOperation"
+    ],
+    "memoryPolicyClientCompleteOriginalFileReconstruction": true,
+    "sensitiveExistingTestsByteIdenticalToHEAD": [
+      "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+      "tests/unit/client-runtime/observation-native.test.ts",
+      "tests/unit/runtimeAgent/context-source-composition.test.ts"
+    ],
+    "allFinalCheckExitCodesZeroAndLogHashesMatch": true
+  },
+  "rawReceipts": {
+    "cloud-authority-read-scope-affected-final.json": {
+      "sha256": "20358a294f25c9809afcf220339d0e9abebcc263ad8a39d9834b4e0f2e199b26",
+      "success": true,
+      "numPassedTests": 1289,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTests": 1289,
+      "numTotalTestSuites": 25
+    },
+    "cloud-context-routing-focused-v3.json": {
+      "sha256": "5454cdc7de4905b83e120a04babb9db264072cf4429682a90c8b205c2494836c",
+      "success": true,
+      "numPassedTests": 52,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTests": 52,
+      "numTotalTestSuites": 1
+    },
+    "cloud-recall-authority-entries-affected-v2.json": {
+      "sha256": "49ca7388d0845f513364f5618f680fe17829876a1a6259946dc13fb42c19115f",
+      "success": true,
+      "numPassedTests": 856,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTests": 856,
+      "numTotalTestSuites": 22
+    },
+    "cloud-recall-authority-entries-affected-v1.json": {
+      "sha256": "f649813266c8e3b82cd88d5a8272fc01cbb13280a967bc2cf519e12d1d7472ed",
+      "success": false,
+      "numPassedTests": 772,
+      "numFailedTests": 4,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTests": 776,
+      "numTotalTestSuites": 18
+    },
+    "cloud-context-routing-affected-v1.json": {
+      "sha256": "eb84df589036dc103e6fe4c0bb05ae107d17272ccbfef372c2b37e36f55ccb76",
+      "success": false,
+      "numPassedTests": 322,
+      "numFailedTests": 1,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTests": 323,
+      "numTotalTestSuites": 10
+    },
+    "cloud-recall-authority-entries-checks-final.json": {
+      "sha256": "5cf9d50b7b7622cecb0b61401f80a3d1a5b7b40a9f688cd7b4995012fdc29c8b"
+    },
+    "cloud-recall-authority-entries-equivalence-final.json": {
+      "sha256": "59a7bbeecc5fb4cecdd9928a644120351a323cedea458d31428534c64fd933b3"
+    },
+    "cloud-authority-read-scope-checks.json": {
+      "sha256": "0dc06064bc243b6c007fa7e758f6ae78b27f0a8305fefe048e836bda04ee2624"
+    },
+    "cloud-authority-read-scope-equivalence.json": {
+      "sha256": "ea0d17bd202b441a24d595b21d0b741efd610cc7ffd8d11f399089c03b49581d"
+    },
+    "cloud-context-routing-equivalence.json": {
+      "sha256": "a8306751c640331bc928b3637b741630ed29bb239c0e1b66b7bae39044dc5e3f"
+    },
+    "cloud-context-routing-final-supplement.md": {
+      "sha256": "36b1beae1f202c63665ff795790eebaca39cead875c163cb710becc972f6ce6b"
+    },
+    "cloud-recall-authority-entries-source-report.md": {
+      "sha256": "d2c4de075123f9d90a6f5500e3e9a0e3706c8158554b4928bfeb496c6aea73ee"
+    }
+  },
+  "countsOverlap": true,
+  "preservedFindings": [
+    "Four original sensitive grant-change assertions failed with the two rejected activations; original FAIL retained, final unchanged assertions PASS.",
+    "Prior direct second-source-getter revocation failure retained; contextSource unscoped.",
+    "Initial root/test/harness failures retained.",
+    "Old routing equivalence metadata is intermediate, not final source identity."
+  ],
+  "materialLimits": [
+    "No native OCC/snapshot/resource/readback/SLO acceptance.",
+    "Factory raw scope requires same native invocation and correctly routed writer ports.",
+    "Bounded metadata routing may add work for empty/represented scopes or conservatively request the original Action.",
+    "223-to-28 finalDelivery reduction is rejected prototype history; no accepted cloud savings.",
+    "K11 deadlines/auth exact-code/SLO failures remain unchanged."
+  ],
+  "reviewerActions": {
+    "productEdits": 0,
+    "existingTestEdits": 0,
+    "testReruns": 0,
+    "serviceCalls": 0,
+    "paidCalls": 0,
+    "gitWrites": 0
+  },
+  "finalAuthorMetadataSupplementRead": true
+}

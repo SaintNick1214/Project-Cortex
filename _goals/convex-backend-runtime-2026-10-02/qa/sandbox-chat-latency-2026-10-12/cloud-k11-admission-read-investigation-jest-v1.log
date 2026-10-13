@@ -1,0 +1,103 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:68445) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs (8.418 s)
+  ✕ counts exact native API reads in one original model-admission transaction with 0 source witnesses (47 ms)
+  ✕ counts exact native API reads in one original model-admission transaction with 4 source witnesses (34 ms)
+
+  ● counts exact native API reads in one original model-admission transaction with 0 source witnesses
+
+    INVALID_INPUT: noncanonical JSON
+
+      259 |     if (value === null || typeof value === "boolean" || typeof value === "string") return JSON.stringify(value);
+      260 |     if (typeof value === "number" && Number.isFinite(value) && !Object.is(value, -0)) return JSON.stringify(value);
+    > 261 |     if (typeof value !== "object" || active.has(value)) throw new Error("INVALID_INPUT: noncanonical JSON");
+          |                                                               ^
+      262 |     active.add(value);
+      263 |     let result: string;
+      264 |     if (Array.isArray(value)) {
+
+      at visit (src/domain/model-policy.ts:261:63)
+      at src/domain/model-policy.ts:279:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:279:47)
+      at canonicalModelJson (src/domain/model-policy.ts:284:10)
+      at _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs:73:20
+
+  ● counts exact native API reads in one original model-admission transaction with 4 source witnesses
+
+    INVALID_INPUT: noncanonical JSON
+
+      259 |     if (value === null || typeof value === "boolean" || typeof value === "string") return JSON.stringify(value);
+      260 |     if (typeof value === "number" && Number.isFinite(value) && !Object.is(value, -0)) return JSON.stringify(value);
+    > 261 |     if (typeof value !== "object" || active.has(value)) throw new Error("INVALID_INPUT: noncanonical JSON");
+          |                                                               ^
+      262 |     active.add(value);
+      263 |     let result: string;
+      264 |     if (Array.isArray(value)) {
+
+      at visit (src/domain/model-policy.ts:261:63)
+      at src/domain/model-policy.ts:279:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:279:47)
+      at canonicalModelJson (src/domain/model-policy.ts:284:10)
+      at _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs:73:20
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     8.4s | 0/2 passed | /_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.05s ( 0.5%) - counts exact native API reads in one original model-admission transaction with 0 source witnesses
+    /_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs
+
+ 2. [31m✗[0m    0.03s ( 0.4%) - counts exact native API reads in one original model-admission transaction with 4 source witnesses
+    /_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.08s (0.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.55s
+  Test suites:        1
+  Individual tests:   2
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 2 total
+Snapshots:   0 total
+Time:        8.548 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation.test.mjs".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k11-admission-read-investigation-jest-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
