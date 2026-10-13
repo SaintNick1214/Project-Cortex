@@ -3,8 +3,9 @@ import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { bearer, hostToken, identifier, runtimeConfig, withRuntime } from "../cortex.js";
+import type { RuntimeFactory } from "../cortex.js";
 import { config, runtimeMock } from "./helpers/test-utils.js";
-afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
+afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); vi.unstubAllEnvs(); });
 describe("verified remote configuration", () => {
   it("rejects embedded C0 controls without rejecting printable Unicode or DEL", () => {
     for (let code = 0; code < 32; code++) expect(() => identifier(`scope${String.fromCharCode(code)}id`)).toThrow("INVALID_INPUT");
@@ -33,6 +34,19 @@ describe("verified remote configuration", () => {
   });
 });
 describe("per-operation client ownership", () => {
+  it("latency diagnostics are forwarded only for explicit opt-in and contain scalar metadata", async () => {
+    const f = runtimeMock(), factory = vi.fn<RuntimeFactory>(() => f.client), log = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.stubEnv("CORTEX_RUNTIME_LATENCY_TRACE", "");
+    await withRuntime(async () => "PRIVATE_TOKEN_TRACE_SENTINEL", async () => "PRIVATE_RESULT_TRACE_SENTINEL", { config, factory });
+    expect(factory.mock.calls[0][0]).not.toHaveProperty("onLatencyEvent");
+    vi.stubEnv("CORTEX_RUNTIME_LATENCY_TRACE", "1");
+    await withRuntime(async () => "PRIVATE_TOKEN_TRACE_SENTINEL", async () => "PRIVATE_RESULT_TRACE_SENTINEL", { config, factory });
+    const hook = factory.mock.calls[1][0].onLatencyEvent; expect(hook).toBeTypeOf("function");
+    hook?.({ version: 1, phase: "rpc.end", atMs: 50, rpcId: 1, method: "runtimeClient:session", durationMs: 10 });
+    expect(log).toHaveBeenCalledWith('{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":50,"rpcId":1,"method":"runtimeClient:session","durationMs":10}');
+    expect(log.mock.calls.flat().join(" ")).not.toMatch(/PRIVATE_TOKEN|PRIVATE_RESULT/);
+    expect(f.client.close).toHaveBeenCalledTimes(2);
+  });
   it("pins selectors and closes after a verified positive", async () => {
     const f = runtimeMock(), factory = vi.fn(() => f.client);
     expect(await withRuntime(async () => "token", async () => "result", { config, factory })).toBe("result");

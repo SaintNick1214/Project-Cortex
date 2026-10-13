@@ -6,12 +6,15 @@ import { CortexRuntimeClient, runtimePublicPart } from "@cortexmemory/sdk/runtim
 import type { RuntimeRun, RuntimeRunHandle, RuntimeSession, RuntimeObservation, RuntimeToolApproval,
   RuntimeEmbeddingProfile, RuntimeRecallResult, RuntimeMemoryReadiness, RuntimeMemoryStage, RuntimePublicPart } from "@cortexmemory/sdk/runtime";
 import { CortexRemoteTransport } from "@cortexmemory/vercel-ai-provider/remote";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
+import type { RuntimeLatencyEvent } from "@cortexmemory/sdk/runtime";
 import { RuntimeMediaPanel } from "./RuntimeMediaPanel";
+import { createChatLatencyTrace } from "@/lib/chat-latency";
 
 const button = "rounded-lg border border-white/20 px-3 py-2 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-cortex-400";
 const input = "w-full rounded-lg border border-white/20 bg-gray-950 p-3 text-white focus-visible:outline-2 focus-visible:outline-cortex-400";
+function browserNow() { return performance.now(); }
 function errorCode(error: unknown): string {
   const code = error && typeof error === "object" && "code" in error ? error.code : undefined;
   return typeof code === "string" && /^[A-Z][A-Z0-9_]{0,79}$/.test(code) ? code : "RUNTIME_REQUEST_FAILED";
@@ -74,6 +77,7 @@ export function RuntimeQuickstart() {
         let candidate: CortexRuntimeClient | undefined;
         const client = new CortexRuntimeClient({ deploymentUrl: url, fetchToken: async () => token.current,
           ...(assetHttpUrl ? { assetHttpUrl } : {}),
+          ...(process.env.NEXT_PUBLIC_CORTEX_LATENCY_TRACE === "1" ? { onLatencyEvent: (event: RuntimeLatencyEvent) => console.log(JSON.stringify({ type: "cortex-client-latency", ...event })) } : {}),
           ...(process.env.NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID ? { scope: { memorySpaceId: process.env.NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID } } : {}),
           onAuthChange: authenticated => {
             if (!authenticated && candidate && owned.current === candidate) {
@@ -151,8 +155,16 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
   const [checking, setChecking] = useState(false);
   const [showMedia, setShowMedia] = useState(false);
   const [mediaRefs, setMediaRefs] = useState<Record<string, Extract<RuntimePublicPart, { type: "media-job" }>>>({});
+  const latency = useMemo(() => createChatLatencyTrace(process.env.NEXT_PUBLIC_CORTEX_LATENCY_TRACE === "1", {
+    now: browserNow, emit: event => console.log(JSON.stringify(event)), visibility: () => document.visibilityState,
+    afterPaint: callback => {
+      let second = 0;
+      const first = requestAnimationFrame(() => { second = requestAnimationFrame(callback); });
+      return () => { cancelAnimationFrame(first); cancelAnimationFrame(second); };
+    },
+  }), []);
   const transport = useMemo(() => new CortexRemoteTransport({ client: connection.client, agentId, agentVersion,
-    onRun: value => { setHandle(value); setRunId(value.runId); setTools({}); setMediaRefs({}); },
+    onRun: value => { latency.bind(value.runId); setHandle(value); setRunId(value.runId); setTools({}); setMediaRefs({}); },
     onObservation: (value: RuntimeObservation) => {
       setRun(value.run); setApprovals(value.approvals);
       setTools(old => {
@@ -165,12 +177,18 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
         for (const entry of value.parts) if (entry.part.type === "media-job") next[entry.part.jobId] = entry.part;
         return next;
       });
-    } }), [connection.client, agentId, agentVersion]);
-  const chat = useChat({ transport, onError: caught => {
+    } }), [connection.client, agentId, agentVersion, latency]);
+  const chat = useChat({ transport, onFinish: result => {
+    if (!result.isAbort && !result.isDisconnect && !result.isError && result.finishReason === "stop") latency.transportComplete(result.message.id);
+  }, onError: caught => {
+    latency.failed();
     setError(errorCode(caught));
     if (["FORBIDDEN", "UNAUTHENTICATED", "SESSION_CHANGED", "AUTHORITY_CHANGED", "AUTHORITY_EXPIRED", "AUTHENTICATION_TIMEOUT", "AUTH_TOKEN_FETCH_FAILED", "RPC_DEADLINE_EXCEEDED", "CLIENT_CLOSED"].includes(errorCode(caught))) onDenied(caught);
   } });
   const setMessages = chat.setMessages;
+  useLayoutEffect(() => { latency.committed(chat.messages); }, [latency, chat.messages, chat.status]);
+  useLayoutEffect(() => { if (run?.responseStatus === "complete") latency.responseStatusComplete(run.runId); }, [latency, run?.runId, run?.responseStatus]);
+  useEffect(() => () => latency.dispose(), [latency]);
   const deny = useCallback((caught: unknown) => {
     setError(errorCode(caught)); setMessages([]); setRecall(null); setApprovals([]); setTools({}); setMediaRefs({}); setReadiness(null); setProfile(null);
     if (["FORBIDDEN", "UNAUTHENTICATED", "SESSION_CHANGED", "AUTHORITY_CHANGED", "AUTHORITY_EXPIRED", "AUTHENTICATION_TIMEOUT", "AUTH_TOKEN_FETCH_FAILED", "RPC_DEADLINE_EXCEEDED", "CLIENT_CLOSED"].includes(errorCode(caught))) onDenied(caught);
@@ -191,7 +209,8 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
   async function submit(event: FormEvent) {
     event.preventDefault(); if (!prompt.trim()) return;
     setError(null); setDisconnected(false); const text = prompt; setPrompt("");
-    try { await chat.sendMessage({ text }); } catch (caught) { setError(errorCode(caught)); }
+    latency.begin(chat.messages.length);
+    try { await chat.sendMessage({ text }); } catch (caught) { latency.failed(); setError(errorCode(caught)); }
   }
   async function resume(attach = false) {
     setError(null);

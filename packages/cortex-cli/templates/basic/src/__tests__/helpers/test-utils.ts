@@ -12,6 +12,7 @@ export function runtimeMock(principalId = "owner") {
   const session = vi.fn<RuntimeClient["session"]>(async () => verified);
   const submit = vi.fn<RuntimeClient["submit"]>(async () => handle);
   const start = vi.fn<RuntimeClient["start"]>(async () => { run.responseStatus = "running"; return { runId: handle.runId, attemptNumber: 1, state: "running" }; });
+  const submitAndStart = vi.fn<RuntimeClient["submitAndStart"]>(async () => { run.responseStatus = "running"; run.attemptNumber = 1; return { handle, run, start: { runId: handle.runId, attemptNumber: 1, state: "ready" } }; });
   const attach = vi.fn<RuntimeClient["attach"]>(async () => handle);
   const get = vi.fn<RuntimeClient["get"]>(async () => run);
   const observe = vi.fn<RuntimeClient["observe"]>(async () => observation);
@@ -26,6 +27,6 @@ export function runtimeMock(principalId = "owner") {
   const memoryReadiness = vi.fn<RuntimeClient["memoryReadiness"]>(async () => ({ version: 1, cutoff: 1, graphCutoff: 0, profile: (await getDefaultProfile()).profile, stages: { facts: { cutoff: 1, indexedThrough: 0, complete: false, hole: { sequence: 1, state: "pending" } } }, strictStages: [] }));
   const recall = vi.fn<RuntimeClient["recall"]>(async () => ({ items: [{ type: "fact", id: "fact-one", content: "authorized recall", score: 1, source: "source-one" }], context: "authorized recall", profileId: "small" }));
   const close = vi.fn();
-  const client = { session, submit, start, attach, get, observe, watchObservation, cancel, approveInput, approveTool, messages, listConversations, getDefaultProfile, memoryReadiness, recall, close } satisfies RuntimeClient;
+  const client = { session, submit, submitAndStart, start, attach, get, observe, watchObservation, cancel, approveInput, approveTool, messages, listConversations, getDefaultProfile, memoryReadiness, recall, close } satisfies RuntimeClient;
   return { client, verified, run, handle, observation, unsubscribe };
 }

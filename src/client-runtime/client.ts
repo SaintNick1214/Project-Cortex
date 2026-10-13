@@ -1,12 +1,12 @@
 import { ConvexClient } from "convex/browser";
 import type { AuthTokenFetcher } from "convex/browser";
-import { makeFunctionReference } from "convex/server";
+import { getFunctionName, makeFunctionReference } from "convex/server";
 import type { RuntimeConversation, RuntimeDefinition, RuntimeEmbeddingProfile, RuntimeObservation, RuntimeRecallResult, RuntimeRun,
-  RuntimeRunHandle, RuntimeScope, RuntimeSession, RuntimeToolApproval, RuntimeTranscriptPage, RuntimeOutputCursor, TextSubmitV1 } from "./types.js";
+  RuntimeRunHandle, RuntimeScope, RuntimeSession, RuntimeToolApproval, RuntimeTranscriptPage, RuntimeOutputCursor, RuntimeAdmissionResult, TextSubmitV1 } from "./types.js";
 import type { RuntimeAssetReference, RuntimeAssetVersion } from "./types.js";
 import { assetDigest, assetHttpBase, assetHttpError, assetMime, assetFilename, assetRequestId, assetReference, assetVersion, boundedAssetBody, RUNTIME_ASSET_MAX_BYTES } from "./assets.js";
 import type { RuntimeAssetIoOptions, RuntimeAssetUploadOptions, RuntimeAssetPreview } from "./assets.js";
-import { CortexRuntimeError, deliveryDeadline, identifier, invalid, natural, object, observation, run, runtimeError, sameScope, session, textSubmit } from "./validation.js";
+import { admissionResult, CortexRuntimeError, deliveryDeadline, identifier, invalid, natural, object, observation, run, runtimeError, sameScope, session, textSubmit } from "./validation.js";
 import { embeddingProfileOptions, memoryReadiness, readinessOptions, runtimeArtifact, runtimeEmbeddingProfile } from "./extensions.js";
 import type { RuntimeMemoryReadiness, RuntimeMemoryReadinessOptions } from "./types.js";
 import type { RuntimeArtifact, RuntimeMediaJob, RuntimeMediaSubmit } from "./types.js";
@@ -15,6 +15,13 @@ import { contentJob, contentJobList, contentListOptions, contentSubmit, contentS
 import type { ContentSubmitV1, RuntimeContentJobV1 } from "../domain/content.js";
 
 export type RuntimeClientPort = Pick<ConvexClient, "setAuth" | "query" | "mutation" | "action" | "onUpdate" | "close">;
+/** Metadata only, timed with this client's monotonic clock. RPC end/failed describe
+ * the official port promise; a local deadline may already have suppressed delivery. */
+export interface RuntimeLatencyEvent {
+  readonly version: 1;
+  readonly phase: "rpc.begin" | "rpc.end" | "rpc.failed" | "auth.begin" | "auth.ready" | "auth.denied" | "watcher.wake";
+  readonly atMs: number; readonly rpcId?: number; readonly method?: string; readonly durationMs?: number;
+}
 export interface CortexRuntimeClientOptions {
   deploymentUrl: string; fetchToken: AuthTokenFetcher; scope?: Partial<RuntimeScope>;
   /** Explicit owned HTTP-action origin. Tokens are never forwarded to redirects or storage URLs. */
@@ -22,6 +29,8 @@ export interface CortexRuntimeClientOptions {
   /** Optional standard fetch port for hosts/tests; defaults to the browser implementation. */
   fetch?: typeof globalThis.fetch;
   onAuthChange?: (authenticated: boolean) => void;
+  /** Optional scalar diagnostics. No arguments, results, credentials or error data are emitted. */
+  onLatencyEvent?: (event: RuntimeLatencyEvent) => void;
   /** Bound the official authentication handshake, including providers that never notify rejection. Default 10 seconds. */
   authTimeoutMs?: number;
   /** Bound RPC observation without cancelling or retrying a server mutation. Default 12 seconds. */
@@ -32,7 +41,7 @@ export interface CortexRuntimeClientOptions {
 const query = (name: string) => makeFunctionReference<"query", Record<string, unknown>, unknown>(name);
 const mutation = (name: string) => makeFunctionReference<"mutation", Record<string, unknown>, unknown>(name);
 const action = (name: string) => makeFunctionReference<"action", Record<string, unknown>, unknown>(name);
-const refs = { session: mutation("runtimeClient:session"), signal: query("runtimeClient:signal"), submit: mutation("runs:submit"), get: mutation("runs:get"), start: mutation("runtimeAgent:start"),
+const refs = { session: mutation("runtimeClient:session"), signal: query("runtimeClient:signal"), submit: mutation("runs:submit"), submitAndStart: mutation("runtimeClient:submitAndStart"), get: mutation("runs:get"), start: mutation("runtimeAgent:start"),
   observe: mutation("runtimeAgent:observe"), cancel: mutation("runtimeAgent:cancel"), approve: mutation("runs:approve"), tool: mutation("runtimeAgent:approveTool"),
   definition: mutation("agentDefinitions:get"), messages: mutation("runtimeTranscript:messages"), conversations: mutation("runtimeTranscript:list"),
   profile: mutation("runtimeMemory:defaultProfile"), recall: action("runtimeMemory:recall"), asset: mutation("runtimeAssets:get"),
@@ -61,6 +70,8 @@ export class CortexRuntimeClient {
   private earliestDelivery?: number;
   private readonly wakeWatchers = new Set<() => void>();
   private readonly pendingCalls = new Set<(error: CortexRuntimeError) => void>();
+  private rpcSequence = 0;
+  private latencyAt = 0;
   constructor(private readonly options: CortexRuntimeClientOptions) {
     this.scope = Object.freeze({ ...(options.scope?.tenantId === undefined ? {} : { tenantId: identifier(options.scope.tenantId) }),
       ...(options.scope?.memorySpaceId === undefined ? {} : { memorySpaceId: identifier(options.scope.memorySpaceId) }) });
@@ -69,7 +80,40 @@ export class CortexRuntimeClient {
     this.port = options.client ?? new ConvexClient(options.deploymentUrl);
     this.fetchToken = options.fetchToken; this.installAuth();
   }
+  private latencyNow(): number {
+    let at: number | undefined;
+    try { at = globalThis.performance.now(); } catch { /* Diagnostic clocks cannot alter execution. */ }
+    if (at === undefined || !Number.isFinite(at)) { try { at = Date.now(); } catch { at = this.latencyAt; } }
+    this.latencyAt = Math.max(this.latencyAt, Number.isFinite(at) ? at : 0); return this.latencyAt;
+  }
+  private latency(phase: RuntimeLatencyEvent["phase"], fields: { rpcId?: number; method?: string; durationMs?: number } = {}, atMs?: number): void {
+    if (!this.options.onLatencyEvent) return;
+    try {
+      const result: unknown = this.options.onLatencyEvent(Object.freeze({ version: 1, phase, atMs: atMs ?? this.latencyNow(), ...fields }));
+      // Also own rejection from an accidentally asynchronous diagnostic callback.
+      if (result && typeof (result as PromiseLike<unknown>).then === "function") void Promise.resolve(result).catch(() => {});
+    } catch { /* Diagnostics cannot fail authentication, dispatch, delivery or cleanup. */ }
+  }
+  private rpc<T>(method: string, invoke: () => Promise<T>): Promise<T> {
+    if (!this.options.onLatencyEvent) return invoke();
+    const rpcId = ++this.rpcSequence, started = this.latencyNow();
+    this.latency("rpc.begin", { rpcId, method }, started);
+    const finish = (phase: "rpc.end" | "rpc.failed") => {
+      const at = this.latencyNow(); this.latency(phase, { rpcId, method, durationMs: at - started }, at);
+    };
+    try { return invoke().then(value => { finish("rpc.end"); return value; }, error => { finish("rpc.failed"); throw error; }); }
+    catch (error) { finish("rpc.failed"); throw error; }
+  }
+  private mutation(ref: ReturnType<typeof mutation>, args: Record<string, unknown>): Promise<unknown> {
+    if (!this.options.onLatencyEvent) return this.port.mutation(ref, args);
+    return this.rpc(getFunctionName(ref), () => this.port.mutation(ref, args));
+  }
+  private action(ref: ReturnType<typeof action>, args: Record<string, unknown>): Promise<unknown> {
+    if (!this.options.onLatencyEvent) return this.port.action(ref, args);
+    return this.rpc(getFunctionName(ref), () => this.port.action(ref, args));
+  }
   private installAuth() {
+    this.latency("auth.begin");
     clearTimeout(this.authTimer); clearTimeout(this.sessionTimer); clearTimeout(this.deliveryTimer); this.earliestDelivery = undefined; this.authenticated = false;
     const epoch = this.generation; let settled = false, accepted = false;
     let ready = () => {}, denied = (_error: CortexRuntimeError) => {};
@@ -78,6 +122,7 @@ export class CortexRuntimeClient {
     const reject = (error: CortexRuntimeError) => {
       if (this.closed || epoch !== this.generation || (settled && !accepted)) return;
       settled = true; accepted = false; clearTimeout(this.authTimer); this.authenticated = false;
+      this.latency("auth.denied");
       denied(error); this.abortAssets(error); this.abortCalls(error); for (const fail of [...this.watchers]) fail(error);
       this.options.onAuthChange?.(false);
     };
@@ -94,6 +139,7 @@ export class CortexRuntimeClient {
       if (this.closed || epoch !== this.generation || (settled && !accepted)) return;
       if (!authenticated) { reject(new CortexRuntimeError("UNAUTHENTICATED")); return; }
       settled = true; accepted = true; clearTimeout(this.authTimer); this.authenticated = true; ready();
+      this.latency("auth.ready");
       this.options.onAuthChange?.(true); for (const wake of [...this.wakeWatchers]) wake();
     });
   }
@@ -105,6 +151,7 @@ export class CortexRuntimeClient {
   private expireSession() {
     if (this.closed) return;
     const error = new CortexRuntimeError("AUTHORITY_EXPIRED"); this.authenticated = false;
+    this.latency("auth.denied");
     this.abortAssets(error); this.abortCalls(error); for (const fail of [...this.watchers]) fail(error); this.options.onAuthChange?.(false);
   }
   private sessionDeadline(value: RuntimeSession) {
@@ -149,7 +196,7 @@ export class CortexRuntimeClient {
   async session(): Promise<RuntimeSession> {
     this.check(); const epoch = this.generation; await this.authReady;
     if (epoch !== this.generation) invalid("SESSION_CHANGED"); if (!this.authenticated) invalid("UNAUTHENTICATED");
-    const result = session(await this.call(() => this.port.mutation(refs.session, { ...this.scope })));
+    const result = session(await this.call(() => this.mutation(refs.session, { ...this.scope })));
     if (epoch !== this.generation || !this.authenticated) invalid("SESSION_CHANGED"); this.sessionDeadline(result); return result;
   }
   private selector(handle: RuntimeRunHandle, current: RuntimeSession) {
@@ -180,32 +227,48 @@ export class CortexRuntimeClient {
   }
   async submit(request: TextSubmitV1): Promise<RuntimeRunHandle> {
     const normalized = textSubmit(request);
-    const admitted = await this.inSession(current => this.port.mutation(refs.submit, { request: normalized, tenantId: current.tenantId, memorySpaceId: current.memorySpaceId }));
+    const admitted = await this.inSession(current => this.mutation(refs.submit, { request: normalized, tenantId: current.tenantId, memorySpaceId: current.memorySpaceId }));
     const current = admitted.current, result = run(admitted.result);
     if (result.agentId !== normalized.agentId || result.agentVersion !== normalized.agentVersion
       || normalized.conversationId !== undefined && result.conversationId !== normalized.conversationId) invalid("RUN_IDENTITY_CHANGED");
     return this.handle(result, current);
   }
+  /** Atomically admit immutable text and request execution, with fresh session fences on both sides. */
+  async submitAndStart(request: TextSubmitV1, options: { streaming?: boolean } = {}): Promise<RuntimeAdmissionResult> {
+    const normalized = textSubmit(request), settings = object(options);
+    if (Object.keys(settings).some(key => key !== "streaming") || settings.streaming !== undefined && typeof settings.streaming !== "boolean") invalid();
+    const acquired = await this.inSession(current => this.mutation(refs.submitAndStart, { request: normalized,
+      tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, streaming: settings.streaming ?? true }));
+    try {
+      const result = admissionResult(acquired.result), value = result.run;
+      if (value.agentId !== normalized.agentId || value.agentVersion !== normalized.agentVersion
+        || normalized.conversationId !== undefined && value.conversationId !== normalized.conversationId) invalid("RUN_IDENTITY_CHANGED");
+      return { handle: this.handle(value, acquired.current), run: value, start: result.start };
+    } catch (error) {
+      // Invalid delivery cannot assert that the native admission/Workflow did not happen.
+      throw new CortexRuntimeError(runtimeError(error).code, "uncertain");
+    }
+  }
   async attach(runId: string): Promise<RuntimeRunHandle> {
-    const acquired = await this.inSession(current => this.port.mutation(refs.get, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, runId: identifier(runId, 512) }));
+    const acquired = await this.inSession(current => this.mutation(refs.get, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, runId: identifier(runId, 512) }));
     const current = acquired.current, result = run(acquired.result);
     if (result.runId !== runId) invalid("RUN_IDENTITY_CHANGED"); return this.handle(result, current);
   }
   async start(handle: RuntimeRunHandle, options: { streaming?: boolean } = {}): Promise<{ runId: string; attemptNumber: number; state: string; failureCode?: string }> {
     await this.get(handle);
-    const { result } = await this.inSession(current => this.port.mutation(refs.start, { ...this.selector(handle, current), streaming: options.streaming ?? true }));
+    const { result } = await this.inSession(current => this.mutation(refs.start, { ...this.selector(handle, current), streaming: options.streaming ?? true }));
     return result as { runId: string; attemptNumber: number; state: string; failureCode?: string };
   }
-  async get(handle: RuntimeRunHandle): Promise<RuntimeRun> { const { result } = await this.inSession(current => this.port.mutation(refs.get, this.selector(handle, current))); return this.pinned(handle, run(result)); }
+  async get(handle: RuntimeRunHandle): Promise<RuntimeRun> { const { result } = await this.inSession(current => this.mutation(refs.get, this.selector(handle, current))); return this.pinned(handle, run(result)); }
   async observe(handle: RuntimeRunHandle, options: { cursor?: RuntimeOutputCursor; finalOnly?: boolean; limit?: number } = {}): Promise<RuntimeObservation> {
     const acquired = await this.inSession(async current => {
       const args = this.selector(handle, current);
-      let result = observation(await this.port.mutation(refs.observe, { ...args, afterSequence: natural(options.cursor?.sequence ?? 0), limit: options.limit ?? 100, finalOnly: options.finalOnly ?? false }));
-      if (options.cursor && result.run.attemptNumber !== natural(options.cursor.attemptNumber)) result = observation(await this.port.mutation(refs.observe, { ...args, afterSequence: 0, limit: options.limit ?? 100, finalOnly: options.finalOnly ?? false }));
+      let result = observation(await this.mutation(refs.observe, { ...args, afterSequence: natural(options.cursor?.sequence ?? 0), limit: options.limit ?? 100, finalOnly: options.finalOnly ?? false }));
+      if (options.cursor && result.run.attemptNumber !== natural(options.cursor.attemptNumber)) result = observation(await this.mutation(refs.observe, { ...args, afterSequence: 0, limit: options.limit ?? 100, finalOnly: options.finalOnly ?? false }));
       this.pinned(handle, result.run); return result;
     }); this.trackDelivery(acquired.result.deliveryExpiresAt); return acquired.result;
   }
-  private watch<T>(handle: RuntimeRunHandle, ref: ReturnType<typeof mutation>, args: Record<string, unknown>, parse: (raw: unknown) => T,
+  private watch<T>(handle: RuntimeRunHandle, ref: ReturnType<typeof mutation>, args: Record<string, unknown> | (() => Record<string, unknown>), parse: (raw: unknown) => T,
     callback: (value: T) => void, onError?: (error: CortexRuntimeError) => void): () => void {
     this.check(); let active = true, inFlight = false, pending = false, stopSignal = () => {};
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -218,12 +281,14 @@ export class CortexRuntimeClient {
       if (typeof timer === "object" && "unref" in timer) timer.unref();
     };
     const wake = () => {
-      if (!active) return; pending = true; if (inFlight) return; inFlight = true;
+      if (!active) return;
+      if (this.options.onLatencyEvent) this.latency("watcher.wake", { method: getFunctionName(ref) });
+      pending = true; if (inFlight) return; inFlight = true;
       void (async () => {
         while (active && pending) {
           pending = false; const epoch = this.generation;
           try {
-            const acquired = await this.inSession(current => this.port.mutation(ref, { ...args, ...this.selector(handle, current) }));
+            const acquired = await this.inSession(current => this.mutation(ref, { ...(typeof args === "function" ? args() : args), ...this.selector(handle, current) }));
             if (!active || epoch !== this.generation) continue;
             const raw = object(acquired.result), value = parse(raw);
             const bounds = [acquired.current.deliveryExpiresAt, deliveryDeadline(raw.deliveryExpiresAt)].filter((bound): bound is number => bound !== undefined);
@@ -256,8 +321,8 @@ export class CortexRuntimeClient {
     if (attempt !== undefined) natural(attempt);
     const subscribe = () => {
       const ownEpoch = ++epoch;
-      stop = this.watch(handle, refs.observe, { tenantId: handle.tenantId, memorySpaceId: handle.memorySpaceId, runId: handle.runId,
-        afterSequence: cursor, limit: 100, finalOnly: options.finalOnly ?? false }, raw => { const result = observation(raw); this.pinned(handle, result.run); return result; }, result => {
+      stop = this.watch(handle, refs.observe, () => ({ afterSequence: cursor, limit: 100, finalOnly: options.finalOnly ?? false }),
+        raw => { const result = observation(raw); this.pinned(handle, result.run); return result; }, result => {
         if (!active || ownEpoch !== epoch) return;
         if (attempt !== undefined && result.run.attemptNumber !== attempt) {
           attempt = result.run.attemptNumber; cursor = 0; stop(); queueMicrotask(() => { if (active && ownEpoch === epoch) subscribe(); }); return;
@@ -273,19 +338,19 @@ export class CortexRuntimeClient {
     };
     subscribe(); return () => { active = false; epoch++; stop(); };
   }
-  async cancel(handle: RuntimeRunHandle): Promise<{ cancelled: true }> { const { result } = await this.inSession(current => this.port.mutation(refs.cancel, this.selector(handle, current))); return result as { cancelled: true }; }
-  async approveInput(handle: RuntimeRunHandle): Promise<RuntimeRun> { const { result } = await this.inSession(current => this.port.mutation(refs.approve, { ...this.selector(handle, current), expectedDefinitionHash: handle.definitionHash })); return this.pinned(handle, run(result)); }
+  async cancel(handle: RuntimeRunHandle): Promise<{ cancelled: true }> { const { result } = await this.inSession(current => this.mutation(refs.cancel, this.selector(handle, current))); return result as { cancelled: true }; }
+  async approveInput(handle: RuntimeRunHandle): Promise<RuntimeRun> { const { result } = await this.inSession(current => this.mutation(refs.approve, { ...this.selector(handle, current), expectedDefinitionHash: handle.definitionHash })); return this.pinned(handle, run(result)); }
   async approveTool(handle: RuntimeRunHandle, approval: RuntimeToolApproval): Promise<{ approved: true }> {
-    const { result } = await this.inSession(current => this.port.mutation(refs.tool, { ...this.selector(handle, current), operationId: identifier(approval.operationId, 512), expectedRequestHash: identifier(approval.requestHash) })); return result as { approved: true };
+    const { result } = await this.inSession(current => this.mutation(refs.tool, { ...this.selector(handle, current), operationId: identifier(approval.operationId, 512), expectedRequestHash: identifier(approval.requestHash) })); return result as { approved: true };
   }
-  async getDefinition(agentId: string, version: number): Promise<RuntimeDefinition> { const { result } = await this.inSession(current => this.port.mutation(refs.definition, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, agentId: identifier(agentId), version: natural(version) })); return result as RuntimeDefinition; }
-  async messages(conversationId: string, options: { cursor?: string | null; limit?: number } = {}): Promise<RuntimeTranscriptPage> { const { result } = await this.inSession(current => this.port.mutation(refs.messages, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, conversationId: identifier(conversationId), cursor: options.cursor ?? null, limit: options.limit ?? 100 })); return result as RuntimeTranscriptPage; }
-  async listConversations(limit = 100): Promise<RuntimeConversation[]> { const { result } = await this.inSession(current => this.port.mutation(refs.conversations, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, limit })); return result as RuntimeConversation[]; }
-  async getDefaultProfile(): Promise<{ version: 1; profile: RuntimeEmbeddingProfile }> { const { result } = await this.inSession(current => this.port.mutation(refs.profile, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId })); return result as { version: 1; profile: RuntimeEmbeddingProfile }; }
+  async getDefinition(agentId: string, version: number): Promise<RuntimeDefinition> { const { result } = await this.inSession(current => this.mutation(refs.definition, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, agentId: identifier(agentId), version: natural(version) })); return result as RuntimeDefinition; }
+  async messages(conversationId: string, options: { cursor?: string | null; limit?: number } = {}): Promise<RuntimeTranscriptPage> { const { result } = await this.inSession(current => this.mutation(refs.messages, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, conversationId: identifier(conversationId), cursor: options.cursor ?? null, limit: options.limit ?? 100 })); return result as RuntimeTranscriptPage; }
+  async listConversations(limit = 100): Promise<RuntimeConversation[]> { const { result } = await this.inSession(current => this.mutation(refs.conversations, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, limit })); return result as RuntimeConversation[]; }
+  async getDefaultProfile(): Promise<{ version: 1; profile: RuntimeEmbeddingProfile }> { const { result } = await this.inSession(current => this.mutation(refs.profile, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId })); return result as { version: 1; profile: RuntimeEmbeddingProfile }; }
   /** Fresh administrator-selected profile metadata. expectedProfileId is a mismatch guard, never an override. */
   async getEmbeddingProfile(options: { operationKey?: "embedding.memory" | "embedding.query"; expectedProfileId?: string } = {}): Promise<{ version: 1; profile: RuntimeEmbeddingProfile }> {
     const args = embeddingProfileOptions(options);
-    const { result } = await this.inSession(current => this.port.mutation(refs.embeddingProfile, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
+    const { result } = await this.inSession(current => this.mutation(refs.embeddingProfile, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
     const row = object(result);
     if (row.version !== 1) invalid("INVALID_RESPONSE");
     const profile = runtimeEmbeddingProfile(row.profile);
@@ -295,7 +360,7 @@ export class CortexRuntimeClient {
   /** Fresh status, or an explicit strict barrier for only the requested stages. Starts no inference. */
   async memoryReadiness(options: RuntimeMemoryReadinessOptions = {}): Promise<RuntimeMemoryReadiness> {
     const args = readinessOptions(options);
-    const { result } = await this.inSession(current => this.port.mutation(refs.readiness, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
+    const { result } = await this.inSession(current => this.mutation(refs.readiness, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
     const value = memoryReadiness(result);
     if (args.cutoff !== undefined && value.cutoff !== args.cutoff || args.graphCutoff !== undefined && value.graphCutoff !== args.graphCutoff
       || args.expectedProfileId !== undefined && value.profile.profileId !== args.expectedProfileId
@@ -303,20 +368,20 @@ export class CortexRuntimeClient {
     return value;
   }
   async recall(input: { text: string; requestId: string; limit?: number }): Promise<RuntimeRecallResult> {
-    const { result } = await this.inSession(current => this.port.action(refs.recall, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId,
+    const { result } = await this.inSession(current => this.action(refs.recall, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId,
       text: input.text, requestId: identifier(input.requestId, 512), ...(input.limit === undefined ? {} : { limit: input.limit }) }));
     this.trackDelivery(deliveryDeadline(object(result).deliveryExpiresAt)); return result as RuntimeRecallResult;
   }
   /** Admit one backend-owned job and pending artifact. The backend chooses its qualified model and options. */
   async submitMediaJob(input: RuntimeMediaSubmit): Promise<RuntimeMediaJob> {
     const request = mediaSubmit(input);
-    const { result } = await this.inSession(current => this.port.mutation(refs.mediaSubmit, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...request }));
+    const { result } = await this.inSession(current => this.mutation(refs.mediaSubmit, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...request }));
     const job = mediaJob(result); this.trackDelivery(job.deliveryExpiresAt); if (job.kind !== request.kind) invalid("INVALID_RESPONSE"); return job;
   }
   async getMediaJob(jobId: string): Promise<RuntimeMediaJob> { return await this.mediaOperation(refs.mediaGet, jobId); }
   async listMediaJobs(options: { conversationId?: string; limit?: number } = {}): Promise<{ version: 1; jobs: RuntimeMediaJob[] }> {
     const args = mediaListOptions(options);
-    const { result } = await this.inSession(current => this.port.mutation(refs.mediaList, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
+    const { result } = await this.inSession(current => this.mutation(refs.mediaList, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
     const list = mediaJobList(result, args.limit ?? 20); for (const job of list.jobs) this.trackDelivery(job.deliveryExpiresAt); return list;
   }
   /** Local cancellation is honest about unsupported upstream cancellation and any incurred uncertainty. */
@@ -326,19 +391,19 @@ export class CortexRuntimeClient {
   /** Fresh artifact metadata with a bounded current-version projection and no storage URL or credentials. */
   async getArtifact(value: string): Promise<RuntimeArtifact> {
     const artifactId = identifier(value);
-    const { result } = await this.inSession(current => this.port.mutation(refs.artifact, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId,
+    const { result } = await this.inSession(current => this.mutation(refs.artifact, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId,
       artifactId, includeVersionHistory: false }));
     const artifact = runtimeArtifact(result); this.trackDelivery(artifact.deliveryExpiresAt); if (artifact.artifactId !== artifactId) invalid("INVALID_RESPONSE"); return artifact;
   }
   private async mediaOperation(ref: ReturnType<typeof mutation>, value: string): Promise<RuntimeMediaJob> {
     const jobId = identifier(value);
-    const { result } = await this.inSession(current => this.port.mutation(ref, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, jobId }));
+    const { result } = await this.inSession(current => this.mutation(ref, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, jobId }));
     const job = mediaJob(result); this.trackDelivery(job.deliveryExpiresAt); if (job.jobId !== jobId) invalid("INVALID_RESPONSE"); return job;
   }
   /** Submit one durable backend content intent; model, budget, tools and memory stay on the backend. */
   async submitContentJob(input: ContentSubmitV1): Promise<RuntimeContentJobV1> {
     const request = contentSubmit(input);
-    const { result } = await this.inSession(current => this.port.mutation(refs.contentSubmit, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...request }));
+    const { result } = await this.inSession(current => this.mutation(refs.contentSubmit, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...request }));
     const job = contentJob(result); this.trackDelivery(job.deliveryExpiresAt);
     if (job.intent !== request.intent || request.conversationId !== undefined && job.conversationId !== request.conversationId) invalid("INVALID_RESPONSE");
     return job;
@@ -346,7 +411,7 @@ export class CortexRuntimeClient {
   async getContentJob(jobId: string): Promise<RuntimeContentJobV1> { return await this.contentOperation(refs.contentGet, jobId); }
   async listContentJobs(options: { conversationId?: string; limit?: number } = {}): Promise<RuntimeContentJobV1[]> {
     const args = contentListOptions(options);
-    const { result } = await this.inSession(current => this.port.mutation(refs.contentList, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
+    const { result } = await this.inSession(current => this.mutation(refs.contentList, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
     const jobs = contentJobList(result, args.limit ?? 20);
     for (const job of jobs) { this.trackDelivery(job.deliveryExpiresAt); if (args.conversationId !== undefined && job.conversationId !== args.conversationId) invalid("INVALID_RESPONSE"); }
     return jobs;
@@ -357,14 +422,14 @@ export class CortexRuntimeClient {
   /** Commit an explicitly selected suggestion against its exact current retained artifact version. */
   async applyContentSuggestion(input: { jobId: string; suggestionId: string; artifactVersion: number }): Promise<RuntimeContentJobV1> {
     const args = contentSuggestionInput(input);
-    const { result } = await this.inSession(current => this.port.mutation(refs.contentApply, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
+    const { result } = await this.inSession(current => this.mutation(refs.contentApply, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
     const job = contentJob(result); this.trackDelivery(job.deliveryExpiresAt);
     if (job.jobId !== args.jobId || job.intent !== "suggestions" || job.artifactVersion === undefined || job.artifactVersion <= args.artifactVersion) invalid("INVALID_RESPONSE");
     return job;
   }
   private async contentOperation(ref: ReturnType<typeof mutation>, value: string): Promise<RuntimeContentJobV1> {
     const jobId = identifier(value);
-    const { result } = await this.inSession(current => this.port.mutation(ref, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, jobId }));
+    const { result } = await this.inSession(current => this.mutation(ref, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, jobId }));
     const job = contentJob(result); this.trackDelivery(job.deliveryExpiresAt); if (job.jobId !== jobId) invalid("INVALID_RESPONSE"); return job;
   }
   private abortAssets(error: CortexRuntimeError) {
@@ -413,7 +478,7 @@ export class CortexRuntimeClient {
       signal, redirect: "error", cache: "no-store", credentials: "omit" });
   }
   private async currentAsset(current: RuntimeSession, reference: RuntimeAssetReference): Promise<RuntimeAssetVersion> {
-    const result = assetVersion(await this.port.mutation(refs.asset, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...reference }));
+    const result = assetVersion(await this.mutation(refs.asset, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...reference }));
     if (result.assetId !== reference.assetId || result.assetVersion !== reference.version) invalid("ASSET_VERSION_CHANGED");
     this.trackDelivery(result.deliveryExpiresAt);
     return result;

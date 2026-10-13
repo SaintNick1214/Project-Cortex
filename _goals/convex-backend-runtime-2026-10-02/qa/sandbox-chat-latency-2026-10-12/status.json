@@ -1,0 +1,38 @@
+{
+  "scope": "Sandbox chat latency repair and canonical demo reuse",
+  "phase": "backend/Gateway and SDK/provider/Basic/browser source independentlyPASS; fresh immutable artifacts/service/UI integration in progress",
+  "complete": 2,
+  "total": 4,
+  "percent": 50,
+  "metric": "accepted backend/Gateway batch; accepted native SDK/provider/Basic batch; fresh installed-candidate/service/UI integration; final independent audit",
+  "baseline": {
+    "firstDurableTextMs": 17597,
+    "modelEndedMs": 23137,
+    "responseFinalMs": 34283,
+    "browserLatencyMeasured": false
+  },
+  "activeUserEnvironmentPreserved": null,
+  "updatedAt": "2026-10-13T02:33:34.509793+00:00",
+  "metricVersion": 2,
+  "userEnvironmentHistory": {
+    "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
+    "state": "CLEANED by user; old snapshot retained only"
+  },
+  "acceptedMilestones": [
+    {
+      "name": "backend/Gateway source/test batch",
+      "review": "backend-source-review.md",
+      "verdict": "PASS4.0",
+      "liveLatency": false
+    },
+    {
+      "name": "SDK/provider/Basic/browser source/test batch",
+      "reviews": [
+        "admission-source-review-v2.md",
+        "browser-source-review.md"
+      ],
+      "verdict": "PASS4.0",
+      "liveLatency": false
+    }
+  ]
+}

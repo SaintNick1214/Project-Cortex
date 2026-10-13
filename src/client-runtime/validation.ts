@@ -1,4 +1,4 @@
-import type { RuntimeObservation, RuntimePublicPart, RuntimeRun, RuntimeScope, RuntimeSession, TextSubmitV1 } from "./types.js";
+import type { RuntimeObservation, RuntimePublicPart, RuntimeRun, RuntimeScope, RuntimeSession, RuntimeStartResult, TextSubmitV1 } from "./types.js";
 
 export class CortexRuntimeError extends Error {
   readonly version = 1;
@@ -90,6 +90,32 @@ export function run(value: unknown): RuntimeRun {
     inputMessageIds: row.inputMessageIds as string[], outputMessageIds: row.outputMessageIds as string[], failureCode: row.failureCode as string | null,
     contextCompleteness: row.contextCompleteness as RuntimeRun["contextCompleteness"], contextFailureCode: row.contextFailureCode as string | null,
     createdAt: row.createdAt as number, updatedAt: row.updatedAt as number };
+}
+export function startResult(input: unknown): RuntimeStartResult {
+  const value = object(input);
+  exact(value, ["runId", "attemptNumber", "state"], ["failureCode"]);
+  if (!["queued", "ready", "running", "waiting_approval", "finalizing", "complete", "failed", "cancelled", "unknown"].includes(value.state as string)) invalid("INVALID_RESPONSE");
+  return { runId: identifier(value.runId, 512), attemptNumber: natural(value.attemptNumber), state: value.state as RuntimeStartResult["state"],
+    ...(value.failureCode === undefined ? {} : { failureCode: identifier(value.failureCode) }) };
+}
+export function admissionResult(input: unknown): { version: 1; run: RuntimeRun; start: RuntimeStartResult } {
+  const value = object(input); exact(value, ["version", "run", "start"]);
+  if (value.version !== 1) invalid("INVALID_RESPONSE");
+  const metadata = object(value.run);
+  exact(metadata, ["version", "runId", "conversationId", "agentId", "agentVersion", "scope", "definitionHash", "queueSequence", "responseStatus",
+    "memoryStatus", "graphStatus", "attemptNumber", "cancellationRequested", "inputMessageIds", "outputMessageIds", "failureCode", "contextCompleteness", "contextFailureCode", "createdAt", "updatedAt"]);
+  exact(object(metadata.scope), ["tenantId", "memorySpaceId"]);
+  if (typeof metadata.cancellationRequested !== "boolean" || natural(metadata.agentVersion) < 1
+    || ![null, "complete", "incomplete"].includes(metadata.contextCompleteness as RuntimeRun["contextCompleteness"])
+    || [metadata.failureCode, metadata.contextFailureCode].some(code => code !== null && typeof code !== "string")) invalid("INVALID_RESPONSE");
+  for (const key of ["inputMessageIds", "outputMessageIds"] as const) {
+    const ids = metadata[key]; if (!Array.isArray(ids) || ids.some(id => typeof id !== "string")) invalid("INVALID_RESPONSE");
+    for (const id of ids) identifier(id, 512);
+  }
+  natural(metadata.createdAt); natural(metadata.updatedAt);
+  const admitted = run(value.run), started = startResult(value.start);
+  if (started.runId !== admitted.runId || started.attemptNumber !== admitted.attemptNumber) invalid("RUN_IDENTITY_CHANGED");
+  return { version: 1, run: admitted, start: started };
 }
 export function runtimePublicPart(input: unknown): RuntimePublicPart {
   const part = object(input);

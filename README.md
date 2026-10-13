@@ -104,18 +104,17 @@ export async function openConversation(options: {
   try {
     await client.session();
     await client.getDefinition(options.agentId, options.agentVersion);
-    const handle = await client.submit({
+    const { handle } = await client.submitAndStart({
       version: 1,
       agentId: options.agentId,
       agentVersion: options.agentVersion,
       clientRequestId: crypto.randomUUID(),
       parts: [{ type: "text", text: options.text }],
-    });
+    }, { streaming: true });
     disconnect = client.watchObservation(handle, options.render, error => {
       options.clearPrivateViews();
       options.onError(error);
     });
-    await client.start(handle, { streaming: true });
     return { client, handle, disconnect };
   } catch (error) {
     disconnect();
@@ -138,6 +137,13 @@ handle to attach another authenticated client without resubmission. Administrato
 control transcript write locks; unlocked edits create tracked revisions and invalidate
 stale derived context. Response completion, memory indexing and graph readiness are
 separate statuses.
+
+`submitAndStart` composes native submit and execution admission in one transaction,
+with fresh session checks before and after the RPC. The separate `submit` and `start`
+methods remain available. Optional conversation title work runs after canonical answer
+finalization. Set `onLatencyEvent` to receive payload-free client RPC/auth/wake timings;
+backend diagnostics require `CORTEX_RUNTIME_LATENCY_TRACE=1`. First visible answer text,
+full response completion and asynchronous memory each have distinct timing boundaries.
 
 ## Memory, tools and model governance
 

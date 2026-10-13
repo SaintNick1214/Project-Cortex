@@ -20,6 +20,13 @@ export interface RuntimeRunHandle extends RuntimeScope {
   readonly version: 1; readonly principalId: string; readonly runId: string; readonly conversationId: string;
   readonly agentId: string; readonly agentVersion: number; readonly definitionHash: string;
 }
+export interface RuntimeStartResult {
+  runId: string; attemptNumber: number;
+  state: "queued" | "ready" | "running" | "waiting_approval" | "finalizing" | "complete" | "failed" | "cancelled" | "unknown";
+  failureCode?: string;
+}
+/** Admission and start metadata from one native transaction. The handle grants no authority. */
+export interface RuntimeAdmissionResult { handle: RuntimeRunHandle; run: RuntimeRun; start: RuntimeStartResult }
 export type RuntimePublicPart =
   | { type: "text"; text: string }
   | { type: "text-start" | "text-end"; id: string }

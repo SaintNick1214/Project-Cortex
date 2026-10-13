@@ -21,7 +21,7 @@ export interface CortexRemoteTransportOptions {
   /** Restore only from this app's retained state; no model/context/tool/authority overrides. */
   state?: CortexRemoteState;
 }
-interface Replay { canonical: string; request: TextSubmitV1; handle?: RuntimeRunHandle; pending?: Promise<RuntimeRunHandle> }
+interface Replay { canonical: string; request: TextSubmitV1; handle?: RuntimeRunHandle; attemptNumber?: number; pending?: Promise<RuntimeRunHandle> }
 
 /** AI SDK 7 transport for one canonical remote conversation. It performs no inference or memory writing. */
 export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> implements ChatTransport<UI_MESSAGE> {
@@ -81,15 +81,17 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
     }
     if (!replay.handle && !replay.pending) {
       const ownReplay = replay;
-      replay.pending = this.options.client.submit(replay.request).catch(error => { ownReplay.pending = undefined; throw error; });
+      replay.pending = this.options.client.submitAndStart(replay.request, { streaming: !this.options.finalOnly }).then(result => {
+        ownReplay.attemptNumber = result.run.attemptNumber; return result.handle;
+      })
+        .catch(error => { ownReplay.pending = undefined; throw error; });
     }
     const handle = replay.handle ?? await replay.pending!;
     replay.handle = handle;
     this.disconnect(); this.conversationId = handle.conversationId;
-    if (this.current?.handle.runId !== handle.runId) this.current = { version: 1, chatId: options.chatId, handle, cursor: 0, attemptNumber: 0, text: "", finalText: "", finalTextStarted: false };
+    if (this.current?.handle.runId !== handle.runId) this.current = { version: 1, chatId: options.chatId, handle, cursor: 0, attemptNumber: replay.attemptNumber ?? 0, text: "", finalText: "", finalTextStarted: false };
     this.options.onRun?.(handle);
     if (options.abortSignal?.aborted) { await this.options.client.cancel(handle); throw new CortexRuntimeError("CANCELLED"); }
-    await this.options.client.start(handle, { streaming: !this.options.finalOnly });
     return this.stream(options.abortSignal);
   }
   async reconnectToStream(options: Parameters<ChatTransport<UI_MESSAGE>["reconnectToStream"]>[0]): Promise<ReadableStream<UIMessageChunk> | null> {

@@ -1,11 +1,44 @@
 /** Fresh private bootstrap and a payload-free reactive invalidation signal. */
 import { v } from "convex/values";
+import { makeFunctionReference } from "convex/server";
 import { mutation, query } from "./_generated/server";
+import type { MutationCtx } from "./_generated/server";
 import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
 import { observeHandler } from "./runtimeAgent";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { semanticHash } from "../src/domain/profile";
+import { publicRun } from "./runs";
+import { transcriptDenied } from "./runtimeTranscript";
+import type { RuntimeStartResult } from "../src/client-runtime/types";
+
+type Run = ReturnType<typeof publicRun>;
+type Selectors = { tenantId?: string; memorySpaceId?: string };
+const submitRef = makeFunctionReference<"mutation", Selectors & { request: unknown }, Run>("runs:submit");
+const startRef = makeFunctionReference<"mutation", Selectors & { runId: string; streaming?: boolean }, RuntimeStartResult>("runtimeAgent:start");
+const getRef = makeFunctionReference<"mutation", Selectors & { runId: string }, Run>("runs:get");
+
+/** One parent transaction retains the original admission, queue, approval and start guards.
+ * No caller-selected model/context/tool options, independent dispatch or retry lane. */
+export async function submitAndStartHandler(ctx: MutationCtx, args: Selectors & { request: unknown; streaming?: boolean }) {
+  const selectors = { ...(args.tenantId === undefined ? {} : { tenantId: args.tenantId }),
+    ...(args.memorySpaceId === undefined ? {} : { memorySpaceId: args.memorySpaceId }) };
+  const submitted = await ctx.runMutation(submitRef, { ...selectors, request: args.request });
+  const start = await ctx.runMutation(startRef, { ...selectors, runId: submitted.runId, streaming: args.streaming ?? true });
+  // Preserve the old SDK start's read permission and immutable-handle check without
+  // another client round trip. A mismatch rolls back admission and Workflow insertion.
+  const run = await ctx.runMutation(getRef, { ...selectors, runId: submitted.runId });
+  if (start.runId !== submitted.runId || start.attemptNumber !== run.attemptNumber
+    || run.runId !== submitted.runId || run.conversationId !== submitted.conversationId
+    || run.agentId !== submitted.agentId || run.agentVersion !== submitted.agentVersion
+    || run.definitionHash !== submitted.definitionHash
+    || run.scope.tenantId !== submitted.scope.tenantId || run.scope.memorySpaceId !== submitted.scope.memorySpaceId) transcriptDenied("TRANSCRIPT_CONFLICT");
+  return { version: 1 as const, run, start };
+}
+export const submitAndStart = mutation({
+  args: { request: v.any(), streaming: v.optional(v.boolean()), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
+  handler: submitAndStartHandler,
+});
 
 export const session = mutation({
   args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },

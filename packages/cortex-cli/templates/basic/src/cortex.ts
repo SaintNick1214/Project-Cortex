@@ -4,7 +4,7 @@ import { open } from "node:fs/promises";
 import { CortexRuntimeClient, CortexRuntimeError } from "@cortexmemory/sdk/runtime";
 import type { CortexRuntimeClientOptions, RuntimeSession } from "@cortexmemory/sdk/runtime";
 export { CortexRuntimeError };
-export type RuntimeClient = Pick<CortexRuntimeClient, "session" | "submit" | "start" | "attach" | "get" | "observe" | "watchObservation" | "cancel" | "approveInput" | "approveTool" | "messages" | "listConversations" | "getDefaultProfile" | "memoryReadiness" | "recall" | "close">;
+export type RuntimeClient = Pick<CortexRuntimeClient, "session" | "submit" | "submitAndStart" | "start" | "attach" | "get" | "observe" | "watchObservation" | "cancel" | "approveInput" | "approveTool" | "messages" | "listConversations" | "getDefaultProfile" | "memoryReadiness" | "recall" | "close">;
 export type RuntimeFactory = (options: CortexRuntimeClientOptions) => RuntimeClient;
 export interface RuntimeConfig { deploymentUrl: string; tenantId?: string; memorySpaceId?: string; agentId: string; agentVersion: number; timeoutMs: number }
 export class AppError extends Error { constructor(readonly code: string, readonly status: 400 | 401 | 403 | 413 | 499 | 504 = 400) { super(code); } }
@@ -45,7 +45,8 @@ export async function withRuntime<T>(fetchToken: CortexRuntimeClientOptions["fet
   if (options.signal?.aborted) throw new AppError("REQUEST_ABORTED", 499);
   const client = (options.factory ?? (settings => new CortexRuntimeClient(settings)))({ deploymentUrl: config.deploymentUrl, fetchToken,
     scope: { ...(config.tenantId ? { tenantId: config.tenantId } : {}), ...(config.memorySpaceId ? { memorySpaceId: config.memorySpaceId } : {}) },
-    authTimeoutMs: Math.min(config.timeoutMs, 10000), requestTimeoutMs: Math.min(config.timeoutMs, 12000) });
+    authTimeoutMs: Math.min(config.timeoutMs, 10000), requestTimeoutMs: Math.min(config.timeoutMs, 12000),
+    ...(process.env.CORTEX_RUNTIME_LATENCY_TRACE === "1" ? { onLatencyEvent: event => console.error(JSON.stringify({ type: "cortex-client-latency", ...event })) } : {}) });
   let closed = false, timer: ReturnType<typeof setTimeout> | undefined, rejectBound: (error: Error) => void = () => {};
   const close = () => { if (!closed) { closed = true; client.close(); } };
   const abort = () => { close(); rejectBound(new AppError("REQUEST_ABORTED", 499)); };

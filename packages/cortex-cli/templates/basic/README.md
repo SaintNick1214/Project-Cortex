@@ -22,7 +22,7 @@ Backend installation/deployment and optional graph workers are separate operator
 
 ## CLI
 
-Plain text creates and prints one request ID before submit. `/send <requestId> <text>` lets you retain a caller-chosen stable ID. An ambiguous response is never retried automatically; keep the original request/run ID.
+Plain text creates and prints one request ID, admits the run, then displays its streamed and canonical final answer through the same client. It pauses at explicit approval or terminal completion. `/send <requestId> <text>` returns the handle for later observation with a caller-chosen stable ID. An ambiguous response is never retried automatically; keep the original request/run ID. Ctrl+C releases local observation and the client; use `/cancel` to ask the backend to cancel.
 
 - `/observe [runId]` reads the current durable output; `/watch [runId]` observes until terminal/approval or the configured local deadline.
 - `/approve-input [runId]` approves input; `/approve-tool <operationId> <toolName> <requestHash>` uses the exact displayed server request hash for the current run.
@@ -31,6 +31,13 @@ Plain text creates and prints one request ID before submit. `/send <requestId> <
 - `/history`, `/conversations`, `/profile`, `/readiness`, `/session`, `/new`, `/exit` expose fresh verified metadata/history. Session changes fail closed.
 
 Response completion can precede facts/vectors/graph readiness. A published strict Agent definition controls its barrier; a status read does not change that policy. `PROFILE_NOT_READY`, `CAPABILITY_UNAVAILABLE`, `POLICY_DENIED`, `FORBIDDEN` and deadline/unknown outcomes are actionable errors, not echo-mode success.
+
+Optional title work follows canonical answer finalization. For local diagnosis, set
+`CORTEX_RUNTIME_LATENCY_TRACE=1` to emit metadata timings for client RPCs and the
+submission-to-first-printed-answer boundary. Enable the same flag separately on an
+authorized backend for its context, model-policy and Gateway phases. These diagnostics
+do not contain prompts, reply text or credentials. The under-one-second first-visible
+target requires actual installed-client measurements; it is not a service guarantee.
 
 ## HTTP
 

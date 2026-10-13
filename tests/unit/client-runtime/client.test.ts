@@ -2,7 +2,7 @@ import { jest } from "@jest/globals";
 import { getFunctionName } from "convex/server";
 import type { AuthTokenFetcher } from "convex/browser";
 import { CortexRuntimeClient, CortexRuntimeError } from "../../../src/client-runtime/index";
-import type { RuntimeClientPort, RuntimeObservation, RuntimeRun, RuntimeRunHandle, RuntimeSession } from "../../../src/client-runtime/index";
+import type { RuntimeClientPort, RuntimeLatencyEvent, RuntimeObservation, RuntimeRun, RuntimeRunHandle, RuntimeSession } from "../../../src/client-runtime/index";
 
 const verified: RuntimeSession = { version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "owner", userId: "user" };
 const value: RuntimeRun = { version: 1, runId: "run", conversationId: "conversation", agentId: "agent", agentVersion: 1,
@@ -11,7 +11,7 @@ const value: RuntimeRun = { version: 1, runId: "run", conversationId: "conversat
   inputMessageIds: ["input"], outputMessageIds: [], failureCode: null, contextCompleteness: "complete", contextFailureCode: null, createdAt: 1, updatedAt: 2 };
 const handle: RuntimeRunHandle = { version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "owner", runId: "run", conversationId: "conversation", agentId: "agent", agentVersion: 1, definitionHash: "definition" };
 const request = { version: 1 as const, agentId: "agent", agentVersion: 1, clientRequestId: "request", parts: [{ type: "text" as const, text: "hello" }] };
-function fixture(autoAuth = true) {
+function fixture(autoAuth = true, onLatencyEvent?: (event: RuntimeLatencyEvent) => void) {
   let current: RuntimeSession = verified, authCallback = (_value: boolean) => {}, tokenFetcher: AuthTokenFetcher = async () => null;
   const calls: { name: string; args: Record<string, unknown> }[] = [];
   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
@@ -20,6 +20,7 @@ function fixture(autoAuth = true) {
     const name = getFunctionName(ref); calls.push({ name, args });
     if (name === "runtimeClient:session") return current;
     if (name === "runtimeAgent:observe") return observe;
+    if (name === "runtimeClient:submitAndStart") return { version: 1, run: value, start: { runId: value.runId, attemptNumber: value.attemptNumber, state: "ready" } };
     if (name === "runtimeMemory:defaultProfile") return { version: 1, profile: { profileId: "profile", dimensions: 1536 } };
     return value;
   });
@@ -31,13 +32,136 @@ function fixture(autoAuth = true) {
       const row = { name: getFunctionName(ref), args, update, error, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
     }, close: jest.fn(async () => {}) } as unknown as RuntimeClientPort;
   const fetchToken = jest.fn(async () => "opaque-host-jwt");
-  const client = new CortexRuntimeClient({ deploymentUrl: "https://fixture.convex.cloud", scope: { tenantId: "tenant", memorySpaceId: "space" }, fetchToken, client: port });
+  const client = new CortexRuntimeClient({ deploymentUrl: "https://fixture.convex.cloud", scope: { tenantId: "tenant", memorySpaceId: "space" }, fetchToken, client: port,
+    ...(onLatencyEvent ? { onLatencyEvent } : {}) });
   return { client, port, mutation, action, calls, subscriptions, fetchToken, authenticate: (status: boolean) => authCallback(status), token: (forceRefreshToken: boolean) => tokenFetcher({ forceRefreshToken }),
     automaticAuth: (enabled: boolean) => { autoAuth = enabled; },
     session: (next: RuntimeSession) => { current = next; }, observation: (next: RuntimeObservation) => { observe = next; } };
 }
 const tick = async () => { for (let i = 0; i < 50; i++) await Promise.resolve(); };
 describe("browser remote runtime client", () => {
+  it("opt-in latency events expose only fixed scalars and pair unique native RPC IDs without extra calls or changed receiver ownership", async () => {
+    const events: RuntimeLatencyEvent[] = [], f = fixture(true, event => { events.push(event); });
+    try {
+      expect(await f.token(true)).toBe("opaque-host-jwt");
+      await f.client.submitAndStart({ ...request, parts: [{ type: "text", text: "PRIVATE_PROMPT_TRACE_SENTINEL" }] });
+      expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:session", "runtimeClient:submitAndStart", "runtimeClient:session"]);
+      expect(events.slice(0, 2).map(event => event.phase)).toEqual(["auth.begin", "auth.ready"]);
+      const begins = events.filter(event => event.phase === "rpc.begin"), ends = events.filter(event => event.phase === "rpc.end");
+      expect(begins.map(event => event.rpcId)).toEqual([1, 2, 3]); expect(ends.map(event => event.rpcId)).toEqual([1, 2, 3]);
+      expect(begins.map(event => event.method)).toEqual(f.calls.map(call => call.name));
+      for (const event of events) {
+        expect(Object.isFrozen(event)).toBe(true);
+        expect(Object.keys(event).every(key => ["version", "phase", "atMs", "rpcId", "method", "durationMs"].includes(key))).toBe(true);
+        expect(Object.values(event).every(value => typeof value === "string" || typeof value === "number")).toBe(true);
+        expect(Number.isFinite(event.atMs)).toBe(true);
+      }
+      expect(events.every((event, index) => index === 0 || event.atMs >= events[index - 1].atMs)).toBe(true);
+      expect(ends.every((event, index) => event.durationMs === event.atMs - begins[index].atMs && event.durationMs >= 0)).toBe(true);
+      const serialized = JSON.stringify(events);
+      for (const value of ["PRIVATE_PROMPT_TRACE_SENTINEL", "opaque-host-jwt", "tenant", "space", "owner", "definition"]) expect(serialized).not.toContain(value);
+      expect(f.mutation.mock.contexts.every(receiver => receiver === f.port)).toBe(true);
+    } finally { await f.client.close(); }
+    expect(f.port.close).not.toHaveBeenCalled();
+  });
+  it("opt-in failed RPC/auth and watcher-wake events never copy signal, output or diagnostics", async () => {
+    const events: RuntimeLatencyEvent[] = [], f = fixture(true, event => { events.push(event); });
+    f.observation({ run: value, state: "running", parts: [{ sequence: 1, part: { type: "text-delta", text: "PRIVATE_OUTPUT_TRACE_SENTINEL" } }], cursor: 1, approvals: [] });
+    const close = f.client.watchObservation(handle, () => {}); await tick();
+    f.subscriptions[0].update({ version: 1, marker: "a".repeat(64) }); await tick(); close();
+    f.mutation.mockRejectedValueOnce(new Error("PRIVATE_ERROR_TRACE_SENTINEL"));
+    await expect(f.client.session()).rejects.toMatchObject({ code: "TRANSPORT_ERROR", outcome: "uncertain" });
+    f.authenticate(false);
+    expect(events.filter(event => event.phase === "watcher.wake")).toMatchObject([{ method: "runtimeAgent:observe" }, { method: "runtimeAgent:observe" }]);
+    expect(events.filter(event => event.phase === "rpc.failed")).toMatchObject([{ method: "runtimeClient:session", rpcId: 7, durationMs: expect.any(Number) }]);
+    expect(events.at(-1)?.phase).toBe("auth.denied");
+    const serialized = JSON.stringify(events);
+    for (const value of ["PRIVATE_OUTPUT_TRACE_SENTINEL", "PRIVATE_ERROR_TRACE_SENTINEL", "a".repeat(64), "TRANSPORT_ERROR", "UNAUTHENTICATED"]) expect(serialized).not.toContain(value);
+    const count = events.length; f.subscriptions[0].update({ version: 1, marker: "b".repeat(64) }); await tick(); expect(events).toHaveLength(count);
+    await f.client.close();
+  });
+  it("governed action tracing preserves fresh session fences and the official receiver without recall payloads", async () => {
+    const events: RuntimeLatencyEvent[] = [], f = fixture(true, event => { events.push(event); });
+    f.action.mockResolvedValueOnce({ items: [], context: "PRIVATE_RECALL_RESULT_TRACE_SENTINEL", profileId: "profile" });
+    expect(await f.client.recall({ text: "PRIVATE_RECALL_INPUT_TRACE_SENTINEL", requestId: "request" })).toMatchObject({ context: "PRIVATE_RECALL_RESULT_TRACE_SENTINEL" });
+    expect(events.filter(event => event.phase === "rpc.begin").map(event => event.method)).toEqual(["runtimeClient:session", "runtimeMemory:recall", "runtimeClient:session"]);
+    expect(f.action).toHaveBeenCalledTimes(1); expect(f.mutation).toHaveBeenCalledTimes(2);
+    expect(f.action.mock.contexts).toEqual([f.port]); expect(JSON.stringify(events)).not.toMatch(/PRIVATE_RECALL/);
+    await f.client.close(); expect(f.port.close).not.toHaveBeenCalled();
+  });
+  it.each(["sync", "async"])("a failing %s diagnostic callback cannot alter guarded admission or shared-client closure", async mode => {
+    const callback = mode === "sync" ? () => { throw new Error("diagnostic failure"); } : async () => { throw new Error("diagnostic failure"); };
+    // Exercise a host accidentally violating the synchronous callback type.
+    const f = fixture(true, callback as (event: RuntimeLatencyEvent) => void); expect((await f.client.submitAndStart(request)).handle).toEqual(handle); await tick();
+    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:session", "runtimeClient:submitAndStart", "runtimeClient:session"]);
+    await f.client.close(); expect(f.port.close).not.toHaveBeenCalled();
+  });
+  it("diagnostic clock failure uses a finite monotonic fallback without changing admission", async () => {
+    const clock = jest.spyOn(performance, "now").mockImplementation(() => { throw new Error("clock unavailable"); });
+    const wall = jest.spyOn(Date, "now").mockReturnValueOnce(100).mockReturnValueOnce(90).mockReturnValue(80);
+    const events: RuntimeLatencyEvent[] = [];
+    try {
+      const f = fixture(true, event => { events.push(event); }); expect((await f.client.submitAndStart(request)).handle).toEqual(handle);
+      expect(events.every(event => Number.isFinite(event.atMs) && event.atMs >= 100)).toBe(true);
+      expect(events.filter(event => event.phase === "rpc.end").every(event => event.durationMs === 0)).toBe(true);
+      await f.client.close();
+    } finally { clock.mockRestore(); wall.mockRestore(); }
+  });
+  it("uses three serial RPCs for combined admission before attaching the durable watcher", async () => {
+    const f = fixture();
+    const result = await f.client.submitAndStart(request, { streaming: false });
+    expect(result).toEqual({ handle, run: value, start: { runId: "run", attemptNumber: 1, state: "ready" } });
+    expect(Object.isFrozen(result.handle)).toBe(true);
+    expect(f.calls).toEqual([
+      { name: "runtimeClient:session", args: { tenantId: "tenant", memorySpaceId: "space" } },
+      { name: "runtimeClient:submitAndStart", args: { tenantId: "tenant", memorySpaceId: "space", request, streaming: false } },
+      { name: "runtimeClient:session", args: { tenantId: "tenant", memorySpaceId: "space" } },
+    ]);
+    expect(f.subscriptions).toHaveLength(0);
+    const close = f.client.watchObservation(result.handle, () => {}); await tick();
+    expect(f.subscriptions[0].name).toBe("runtimeClient:signal");
+    expect(f.calls.filter(call => call.name === "runtimeAgent:observe")).toHaveLength(1);
+    expect(f.calls.some(call => ["runs:submit", "runs:get", "runtimeAgent:start"].includes(call.name))).toBe(false);
+    close(); await f.client.close();
+  });
+  it.each([
+    { version: 1, run: { ...value, agentId: "foreign" }, start: { runId: "run", attemptNumber: 1, state: "ready" } },
+    { version: 1, run: value, start: { runId: "foreign", attemptNumber: 1, state: "ready" } },
+    { version: 1, run: value, start: { runId: "run", attemptNumber: 2, state: "ready" } },
+    { version: 1, run: { ...value, scope: { tenantId: "foreign", memorySpaceId: "space" } }, start: { runId: "run", attemptNumber: 1, state: "ready" } },
+    { version: 1, run: value, start: { runId: "run", attemptNumber: 1, state: "invented" } },
+    { version: 1, run: value, start: { runId: "run", attemptNumber: 1, state: "ready", model: "override" } },
+    { version: 1, run: { ...value, privateOutput: "must not deliver" }, start: { runId: "run", attemptNumber: 1, state: "ready" } },
+  ])("withholds changed or unknown combined output identity %#", async response => {
+    const f = fixture(), fresh = f.mutation.getMockImplementation()!;
+    f.mutation.mockImplementation(async (ref, args) => getFunctionName(ref) === "runtimeClient:submitAndStart" ? response as never : await fresh(ref, args));
+    const pending = f.client.submitAndStart(request);
+    await expect(pending).rejects.toBeInstanceOf(CortexRuntimeError);
+    await expect(pending).rejects.toMatchObject({ outcome: "uncertain" });
+    expect(f.calls.filter(call => call.name === "runtimeClient:session")).toHaveLength(2);
+    expect(f.subscriptions).toEqual([]); await f.client.close();
+  });
+  it.each([{ streaming: "false" }, { model: "unsafe" }, { context: "injected" }])("refuses combined execution override before RPC %#", async options => {
+    const f = fixture(); await expect(f.client.submitAndStart(request, options as never)).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    expect(f.calls).toEqual([]); await f.client.close();
+  });
+  it.each([
+    { ...verified, principalId: "foreign" }, { ...verified, memorySpaceId: "foreign" }, { ...verified, tenantId: "foreign" },
+  ])("retains the fresh post-I/O combined session fence %#", async changed => {
+    const f = fixture(), fresh = f.mutation.getMockImplementation()!;
+    f.mutation.mockImplementation(async (ref, args) => { const result = await fresh(ref, args);
+      if (getFunctionName(ref) === "runtimeClient:submitAndStart") f.session(changed); return result; });
+    await expect(f.client.submitAndStart(request)).rejects.toMatchObject({ code: "SESSION_CHANGED", outcome: "uncertain" });
+    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:session", "runtimeClient:submitAndStart", "runtimeClient:session"]);
+    await f.client.close();
+  });
+  it("withholds admission after time-only grant expiry during its post-I/O session read", async () => {
+    const f = fixture(), fresh = f.mutation.getMockImplementation()!;
+    f.mutation.mockImplementation(async (ref, args) => { const result = await fresh(ref, args);
+      if (getFunctionName(ref) === "runtimeClient:submitAndStart") f.session({ ...verified, deliveryExpiresAt: Date.now() - 1 }); return result; });
+    await expect(f.client.submitAndStart(request)).rejects.toMatchObject({ code: "AUTHORITY_EXPIRED", outcome: "uncertain" });
+    expect(f.subscriptions).toEqual([]); await f.client.close();
+  });
   it("withholds a recalled result whose source authority expired during action delivery", async () => {
     const f = fixture(); f.action.mockResolvedValueOnce({ items: [], context: "private source", profileId: "profile", deliveryExpiresAt: Date.now() - 1 } as never);
     await expect(f.client.recall({ text: "facts", requestId: "source-expired" })).rejects.toMatchObject({ code: "AUTHORITY_EXPIRED" });
@@ -55,7 +179,8 @@ describe("browser remote runtime client", () => {
     { ...request, agentVersion: 0 }, { ...request, clientRequestId: "x".repeat(129) }, { ...request, parts: [{ type: "text", text: "\ud800" }] },
     { ...request, parts: [{ type: "text", text: "x".repeat(120001) }] }, { ...request, parts: new Array(1) },
   ])("denies invalid public graph before session or mutation %#", async input => {
-    const f = fixture(); await expect(f.client.submit(input as never)).rejects.toMatchObject({ code: "INVALID_INPUT" }); expect(f.calls).toEqual([]);
+    const f = fixture(); await expect(f.client.submit(input as never)).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    await expect(f.client.submitAndStart(input as never)).rejects.toMatchObject({ code: "INVALID_INPUT" }); expect(f.calls).toEqual([]);
   });
   it("does not invoke input getters", async () => {
     const f = fixture(), getter = jest.fn(() => "secret"); const input = { ...request };
@@ -126,6 +251,33 @@ describe("browser remote runtime client", () => {
     close(); expect(f.subscriptions.every(row => row.closed)).toBe(true);
     expect(f.calls.some(call => call.name === "runtimeAgent:cancel")).toBe(false); expect(f.port.query).not.toHaveBeenCalled(); await f.client.close();
   });
+  it("reads the current cursor after a short page and drains over 100 terminal parts without filtered-duplicate early completion", async () => {
+    const f = fixture(), updates: RuntimeObservation[] = [], reads: number[] = [], fresh = f.mutation.getMockImplementation()!;
+    f.mutation.mockImplementation(async (ref, args) => {
+      if (getFunctionName(ref) !== "runtimeAgent:observe") return await fresh(ref, args);
+      reads.push(args.afterSequence as number);
+      const start = args.afterSequence as number;
+      const events = start === 0 ? [{ sequence: 1, part: { type: "text-delta", text: "a" } }, { sequence: 2, part: { type: "text-delta", text: "a" } }]
+        : start === 2 ? Array.from({ length: 100 }, (_, i) => ({ sequence: i + 3, part: { type: "text-delta", text: "a" } }))
+        : [{ sequence: 103, part: { type: "text", text: "a".repeat(102) } }, { sequence: 104, part: { type: "status", state: "complete" } }];
+      return { run: { ...value, responseStatus: start === 0 ? "running" : "complete" }, state: start === 0 ? "running" : "complete", parts: events,
+        cursor: events.at(-1)!.sequence, approvals: [] } as never;
+    });
+    let stop = () => {};
+    stop = f.client.watchObservation(handle, observed => {
+      updates.push(observed);
+      if (observed.run.responseStatus === "complete" && observed.parts.length < 100) stop();
+    }, undefined, { cursor: { attemptNumber: 1, sequence: 0 } });
+    await tick(); expect(reads).toEqual([0]);
+    f.subscriptions.at(-1)!.update({ version: 1, marker: "a".repeat(64) }); await tick(); await tick();
+    expect(reads).toEqual([0, 2, 102]);
+    expect(updates.map(observed => observed.parts.length)).toEqual([2, 100, 2]);
+    const events = updates.flatMap(observed => observed.parts);
+    expect(events.map(event => event.sequence)).toEqual(Array.from({ length: 104 }, (_, i) => i + 1));
+    expect(events.filter(event => event.part.type === "text-delta")).toHaveLength(102);
+    expect(f.subscriptions.every(subscription => subscription.closed)).toBe(true);
+    expect(f.calls.filter(call => call.name === "runtimeClient:session")).toHaveLength(6); await f.client.close();
+  });
   it("fences a changed verified principal before fresh reactive payload delivery", async () => {
     const f = fixture(), update = jest.fn(), error = jest.fn(); f.session({ ...verified, principalId: "other" });
     f.client.watchRun(handle, update, error); await tick();
@@ -138,16 +290,16 @@ describe("browser remote runtime client", () => {
     jest.mocked(f.port.mutation).mockRejectedValueOnce(new Error("private provider credentials"));
     await expect(f.client.session()).rejects.toMatchObject({ message: "Cortex runtime: TRANSPORT_ERROR", outcome: "uncertain" });
   });
-  it.each(["get", "attach", "messages", "listConversations", "getDefinition", "getDefaultProfile", "recall"] as const)("withholds async %s delivery when auth changes principal while response is in flight", async method => {
+  it.each(["get", "attach", "messages", "listConversations", "getDefinition", "getDefaultProfile", "recall", "submitAndStart"] as const)("withholds async %s delivery when auth changes principal while response is in flight", async method => {
     const f = fixture(); let release = (_value: unknown) => {}, started = () => {};
     const ready = new Promise<void>(resolve => { started = resolve; }); const response = new Promise<unknown>(resolve => { release = resolve; });
     const target = { get: "runs:get", attach: "runs:get", messages: "runtimeTranscript:messages", listConversations: "runtimeTranscript:list",
-      getDefinition: "agentDefinitions:get", getDefaultProfile: "runtimeMemory:defaultProfile", recall: "runtimeMemory:recall" }[method];
+      getDefinition: "agentDefinitions:get", getDefaultProfile: "runtimeMemory:defaultProfile", recall: "runtimeMemory:recall", submitAndStart: "runtimeClient:submitAndStart" }[method];
     f.mutation.mockImplementation(async (ref, _args) => { if (getFunctionName(ref) === "runtimeClient:session") return verified;
       if (getFunctionName(ref) === target) { started(); return await response as RuntimeRun; } return value; });
     if (method === "recall") f.action.mockImplementation(async () => { started(); await response; return { items: [], context: "", profileId: "profile" }; });
     const calls = { get: () => f.client.get(handle), attach: () => f.client.attach("run"), messages: () => f.client.messages("conversation"), listConversations: () => f.client.listConversations(),
-      getDefinition: () => f.client.getDefinition("agent", 1), getDefaultProfile: () => f.client.getDefaultProfile(), recall: () => f.client.recall({ text: "private", requestId: "r" }) };
+      getDefinition: () => f.client.getDefinition("agent", 1), getDefaultProfile: () => f.client.getDefaultProfile(), recall: () => f.client.recall({ text: "private", requestId: "r" }), submitAndStart: () => f.client.submitAndStart(request) };
     const pending = calls[method](); await ready; f.session({ ...verified, principalId: "other" }); await f.client.refreshAuth(); release(value);
     await expect(pending).rejects.toMatchObject({ code: "SESSION_CHANGED", outcome: "uncertain" });
   });
@@ -196,17 +348,17 @@ describe("browser remote runtime client", () => {
     expect(update).not.toHaveBeenCalled(); expect(reads).toBe(1); expect(f.calls.some(call => call.name === "runtimeAgent:cancel")).toBe(false); await f.client.close();
   });
 
-  it("bounds a stalled fresh mutation, retains its late outcome and never redispatches", async () => {
+  it.each(["submit", "submitAndStart"] as const)("bounds stalled %s, retains its late outcome and never redispatches", async method => {
     jest.useFakeTimers();
     try {
       const f = fixture(); let release = (_value: unknown) => {}, issued = 0;
       const fresh = f.mutation.getMockImplementation()!;
       f.mutation.mockImplementation(async (ref, args) => {
-        if (getFunctionName(ref) === "runs:submit") { issued++; return await new Promise<unknown>(resolve => { release = resolve; }) as never; }
+        if (getFunctionName(ref) === (method === "submit" ? "runs:submit" : "runtimeClient:submitAndStart")) { issued++; return await new Promise<unknown>(resolve => { release = resolve; }) as never; }
         return await fresh(ref, args);
       });
       const client = new CortexRuntimeClient({ deploymentUrl: "https://fixture.convex.cloud", fetchToken: f.fetchToken, client: f.port, requestTimeoutMs: 30 });
-      const pending = client.submit(request), assertion = expect(pending).rejects.toMatchObject({ code: "RPC_DEADLINE_EXCEEDED", outcome: "uncertain" });
+      const pending = client[method](request), assertion = expect(pending).rejects.toMatchObject({ code: "RPC_DEADLINE_EXCEEDED", outcome: "uncertain" });
       await tick(); await jest.advanceTimersByTimeAsync(30); await assertion; expect(issued).toBe(1);
       release(value); await tick(); expect(issued).toBe(1); expect(f.calls.some(call => call.name === "runtimeAgent:start" || call.name === "runtimeAgent:cancel")).toBe(false);
       await client.close(); await f.client.close();

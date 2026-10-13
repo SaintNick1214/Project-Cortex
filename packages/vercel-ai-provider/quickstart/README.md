@@ -59,6 +59,17 @@ sources while indexing catches up.
 The old `/api/chat` and `/api/chat-v6` app-side inference routes return
 `410 REMOTE_RUN_TRANSPORT_REQUIRED`. The home page uses the remote transport.
 
+For local timing diagnostics, set `NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1` before
+starting the demo. Console metadata separates authentication and client RPCs,
+submission, first assistant DOM commit, a subsequent browser paint checkpoint,
+and response/transport completion. A paint sample reports page visibility; a
+hidden page is unsuitable for a first-visible-text target. No prompt, reply text
+or token is included. Enable `CORTEX_RUNTIME_LATENCY_TRACE=1` separately on an
+authorized development backend for context, policy, native Gateway and finalization
+phases. Gateway acquisition includes its private token/request/header work;
+internal network/provider subphases remain opaque. The under-one-second target is
+submission to visible answer text, and requires actual measurements.
+
 **Memory readiness** reads fresh administrator-selected profile/index metadata and
 the contiguous facts, vectors and optional graph watermarks. Selecting a required
 stage checks an explicit barrier; an incomplete or unavailable stage returns a
