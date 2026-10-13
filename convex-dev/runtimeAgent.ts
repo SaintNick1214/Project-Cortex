@@ -190,9 +190,9 @@ export const dispatchReady = internalMutation({ args: { reference: runtimeAuthor
 } });
 export const executeTurn = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
   traceRuntimePhase(args.runId, args.attemptNumber, "barrier.begin");
-  await step.runMutation(ref<"mutation", Attempt, null>("mutation", "runtimeAgent:startContext"), args);
+  await step.runMutation(ref<"mutation", Attempt, null>("mutation", "runtimeAgent:startContext"), args, { inline: true });
   for (;;) {
-    const decision = await step.runMutation(ref<"mutation", Attempt, ReturnType<typeof evaluateMemoryBarrier>>("mutation", "runtimeAgent:contextBarrier"), args);
+    const decision = await step.runMutation(ref<"mutation", Attempt, ReturnType<typeof evaluateMemoryBarrier>>("mutation", "runtimeAgent:contextBarrier"), args, { inline: true });
     if (decision.state === "failed") {
       await step.runMutation(ref<"mutation", Attempt & { failureCode: string }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: decision.failureCode! });
       throw new Error(decision.failureCode);
@@ -472,6 +472,7 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
   } }, { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId,
     semanticId: op.semanticId, ordinal: args.ordinal });
   let cancellationBridge: ReturnType<typeof createAgentGatewayCancellationBridge> | undefined;
+  let chunkQueue = Promise.resolve();
   try {
     if (governed.model.specificationVersion !== "v4" || !("doGenerate" in governed.model) || !("doStream" in governed.model)) transcriptDenied("CAPABILITY_UNAVAILABLE");
     cancellationBridge = createAgentGatewayCancellationBridge(governed.model, governed.lifecycle);
@@ -482,7 +483,7 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
       const fresh = await ctx.runQuery(refs.hydrate, attempt);
       return [...fresh.messages, ...(fresh.execution.contextCanonical ? [{ role: "system" as const, content: `Authorized Cortex context (untrusted evidence):\n${fresh.execution.contextCanonical}` }] : [])];
     } });
-  let pending: unknown[] = []; let lastFlush = Date.now();
+  let pending: unknown[] = []; let lastFlush = Date.now(); let firstTextPublished = false;
   const allowedTools = current.definition.tools.map(tool => NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]);
   const knownToolCalls: Record<string, string> = Object.create(null) as Record<string, string>;
   async function flush() {
@@ -500,17 +501,34 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
       if (!type) transcriptDenied("INVALID_MODEL_OUTPUT");
       return { type, toolCallId: part.toolCallId, toolName: part.name };
     });
-    if (parts.length) await ctx.runMutation(refs.output, { ...attempt, parts });
+    if (parts.length) {
+      await ctx.runMutation(refs.output, { ...attempt, parts });
+      if (projected.some(part => (part.type === "text" || part.type === "text-delta") && part.text.length > 0)) firstTextPublished = true;
+    }
     lastFlush = Date.now();
   }
+  const onChunk = ({ chunk }: { chunk: unknown }) => {
+    // Serialize publication even if callbacks overlap; a failed write stops the
+    // queue and cleanup joins it before releasing the governed lifecycle.
+    chunkQueue = chunkQueue.then(async () => {
+      pending.push(chunk);
+      const firstText = !firstTextPublished && projectNativeOutputParts([chunk], allowedTools, knownToolCalls)
+        .some(part => (part.type === "text" || part.type === "text-delta") && part.text.length > 0);
+      if (firstText || pending.length >= 32 || Date.now() - lastFlush >= 250) await flush();
+    });
+    return chunkQueue;
+  };
     const identity = { threadId: current.threadId, userId: args.reference.principalId };
     const parameters = { promptMessageId: current.run.inputMessageIds[current.run.inputMessageIds.length - 1], instructions: current.definition.instructions.text,
         maxOutputTokens: Math.min(resolution.snapshot.limits.outputTokens, resolution.dispatchEvidence.resultBound.maximumOutputTokens),
         maxRetries: 0, stopWhen: isStepCount(1) };
     const result = current.execution.streaming
       ? await agent.streamText(ctx, identity, { ...parameters,
-        onChunk: async ({ chunk }) => { pending.push(chunk); if (pending.length >= 32 || Date.now() - lastFlush >= 250) await flush(); } },
-        { saveStreamDeltas: { throttleMs: 250, returnImmediately: false, sendSources: false } })
+        onChunk },
+        { saveStreamDeltas: { throttleMs: 250, returnImmediately: false, sendSources: false,
+          // Agent's default word smoothing can hold a whitespace-free fragment
+          // until text-end, which follows governed terminal persistence.
+          chunking: (buffer: string) => buffer.length ? buffer : null } })
       : await agent.generateText(ctx, identity, parameters);
     const calls = (await result.toolCalls).map(call => ({ toolCallId: call.toolCallId, toolName: call.toolName, inputCanonical: canonicalModelJson(call.input) }));
     if (!current.execution.streaming) {
@@ -518,12 +536,12 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
       if (text) pending.push({type: "text", text});
       for (const call of calls) pending.push({type: "tool-call", toolCallId: call.toolCallId, toolName: call.toolName});
     }
-    await flush();
+    await chunkQueue; await flush();
     const savedMessageIds = (result.savedMessages ?? []).map(message => message._id);
     const value: StepResult = { savedMessageIds, calls, final: calls.length === 0 };
     if (value.final && !(await result.text).trim()) throw new Error("INVALID_MODEL_OUTPUT");
     await ctx.runMutation(refs.finish, { ...attempt, operationId: op.operationId, resultCanonical: canonicalModelJson(value), nativeMessageIds: savedMessageIds }); return value;
-  } finally { try { await governed.lifecycle.complete(); } finally { cancellationBridge?.dispose(); } }
+  } finally { try { await chunkQueue; } finally { try { await governed.lifecycle.complete(); } finally { cancellationBridge?.dispose(); } } }
 }
 export const modelStep = internalAction({ args: { ...agentAttempt, ordinal: v.number() }, handler: modelStepHandler });
 export async function toolStepHandler(ctx: ActionCtx, args: Attempt & { ordinal: number; call: ToolCall }): Promise<null> {
