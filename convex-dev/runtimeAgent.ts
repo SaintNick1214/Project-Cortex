@@ -65,7 +65,7 @@ function ref<Type extends "mutation" | "query" | "action", Args extends Record<s
 }
 const workflowComponent = (components as unknown as { workflow: ConstructorParameters<typeof WorkflowManager>[0] }).workflow;
 const workflow = new WorkflowManager(workflowComponent, { workpoolOptions: { maxParallelism: 4 } });
-const freshWorkflow = ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurnV4");
+const freshWorkflow = ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurnV5");
 const freshWorkflowComplete = ref<"mutation", WorkflowCompletion, null>("mutation", "runtimeAgent:onInitialWorkflowComplete");
 const refs = {
   claim: ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string; leaseMs: number }, { runId: string; attemptNumber: number; leaseVersion: number } | { runId: string; failureCode: string } | null>("mutation", "runs:claimNext"),
@@ -73,6 +73,10 @@ const refs = {
   resolveModelOperation: ref<"query", Attempt & { runBudgetId: string }, Awaited<ReturnType<typeof resolveModelOperationHandler>>>("query", "runtimeAgent:resolveModelOperation"),
   admitModelOperation: ref<"mutation", Attempt & { operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string }, Awaited<ReturnType<typeof admitModelOperationHandler>>>("mutation", "runtimeAgent:admitModelOperation"),
   prepareModelOperation: ref<"mutation", Attempt & { ordinal: number }, Awaited<ReturnType<typeof prepareModelOperationHandler>>>("mutation", "runtimeAgent:prepareModelOperation"),
+  prepareTurnModel: ref<"mutation", Attempt, Awaited<ReturnType<typeof prepareTurnModelHandler>>>("mutation", "runtimeAgent:prepareTurnModel"),
+  prepareResolvedModelOperation: ref<"mutation", Attempt & { ordinal: number }, Awaited<ReturnType<typeof prepareResolvedModelOperationHandler>>>("mutation", "runtimeAgent:prepareResolvedModelOperation"),
+  admitPreparedModelOperation: ref<"mutation", Attempt & { operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string; bindingCanonical: string }, GatewayAdmissionCheckpoint>("mutation", "runtimeAgent:admitPreparedModelOperation"),
+  turn: ref<"action", Attempt & { ordinal: number }, StepResult>("action", "runtimeAgent:turnStepV5"),
   contextInputs: ref<"query", Attempt, Awaited<ReturnType<typeof contextInputsHandler>>>("query", "runtimeAgent:contextInputs"),
   contextSource: ref<"query", ContextSourceArgs, Awaited<ReturnType<typeof contextSourceHandler>>>("query", "runtimeAgent:contextSource"),
   prepareContext: ref<"action", Attempt, null>("action", "runtimeAgent:prepareContext"),
@@ -425,6 +429,39 @@ export const executeTurnV4 = workflow.define({ args: agentAttempt, returns: v.nu
   }
   throw new Error("TOOL_STEP_LIMIT");
 } });
+/** Fresh ordinary turns use one durable, retry-disabled Action after explicit stage barriers.
+ * Tools/approval waits remain Workflow-owned; V1–V4 journals retain their layouts. */
+export const executeTurnV5 = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.begin");
+  await step.runMutation(ref<"mutation", Attempt, null>("mutation", "runtimeAgent:startContext"), args, { inline: true });
+  for (;;) {
+    const decision = await step.runMutation(ref<"mutation", Attempt, ReturnType<typeof evaluateMemoryBarrier>>("mutation", "runtimeAgent:contextBarrier"), args, { inline: true });
+    if (decision.state === "failed") {
+      await step.runMutation(ref<"mutation", Attempt & { failureCode: string }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: decision.failureCode! });
+      throw new Error(decision.failureCode);
+    }
+    if (decision.state !== "waiting") break;
+    await step.sleep(Math.min(1000, decision.remainingMs), { name: "memory stage barrier" });
+  }
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.end");
+  for (let ordinal = 0; ordinal < 33; ordinal++) {
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.begin`);
+    const result = await step.runAction(refs.turn, { ...args, ordinal }, { retry: false, name: `context and model turn ${ordinal}` });
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.end`);
+    if (result.final) return null;
+    if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
+    for (const call of result.calls) {
+      const prepared = await step.runMutation(refs.begin, { ...args, kind: "tool", ordinal,
+        requestCanonical: call.inputCanonical, toolCallId: call.toolCallId, toolName: call.toolName });
+      if (prepared.state === "waiting_approval") {
+        await step.runMutation(refs.waiting, { ...args, operationId: prepared.operationId });
+        await step.awaitEvent({ name: prepared.operationId, validator: v.literal("approved") });
+      }
+      await step.runAction(refs.tool, { ...args, ordinal, call }, { retry: false, name: `server tool ${call.toolName}` });
+    }
+  }
+  throw new Error("TOOL_STEP_LIMIT");
+} });
 async function saveContextHandler(ctx: MutationCtx, args: Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string }) {
   const current = await executionContext(ctx, args); if (current.execution.contextCanonical !== undefined) transcriptDenied("INVALID_STATE");
   if (utf8Bytes(args.context) > Math.min(16_384, current.definition.context.maxContextTokens) || args.witnesses.length > 32) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
@@ -485,7 +522,7 @@ export const contextSource = internalQuery({ args: { reference: runtimeAuthority
   expected: v.object({ sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.optional(v.string()) }),
   excludedSourceKeys: v.array(v.string()), cutoff: v.number(), boundary: contextBoundary }, handler: contextSourceHandler });
 
-export const prepareContext = internalAction({ args: agentAttempt, handler: async (ctx, args): Promise<null> => {
+export async function prepareContextHandler(ctx: ActionCtx, args: Attempt): Promise<null> {
   const inputs = await ctx.runQuery(refs.contextInputs, args);
   const { current, scope, boundary, represented, pending } = inputs;
   const cutoff = current.snapshot.ingestionCutoff.sequence;
@@ -568,7 +605,8 @@ export const prepareContext = internalAction({ args: agentAttempt, handler: asyn
     result.context ? `Indexed Cortex memory (untrusted evidence):\n${result.context}\nSource roles and trust: ${canonicalModelJson([...provenance.values()])}` : "", pending.text].filter(Boolean).join("\n\n");
   if (utf8Bytes(context) > Math.min(16_384, current.definition.context.maxContextTokens) || witnesses.size > 32) return await fail("CONTEXT_OVERFLOW");
   await ctx.runMutation(refs.context, { ...args, context, witnesses: [...witnesses.values()], completeness, ...(failureCode ? { failureCode } : {}), ...(availability.empty ? { emptyIndexedProfileId: availability.profileId } : {}) }); return null;
-} });
+}
+export const prepareContext = internalAction({ args: agentAttempt, handler: prepareContextHandler });
 type EmptyContextResult = { state: "COMPLETE" } | { state: "NEEDS_ACTION" } | { state: "FAILED"; failureCode: "CONTEXT_OVERFLOW" };
 /** Only the original bounded empty proof permits local context completion. */
 async function prepareEmptyContextHandler(ctx: MutationCtx, args: Attempt): Promise<EmptyContextResult> {
@@ -593,7 +631,7 @@ async function prepareEmptyContextHandler(ctx: MutationCtx, args: Attempt): Prom
 }
 export const prepareEmptyContext = internalMutation({ args: agentAttempt, handler: (ctx, args) => prepareEmptyContextHandler(createAuthorityReadScope(ctx), args) });
 /** Metadata can request the original Action, never certify an empty context. */
-export const prepareRoutedContext = internalMutation({ args: agentAttempt, handler: async (ctx, args): Promise<EmptyContextResult> => {
+async function prepareRoutedContextHandler(ctx: MutationCtx, args: Attempt): Promise<EmptyContextResult> {
   ctx = createAuthorityReadScope(ctx, { policyMetadata: true });
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
@@ -612,7 +650,8 @@ export const prepareRoutedContext = internalMutation({ args: agentAttempt, handl
     return { state: "NEEDS_ACTION" };
   }
   return await prepareEmptyContextHandler(ctx, args);
-} });
+}
+export const prepareRoutedContext = internalMutation({ args: agentAttempt, handler: prepareRoutedContextHandler });
 
 async function beginOperationHandler(ctx: MutationCtx, args: Attempt & { kind: "model" | "tool"; ordinal: number; requestCanonical: string; toolCallId?: string; toolName?: string }) {
   const current = await executionContext(ctx, args);
@@ -687,6 +726,26 @@ async function prepareModelOperationHandler(ctx: MutationCtx, args: Attempt & { 
   return { state: "started" as const, current, op };
 }
 export const prepareModelOperation = internalMutation({ args: { ...agentAttempt, ordinal: v.number() }, handler: (ctx, args) => prepareModelOperationHandler(createAuthorityReadScope(ctx), args) });
+/** These resolutions propose pinned model inputs only. Fresh admission/checkpoint
+ * still execute every original current policy/authority/source/budget predicate. */
+async function prepareResolvedModelOperationHandler(ctx: MutationCtx, args: Attempt & { ordinal: number }) {
+  const prepared = await prepareModelOperationHandler(ctx, args);
+  if (prepared.state === "completed") return prepared;
+  const resolutionArgs = { ...attemptArgs(args), runBudgetId: prepared.current.run.runBudgetId };
+  const initialResolution = await resolveModelOperationHandler(ctx, resolutionArgs);
+  const governedResolution = await resolveModelOperationHandler(ctx, resolutionArgs);
+  return { ...prepared, initialResolution, governedResolution };
+}
+export const prepareResolvedModelOperation = internalMutation({ args: { ...agentAttempt, ordinal: v.number() },
+  handler: (ctx, args) => prepareResolvedModelOperationHandler(createAuthorityReadScope(ctx), args) });
+async function prepareTurnModelHandler(ctx: MutationCtx, args: Attempt) {
+  const context = await prepareRoutedContextHandler(ctx, args);
+  if (context.state === "FAILED") return { state: "failed_context" as const, failureCode: context.failureCode };
+  if (context.state === "NEEDS_ACTION") return { state: "needs_context" as const };
+  return await prepareResolvedModelOperationHandler(createAuthorityReadScope(ctx), { ...args, ordinal: 0 });
+}
+export const prepareTurnModel = internalMutation({ args: agentAttempt, handler: prepareTurnModelHandler });
+
 export const finishOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), resultCanonical: v.string(), nativeMessageIds: v.array(v.string()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); const owned = await operation(ctx, args, args.operationId);
   if (owned.state !== "started" || utf8Bytes(args.resultCanonical) > 180_000 || canonicalModelJson(JSON.parse(args.resultCanonical)) !== args.resultCanonical) transcriptDenied("INVALID_STATE");
@@ -747,6 +806,21 @@ async function admitModelOperationHandler(ctx: MutationCtx, args: Attempt & { op
   return { admission, permit };
 }
 export const admitModelOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), ordinal: v.number(), requestCanonical: v.string(), snapshotCanonical: v.string() }, handler: (ctx, args) => admitModelOperationHandler(createAuthorityReadScope(ctx), args) });
+/** Original outer hydration and request-binding checks precede the unchanged
+ * atomic admit/bind/checkpoint parent. Caller input cannot select another lane. */
+async function admitPreparedModelOperationHandler(ctx: MutationCtx, args: Attempt & {
+  operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string; bindingCanonical: string;
+}): Promise<GatewayAdmissionCheckpoint> {
+  const current = await executionContext(ctx, attemptArgs(args));
+  const semanticId = await semanticHash(canonicalModelJson([args.runId, args.attemptNumber, "model", args.ordinal, null]));
+  if (args.bindingCanonical !== canonicalModelJson({ reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId,
+    semanticId, ordinal: args.ordinal })) transcriptDenied("POLICY_DENIED");
+  return await admitModelOperationHandler(ctx, args);
+}
+export const admitPreparedModelOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), ordinal: v.number(),
+  requestCanonical: v.string(), snapshotCanonical: v.string(), bindingCanonical: v.string() },
+  handler: (ctx, args) => admitPreparedModelOperationHandler(createAuthorityReadScope(ctx), args) });
+
 export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v.array(v.any()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); if (args.parts.length > 64) transcriptDenied("INVALID_INPUT");
   const tools = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", args.reference.tenantId).eq("memorySpaceId", args.reference.memorySpaceId!)
@@ -759,19 +833,32 @@ export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v
 export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal: number }): Promise<StepResult> {
   const attempt = attemptArgs(args);
   const prepared = await ctx.runMutation(refs.prepareModelOperation, { ...attempt, ordinal: args.ordinal });
+  return await executePreparedModelStep(ctx, args, prepared);
+}
+async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordinal: number }, prepared: Awaited<ReturnType<typeof prepareModelOperationHandler>>,
+  proposal?: { initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>> }): Promise<StepResult> {
+  const attempt = attemptArgs(args);
   if (prepared.state === "completed") return JSON.parse(prepared.resultCanonical) as StepResult;
   const { current, op } = prepared;
   const guard = async () => { await ctx.runQuery(refs.hydrate, attempt); };
   const base = createBackendGatewayComposition(ctx, async request => {
-    await guard();
-    if (canonicalModelJson(request.reference) !== canonicalModelJson(args.reference) || request.operationKey !== "agent.respond"
+    if (!proposal) await guard();
+    if (!proposal && (canonicalModelJson(request.reference) !== canonicalModelJson(args.reference) || request.operationKey !== "agent.respond"
       || request.runBudgetId !== current.run.runBudgetId || request.semanticId !== op.semanticId || request.ordinal !== args.ordinal
-      || request.source !== undefined || request.parentOperationId !== undefined) transcriptDenied("POLICY_DENIED");
+      || request.source !== undefined || request.parentOperationId !== undefined)) transcriptDenied("POLICY_DENIED");
+    if (proposal) return await ctx.runMutation(refs.admitPreparedModelOperation, { ...attempt, operationId: op.operationId, ordinal: args.ordinal,
+      requestCanonical: request.requestCanonical, snapshotCanonical: request.snapshotCanonical,
+      bindingCanonical: canonicalModelJson({ reference: request.reference, operationKey: request.operationKey, runBudgetId: request.runBudgetId,
+        semanticId: request.semanticId, ordinal: request.ordinal, ...(request.source !== undefined ? { source: request.source } : {}),
+        ...(request.parentOperationId !== undefined ? { parentOperationId: request.parentOperationId } : {}) }) });
     return await ctx.runMutation(refs.admitModelOperation, { ...attempt, operationId: op.operationId, ordinal: args.ordinal,
       requestCanonical: request.requestCanonical, snapshotCanonical: request.snapshotCanonical });
   });
+  const proposals = proposal ? [proposal.initialResolution, proposal.governedResolution] : [];
   const resolve: GatewayLedgerPort["resolve"] = async request => {
-    const result = await ctx.runQuery(refs.resolveModelOperation, { ...attempt, runBudgetId: request.runBudgetId });
+    // Two original native checks were executed sequentially in preparation.
+    // Consume their model proposals only here; replay resolves freshly again.
+    const result = proposals.shift() ?? await ctx.runQuery(refs.resolveModelOperation, { ...attempt, runBudgetId: request.runBudgetId });
     if (canonicalModelJson(request.reference) !== canonicalModelJson(args.reference) || request.operationKey !== "agent.respond"
       || request.runBudgetId !== current.run.runBudgetId || request.source !== undefined || request.parentOperationId !== undefined) transcriptDenied("POLICY_DENIED");
     if (result.storageLimits.embeddingValuesPerCall !== 1) throw new GatewayDispatchError("CAPABILITY_UNAVAILABLE");
@@ -858,6 +945,38 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
   } finally { try { await chunkQueue; } finally { try { await governed.lifecycle.complete(); } finally { cancellationBridge?.dispose(); } } }
 }
 export const modelStep = internalAction({ args: { ...agentAttempt, ordinal: v.number() }, handler: modelStepHandler });
+/** No Action retry: partial/unknown effects remain owned by the original native
+ * operation ledger and explicit reconciliation, never replayed automatically. */
+export async function turnStepV5Handler(ctx: ActionCtx, args: Attempt & { ordinal: number }): Promise<StepResult> {
+  const attempt = attemptArgs(args);
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.prepare.begin");
+  let prepared = args.ordinal === 0
+    ? await ctx.runMutation(refs.prepareTurnModel, attempt)
+    : await ctx.runMutation(refs.prepareResolvedModelOperation, { ...attempt, ordinal: args.ordinal });
+  if (prepared.state === "failed_context") {
+    await ctx.runMutation(ref<"mutation", Attempt & { failureCode: "CONTEXT_OVERFLOW" }, null>("mutation", "runtimeAgent:failContext"), { ...attempt, failureCode: prepared.failureCode });
+    transcriptDenied(prepared.failureCode);
+  }
+  if (prepared.state === "needs_context") {
+    await prepareContextHandler(ctx, attempt);
+    prepared = await ctx.runMutation(refs.prepareResolvedModelOperation, { ...attempt, ordinal: args.ordinal });
+  }
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.prepare.end");
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.model.begin");
+  const result = await executePreparedModelStep(ctx, args, prepared, prepared.state === "started" ? prepared : undefined);
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.model.end");
+  if (result.final) {
+    await ctx.runMutation(refs.finalize, { ...attempt, finalMessageIds: result.savedMessageIds });
+    try {
+      traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.begin");
+      await ctx.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runId: string }, string | null>("mutation", "runtimeContentJobs:enqueueParentTitle"), { reference: args.reference, runId: args.runId });
+    } catch { /* Optional title failure cannot roll back the canonical answer. */ }
+    finally { traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.end"); }
+  }
+  return result;
+}
+export const turnStepV5 = internalAction({ args: { ...agentAttempt, ordinal: v.number() }, handler: turnStepV5Handler });
+
 export async function toolStepHandler(ctx: ActionCtx, args: Attempt & { ordinal: number; call: ToolCall }): Promise<null> {
   const attempt = attemptArgs(args);
   const current = await ctx.runQuery(refs.hydrate, attempt); const op = await ctx.runMutation(refs.begin, { ...attempt, ordinal: args.ordinal, kind: "tool", toolName: args.call.toolName,

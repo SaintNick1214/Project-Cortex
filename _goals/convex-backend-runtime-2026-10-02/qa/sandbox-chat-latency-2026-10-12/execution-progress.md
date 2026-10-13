@@ -24,3 +24,5 @@
 2026-10-13T22:50:40.429196+00:00 — K14 native functional/cleanup milestone100%; original four-turn proof8/8PASS/43fresh target checks/clientclosed;31native attempts, allslots released,5,000,000microUSD UNKNOWNceilings, chargesunknown. Browserclosed/CLIexit0/launcherexit130; freshABSENTcleanup. Latency0/4FAIL; overall2/4=50%.
 
 2026-10-13T23:00:42.227592+00:00 — K14 saved delay-chain analysis100%; modelentry+3.896/5.395s browser,+7.659/9.873sCLI. Retained answeracquisition0.519/0.509/0.506s; firstbrowserearlyphases unavailable due1000cap. Stage-only source batching insufficient for1s; bounded V5 orchestration/native-parent repair started, original strictbarriers/approval/replay/auth/budgets retained. Overall2/4=50%.
+
+2026-10-13T23:36:16.963903+00:00 — V5 structural source/docs milestone100%, independentPASS4.0/no breaking findings;1902/44/0skip, types/lint/build/contracts0; v11 docs build/render0warnings sampled. Nativeperformanceunmeasured, overall2/4=50%.

@@ -1,0 +1,625 @@
+{
+  "schema": "cortex.v5-structural.joint-independent-source-review.v1",
+  "observedAtUTC": "2026-10-13T23:35:00.690226+00:00",
+  "reviewer": "parallel_policy_source_review (independent nonauthor)",
+  "author": "latency_backend_repair",
+  "verdict": "PASS",
+  "scores": {
+    "requirements": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patterns": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "breakingFindings": [],
+  "policy": "Adopted goal functional acceptance-policy v2; requirement/test/completeness>=4,code/pattern>=3,no breaking findings. Numerical cycles waived; original product assertions/deadlines retained.",
+  "repositories": {
+    "core": "SaintNick1214/Project-Cortex",
+    "coreRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "website": "SaintNick1214/cortexmemory.dev",
+    "websiteRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+    "gitHubVisibilityVerified": false
+  },
+  "productBaseline": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
+  "currentHead": "c47c1fd3eda8b71df2d3581601743ba0aa23a310",
+  "successorQAOnlyVerified": true,
+  "scope": {
+    "productionFiles": 1,
+    "newTestFiles": 3,
+    "adaptedTestFiles": 3,
+    "sourceTestFiles": 7,
+    "changedDocPages": 1,
+    "retainedOtherDocPages": 6,
+    "oneCoherentGate": true,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "fullGoalAccepted": false
+  },
+  "requirements": [
+    {
+      "id": "additive_workflow",
+      "met": true,
+      "finding": "Fresh V5 only; oldV1-V4 registrations and callbacks byte exact.",
+      "evidence": [
+        "convex-dev/runtimeAgent.ts:68",
+        "convex-dev/runtimeAgent.ts:432",
+        "tests/unit/runtimeAgent/start-native.test.ts",
+        "tests/unit/runtimeAgent/turn-workflow.test.ts"
+      ]
+    },
+    {
+      "id": "original_body_preservation",
+      "met": true,
+      "finding": "Two extracted context bodies exact; no-proposal original model behavior and normalized shared tail exact.",
+      "evidence": [
+        "cloud-turn-consolidation-equivalence.json",
+        "convex-dev/runtimeAgent.ts:525",
+        "convex-dev/runtimeAgent.ts:634",
+        "convex-dev/runtimeAgent.ts:833"
+      ]
+    },
+    {
+      "id": "strict_tool_approval_retry",
+      "met": true,
+      "finding": "Original strict barrier/deadline/durable failure, bounded model/tool loop and explicit event; Actions retry:false.",
+      "evidence": [
+        "convex-dev/runtimeAgent.ts:432",
+        "tests/unit/runtimeAgent/turn-workflow.test.ts"
+      ]
+    },
+    {
+      "id": "context_and_model_composition",
+      "met": true,
+      "finding": "Original empty/populated proof, source and model preparation; proposal input server-derived. Exact outcomes and state compared.",
+      "evidence": [
+        "convex-dev/runtimeAgent.ts:731",
+        "convex-dev/runtimeAgent.ts:741",
+        "convex-dev/runtimeAgent.ts:950",
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts"
+      ]
+    },
+    {
+      "id": "fresh_billable_fence",
+      "met": true,
+      "finding": "Proposals do not authorize; full canonical tuple plus fresh hydrate precedes unchanged admission/bind/post-bind hydrate/checkpoint.",
+      "evidence": [
+        "convex-dev/runtimeAgent.ts:811",
+        "convex-dev/runtimeAgent.ts:844",
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts"
+      ]
+    },
+    {
+      "id": "retained_controls",
+      "met": true,
+      "finding": "Grant/source/owner/tombstone/profile/definition/qualification/transcript/lease/cancel/budget changes, reserve/bind rollback and original cutoff/expiry/delete fences retained.",
+      "evidence": [
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-action.test.ts",
+        "cloud-turn-consolidation-equivalence.json"
+      ]
+    },
+    {
+      "id": "fallback_and_unknown",
+      "met": true,
+      "finding": "Seventeen existing fallback assertions pass; lost permit/ambiguous provider failure no retry, original UNKNOWN liabilities remain.",
+      "evidence": [
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-action.test.ts"
+      ]
+    },
+    {
+      "id": "explicit_reconciliation",
+      "met": true,
+      "finding": "Ordinal0 duplicate intentionallyINVALID_STATE; public reconcile once after genuine saved generation gaps, stale transcript completion denied.",
+      "evidence": [
+        "tests/unit/runtimeAgent/turn-action.test.ts",
+        "convex-dev/runtimeAgent.ts:950"
+      ]
+    },
+    {
+      "id": "finalization_and_background",
+      "met": true,
+      "finding": "Original canonical finalization and durable ingestion precede optional title; tool results stay Workflow-owned.",
+      "evidence": [
+        "convex-dev/runtimeAgent.ts:968",
+        "tests/unit/runtimeAgent/turn-action.test.ts"
+      ]
+    },
+    {
+      "id": "checks_and_docs",
+      "met": true,
+      "finding": "1902/44matching/no skip; current typed source checks0; correctedv11doc actual build/render and six retained docs.",
+      "evidence": [
+        "cloud-turn-consolidation-remaining-checks.json",
+        "cloud-turn-consolidation-affected-final-jest.json",
+        "docs-v5-wording-v11-receipt.json"
+      ]
+    }
+  ],
+  "frozenSourceAndTests": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "sha256": "2e556248236cd2cd70a162d5479f505530e44bd07931c1af0a5b99f2e2d9161f",
+      "bytes": 123160,
+      "currentSha256": "2e556248236cd2cd70a162d5479f505530e44bd07931c1af0a5b99f2e2d9161f",
+      "matches": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/turn-native-composition.test.ts",
+      "sha256": "d22e639a9994b4d2e844abd052ae4c5df43517e5bfa91806896337208fc09e93",
+      "bytes": 16870,
+      "currentSha256": "d22e639a9994b4d2e844abd052ae4c5df43517e5bfa91806896337208fc09e93",
+      "matches": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/turn-action.test.ts",
+      "sha256": "06e6a60213914bd5ef18fc12f64b8c9772c919c34373f4d073aeb701acda6827",
+      "bytes": 19575,
+      "currentSha256": "06e6a60213914bd5ef18fc12f64b8c9772c919c34373f4d073aeb701acda6827",
+      "matches": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/turn-workflow.test.ts",
+      "sha256": "dce305777a1ba0ea5926b92a9184a1b3b6e9b3b26dc191f810c9ad870f85cdc9",
+      "bytes": 10957,
+      "currentSha256": "dce305777a1ba0ea5926b92a9184a1b3b6e9b3b26dc191f810c9ad870f85cdc9",
+      "matches": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/start-native.test.ts",
+      "sha256": "37db7c3da34466cf90201bd83bc81b60af61617e6388c5189c93abc3170158a0",
+      "bytes": 17284,
+      "currentSha256": "37db7c3da34466cf90201bd83bc81b60af61617e6388c5189c93abc3170158a0",
+      "matches": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "sha256": "fe71e4d552ea6926c5e929a3f79c9b84202d50ae2b28933e51ea5b9b644ffbbe",
+      "bytes": 17300,
+      "currentSha256": "fe71e4d552ea6926c5e929a3f79c9b84202d50ae2b28933e51ea5b9b644ffbbe",
+      "matches": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-routing.test.ts",
+      "sha256": "81c99d40ce8e69fb77e1b2901a1884f928bad01e7d5d481a0861b6a8aedcae7a",
+      "bytes": 32895,
+      "currentSha256": "81c99d40ce8e69fb77e1b2901a1884f928bad01e7d5d481a0861b6a8aedcae7a",
+      "matches": true
+    }
+  ],
+  "all7ScopeHashesMatch": true,
+  "all22SourceFreezeEvidenceHashesMatch": true,
+  "independentLiteralComparison": {
+    "baselineSourceAndPreimageSha256": "83a3a37d5b38c35e2aa5bfa20dbbb360de9da7ff093e94816f8dca0ae332c5d2",
+    "unchangedOriginalStatements": 131,
+    "intentionalChangedOriginalStatements": 5,
+    "unexpectedChanges": [],
+    "byteExactExtractedBodies": 2,
+    "byteExactOriginalGuardHelpers": 16,
+    "byteExactCriticalRegistrations": 16,
+    "workflowV1ThroughV4AndCallbacksExact": true,
+    "originalSharedModelTailExactAfterExplicitProposalSwitches": true,
+    "modelTailSha256": "1bbe504e3d1e831d673c267259cb13c421759f9d07b59a6cd0bb740299423f5b"
+  },
+  "tests": {
+    "success": true,
+    "numTotalTests": 1902,
+    "numPassedTests": 1902,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "numTotalTestSuites": 44,
+    "numPassedTestSuites": 44,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0,
+    "exitCode": 0,
+    "discoveredUniqueSuites": 44,
+    "discoveryExactlyExecuted": true,
+    "allAssertionStatusesPassed": true,
+    "earlier41SuitesRetained": true,
+    "countsOverlapNotAdditive": true,
+    "newNativeCases": 30,
+    "newActionCases": 12,
+    "newInstalledWorkflowCases": 5,
+    "adaptedImmediateStartCases": 18,
+    "retainedFallbackCases": 17,
+    "allRetainedFallbackCasesPass": true,
+    "controlledPortsNotNativeOCCOrProviderProof": true,
+    "reviewerReranTests": false
+  },
+  "passingTestApplicability": {
+    "passedPriorNativeTestSha256": "9a7f54311c7d8ea4e997f88771c20ec0df0110a1773b6444c7971b4d4db2284c",
+    "independentlyReconstructedPriorSha256": "9a7f54311c7d8ea4e997f88771c20ec0df0110a1773b6444c7971b4d4db2284c",
+    "reconstructionMatchesPassedInput": true,
+    "reversedChangesOnlyErasedImportAliasAndTwoReturnTypeExpressions": true,
+    "emittedJavaScriptEqualityReceipt": {
+      "correction": "ApiFromModules derives native FunctionReference before FunctionReturnType; two erased test-only type expressions",
+      "beforeHash": "0b86fe72af06cd5b7a5b24f73782dd3753c70b1fef6c9f7e7f4da0f97fd5b7c1",
+      "afterHash": "0b86fe72af06cd5b7a5b24f73782dd3753c70b1fef6c9f7e7f4da0f97fd5b7c1",
+      "sameExecutable": true,
+      "preservedRawFailure": "cloud-turn-consolidation-root-types-final.log"
+    },
+    "currentSourceTypedChecksPass": true
+  },
+  "remainingChecks": [
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "rawLog": "cloud-turn-consolidation-root-types-v2.log",
+      "currentBeforeAfterHashesMatch": true
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "rawLog": "cloud-turn-consolidation-backend-types-final.log",
+      "currentBeforeAfterHashesMatch": true
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-action.test.ts",
+        "tests/unit/runtimeAgent/turn-workflow.test.ts",
+        "tests/unit/runtimeAgent/start-native.test.ts",
+        "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "tests/unit/runtimeAgent/context-routing.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "rawLog": "cloud-turn-consolidation-scoped-eslint-v4.log",
+      "currentBeforeAfterHashesMatch": true
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "rawLog": "cloud-turn-consolidation-root-lint-final.log",
+      "currentBeforeAfterHashesMatch": true
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "rawLog": "cloud-turn-consolidation-build-final.log",
+      "currentBeforeAfterHashesMatch": true
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:contracts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "rawLog": "cloud-turn-consolidation-contracts-final.log",
+      "currentBeforeAfterHashesMatch": true
+    }
+  ],
+  "all6FinalChecksExit0": true,
+  "all6CurrentBeforeAfterHashesMatch": true,
+  "lint": {
+    "scopedErrors": 0,
+    "scopedWarnings": 0,
+    "rootErrors": 0,
+    "rootWarnings": 237
+  },
+  "distribution": {
+    "sourceFiles": 157,
+    "tables": 72,
+    "components": 2,
+    "deployed": false
+  },
+  "toolchain": "Node24.15.0/npm12.2.0 explicit offline CONVEX_URL=http://127.0.0.1:9",
+  "docs": {
+    "currentVersion": "v11(two-phrase correction to preservedv10)",
+    "currentPerformanceSha256": "30279f2356e24620d5aeceb440ec338e68d31a9c5072e7206bc62e5cd8179492",
+    "frozenV10Sha256": "2e0069e3c6b6492b93fe126d18275711ff921d4ec1ff1b8b11372b3a98b2c297",
+    "inverseV11ToV10Sha256": "2e0069e3c6b6492b93fe126d18275711ff921d4ec1ff1b8b11372b3a98b2c297",
+    "inverseExactlyV10": true,
+    "v10ArtifactsPreservedNotRelabelled": true,
+    "sevenReviewedPages": [
+      {
+        "path": "docs-site/docs/architecture/performance.mdx",
+        "sha256": "30279f2356e24620d5aeceb440ec338e68d31a9c5072e7206bc62e5cd8179492",
+        "priorAcceptedSha256": "b13f9f390c286bd5969bf254c33b8e06cd64e2f807ec6575aa066741b6df9cac",
+        "retainedPriorBytes": null
+      },
+      {
+        "path": "docs-site/docs/api-reference/runtime-client.mdx",
+        "sha256": "a97b001914b4a0edef368ef532d8a93c051463cd9e6e0e08420c11e2b49769a5",
+        "priorAcceptedSha256": "a97b001914b4a0edef368ef532d8a93c051463cd9e6e0e08420c11e2b49769a5",
+        "retainedPriorBytes": true
+      },
+      {
+        "path": "docs-site/docs/architecture/model-policy.mdx",
+        "sha256": "7cf8acb413cceb96c5d8c6674debbf8ae1fe36b2547cbf54fd0a5d86e85d1f9f",
+        "priorAcceptedSha256": "7cf8acb413cceb96c5d8c6674debbf8ae1fe36b2547cbf54fd0a5d86e85d1f9f",
+        "retainedPriorBytes": true
+      },
+      {
+        "path": "docs-site/docs/getting-started/backend-runtime.mdx",
+        "sha256": "6246cf77d233d2efb726a3063139cd3b54a1d73eaf911623c58043f4cd3445cd",
+        "priorAcceptedSha256": "6246cf77d233d2efb726a3063139cd3b54a1d73eaf911623c58043f4cd3445cd",
+        "retainedPriorBytes": true
+      },
+      {
+        "path": "docs-site/docs/getting-started/five-minute-quickstart.mdx",
+        "sha256": "ce0e2d2eb082e019cbdc8a9f01a2cba86ab740ce77f495082e425d38d86053db",
+        "priorAcceptedSha256": "ce0e2d2eb082e019cbdc8a9f01a2cba86ab740ce77f495082e425d38d86053db",
+        "retainedPriorBytes": true
+      },
+      {
+        "path": "docs-site/docs/getting-started/installation.mdx",
+        "sha256": "2b5a235a74544a83ce14fe5d778b246a069bcc58874b4912bd8d734140a655b2",
+        "priorAcceptedSha256": "2b5a235a74544a83ce14fe5d778b246a069bcc58874b4912bd8d734140a655b2",
+        "retainedPriorBytes": true
+      },
+      {
+        "path": "docs-site/docs/tools/cli-reference.mdx",
+        "sha256": "2e222740350cfa5551d37725c291df8755a761d3d7168fcbae7c3f06192e49ec",
+        "priorAcceptedSha256": "2e222740350cfa5551d37725c291df8755a761d3d7168fcbae7c3f06192e49ec",
+        "retainedPriorBytes": true
+      }
+    ],
+    "sixOtherPagesRetainAcceptedBytes": true,
+    "buildExitCode": 0,
+    "actualIABRenderReceiptReviewed": true,
+    "savedV10AndFinalV11ScreenshotsViewed": true,
+    "reviewerFreshBrowserRender": false,
+    "correctedPhrasesRendered": true,
+    "v5AndK14TableRetained": true,
+    "sampledWarningErrors": 0,
+    "sampleLimit": 100,
+    "completeConsoleHealthClaim": false,
+    "tabClosed": true,
+    "serveExitCode": 130,
+    "published": false,
+    "currentHTML": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/build/architecture/performance/index.html",
+      "sha256": "c785450a865fc86a41a471cba94efd954e761819ddc5e945eadf45b7c1c7022f",
+      "correctedPhrasesAndV5TargetMarkersPresent": true
+    }
+  },
+  "disclosedBehaviorBoundaries": [
+    "Empty context save/model start/two resolutions now roll back as one pre-dispatch parent.",
+    "Populated context can already be saved while grouped preparation rolls back; pre-permit interruption may beFAILED instead of started-operationUNKNOWN, with no provider liability.",
+    "Post-checkpoint UNKNOWN/no-replay/accounting retained.",
+    "Duplicate ordinal0 after canonical context is deliberatelyINVALID_STATE; public reconcile is explicit lost-result recovery.",
+    "New-parent optional raw-policy metadata activation remains deferred."
+  ],
+  "preservedFailures": {
+    "testReceipts": [
+      {
+        "path": "cloud-turn-consolidation-action-v1-jest.json",
+        "passed": 4,
+        "failed": 5,
+        "success": false,
+        "relabelled": false
+      },
+      {
+        "path": "cloud-turn-consolidation-action-v2-jest.json",
+        "passed": 4,
+        "failed": 5,
+        "success": false,
+        "relabelled": false
+      },
+      {
+        "path": "cloud-turn-consolidation-action-v3-jest.json",
+        "passed": 8,
+        "failed": 1,
+        "success": false,
+        "relabelled": false
+      },
+      {
+        "path": "cloud-turn-consolidation-new-v2-jest.json",
+        "passed": 41,
+        "failed": 1,
+        "success": false,
+        "relabelled": false
+      }
+    ],
+    "initialRootTypecheckExitCode": 2,
+    "initialRootTypecheckRelabelled": false,
+    "originalGuardDeadlineOutcomeAssertionsWeakened": false,
+    "testSelectorAndJournalChangesJustifiedByFreshV5Contract": true
+  },
+  "nonbreakingDebt": [
+    "Root lint retains237 existing warnings.",
+    "Larger preparation readset may incur engine/OCC overhead; native performance unproven.",
+    "context-routing fresh selector test title still saysV4 while actual assertion correctly requiresV5."
+  ],
+  "limits": [
+    "Source/test/docs acceptance only; fresh installed immutable candidate qualification remains.",
+    "No native OCC/concurrency/provider proof or measured V5 latency/SLO acceptance.",
+    "K14native results belong to old8917source; all4subsecond SLOs remainFAIL.",
+    "Latency followup remains2/4=50%; full-goal final audit incomplete.",
+    "GitHub unavailable; no publication/production deployment or unrelated repository claim."
+  ],
+  "evidence": [
+    {
+      "path": "cloud-turn-consolidation-source-report.md",
+      "sha256": "3ea91849321f16bb6e930790c0a5559923185d2223b229ba06cc9e3d6e70030d"
+    },
+    {
+      "path": "cloud-turn-consolidation-freeze.json",
+      "sha256": "3474e4e3f4dbf523c37203763d7ef921490ca3a0cb0a3826829618ac5a3231df"
+    },
+    {
+      "path": "cloud-turn-consolidation-equivalence.json",
+      "sha256": "694d540477332b3343d85040446066f5e8cd1cd41f969d6b619bf0c34886022d"
+    },
+    {
+      "path": "cloud-turn-consolidation-equivalence.mjs",
+      "sha256": "06bef23e60e6a2d4e513e407a7801e7378f26ebf8ecb502c6128b8ebaf43defd"
+    },
+    {
+      "path": "cloud-turn-consolidation-runtimeAgent-before.ts",
+      "sha256": "83a3a37d5b38c35e2aa5bfa20dbbb360de9da7ff093e94816f8dca0ae332c5d2"
+    },
+    {
+      "path": "cloud-turn-consolidation-baseline.json",
+      "sha256": "640a10bbe319f05477c931d6afb56cea8f342b9ce19b81ec1f4b3f4ba36d223b"
+    },
+    {
+      "path": "cloud-turn-consolidation-test-paths.json",
+      "sha256": "85199d324cb107c7d5444e5514c07f36cdf0a4bf903d527a0210d1290f264be5"
+    },
+    {
+      "path": "cloud-turn-consolidation-discovery.log",
+      "sha256": "372025ffd85ac7dc44c148d10a4825f8cc0d2fe19204e775cbe1e16492efa844"
+    },
+    {
+      "path": "cloud-turn-consolidation-discovery.json",
+      "sha256": "fbb047246de49391a584ae1d6a18ddfe462eb2705092483ba1f171c4b2b612db"
+    },
+    {
+      "path": "cloud-turn-consolidation-affected-final.json",
+      "sha256": "9f980cb0f9ff8c591d4071171b9bcde25c73e6ddc468863b2e46a9b6cfae4b27"
+    },
+    {
+      "path": "cloud-turn-consolidation-affected-final-jest.json",
+      "sha256": "854ca154a3efed371ff6237ccff968d85235a26686634bc27ede8ebadffeefca"
+    },
+    {
+      "path": "cloud-turn-consolidation-affected-final.log",
+      "sha256": "b59adc0e9d9697ce0401a4403312a8c50d76eca8887dc037b3fcdc14dfee7f9b"
+    },
+    {
+      "path": "cloud-turn-consolidation-remaining-checks.json",
+      "sha256": "f0dcc5c6f92d317a1e075cebd9a3abc94a2e5f5877545c7abda15878aa373d90"
+    },
+    {
+      "path": "cloud-turn-consolidation-test-type-fix.json",
+      "sha256": "de2dcb1d8992b0d627aada76da41b1b8d69a2097039e010afc35aa338927352d"
+    },
+    {
+      "path": "cloud-turn-consolidation-root-types-final.json",
+      "sha256": "db470c9c2253bb03dc0563d116dafb1723ba88258e8fc543c60f39d1b992de3a"
+    },
+    {
+      "path": "cloud-turn-consolidation-root-types-final.log",
+      "sha256": "e6b1673a47a67b3af6c2435843e5e6c66d17c677d279d5a017442b7aa49de739"
+    },
+    {
+      "path": "cloud-turn-consolidation-root-types-v2.json",
+      "sha256": "80a2c683e2202296cb2e5c9f0d251e149a31bbc21aeb21046583b5399566b6ee"
+    },
+    {
+      "path": "cloud-turn-consolidation-backend-types-final.json",
+      "sha256": "f56eef72af0ad8cc1d6046bdf083a9eb2ffa05fa4963ca22deec108c8def815f"
+    },
+    {
+      "path": "cloud-turn-consolidation-root-lint-final.log",
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d"
+    },
+    {
+      "path": "cloud-turn-consolidation-build-final.log",
+      "sha256": "376c2eb6b52de7ab90764cbbbddc40f4514719f1f6441321d8a614efeac3cc01"
+    },
+    {
+      "path": "cloud-turn-consolidation-contracts-final.log",
+      "sha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf"
+    },
+    {
+      "path": "cloud-turn-consolidation-action-v1-jest.json",
+      "sha256": "de8219a4bc38316f2a18b1cdf5edde032cf0c1dcc5c3071e491f37d2a1a6e145"
+    },
+    {
+      "path": "cloud-turn-consolidation-action-v2-jest.json",
+      "sha256": "af9dc214b0d42f854753c0334265b3233161a84f32b47365da8c1c7f8c28e14e"
+    },
+    {
+      "path": "cloud-turn-consolidation-action-v3-jest.json",
+      "sha256": "9ee543cd60c20b48b4c1af01132f6b9c3b7f19883db4e8d6bc660ed889fc0c53"
+    },
+    {
+      "path": "cloud-turn-consolidation-new-v2-jest.json",
+      "sha256": "00ff69aebc1bbfc6547e6d64d0d5430d8caa60d7ac13eef97488ee188360cc8c"
+    },
+    {
+      "path": "docs-v5-consolidation-v10-receipt.json",
+      "sha256": "1e4b82e93fc769cff51bedb2fd0964326971913ccde38ab5d87dcc90b012282e"
+    },
+    {
+      "path": "docs-v5-consolidation-build-v10.log",
+      "sha256": "3404351a9801010804bceca6462a870f0bf37cc829d4d9491d7cfca30efd3c54"
+    },
+    {
+      "path": "browser/docs-v5-consolidation-v10-observation.json",
+      "sha256": "fd97aceea45eab61bb7619d5a3d60c92aa5b6c24220cb81fa1714e30ceaa412b"
+    },
+    {
+      "path": "browser/docs-v5-consolidation-v10.png",
+      "sha256": "4e9a053193bd8cfb57c96e6ea9880329d2c298644a835df52a2d6b039e69a4ef"
+    },
+    {
+      "path": "docs-v5-wording-v11-receipt.json",
+      "sha256": "0c45e5e68ae66fc8f8478016761b8844e19d2d9da502abb1186474ad4175767d"
+    },
+    {
+      "path": "docs-v5-wording-build-v11.log",
+      "sha256": "8d5049ddff03587c48d05516d402feddfe6457dbf717c397f7659eab07fcadc0"
+    },
+    {
+      "path": "browser/docs-v5-wording-v11-observation.json",
+      "sha256": "749426b961781e032f6b5977e905be511f4d702c087a84123805f1923986afd9"
+    },
+    {
+      "path": "browser/docs-v5-wording-v11.png",
+      "sha256": "429912dddd9c11875a8a88e5dbce0bd6c5f0994dc682f440323d75a3c3cd5d71"
+    },
+    {
+      "path": "docs-immediate-start-source-review-v7.json",
+      "sha256": "e33eb30b02ba70c3189f4d1a914b006c3a95ecbb4c68936352352cc9d4af7fc7"
+    },
+    {
+      "path": "k14-outcomes.md",
+      "sha256": "0b29701ab000b2803590ab2c942720a494825a4bcbe9c7729d217c1ee5c91e7c"
+    }
+  ],
+  "actions": {
+    "productEdits": 0,
+    "docsEdits": 0,
+    "packageEdits": 0,
+    "buildReruns": 0,
+    "testReruns": 0,
+    "browserActions": 0,
+    "serviceCalls": 0,
+    "inferenceCalls": 0,
+    "deployments": 0,
+    "publications": 0,
+    "gitNetworkOperations": 0,
+    "commits": 0,
+    "reviewArtifactWrites": 2
+  },
+  "recommendation": "Accept this bounded V5 structural source/test/docs batch; continue required native candidate qualification and measured latency gates without relabelling prior results.",
+  "markdownReportSha256": "82098d07ef27c6c14c30c8c2c0bc3d9771d2b575ab7670479c2839468987ba30"
+}

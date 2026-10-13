@@ -43,7 +43,7 @@ async function fixture(options: { initialReadFailure?: boolean; journalFailure?:
   const f = await ingestionFixture(), query = f.ctx.runQuery.bind(f.ctx), mutation = f.ctx.runMutation.bind(f.ctx);
   const entries: Entry[] = [], events: string[] = [], starts: Record<string, unknown>[] = [];
   let phase = "", initialReadFailed = false;
-  Object.assign(f.ctx, { meta: { getFunctionMetadata: async () => ({ name: "runtimeAgent:executeTurnV4" }) } });
+  Object.assign(f.ctx, { meta: { getFunctionMetadata: async () => ({ name: "runtimeAgent:executeTurnV5" }) } });
   f.ctx.runQuery = (async (ref: unknown, args: unknown) => nativeBoundary(async () => {
     const name = functionName(ref);
     if (name.endsWith("/journal/load")) {
@@ -63,7 +63,7 @@ async function fixture(options: { initialReadFailure?: boolean; journalFailure?:
     const name = functionName(ref);
     if (name.endsWith("/workflow/create")) {
       const input = args as Record<string, unknown>; starts.push(clone(input)); events.push("component.create");
-      expect(input).toMatchObject({ createOnly: true, startAsync: false, workflowName: "runtimeAgent:executeTurnV4" });
+      expect(input).toMatchObject({ createOnly: true, startAsync: false, workflowName: "runtimeAgent:executeTurnV5" });
       return await f.db.insert("workflows", { name: input.workflowName, workflowHandle: input.workflowHandle, args: input.workflowArgs,
         generationNumber: 0, onComplete: input.onComplete });
     }
@@ -104,25 +104,22 @@ async function fixture(options: { initialReadFailure?: boolean; journalFailure?:
 }
 type Fixture = Awaited<ReturnType<typeof fixture>>;
 const stored = (f: Fixture) => clone({ rows: f.db.rows, writes: f.db.writes, sequence: f.db.sequence, native: f.native, effects: f.effects, scheduled: f.scheduled });
-it("real immediate start sees the inserted execution, journals the inline prefix, and queues context before returning its ID", async () => {
+it("real immediate start sees the inserted execution, journals the inline prefix, and queues the ordinary turn Action before returning its ID", async () => {
   const f = await fixture(), { run, result, owned } = await f.start();
   expect(result).toEqual({ runId: run.runId, attemptNumber: 1, state: "ready" }); expect(f.starts).toHaveLength(1);
   expect(owned).toMatchObject({ workflowId: f.db.table("workflows")[0]._id, contextState: "started", state: "ready" });
   expect(f.entries.map(e => [e.step.name, e.step.kind === "function" || e.step.kind === undefined ? e.step.functionType : e.step.kind, e.step.inProgress])).toEqual([
-    ["runtimeAgent:startContext", "mutation", false], ["runtimeAgent:contextBarrier", "mutation", false], ["runtimeAgent:prepareRoutedContext", "mutation", true],
+    ["runtimeAgent:startContext", "mutation", false], ["runtimeAgent:contextBarrier", "mutation", false], ["context and model turn 0", "action", true],
   ]);
   expect(f.events).not.toContain("runtimeAgent:prepareRoutedContext"); expect(f.events).not.toContain("runtimeAgent:modelStep");
   expect(f.db.table("runtimeModelAttempts")).toEqual([]); expect(f.db.table("runtimeAgentOperations")).toEqual([]);
   await f.call(runtime.start, { runId: run.runId }); expect(f.starts).toHaveLength(1); expect(f.entries).toHaveLength(3);
 });
-it("completed journal replay queues the paid Action durably and never executes it in the parent mutation", async () => {
-  const f = await fixture(), { args, owned } = await f.start();
-  const value = await f.call(runtime.prepareRoutedContext, args), contextStep = f.entries.at(-1)!;
-  contextStep.step.inProgress = false; contextStep.step.completedAt = clock; contextStep.step.runResult = { kind: "success", returnValue: value as never };
-  f.events.length = 0;
-  await f.call(runtime.executeTurnV4, { workflowId: owned.workflowId, generationNumber: 0 });
-  expect(f.events).toEqual(["component.journal"]); expect(f.entries.at(-1)!.step).toMatchObject({ name: "model 0", functionType: "action", inProgress: true });
-  const before = stored(f); await f.call(runtime.executeTurnV4, { workflowId: owned.workflowId, generationNumber: 0 }); expect(stored(f)).toEqual(before);
+it("in-progress fresh journal replay keeps one durable paid Action and never executes it in the parent mutation", async () => {
+  const f = await fixture(), { owned } = await f.start(), before = stored(f); f.events.length = 0;
+  await f.call(runtime.executeTurnV5, { workflowId: owned.workflowId, generationNumber: 0 });
+  expect(f.events).toEqual([]); expect(f.entries.at(-1)!.step).toMatchObject({ name: "context and model turn 0", functionType: "action", inProgress: true });
+  expect(stored(f)).toEqual(before); await f.call(runtime.executeTurnV5, { workflowId: owned.workflowId, generationNumber: 0 }); expect(stored(f)).toEqual(before);
   expect(f.db.table("runtimeModelAttempts")).toEqual([]); expect(f.db.table("runtimeAgentOperations")).toEqual([]);
 });
 it("strict readiness still journals the original bounded sleep before context or model scheduling", async () => {

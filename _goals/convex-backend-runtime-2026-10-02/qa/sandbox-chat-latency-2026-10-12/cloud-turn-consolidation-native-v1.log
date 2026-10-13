@@ -1,0 +1,138 @@
+(node:93191) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/turn-native-composition.test.ts (5.3 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.3s | 28/28 passed | /tests/unit/runtimeAgent/turn-native-composition.test.ts
+  ✅     1.4s | 21/21 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.12s ( 1.7%) - native context+preparation+two resolutions equal original handler outcomes with warning=false
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 2. [32m✓[0m    0.10s ( 1.4%) - native context+preparation+two resolutions equal original handler outcomes with warning=true
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 3. [32m✓[0m    0.07s ( 1.1%) - new atomic admission equals the original outer hydrate then complete admit/bind/checkpoint parent
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 4. [32m✓[0m    0.06s ( 0.8%) - lost dispatch permit cannot fund/replay another model attempt and retains original UNKNOWN liability
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.8%) - populated context returns to the unchanged Action before model preparation, without saved context or model effects
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.7%) - pre-dispatch resolution failure rolls back grouped preparation/context and original interruption remains explicit
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.6%) - original started model step refuses without a resolution, paid attempt or state change
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.6%) - proposed resolution cannot authorize profile changes before final atomic admission
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.6%) - late bind fault rolls back original account reservations/permit, retaining every post-write guard
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+10. [32m✓[0m    0.04s ( 0.6%) - the actual model action wires only its exact original binding to one native Agent admission/checkpoint parent
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+11. [32m✓[0m    0.04s ( 0.6%) - late reserve fault rolls back original account reservations/permit, retaining every post-write guard
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+12. [32m✓[0m    0.04s ( 0.5%) - completed model result returns exactly once without new model/resolution work
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+13. [32m✓[0m    0.04s ( 0.5%) - proposed resolution cannot authorize budget changes before final atomic admission
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+14. [32m✓[0m    0.04s ( 0.5%) - real installed Agent/AI SDK smoothing publishes first whitespace-free fragment before text-end/terminal, preserving order once
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+15. [32m✓[0m    0.04s ( 0.5%) - original unknown model step refuses without a resolution, paid attempt or state change
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+16. [32m✓[0m    0.04s ( 0.5%) - proposed resolution cannot authorize qualification changes before final atomic admission
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+17. [32m✓[0m    0.03s ( 0.5%) - proposed resolution cannot authorize source changes before final atomic admission
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+18. [32m✓[0m    0.03s ( 0.5%) - proposed resolution cannot authorize lease changes before final atomic admission
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+19. [32m✓[0m    0.03s ( 0.5%) - request binding operationKey cannot choose another lane or bypass the original first-guard error order
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+20. [32m✓[0m    0.03s ( 0.5%) - request binding runBudgetId cannot choose another lane or bypass the original first-guard error order
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.96s (13.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.88s
+  Test suites:        2
+  Individual tests:   49
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       49 passed, 49 total
+Snapshots:   0 total
+Time:        6.883 s
+Ran all test suites within paths "tests/unit/runtimeAgent/turn-native-composition.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-native-v1-jest.json
