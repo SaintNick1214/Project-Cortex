@@ -607,7 +607,7 @@ export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, requ
 const admitArgs = { ...resolveArgs, semanticId: v.string(), ordinal: v.number(), requestCanonical: v.string() };
 const _admissionValidator = v.object(admitArgs);
 export type AdmitModelArgs = Infer<typeof _admissionValidator>;
-export const admit = internalMutation({ args: admitArgs, handler: async (ctx, args) => {
+export async function admitHandler(ctx: MutationCtx, args: Infer<typeof _admissionValidator>) {
   await currentAuthority(ctx, args.reference, args.operationKey); integer(args.ordinal); text(args.semanticId);
   await checkSource(ctx, args.reference, args.operationKey, args.source);
   const run = await runAccount(ctx, args.reference, args.runBudgetId);
@@ -689,7 +689,8 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
     { reservedUnits: add(account.reservedUnits, ceiling), activeConcurrency: add(account.activeConcurrency, 1), version: add(account.version, 1) });
   await ctx.db.patch("runtimeModelOperations", operation._id, { reservedUnits: add(operation.reservedUnits, ceiling) });
   return { status: "reserved" as const, operationId: operation._id, attemptId, snapshot, requestCanonical: canonical(validated.request) };
-} });
+}
+export const admit = internalMutation({ args: admitArgs, handler: admitHandler });
 
 function attemptSnapshot(attempt: Attempt, operation: Operation, manifest: DeploymentPolicyManifest): ModelPolicySnapshotV1 {
   const base = snapshotOf(operation);
@@ -721,7 +722,9 @@ async function attemptContext(ctx: ReadCtx, attemptId: Id<"runtimeModelAttempts"
   return { attempt, operation, tenant, run, snapshot, proof };
 }
 const attemptArgs = { reference: runtimeAuthorityReference, attemptId: v.id("runtimeModelAttempts") };
-export const checkpoint = internalMutation({ args: { ...attemptArgs, requestCanonical: v.string() }, handler: async (ctx, args) => {
+const checkpointArgs = { ...attemptArgs, requestCanonical: v.string() };
+const _checkpointValidator = v.object(checkpointArgs);
+export async function checkpointHandler(ctx: MutationCtx, args: Infer<typeof _checkpointValidator>) {
   const { attempt, operation, snapshot, proof, run, tenant } = await attemptContext(ctx, args.attemptId);
   const checked = await currentOperation(ctx, args.reference, operation);
   if (Date.now() >= run.windowEnd) fail("BUDGET_EXCEEDED");
@@ -754,7 +757,8 @@ export const checkpoint = internalMutation({ args: { ...attemptArgs, requestCano
   if (proof.checkedAt > Date.now() || Date.now() >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
   await ctx.db.patch("runtimeModelAttempts", attempt._id, { state: "dispatch_pending", checkpointAt: Date.now() });
   return { dispatchPermit: true as const, dispatchIdentity: attempt.dispatchIdentity, snapshot, requestCanonical: canonical(validated.request) };
-} });
+}
+export const checkpoint = internalMutation({ args: checkpointArgs, handler: checkpointHandler });
 export const markVisible = internalMutation({ args: { ...attemptArgs, ...visibilityFields }, handler: async (ctx, args) => {
   const { attempt, operation } = await attemptContext(ctx, args.attemptId);
   await currentOperation(ctx, args.reference, operation);

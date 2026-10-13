@@ -4,7 +4,7 @@ import type { ApiFromModules, FunctionArgs, FunctionReturnType } from "convex/se
 import type { ActionCtx } from "./_generated/server";
 import type * as ModelPolicy from "./runtimeModelPolicy";
 import { createGovernedGatewayModel, GatewayDispatchError } from "./runtimeGateway";
-import type { GatewayBinding, GatewayComposition } from "./runtimeGateway";
+import type { GatewayBinding, GatewayComposition, GatewayLedgerPort } from "./runtimeGateway";
 import { traceRuntimePhase } from "./runtimeLatencyTrace";
 
 type PolicyApi = ApiFromModules<{ runtimeModelPolicy: typeof ModelPolicy }>["runtimeModelPolicy"];
@@ -43,7 +43,7 @@ export async function ensureBackendGatewayBudget(
  * Terminal capture is charge-only: it settles known/uncertain liability atomically
  * even if delivery authority was revoked. Attachment independently fences output.
  * No second settlement, automatic inference retry or fallback is introduced. */
-export function createBackendGatewayComposition(ctx: BackendGatewayContext): GatewayComposition {
+export function createBackendGatewayComposition(ctx: BackendGatewayContext, admitAndCheckpoint?: NonNullable<GatewayLedgerPort["admitAndCheckpoint"]>): GatewayComposition {
   type Correlation = { runBudgetId: string; operationKey: string; semanticId?: string };
   const attempts = new Map<string, Correlation>();
   const timed = async <T>(phase: string, correlation: Correlation | undefined, invoke: () => Promise<T>): Promise<T> => {
@@ -65,6 +65,12 @@ export function createBackendGatewayComposition(ctx: BackendGatewayContext): Gat
   };
   return {
     ledger: {
+      ...(admitAndCheckpoint ? { admitAndCheckpoint: async (args: Parameters<NonNullable<GatewayLedgerPort["admitAndCheckpoint"]>>[0]) => {
+        const correlation = { runBudgetId: args.runBudgetId, operationKey: args.operationKey, semanticId: args.semanticId };
+        const result = await timed("admit-checkpoint", correlation, () => admitAndCheckpoint(args));
+        if (result.admission.status === "reserved") attempts.set(result.admission.attemptId, correlation);
+        return result;
+      } } : {}),
       resolve: async (args) => {
         const correlation = { runBudgetId: args.runBudgetId, operationKey: args.operationKey };
         const result = await timed("resolve", correlation, () => ctx.runQuery(references.resolve, {

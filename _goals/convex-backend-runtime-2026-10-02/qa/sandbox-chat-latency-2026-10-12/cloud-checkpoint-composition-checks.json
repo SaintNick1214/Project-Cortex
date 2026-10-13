@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-13T09:22:18.882662+00:00",
+  "repo": "SaintNick1214/Project-Cortex continuation checkout",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseline": "4c2bc7cffafd57b5493f6305f48e390621528793",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "nodePath": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node"
+  },
+  "sourceMilestonePercent": 100,
+  "review": "PENDING independent non-author practical-v2 source gate",
+  "hostedLatency": "UNMEASURED changed source; no SLO/actual OCC claim",
+  "files": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "94bcf93fcf1d906a3c9a161af9b343f7b0601c1a314421b7cb71eac065fdb15a"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "3b265413cbbf3d64766fc555ce5be84833dc5394e6829ed187fd439f9651774b"
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "sha256": "254bd3b4a69560fce7231aaa0e704aee026c305b225f4fe83df635772dcf1e78"
+    },
+    {
+      "path": "convex-dev/runtimeGatewayBackend.ts",
+      "sha256": "ff2ac985c59ee952fd31666664526665c415dc24155a4d438173fd0378cfd4e6"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+      "sha256": "353e559869caa1ced47c153950e2900ca275e86949d6eb6e6213d8b9f4c282d4"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "sha256": "9f77b274c3e0946ddbe3fc03b34a3da9e1901d96c99be67bbf25134fc39b75c0"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-dispatch.test.ts",
+      "sha256": "61918810b0cbe22d292070b6749cc6622fc2c4b61232b48afcc2de238f11b75e"
+    }
+  ],
+  "checks": [
+    {
+      "name": "affected controlled actual-handler suites",
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeAgent/checkpoint-composition.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtime/gateway-dispatch.test.ts tests/unit/runtime/model-policy-admission.test.ts tests/unit/runtimeAgent/execution.test.ts tests/unit/runtime/gateway-backend.test.ts tests/unit/runtime/gateway-terminal-composition.test.ts tests/unit/runtime/memory-gateway.test.ts tests/unit/runtimeAgent/tool-context.test.ts --runInBand --watchman=false --forceExit",
+      "exitCode": 0,
+      "tests": 737,
+      "suites": 9,
+      "skipped": 0,
+      "receipt": "cloud-checkpoint-composition-jest-v3.log"
+    },
+    {
+      "name": "backend types",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --project convex-dev/tsconfig.json --noEmit",
+      "exitCode": 0,
+      "receipt": "cloud-checkpoint-composition-backend-types-v2.log"
+    },
+    {
+      "name": "lint types",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --project tsconfig.lint.json --noEmit",
+      "exitCode": 0,
+      "receipt": "cloud-checkpoint-composition-lint-types-v2.log"
+    },
+    {
+      "name": "scoped ESLint",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts convex-dev/runtimeModelPolicy.ts convex-dev/runtimeGateway.ts convex-dev/runtimeGatewayBackend.ts tests/unit/runtimeAgent/checkpoint-composition.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtime/gateway-dispatch.test.ts --report-unused-disable-directives",
+      "exitCode": 0,
+      "receipt": "cloud-checkpoint-composition-eslint-v1.log"
+    },
+    {
+      "name": "original AST/body equivalence",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-equivalence.mjs",
+      "exitCode": 0,
+      "assertions": 31,
+      "receipt": "cloud-checkpoint-composition-equivalence.json"
+    },
+    {
+      "name": "git diff whitespace",
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "preservedFailures": [
+    {
+      "receipt": "cloud-checkpoint-composition-jest-v1.log",
+      "reason": "New fixture omitted actual runs:claimNext RPC route; generic suites passed."
+    },
+    {
+      "receipt": "cloud-checkpoint-composition-jest-fix-v2.log",
+      "reason": "27/28 parent cases plus21/21 wiring cases passed; lost-permit test incorrectly expected release of active slot without terminal proof. Corrected expectation to unchanged original recover contract: UNKNOWN100 and slot held1. No product-accounting relaxation."
+    },
+    {
+      "receipt": "cloud-checkpoint-composition-backend-types-v1.log",
+      "reason": "Concurrent V18 owner readonly capabilities/options arrays; owner corrected, no edits by this author."
+    },
+    {
+      "receipt": "cloud-checkpoint-composition-lint-types-v1.log",
+      "reason": "Same concurrent V18 readonly arrays; owner corrected."
+    }
+  ],
+  "rawReceipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-jest-v1.log",
+      "sha256": "20830eebdd0fc7ff6ffc8f736de03758319dba99d4ba8d76d003c5a5429961b4",
+      "bytes": 42295
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-jest-fix-v2.log",
+      "sha256": "ba6fc1a8f712688e60085b8c4a3abc932a9fec8b4ffcc4997325118d2cb33c97",
+      "bytes": 9582
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-jest-v3.log",
+      "sha256": "8886812443cc345aa7c3e9a77c504d32ab3d6e3a866960fca4652704a14091b5",
+      "bytes": 12675
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-backend-types-v1.log",
+      "sha256": "e4b43d174c1575cdb835bb8defd03da446a288476339b90a6c6556d0f1806e1b",
+      "bytes": 5255
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-backend-types-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-lint-types-v1.log",
+      "sha256": "ad36e5aed34086b34f8deaf7a720c5a5e18264fe4cc4d04865d92cf7e6a9737f",
+      "bytes": 5255
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-lint-types-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-eslint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-equivalence-v1.log",
+      "sha256": "188e58ce44368c2c2ecf4a3bfb2eebaadc01efa6413d8b36c6d2bde280124b7f",
+      "bytes": 235
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-equivalence.json",
+      "sha256": "a8df713bf7c0ec7e4d126d88d39eec5479cd14049d47a50136b2d8a1a49dd552",
+      "bytes": 4077
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-checkpoint-composition-equivalence.mjs",
+      "sha256": "eb9ddc12f6ede48326a025857708b442026393e207a6cede2de0443867ad7a90",
+      "bytes": 5180
+    }
+  ],
+  "excludedOperations": [
+    "No service calls",
+    "No inference",
+    "No deployment",
+    "No package builds",
+    "No P/website edits",
+    "No generated bindings changes",
+    "No Git commit/push",
+    "No unrelated local edits"
+  ]
+}

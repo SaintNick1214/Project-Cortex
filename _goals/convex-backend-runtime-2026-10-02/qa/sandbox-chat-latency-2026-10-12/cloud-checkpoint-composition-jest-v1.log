@@ -1,0 +1,748 @@
+(node:24106) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/checkpoint-composition.test.ts (5.648 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● Agent-only admission, binding and checkpoint parent › is internal with an exact original-attempt schema, rejecting caller-selected lanes
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at Object.<anonymous> (tests/unit/runtimeAgent/checkpoint-composition.test.ts:44:15)
+
+  ● Agent-only admission, binding and checkpoint parent › matches original handler return and all persisted tables/effects at a fixed native transaction clock
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at Object.<anonymous> (tests/unit/runtimeAgent/checkpoint-composition.test.ts:50:15)
+
+  ● Agent-only admission, binding and checkpoint parent › denies substituted ordinal without any persisted effect
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:62:15
+
+  ● Agent-only admission, binding and checkpoint parent › denies substituted operation without any persisted effect
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:62:15
+
+  ● Agent-only admission, binding and checkpoint parent › denies substituted semantic without any persisted effect
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:62:15
+
+  ● Agent-only admission, binding and checkpoint parent › denies substituted stored-model-binding without any persisted effect
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:62:15
+
+  ● Agent-only admission, binding and checkpoint parent › denies substituted kind without any persisted effect
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:62:15
+
+  ● Agent-only admission, binding and checkpoint parent › denies substituted agent-unknown without any persisted effect
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:62:15
+
+  ● Agent-only admission, binding and checkpoint parent › denies substituted native-parent without any persisted effect
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:62:15
+
+  ● Agent-only admission, binding and checkpoint parent › denies substituted native-account without any persisted effect
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:62:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current revoked before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current tenant-epoch before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current space-epoch before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current cancelled before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current lease-expired before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current definition before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current source-edited before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current proof-expired before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current budget-corrupt before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › fences current snapshot before issuing a permit
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:78:15
+
+  ● Agent-only admission, binding and checkpoint parent › rolls back admission and all reservations when the original binding guard fails late
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:92:15
+
+  ● Agent-only admission, binding and checkpoint parent › rolls back admission and all reservations when the original post-binding-checkpoint guard fails late
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at tests/unit/runtimeAgent/checkpoint-composition.test.ts:92:15
+
+  ● Agent-only admission, binding and checkpoint parent › lost committed permit response cannot obtain a new paid attempt or pre-dispatch release; recovery retains UNKNOWN ceiling
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at Object.<anonymous> (tests/unit/runtimeAgent/checkpoint-composition.test.ts:102:15)
+
+  ● Agent-only admission, binding and checkpoint parent › confirmed complete native replay binds the same original parent without another permit or reservation
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at Object.<anonymous> (tests/unit/runtimeAgent/checkpoint-composition.test.ts:115:15)
+
+  ● Agent-only admission, binding and checkpoint parent › post-permit cancellation retains liability and denies native visibility and attachment
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at startExecution (convex-dev/runtimeAgent.ts:194:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:186:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/checkpoint-composition.test.ts:16:67)
+      at Object.<anonymous> (tests/unit/runtimeAgent/checkpoint-composition.test.ts:123:15)
+
+PASS tests/unit/runtimeAgent/execution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/gateway-dispatch.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.6s | 0/25 passed | /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ✅     2.7s | 101/101 passed | /tests/unit/runtime/gateway-dispatch.test.ts
+  ✅     2.4s | 86/86 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     2.4s | 159/159 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     1.5s | 21/21 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.00s ( 6.8%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 2. [32m✓[0m    0.13s ( 0.9%) - C2 finite terminal persistence and retained RPC outcomes late authority rejection after its deadline remains handled and cannot reopen stream delivery
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 3. [32m✓[0m    0.10s ( 0.7%) - C2 finite terminal persistence and retained RPC outcomes observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 4. [32m✓[0m    0.07s ( 0.5%) - C2 initial native hook ownership complete joins a native connection that ignores abort through its finite observation window
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.3%) - C2 finite terminal persistence and retained RPC outcomes slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.3%) - C2 finite terminal persistence and retained RPC outcomes slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.3%) - the actual model action wires only its exact original binding to one native Agent admission/checkpoint parent
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.3%) - separately qualified JSON-object extraction lane (offline) dispatches the exact official closed wire body, retains format identity and full UNKNOWN ceiling
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.3%) - durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    /tests/unit/runtimeAgent/execution.test.ts
+
+10. [32m✓[0m    0.04s ( 0.2%) - durable Agent execution product boundaries strict readiness and pending context resolve against the owned run budget before model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [32m✓[0m    0.04s ( 0.2%) - real installed Agent/AI SDK smoothing publishes first whitespace-free fragment before text-end/terminal, preserving order once
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+12. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries strict facts barrier waits and then reports the pinned deadline before embedding dispatch
+    /tests/unit/runtimeAgent/execution.test.ts
+
+13. [32m✓[0m    0.03s ( 0.2%) - native JSON-object admission and financial guards (offline handlers) capture cannot deliver extraction merely because money is known without complete usage
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+14. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+15. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+16. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+17. [32m✓[0m    0.03s ( 0.2%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+18. [32m✓[0m    0.03s ( 0.2%) - atomic native model preparation accepts only the original attempt and ordinal native schema, rejecting caller-owned request or context
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.03s ( 0.2%) - atomic native model preparation a prepared exact replay starts once; a changed canonical request remains an idempotency conflict
+    /tests/unit/runtimeAgent/execution.test.ts
+
+20. [32m✓[0m    0.03s ( 0.2%) - C2 finite terminal persistence and retained RPC outcomes late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.84s (12.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      14.72s
+  Test suites:        5
+  Individual tests:   358
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       25 failed, 367 passed, 392 total
+Snapshots:   0 total
+Time:        14.726 s
+Ran all test suites within paths "tests/unit/runtimeAgent/checkpoint-composition.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts", "tests/unit/runtime/gateway-dispatch.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtimeAgent/execution.test.ts".
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

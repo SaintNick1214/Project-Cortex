@@ -41,12 +41,17 @@ export interface GatewayResolution {
 type Reserved = { status: "reserved"; operationId: OperationId; attemptId: AttemptId; snapshot: ModelPolicySnapshotV1; requestCanonical: string };
 export type GatewayAdmission = Reserved | { status: "replay"; operationId: OperationId; resultCanonical: string }
   | { status: "inflight" | "uncertain"; operationId: OperationId; attemptId: AttemptId; replayAllowed?: false };
+export type GatewayCheckpoint =
+  { dispatchPermit: true; dispatchIdentity: string; snapshot: ModelPolicySnapshotV1; requestCanonical: string }
+  | { dispatchPermit: false; state: string; replayAllowed: false };
+export type GatewayAdmissionCheckpoint = { admission: Extract<GatewayAdmission, { status: "reserved" }>; permit: GatewayCheckpoint }
+  | { admission: Exclude<GatewayAdmission, { status: "reserved" }> };
 export interface GatewayLedgerPort {
   resolve(args: Pick<GatewayBinding, "reference" | "operationKey" | "runBudgetId" | "source" | "parentOperationId">): Promise<GatewayResolution>;
   admit(args: GatewayBinding & { requestCanonical: string }): Promise<GatewayAdmission>;
-  checkpoint(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; requestCanonical: string }): Promise<
-    { dispatchPermit: true; dispatchIdentity: string; snapshot: ModelPolicySnapshotV1; requestCanonical: string }
-    | { dispatchPermit: false; state: string; replayAllowed: false }>;
+  checkpoint(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; requestCanonical: string }): Promise<GatewayCheckpoint>;
+  /** Trusted Agent-only parent retains original admission, binding and checkpoint in one transaction. */
+  admitAndCheckpoint?(args: GatewayBinding & { requestCanonical: string; snapshotCanonical: string }): Promise<GatewayAdmissionCheckpoint>;
   markVisible(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; outputVisible: boolean; toolInputVisible: boolean; toolResultVisible: boolean; toolEffectCommitted: boolean }): Promise<{ recorded: true }>;
   attachTerminalResult(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; evidenceId: string; privateResultCanonical: string }): Promise<TerminalAttachmentAcknowledgment>;
 }
@@ -144,6 +149,24 @@ function checkedAdmission(input: unknown): GatewayAdmission {
   if (["uncertain", "inflight"].includes(fields.status as string) && exact(["status", "operationId", "attemptId", "replayAllowed"], ["attemptId"])
     && stableId(fields.attemptId) && (!keys.includes("replayAllowed") || fields.replayAllowed === false)) return detached(fields) as unknown as GatewayAdmission;
   return fail("ADMITTED_REQUEST_MISMATCH");
+}
+/** Both the original action path and the Agent parent validate these same exact bytes before checkpoint. */
+export function assertGatewayReservedRequest(admitted: Reserved, incoming: string, snapshotCanonical: string, canonicalBytes: number): void {
+  const request = exactJSON(incoming, canonicalBytes) as unknown as ModelCallRequest;
+  const flat = exactJSON(admitted.requestCanonical, canonicalBytes);
+  const validated = validateModelRequest(admitted.snapshot, flat).request;
+  const comparable = { ...validated, semanticId: request.semanticId, childCallId: request.childCallId };
+  if (canonicalModelJson(comparable) !== canonicalModelJson(request) || canonicalModelJson(admitted.snapshot) !== snapshotCanonical) fail("ADMITTED_REQUEST_MISMATCH");
+}
+function checkedAdmissionCheckpoint(input: unknown): GatewayAdmissionCheckpoint {
+  const fields = record(input, ["admission", "permit"]);
+  const admission = checkedAdmission(fields.admission);
+  if (admission.status === "reserved") {
+    if (Object.keys(fields).length !== 2) fail("CHECKPOINT_MISMATCH");
+    return { admission, permit: checkedPermit(fields.permit) };
+  }
+  if (Object.keys(fields).length !== 1) fail("CHECKPOINT_MISMATCH");
+  return { admission };
 }
 function checkedPermit(input: unknown): Awaited<ReturnType<GatewayLedgerPort["checkpoint"]>> {
   const fields = record(input, ["dispatchPermit", "dispatchIdentity", "snapshot", "requestCanonical", "state", "replayAllowed"]);
@@ -644,13 +667,13 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
   async function admit(request: ModelCallRequest): Promise<Reserved & { dispatchIdentity: string }> {
     proofFor(resolution, (composition.now ?? Date.now)()); assertDelivery();
     const incoming = json(request, resolution.storageLimits.canonicalBytes);
-    const admitted = checkedAdmission(await authority(() => composition.ledger.admit({ ...binding, requestCanonical: incoming })));
+    const combined = composition.ledger.admitAndCheckpoint ? checkedAdmissionCheckpoint(await authority(() => composition.ledger.admitAndCheckpoint!({
+      ...binding, requestCanonical: incoming, snapshotCanonical: canonicalModelJson(resolution.snapshot),
+    }))) : undefined;
+    const admitted = combined?.admission ?? checkedAdmission(await authority(() => composition.ledger.admit({ ...binding, requestCanonical: incoming })));
     if (admitted.status !== "reserved") { if (admitted.status === "replay") replay = admitted.resultCanonical; fail(admitted.status === "replay" ? "REPLAY_AVAILABLE" : "UNCERTAIN_OR_INFLIGHT"); }
-    const flat = exactJSON(admitted.requestCanonical, resolution.storageLimits.canonicalBytes);
-    const validated = validateModelRequest(admitted.snapshot, flat).request;
-    const comparable = { ...validated, semanticId: request.semanticId, childCallId: request.childCallId };
-    if (canonicalModelJson(comparable) !== canonicalModelJson(request) || canonicalModelJson(admitted.snapshot) !== canonicalModelJson(resolution.snapshot)) fail("ADMITTED_REQUEST_MISMATCH");
-    const permit = checkedPermit(await authority(() => composition.ledger.checkpoint({ reference: binding.reference, attemptId: admitted.attemptId, requestCanonical: admitted.requestCanonical })));
+    assertGatewayReservedRequest(admitted, incoming, canonicalModelJson(resolution.snapshot), resolution.storageLimits.canonicalBytes);
+    const permit = combined && "permit" in combined ? combined.permit : checkedPermit(await authority(() => composition.ledger.checkpoint({ reference: binding.reference, attemptId: admitted.attemptId, requestCanonical: admitted.requestCanonical })));
     if (!permit.dispatchPermit) fail("DISPATCH_NOT_PERMITTED");
     if (permit.requestCanonical !== admitted.requestCanonical || canonicalModelJson(permit.snapshot) !== canonicalModelJson(admitted.snapshot)) fail("CHECKPOINT_MISMATCH");
     assertDelivery(); return { ...admitted, dispatchIdentity: permit.dispatchIdentity };

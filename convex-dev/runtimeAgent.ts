@@ -33,7 +33,9 @@ import { dataAuthorityReference, requireDataAuthority, managedConversationAccess
 import { deliveryExpiresAt } from "./runtimeDelivery";
 import { recheckAuthority } from "./runtimeAuth";
 import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
-import { createAgentGatewayCancellationBridge, createGovernedGatewayModel } from "./runtimeGateway";
+import type { GatewayAdmissionCheckpoint } from "./runtimeGateway";
+import { admitHandler, checkpointHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
+import { createAgentGatewayCancellationBridge, createGovernedGatewayModel, assertGatewayReservedRequest } from "./runtimeGateway";
 import { createActionMemoryRepository } from "./runtimeMemoryRepository";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sourceContent, commitDerivedInput } from "./runtimeMemorySchema";
@@ -62,6 +64,7 @@ const workflow = new WorkflowManager((components as unknown as { workflow: Const
 const refs = {
   claim: ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string; leaseMs: number }, { runId: string; attemptNumber: number; leaseVersion: number } | { runId: string; failureCode: string } | null>("mutation", "runs:claimNext"),
   hydrate: ref<"query", Attempt, Awaited<ReturnType<typeof executionContext>>>("query", "runtimeAgent:hydrateExecution"),
+  admitModelOperation: ref<"mutation", Attempt & { operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string }, Awaited<ReturnType<typeof admitModelOperationHandler>>>("mutation", "runtimeAgent:admitModelOperation"),
   prepareModelOperation: ref<"mutation", Attempt & { ordinal: number }, Awaited<ReturnType<typeof prepareModelOperationHandler>>>("mutation", "runtimeAgent:prepareModelOperation"),
   contextInputs: ref<"query", Attempt, Awaited<ReturnType<typeof contextInputsHandler>>>("query", "runtimeAgent:contextInputs"),
   prepareContext: ref<"action", Attempt, null>("action", "runtimeAgent:prepareContext"),
@@ -453,7 +456,7 @@ export const finishOperation = internalMutation({ args: { ...agentAttempt, opera
   }
   return null;
 } });
-export const bindNativeOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), nativeOperationId: v.id("runtimeModelOperations") }, handler: async (ctx, args) => {
+async function bindNativeOperationHandler(ctx: MutationCtx, args: Attempt & { operationId: string; nativeOperationId: import("./_generated/dataModel").Id<"runtimeModelOperations"> }) {
   const current = await executionContext(ctx, args); const op = await operation(ctx, args, args.operationId);
   const native = await ctx.db.get("runtimeModelOperations", args.nativeOperationId);
   if (!native || op.kind !== "model" || op.state !== "started" || native.runAccountId !== current.run.runAccountId
@@ -463,7 +466,29 @@ export const bindNativeOperation = internalMutation({ args: { ...agentAttempt, o
   const attempts = await ctx.db.query("runtimeModelAttempts").withIndex("by_operation", q => q.eq("operationDocumentId", native._id)).take(2);
   if (attempts.length !== 1 || attempts[0].ordinal !== op.ordinal || attempts[0].attemptNumber !== 1) transcriptDenied("POLICY_DENIED");
   await ctx.db.patch("runtimeAgentOperations", op._id, { nativeModelOperationId: native._id }); return null;
-} });
+}
+export const bindNativeOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), nativeOperationId: v.id("runtimeModelOperations") }, handler: bindNativeOperationHandler });
+/** Agent-only native parent: no inference or charge settlement, and no caller-selected request lane. */
+async function admitModelOperationHandler(ctx: MutationCtx, args: Attempt & { operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string }): Promise<GatewayAdmissionCheckpoint> {
+  const attempt = attemptArgs(args);
+  const current = await executionContext(ctx, attempt);
+  const op = await operation(ctx, attempt, args.operationId);
+  const semanticId = await semanticHash(canonicalModelJson([args.runId, args.attemptNumber, "model", args.ordinal, null]));
+  const modelBinding = canonicalModelJson({ messages: current.messages, context: current.execution.contextCanonical ?? "", instructions: current.definition.instructions });
+  if (!Number.isSafeInteger(args.ordinal) || args.ordinal < 0 || args.ordinal > 32 || op.kind !== "model" || op.state !== "started"
+    || op.ordinal !== args.ordinal || op.semanticId !== semanticId || op.operationId !== `agent-op:${semanticId}`
+    || op.requestCanonical !== modelBinding) transcriptDenied("POLICY_DENIED");
+  const admission = await admitHandler(ctx, { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId,
+    semanticId: op.semanticId, ordinal: op.ordinal, requestCanonical: args.requestCanonical });
+  await bindNativeOperationHandler(ctx, { ...attempt, operationId: op.operationId, nativeOperationId: admission.operationId });
+  if (admission.status !== "reserved") return { admission };
+  assertGatewayReservedRequest(admission, args.requestCanonical, args.snapshotCanonical, MODEL_LEDGER_STORAGE_LIMITS.canonicalBytes);
+  // Retain the original fresh post-binding action hydration before checkpoint in the native transaction.
+  await executionContext(ctx, attempt);
+  const permit = await checkpointHandler(ctx, { reference: args.reference, attemptId: admission.attemptId, requestCanonical: admission.requestCanonical });
+  return { admission, permit };
+}
+export const admitModelOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), ordinal: v.number(), requestCanonical: v.string(), snapshotCanonical: v.string() }, handler: admitModelOperationHandler });
 export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v.array(v.any()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); if (args.parts.length > 64) transcriptDenied("INVALID_INPUT");
   const tools = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", args.reference.tenantId).eq("memorySpaceId", args.reference.memorySpaceId!)
@@ -478,19 +503,19 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
   const prepared = await ctx.runMutation(refs.prepareModelOperation, { ...attempt, ordinal: args.ordinal });
   if (prepared.state === "completed") return JSON.parse(prepared.resultCanonical) as StepResult;
   const { current, op } = prepared;
-  const base = createBackendGatewayComposition(ctx);
   const guard = async () => { await ctx.runQuery(refs.hydrate, attempt); };
+  const base = createBackendGatewayComposition(ctx, async request => {
+    await guard();
+    if (canonicalModelJson(request.reference) !== canonicalModelJson(args.reference) || request.operationKey !== "agent.respond"
+      || request.runBudgetId !== current.run.runBudgetId || request.semanticId !== op.semanticId || request.ordinal !== args.ordinal
+      || request.source !== undefined || request.parentOperationId !== undefined) transcriptDenied("POLICY_DENIED");
+    return await ctx.runMutation(refs.admitModelOperation, { ...attempt, operationId: op.operationId, ordinal: args.ordinal,
+      requestCanonical: request.requestCanonical, snapshotCanonical: request.snapshotCanonical });
+  });
   await guard();
   const resolution = await base.ledger.resolve({ reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId });
   const governed = await createGovernedGatewayModel({ ...base, ledger: { ...base.ledger,
     resolve: async request => { await guard(); return await base.ledger.resolve(request); },
-    admit: async request => {
-      await guard(); const admission = await base.ledger.admit(request);
-      await ctx.runMutation(ref<"mutation", Attempt & { operationId: string; nativeOperationId: import("./_generated/dataModel").Id<"runtimeModelOperations"> }, null>("mutation", "runtimeAgent:bindNativeOperation"),
-        { ...attempt, operationId: op.operationId, nativeOperationId: admission.operationId });
-      return admission;
-    },
-    checkpoint: async request => { await guard(); return await base.ledger.checkpoint(request); },
     // The native mutation repeats the complete current Agent fence atomically.
     markVisible: async request => await base.ledger.markVisible(request),
     attachTerminalResult: async request => { await guard(); return await base.ledger.attachTerminalResult(request); },

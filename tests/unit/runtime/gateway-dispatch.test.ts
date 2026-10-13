@@ -152,6 +152,73 @@ describe("separately qualified JSON-object extraction lane (offline)", () => {
 });
 beforeEach(() => { tokenLookup.mockClear(); });
 
+/** The generic fake ledger still uses its original ports; only these cases opt into the Agent composition. */
+function combinedFixture() {
+  const f = fixture(), original = f.composition.ledger;
+  const admit = original.admit.bind(original), checkpoint = original.checkpoint.bind(original);
+  original.admitAndCheckpoint = async args => {
+    f.events.push("combined");
+    const { snapshotCanonical, ...request } = args;
+    expect(snapshotCanonical).toBe(canonicalModelJson(f.r.snapshot));
+    const admission = await admit(request);
+    if (admission.status !== "reserved") return { admission };
+    return { admission, permit: await checkpoint({ reference: args.reference, attemptId: admission.attemptId, requestCanonical: admission.requestCanonical }) };
+  };
+  original.admit = async () => { throw new Error("Unexpected generic admission"); };
+  original.checkpoint = async () => { throw new Error("Unexpected generic checkpoint"); };
+  return f;
+}
+describe("Agent-only combined admission envelope", () => {
+  it("uses one composed port and retains native once, capture and attachment ordering", async () => {
+    const f = combinedFixture(), h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    expect((await h.model.doGenerate(params())).content).toEqual([{ type: "text", text: "answer" }]);
+    expect(f.events).toEqual(["combined", "admit", "checkpoint", "native", "capture", "attach"]);
+    expect(f.count()).toBe(1); expect(f.admissions[0]).not.toHaveProperty("snapshotCanonical"); await h.lifecycle.complete();
+  });
+  it.each(["uncertain", "inflight", "replay"] as const)("%s never calls checkpoint/native or generic ports", async status => {
+    const f = combinedFixture(); f.disposition(status); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: status === "replay" ? "REPLAY_AVAILABLE" : "UNCERTAIN_OR_INFLIGHT" });
+    expect(f.events).toEqual(["combined", "admit"]); expect(f.count()).toBe(0); expect(tokenLookup).not.toHaveBeenCalled();
+    expect(await h.lifecycle.consumeReplay()).toEqual(status === "replay" ? { text: "saved" } : undefined); await h.lifecycle.complete();
+  });
+  it.each(["missing-permit", "extra-field", "permit-getter", "admission-mismatch", "permit-mismatch", "no-permit", "nonreserved-permit"])("strict %s envelope cannot enable inference or fall back", async kind => {
+    const f = combinedFixture(), combined = f.composition.ledger.admitAndCheckpoint!; let getterCalls = 0;
+    f.composition.ledger.admitAndCheckpoint = async args => {
+      if (kind === "nonreserved-permit") return { admission: { status: "uncertain", operationId: "op", attemptId: "attempt" }, permit: { dispatchPermit: true } } as never;
+      const result = await combined(args); if (!("permit" in result)) throw new Error("Fixture permit required");
+      const modified = { ...result } as Record<string, unknown>;
+      if (kind === "missing-permit") delete modified.permit;
+      if (kind === "extra-field") modified.bypass = true;
+      if (kind === "permit-getter") Object.defineProperty(modified, "permit", { enumerable: true, get() { getterCalls++; return result.permit; } });
+      if (kind === "admission-mismatch") modified.admission = { ...result.admission, requestCanonical: "{}" };
+      if (kind === "permit-mismatch") modified.permit = { ...result.permit, requestCanonical: "{}" };
+      if (kind === "no-permit") modified.permit = { dispatchPermit: false, state: "dispatch_pending", replayAllowed: false };
+      return modified as never;
+    };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(params())).rejects.toThrow(); expect(f.count()).toBe(0); expect(getterCalls).toBe(0);
+    expect(f.receipts).toEqual([]); expect(f.attachments).toEqual([]); expect(tokenLookup).not.toHaveBeenCalled(); await h.lifecycle.complete();
+  });
+  it("lost committed permit response preserves the same uncertain identity and cannot repeat native dispatch", async () => {
+    const f = combinedFixture(), combined = f.composition.ledger.admitAndCheckpoint!; let lost = true;
+    f.composition.ledger.admitAndCheckpoint = async args => { const result = await combined(args); if (lost) { lost = false; throw new Error("Committed response lost"); } return result; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(params())).rejects.toThrow("Committed response lost");
+    await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" });
+    expect(f.events).toEqual(["combined", "admit", "checkpoint", "combined", "admit"]); expect(f.count()).toBe(0);
+    expect(f.admissions[0]).toEqual(f.admissions[1]); expect(f.accounting).toMatchObject({ uncertainUnits: 10000, activeSlots: 1 }); await h.lifecycle.complete();
+  });
+  it("cancel while an issued composition completes keeps the committed permit from reaching native", async () => {
+    const f = combinedFixture(), combined = f.composition.ledger.admitAndCheckpoint!;
+    let release!: () => void, entered!: () => void;
+    const wait = new Promise<void>(resolve => { release = resolve; }), started = new Promise<void>(resolve => { entered = resolve; });
+    f.composition.ledger.admitAndCheckpoint = async args => { const result = await combined(args); entered(); await wait; return result; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), call = h.model.doGenerate(params());
+    await started; h.lifecycle.cancel(); release(); await expect(call).rejects.toThrow();
+    expect(f.count()).toBe(0); expect(f.receipts).toEqual([]); expect(f.accounting.uncertainUnits).toBe(10000); await h.lifecycle.complete();
+  });
+});
+
 describe("bounded governed Gateway middleware", () => {
   it("requires a durable server sink before model construction/resolution", async () => {
     const f = fixture(); const composition = { ...f.composition, terminalSink: undefined } as unknown as GatewayComposition;

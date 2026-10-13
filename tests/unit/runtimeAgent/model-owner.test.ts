@@ -1,6 +1,9 @@
 /** Actual handler/RPC schemas and lifecycle ownership; paid model/tool ports are controlled. */
 import { beforeEach, afterEach, expect, it, jest } from "@jest/globals";
 import { getFunctionName } from "convex/server";
+import type { GatewayComposition, GatewayBinding } from "../../../convex-dev/runtimeGateway";
+import type { ModelCallRequest } from "../../../src/domain/model-policy";
+import { canonicalModelJson } from "../../../src/domain/model-policy";
 import type { ActionCtx } from "../../../convex-dev/_generated/server";
 import { assertNativeArgs } from "./native-arguments";
 import { mergeTransforms } from "../../../node_modules/@convex-dev/agent/dist/vercel/client/streaming.js";
@@ -9,6 +12,7 @@ const complete = jest.fn(async () => {}); let mode = "success";
 const nativeMethods: string[] = [];
 let fixtureFinal: Record<string, unknown>, capturedOptions: Record<string, unknown>, capturedCall: Record<string, unknown>;
 let privateContext: unknown;
+let capturedGateway: GatewayComposition, capturedGatewayBinding: GatewayBinding;
 let streamScenario: ((call: Record<string, unknown>, storage: { saveStreamDeltas: Parameters<typeof mergeTransforms>[0] }) => Promise<void>) | undefined;
 jest.unstable_mockModule("@convex-dev/agent", () => ({ ...nativeAgent, Agent: class {
   constructor(_component: unknown, options: Record<string, unknown>) { capturedOptions = options; if (mode === "constructor") throw new Error("Constructor failure"); }
@@ -43,10 +47,12 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
 } }));
 const { transcriptFixture, installMockRoot, runs, ledger, invoke } = await import("../runtimeTranscript/fixture");
 const originalGateway = await import("../../../convex-dev/runtimeGateway");
-jest.unstable_mockModule("../../../convex-dev/runtimeGateway", () => ({ ...originalGateway, createGovernedGatewayModel: async () => ({
+jest.unstable_mockModule("../../../convex-dev/runtimeGateway", () => ({ ...originalGateway, createGovernedGatewayModel: async (composition: GatewayComposition, binding: GatewayBinding) => {
+  capturedGateway = composition; capturedGatewayBinding = binding;
+  return {
   model: { specificationVersion: mode === "identity" ? "v3" : "v4", doStream: async () => {}, doGenerate: async () => {}, provider: "controlled", modelId: "controlled/model" },
   lifecycle: { complete, signal: new AbortController().signal },
-}) }));
+}; } }));
 const originalTools = await import("../../../convex-dev/runtimeAgentTools");
 const executeTool = jest.fn(async (_ctx: unknown, binding: { checkCurrent(): Promise<void> }) => { await binding.checkCurrent(); return { result: { context: "PRIVATE_TOOL_CONTEXT", profileId: "controlled" }, witnesses: [] }; });
 jest.unstable_mockModule("../../../convex-dev/runtimeAgentTools", () => ({ ...originalTools, executeServerTool: executeTool }));
@@ -70,7 +76,7 @@ async function setup(withTool = false, streaming = true) {
     if (reg) {
       assertNativeArgs(reg, args); calls.push(name);
       // The actual combined native mutation commits or rolls back as one parent.
-      return name === "runtimeAgent:prepareModelOperation" ? await f.transaction(async () => await invoke(reg, f.ctx, args)) : await invoke(reg, f.ctx, args);
+      return ["runtimeAgent:prepareModelOperation", "runtimeAgent:admitModelOperation"].includes(name) ? await f.transaction(async () => await invoke(reg, f.ctx, args)) : await invoke(reg, f.ctx, args);
     }
     return await mutation(reference as never, args as never);
   }) as typeof f.ctx.runMutation;
@@ -215,6 +221,29 @@ it("the whole model path obeys native RPC schemas, uses private pinned history a
   expect(calls).not.toContain("runtimeAgent:completedModelStep"); expect(calls).not.toContain("runtimeAgent:beginOperation"); expect(calls).not.toContain("runtimeAgent:startOperation");
   expect(calls).toContain("runtimeAgent:recordOutput"); expect(calls).toContain("runtimeAgent:finishOperation"); expect(complete).toHaveBeenCalledTimes(1);
   expect(JSON.stringify(f.db.table("runtimeAgentOutput"))).not.toContain("PROVIDER_SECRET");
+});
+it("the actual model action wires only its exact original binding to one native Agent admission/checkpoint parent", async () => {
+  const { f, args, calls } = await setup();
+  streamScenario = async () => {
+    const b = capturedGatewayBinding, r = await capturedGateway.ledger.resolve(b), pins = r.snapshot.pins;
+    const request: ModelCallRequest = { semanticId: b.semanticId, childCallId: "normalized-child", texts: ["Hello"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello" }] }],
+      inputTokens: 1, outputTokens: 16, toolSteps: 0, timeoutMs: 1000, reservationUnits: r.snapshot.costBound.maximumCostUnits,
+      promptVersion: pins.promptVersion, schemaVersion: pins.schemaVersion, extractionVersion: pins.extractionVersion, toolRegistryVersion: pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+    request.inputTokens = ledger.deriveQualifiedInputBound(r.dispatchEvidence, request);
+    const combined = capturedGateway.ledger.admitAndCheckpoint!;
+    for (const change of [{ operationKey: "memory.extract" }, { runBudgetId: "foreign" }, { semanticId: "foreign" }, { ordinal: 1 }, { parentOperationId: "foreign" }, { source: {} }, { reference: { ...b.reference, tenantId: "foreign" } }]) {
+      await expect(combined({ ...b, ...change, requestCanonical: canonicalModelJson(request), snapshotCanonical: canonicalModelJson(r.snapshot) } as never)).rejects.toThrow();
+      expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+    }
+    const result = await combined({ ...b, requestCanonical: canonicalModelJson(request), snapshotCanonical: canonicalModelJson(r.snapshot) });
+    expect(result).toMatchObject({ admission: { status: "reserved" }, permit: { dispatchPermit: true } });
+    expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+    expect(f.db.table("runtimeModelAttempts")[0].state).toBe("dispatch_pending");
+  };
+  await runtime.modelStepHandler(f.ctx as unknown as ActionCtx, { ...args, ordinal: 0 });
+  expect(calls.filter(name => name === "runtimeAgent:admitModelOperation")).toHaveLength(1);
+  expect(calls).not.toContain("runtimeAgent:bindNativeOperation"); expect(calls).not.toContain("runtimeModelPolicy:admit"); expect(calls).not.toContain("runtimeModelPolicy:checkpoint");
+  expect(calls).toContain("runtimeAgent:hydrateExecution"); expect(calls).toContain("runtimeAgent:finishOperation"); expect(complete).toHaveBeenCalledTimes(1);
 });
 it("the whole deferred tool path keeps exact native schemas and its primary model parent; completed tool replay performs no second effect", async () => {
   const { f, args, calls } = await setup(true);
