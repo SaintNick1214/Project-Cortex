@@ -151,14 +151,15 @@ export const checkToolAuthority = internalQuery({ args: { reference: runtimeAuth
 } });
 const selector = { runId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()) };
 /** Start is atomic with one claim and Workflow insertion. The public request cannot choose models/tools/context. */
-export const start = mutation({ args: { ...selector, streaming: v.optional(v.boolean()) }, handler: async (ctx, args) => {
+export async function startHandler(ctx: MutationCtx, args: { runId: string; memorySpaceId?: string; tenantId?: string; streaming?: boolean }) {
   const actor = await requireDataAuthority(ctx, args, "run"); const reference = dataAuthorityReference(actor);
   const current = await currentRun(ctx, reference, args.runId, "run");
   if (canonicalModelJson(reference) !== canonicalModelJson(current.row.authorityReference)) transcriptDenied();
   if (current.row.executionRequested && current.row.streamingRequested !== (args.streaming ?? true)) transcriptDenied("IDEMPOTENCY_CONFLICT");
   await ctx.db.patch("runtimeRuns", current.row._id, { executionRequested: true, streamingRequested: args.streaming ?? true });
   return await startExecution(ctx, reference, current.row, args.streaming ?? true);
-} });
+}
+export const start = mutation({ args: { ...selector, streaming: v.optional(v.boolean()) }, handler: startHandler });
 async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityReference, row: Doc<"runtimeRuns">, streaming: boolean) {
   const old = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!).eq("runId", row.runId).eq("attemptNumber", row.attemptNumber)).take(2));

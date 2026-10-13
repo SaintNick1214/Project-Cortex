@@ -112,9 +112,10 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown; 
 }
 export const submit = mutation({ args: { request: v.any(), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) }, handler: submitHandler });
 const runSelector = { runId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()) };
-export const get = mutation({ args: runSelector, handler: async (ctx, args) => {
+export async function getHandler(ctx: MutationCtx, args: { runId: string; memorySpaceId?: string; tenantId?: string }) {
   const actor = await requireDataAuthority(ctx, args, "read"); return publicRun((await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read")).row);
-} });
+}
+export const get = mutation({ args: runSelector, handler: getHandler });
 export const list = mutation({ args: { conversationId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()),
   afterSequence: v.optional(v.number()), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
   const { reference } = await requireConversation(ctx, args, args.conversationId, "read");

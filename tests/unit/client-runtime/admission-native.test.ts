@@ -39,19 +39,29 @@ async function fixture(options: { maxContextTokens?: number } = {}) {
   const snapshot = () => clone({ rows: f.db.rows, native: f.native, scheduled: f.scheduled, effects: f.effects, writes: f.db.writes });
   return { ...f, admit, calls, workflows, snapshot };
 }
+function afterWorkflow(f: Awaited<ReturnType<typeof fixture>>, change: () => void) {
+  const native = f.ctx.scheduler.runAfter.bind(f.ctx.scheduler), reached = { value: false };
+  f.ctx.scheduler.runAfter = async (delay, ref, ...args) => {
+    const result = await native(delay, ref, ...args);
+    if (getFunctionName(ref) === "runtimeAgent:executeTurn") { reached.value = true; change(); }
+    return result;
+  };
+  return reached;
+}
 describe("combined native run admission", () => {
-  it("composes the original registered submit/start/get guards with exact selectors and one durable attempt/account", async () => {
+  it("directly composes the original submit/start/get bodies with exact selectors and one durable attempt/account", async () => {
     const f = await fixture(), request = f.request();
     const result = await f.admit(request, { tenantId: "tenant-a", memorySpaceId: "space-a", streaming: false });
     expect(result).toMatchObject({ version: 1, run: { responseStatus: "running", attemptNumber: 1 }, start: { runId: result.run.runId, attemptNumber: 1, state: "ready" } });
-    expect(f.calls.filter(call => ["runs:submit", "runtimeAgent:start", "runs:get"].includes(call.name))).toEqual([
-      { name: "runs:submit", args: { request, tenantId: "tenant-a", memorySpaceId: "space-a" } },
-      { name: "runtimeAgent:start", args: { runId: result.run.runId, streaming: false, tenantId: "tenant-a", memorySpaceId: "space-a" } },
-      { name: "runs:get", args: { runId: result.run.runId, tenantId: "tenant-a", memorySpaceId: "space-a" } },
+    expect(f.calls.filter(call => ["runs:submit", "runtimeAgent:start", "runs:get"].includes(call.name))).toEqual([]);
+    expect(f.calls.filter(call => call.name === "runs:claimNext")).toEqual([
+      { name: "runs:claimNext", args: { reference: f.reference, conversationId: result.run.conversationId, leaseMs: 300_000 } },
     ]);
     expect(f.effects.saves).toBe(1); expect(f.db.table("runtimeRunAttempts")).toHaveLength(1);
     expect(f.workflows()).toHaveLength(1); expect(f.db.table("runtimeAgentExecutions")).toMatchObject([{ streaming: false }]);
     const row = f.db.table("runtimeRuns")[0];
+    expect(result.run.scope).toEqual({ tenantId: "tenant-a", memorySpaceId: "space-a" });
+    expect(row).toMatchObject({ tenantId: "tenant-a", memorySpaceId: "space-a", executionRequested: true, streamingRequested: false });
     expect(row.authorityReference).toEqual(f.reference); expect(row.runAccountId).toBeTruthy(); expect(row.snapshotCanonical).toBeTruthy();
     expect(f.db.table("runtimeRunOutbox")).toMatchObject([{ state: "claimed", runId: result.run.runId }]);
     expect(f.db.table("runtimeConversations")[0].manualWriteLocked).toBe(true);
@@ -122,22 +132,90 @@ describe("combined native run admission", () => {
     expect(f.snapshot()).toEqual(before); expect(f.workflows()).toEqual([]); expect(f.db.table("runtimeRuns")).toEqual([]);
   });
   it("a revoked grant between submit and start cannot leave transcript, budget, outbox or Workflow effects", async () => {
-    const f = await fixture(), native = f.ctx.runMutation.bind(f.ctx), before = f.snapshot();
-    f.ctx.runMutation = async (ref, ...args) => {
-      const result = await native(ref, ...args);
-      let name = ""; try { name = getFunctionName(ref as never); } catch { /* Native component route. */ }
-      if (name === "runs:submit") f.grant.revokedAt = Date.now(); return result;
+    const f = await fixture(), native = f.db.get.bind(f.db), before = f.snapshot(); let reached = false;
+    f.db.get = async (table, id) => {
+      const row = await native(table, id);
+      // submit's final DB read follows its final authority check. Mutate the
+      // actual grant before start's own fresh authority lookup, not a helper mock.
+      if (table === "runtimeRuns" && row?.responseStatus === "queued" && !row.executionRequested) {
+        reached = true; f.grant.revokedAt = Date.now();
+      }
+      return row;
     };
-    await expect(f.admit()).rejects.toThrow(); expect(f.snapshot()).toEqual(before);
+    await expect(f.admit()).rejects.toThrow("FORBIDDEN"); expect(reached).toBe(true); expect(f.snapshot()).toEqual(before);
   });
   it("an altered returned identity after native start rolls back the parent including Workflow insertion", async () => {
-    const f = await fixture(), native = f.ctx.runMutation.bind(f.ctx), before = f.snapshot();
-    f.ctx.runMutation = (async (ref: unknown, args: unknown) => {
-      const result = await native(ref as never, args as never);
-      let name = ""; try { name = getFunctionName(ref as never); } catch { /* Native component route. */ }
-      return name === "runs:get" ? { ...result as object, definitionHash: "unknown" } : result;
-    }) as typeof f.ctx.runMutation;
-    await expect(f.admit()).rejects.toThrow("TRANSCRIPT_CONFLICT"); expect(f.snapshot()).toEqual(before);
+    const f = await fixture(), before = f.snapshot();
+    const reached = afterWorkflow(f, () => { f.db.table("runtimeRuns")[0].definitionHash = "unknown"; });
+    // Actual getHandler projects the changed DB row. The final tuple fence
+    // catches it after real start/claim/scheduling have already succeeded.
+    await expect(f.admit()).rejects.toThrow("TRANSCRIPT_CONFLICT");
+    expect(reached.value).toBe(true); expect(f.snapshot()).toEqual(before);
+  });
+  it("a grant expiring exactly now rejects admission without effects", async () => {
+    const f = await fixture(); f.grant.expiresAt = Date.now(); const before = f.snapshot();
+    await expect(f.admit()).rejects.toThrow("FORBIDDEN"); expect(f.snapshot()).toEqual(before);
+  });
+  it.each(["read_missing", "grant_expired", "conversation_expired", "conversation_tombstoned", "run_tombstoned", "conversation_epoch"])(
+    "%s after Workflow insertion is freshly denied and rolls back every effect", async kind => {
+      const f = await fixture(), before = f.snapshot();
+      const reached = afterWorkflow(f, () => {
+        if (kind === "read_missing") f.grant.capabilities = (f.grant.capabilities as string[]).filter(cap => cap !== "read");
+        if (kind === "grant_expired") f.grant.expiresAt = Date.now();
+        if (kind === "conversation_expired") f.db.table("runtimeConversations")[0].retentionUntil = Date.now();
+        if (kind === "conversation_tombstoned") f.db.table("runtimeConversations")[0].tombstonedAt = Date.now();
+        if (kind === "run_tombstoned") f.db.table("runtimeRuns")[0].tombstonedAt = Date.now();
+        if (kind === "conversation_epoch") f.db.table("runtimeConversations")[0].epoch = 2;
+      });
+      await expect(f.admit()).rejects.toThrow(kind === "conversation_epoch" ? "STALE_TRANSCRIPT" : "FORBIDDEN");
+      expect(reached.value).toBe(true); expect(f.snapshot()).toEqual(before);
+    });
+  it.each(["retired_definition", "changed_definition", "edited_input"])("%s before native claim is denied by the unchanged start/claim bodies", async kind => {
+    const f = await fixture(), native = f.db.get.bind(f.db), before = f.snapshot(); let reached = false;
+    f.db.get = async (table, id) => {
+      const row = await native(table, id);
+      if (table === "runtimeRuns" && row?.responseStatus === "queued" && !row.executionRequested) {
+        reached = true;
+        if (kind === "retired_definition") f.db.table("runtimeAgentDefinitions")[0].revokedAt = Date.now();
+        if (kind === "changed_definition") f.db.table("runtimeRuns")[0].definitionHash = "unknown";
+        if (kind === "edited_input") {
+          const message = f.native.messages.get((row.inputMessageIds as string[])[0])!;
+          message.message = { role: "user", content: [{ type: "text", text: "Edited after submit" }] };
+        }
+      }
+      return row;
+    };
+    await expect(f.admit()).rejects.toThrow(); expect(reached).toBe(true); expect(f.snapshot()).toEqual(before);
+    expect(f.workflows()).toEqual([]);
+  });
+  it.each(["native_save", "native_claim", "workflow_schedule"])("%s failure after native writes rolls back the complete parent", async kind => {
+    const f = await fixture(), before = f.snapshot(); let reached = false;
+    if (kind === "workflow_schedule") {
+      const native = f.ctx.scheduler.runAfter.bind(f.ctx.scheduler);
+      f.ctx.scheduler.runAfter = async (delay, ref, ...args) => {
+        const result = await native(delay, ref, ...args);
+        if (getFunctionName(ref) === "runtimeAgent:executeTurn") {
+          reached = true; expect(f.db.table("runtimeAgentExecutions")).toHaveLength(1); expect(f.workflows()).toHaveLength(1);
+          throw new Error("INJECTED_NATIVE_FAILURE");
+        }
+        return result;
+      };
+    } else {
+      const native = f.ctx.runMutation.bind(f.ctx);
+      f.ctx.runMutation = async (ref, ...args) => {
+        const result = await native(ref, ...args);
+        const path = (ref as Partial<Record<symbol, string>>)[Symbol.for("toReferencePath")];
+        let name = ""; if (!path) name = getFunctionName(ref);
+        if ((kind === "native_save" && path?.endsWith("/addMessages")) || (kind === "native_claim" && name === "runs:claimNext")) {
+          reached = true; expect(f.effects.saves).toBe(1);
+          expect(f.db.table("runtimeBudgetAccounts").some(row => row.kind === "run")).toBe(true);
+          if (kind === "native_claim") expect(f.db.table("runtimeRunAttempts")).toHaveLength(1);
+          throw new Error("INJECTED_NATIVE_FAILURE");
+        }
+        return result;
+      };
+    }
+    await expect(f.admit()).rejects.toThrow("INJECTED_NATIVE_FAILURE"); expect(reached).toBe(true); expect(f.snapshot()).toEqual(before);
   });
   it("legacy submit/start remains compatible with subsequent same-request combined admission", async () => {
     const f = await fixture(), submitted = await f.run(); await f.call(runtime.start, { runId: submitted.runId });

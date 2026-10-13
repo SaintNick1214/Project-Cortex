@@ -1,0 +1,93 @@
+{
+  "scope": "AST source equivalence only; runtime proof is separate focused Jest fixture",
+  "allPassed": true,
+  "checks": [
+    {
+      "file": "convex-dev/runs.ts",
+      "check": "original handler body identical",
+      "pass": true,
+      "bodySha256": "87d68ce9745e2929704a41f0ad70da11ba92db6826117de099ab2cf746a324f3"
+    },
+    {
+      "file": "convex-dev/runs.ts",
+      "check": "registered argument validator identical",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runs.ts",
+      "check": "registration points to actual shared helper",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "check": "original handler body identical",
+      "pass": true,
+      "bodySha256": "27228df94aaec5a52b42315b37418178c25be5eaf4ea190381701fa6a475bb65"
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "check": "registered argument validator identical",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "check": "registration points to actual shared helper",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runs.ts",
+      "check": "submitHandler unchanged",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "check": "startExecution unchanged",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "check": "modelStepHandler unchanged",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "check": "submitted identical args and awaited direct helper",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "check": "start identical args and awaited direct helper",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "check": "run identical args and awaited direct helper",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "check": "selectors identical",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "check": "final tuple check and return unchanged",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "check": "submitAndStart registered args/handler unchanged where applicable",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "check": "session registered args/handler unchanged where applicable",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "check": "signal registered args/handler unchanged where applicable",
+      "pass": true
+    }
+  ]
+}

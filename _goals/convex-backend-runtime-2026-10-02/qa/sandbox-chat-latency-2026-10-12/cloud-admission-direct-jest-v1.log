@@ -1,0 +1,199 @@
+(node:7799) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/client.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/execution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/admission-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeTranscript/managed.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/observe-delivery.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.5s | 63/63 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     2.8s | 60/60 passed | /tests/unit/client-runtime/client.test.ts
+  ✅     1.9s | 32/32 passed | /tests/unit/client-runtime/admission-native.test.ts
+  ✅     1.9s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+  ✅     0.3s | 2/2 passed | /tests/unit/client-runtime/observe-delivery.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.48s ( 4.2%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.3%) - durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.3%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.3%) - durable Agent execution product boundaries strict facts barrier waits and then reports the pinned deadline before embedding dispatch
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.3%) - durable Agent execution product boundaries strict readiness and pending context resolve against the owned run budget before model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+10. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries future queued request remains durable and only dispatches after the current head retires
+    /tests/unit/runtimeAgent/execution.test.ts
+
+12. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries source/manual edits fence every delegated operation and finalization before effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+13. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries atomic Agent ledger fence rejects a saved pin matching native position before-anchor outside the run anchor
+    /tests/unit/runtimeAgent/execution.test.ts
+
+14. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries saved private tool/model position mutation cannot reach a later native admission
+    /tests/unit/runtimeAgent/execution.test.ts
+
+15. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries tool source commits recheck cancellation in the effect transaction, after an earlier approved check
+    /tests/unit/runtimeAgent/execution.test.ts
+
+16. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries atomic Agent ledger fence rejects a saved pin matching native position different-order outside the run anchor
+    /tests/unit/runtimeAgent/execution.test.ts
+
+17. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach
+    /tests/unit/runtimeAgent/execution.test.ts
+
+18. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries finalization registers canonical messages and one ingestion receipt atomically/idempotently
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries queue recovery retires an expired active approval but leaves intentional unclaimed input approval pending
+    /tests/unit/runtimeAgent/execution.test.ts
+
+20. [32m✓[0m    0.02s ( 0.2%) - canonical transcript lifetime/compatibility/privacy unlocked edit preserves native ID, records actor/revision, and immediately invalidates facts/vectors/witnesses
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.97s (8.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      11.56s
+  Test suites:        5
+  Individual tests:   127
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 5 passed, 5 total
+Tests:       172 passed, 172 total
+Snapshots:   0 total
+Time:        11.565 s
+Ran all test suites within paths "tests/unit/client-runtime/admission-native.test.ts", "tests/unit/client-runtime/client.test.ts", "tests/unit/client-runtime/observe-delivery.test.ts", "tests/unit/runtimeTranscript/managed.test.ts", "tests/unit/runtimeAgent/execution.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-direct-jest-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "status": "SOURCE_TEST_COMPLETE",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "versions": {
+    "convex": "1.46.0",
+    "typescript": "6.0.3",
+    "jest": "30.5.2",
+    "eslint": "10.11.0"
+  },
+  "scope": "offline actual-handler controlled transactional/native-component fixture; no live/OCC/timing claim",
+  "checks": [
+    {
+      "name": "focused Jest",
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9 CORTEX_RUNTIME_LATENCY_TRACE=0 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --testTimeout=10000 --runInBand --runTestsByPath tests/unit/client-runtime/admission-native.test.ts tests/unit/client-runtime/client.test.ts tests/unit/client-runtime/observe-delivery.test.ts tests/unit/runtimeTranscript/managed.test.ts tests/unit/runtimeAgent/execution.test.ts --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-direct-jest-v1.json",
+      "exit": 0,
+      "log": "cloud-admission-direct-jest-v1.log"
+    },
+    {
+      "name": "backend types",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit -p convex-dev/tsconfig.json",
+      "exit": 0,
+      "log": "cloud-admission-direct-backend-types-v1.log"
+    },
+    {
+      "name": "lint types",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit -p tsconfig.lint.json",
+      "exit": 0,
+      "log": "cloud-admission-direct-lint-types-v1.log"
+    },
+    {
+      "name": "scoped ESLint",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/eslint/bin/eslint.js convex-dev/runtimeClient.ts convex-dev/runs.ts convex-dev/runtimeAgent.ts tests/unit/client-runtime/admission-native.test.ts --report-unused-disable-directives",
+      "exit": 0,
+      "log": "cloud-admission-direct-eslint-v1.log"
+    },
+    {
+      "name": "scoped diff whitespace",
+      "command": "git diff --check -- convex-dev/runs.ts convex-dev/runtimeAgent.ts convex-dev/runtimeClient.ts tests/unit/client-runtime/admission-native.test.ts",
+      "exit": 0
+    },
+    {
+      "name": "scoped AST body/validator equivalence",
+      "exit": 0,
+      "receipt": "cloud-admission-direct-equivalence-v1.json"
+    }
+  ],
+  "tests": {
+    "total": 172,
+    "passed": 172,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "suites": 5,
+    "files": [
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/client.test.ts",
+        "status": "passed",
+        "total": 60,
+        "passed": 60,
+        "skipped": 0
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+        "status": "passed",
+        "total": 63,
+        "passed": 63,
+        "skipped": 0
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/admission-native.test.ts",
+        "status": "passed",
+        "total": 32,
+        "passed": 32,
+        "skipped": 0
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/managed.test.ts",
+        "status": "passed",
+        "total": 15,
+        "passed": 15,
+        "skipped": 0
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/observe-delivery.test.ts",
+        "status": "passed",
+        "total": 2,
+        "passed": 2,
+        "skipped": 0
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "convex-dev/runs.ts",
+      "sha256": "6cb60d04a373f1123e41951c257c57089fce9a00b167fead16fd0424a4f8ec3e"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "e86ec3e1aecc293aa49fcb7fe7f6b37defee4593af986b45d043e0a54d3cce61"
+    },
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "sha256": "8d9b97f2d270cbc8efdbd47ff04c0fec0e9c7b819d949d0c542ca5e96c07fd45"
+    },
+    {
+      "path": "tests/unit/client-runtime/admission-native.test.ts",
+      "sha256": "b4607fb622bed54a156782cb9b5ddd88a99a205ee349ac1ef0b3ba66bd80e4eb"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "cloud-admission-direct-jest-v1.log",
+      "sha256": "6676d57d0db311103ab660843464f6757fc53cedfd7a3f371b12f43abeb7347c"
+    },
+    {
+      "path": "cloud-admission-direct-jest-v1.json",
+      "sha256": "f2133128c1ddfd038c6b4a05fda401750aad398450003cf308d90ea7fb062c62"
+    },
+    {
+      "path": "cloud-admission-direct-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-admission-direct-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-admission-direct-eslint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-admission-direct-equivalence-v1.json",
+      "sha256": "2aa68c618b48d00b2d61210cefbfe511830cce48264b705e25048d90f8f0d26f"
+    }
+  ]
+}
