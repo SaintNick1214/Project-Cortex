@@ -239,10 +239,10 @@ it("a lost completed native result cannot repeat context saves or create model w
   const f = await fixture(), { args } = await f.start(); expect(await f.call(runtime.prepareRoutedContext, args)).toEqual({ state: "COMPLETE" }); const before = state(f);
   await expect(f.call(runtime.prepareRoutedContext, args)).rejects.toThrow("INVALID_STATE"); expect(state(f)).toEqual(before);
 });
-it("fresh starts route only V4 with the same startAsync/completion/duplicate ownership contracts", async () => {
+it("fresh starts route only V4 with immediate initialization and completion/duplicate ownership contracts", async () => {
   const f = await fixture(), { run } = await f.start(); expect(starts).toHaveLength(1); expect(getFunctionName(starts[0][1] as never)).toBe("runtimeAgent:executeTurnV4");
-  expect(starts[0][3]).toMatchObject({ startAsync: true, context: { runId: run.runId, attemptNumber: 1 } });
-  expect(getFunctionName((starts[0][3] as { onComplete: never }).onComplete)).toBe("runtimeAgent:onWorkflowComplete");
+  expect(starts[0][3]).toMatchObject({ startAsync: false, context: { runId: run.runId, attemptNumber: 1 } });
+  expect(getFunctionName((starts[0][3] as { onComplete: never }).onComplete)).toBe("runtimeAgent:onInitialWorkflowComplete");
   await f.call(runtime.start, { runId: run.runId }); expect(starts).toHaveLength(1);
 });
 async function drive(f: Fixture, args: Awaited<ReturnType<Fixture["start"]>>["args"], options: { entries?: Entry[]; journalModel?: boolean } = {}) {

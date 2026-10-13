@@ -103,11 +103,11 @@ it.each(["empty", "pending", "pending_unknown", "barrier_warning"])("inline %s c
   expect(f.db.table("runtimeModelOperations")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
   if (mode === "pending_unknown") expect(f.db.table("runtimeIngestionEvents")[0].factsState).toBe("unknown");
 });
-it("fresh starts dispatch the additive Workflow version and retain startAsync/onComplete and duplicate ownership", async () => {
+it("fresh starts dispatch the additive Workflow version with immediate initialization/onComplete and duplicate ownership", async () => {
   const f = await fixture(), { run } = await f.start();
   expect(starts).toHaveLength(1); expect(getFunctionName(starts[0][1] as never)).toBe("runtimeAgent:executeTurnV4");
-  expect(starts[0][3]).toMatchObject({ startAsync: true, context: { runId: run.runId, attemptNumber: 1 } });
-  expect(getFunctionName((starts[0][3] as { onComplete: never }).onComplete)).toBe("runtimeAgent:onWorkflowComplete");
+  expect(starts[0][3]).toMatchObject({ startAsync: false, context: { runId: run.runId, attemptNumber: 1 } });
+  expect(getFunctionName((starts[0][3] as { onComplete: never }).onComplete)).toBe("runtimeAgent:onInitialWorkflowComplete");
   await f.call(runtime.start, { runId: run.runId }); expect(starts).toHaveLength(1);
 });
 it.each(["eligible_index", "metadata_overflow", "pending_overflow_warn"])("%s needs the unchanged Action without context or model effects", async mode => {

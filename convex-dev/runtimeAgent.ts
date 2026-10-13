@@ -7,7 +7,7 @@ import { Agent, saveMessages, abortStream } from "@convex-dev/agent";
 import type { MessageDoc } from "@convex-dev/agent";
 import { WorkflowManager } from "@convex-dev/workflow";
 import type { WorkflowId } from "@convex-dev/workflow";
-import { makeFunctionReference } from "convex/server";
+import { createFunctionHandle, makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { isStepCount } from "ai";
@@ -52,6 +52,7 @@ import type { RuntimePublicOutputPart } from "./runtimeOutputProjection";
 type Attempt = { reference: RuntimeAuthorityReference; runId: string; attemptNumber: number; leaseVersion: number };
 type ToolCall = { toolCallId: string; toolName: string; inputCanonical: string };
 type StepResult = { savedMessageIds: string[]; calls: ToolCall[]; final: boolean };
+type WorkflowCompletion = { workflowId: string; context: Attempt; result: { kind: "success"; returnValue: null } | { kind: "failed"; error: string } | { kind: "canceled" } };
 type Witness = ContextSourceWitness;
 type ContextSourceArgs = { reference: RuntimeAuthorityReference; sourceId: string;
   expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }; excludedSourceKeys: string[]; cutoff: number; boundary: ContextBoundary };
@@ -62,8 +63,10 @@ function ref<Type extends "mutation" | "query" | "action", Args extends Record<s
   void type;
   return makeFunctionReference<Type, Args, Result>(name) as unknown as FunctionReference<Type, "internal", Args, Result>;
 }
-const workflow = new WorkflowManager((components as unknown as { workflow: ConstructorParameters<typeof WorkflowManager>[0] }).workflow,
-  { workpoolOptions: { maxParallelism: 4 } });
+const workflowComponent = (components as unknown as { workflow: ConstructorParameters<typeof WorkflowManager>[0] }).workflow;
+const workflow = new WorkflowManager(workflowComponent, { workpoolOptions: { maxParallelism: 4 } });
+const freshWorkflow = ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurnV4");
+const freshWorkflowComplete = ref<"mutation", WorkflowCompletion, null>("mutation", "runtimeAgent:onInitialWorkflowComplete");
 const refs = {
   claim: ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string; leaseMs: number }, { runId: string; attemptNumber: number; leaseVersion: number } | { runId: string; failureCode: string } | null>("mutation", "runs:claimNext"),
   hydrate: ref<"query", Attempt, Awaited<ReturnType<typeof executionContext>>>("query", "runtimeAgent:hydrateExecution"),
@@ -217,10 +220,12 @@ async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityRefer
   const id = await ctx.db.insert("runtimeAgentExecutions", { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, ...attempt,
     state: "ready", streaming, nextOutputSequence: 0, nextModelStep: 0, toolCount: 0,
     sourceWitnesses: [], mediaJobReferences: [], savedMessageIds: [], savedMessagePins: [], createdAt: now, updatedAt: now });
-  const workflowId = await workflow.start(ctx, ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurnV4"), attempt,
-    { startAsync: true, onComplete: ref<"mutation", { workflowId: WorkflowId; context: Attempt; result: { kind: "success"; returnValue: null } | { kind: "failed"; error: string } | { kind: "canceled" } }, null>("mutation", "runtimeAgent:onWorkflowComplete"), context: attempt });
+  const workflowId = await workflow.start(ctx, freshWorkflow, attempt,
+    { startAsync: false, onComplete: freshWorkflowComplete, context: attempt });
+  const started = await ctx.db.get("runtimeAgentExecutions", id);
+  if (!started || started.workflowId !== undefined && started.workflowId !== workflowId) transcriptDenied();
   await ctx.db.patch("runtimeAgentExecutions", id, { workflowId });
-  return { runId: row.runId, attemptNumber: claimed.attemptNumber, state: "ready" as const };
+  return { runId: row.runId, attemptNumber: claimed.attemptNumber, state: started.state };
 }
 export const dispatchReady = internalMutation({ args: { reference: runtimeAuthorityReference, runId: v.string() }, handler: async (ctx, args) => {
   const current = await currentRun(ctx, args.reference, args.runId, "run");
@@ -647,7 +652,7 @@ async function prepareModelOperationHandler(ctx: MutationCtx, args: Attempt & { 
   await startOperationHandler(ctx, { ...attempt, operationId: op.operationId });
   return { state: "started" as const, current, op };
 }
-export const prepareModelOperation = internalMutation({ args: { ...agentAttempt, ordinal: v.number() }, handler: prepareModelOperationHandler });
+export const prepareModelOperation = internalMutation({ args: { ...agentAttempt, ordinal: v.number() }, handler: (ctx, args) => prepareModelOperationHandler(createAuthorityReadScope(ctx), args) });
 export const finishOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), resultCanonical: v.string(), nativeMessageIds: v.array(v.string()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); const owned = await operation(ctx, args, args.operationId);
   if (owned.state !== "started" || utf8Bytes(args.resultCanonical) > 180_000 || canonicalModelJson(JSON.parse(args.resultCanonical)) !== args.resultCanonical) transcriptDenied("INVALID_STATE");
@@ -1077,6 +1082,21 @@ export const endInterrupted = internalMutation({ args: { ...agentAttempt, cancel
 export const onWorkflowComplete = internalMutation({ args: { workflowId: v.string(), context: v.any(), result: v.any() }, handler: async (ctx, args) => {
   const context = args.context as Attempt; const owned = await execution(ctx, context); if (owned.workflowId !== args.workflowId) transcriptDenied();
   if (owned.state !== "complete") await ctx.runMutation(refs.end, { ...context, cancelled: (args.result as { kind?: string }).kind === "canceled" }); return null;
+} });
+/** Immediate start can fail before start returns its ID. Only the actual completed
+ * fresh Workflow document may attach that ID; the original strict callback then runs. */
+export const onInitialWorkflowComplete = internalMutation({ args: { workflowId: v.string(), context: v.object(agentAttempt),
+  result: v.union(v.object({ kind: v.literal("success"), returnValue: v.null() }), v.object({ kind: v.literal("failed"), error: v.string() }), v.object({ kind: v.literal("canceled") })) }, handler: async (ctx, args) => {
+  const owned = await execution(ctx, args.context);
+  if (owned.workflowId === undefined) {
+    const { workflow: completed, inProgress } = await ctx.runQuery(workflowComponent.workflow.getStatus, { workflowId: args.workflowId });
+    if (owned.state !== "ready" || completed._id !== args.workflowId || completed.generationNumber !== 0 || inProgress.length
+      || completed.workflowHandle !== await createFunctionHandle(freshWorkflow) || completed.onComplete?.fnHandle !== await createFunctionHandle(freshWorkflowComplete)
+      || canonicalModelJson(completed.args) !== canonicalModelJson(args.context) || canonicalModelJson(completed.onComplete?.context) !== canonicalModelJson(args.context)
+      || canonicalModelJson(completed.runResult) !== canonicalModelJson(args.result)) transcriptDenied();
+    await ctx.db.patch("runtimeAgentExecutions", owned._id, { workflowId: args.workflowId });
+  }
+  return await ctx.runMutation(ref<"mutation", WorkflowCompletion, null>("mutation", "runtimeAgent:onWorkflowComplete"), args);
 } });
 export async function observeHandler(ctx: QueryCtx, args: { runId: string; tenantId?: string; memorySpaceId?: string; afterSequence?: number; limit?: number; finalOnly?: boolean }) {
   const actor = await requireDataAuthority(ctx, args, "read"); const current = await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read");

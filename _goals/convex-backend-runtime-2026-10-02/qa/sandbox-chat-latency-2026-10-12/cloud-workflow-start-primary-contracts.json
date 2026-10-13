@@ -1,0 +1,81 @@
+{
+  "version": "0.4.8",
+  "supportedCompletionDocumentRead": "Workflow component workflow.getStatus registered query",
+  "contracts": [
+    {
+      "file": "node_modules/@convex-dev/workflow/src/client/index.ts",
+      "sha256": "4d01892b1e3fa2fb428563932fb38d8b1f1af92d36e75117903c2d037bb24ca1",
+      "excerpts": [
+        {
+          "start": 177,
+          "end": 194,
+          "text": "type StartOptions<Context = unknown> = CallbackOptions<Context> & {\n  /**\n   * By default, during creation the workflow will be initiated immediately.\n   * With `startAsync` set to true, the workflow will be created but will\n   * start asynchronously via the internal workpool.\n   * @default false\n   */\n  startAsync?: boolean;\n};\n\n/**\n * Start a workflow\n *\n * It will run asynchronously, returning a workflow ID to monitor the progress.\n *\n * By default it will start running the handler as part of \"start\" unless\n * `startAsync` is set to true.\n *"
+        },
+        {
+          "start": 604,
+          "end": 636,
+          "text": "      /**\n       * By default, during creation the workflow will be initiated immediately.\n       * The benefit is that you catch errors earlier (e.g. passing a bad\n       * workflow reference or catch arg validation).\n       *\n       * With `startAsync` set to true, the workflow will be created but will\n       * start asynchronously via the internal workpool.\n       * You can use this to queue up a lot of work,\n       * or make `start` return faster (you still get a workflowId back).\n       * @default false\n       */\n      startAsync?: boolean;\n    },\n  ): Promise<WorkflowId> {\n    if (!options?.startAsync) {\n      return start(ctx, workflow, args, options);\n    }\n    const handle = await createFunctionHandle(workflow);\n    const onComplete = options?.onComplete\n      ? {\n          fnHandle: await createFunctionHandle(options.onComplete),\n          context: options.context,\n        }\n      : undefined;\n    const workflowId = await ctx.runMutation(this.component.workflow.create, {\n      workflowName: safeFunctionName(workflow),\n      workflowHandle: handle,\n      workflowArgs: args,\n      maxParallelism: this.options?.workpoolOptions?.maxParallelism,\n      onComplete,\n      startAsync: true,\n    });\n    return workflowId as unknown as WorkflowId;"
+        }
+      ]
+    },
+    {
+      "file": "node_modules/@convex-dev/workflow/src/client/workflowMutation.ts",
+      "sha256": "755b72229753e2248f9530989bb354ce719f49a2421a8e648f5cf0d2094fe263",
+      "excerpts": [
+        {
+          "start": 161,
+          "end": 193,
+          "text": "      // Direct call { args: {...}, onComplete?, context?, startAsync? }\n      if (\"args\" in args) {\n        const metadata = await ctx.meta.getFunctionMetadata();\n        const fn = makeFunctionReference(metadata.name);\n        const onComplete =\n          typeof args.onComplete === \"string\"\n            ? { fnHandle: args.onComplete, context: args.context }\n            : undefined;\n        workflowId = (await ctx.runMutation(component.workflow.create, {\n          workflowName: metadata.name,\n          workflowHandle: await createFunctionHandle(fn),\n          workflowArgs: args.args,\n          maxParallelism: workpoolOptions.maxParallelism,\n          onComplete,\n          startAsync: args.startAsync ?? undefined,\n          createOnly: !args.startAsync, // either start async or run inline here\n        })) as WorkflowId;\n        if (args.startAsync) {\n          return workflowId;\n        }\n        generationNumber = 0;\n      } else {\n        workflowId = args.workflowId;\n        generationNumber = args.generationNumber;\n      }\n\n      const { workflow, logLevel, journalEntries, ok } = await ctx.runQuery(\n        component.journal.load,\n        { workflowId, shortCircuit: true },\n      );\n      const inProgress = journalEntries.filter(({ step }) => step.inProgress);\n      const console = createLogger(logLevel);\n      if (!ok) {"
+        },
+        {
+          "start": 282,
+          "end": 308,
+          "text": "          }\n          return { type: \"handlerDone\", runResult };\n        };\n        const executorWorker = async (): Promise<WorkerResult> => {\n          return await executor.run();\n        };\n        const result = await Promise.race([handlerWorker(), executorWorker()]);\n        switch (result.type) {\n          case \"handlerDone\": {\n            await ctx.runMutation(component.workflow.complete, {\n              workflowId,\n              generationNumber,\n              runResult: result.runResult,\n            });\n            if (!(\"args\" in args)) {\n              return { kind: \"complete\", runResult: result.runResult };\n            }\n            break;\n          }\n          case \"executorBlocked\": {\n            // Nothing to do, we already started steps in the StepExecutor.\n            break;\n          }\n        }\n      } finally {\n        restoreEnvironment();\n      }"
+        }
+      ]
+    },
+    {
+      "file": "node_modules/@convex-dev/workflow/src/component/workflow.ts",
+      "sha256": "4f9d942be0a278dd060b36c7615f03fe47b1bacc96055a886a35aed7643facb2",
+      "excerpts": [
+        {
+          "start": 105,
+          "end": 136,
+          "text": "export const getStatus = query({\n  args: {\n    workflowId: v.id(\"workflows\"),\n  },\n  returns: v.object({\n    workflow: workflowDocument,\n    inProgress: v.array(journalDocument),\n    logLevel: logLevel,\n  }),\n  handler: async (ctx, args) => {\n    const workflow = await ctx.db.get(\"workflows\", args.workflowId);\n    assert(workflow, `Workflow not found: ${args.workflowId}`);\n    const console = await getDefaultLogger(ctx);\n\n    const inProgress = await ctx.db\n      .query(\"steps\")\n      .withIndex(\"inProgress\", (q) =>\n        q.eq(\"step.inProgress\", true).eq(\"workflowId\", args.workflowId),\n      )\n      .collect();\n    console.debug(`${args.workflowId} blocked by`, inProgress);\n    return { workflow, inProgress, logLevel: console.logLevel };\n  },\n});\n\nfunction publicWorkflowId(workflowId: Id<\"workflows\">): WorkflowId {\n  return workflowId as any;\n}\n\nfunction publicWorkflow(workflow: Doc<\"workflows\">): PublicWorkflow {\n  return {\n    workflowId: publicWorkflowId(workflow._id),"
+        },
+        {
+          "start": 426,
+          "end": 448,
+          "text": "  }\n  // Write the workflow so the onComplete can observe the updated status.\n  await ctx.db.replace(\"workflows\", workflow._id, workflow);\n  if (workflow.onComplete) {\n    try {\n      await ctx.runMutation(\n        workflow.onComplete.fnHandle as FunctionHandle<\n          \"mutation\",\n          OnCompleteArgs\n        >,\n        {\n          workflowId: workflow._id as unknown as WorkflowId,\n          result: workflow.runResult,\n          context: workflow.onComplete.context,\n        },\n      );\n    } catch (error) {\n      const message = formatErrorWithStack(error);\n      console.error(\"Error calling onComplete\", message);\n      await ctx.db.insert(\"onCompleteFailures\", {\n        ...args,\n        error: message,\n      });"
+        }
+      ]
+    },
+    {
+      "file": "node_modules/@convex-dev/workflow/src/client/step.ts",
+      "sha256": "b0af5d5e96b011c76cc816e3c329cfb3dfe9bc3dcaa641a91f208edb589ea5dc",
+      "excerpts": [
+        {
+          "start": 164,
+          "end": 198,
+          "text": "        if (message.inline) {\n          if (target.kind !== \"function\" || target.functionType === \"action\") {\n            throw new Error(\n              \"Inline execution is only supported for queries and mutations.\",\n            );\n          }\n          try {\n            const result =\n              target.functionType === \"query\"\n                ? // cast until transactionLimits is shipped / peer dep\n                  await (this.ctx.runQuery as any)(\n                    target.function as FunctionReference<\n                      typeof target.functionType\n                    >,\n                    target.args,\n                    { transactionLimits: message.transactionLimits },\n                  )\n                : // cast until transactionLimits is shipped / peer dep\n                  await (this.ctx.runMutation as any)(\n                    target.function as FunctionReference<\n                      typeof target.functionType\n                    >,\n                    target.args,\n                    { transactionLimits: message.transactionLimits },\n                  );\n            runResult = { kind: \"success\", returnValue: result ?? null };\n          } catch (error: unknown) {\n            runResult = { kind: \"failed\", error: formatErrorWithStack(error) };\n          }\n        }\n\n        const commonFields = {\n          inProgress: !runResult,\n          name: message.name,\n          args,"
+        },
+        {
+          "start": 245,
+          "end": 255,
+          "text": "    const entries = (await this.ctx.runMutation(\n      this.component.journal.startSteps,\n      {\n        workflowId: this.workflowId,\n        generationNumber: this.generationNumber,\n        steps,\n        workpoolOptions: this.workpoolOptions,\n      },\n    )) as JournalEntry[];\n    for (const entry of entries) {\n      this.journalEntrySize += getConvexSize(entry);"
+        }
+      ]
+    },
+    {
+      "file": "node_modules/@convex-dev/workflow/src/client/environment.ts",
+      "sha256": "1f3ea350b7cffecd0f1bbd6f409948fe8d33697cc57f211941584b8b03ece18a",
+      "excerpts": [
+        {
+          "start": 124,
+          "end": 158,
+          "text": "  // environments (e.g. convex-test) that share the same JS global scope and\n  // rely on these globals internally.\n\n  // Disable non-deterministic globals with assignments so test runtimes can\n  // intercept the writes without losing their global isolation accessors.\n  for (const key of [\n    \"process\",\n    \"Crypto\",\n    \"crypto\",\n    \"CryptoKey\",\n    \"SubtleCrypto\",\n  ]) {\n    const descriptor = Object.getOwnPropertyDescriptor(global, key);\n    if (\n      descriptor &&\n      (\"writable\" in descriptor ? !descriptor.writable : !descriptor.set)\n    ) {\n      // Convex exposes read-only Crypto/SubtleCrypto constructors and a\n      // getter-only crypto. Preserve their descriptors when replacing them.\n      readonlyProperties.set(key, descriptor);\n      Object.defineProperty(global, key, {\n        value: undefined,\n        writable: true,\n        enumerable: descriptor.enumerable,\n        configurable: descriptor.configurable,\n      });\n    } else {\n      global[key] = undefined;\n    }\n  }\n\n  return () => {\n    Object.assign(global, originals);\n    for (const [key, descriptor] of readonlyProperties) {\n      Object.defineProperty(global, key, descriptor);"
+        }
+      ]
+    }
+  ]
+}

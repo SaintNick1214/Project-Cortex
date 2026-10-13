@@ -201,10 +201,9 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
   }, [connection.client]);
   useEffect(() => {
     if (!handle || disconnected) return;
-    const stopRun = connection.client.watchRun(handle, setRun, deny);
     // Keep final delivery authorization reactive after response completion and while memory catches up.
-    const stopDelivery = connection.client.watchObservation(handle, () => {}, deny, { finalOnly: true });
-    return () => { stopRun(); stopDelivery(); };
+    const stopDelivery = connection.client.watchObservation(handle, value => setRun(value.run), deny, { finalOnly: true });
+    return () => { stopDelivery(); };
   }, [connection.client, handle, disconnected, deny]);
   async function submit(event: FormEvent) {
     event.preventDefault(); if (!prompt.trim()) return;

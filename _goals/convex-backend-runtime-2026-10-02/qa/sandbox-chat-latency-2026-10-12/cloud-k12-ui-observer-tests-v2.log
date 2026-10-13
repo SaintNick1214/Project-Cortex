@@ -1,0 +1,839 @@
+Running one project: unit
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:80:9)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:80:9)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:93:9)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:93:9)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at tests/unit/runtime-observation.test.ts:105:9
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at tests/unit/runtime-observation.test.ts:105:9
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at tests/unit/runtime-observation.test.ts:105:9
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at tests/unit/runtime-observation.test.ts:105:9
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at tests/unit/runtime-observation.test.ts:105:9
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at tests/unit/runtime-observation.test.ts:105:9
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:114:22)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:114:22)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:126:9)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:126:9)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:131:9)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:14)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:131:9)
+
+FAIL unit tests/unit/runtime-observation.test.ts
+  ● two observers retain empty-page status and post-response memory updates without watchRun
+
+    TypeError: Cannot read properties of null (reading 'useRef')
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:33)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:80:9)
+
+  ● transport approvals and cancel remain reachable while final observer updates run metadata
+
+    TypeError: Cannot read properties of null (reading 'useRef')
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:33)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:93:9)
+
+  ● continuous final denial FORBIDDEN clears private UI after response completion
+
+    TypeError: Cannot read properties of null (reading 'useRef')
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:33)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at tests/unit/runtime-observation.test.ts:105:9
+
+  ● continuous final denial AUTHORITY_EXPIRED clears private UI after response completion
+
+    TypeError: Cannot read properties of null (reading 'useRef')
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:33)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at tests/unit/runtime-observation.test.ts:105:9
+
+  ● continuous final denial SESSION_CHANGED clears private UI after response completion
+
+    TypeError: Cannot read properties of null (reading 'useRef')
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:33)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at tests/unit/runtime-observation.test.ts:105:9
+
+  ● disconnect/reconnect and unmount release both owned observers
+
+    TypeError: Cannot read properties of null (reading 'useRef')
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:33)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:114:22)
+
+  ● signout and verified-auth denial remove the private projection and subscriptions
+
+    TypeError: Cannot read properties of null (reading 'useRef')
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:33)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:126:9)
+
+  ● SDK authentication loss keeps the original owner teardown
+
+    TypeError: Cannot read properties of null (reading 'useRef')
+
+      44 | /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
+      45 | export function RuntimeQuickstart() {
+    > 46 |   const token = useRef<string | null>(null);
+         |                       ^
+      47 |   const owned = useRef<CortexRuntimeClient | null>(null);
+      48 |   const [credential, setCredential] = useState("");
+      49 |   const [connection, setConnection] = useState<Connection | null>(null);
+
+      at process.env.NODE_ENV.exports.useRef (node_modules/react/cjs/react.development.js:1306:33)
+      at RuntimeQuickstart (components/RuntimeQuickstart.tsx:46:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at flushActQueue (../../../node_modules/react/cjs/react.development.js:664:34)
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:960:10)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (../../../node_modules/@testing-library/react/dist/pure.js:198:26)
+      at render (../../../node_modules/@testing-library/react/dist/pure.js:300:10)
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:63:22)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:131:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       8 failed, 8 total
+Snapshots:   0 total
+Time:        0.499 s
+Ran all test suites within paths "tests/unit/runtime-observation.test.ts".

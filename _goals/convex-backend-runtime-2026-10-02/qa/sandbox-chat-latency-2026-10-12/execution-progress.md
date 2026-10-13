@@ -8,3 +8,5 @@
 2026-10-13T20:54:23.147835+00:00 — K12browser20.5156/12.4153s andisolatedCLI17.7316/18.3989sFAILunder1000ms. AllfourresponseexactCOMPLETE; strictnativefacts/vectors/usage/provenance/currentauthority/profile/contiguous8/8PASS. 30attempts/slots0/allreleased/$4.9MmicroUNKNOWNceilings preserved (notcharges). LauncherSIGINTexit130/CliExit0/IABsignoutandclose; freshtargetinventory/exactDockernegative/4privatefoldersgone=ABSENT. No additionalpaidretry. Newbounded3→2UIobserverfix+officialimmediateWorkflowstart/rawscopeprepareinvestigation inprogress; oldV1–V4journalbodieskeepunchanged. Latency2/4=50%.
 
 2026-10-13T21:05:22.307573+00:00 — K12diagnosisindependentPASSonly; 48nativejoins/34Gatewaymarkersverified. Rootwordingcorrectedwholemethod/historicalcausality distinction. Diagnosis100%; latencygoal2/4=50%,0/4subsecondoutcomesPASS.
+
+2026-10-13T21:17:38.463965+00:00 — K13jointsourcePASS4.2/noactionablebreakingfinding. Backend1094/21/0skip, demo148/catalog24, types/lint/buildPASS; overlappingmirror/subsets notsum. Source100%,latency2/4=50%; cloudmeasurementpending. OriginalV1–V4/strictcallback/guards unchanged.

@@ -1,0 +1,25 @@
+{
+  "scope": "Authorized exact two installed QA dependency declarations only; no package version/range upgrades",
+  "manifests": [
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package.json",
+      "beforeSha256": "d65f5c227187b50763e762ed20cb842963c972647465b02f0009bfb1ba5ab25c",
+      "afterSha256": "6dc46be29ad2290014a323154aae680e1a8cfc7bb0a9ae1ba347a84198dfaf3a",
+      "addedDevDependencies": {
+        "@testing-library/react": "^16.3.3",
+        "jest-environment-jsdom": "^30.5.2"
+      }
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/package.json",
+      "beforeSha256": "df3d51485462d7a53ae59931443484c8955aea0b8b61a62ba77281c81bf8c429",
+      "afterSha256": "8862571f46d9b8f2f75ac7ef393bed22d1c0849fa1b4d3d42089f6864c22f29f",
+      "addedDevDependencies": {
+        "@testing-library/react": "^16.3.3",
+        "jest-environment-jsdom": "^30.5.2"
+      }
+    }
+  ],
+  "lockExistingResolvedRows": false,
+  "next": "One authorized npm12.2 package-lock-only offline ignore-scripts invocation"
+}

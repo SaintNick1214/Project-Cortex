@@ -1,0 +1,157 @@
+{
+  "sourceBaseline": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "observedHead": "162f716bd4a687b2760d35fcc42c2a3b104a6c52",
+  "files": [
+    {
+      "path": "packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx",
+      "bytes": 24020,
+      "sha256": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts",
+      "bytes": 10056,
+      "sha256": "b091684cbd3b8473dde6ef42ccd5885b87c1eae7fba72bd377db35a7f87cf996"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package.json",
+      "bytes": 2462,
+      "sha256": "5d512e1223da97bada8e5c85055046f2d928b38602303c5b3d53abae3f9c7035"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package-lock.json",
+      "bytes": 356899,
+      "sha256": "27ac4720a2b5aa61325e046b7722d82d35ff97f10748ff8bbcae0f19fdee0c58"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/components/RuntimeQuickstart.tsx",
+      "bytes": 24020,
+      "sha256": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/tests/unit/runtime-observation.test.ts",
+      "bytes": 10056,
+      "sha256": "b091684cbd3b8473dde6ef42ccd5885b87c1eae7fba72bd377db35a7f87cf996"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/package.json",
+      "bytes": 1990,
+      "sha256": "4c8ffb59ebb1f60751a2aee403b3da2622ab63d03eeb3120207a98cb09a59008"
+    },
+    {
+      "path": "packages/cortex-templates/catalog.json",
+      "bytes": 281390,
+      "sha256": "f79cc11523a0515218371d4444d8af160c526cc32a5fde1b4893932a5cacd113"
+    }
+  ],
+  "componentRestorationMatchesBaselineExactly": true,
+  "acceptedComponentMask": "Remove watchRun; retained finalOnly callback sets run; retained stopDelivery cleanup",
+  "unchangedBackendSdkTransportFiles": [
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "sha256": "544304c14c4fc69d3a1a9ff94fe561f13da33bbad2a715ec018c0758eb510ae0",
+      "unchangedFromSourceBaseline": true
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "sha256": "14a255e57bd8cbbd9a57adc9f37ab2c49e8a76e61e18ca2f2779d39e31ef163c",
+      "unchangedFromSourceBaseline": true
+    },
+    {
+      "path": "src/client-runtime/validation.ts",
+      "sha256": "2762b6e2f8e85c0871d3f9b5e9b406de35393fab2516ec93b93a0b8af24fcdf4",
+      "unchangedFromSourceBaseline": true
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/remote/index.ts",
+      "sha256": "cc78f108c8b95b1275542039bd72ed7ba8ee22aa8f4b7fd45e66d61ff89a9957",
+      "unchangedFromSourceBaseline": true
+    }
+  ],
+  "observeHandlerBodyByteIdentical": true,
+  "observeHandlerBodySha256": "9e9bed8ae6c9257cc2ecfbecd2dc6929db3e4d015c6ba7bdab2f79f3af68ad07",
+  "wholeAgentFileUnchanged": false,
+  "concurrentOtherOwnerAgentFileSha256": "1ec557cb9f652dc49ee932677bddf84ec6ea6494eaee78ed66919e18ef242089",
+  "existingSensitiveTestsOrAssertionsChanged": 0,
+  "newMountedCases": 8,
+  "productionObserverOwnersBefore": 3,
+  "productionObserverOwnersAfter": 2,
+  "fullCatalogAssemblyRun": false,
+  "catalog": {
+    "scope": "Final exact component/test/package records and payload hash only; other catalog templates and old file rows unchanged",
+    "sourceBase": "2a08b37c23dc4066634d2735da219cb5d09900df",
+    "changedPayloadPaths": [
+      "components/RuntimeQuickstart.tsx",
+      "package.json",
+      "tests/unit/runtime-observation.test.ts"
+    ],
+    "payloadHash": "235c967cc8d054aaa3639c6f48de6ae366d87f48f6998df4ac0d7480ab818909",
+    "catalogSha256": "f79cc11523a0515218371d4444d8af160c526cc32a5fde1b4893932a5cacd113",
+    "twoExactDevDependencies": {
+      "@testing-library/react": "16.3.3",
+      "jest-environment-jsdom": "30.5.2"
+    },
+    "canonicalRuntimeDependencyFieldsAndOrderingPreserved": true,
+    "oldLockNonRootNodes": 765,
+    "allOldNonRootLockNodesUnchanged": true,
+    "addedLockNodes": [
+      "node_modules/@asamuzakjp/css-color",
+      "node_modules/@asamuzakjp/css-color/node_modules/lru-cache",
+      "node_modules/@csstools/color-helpers",
+      "node_modules/@csstools/css-calc",
+      "node_modules/@csstools/css-color-parser",
+      "node_modules/@csstools/css-parser-algorithms",
+      "node_modules/@csstools/css-tokenizer",
+      "node_modules/@jest/environment-jsdom-abstract",
+      "node_modules/@testing-library/dom",
+      "node_modules/@testing-library/dom/node_modules/ansi-styles",
+      "node_modules/@testing-library/dom/node_modules/aria-query",
+      "node_modules/@testing-library/dom/node_modules/pretty-format",
+      "node_modules/@testing-library/dom/node_modules/react-is",
+      "node_modules/@testing-library/react",
+      "node_modules/@types/aria-query",
+      "node_modules/@types/jsdom",
+      "node_modules/@types/tough-cookie",
+      "node_modules/agent-base",
+      "node_modules/cssstyle",
+      "node_modules/data-urls",
+      "node_modules/decimal.js",
+      "node_modules/dom-accessibility-api",
+      "node_modules/entities",
+      "node_modules/html-encoding-sniffer",
+      "node_modules/http-proxy-agent",
+      "node_modules/https-proxy-agent",
+      "node_modules/iconv-lite",
+      "node_modules/is-potential-custom-element-name",
+      "node_modules/jest-environment-jsdom",
+      "node_modules/jsdom",
+      "node_modules/lz-string",
+      "node_modules/nwsapi",
+      "node_modules/parse5",
+      "node_modules/rrweb-cssom",
+      "node_modules/safer-buffer",
+      "node_modules/saxes",
+      "node_modules/symbol-tree",
+      "node_modules/tldts",
+      "node_modules/tldts-core",
+      "node_modules/tough-cookie",
+      "node_modules/tr46",
+      "node_modules/w3c-xmlserializer",
+      "node_modules/webidl-conversions",
+      "node_modules/whatwg-encoding",
+      "node_modules/whatwg-mimetype",
+      "node_modules/whatwg-url",
+      "node_modules/xml-name-validator",
+      "node_modules/xmlchars"
+    ],
+    "officialRootIntegritiesMatch": true,
+    "nodeModulesInstallPerformed": false,
+    "componentMirrorExact": true,
+    "testMirrorExact": true,
+    "freshInstallProven": false
+  },
+  "sdkProtocolChanged": false,
+  "backendWritesByThisBatch": 0,
+  "newNativeLatencyMeasured": false,
+  "futureSelectedBuildInputCountDelta": 1,
+  "backendPathClosureDelta": 0
+}

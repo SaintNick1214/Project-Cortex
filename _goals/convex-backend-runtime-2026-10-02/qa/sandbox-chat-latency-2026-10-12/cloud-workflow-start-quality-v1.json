@@ -1,0 +1,50 @@
+{
+  "node": "v24.15.0",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "checks": [
+    {
+      "name": "backend-types",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "root-types",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "lint-types",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "scoped-eslint",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "tests/unit/runtimeAgent/start-native.test.ts",
+        "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "tests/unit/runtimeAgent/context-routing.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "exitCode": 0,
+      "signal": null
+    }
+  ]
+}

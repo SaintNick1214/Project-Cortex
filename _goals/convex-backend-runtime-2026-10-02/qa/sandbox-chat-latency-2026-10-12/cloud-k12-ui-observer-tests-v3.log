@@ -1,0 +1,1407 @@
+Running one project: unit
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    TypeError: Cannot read properties of null (reading 'useState')
+        at Object.process.env.NODE_ENV.exports.useState (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/react/cjs/react.development.js:1309:33)
+        at useMockChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts:53:41)
+        at RuntimeChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx:181:23)
+        at Object.react_stack_bottom_frame (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+        at renderWithHooks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+        at updateFunctionComponent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+        at beginWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+        at runWithFiberInDEV (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+        at performUnitOfWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+        at workLoopSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+        at renderRootSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+        at performWorkOnRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+        at performWorkOnRootViaSchedulerTask (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+        at performWorkUntilDeadline (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/scheduler/cjs/scheduler.development.js:45:48)
+        at Timeout.task [as _onTimeout] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7)
+
+      at process.env.NODE_ENV.reportGlobalError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28157:23)
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9747:7)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.warn
+    An error occurred in the <RuntimeChat> component.
+    
+    Consider adding an error boundary to your tree to customize error handling behavior.
+    Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9748:15)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    TypeError: Cannot read properties of null (reading 'useState')
+        at Object.process.env.NODE_ENV.exports.useState (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/react/cjs/react.development.js:1309:33)
+        at useMockChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts:53:41)
+        at RuntimeChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx:181:23)
+        at Object.react_stack_bottom_frame (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+        at renderWithHooks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+        at updateFunctionComponent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+        at beginWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+        at runWithFiberInDEV (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+        at performUnitOfWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+        at workLoopSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+        at renderRootSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+        at performWorkOnRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+        at performWorkOnRootViaSchedulerTask (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+        at performWorkUntilDeadline (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/scheduler/cjs/scheduler.development.js:45:48)
+        at Timeout.task [as _onTimeout] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7)
+
+      at process.env.NODE_ENV.reportGlobalError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28157:23)
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9747:7)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.warn
+    An error occurred in the <RuntimeChat> component.
+    
+    Consider adding an error boundary to your tree to customize error handling behavior.
+    Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9748:15)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    TypeError: Cannot read properties of null (reading 'useState')
+        at Object.process.env.NODE_ENV.exports.useState (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/react/cjs/react.development.js:1309:33)
+        at useMockChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts:53:41)
+        at RuntimeChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx:181:23)
+        at Object.react_stack_bottom_frame (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+        at renderWithHooks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+        at updateFunctionComponent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+        at beginWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+        at runWithFiberInDEV (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+        at performUnitOfWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+        at workLoopSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+        at renderRootSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+        at performWorkOnRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+        at performWorkOnRootViaSchedulerTask (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+        at performWorkUntilDeadline (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/scheduler/cjs/scheduler.development.js:45:48)
+        at Timeout.task [as _onTimeout] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7)
+
+      at process.env.NODE_ENV.reportGlobalError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28157:23)
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9747:7)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.warn
+    An error occurred in the <RuntimeChat> component.
+    
+    Consider adding an error boundary to your tree to customize error handling behavior.
+    Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9748:15)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    TypeError: Cannot read properties of null (reading 'useState')
+        at Object.process.env.NODE_ENV.exports.useState (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/react/cjs/react.development.js:1309:33)
+        at useMockChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts:53:41)
+        at RuntimeChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx:181:23)
+        at Object.react_stack_bottom_frame (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+        at renderWithHooks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+        at updateFunctionComponent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+        at beginWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+        at runWithFiberInDEV (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+        at performUnitOfWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+        at workLoopSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+        at renderRootSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+        at performWorkOnRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+        at performWorkOnRootViaSchedulerTask (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+        at performWorkUntilDeadline (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/scheduler/cjs/scheduler.development.js:45:48)
+        at Timeout.task [as _onTimeout] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7)
+
+      at process.env.NODE_ENV.reportGlobalError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28157:23)
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9747:7)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.warn
+    An error occurred in the <RuntimeChat> component.
+    
+    Consider adding an error boundary to your tree to customize error handling behavior.
+    Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9748:15)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    TypeError: Cannot read properties of null (reading 'useState')
+        at Object.process.env.NODE_ENV.exports.useState (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/react/cjs/react.development.js:1309:33)
+        at useMockChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts:53:41)
+        at RuntimeChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx:181:23)
+        at Object.react_stack_bottom_frame (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+        at renderWithHooks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+        at updateFunctionComponent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+        at beginWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+        at runWithFiberInDEV (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+        at performUnitOfWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+        at workLoopSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+        at renderRootSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+        at performWorkOnRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+        at performWorkOnRootViaSchedulerTask (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+        at performWorkUntilDeadline (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/scheduler/cjs/scheduler.development.js:45:48)
+        at Timeout.task [as _onTimeout] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7)
+
+      at process.env.NODE_ENV.reportGlobalError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28157:23)
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9747:7)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.warn
+    An error occurred in the <RuntimeChat> component.
+    
+    Consider adding an error boundary to your tree to customize error handling behavior.
+    Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9748:15)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    TypeError: Cannot read properties of null (reading 'useState')
+        at Object.process.env.NODE_ENV.exports.useState (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/react/cjs/react.development.js:1309:33)
+        at useMockChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts:53:41)
+        at RuntimeChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx:181:23)
+        at Object.react_stack_bottom_frame (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+        at renderWithHooks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+        at updateFunctionComponent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+        at beginWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+        at runWithFiberInDEV (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+        at performUnitOfWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+        at workLoopSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+        at renderRootSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+        at performWorkOnRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+        at performWorkOnRootViaSchedulerTask (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+        at performWorkUntilDeadline (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/scheduler/cjs/scheduler.development.js:45:48)
+        at Timeout.task [as _onTimeout] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7)
+
+      at process.env.NODE_ENV.reportGlobalError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28157:23)
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9747:7)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.warn
+    An error occurred in the <RuntimeChat> component.
+    
+    Consider adding an error boundary to your tree to customize error handling behavior.
+    Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9748:15)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    TypeError: Cannot read properties of null (reading 'useState')
+        at Object.process.env.NODE_ENV.exports.useState (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/react/cjs/react.development.js:1309:33)
+        at useMockChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts:53:41)
+        at RuntimeChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx:181:23)
+        at Object.react_stack_bottom_frame (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+        at renderWithHooks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+        at updateFunctionComponent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+        at beginWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+        at runWithFiberInDEV (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+        at performUnitOfWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+        at workLoopSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+        at renderRootSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+        at performWorkOnRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+        at performWorkOnRootViaSchedulerTask (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+        at performWorkUntilDeadline (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/scheduler/cjs/scheduler.development.js:45:48)
+        at Timeout.task [as _onTimeout] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7)
+
+      at process.env.NODE_ENV.reportGlobalError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28157:23)
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9747:7)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.warn
+    An error occurred in the <RuntimeChat> component.
+    
+    Consider adding an error boundary to your tree to customize error handling behavior.
+    Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9748:15)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18015:11)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at resolveDispatcher (node_modules/react/cjs/react.development.js:538:17)
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:14)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.error
+    TypeError: Cannot read properties of null (reading 'useState')
+        at Object.process.env.NODE_ENV.exports.useState (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/react/cjs/react.development.js:1309:33)
+        at useMockChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts:53:41)
+        at RuntimeChat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx:181:23)
+        at Object.react_stack_bottom_frame (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+        at renderWithHooks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+        at updateFunctionComponent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+        at beginWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+        at runWithFiberInDEV (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+        at performUnitOfWork (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+        at workLoopSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+        at renderRootSync (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+        at performWorkOnRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+        at performWorkOnRootViaSchedulerTask (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+        at performWorkUntilDeadline (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/scheduler/cjs/scheduler.development.js:45:48)
+        at Timeout.task [as _onTimeout] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7)
+
+      at process.env.NODE_ENV.reportGlobalError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28157:23)
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9747:7)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  console.warn
+    An error occurred in the <RuntimeChat> component.
+    
+    Consider adding an error boundary to your tree to customize error handling behavior.
+    Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+      at defaultOnUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9748:15)
+      at logUncaughtError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9817:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at lane.callback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:9847:9)
+      at callCallback (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7781:16)
+      at commitCallbacks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:7801:11)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at commitLayoutEffectOnFiber (../../../node_modules/react-dom/cjs/react-dom-client.development.js:15137:15)
+      at flushLayoutEffects (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19839:15)
+      at commitRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19605:36)
+      at completeRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19509:9)
+      at completeRootWhenReady (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18363:7)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18238:15)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+FAIL unit tests/unit/runtime-observation.test.ts (8.305 s)
+  ● two observers retain empty-page status and post-response memory updates without watchRun
+
+    TypeError: Cannot read properties of null (reading 'useState')
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:33)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● two observers retain empty-page status and post-response memory updates without watchRun
+
+    Unable to find an element by: [data-testid="verified-scope"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div />[39m
+    [36m</body>[39m
+
+      66 |   fireEvent.change(screen.getByLabelText("Access token"), { target: { value: "fixture-token" } });
+      67 |   fireEvent.click(screen.getByRole("button", { name: "Connect", exact: true }));
+    > 68 |   await screen.findByTestId("verified-scope");
+         |                ^
+      69 |   fireEvent.change(screen.getByLabelText("Message", { exact: true }), { target: { value: "fixture request" } });
+      70 |   fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+      71 |   await screen.findByText("protected fixture reply");
+
+      at waitForWrapper (../../../node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at ../../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:68:16)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:82:9)
+
+  ● transport approvals and cancel remain reachable while final observer updates run metadata
+
+    TypeError: Cannot read properties of null (reading 'useState')
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:33)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● transport approvals and cancel remain reachable while final observer updates run metadata
+
+    Unable to find an element by: [data-testid="verified-scope"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div />[39m
+    [36m</body>[39m
+
+      66 |   fireEvent.change(screen.getByLabelText("Access token"), { target: { value: "fixture-token" } });
+      67 |   fireEvent.click(screen.getByRole("button", { name: "Connect", exact: true }));
+    > 68 |   await screen.findByTestId("verified-scope");
+         |                ^
+      69 |   fireEvent.change(screen.getByLabelText("Message", { exact: true }), { target: { value: "fixture request" } });
+      70 |   fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+      71 |   await screen.findByText("protected fixture reply");
+
+      at waitForWrapper (../../../node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at ../../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:68:16)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:95:9)
+
+  ● continuous final denial FORBIDDEN clears private UI after response completion
+
+    TypeError: Cannot read properties of null (reading 'useState')
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:33)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● continuous final denial FORBIDDEN clears private UI after response completion
+
+    Unable to find an element by: [data-testid="verified-scope"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div />[39m
+    [36m</body>[39m
+
+      66 |   fireEvent.change(screen.getByLabelText("Access token"), { target: { value: "fixture-token" } });
+      67 |   fireEvent.click(screen.getByRole("button", { name: "Connect", exact: true }));
+    > 68 |   await screen.findByTestId("verified-scope");
+         |                ^
+      69 |   fireEvent.change(screen.getByLabelText("Message", { exact: true }), { target: { value: "fixture request" } });
+      70 |   fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+      71 |   await screen.findByText("protected fixture reply");
+
+      at waitForWrapper (../../../node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at ../../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:68:16)
+      at tests/unit/runtime-observation.test.ts:107:9
+
+  ● continuous final denial AUTHORITY_EXPIRED clears private UI after response completion
+
+    TypeError: Cannot read properties of null (reading 'useState')
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:33)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● continuous final denial AUTHORITY_EXPIRED clears private UI after response completion
+
+    Unable to find an element by: [data-testid="verified-scope"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div />[39m
+    [36m</body>[39m
+
+      66 |   fireEvent.change(screen.getByLabelText("Access token"), { target: { value: "fixture-token" } });
+      67 |   fireEvent.click(screen.getByRole("button", { name: "Connect", exact: true }));
+    > 68 |   await screen.findByTestId("verified-scope");
+         |                ^
+      69 |   fireEvent.change(screen.getByLabelText("Message", { exact: true }), { target: { value: "fixture request" } });
+      70 |   fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+      71 |   await screen.findByText("protected fixture reply");
+
+      at waitForWrapper (../../../node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at ../../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:68:16)
+      at tests/unit/runtime-observation.test.ts:107:9
+
+  ● continuous final denial SESSION_CHANGED clears private UI after response completion
+
+    TypeError: Cannot read properties of null (reading 'useState')
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:33)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● continuous final denial SESSION_CHANGED clears private UI after response completion
+
+    Unable to find an element by: [data-testid="verified-scope"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div />[39m
+    [36m</body>[39m
+
+      66 |   fireEvent.change(screen.getByLabelText("Access token"), { target: { value: "fixture-token" } });
+      67 |   fireEvent.click(screen.getByRole("button", { name: "Connect", exact: true }));
+    > 68 |   await screen.findByTestId("verified-scope");
+         |                ^
+      69 |   fireEvent.change(screen.getByLabelText("Message", { exact: true }), { target: { value: "fixture request" } });
+      70 |   fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+      71 |   await screen.findByText("protected fixture reply");
+
+      at waitForWrapper (../../../node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at ../../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:68:16)
+      at tests/unit/runtime-observation.test.ts:107:9
+
+  ● disconnect/reconnect and unmount release both owned observers
+
+    TypeError: Cannot read properties of null (reading 'useState')
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:33)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● disconnect/reconnect and unmount release both owned observers
+
+    Unable to find an element by: [data-testid="verified-scope"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div />[39m
+    [36m</body>[39m
+
+      66 |   fireEvent.change(screen.getByLabelText("Access token"), { target: { value: "fixture-token" } });
+      67 |   fireEvent.click(screen.getByRole("button", { name: "Connect", exact: true }));
+    > 68 |   await screen.findByTestId("verified-scope");
+         |                ^
+      69 |   fireEvent.change(screen.getByLabelText("Message", { exact: true }), { target: { value: "fixture request" } });
+      70 |   fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+      71 |   await screen.findByText("protected fixture reply");
+
+      at waitForWrapper (../../../node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at ../../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:68:16)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:116:22)
+
+  ● signout and verified-auth denial remove the private projection and subscriptions
+
+    TypeError: Cannot read properties of null (reading 'useState')
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:33)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● signout and verified-auth denial remove the private projection and subscriptions
+
+    Unable to find an element by: [data-testid="verified-scope"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div />[39m
+    [36m</body>[39m
+
+      66 |   fireEvent.change(screen.getByLabelText("Access token"), { target: { value: "fixture-token" } });
+      67 |   fireEvent.click(screen.getByRole("button", { name: "Connect", exact: true }));
+    > 68 |   await screen.findByTestId("verified-scope");
+         |                ^
+      69 |   fireEvent.change(screen.getByLabelText("Message", { exact: true }), { target: { value: "fixture request" } });
+      70 |   fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+      71 |   await screen.findByText("protected fixture reply");
+
+      at waitForWrapper (../../../node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at ../../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:68:16)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:128:9)
+
+  ● SDK authentication loss keeps the original owner teardown
+
+    TypeError: Cannot read properties of null (reading 'useState')
+
+      51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      52 |   const hooks: typeof React = jest.requireActual("react");
+    > 53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+         |                                         ^
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+      55 |     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
+      56 |       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
+
+      at Object.process.env.NODE_ENV.exports.useState (node_modules/react/cjs/react.development.js:1309:33)
+      at useMockChat (tests/unit/runtime-observation.test.ts:53:41)
+      at RuntimeChat (components/RuntimeQuickstart.tsx:181:23)
+      at Object.react_stack_bottom_frame (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+      at renderWithHooks (../../../node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+      at updateFunctionComponent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+      at beginWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at performUnitOfWork (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+      at workLoopSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+      at renderRootSync (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+      at performWorkOnRoot (../../../node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)
+      at performWorkOnRootViaSchedulerTask (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20665:7)
+      at performWorkUntilDeadline (../../../node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (../../../node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● SDK authentication loss keeps the original owner teardown
+
+    Unable to find an element by: [data-testid="verified-scope"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div />[39m
+    [36m</body>[39m
+
+      66 |   fireEvent.change(screen.getByLabelText("Access token"), { target: { value: "fixture-token" } });
+      67 |   fireEvent.click(screen.getByRole("button", { name: "Connect", exact: true }));
+    > 68 |   await screen.findByTestId("verified-scope");
+         |                ^
+      69 |   fireEvent.change(screen.getByLabelText("Message", { exact: true }), { target: { value: "fixture request" } });
+      70 |   fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+      71 |   await screen.findByText("protected fixture reply");
+
+      at waitForWrapper (../../../node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at ../../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at connectAndSubmit (tests/unit/runtime-observation.test.ts:68:16)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:133:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       8 failed, 8 total
+Snapshots:   0 total
+Time:        8.599 s
+Ran all test suites within paths "tests/unit/runtime-observation.test.ts".

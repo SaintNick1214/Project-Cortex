@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K12fouractualruns/8memoryeventsfunctionalPASS; hostedSLOFAIL; verifiedownedcleanup; nextboundedobserver/startrepair",
+  "phase": "K13jointsourcePASS4.2; committingimmediatestart/prepare-scope/2observerbatch; freshcloudmeasurementpending",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-13T21:05:22.307573+00:00",
+  "updatedAt": "2026-10-13T21:17:38.463965+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -601,5 +601,16 @@
     "supplement": "version-regression-measured-k12-supplement.md",
     "sourceHistoricalCausalBaseline": "unavailable; publishedawaitstructurematchednotwholemethodbytes",
     "doesNotAcceptUnder1000": true
+  },
+  "nextSourceGate": {
+    "verdict": "PASS4.2",
+    "review": "cloud-k13-joint-source-review.md",
+    "backendTests": 1094,
+    "backendSuites": 21,
+    "demoTests": 148,
+    "mirroredTestsOverlap": true,
+    "catalogTests": 24,
+    "zeroSkips": true,
+    "nativeSLOAccepted": false
   }
 }

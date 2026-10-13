@@ -1,0 +1,551 @@
+{
+  "observedAt": "2026-10-13T21:18:12.606440+00:00",
+  "sourceFiles": [
+    {
+      "path": "packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx",
+      "bytes": 24020,
+      "sha256": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts",
+      "bytes": 10056,
+      "sha256": "b091684cbd3b8473dde6ef42ccd5885b87c1eae7fba72bd377db35a7f87cf996"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package.json",
+      "bytes": 2462,
+      "sha256": "5d512e1223da97bada8e5c85055046f2d928b38602303c5b3d53abae3f9c7035"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package-lock.json",
+      "bytes": 356899,
+      "sha256": "27ac4720a2b5aa61325e046b7722d82d35ff97f10748ff8bbcae0f19fdee0c58"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/components/RuntimeQuickstart.tsx",
+      "bytes": 24020,
+      "sha256": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/tests/unit/runtime-observation.test.ts",
+      "bytes": 10056,
+      "sha256": "b091684cbd3b8473dde6ef42ccd5885b87c1eae7fba72bd377db35a7f87cf996"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/package.json",
+      "bytes": 1990,
+      "sha256": "4c8ffb59ebb1f60751a2aee403b3da2622ab63d03eeb3120207a98cb09a59008"
+    },
+    {
+      "path": "packages/cortex-templates/catalog.json",
+      "bytes": 281390,
+      "sha256": "f79cc11523a0515218371d4444d8af160c526cc32a5fde1b4893932a5cacd113"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "bytes": 111469,
+      "sha256": "1ec557cb9f652dc49ee932677bddf84ec6ea6494eaee78ed66919e18ef242089"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/start-native.test.ts",
+      "bytes": 17507,
+      "sha256": "02427e532b2c25831f3a921e345b0988235935518466e32cf0d98c2b7a34a6a1"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "bytes": 17300,
+      "sha256": "3cca1de5ec87f020cf82ff3fc4940a650deba0afcfaa2424f2b28e8872f87102"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-routing.test.ts",
+      "bytes": 32895,
+      "sha256": "00604ae5e9cb97534e51dd0139a82aeb201134428b03a8a7e8f2e0b71184efcb"
+    }
+  ],
+  "qaFiles": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-build-v1-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-build-v1.log",
+      "bytes": 1106,
+      "sha256": "d45662f3042ae2ab3733c106491ed90c4021ac41a3a0bb85b9eb16c1b609d236",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-catalog-final.json",
+      "bytes": 2827,
+      "sha256": "f7a541179a0e781b4a442a0f5300a2f89eed585e574b6224662ed18e769960ce",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-catalog-tests-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-catalog-tests.log",
+      "bytes": 2381,
+      "sha256": "10ec16f71e18e846e421e98e9693168b0b07d5c8cec8b3e8b800e0e7fe4bb044",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-catalog-update.json",
+      "bytes": 787,
+      "sha256": "79b6a19875ec302950ed37a2986bd72a2f3b5a5609be1a9227693a4aba1a4d14",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-checks.json",
+      "bytes": 13247,
+      "sha256": "5c6e967b46a7987b91967fcaac769961d69bb4d3944c746ee1002bf0aa107c94",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-equivalence.json",
+      "bytes": 6404,
+      "sha256": "31632f43896240f6e222b10bd44d2d6948b645bc3238ca4091a7cae9a5bb0ab4",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-lint-exit-v1.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-lint-final-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-lint-final.log",
+      "bytes": 120,
+      "sha256": "99b5e8e723e047fb3c698f259c5317abdee18c14a2abfe785d7c3ad60662a53e",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-lint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-lock-offline-v1.log",
+      "bytes": 341,
+      "sha256": "b1e91b7ecb39a6738df2b5e302d8aefb3a70497f6606b80be17e3519257b62c1",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-lock-online-exit-v1.json",
+      "bytes": 128,
+      "sha256": "37a4da5f1ace5d7846f5ab0d9570a999e7bbe81aaf45641462921fe7a8979fae",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-lock-online-v1.log",
+      "bytes": 18,
+      "sha256": "e64af586ea357f57559d65d1407e250bb430d9affd6f6fb18035db10efc3efe1",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-manifest-update.json",
+      "bytes": 1064,
+      "sha256": "45b4057b3dc19c1485596cb5289cc8fed2abddcb33331e0661102644b7e7113b",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-mirror-unit-integration-exit-v2.json",
+      "bytes": 128,
+      "sha256": "8b1d6481c2781e3eaa835bdd91190c819c86104c81b9904ec2ae089b6b1285f6",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-mirror-unit-integration-exit.json",
+      "bytes": 15,
+      "sha256": "ca4b50a6aabd8c09a9998c501233e663a1a779dee115f77beed1cc4e481ab5c3",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-mirror-unit-integration-v2.log",
+      "bytes": 185,
+      "sha256": "cf0c6aa4e7da7ef8a5a9cbc15c74c58c3dee26722a7264ef7863705998dc5610",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-mirror-unit-integration.log",
+      "bytes": 1475,
+      "sha256": "7343c78a2a7a0eb4071729c77985fb135147e3fd1218500e9733e8c4b4bd5396",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-official-registry-metadata.json",
+      "bytes": 1057,
+      "sha256": "27b1ceae65ae9e392c8eb54b0559b952b925ba8e97c0da0d29ad9d35376ec1e5",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-report.md",
+      "bytes": 5564,
+      "sha256": "ae5358cb712ea77a65f5f2e1f1f7fef1392e8db48dc4fbe6cadcac3490fa25bd",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-test-types-exit-v1.json",
+      "bytes": 15,
+      "sha256": "ec92b3938ea404813a310dbac11d848ca79d7df93e625f201f4072137d6a2606",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-test-types-final-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-test-types-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-test-types-v1.log",
+      "bytes": 14961,
+      "sha256": "c791338162ad9b6c143295383325e0a6bf92e8486003021faacb67d2e3052127",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-test-types-v2-exit.json",
+      "bytes": 15,
+      "sha256": "ec92b3938ea404813a310dbac11d848ca79d7df93e625f201f4072137d6a2606",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-test-types-v2.log",
+      "bytes": 1166,
+      "sha256": "ebfd4a02aeb7d0a30a3cdf875cfd087a244cf0074ccaf48520877d94ea7d2061",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-test-types-v3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-test-types.tsconfig.json",
+      "bytes": 716,
+      "sha256": "51d36fa2b86e2dcc2d6d42af2829b79cbfc74192ce45434ef6052f166200127e",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-tests-v1.log",
+      "bytes": 1128,
+      "sha256": "1c67d0844ab41bf971a65fb50d2f17bbb05ce24662a3154d0ff4c4871d00e5d6",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-tests-v2.log",
+      "bytes": 65090,
+      "sha256": "8067cadecf598c1b766e2091c79e74617578b5c3cd0092c56a6ce52759e062a5",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-tests-v3.log",
+      "bytes": 124344,
+      "sha256": "3ba1fd011f081e2c3d74cbaffb6c99d9e705d0079740ba7d0d56211acec44dbf",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-tests-v4.log",
+      "bytes": 220,
+      "sha256": "d8b39f807d1b17cf8bd255e50684762195581ffd45665dce78074bf5b9a8f7ab",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-types-exit-v1.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-unit-integration-exit-v1.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-unit-integration-final-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-unit-integration-final.log",
+      "bytes": 200,
+      "sha256": "af928b7f7d8d35ecda4143175f388577522e46da98b4977840a8c0d36f2c66cf",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k12-ui-observer-unit-integration-v1.log",
+      "bytes": 185,
+      "sha256": "adc90c4dc81a400124fea5aabe7e38f13dfd32e0e405b81550c00cde05f87856",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k13-joint-source-review.json",
+      "bytes": 16715,
+      "sha256": "d091a0ac145d31d4dca63cde01fbce52198a53c2db4d208bdb7b6a75d2d80a05",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k13-joint-source-review.md",
+      "bytes": 13416,
+      "sha256": "bf79dc86a8562ab85b1940d1c3180529b62e204dac20ccab0ced6413d7068822",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-affected-checks-v1.json",
+      "bytes": 5272,
+      "sha256": "1ee46d08ccf021e200a97c02fca01c1939c86580d8e27941e2e19af6fe647031",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-affected-v1.json",
+      "bytes": 539494,
+      "sha256": "323a0ea6886a9c61982b515a4083311ec1bb749ae62dca0448bc8317f3fa426b",
+      "gitSelected": false,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-affected-v1.log",
+      "bytes": 1992,
+      "sha256": "26ad37e9966770f07a05ad4aa53b6737dc6c6b013b1e4b30efec17b1da068fbe",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-baseline.json",
+      "bytes": 1470,
+      "sha256": "6d435d0cfeb0430a7816d5e2e6850fd8b461d27e36fb748612d7b2bb9f1a4a1c",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-checks-final.json",
+      "bytes": 12317,
+      "sha256": "0f87ab45e370eb13098e0d8955bfc005780e44068e7603810d453f57e1c08cb6",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-completion-report.md",
+      "bytes": 5532,
+      "sha256": "868e6df94f1af10820ba1675d002361c9a0906df5ae76180da39c6b58256f6ac",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-discovery-final.log",
+      "bytes": 2961,
+      "sha256": "8ae6a10dc2a140c47a77b368dc0cc9d66096b9495c5fcad21d110bf26a6bec82",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-equivalence-final.json",
+      "bytes": 36384,
+      "sha256": "63dab3b94e3d19515cf9d9782656d95e0fa44dc562b6871aed5ca0884df14bef",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-native-v1.json",
+      "bytes": 40222,
+      "sha256": "8bea6db4c826813d8c4fcdccdf3a2f251f1791efba3ec24cd6a8409de421e262",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-native-v1.log",
+      "bytes": 13685,
+      "sha256": "6c75c8a8405fc6b955cb88e52c8eb290cfb9570a0e29d660c649709f0804ef5e",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-native-v2.json",
+      "bytes": 8664,
+      "sha256": "dc342111d11f4055a14e0db6f4605f9d2e64660d1449845e6c75da093ddf8ab0",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-native-v2.log",
+      "bytes": 1123,
+      "sha256": "ad78188706498a4b46d76495f62df1667d466536b39e2232f23b71083fc2985f",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-preparation-existing-v1.json",
+      "bytes": 43687,
+      "sha256": "d38ba3f48bfad00da7a6352c46322a5b92af2d200f664844ae062a80192cc392",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-preparation-existing-v1.log",
+      "bytes": 957,
+      "sha256": "9265c44d375b8e941a3f413ce6f43f2b0fa3a9a2cc8015c9004472234281b805",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-primary-contracts.json",
+      "bytes": 10945,
+      "sha256": "a9f584ec223f8217a35c299e6a779fab79c2eccd9049be6fa63179e000dc9c4b",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-quality-v1.json",
+      "bytes": 1151,
+      "sha256": "35b54aca62de06e6667ed462eee1bfff95effa96217026a49b801ec1ea3c2e11",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-root-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-scoped-eslint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-source-report.md",
+      "bytes": 10094,
+      "sha256": "7d7b662d49fb9efb42611046b986ee0114afeff04ffdd5712509cc5622f149fb",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/completion-notices.jsonl",
+      "bytes": 4559,
+      "sha256": "2ba047f144008b594dfba2319c4a3c414e09da8adc199c545ab84de0a9b245b5",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/execution-progress.md",
+      "bytes": 2003,
+      "sha256": "efbab8018d0d2b8d7e65415e654a6e701dda0acb65ca96ab8fda4290cc779a9c",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/immediate-start-kit-control-baseline.json",
+      "bytes": 1599,
+      "sha256": "6a458e87c19e9d9496f08bb31eb29dd85d1d456812de1b0c4bee3be841b7eadc",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/local-sdk-cli-version-comparison-2026-10-13.json",
+      "bytes": 770,
+      "sha256": "f1172361569d3f8ea79a5e15deb9d01242f42f3bf55acef2fc49586e3f922837",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/prepare-immediate-start-kit-controls.mjs",
+      "bytes": 1922,
+      "sha256": "0a75f57c4b3a534aca1b9c0b987a29005691a3d2a12af7c1e014207f14ac4c82",
+      "gitSelected": true,
+      "jwtShapedText": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/status.json",
+      "bytes": 25798,
+      "sha256": "a0e972c83bc8a1bbd275592f5684a6c9ddf37b59d0920b8f447994ef91e18120",
+      "gitSelected": true,
+      "jwtShapedText": false
+    }
+  ],
+  "limits": "OriginaloversizedQAkeptlocalonlywithhashes; heuristicJWTscanonly; noarchive/custodyrepairclaim"
+}

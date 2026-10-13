@@ -1,0 +1,881 @@
+{
+  "version": 1,
+  "originalProductCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "originalSourceSha256": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60",
+  "currentSourceSha256": "1ec557cb9f652dc49ee932677bddf84ec6ea6494eaee78ed66919e18ef242089",
+  "comparisons": [
+    {
+      "key": "import:./runtimeArtifactContext",
+      "beforeSha256": "6837b33f31c4d87ce7719b3487b666e4d78d0eae6de554c74c237b931d28a80b",
+      "afterSha256": "6837b33f31c4d87ce7719b3487b666e4d78d0eae6de554c74c237b931d28a80b",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeArtifactContextSchema",
+      "beforeSha256": "fb65535adca75d1cd6de7dce1539659f852473c3cb143f617e0875ddaa3bbfa9",
+      "afterSha256": "fb65535adca75d1cd6de7dce1539659f852473c3cb143f617e0875ddaa3bbfa9",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:../src/domain/artifact-context",
+      "beforeSha256": "9b077e552005684229eaebaaba680bd07b4bd80277af50a2ae1e84e3408257a8",
+      "afterSha256": "9b077e552005684229eaebaaba680bd07b4bd80277af50a2ae1e84e3408257a8",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeMediaFence",
+      "beforeSha256": "52fade51b4c1d927a7d7d74c92c14b0ecdb9e775b85084da29487e6f188644b0",
+      "afterSha256": "52fade51b4c1d927a7d7d74c92c14b0ecdb9e775b85084da29487e6f188644b0",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:@convex-dev/agent",
+      "beforeSha256": "e34d6a03273859f5dff5c8cd9b81e7e6894f9a0b2e19ec3250a5563463b0fa45",
+      "afterSha256": "e34d6a03273859f5dff5c8cd9b81e7e6894f9a0b2e19ec3250a5563463b0fa45",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:@convex-dev/workflow",
+      "beforeSha256": "0f41b8ba78e932369ab2f176446833a6428879141113135446e8fa77b308f0a2",
+      "afterSha256": "0f41b8ba78e932369ab2f176446833a6428879141113135446e8fa77b308f0a2",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:convex/server",
+      "beforeSha256": "d5d619fdc06ff448685418720fd74bdecbaf83b43248891f77e918c44ef059e9",
+      "afterSha256": "d5d619fdc06ff448685418720fd74bdecbaf83b43248891f77e918c44ef059e9",
+      "unchanged": true,
+      "permittedChange": true
+    },
+    {
+      "key": "import:convex/values",
+      "beforeSha256": "0333127bf389c00a39e354b337dead2ca6ef07171d603ad4f70f727410c0124a",
+      "afterSha256": "0333127bf389c00a39e354b337dead2ca6ef07171d603ad4f70f727410c0124a",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:ai",
+      "beforeSha256": "af4fc2604533a77d770fcdfba1c60433c0a746bd51b163c170d30d7fb6d8ae21",
+      "afterSha256": "af4fc2604533a77d770fcdfba1c60433c0a746bd51b163c170d30d7fb6d8ae21",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:../src/auth/verified",
+      "beforeSha256": "9fa0f71b466d4ece83c69c7f88c77478af4ae207b7e7fb37b888d12049e8b1a2",
+      "afterSha256": "9fa0f71b466d4ece83c69c7f88c77478af4ae207b7e7fb37b888d12049e8b1a2",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:../src/domain/transcript",
+      "beforeSha256": "a44cba6b4b3c5f4b891b03127ce004028427dd2027eb66a2d94966284eebb20c",
+      "afterSha256": "a44cba6b4b3c5f4b891b03127ce004028427dd2027eb66a2d94966284eebb20c",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:../src/domain/context-witness",
+      "beforeSha256": "55810028c8de6d5205a93ed5be5a5755868ee5361c7b02e7018b7d52e3423d9a",
+      "afterSha256": "55810028c8de6d5205a93ed5be5a5755868ee5361c7b02e7018b7d52e3423d9a",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:../src/domain/model-policy",
+      "beforeSha256": "02b53962efbe25164adcf74885c062c40dff11a44b596aa34ad45b97f2028e31",
+      "afterSha256": "02b53962efbe25164adcf74885c062c40dff11a44b596aa34ad45b97f2028e31",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:../src/domain/profile",
+      "beforeSha256": "c2a29e206a9c6caf12dc652e447aa0fe822eb08eca7ab9fc82e38710092bf29f",
+      "afterSha256": "c2a29e206a9c6caf12dc652e447aa0fe822eb08eca7ab9fc82e38710092bf29f",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:../src/domain/memory-context",
+      "beforeSha256": "af9af4aea46259d259ccda979c7befb219e21233a111fdad5a49facbaebf8989",
+      "afterSha256": "af9af4aea46259d259ccda979c7befb219e21233a111fdad5a49facbaebf8989",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./_generated/server",
+      "beforeSha256": "27383466b87f75e61846807a6e58a3e68a13a08d97a41b1fd6307bc5301424e7",
+      "afterSha256": "27383466b87f75e61846807a6e58a3e68a13a08d97a41b1fd6307bc5301424e7",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./_generated/dataModel",
+      "beforeSha256": "08d29d36848b67898e2bcc96c35c22dab4ec6a30419538798da8663f9fd3f649",
+      "afterSha256": "08d29d36848b67898e2bcc96c35c22dab4ec6a30419538798da8663f9fd3f649",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./_generated/api",
+      "beforeSha256": "02e23e268ac4d33184495d206c978615d50307ce36468b73e7c9d9285a6b9e22",
+      "afterSha256": "02e23e268ac4d33184495d206c978615d50307ce36468b73e7c9d9285a6b9e22",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeAgentSchema",
+      "beforeSha256": "9a1195b102d61788d611635e3718d027cf976887aec63a6ea392383c49d7fb42",
+      "afterSha256": "9a1195b102d61788d611635e3718d027cf976887aec63a6ea392383c49d7fb42",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeContextWitness",
+      "beforeSha256": "3ce72dd122147c9f1b7c012c6eb841a25216bf5a34c49642b08c95425a860770",
+      "afterSha256": "3ce72dd122147c9f1b7c012c6eb841a25216bf5a34c49642b08c95425a860770",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeAuthSchema",
+      "beforeSha256": "273b5c19cd54f2af398d720179d8bfdc55b361be3f73f0c771303e8e44b0e720",
+      "afterSha256": "273b5c19cd54f2af398d720179d8bfdc55b361be3f73f0c771303e8e44b0e720",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runs",
+      "beforeSha256": "22ca6ad153cebcaacd8eedfc07f90eb2719f51dd2051bbe4aa5955f10acf94c8",
+      "afterSha256": "22ca6ad153cebcaacd8eedfc07f90eb2719f51dd2051bbe4aa5955f10acf94c8",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeTranscript",
+      "beforeSha256": "2a2c2ff669cfe70a93f51cc6d61ee9233fd55cc30b3809e7bf237734f06ccb51",
+      "afterSha256": "2a2c2ff669cfe70a93f51cc6d61ee9233fd55cc30b3809e7bf237734f06ccb51",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeDataAuth",
+      "beforeSha256": "61e55e84f2083c77270f1e3c57519d7d491e9f78dfd535709f94b16133de8b50",
+      "afterSha256": "61e55e84f2083c77270f1e3c57519d7d491e9f78dfd535709f94b16133de8b50",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeDelivery",
+      "beforeSha256": "d89b7d496244d1ead76dadf69fd9642c0ba2b223b698db174afd6728be647d03",
+      "afterSha256": "d89b7d496244d1ead76dadf69fd9642c0ba2b223b698db174afd6728be647d03",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeAuth",
+      "beforeSha256": "7f1d4e6626b85aa3700238207e4e06af3862a9f09b951351cd4dd20b3302d275",
+      "afterSha256": "7f1d4e6626b85aa3700238207e4e06af3862a9f09b951351cd4dd20b3302d275",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeGatewayBackend",
+      "beforeSha256": "ee7a091857fa45679e3cd902a46be3a30d537add6cec703b2600a9a77dcc0d3c",
+      "afterSha256": "ee7a091857fa45679e3cd902a46be3a30d537add6cec703b2600a9a77dcc0d3c",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeGateway",
+      "beforeSha256": "73c1a523f8f55c449313da47642cc8a2a98c2a8a0287da7fb92787fd551bcc34",
+      "afterSha256": "73c1a523f8f55c449313da47642cc8a2a98c2a8a0287da7fb92787fd551bcc34",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeModelPolicy",
+      "beforeSha256": "9bcc8f3168e7e504337852a56a40026fbeb619e2930c9a3a20524003ad9e3641",
+      "afterSha256": "9bcc8f3168e7e504337852a56a40026fbeb619e2930c9a3a20524003ad9e3641",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeMemoryRepository",
+      "beforeSha256": "5c131a20fe8a7711127f36a26f1b134dff4e6ddedac3efbea354749909565b85",
+      "afterSha256": "5c131a20fe8a7711127f36a26f1b134dff4e6ddedac3efbea354749909565b85",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeMemorySchema",
+      "beforeSha256": "6df028ff88a7d09e5ec6b3999675800a30c90e025ab490ebea97b0c69b16f0a8",
+      "afterSha256": "6df028ff88a7d09e5ec6b3999675800a30c90e025ab490ebea97b0c69b16f0a8",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeIngestion",
+      "beforeSha256": "a5e681a6e287062fcdf28c68f3b0d122a0f8803eae290a2c35626ff9fef8f96d",
+      "afterSha256": "a5e681a6e287062fcdf28c68f3b0d122a0f8803eae290a2c35626ff9fef8f96d",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeMemoryContext",
+      "beforeSha256": "cee7dccb021aa2d132aed3c931752e93476cb423fdabdaf575be6c59bed5a540",
+      "afterSha256": "cee7dccb021aa2d132aed3c931752e93476cb423fdabdaf575be6c59bed5a540",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeLatencyTrace",
+      "beforeSha256": "16e700ac6c0b78b617b8b62e30cbf30a8d38c69dd7a22ef06e426334e95ee647",
+      "afterSha256": "16e700ac6c0b78b617b8b62e30cbf30a8d38c69dd7a22ef06e426334e95ee647",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeMemoryGateway",
+      "beforeSha256": "b40faef2ffd8f1058999e8519789e2a054517f6fc584ea9a3c34b2fd59f0aa8b",
+      "afterSha256": "b40faef2ffd8f1058999e8519789e2a054517f6fc584ea9a3c34b2fd59f0aa8b",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeMemoryServices",
+      "beforeSha256": "67fa8e244b08d18db429cf5f5d7932aee8a3d2c35149641e61fd837d581ae9ac",
+      "afterSha256": "67fa8e244b08d18db429cf5f5d7932aee8a3d2c35149641e61fd837d581ae9ac",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeAgentTools",
+      "beforeSha256": "ca2afb9bbd05d430ebf88df4eb84c25ccc31ec5aff9bdefbaa3af22f8e00a80c",
+      "afterSha256": "ca2afb9bbd05d430ebf88df4eb84c25ccc31ec5aff9bdefbaa3af22f8e00a80c",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "import:./runtimeOutputProjection",
+      "beforeSha256": "ebd2b67759c5352f29de166b01f1f61c3914f675b1da94fccf1104ddad5a11d5",
+      "afterSha256": "ebd2b67759c5352f29de166b01f1f61c3914f675b1da94fccf1104ddad5a11d5",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "type:Attempt",
+      "beforeSha256": "31f82d3de0f1d1026a029dba233be6358948fd4e303995c9f346aa38ddf2ab77",
+      "afterSha256": "31f82d3de0f1d1026a029dba233be6358948fd4e303995c9f346aa38ddf2ab77",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "type:ToolCall",
+      "beforeSha256": "f2bbb16051da01e060ab251c227e4694dc9c3903eb77db4f7bdd1ee740a7a0b3",
+      "afterSha256": "f2bbb16051da01e060ab251c227e4694dc9c3903eb77db4f7bdd1ee740a7a0b3",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "type:StepResult",
+      "beforeSha256": "ca73096009aca66a69b33f60997a985f1b01a8a85baed49fe2fb5ca580174caa",
+      "afterSha256": "ca73096009aca66a69b33f60997a985f1b01a8a85baed49fe2fb5ca580174caa",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "type:Witness",
+      "beforeSha256": "c5dbe12239270b2629b6ec8405d625d009d676be22feab15b1d682d517cdb0f3",
+      "afterSha256": "c5dbe12239270b2629b6ec8405d625d009d676be22feab15b1d682d517cdb0f3",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "type:ContextSourceArgs",
+      "beforeSha256": "ba677916c83de1917247ae7404746f4d4aada59efa7db2e1a1c1efa4266bea82",
+      "afterSha256": "ba677916c83de1917247ae7404746f4d4aada59efa7db2e1a1c1efa4266bea82",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:attemptArgs",
+      "beforeSha256": "85db3c99da734f4a8aa8407db6ad4f1da5535555451651e41aac206fc92e6eb4",
+      "afterSha256": "85db3c99da734f4a8aa8407db6ad4f1da5535555451651e41aac206fc92e6eb4",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "type:AgentPublicPart",
+      "beforeSha256": "356da0801d9d5ac4a6c70610830794a1450348bb942fbd118fcfe7d029c99d5c",
+      "afterSha256": "356da0801d9d5ac4a6c70610830794a1450348bb942fbd118fcfe7d029c99d5c",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:ref",
+      "beforeSha256": "b0a9b736c48860dfda51fdb8545daed7419bf6946f52d142cb6f426dcabbd0dc",
+      "afterSha256": "b0a9b736c48860dfda51fdb8545daed7419bf6946f52d142cb6f426dcabbd0dc",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:workflow",
+      "beforeSha256": "d1af45fdebd4d29f2c9f8c3bb2da4e40973653cf27faf647ac03d264a5a7116b",
+      "afterSha256": "50c9cd2e70a32a112137c677b8307096b9d7d9644b0bf4220658ca6b2bcabae5",
+      "unchanged": false,
+      "permittedChange": true
+    },
+    {
+      "key": "variable:refs",
+      "beforeSha256": "036ed784036a6bbf0bb287f6c73dcd252549d589a006f660b6bd4ef70d649106",
+      "afterSha256": "036ed784036a6bbf0bb287f6c73dcd252549d589a006f660b6bd4ef70d649106",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:attemptName",
+      "beforeSha256": "1f2bb49044a4f52cd6e2fb99c9527022897752c303df5ca87591e1e7f58d2594",
+      "afterSha256": "1f2bb49044a4f52cd6e2fb99c9527022897752c303df5ca87591e1e7f58d2594",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:execution",
+      "beforeSha256": "bfd8b5e96ff6fa692a2302ee22e56c5e36c6aa87f7695686b5a79673d60be16a",
+      "afterSha256": "bfd8b5e96ff6fa692a2302ee22e56c5e36c6aa87f7695686b5a79673d60be16a",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:operation",
+      "beforeSha256": "6b6462dced7bb4c8d3d28dff36a24c35e6248b9092b7327ee1ba576258610ac5",
+      "afterSha256": "6b6462dced7bb4c8d3d28dff36a24c35e6248b9092b7327ee1ba576258610ac5",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "type:ExecutionMediaPart",
+      "beforeSha256": "af59f1dd9a4a0402ab8cba4c2182d0fc55a884747ecf16ebb653d235579298bb",
+      "afterSha256": "af59f1dd9a4a0402ab8cba4c2182d0fc55a884747ecf16ebb653d235579298bb",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:executionMediaReferences",
+      "beforeSha256": "313debb2a15950761f726aee67b4d558cbd0185cd40620845136ad7e027b2896",
+      "afterSha256": "313debb2a15950761f726aee67b4d558cbd0185cd40620845136ad7e027b2896",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:writeParts",
+      "beforeSha256": "b1eb8fa7d11b2c92dcf68871d5527c977c10d3da1cb93975e2f0a8eeed5f3591",
+      "afterSha256": "b1eb8fa7d11b2c92dcf68871d5527c977c10d3da1cb93975e2f0a8eeed5f3591",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:checkWitnesses",
+      "beforeSha256": "eab1bee071984c40497b51f10421730f18ad3a2141d8e299526293fa63338824",
+      "afterSha256": "eab1bee071984c40497b51f10421730f18ad3a2141d8e299526293fa63338824",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:executionContext",
+      "beforeSha256": "3d5f8d9ee7480f93f8b4ce683775595079534d9891446cecc851407dbce5ccc7",
+      "afterSha256": "3d5f8d9ee7480f93f8b4ce683775595079534d9891446cecc851407dbce5ccc7",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:hydrateExecution",
+      "beforeSha256": "8a3f4c619869ce8f4e46b03faa27ed5bc46eeb3f3d21933164e76470af39aabf",
+      "afterSha256": "8a3f4c619869ce8f4e46b03faa27ed5bc46eeb3f3d21933164e76470af39aabf",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:resolveModelOperationHandler",
+      "beforeSha256": "f11c02ecbe0e9a56437bf3a1525495556964eaa3ca119071b8f42682d3a1e553",
+      "afterSha256": "f11c02ecbe0e9a56437bf3a1525495556964eaa3ca119071b8f42682d3a1e553",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:resolveModelOperation",
+      "beforeSha256": "61bfadb827d5418f092d519b4708d6b678139f7d36b27a88713a27ce8ab44488",
+      "afterSha256": "61bfadb827d5418f092d519b4708d6b678139f7d36b27a88713a27ce8ab44488",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:contextInputsHandler",
+      "beforeSha256": "cecfbc7f8ab69f48f661109fc954ad41c084f21bac16d1dbc81673c81cbeaf74",
+      "afterSha256": "cecfbc7f8ab69f48f661109fc954ad41c084f21bac16d1dbc81673c81cbeaf74",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:contextInputs",
+      "beforeSha256": "0d3ff1b9aa79771a65ab0ada91770140062f34a671b776aa9f3dc56c87e67ef3",
+      "afterSha256": "0d3ff1b9aa79771a65ab0ada91770140062f34a671b776aa9f3dc56c87e67ef3",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:checkToolAuthority",
+      "beforeSha256": "eda15f93cf2f7633bd6c7d37eef5a938da5695a28c5af6a7b61637ef10f514a3",
+      "afterSha256": "eda15f93cf2f7633bd6c7d37eef5a938da5695a28c5af6a7b61637ef10f514a3",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:selector",
+      "beforeSha256": "45dd38d77de2add82b37cb27c756a6bceb598a2a1d7797d1e275d2ea7dbe4593",
+      "afterSha256": "45dd38d77de2add82b37cb27c756a6bceb598a2a1d7797d1e275d2ea7dbe4593",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:startHandler",
+      "beforeSha256": "31d4ea47c959667736d3fed4d744d8e76768ec1c7db4e7e709050add136b7539",
+      "afterSha256": "31d4ea47c959667736d3fed4d744d8e76768ec1c7db4e7e709050add136b7539",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:start",
+      "beforeSha256": "1b24849af334d9b2cec8fcc98c2f8baec9a60269df3bc7ac70f5c3ad1a840f2d",
+      "afterSha256": "1b24849af334d9b2cec8fcc98c2f8baec9a60269df3bc7ac70f5c3ad1a840f2d",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:startExecution",
+      "beforeSha256": "0548716f7cea77d8a4753f992027a46328998160ab735e2ce6bddf765843a695",
+      "afterSha256": "41a5d6d6f162f364e53c6dec06c2c598216eee1ff71dc9ce067828e284bb0355",
+      "unchanged": false,
+      "permittedChange": true
+    },
+    {
+      "key": "variable:dispatchReady",
+      "beforeSha256": "b8000e8a0db21c9a0df99e1ea5af91f1df01206de873d98b8f0abc3cb30af7d7",
+      "afterSha256": "b8000e8a0db21c9a0df99e1ea5af91f1df01206de873d98b8f0abc3cb30af7d7",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:executeTurn",
+      "beforeSha256": "1a9d03bdedf5e232265c3242b62b09b45f99c98c076282e72b36d6f7d6ae95c3",
+      "afterSha256": "1a9d03bdedf5e232265c3242b62b09b45f99c98c076282e72b36d6f7d6ae95c3",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:executeTurnV2",
+      "beforeSha256": "30a09557f69ced52f4cfd4388491b850e7a0a1a5bfc62de65513174245ca7aad",
+      "afterSha256": "30a09557f69ced52f4cfd4388491b850e7a0a1a5bfc62de65513174245ca7aad",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:executeTurnV3",
+      "beforeSha256": "db855929f1e987e6d568645dc55ac4dedc81baf578dfdf5dcea04217f014197e",
+      "afterSha256": "db855929f1e987e6d568645dc55ac4dedc81baf578dfdf5dcea04217f014197e",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:executeTurnV4",
+      "beforeSha256": "3ce7f75d263fa7cb20ebab36992467a89c9de06d0edfc34b3b219f9956d4fbe2",
+      "afterSha256": "3ce7f75d263fa7cb20ebab36992467a89c9de06d0edfc34b3b219f9956d4fbe2",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:saveContextHandler",
+      "beforeSha256": "18f1a66e32d0f17a18fb3926001f402668123dea10f9a12bb7b8504eb840bb90",
+      "afterSha256": "18f1a66e32d0f17a18fb3926001f402668123dea10f9a12bb7b8504eb840bb90",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:saveContext",
+      "beforeSha256": "a609cf50d0d778b4d2cf60d0b670b854a99eebfd59cc9cb961a3eb1b11723bff",
+      "afterSha256": "a609cf50d0d778b4d2cf60d0b670b854a99eebfd59cc9cb961a3eb1b11723bff",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:startContext",
+      "beforeSha256": "f147367ae259cc1d6d957347302e57f9f8fb3dada8d7920eeb3a0dad2a11491f",
+      "afterSha256": "f147367ae259cc1d6d957347302e57f9f8fb3dada8d7920eeb3a0dad2a11491f",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:contextBarrier",
+      "beforeSha256": "611ba1f01bf5be7323d79e325fa35cdfb8113106462794bdb1ef472d5f513d66",
+      "afterSha256": "611ba1f01bf5be7323d79e325fa35cdfb8113106462794bdb1ef472d5f513d66",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:failContext",
+      "beforeSha256": "24a7f7f68e03587412d1c08e11045a85728fc931b389bf2b703a46c3a6d840ca",
+      "afterSha256": "24a7f7f68e03587412d1c08e11045a85728fc931b389bf2b703a46c3a6d840ca",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:contextSourceHandler",
+      "beforeSha256": "f35eaca8cb309fa02c92d849d60a2723e5909898375c1950b089d6966d90efc3",
+      "afterSha256": "f35eaca8cb309fa02c92d849d60a2723e5909898375c1950b089d6966d90efc3",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:contextSource",
+      "beforeSha256": "ac6a28eb41707eb16955b11a0517e11149bf5e8d072574390b9c19350a430013",
+      "afterSha256": "ac6a28eb41707eb16955b11a0517e11149bf5e8d072574390b9c19350a430013",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:prepareContext",
+      "beforeSha256": "9e19f80965a74c751e201e85fc1799a2a2c8cfe9c2a5a3018b26a234b065ca0f",
+      "afterSha256": "9e19f80965a74c751e201e85fc1799a2a2c8cfe9c2a5a3018b26a234b065ca0f",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "type:EmptyContextResult",
+      "beforeSha256": "ca46f44a28cfc55e378172c23ccf40812b7cfbdcb9ef06142602ae66770bab52",
+      "afterSha256": "ca46f44a28cfc55e378172c23ccf40812b7cfbdcb9ef06142602ae66770bab52",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:prepareEmptyContextHandler",
+      "beforeSha256": "f1bbac64562d63253b20aa104535d736a7007e589d9938de2726428ebfba52fb",
+      "afterSha256": "f1bbac64562d63253b20aa104535d736a7007e589d9938de2726428ebfba52fb",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:prepareEmptyContext",
+      "beforeSha256": "28f81791a31f45e20f7e9ea34975e313172ab10c21316f8a82194fe39ccbbdbc",
+      "afterSha256": "28f81791a31f45e20f7e9ea34975e313172ab10c21316f8a82194fe39ccbbdbc",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:prepareRoutedContext",
+      "beforeSha256": "a1a83705bfdb5b51197b4cafe07227676e2e9668ee9a981f6ef1a9f5771e5c14",
+      "afterSha256": "a1a83705bfdb5b51197b4cafe07227676e2e9668ee9a981f6ef1a9f5771e5c14",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:beginOperationHandler",
+      "beforeSha256": "5ff08347a2625f490fedfc593e8eb308bdc932165f44e97e45490306bc35d1af",
+      "afterSha256": "5ff08347a2625f490fedfc593e8eb308bdc932165f44e97e45490306bc35d1af",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:beginOperation",
+      "beforeSha256": "6fa93d289d22ff75e72f14545399129e4dd5004ee0f64e3ab6c1b0524039b32e",
+      "afterSha256": "6fa93d289d22ff75e72f14545399129e4dd5004ee0f64e3ab6c1b0524039b32e",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:completedModelStepHandler",
+      "beforeSha256": "b621df64842f18e70ded57c9053ac90623ac7d880d331967827febbd3683891e",
+      "afterSha256": "b621df64842f18e70ded57c9053ac90623ac7d880d331967827febbd3683891e",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:completedModelStep",
+      "beforeSha256": "7c4bdb02afb7b04854b73bf956ec410b07292860a059859a63b449559bce0074",
+      "afterSha256": "7c4bdb02afb7b04854b73bf956ec410b07292860a059859a63b449559bce0074",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:startOperationHandler",
+      "beforeSha256": "f90a5fb1671511a55c646d606d06d752edcd22c43875ec934dfede4ee05f30f8",
+      "afterSha256": "f90a5fb1671511a55c646d606d06d752edcd22c43875ec934dfede4ee05f30f8",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:startOperation",
+      "beforeSha256": "9b550262f25466af7c997e05ebc4aa35f87678ee51a83c443556ed6482c74228",
+      "afterSha256": "9b550262f25466af7c997e05ebc4aa35f87678ee51a83c443556ed6482c74228",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:prepareModelOperationHandler",
+      "beforeSha256": "133879a9461b29f2a4fbcdf31eed612d4db022228e09507b502d709bc45cf3f2",
+      "afterSha256": "133879a9461b29f2a4fbcdf31eed612d4db022228e09507b502d709bc45cf3f2",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:prepareModelOperation",
+      "beforeSha256": "cf8af3a828b91d873a3b95b244b36c53cbf007af3d5d83352985d8ac9d2cca9d",
+      "afterSha256": "61400d4bf0ff46142064381d8a0e847d133df53c9a1288a7511e3997bc605e77",
+      "unchanged": false,
+      "permittedChange": true
+    },
+    {
+      "key": "variable:finishOperation",
+      "beforeSha256": "36d8a8f274edbd518b08cb9d61d9c3c7199d64e11f68ff464350d032d6e39a23",
+      "afterSha256": "36d8a8f274edbd518b08cb9d61d9c3c7199d64e11f68ff464350d032d6e39a23",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:bindNativeOperationHandler",
+      "beforeSha256": "f14022956942079cc2fc62253b7987331e012e1f93b44b7ef6cec0d1b381864c",
+      "afterSha256": "f14022956942079cc2fc62253b7987331e012e1f93b44b7ef6cec0d1b381864c",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:bindNativeOperation",
+      "beforeSha256": "0ce6076e6bc96e38598587722c25e29a4502a1ecfe36409c9b98d9b9df54934f",
+      "afterSha256": "0ce6076e6bc96e38598587722c25e29a4502a1ecfe36409c9b98d9b9df54934f",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:admitModelOperationHandler",
+      "beforeSha256": "af8b0f6d92322b9a1b2b3d48340bc46478b062a8180cef02b01e1dfd59339751",
+      "afterSha256": "af8b0f6d92322b9a1b2b3d48340bc46478b062a8180cef02b01e1dfd59339751",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:admitModelOperation",
+      "beforeSha256": "7f461e53248c2eb53dc9810394dfb7a435fbccfba7fb04cf812b81e58c8068ff",
+      "afterSha256": "7f461e53248c2eb53dc9810394dfb7a435fbccfba7fb04cf812b81e58c8068ff",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:recordOutput",
+      "beforeSha256": "c7d8bbd924d2bc3f8b547dc9eeeb32991fb1a46dfed661f3bd5920df38fcd509",
+      "afterSha256": "c7d8bbd924d2bc3f8b547dc9eeeb32991fb1a46dfed661f3bd5920df38fcd509",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:modelStepHandler",
+      "beforeSha256": "db66c97114a13e3fb354c92756c75c3069259fcc9f0e5125d93942b3995045dc",
+      "afterSha256": "db66c97114a13e3fb354c92756c75c3069259fcc9f0e5125d93942b3995045dc",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:modelStep",
+      "beforeSha256": "b6b045a7475663963029fce4e672da3ab4af9277ef59c56a37fa1319b520e2e5",
+      "afterSha256": "b6b045a7475663963029fce4e672da3ab4af9277ef59c56a37fa1319b520e2e5",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:toolStepHandler",
+      "beforeSha256": "02848393451a99086e3e31223cc9816716946359f25c791edd108359fecf8258",
+      "afterSha256": "02848393451a99086e3e31223cc9816716946359f25c791edd108359fecf8258",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:toolStep",
+      "beforeSha256": "54bcb6ff3b52bcd8b7143b55a7de25eb4c0ab9ed78078adeea54bfe11c59b0a1",
+      "afterSha256": "54bcb6ff3b52bcd8b7143b55a7de25eb4c0ab9ed78078adeea54bfe11c59b0a1",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:currentToolPermission",
+      "beforeSha256": "af3b89df02567bf776b6229de618cc24a0266a53dc673f265ba2b397a91df260",
+      "afterSha256": "af3b89df02567bf776b6229de618cc24a0266a53dc673f265ba2b397a91df260",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:checkActiveTool",
+      "beforeSha256": "afb6207eea75d8308ae9a6fa0d60760a62a3922f48804e169026f0627cc29f54",
+      "afterSha256": "afb6207eea75d8308ae9a6fa0d60760a62a3922f48804e169026f0627cc29f54",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:toolWriteFence",
+      "beforeSha256": "0acab1d9afb3629902e124413f6a03fce092676c862ad59bc0d927dda95df8ac",
+      "afterSha256": "0acab1d9afb3629902e124413f6a03fce092676c862ad59bc0d927dda95df8ac",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:writeToolSource",
+      "beforeSha256": "fb890c160e6a5d838a9ad29744488e5512c212bdf403657795bce42bde62116b",
+      "afterSha256": "fb890c160e6a5d838a9ad29744488e5512c212bdf403657795bce42bde62116b",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:writeToolDerived",
+      "beforeSha256": "87c515f65c4284505023b30d7e92f1594a36f183b551ad8c06fdf9e5e3fbadbe",
+      "afterSha256": "87c515f65c4284505023b30d7e92f1594a36f183b551ad8c06fdf9e5e3fbadbe",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:rememberToolSources",
+      "beforeSha256": "1c51cb5a4bd4470eb647f30361349b4f10f1aefb614b249ec0ed668c6b153553",
+      "afterSha256": "1c51cb5a4bd4470eb647f30361349b4f10f1aefb614b249ec0ed668c6b153553",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:toolParent",
+      "beforeSha256": "6a6ae554c9a088a37863bed219495d04022f9308fdde4ec7d43f54cebcc5c2b8",
+      "afterSha256": "6a6ae554c9a088a37863bed219495d04022f9308fdde4ec7d43f54cebcc5c2b8",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:waitForApproval",
+      "beforeSha256": "5c04064613d372d39c79ac736abc7c84b6fb81ef7bb61e26aed33493b2bc5eff",
+      "afterSha256": "5c04064613d372d39c79ac736abc7c84b6fb81ef7bb61e26aed33493b2bc5eff",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:expireApproval",
+      "beforeSha256": "7467512b83dd75d705a4ec1ef725233138fd8eb2ccfeac70170861833676b77c",
+      "afterSha256": "7467512b83dd75d705a4ec1ef725233138fd8eb2ccfeac70170861833676b77c",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:approveTool",
+      "beforeSha256": "94753fa44329168a9be61bb0cbb001793764dafee4a5ee4e836577d4bfef3380",
+      "afterSha256": "94753fa44329168a9be61bb0cbb001793764dafee4a5ee4e836577d4bfef3380",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:finalizeExecution",
+      "beforeSha256": "63bb0a7652e3b4be46e5e06faccfc88eb1f25027cc1a48263ae4fb53054b4f99",
+      "afterSha256": "63bb0a7652e3b4be46e5e06faccfc88eb1f25027cc1a48263ae4fb53054b4f99",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:finalize",
+      "beforeSha256": "e2c36c2f95e078aa63deb630ac564ddf6737ceae559466d28bcd103268fa1f2b",
+      "afterSha256": "e2c36c2f95e078aa63deb630ac564ddf6737ceae559466d28bcd103268fa1f2b",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:reconcile",
+      "beforeSha256": "37d0f703ed4fedcb49e09353aba9df7e9fc4680babf421ea5003ad3fd1a67254",
+      "afterSha256": "37d0f703ed4fedcb49e09353aba9df7e9fc4680babf421ea5003ad3fd1a67254",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:attemptWithFinal",
+      "beforeSha256": "c942f43fa3f159f16339dd898760450d3329cb96602b5b18211910a5a2cdf1db",
+      "afterSha256": "c942f43fa3f159f16339dd898760450d3329cb96602b5b18211910a5a2cdf1db",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:endInterrupted",
+      "beforeSha256": "ff77b1c8873772593cc020f2ed85b2f7aaa985269445327e659b322b43b3bc27",
+      "afterSha256": "ff77b1c8873772593cc020f2ed85b2f7aaa985269445327e659b322b43b3bc27",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:onWorkflowComplete",
+      "beforeSha256": "d20448680f4ee536fb8b11f01d9c0e4e4a88ac3242db2a2b17eba60eb67aee38",
+      "afterSha256": "d20448680f4ee536fb8b11f01d9c0e4e4a88ac3242db2a2b17eba60eb67aee38",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "function:observeHandler",
+      "beforeSha256": "cb9ffca44400dc435aa376bdbbd252674661fbddab51b9a4b7a3af052ae85d30",
+      "afterSha256": "cb9ffca44400dc435aa376bdbbd252674661fbddab51b9a4b7a3af052ae85d30",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:observe",
+      "beforeSha256": "ad11b01d59ba1792058730ed9b87decdf51e7996dfa56f002bbecc8c571851fe",
+      "afterSha256": "ad11b01d59ba1792058730ed9b87decdf51e7996dfa56f002bbecc8c571851fe",
+      "unchanged": true,
+      "permittedChange": false
+    },
+    {
+      "key": "variable:cancel",
+      "beforeSha256": "4079e356a8c28d71ecf10f90bfb897efe3373644d1323f669b03bedcb2db1db6",
+      "afterSha256": "4079e356a8c28d71ecf10f90bfb897efe3373644d1323f669b03bedcb2db1db6",
+      "unchanged": true,
+      "permittedChange": false
+    }
+  ],
+  "addedStatements": [
+    "type:WorkflowCompletion",
+    "variable:workflowComponent",
+    "variable:freshWorkflow",
+    "variable:freshWorkflowComplete",
+    "variable:onInitialWorkflowComplete"
+  ],
+  "allUnexpectedOriginalStatementChanges": [],
+  "originalStartPrefixThroughExecutionInsertionUnchanged": true,
+  "legacyWorkflowBodiesAndCallbackUnchanged": true,
+  "originalModelPreparationBodyUnchanged": true,
+  "files": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "sha256": "1ec557cb9f652dc49ee932677bddf84ec6ea6494eaee78ed66919e18ef242089",
+      "beforeSha256": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60"
+    },
+    {
+      "file": "tests/unit/runtimeAgent/start-native.test.ts",
+      "sha256": "02427e532b2c25831f3a921e345b0988235935518466e32cf0d98c2b7a34a6a1",
+      "newFile": true
+    },
+    {
+      "file": "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "sha256": "3cca1de5ec87f020cf82ff3fc4940a650deba0afcfaa2424f2b28e8872f87102",
+      "beforeSha256": "33052c90b19a0cbffce2239c9d29643c2680f860e483471308a6fd7a07397db7"
+    },
+    {
+      "file": "tests/unit/runtimeAgent/context-routing.test.ts",
+      "sha256": "00604ae5e9cb97534e51dd0139a82aeb201134428b03a8a7e8f2e0b71184efcb",
+      "beforeSha256": "cc59ec56b45652467c834d2f1fa5b3576cad59853b8334e08917db972320d078"
+    }
+  ]
+}
