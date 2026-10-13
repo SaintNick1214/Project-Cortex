@@ -1,0 +1,239 @@
+{
+  "observedAt": "2026-10-13T04:18:00.857Z",
+  "target": {
+    "sessionId": "676a6b4b-e5db-4659-9d63-b8e4501b1a6f",
+    "name": "kindly-clam-401",
+    "id": 6130340,
+    "reference": "dev/cortex-sandbox-676a6b4b-e5db-4659-9d63-b8e4501b1a6f",
+    "expiresAt": 1792467797449
+  },
+  "freshVerifications": 3,
+  "readOnly": true,
+  "managementMutationsBlocked": true,
+  "rawPayloadRetained": false,
+  "tableCounts": {
+    "runtimeIngestionEvents": 4,
+    "runtimeIngestionStages": 12,
+    "runtimeIngestionJobs": 4,
+    "runtimeModelOperations": 17,
+    "runtimeModelAttempts": 17,
+    "runtimeBudgetAccounts": 15,
+    "runtimeMemorySources": 5
+  },
+  "event": {
+    "eventId": "ingestion:5a2af18275de48667deaedbb5e3096538c2dd149e835bf111d85aefe59a756cc",
+    "runId": "run:0a34dd8e898d804bf9aebbc614592b76acf2dec3f1824944cf00b54bf1f71044",
+    "sequence": 3,
+    "factsState": "unknown",
+    "vectorsState": "pending",
+    "createdAt": 1791864268007,
+    "updatedAt": 1791864272116,
+    "sourceSha256": "1c3a32745b719c79f79d98cadc7bf62b82f54c76ea514886dd44c1697fc37100",
+    "contentHash": "260c683fe9c21cdbef2a7e4094f20a3611afee9c1b2b8ef620c65bba3035a2c4",
+    "sourceContentBytes": 19,
+    "sourceRole": "user",
+    "tombstoned": false
+  },
+  "stages": [
+    {
+      "stage": "vectors",
+      "state": "pending",
+      "attempt": 0,
+      "leaseVersion": 0,
+      "updatedAt": 1791864268007,
+      "payload": {
+        "present": false
+      }
+    },
+    {
+      "stage": "facts",
+      "state": "pending",
+      "attempt": 0,
+      "leaseVersion": 0,
+      "updatedAt": 1791864268007,
+      "payload": {
+        "present": false
+      }
+    },
+    {
+      "stage": "extract",
+      "state": "unknown",
+      "failureCode": "INDEXING_OUTCOME_UNKNOWN",
+      "attempt": 1,
+      "leaseVersion": 1,
+      "updatedAt": 1791864272116,
+      "payload": {
+        "present": false
+      }
+    }
+  ],
+  "account": {
+    "runAccountId": "ps74fdaz1yhbz4pscxv8bhyxy98g71ky",
+    "runBudgetId": "46fcb13814be00e8c2033368d6ddfcbe30448f55405553315e9ffe4925ba04fd",
+    "kind": "run",
+    "reservedUnits": 0,
+    "settledUnits": 0,
+    "uncertainUnits": 100000,
+    "activeConcurrency": 0,
+    "cancelled": false,
+    "current": true,
+    "overrun": false
+  },
+  "modelOperationCount": 1,
+  "modelAttemptCount": 1,
+  "attempts": [
+    {
+      "operationDocumentId": "t174w8acq1m90hyevvd487rphs8g7cfh",
+      "operationKey": "memory.extract",
+      "state": "uncertain",
+      "attemptNumber": 1,
+      "ordinal": 0,
+      "createdAt": 1791864270397,
+      "checkpointAt": 1791864270564,
+      "measuredInputTokens": 4060,
+      "maximumOutputTokens": 512,
+      "resultWithheld": false,
+      "resultAttachmentState": "attached",
+      "slotReleased": true,
+      "outputVisible": true,
+      "reservationUnits": 100000,
+      "operationUnits": {
+        "reserved": 0,
+        "settled": 0,
+        "uncertain": 100000
+      },
+      "sourceBindingMatches": true,
+      "request": {
+        "encoded": {
+          "present": true,
+          "bytes": 12965,
+          "sha256": "27601d5ace3b87544bd457a8f895a948de1b9758197848fd49d5a8d95aede4d4",
+          "jsonValid": true,
+          "type": "object",
+          "canonical": true,
+          "knownKeys": [
+            "request",
+            "snapshot"
+          ],
+          "unknownKeyCount": 0,
+          "keysSha256": "d98ba54023973d6936f6cb5faf6f92ae0cb159897f9fdca1d5c3be03abbca094"
+        },
+        "keysSha256": "fed28e3625a20b4077fc9658e855dfa010a24c59cbd762291ea3eeb6fc17c940",
+        "promptBytes": 4042,
+        "promptSha256": "3e6c77c19f0e322aa0453d76349916bbd4190150dcbf4dc59b459c8a874e1fdd",
+        "asksForSchemaInsteadOfInstance": true,
+        "asksForDataInstance": true,
+        "includesNoFactsInstance": true,
+        "schemaVersion": "facts-v1"
+      },
+      "snapshot": {
+        "operationKey": "memory.extract",
+        "promptVersionSha256": "ef9011c430ff14a76344d5f6fa36fc34d75e680f44c9790eee6d73421b987759",
+        "promptVersionIsV3": true,
+        "inputTokens": 8192,
+        "outputTokens": 512
+      },
+      "terminal": {
+        "encoded": {
+          "present": true,
+          "bytes": 426,
+          "sha256": "5e5cd46312de1f4334f97d1d977e8d3fcc7e651af5a818cdde69053c10542eca",
+          "jsonValid": true,
+          "type": "object",
+          "canonical": true,
+          "knownKeys": [
+            "actualModel",
+            "costSource",
+            "dispatchIdentity",
+            "modelId",
+            "nativeInterface",
+            "outcome",
+            "proof",
+            "receiptId",
+            "usage",
+            "version"
+          ],
+          "unknownKeyCount": 0,
+          "keysSha256": "658b37bf56233e0201a8369fe9b19f965f060537ba453bd82528211a70baa4d8"
+        },
+        "outcome": "confirmed",
+        "nativeInterface": "chat",
+        "costSource": "unavailable",
+        "usage": {
+          "inputTokens": 963,
+          "outputTokens": 4,
+          "totalTokens": 967,
+          "cachedInputTokens": 0,
+          "reasoningTokens": 0
+        },
+        "actualModelSha256": "94d9f0da97276443ab83dd315d000eef5751916f8d4849c468859bd51b21d79f",
+        "dispatchIdentityMatches": true
+      },
+      "privateResult": {
+        "envelope": {
+          "present": true,
+          "bytes": 26,
+          "sha256": "f5399145d97520440b509c6c4dcbb07d0a5a4233f31e18ec4c55b909f2d303e4",
+          "jsonValid": true,
+          "type": "object",
+          "canonical": true,
+          "knownKeys": [
+            "text"
+          ],
+          "unknownKeyCount": 0,
+          "keysSha256": "3fe5850a7e2e9ae6b1f23c333f2ffbe21495fde945b6485d24fcf58169414f8b"
+        },
+        "textPresent": true,
+        "textBytes": 13,
+        "textSha256": "046b2ce18fd594d348ebd1b1541e3f6c3a352bcc2e784e95c798f37867ca271d",
+        "jsonValid": false,
+        "textSyntax": {
+          "startsWithJsonObject": true,
+          "startsWithJsonArray": false,
+          "startsWithMarkdownFence": false,
+          "startsWithQuote": false,
+          "startsWithLetter": false,
+          "objectDelimiterCount": 3,
+          "arrayDelimiterCount": 2
+        },
+        "parseError": {
+          "sha256": "01e745f3c8a8507dbf6f10ae314aa4fa9827cacf8c8b1c580501d38fe74ccb27",
+          "bytes": 80,
+          "classifications": {
+            "jsonParse": true,
+            "missingFactsArray": false,
+            "malformedFact": false,
+            "malformedEntity": false,
+            "malformedRelation": false,
+            "unknownOutputFields": false,
+            "invalidSource": false,
+            "invalidInput": false,
+            "forbidden": false,
+            "policyDenied": false,
+            "timeout": false,
+            "argumentValidation": false
+          }
+        },
+        "domainValid": false,
+        "domainError": {
+          "sha256": "01e745f3c8a8507dbf6f10ae314aa4fa9827cacf8c8b1c580501d38fe74ccb27",
+          "bytes": 80,
+          "classifications": {
+            "jsonParse": true,
+            "missingFactsArray": false,
+            "malformedFact": false,
+            "malformedEntity": false,
+            "malformedRelation": false,
+            "unknownOutputFields": false,
+            "invalidSource": false,
+            "invalidInput": false,
+            "forbidden": false,
+            "policyDenied": false,
+            "timeout": false,
+            "argumentValidation": false
+          }
+        }
+      }
+    }
+  ]
+}

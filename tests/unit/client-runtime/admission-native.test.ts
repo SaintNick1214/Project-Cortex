@@ -123,11 +123,11 @@ describe("combined native run admission", () => {
   });
   it("a revoked grant between submit and start cannot leave transcript, budget, outbox or Workflow effects", async () => {
     const f = await fixture(), native = f.ctx.runMutation.bind(f.ctx), before = f.snapshot();
-    f.ctx.runMutation = (async (ref: unknown, args: unknown) => {
-      const result = await native(ref as never, args as never);
+    f.ctx.runMutation = async (ref, ...args) => {
+      const result = await native(ref, ...args);
       let name = ""; try { name = getFunctionName(ref as never); } catch { /* Native component route. */ }
       if (name === "runs:submit") f.grant.revokedAt = Date.now(); return result;
-    }) as typeof f.ctx.runMutation;
+    };
     await expect(f.admit()).rejects.toThrow(); expect(f.snapshot()).toEqual(before);
   });
   it("an altered returned identity after native start rolls back the parent including Workflow insertion", async () => {

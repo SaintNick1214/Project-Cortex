@@ -548,3 +548,21 @@ export const OBSERVED_GATEWAY_POLICY_MANIFEST_V16 = {
       promptVersion: "memory-extraction-instance-prompt-v3" } } };
   }),
 } as const satisfies DeploymentPolicyManifest;
+
+/** Reviewed source framing successor; the evidence hash binds the read-only
+ * invalid-output analysis, not a new native JSON capability or syntax guarantee.
+ * V16 and older prompt requests, accounting roots and actual proofs stay exact.
+ */
+export const OBSERVED_GATEWAY_POLICY_MANIFEST_V17 = {
+  ...OBSERVED_GATEWAY_POLICY_MANIFEST_V16,
+  revision: 17,
+  artifactRevision: "d2aa058ea9d2ed73281b1f6ccc3a4a808d5ac33462718261d98e55f852a75776",
+  evidenceHash: "d2aa058ea9d2ed73281b1f6ccc3a4a808d5ac33462718261d98e55f852a75776",
+  acceptanceHash: "d2aa058ea9d2ed73281b1f6ccc3a4a808d5ac33462718261d98e55f852a75776",
+  policies: OBSERVED_GATEWAY_POLICY_MANIFEST_V16.policies.map(policy => {
+    const successor = { ...policy, policyId: policy.policyId.replace(/-v16$/, "-v17"), version: 17 };
+    if (!("operationKey" in policy) || policy.operationKey !== "memory.extract") return successor;
+    return { ...successor, rules: { ...policy.rules, pins: { ...policy.rules.pins,
+      promptVersion: "memory-extraction-framed-prompt-v4" } } };
+  }),
+} as const satisfies DeploymentPolicyManifest;

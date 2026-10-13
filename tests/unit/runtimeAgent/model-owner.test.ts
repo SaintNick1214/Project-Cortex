@@ -86,7 +86,8 @@ async function setup(withTool = false, streaming = true) {
   return { f, args, calls };
 }
 async function actualFragmentStream(call: Record<string, unknown>, storage: Parameters<NonNullable<typeof streamScenario>>[1], beforeEnd: () => Promise<void> | void) {
-  const transform = mergeTransforms(storage.saveStreamDeltas, undefined)![0]!({ tools: {}, stopStream() {} });
+  const transforms = mergeTransforms(storage.saveStreamDeltas, undefined)!;
+  const transform = (Array.isArray(transforms) ? transforms[0]! : transforms)({ tools: {}, stopStream() {} });
   const writer = transform.writable.getWriter(), reader = transform.readable.getReader();
   const read = (async () => { try { for (;;) { const item = await reader.read(); if (item.done) return;
     await (call.onChunk as (event: { chunk: unknown }) => Promise<void>)({ chunk: item.value }); }

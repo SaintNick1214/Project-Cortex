@@ -134,7 +134,8 @@ it("the Agent Workflow commits canonical answer and ingestion while its durable 
       throw new Error(`Unexpected inline title action: ${name}`);
     },
   };
-  await (runtime.executeTurn as unknown as { _handler(step: typeof step, args: typeof parent.attempt): Promise<null> })._handler(step, parent.attempt);
+  type TitleWorkflowStep = typeof step;
+  await (runtime.executeTurn as unknown as { _handler(step: TitleWorkflowStep, args: typeof parent.attempt): Promise<null> })._handler(step, parent.attempt);
   expect(actions).toEqual(["runtimeAgent:prepareContext", "runtimeAgent:modelStep"]);
   const job = f.db.table("runtimeContentJobs")[0], accounts = f.db.table("runtimeBudgetAccounts").length;
   expect(f.db.table("runtimeRuns")[0]).toMatchObject({ responseStatus: "complete", outputMessageIds: [parent.finalId] });

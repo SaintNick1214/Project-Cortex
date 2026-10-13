@@ -13,7 +13,7 @@ const runtime = await import("../../../convex-dev/runtimeAgent");
 const context = await import("../../../convex-dev/runtimeMemoryContext");
 const memory = await import("../../../convex-dev/runtimeMemory");
 const { ledger } = await import("../runtimeTranscript/fixture");
-beforeEach(() => installIngestionMockRoot()); afterEach(() => jest.restoreAllMocks());
+beforeEach(() => installIngestionMockRoot()); afterEach(() => { jest.restoreAllMocks(); });
 async function fixture() {
   const f = await ingestionFixture(), query = f.ctx.runQuery.bind(f.ctx), mutation = f.ctx.runMutation.bind(f.ctx);
   f.ctx.runQuery = (async (ref, args) => {

@@ -103,7 +103,7 @@ it("installed completed replay rejects changed attempt arguments before native w
   const channel = new BaseChannel<Request>();
   const executor = new StepExecutor("workflow:inline", 0, {} as never, {} as never, first.entries, channel, Date.now(), undefined);
   const worker = executor.run(); void worker.catch(() => {});
-  const request = createWorkflowCtx("workflow:inline" as never, channel).runMutation(makeFunctionReference("runtimeAgent:startContext"), { ...args, leaseVersion: args.leaseVersion + 1 }, { inline: true });
+  const request = createWorkflowCtx("workflow:inline" as never, channel).runMutation(makeFunctionReference<"mutation">("runtimeAgent:startContext"), { ...args, leaseVersion: args.leaseVersion + 1 }, { inline: true });
   void request.catch(() => {});
   await expect(worker).rejects.toThrow("Journal entry mismatch"); channel.close();
   expect(f.db.table("runtimeAgentExecutions")[0].contextState).toBe("started"); expect(f.db.table("runtimeModelOperations")).toEqual([]);
@@ -129,8 +129,8 @@ it.each(["revocation", "budget-cancel", "input-edit"])("second inline handler fr
 });
 it("installed Workflow rejects inline scheduling overrides/actions and keeps sleep non-inline with exact delay", async () => {
   const channel = new BaseChannel<Request>(), context = createWorkflowCtx("workflow:inline" as never, channel);
-  await expect(context.runMutation(makeFunctionReference("runtimeAgent:startContext"), {}, { inline: true, runAfter: 1 } as never)).rejects.toThrow("Cannot combine");
-  await expect(context.runAction(makeFunctionReference("runtimeAgent:modelStep"), {}, { inline: true } as never)).rejects.toThrow("Cannot run an action inline");
+  await expect(context.runMutation(makeFunctionReference<"mutation">("runtimeAgent:startContext"), {}, { inline: true, runAfter: 1 } as never)).rejects.toThrow("Cannot combine");
+  await expect(context.runAction(makeFunctionReference<"action">("runtimeAgent:modelStep"), {}, { inline: true } as never)).rejects.toThrow("Cannot run an action inline");
   const sleep = context.sleep(100, { name: "memory stage barrier" });
   const request = await channel.get(); expect(request).toMatchObject({ name: "memory stage barrier", inline: false, schedulerOptions: { runAfter: 100 }, unstableArgs: false });
   request.resolve({ kind: "success", returnValue: null }); await sleep; channel.close();

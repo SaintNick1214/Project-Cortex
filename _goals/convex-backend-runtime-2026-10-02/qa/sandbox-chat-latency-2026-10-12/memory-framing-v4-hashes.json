@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "pin": "memory-extraction-framed-prompt-v4",
+  "manifestRevision": 17,
+  "productionFileCountAdded": 0,
+  "sourceFiles": [
+    {
+      "path": "convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 13351,
+      "sha256": "db503df8d2278c4e2d37802502f2ed6cc78daac9d213841d423f3965463f8acd"
+    },
+    {
+      "path": "convex-dev/runtimeGatewayMediaQualifications.ts",
+      "bytes": 22340,
+      "sha256": "2e3f10cebd9207fde5779de0abf51598f1d3c9de80e583dd6053a83d36184fee"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 5040,
+      "sha256": "0c5c98bae06c5c6d16a0a9edc9488938d9f6c3ecd7cf36f15e76b0065f7f67da"
+    },
+    {
+      "path": "tests/unit/runtime/memory-gateway.test.ts",
+      "bytes": 58659,
+      "sha256": "c72181cbdf413c784f3ceaebcde113f45f23e5a36ba88cc2db29809c163ad277"
+    },
+    {
+      "path": "tests/unit/runtime/observed-extraction-framing.test.ts",
+      "bytes": 8849,
+      "sha256": "aaa47b656af644806e14fffa34d92e43e8e6b1b040becc4843da9e9538f65d82"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/framing-invalid-output.test.ts",
+      "bytes": 12986,
+      "sha256": "96799c1257933350798f52cf4e6d0efbc4de46760aabb93ed9428bff5a3fadcd"
+    }
+  ],
+  "sourceBatchHash": "76c82f68b3b9382d6f2bf964e35dd5e6595fbab7cb70b0568cc49ba85baa95b8",
+  "rawEvidence": [
+    {
+      "path": "memory-framing-historical-baseline.log",
+      "bytes": 3763,
+      "sha256": "b1a9ea2339c24e393eb9b886f5079b84abf7f892347df0e650eaaca758edca16"
+    },
+    {
+      "path": "memory-framing-historical-capture.log",
+      "bytes": 10697,
+      "sha256": "6b7771c9acb63c57179acd2bc69f4bb3504865156e7ca1feb665ee09b3e3a176"
+    },
+    {
+      "path": "memory-framing-v4-focused-initial.log",
+      "bytes": 22689,
+      "sha256": "4f877f99fd923d3e86a96b0eb77a2585add08c4d47724385bfbc2cdc58c7b854"
+    },
+    {
+      "path": "memory-framing-v4-handler-repair.log",
+      "bytes": 10511,
+      "sha256": "dfc7c55a956bf394cde57f45cc7f0ef49d11c21ae09e70c576f2a4894018baa6"
+    },
+    {
+      "path": "memory-framing-v4-regressions.log",
+      "bytes": 13403,
+      "sha256": "9cd8c2662e0b0d1640dd9f5bf753f13006655d084e80b9cdd5db3f82b3bfc6ec"
+    },
+    {
+      "path": "memory-framing-v4-regressions-final.log",
+      "bytes": 12034,
+      "sha256": "502b28c6898fbe238dcf45654429ce56d353ee99986710b8876f41777013d613"
+    },
+    {
+      "path": "memory-framing-v4-type-initial.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "memory-framing-v4-tsc.log",
+      "bytes": 5389,
+      "sha256": "7e86c1e490d46119ff38ec91489c7ec61e1ee6f94ff93a1e809ac648958b1560"
+    },
+    {
+      "path": "memory-framing-v4-tsc-final.log",
+      "bytes": 2793,
+      "sha256": "cf6801c86344a319dbfa15159cd71020dc55ef6e0ccd6a1bbcab73aaf024045b"
+    },
+    {
+      "path": "memory-framing-v4-scoped-tsc.log",
+      "bytes": 2025,
+      "sha256": "3424236d479566188a40b7219b4b049e5be3c504243e94538d2f5341db7cc40c"
+    },
+    {
+      "path": "memory-framing-v4-scoped-tsc-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "memory-framing-v4-eslint.log",
+      "bytes": 283,
+      "sha256": "6dafd440c8b696f7bc1fb4f12ae699123e308219f73b33911cd5692d7ad60643"
+    },
+    {
+      "path": "memory-framing-v4-eslint-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tsconfig.memory-framing-v4.json",
+      "bytes": 988,
+      "sha256": "d8616ad16da15d35b41abc9ea28ba6beba299cb938c3159b13b3b0340c26c335"
+    },
+    {
+      "path": "memory-framing-v4-repair-report.md",
+      "bytes": 10022,
+      "sha256": "c14d21e3f7d46d6b94e5c2bafa206e75a82971786bc59df25e8eadd8a1dbdab7"
+    }
+  ],
+  "checks": {
+    "regressions": {
+      "exitCode": 0,
+      "suites": 7,
+      "passed": 129,
+      "skipped": 0
+    },
+    "productionTypeScript": {
+      "exitCode": 0
+    },
+    "affectedTypeScript": {
+      "exitCode": 0
+    },
+    "eslint": {
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "broadTypeScript": {
+      "exitCode": 2,
+      "outsideBatchErrors": 7
+    },
+    "actualService": "not_run",
+    "independentReview": "coordinator_pending"
+  }
+}

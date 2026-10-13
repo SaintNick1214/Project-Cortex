@@ -1,0 +1,50 @@
+{
+  "recordedAt": "2026-10-13T04:50:01.419Z",
+  "scope": "Five test fixture typing corrections; no production/API/assertion change",
+  "files": [
+    {
+      "path": "tests/unit/client-runtime/admission-native.test.ts",
+      "sha256": "b80d7fc03780a4d8296c263e731c048d661628fea82e2094cea67c5b43e12aea"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-latency.test.ts",
+      "sha256": "7640188d49924b40bf070b821ac13a054a6da5aa96d341bc58a515f4102a3a19"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/inline-barrier.test.ts",
+      "sha256": "8ff9725818174ff8ba1ab1a694b3394418993f974d077a2dba4bd99f47ba5aec"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "sha256": "962cfc9462d08c05cc93be3aa651b5c186bb877ba73d5e4a28927bae26447897"
+    },
+    {
+      "path": "tests/unit/runtimeContent/jobs.test.ts",
+      "sha256": "9400812fd6f41b65e39e0970d312256f9987819b4767a6ecff75b96f805b3f25"
+    }
+  ],
+  "checks": {
+    "rootTypeScript": {
+      "command": "Node24.15 TypeScript6.0.3 tsc --noEmit -p tsconfig.json",
+      "exitCode": 0,
+      "log": "latency-test-types-root-final.log"
+    },
+    "scopedEslint": {
+      "exitCode": 0,
+      "log": "latency-test-types-eslint-final.log"
+    },
+    "affectedJest": {
+      "exitCode": 0,
+      "suites": 5,
+      "passed": 95,
+      "failed": 0,
+      "pending": 0,
+      "todo": 0,
+      "receipt": "latency-test-types-regressions-final.json",
+      "sha256": "370ebb97475dff095bf0ac8846c83569cd3c66fad90a21b2318c30dbc107d237"
+    }
+  },
+  "previousFailure": "memory-framing-v4-tsc-final.log retained seven errors; corrected method signature/function kind/union/void/recursive parameter types",
+  "priorEarlyDeliveryReceiptApplicability": "Production runtimeAgent.ts unchanged; original two test hashes and raw run retained historical. This receipt verifies current test bytes.",
+  "noServiceAccess": true
+}
