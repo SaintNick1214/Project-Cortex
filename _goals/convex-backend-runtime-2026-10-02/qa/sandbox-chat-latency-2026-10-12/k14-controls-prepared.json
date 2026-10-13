@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-13T22:42:37.593169+00:00",
+  "sourceCommit": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
+  "imageId": "sha256:f1b4bb13bf023ed2851f0bca5c9da2a18eca1e7010daee7eeaef730978d56406",
+  "target": {
+    "sessionId": "e07fd8cd-4f0b-4ceb-833c-15b167bda97f",
+    "name": "UNREADY_K14_NAME",
+    "id": "UNREADY_K14_ID",
+    "expiresAt": "UNREADY_K14_EXPIRY",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-e07fd8cd-4f0b-4ceb-833c-15b167bda97f"
+  },
+  "controls": [
+    {
+      "original": "verify-k13-four-run-memory-readonly.mjs",
+      "originalSha256": "5297fa9aad52024dc47a5d4ea8b21c6e8d606f1bedd8523768a35c73c10c4df6",
+      "prepared": "verify-k14-four-run-memory-readonly.mjs",
+      "sha256": "4ffa6a2353c4277c97fbcc56d6b3dd3019dafbd1a6380e5bc476de26be997128",
+      "syntaxExitCode": 0,
+      "syntaxStdoutBytes": 0,
+      "syntaxStderrBytes": 0
+    },
+    {
+      "original": "capture-k13-financial-metadata.mjs",
+      "originalSha256": "6f8af2259166ff4b7a9d283c74aa08a271172a1eb42a52cf63e4631c6f195e43",
+      "prepared": "capture-k14-financial-metadata.mjs",
+      "sha256": "22efe131fb39871d074f2d6400cb49b95b0d207925667497cda714d5bc214c90",
+      "syntaxExitCode": 0,
+      "syntaxStdoutBytes": 0,
+      "syntaxStderrBytes": 0
+    },
+    {
+      "original": "verify-k13-cleanup.mjs",
+      "originalSha256": "2150c5e4ca036d8214872b499d4daa0dbb98f89771a44dfce7af97338def5251",
+      "prepared": "verify-k14-cleanup.mjs",
+      "sha256": "5d43e30382efc669a042e7753ab7a8fb244d135e86a331b931483cb84a5c85c1",
+      "syntaxExitCode": 0,
+      "syntaxStdoutBytes": 0,
+      "syntaxStderrBytes": 0
+    }
+  ],
+  "runIdPins": "UNREADY: four exact actual run IDs pending",
+  "interlock": "CORTEX_K14_MEMORY_TURN_COMPLETE_CONFIRMED=1 only after root all-four COMPLETE/GO",
+  "paging": {
+    "numItems": 256,
+    "requireIsDone": true,
+    "timeoutMs": 30000
+  },
+  "pendingInputs": [
+    "READY exact name/id/expiry/image confirmation",
+    "four distinct exact run IDs, browser-first/browser-warm/cli-first/cli-warm",
+    "explicit all-four COMPLETE/GO",
+    "separate finance and cleanup GO"
+  ],
+  "serviceCalls": 0,
+  "mutations": 0,
+  "inferenceCalls": 0,
+  "oldControlsUnchanged": true
+}

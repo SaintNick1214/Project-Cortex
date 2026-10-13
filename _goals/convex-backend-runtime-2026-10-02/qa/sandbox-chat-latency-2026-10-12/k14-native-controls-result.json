@@ -1,0 +1,222 @@
+{
+  "observedAt": "2026-10-13T22:50:33.003939+00:00",
+  "target": {
+    "sessionId": "e07fd8cd-4f0b-4ceb-833c-15b167bda97f",
+    "name": "mild-eagle-107",
+    "id": 6150945,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-e07fd8cd-4f0b-4ceb-833c-15b167bda97f"
+  },
+  "sourceCommit": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
+  "imageId": "sha256:f1b4bb13bf023ed2851f0bca5c9da2a18eca1e7010daee7eeaef730978d56406",
+  "strictProof": {
+    "passed": true,
+    "events": 8,
+    "facts": [
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0
+    ],
+    "vectors": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "freshVerifications": 43,
+    "allResponseMemoryComplete": true,
+    "contiguousRequired": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "allOriginalChecksPass": true
+  },
+  "finance": {
+    "nativeAttempts": 31,
+    "activeSlots": 0,
+    "reservationCeilingsUnits": 5000000,
+    "allSlotsReleased": true,
+    "chargesUnknown": true,
+    "manualCallsNotRetried": true
+  },
+  "snapshot": {
+    "phases": 351,
+    "executions": 1000,
+    "byteCount": 1232321,
+    "nativeExecutionCapReached": true,
+    "earlierRecordsOutsideCapAreUnavailableNotZero": true
+  },
+  "execution": {
+    "strict": {
+      "exitCode": 0,
+      "elapsedMs": 8191,
+      "stdoutBytes": 2820,
+      "stderrBytes": 0,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nativeClientClosed": true,
+      "noPaidCalls": true,
+      "noRetries": true
+    },
+    "others": {
+      "executions": [
+        {
+          "label": "finance",
+          "exitCode": 0,
+          "elapsedMs": 1439,
+          "stdoutBytes": 361,
+          "stderrBytes": 0,
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "nativeClientClosed": true,
+          "noPaidCalls": true,
+          "noRetries": true,
+          "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-financial-metadata-1791931761731.json"
+        },
+        {
+          "label": "service-log",
+          "exitCode": 0,
+          "elapsedMs": 1013,
+          "stdoutBytes": 401,
+          "stderrBytes": 0,
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "nativeClientClosed": true,
+          "noPaidCalls": true,
+          "noRetries": true,
+          "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-1791931762831.json"
+        },
+        {
+          "label": "chain-0",
+          "exitCode": 0,
+          "elapsedMs": 2403,
+          "stdoutBytes": 1356,
+          "stderrBytes": 0,
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "nativeClientClosed": true,
+          "noPaidCalls": true,
+          "noRetries": true,
+          "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-319a64e2e3d6-1791931765143.json"
+        },
+        {
+          "label": "chain-1",
+          "exitCode": 0,
+          "elapsedMs": 2354,
+          "stdoutBytes": 1187,
+          "stderrBytes": 0,
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "nativeClientClosed": true,
+          "noPaidCalls": true,
+          "noRetries": true,
+          "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-ef6c7741bd3f-1791931767512.json"
+        },
+        {
+          "label": "chain-2",
+          "exitCode": 0,
+          "elapsedMs": 2148,
+          "stdoutBytes": 1356,
+          "stderrBytes": 0,
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "nativeClientClosed": true,
+          "noPaidCalls": true,
+          "noRetries": true,
+          "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-f600e0263131-1791931769665.json"
+        },
+        {
+          "label": "chain-3",
+          "exitCode": 0,
+          "elapsedMs": 2458,
+          "stdoutBytes": 1187,
+          "stderrBytes": 0,
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "nativeClientClosed": true,
+          "noPaidCalls": true,
+          "noRetries": true,
+          "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-68ee2464ec0a-1791931772104.json"
+        }
+      ],
+      "allExecuted": true,
+      "allPassed": true,
+      "allClientsClosed": true,
+      "noPaidCalls": true
+    },
+    "allClientsClosed": true,
+    "inferenceCalls": 0,
+    "effectfulMutations": 0,
+    "paidRetries": 0,
+    "cleanupCollectorInvoked": false
+  },
+  "SLO": {
+    "rootMeasuredMs": {
+      "browserFirstAfterPaint": 7836.1,
+      "browserWarmAfterPaint": 8928.6,
+      "cliFirstStdout": 12840.38,
+      "cliWarmStdout": 15010.61
+    },
+    "allFourUnderOneSecond": false,
+    "nativeFunctionalProofDoesNotAcceptSLO": true
+  },
+  "artifacts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-memory-native-v2-four-run-verification-1791931693927.json",
+      "sha256": "cf6872e5dc696e8a5114744b555acbd5f55aa0114a184f1450697339c63a0f39"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-financial-metadata-1791931761731.json",
+      "sha256": "aa30d9d7a15ba4a38dec3418a6c056d023aa17c32d4f47adac04be69d2a77047"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-1791931762831.json",
+      "sha256": "9c70fb1a0328aec5b08079223ec1cf24fb2f635ef94e3d3a811106e0c396490c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-319a64e2e3d6-1791931765143.json",
+      "sha256": "a6fdf62c8630aba123ab5cb5dd23f179c78bb7eb91ab1fa907821f96f09dc3c9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-ef6c7741bd3f-1791931767512.json",
+      "sha256": "b091e439233f615385d15e705d7d94ccc344904f2f1d50d1954eb7c1c522de30"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-f600e0263131-1791931769665.json",
+      "sha256": "60f67c3918c451574ca3f1c25961b821f0755fedfaf89ab25bc71ade15afec5d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-68ee2464ec0a-1791931772104.json",
+      "sha256": "306a53b52913fa1ffe210c16fb7ec2c84d489023219ab9818db1d15fe13c5984"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-memory-four-run-control-issued.json",
+      "sha256": "991c1938b05feac7d0cb0a2111121f2a3e74cf66258d6385be58b1fc2a425282"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-memory-four-run-control-output.json",
+      "sha256": "297ae68b14181c04cec50e91a423cfa8908e228ecd3953a47382745dd339fe43"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-memory-four-run-control-execution.json",
+      "sha256": "a9c2ed8516f0b972a65842398dda7c54e879b5aaa288efee88898c0619ea99d8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-rest-collectors-execution.json",
+      "sha256": "99d1364680dc83c97b53003a8a21816e57d88dc4fe8944a14c024182523e7d96"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-four-run-exact-ids.json",
+      "sha256": "9a1ffbc919de1b06cf30caaedc1dce715734db33aaed84fdf1bf9fbff72d32dc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-trace-collectors-prepared.json",
+      "sha256": "54b608f41591ac0f1b70c38d2417e891f6878596ea5f5dbc2498f5d5c2663b06"
+    }
+  ]
+}

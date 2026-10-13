@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "verdict": "APPROVED",
+  "scope": "prospective-automatic-qualification-procedure",
+  "reviewSha256": "bf79dc86a8562ab85b1940d1c3180529b62e204dac20ccab0ced6413d7068822",
+  "reviewPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k13-joint-source-review.md",
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "perRunHumanReview": false,
+  "files": [
+    {
+      "path": "../start-sandbox.sh",
+      "sha256": "aca93c7efe72066d6dcc46007c1517a5eee2a99f7d4baaaa2a4239b323226bca"
+    },
+    {
+      "path": "cloud.mjs",
+      "sha256": "d050985d18d7887f827877cc05ede3d4de76c41eae2b1680ebc092ab452a23f4"
+    },
+    {
+      "path": "cloud-config.json",
+      "sha256": "2fa89238d713a04611311097ec6f71e995ec478de4e658a219cd59bfa78a58d5"
+    },
+    {
+      "path": "runtime.mjs",
+      "sha256": "f4ba86380e9db718c7cf1f6a5e06b209b79c7bcb2a96e978e5c00a9c21a7ba7c"
+    },
+    {
+      "path": "qualification.mjs",
+      "sha256": "96e63538280185aa0d86947ddf526c2c4e2e1fd50bf77cf425bf17398af40016"
+    },
+    {
+      "path": "runner.mjs",
+      "sha256": "f9efa3a801a038c51090df99de6c72591b37c2e810a1d2a24ad5c81144b6f30f"
+    },
+    {
+      "path": "docker.mjs",
+      "sha256": "aa33701137776be1358bc131430c7879b54729085be6d1293a4f982da0c54f4e"
+    },
+    {
+      "path": "templates/manualQualificationProbe.ts",
+      "sha256": "85efd3b7946987c07ccb02201b9caf30d2f0d42345c155bc1f787223ccf088d4"
+    },
+    {
+      "path": "templates/qualification-envelopes.json",
+      "sha256": "e08530363beb0c8acfdd7b2a662c3611d6cea518166f02b561b2dbb2c9177d99"
+    },
+    {
+      "path": "templates/native-package-lock.json",
+      "sha256": "48e2030f200e70e8a5253ad5cc5697baf00c1c50e452436e5348dc0f9d3a5062"
+    }
+  ],
+  "priorCoherentReviewSha256": "5756a1745259b337a6f5b1f7d0f57e05ba41dd88ae968c48fbef72038dc4ff92",
+  "originalFailedRun": "c341073c-d1fe-4428-ab05-44df85627480 preserved FAILED before paid qualification",
+  "priorSchemaRepairReviewSha256": "41848192c0592e9935fc2dc97d4c04ec3646c748f7d768c591952f3bb999689b",
+  "originalFailedRuns": [
+    "c341073c-d1fe-4428-ab05-44df85627480 failed before paid qualification",
+    "8b2732c7-6ebd-4dd7-8478-590be790f9ed failed after4verified methods;5th rawresultunknown",
+    "f3fbc874-cced-4e58-895f-4eb3004870fd failed launcher handoff after7verified native methods; scoped qualification retained",
+    "8a1aa585-aff0-4383-acda-c221c6d405e1 failed manual Agent before first Workflow step after seven verified qualification methods; zero Agent/two async memory attempts; exact resources CLEANED",
+    "356660dd-bd27-4829-b0c4-3caf24cb0d09 JSON qualification failed beforeREADY; retainedledger0nativeattempts/operations; liveexceptiondiscarded; exactresourcesCLEANED"
+  ],
+  "priorReceiptRepairReviewSha256": "0c3b13b9973c0be254ab99578fc6bc784ef4160d046ce870d2251adf4591623d",
+  "priorProcedureApprovalSha256": "822a15ed8d7db16c96df39869014cced0775c0ddd711dcfd39002d91ac704565",
+  "priorProcedureReviewSha256": "64f98ffa15b2f6d44955ac340f86135ac9bbf73e4377fd82951f59d828de9ada",
+  "candidateSourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+  "procedureHistory": [
+    {
+      "approvalSha256": "822a15ed8d7db16c96df39869014cced0775c0ddd711dcfd39002d91ac704565",
+      "reviewSha256": "64f98ffa15b2f6d44955ac340f86135ac9bbf73e4377fd82951f59d828de9ada",
+      "sourceCommit": "e89c3d0bb381bdb7ddd5e89b4eccc2590c25a403"
+    },
+    {
+      "approvalSha256": "bf57c88e5a99fc45b09ae45b8dc2ea16c41b992854b02dbc7b84a26f2fa7469c",
+      "reviewSha256": "33f4a66ffbb2098a6320bf99461b8298fc82c5ff529499c0a961156e357eb7b2",
+      "sourceCommit": "75432bc0787d50bdf21c69d3c88d4a9cf395489e",
+      "methods": 7,
+      "unknownLiabilityUnits": 2600000
+    },
+    {
+      "approvalSha256": "1bfbc26a0656ddf98b131307895fdef77f7d6600a6a67a5ea6fa5a7fa74a2cc6",
+      "reviewSha256": "a77c20642412807e4671d037a84890d99bada03db37f0fa097766f1124ca73ce",
+      "sourceCommit": "b0b4d3e454f5a13560ac9474b5fb2a397bb5cd2b",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "42d6837ed13f3178c138be449e47733ae8c4d7e5ce7eee66e0c6f3457091da29",
+      "reviewSha256": "6dfb0bb0e96282fa181a4b1df21ac3d7eab8cd0f81691922dd1ec5ac63447528",
+      "sourceCommit": "b0b4d3e454f5a13560ac9474b5fb2a397bb5cd2b",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "2747c8dc09e197487d61167501724d5ed41c2a7e33336f47ffe43e6298944aaf",
+      "reviewSha256": "5af3b06b8d9fa17b6fd3054364d971827cd0be5bbc88ce47d37ba78606ccb271",
+      "sourceCommit": "7fecfebd36704ed397b3f8c755ad651dc49c814f",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "b5a76a3b10713004cd699a91e94e4ecd50d5cfb2fd991d6ae1eed1a50e8dca72",
+      "reviewSha256": "a5cc8d0771c04151a1e289d5cef08e0907b70c969d26d6924441c8e4fda6272f",
+      "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "4122b4dbb6bd9dd00ee8fa49eac9a7a7273b7d47ce7e2e6eccba525600f63fd6",
+      "reviewSha256": "0a859cbae688a8f0f5b6bd1eb50a5cb44a2c91898dd1ddb97c3622a615d10bf0",
+      "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "5b47234d96bdd8d0ac2ca60854a784360308cf7afd5f0c25e2e60ac8add36af1",
+      "reviewSha256": "0e861894754f6d8cf4a7f0cd92c8cf5d536c24f1d4e6e72eedd838fd7b18cf25",
+      "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "e6368e81754be7fdf29d2b1e6538e23b87bc544596d99b815a75d07babf452e4",
+      "reviewSha256": "b35add945c147f4728ce566a691babde481a7bd5548c04a1699da94b63c846ed",
+      "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "1bafe2e307ea8828063f9b3f3c84d4cf936e41a00c7ae74e1f7c17af38947fcd",
+      "reviewSha256": "624387d7701138c432c8d00d111334b56e964496f49c60390af7f2644ef296a0",
+      "sourceCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    }
+  ],
+  "priorManualObservations": [
+    {
+      "sessionId": "676a6b4b-e5db-4659-9d63-b8e4501b1a6f",
+      "reply": "COMPLETE",
+      "firstBrowserPaintMs": 17143.1,
+      "inputExtraction": "UNKNOWN invalid retained JSON",
+      "environment": "CLEANED",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k3-cleanup-final.json"
+    },
+    {
+      "sessionId": "5eb8331b-fc02-45ec-aff1-f1f6c2e3575f",
+      "firstBrowserPaintMs": 11159.8,
+      "warmBrowserPaintMs": 8260.5,
+      "warmInputExtraction": "UNKNOWN invalid193-byte native JSON",
+      "environment": "CLEANED",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k4-cleanup-final.json"
+    },
+    {
+      "sessionId": "719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "firstCliMs": 9349.772962,
+      "warmCliMs": 9343.232171,
+      "firstBrowserAfterPaintMs": 16132.7,
+      "warmBrowserAfterPaintMs": 16482.5,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k6-cleanup-final.json",
+      "warmDuplicateOutcome": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k6-browser-warm-duplicate-postcondition.json"
+    },
+    {
+      "sessionId": "d468632b-f475-4979-a1d9-144b9010cea1",
+      "firstCliMs": 16638.226424,
+      "warmCliMs": 25504.234928,
+      "firstBrowserAfterPaintMs": 8349.1,
+      "warmBrowserAfterPaintMs": 8916,
+      "warmCommand": "REQUEST_DEADLINE_EXCEEDED; same-run recovery only",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k7-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k7-financial-metadata-1791888683310.json"
+    },
+    {
+      "sessionId": "e8cccbc7-fc49-44ef-a61a-d12ca169d472",
+      "firstCliMs": 17135.665632,
+      "warmCliMs": 19593.27780099999,
+      "firstBrowserAfterPaintMs": 12433.3,
+      "warmBrowserAfterPaintMs": 12882.5,
+      "warmCommand": "COMPLETE within original30s deadline",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k9-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k9-financial-metadata-1791895263347.json"
+    },
+    {
+      "sessionId": "0243a635-96dc-4c03-a2b1-34fbcc8a6e63",
+      "firstCliMs": 15456.622757000005,
+      "warmCliMs": null,
+      "warmCommand": "waiting_approval; no comparable no-tool TTFT; same-run approved tool later COMPLETE",
+      "firstBrowserAfterPaintMs": 11181.899999976158,
+      "warmBrowserAfterPaintMs": 9365.100000023842,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-financial-metadata-1791915701228.json",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "770578bc-9bbd-4616-b257-c033972704da",
+      "firstCliMs": null,
+      "warmCliMs": 22490.07196900001,
+      "firstCliOutcome": "REQUEST_DEADLINE_EXCEEDED original30000ms; same-run observe later COMPLETE without paidretry",
+      "firstBrowserAfterPaintMs": 10364.399999976158,
+      "warmBrowserAfterPaintMs": 11082.699999928474,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k11-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k11-financial-metadata-1791920083120.json",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "706fb0d2-187d-4855-9ace-376958ab5613",
+      "firstCliMs": 17731.584925000003,
+      "warmCliMs": 18398.853757000004,
+      "firstBrowserAfterPaintMs": 20515.600000023842,
+      "warmBrowserAfterPaintMs": 12415.299999952316,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k12-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k12-financial-metadata-1791924741658.json",
+      "allFourSubsecondOutcomes": "FAIL",
+      "allFourNativeMemory": "PASS through8/8",
+      "originalFailuresPreserved": true
+    }
+  ],
+  "sourceAcceptance": {
+    "kind": "NORMAL_REVIEWED_SOURCE_PIN_INTEGRATION",
+    "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-immediate-start-2026-10-13",
+    "imageId": "sha256:4155c4f494de20db78117d27898455c11f961acc9b3a8d93fb7d1798ef367bb5",
+    "artifactReceiptSha256": "d8fc2bf0d3bfb9ad2f91e47e98eefd4ba4d670fc2de0589e9ced22527680a9ae",
+    "reviewHashes": {
+      "v18-source-review.md": "5af3b06b8d9fa17b6fd3054364d971827cd0be5bbc88ce47d37ba78606ccb271",
+      "cloud-model-preparation-source-review.md": "146bdf7dd9dcc5a370aa556895a75bdeb9c0bbbe66ccef91d285c2b84dd64875",
+      "cloud-checkpoint-composition-source-review.md": "77335effe5b46037174d73947e0f066e64c45af4fe328613502dd6ad963ed9ee",
+      "cloud-observation-composition-source-review.md": "b5bc5e43c97bc7e9bb458711dbd438f44faf62b7979244bc8e7440a8aea5d690",
+      "cloud-empty-context-inline-source-review.md": "fb6ab801dcd24f698adc6395d68ebeabb7a69129992f6f256e1776da452f8960",
+      "compact-vector-source-review.md": "a5cc8d0771c04151a1e289d5cef08e0907b70c969d26d6924441c8e4fda6272f",
+      "k8-qualification-diagnostic-review.md": "0a859cbae688a8f0f5b6bd1eb50a5cb44a2c91898dd1ddb97c3622a615d10bf0",
+      "cloud-context-transaction-separation-review.md": "0e861894754f6d8cf4a7f0cd92c8cf5d536c24f1d4e6e72eedd838fd7b18cf25",
+      "cloud-query-composition-source-review.md": "b35add945c147f4728ce566a691babde481a7bd5548c04a1699da94b63c846ed",
+      "cloud-authority-routing-source-review.md": "624387d7701138c432c8d00d111334b56e964496f49c60390af7f2644ef296a0",
+      "cloud-k13-joint-source-review.md": "bf79dc86a8562ab85b1940d1c3180529b62e204dac20ccab0ced6413d7068822"
+    }
+  },
+  "diagnosticAcceptance": {
+    "reviewPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k8-qualification-diagnostic-review.md",
+    "reviewSha256": "0a859cbae688a8f0f5b6bd1eb50a5cb44a2c91898dd1ddb97c3622a615d10bf0",
+    "scope": "Preserve exact fixed synthetic generated output before strict parsing; no prompt/parser/schema/model/budget/retry change",
+    "priorFailure": "k8-failed-qualification-metadata.json",
+    "nextAttempt": "New disposable qualification only; original failed intent is never retried or relabeled"
+  }
+}
