@@ -1,0 +1,60 @@
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m2[0m:[93m65[0m - [91merror[0m[90m TS2307: [0mCannot find module './_generated/server' or its corresponding type declarations.
+
+[7m2[0m import { internalAction, internalMutation, internalQuery } from './_generated/server';
+[7m [0m [91m                                                                ~~~~~~~~~~~~~~~~~~~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m30[0m:[93m68[0m - [91merror[0m[90m TS7006: [0mParameter 'ctx' implicitly has an 'any' type.
+
+[7m30[0m export const prepare = internalMutation({ args: {}, handler: async ctx => {
+[7m  [0m [91m                                                                   ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m33[0m:[93m89[0m - [91merror[0m[90m TS7006: [0mParameter 'q' implicitly has an 'any' type.
+
+[7m33[0m   const prior = await ctx.db.query('runtimeMemorySources').withIndex('by_scope_source', q => q.eq('tenantId', reference.tenantId)
+[7m  [0m [91m                                                                                        ~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m50[0m:[93m66[0m - [91merror[0m[90m TS7006: [0mParameter 'ctx' implicitly has an 'any' type.
+
+[7m50[0m export const snapshot = internalQuery({ args: {}, handler: async ctx => {
+[7m  [0m [91m                                                                 ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m51[0m:[93m83[0m - [91merror[0m[90m TS7006: [0mParameter 'row' implicitly has an 'any' type.
+
+[7m51[0m   const accounts = (await ctx.db.query('runtimeBudgetAccounts').take(100)).filter(row => row.tenantId === reference.tenantId);
+[7m  [0m [91m                                                                                  ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m52[0m:[93m86[0m - [91merror[0m[90m TS7006: [0mParameter 'row' implicitly has an 'any' type.
+
+[7m52[0m   const operations = (await ctx.db.query('runtimeModelOperations').take(100)).filter(row => row.tenantId === reference.tenantId);
+[7m  [0m [91m                                                                                     ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m53[0m:[93m38[0m - [91merror[0m[90m TS7006: [0mParameter 'row' implicitly has an 'any' type.
+
+[7m53[0m   const ids = new Set(operations.map(row => row._id));
+[7m  [0m [91m                                     ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m54[0m:[93m82[0m - [91merror[0m[90m TS7006: [0mParameter 'row' implicitly has an 'any' type.
+
+[7m54[0m   const attempts = (await ctx.db.query('runtimeModelAttempts').take(100)).filter(row => ids.has(row.operationDocumentId));
+[7m  [0m [91m                                                                                 ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m55[0m:[93m73[0m - [91merror[0m[90m TS7006: [0mParameter 'row' implicitly has an 'any' type.
+
+[7m55[0m   const jobs = (await ctx.db.query('runtimeMediaJobs').take(20)).filter(row => row.tenantId === reference.tenantId);
+[7m  [0m [91m                                                                        ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m56[0m:[93m35[0m - [91merror[0m[90m TS7006: [0mParameter 'row' implicitly has an 'any' type.
+
+[7m56[0m   return { accounts: accounts.map(row => ({ id: row._id, kind: row.kind, runBudgetId: row.runBudgetId, limitUnits: row.limitUnits,
+[7m  [0m [91m                                  ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m59[0m:[93m32[0m - [91merror[0m[90m TS7006: [0mParameter 'row' implicitly has an 'any' type.
+
+[7m59[0m     operations: operations.map(row => ({ id: row._id, operationKey: row.operationKey, semanticId: row.semanticId, snapshot: JSON.parse(row.snapshotCanonical) })),
+[7m  [0m [91m                               ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m60[0m:[93m28[0m - [91merror[0m[90m TS7006: [0mParameter 'row' implicitly has an 'any' type.
+
+[7m60[0m     attempts: attempts.map(row => ({ id: row._id, operationDocumentId: row.operationDocumentId, ordinal: row.ordinal, state: row.state,
+[7m  [0m [91m                           ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m65[0m:[93m20[0m - [91merror[0m[90m TS7006: [0mParameter 'row' implicitly has an 'any' type.
+
+[7m65[0m     jobs: jobs.map(row => ({ jobId: row.jobId, requestId: row.requestId, state: row.state, artifactId: row.artifactId,
+[7m  [0m [91m                   ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m78[0m:[93m80[0m - [91merror[0m[90m TS7006: [0mParameter 'ctx' implicitly has an 'any' type.
+
+[7m78[0m export const observe = internalAction({ args: { mode: modes }, handler: async (ctx, args) => {
+[7m  [0m [91m                                                                               ~~~[0m
+[96m../../Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts[0m:[93m78[0m:[93m85[0m - [91merror[0m[90m TS7006: [0mParameter 'args' implicitly has an 'any' type.
+
+[7m78[0m export const observe = internalAction({ args: { mode: modes }, handler: async (ctx, args) => {
+[7m  [0m [91m                                                                                    ~~~~[0m

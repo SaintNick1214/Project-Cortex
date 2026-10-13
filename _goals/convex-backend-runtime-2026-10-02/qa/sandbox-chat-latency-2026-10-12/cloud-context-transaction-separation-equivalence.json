@@ -1,0 +1,311 @@
+{
+  "kind": "Source equality plus actual installed primary contract excerpts; runtime behavior tested separately",
+  "node": "v24.15.0",
+  "preimageSha256": "0b0c216c52a963643dde89982508a99b293f16cdeea4cc7a740bae7a4774fa25",
+  "currentSha256": "c5a5038d15e3dad1cef2df772ff1ff2286fb80804d6dbc8dd61ea6a9a6084a54",
+  "unchangedOriginalDeclarations": [
+    {
+      "name": "attemptArgs",
+      "sha256": "85db3c99da734f4a8aa8407db6ad4f1da5535555451651e41aac206fc92e6eb4"
+    },
+    {
+      "name": "ref",
+      "sha256": "b0a9b736c48860dfda51fdb8545daed7419bf6946f52d142cb6f426dcabbd0dc"
+    },
+    {
+      "name": "workflow",
+      "sha256": "a7cc51a8293443036b6fb2abcaab5bfcc8208aed89a50ab3740d22d8c6457eb1"
+    },
+    {
+      "name": "refs",
+      "sha256": "695d63bb0ad7d05aaffe2786e2c041f791ee8f942502d895a369a1a2b3ed2415"
+    },
+    {
+      "name": "attemptName",
+      "sha256": "1f2bb49044a4f52cd6e2fb99c9527022897752c303df5ca87591e1e7f58d2594"
+    },
+    {
+      "name": "execution",
+      "sha256": "bfd8b5e96ff6fa692a2302ee22e56c5e36c6aa87f7695686b5a79673d60be16a"
+    },
+    {
+      "name": "operation",
+      "sha256": "6b6462dced7bb4c8d3d28dff36a24c35e6248b9092b7327ee1ba576258610ac5"
+    },
+    {
+      "name": "executionMediaReferences",
+      "sha256": "313debb2a15950761f726aee67b4d558cbd0185cd40620845136ad7e027b2896"
+    },
+    {
+      "name": "writeParts",
+      "sha256": "b1eb8fa7d11b2c92dcf68871d5527c977c10d3da1cb93975e2f0a8eeed5f3591"
+    },
+    {
+      "name": "checkWitnesses",
+      "sha256": "eab1bee071984c40497b51f10421730f18ad3a2141d8e299526293fa63338824"
+    },
+    {
+      "name": "executionContext",
+      "sha256": "3d5f8d9ee7480f93f8b4ce683775595079534d9891446cecc851407dbce5ccc7"
+    },
+    {
+      "name": "hydrateExecution",
+      "sha256": "ac913224906da9764e9766d0b321e3046ec8eacdd422825bde9cb6d1fd46430b"
+    },
+    {
+      "name": "contextInputsHandler",
+      "sha256": "cecfbc7f8ab69f48f661109fc954ad41c084f21bac16d1dbc81673c81cbeaf74"
+    },
+    {
+      "name": "contextInputs",
+      "sha256": "7384f765612241aefcfc8e6555ff29e3c54e11b01f35912b22ca1f3e68700887"
+    },
+    {
+      "name": "checkToolAuthority",
+      "sha256": "bcc6439bdb52b7f2accf28d8cd5fdc98042f01a4e15d4d19337511c184f847cf"
+    },
+    {
+      "name": "selector",
+      "sha256": "d82584ae500fd47af47c6c77825d897f87dbcd502c4777fb013b45b14f2f2e70"
+    },
+    {
+      "name": "startHandler",
+      "sha256": "31d4ea47c959667736d3fed4d744d8e76768ec1c7db4e7e709050add136b7539"
+    },
+    {
+      "name": "start",
+      "sha256": "252b7235871eec6a395b42b29251c38585aa867117ec7699396661a8a5bd01bf"
+    },
+    {
+      "name": "dispatchReady",
+      "sha256": "389d4de9283025d4a1db9414e2e9ece7dffc24b05acea315526e38fe54064883"
+    },
+    {
+      "name": "executeTurn",
+      "sha256": "653ae8dc0f5d8b3bead4ecd6f3cd61ec9c51a2aca3eaae1d398fefede8cc61e7"
+    },
+    {
+      "name": "executeTurnV2",
+      "sha256": "e7f5167e129e3e38465fbf70432999c3834da2a10e3827dfbfc84a0ff8805178"
+    },
+    {
+      "name": "saveContextHandler",
+      "sha256": "18f1a66e32d0f17a18fb3926001f402668123dea10f9a12bb7b8504eb840bb90"
+    },
+    {
+      "name": "saveContext",
+      "sha256": "f32a9404cb07baa509689e07cd692517f6cfa018d63980e3a6c3da57ef51d9a5"
+    },
+    {
+      "name": "startContext",
+      "sha256": "59a3bddd382a8801b1501805eb7594c1b9b743d252f19f1eb824509a58e42092"
+    },
+    {
+      "name": "contextBarrier",
+      "sha256": "595cad9700db9a47939f1a81ed26a0829ea2906070d16b343eb02f009a93d7bf"
+    },
+    {
+      "name": "failContext",
+      "sha256": "16f9c2241b6e16c8fb303d15b6c1e21c46b9a9f872b725ea807d02fbd498ef19"
+    },
+    {
+      "name": "prepareContext",
+      "sha256": "c6a80a0802dfd4cbdf79da81fb2356c3cab0875bbc96cbfd53e34bb78d7bf01d"
+    },
+    {
+      "name": "prepareEmptyContext",
+      "sha256": "e2f685a05c276ddf516ad585e9f7fe489bfee21946c77256601e30a1211096fb"
+    },
+    {
+      "name": "beginOperationHandler",
+      "sha256": "5ff08347a2625f490fedfc593e8eb308bdc932165f44e97e45490306bc35d1af"
+    },
+    {
+      "name": "beginOperation",
+      "sha256": "24c1f8888ec1d368662b0e71420d073737aa6629961798d7f6d48910cd591bce"
+    },
+    {
+      "name": "completedModelStepHandler",
+      "sha256": "b621df64842f18e70ded57c9053ac90623ac7d880d331967827febbd3683891e"
+    },
+    {
+      "name": "completedModelStep",
+      "sha256": "ed0abb9ad54057dce8ed66701fe698606893f210fa7487707597d5378c190e21"
+    },
+    {
+      "name": "startOperationHandler",
+      "sha256": "f90a5fb1671511a55c646d606d06d752edcd22c43875ec934dfede4ee05f30f8"
+    },
+    {
+      "name": "startOperation",
+      "sha256": "744458badc2481baaa277ef79a0be8bf52b0fa271c571dc5509c2d7bc9b3859a"
+    },
+    {
+      "name": "prepareModelOperationHandler",
+      "sha256": "133879a9461b29f2a4fbcdf31eed612d4db022228e09507b502d709bc45cf3f2"
+    },
+    {
+      "name": "prepareModelOperation",
+      "sha256": "f84c006e3cdb73626fc3eca7ecd31a04471c910d41190082e3b11dab1cf4878a"
+    },
+    {
+      "name": "finishOperation",
+      "sha256": "a748acebc064e2a22f56058dee772bdecef971d11c551f6fb916d08ae0bdacd4"
+    },
+    {
+      "name": "bindNativeOperationHandler",
+      "sha256": "f14022956942079cc2fc62253b7987331e012e1f93b44b7ef6cec0d1b381864c"
+    },
+    {
+      "name": "bindNativeOperation",
+      "sha256": "c9affea0fe678ff8654cc20a39da0cf849882d649915ad2d06b452d52eac3bfa"
+    },
+    {
+      "name": "admitModelOperationHandler",
+      "sha256": "af8b0f6d92322b9a1b2b3d48340bc46478b062a8180cef02b01e1dfd59339751"
+    },
+    {
+      "name": "admitModelOperation",
+      "sha256": "62f85bf6af383de4f48a786836514db1017d01147e497c21ce7ff0cddc6a28e4"
+    },
+    {
+      "name": "recordOutput",
+      "sha256": "f13d43f4b18045a035175cd1442a996d42040c015a08fa9ca37269927dedc35e"
+    },
+    {
+      "name": "modelStepHandler",
+      "sha256": "4067ba052d29d4241773daea01fc84d03f6b60c884af1a0c932f439e16b81dcb"
+    },
+    {
+      "name": "modelStep",
+      "sha256": "013587e1cb226a2631853d2b052a685b25f10b5327eb74219c490af368caf899"
+    },
+    {
+      "name": "toolStepHandler",
+      "sha256": "02848393451a99086e3e31223cc9816716946359f25c791edd108359fecf8258"
+    },
+    {
+      "name": "toolStep",
+      "sha256": "52de6564ac2cde2bdc59c939d3a58b387d2fbfbc09760382f1575ce06b58ce5a"
+    },
+    {
+      "name": "currentToolPermission",
+      "sha256": "af3b89df02567bf776b6229de618cc24a0266a53dc673f265ba2b397a91df260"
+    },
+    {
+      "name": "checkActiveTool",
+      "sha256": "e82e45d093de62754d3a16e0b61e6e11b777b922056fb5c9d90a1b5dd079993c"
+    },
+    {
+      "name": "toolWriteFence",
+      "sha256": "0acab1d9afb3629902e124413f6a03fce092676c862ad59bc0d927dda95df8ac"
+    },
+    {
+      "name": "writeToolSource",
+      "sha256": "ac9b68a512b2b8eff434159962c66ae94285e6733330c1980af6f817d7ac8293"
+    },
+    {
+      "name": "writeToolDerived",
+      "sha256": "1e982e19b2522ac6f7647b024f45d02e6f8c2141fed648ddaa345ea235b67fab"
+    },
+    {
+      "name": "rememberToolSources",
+      "sha256": "332741437c7611b8389e00e3db717f0be45a1dad131ede903e422e981b27a251"
+    },
+    {
+      "name": "toolParent",
+      "sha256": "7f8f224cef929ed4cc9321ef7eaee5d75e914be540ae959b5e65f1922ca85a03"
+    },
+    {
+      "name": "waitForApproval",
+      "sha256": "e6d35568676eef8b94a4da9b80337a09978ff6bad4a406554a1476d1541f7065"
+    },
+    {
+      "name": "expireApproval",
+      "sha256": "5bb66b3c188d20d71918b3aeebe4b6e279a31a48803bb221337affeb4118d726"
+    },
+    {
+      "name": "approveTool",
+      "sha256": "7dd998c59fc3adcd8d91da8bb6c4d2f0f7c20d3d06c291a3a33ea156700dcff8"
+    },
+    {
+      "name": "finalizeExecution",
+      "sha256": "63bb0a7652e3b4be46e5e06faccfc88eb1f25027cc1a48263ae4fb53054b4f99"
+    },
+    {
+      "name": "finalize",
+      "sha256": "95d173bc1abfea2d5d96c9d0bcba01dad2e27332a653c9747d3df9ac0c555e19"
+    },
+    {
+      "name": "reconcile",
+      "sha256": "3896b3e74500cd9fa2663d6fb5adea2a7f3f603393b027af0cb17c74ca9005b6"
+    },
+    {
+      "name": "attemptWithFinal",
+      "sha256": "c942f43fa3f159f16339dd898760450d3329cb96602b5b18211910a5a2cdf1db"
+    },
+    {
+      "name": "endInterrupted",
+      "sha256": "37ad83f62a973efd1eec81939a07a17fdb7ffe42b528daba7e14341445e21382"
+    },
+    {
+      "name": "onWorkflowComplete",
+      "sha256": "89ebefa39c617e1f2051c70939e00412bea321a926814e280f01e7ecb26fc491"
+    },
+    {
+      "name": "observeHandler",
+      "sha256": "cb9ffca44400dc435aa376bdbbd252674661fbddab51b9a4b7a3af052ae85d30"
+    },
+    {
+      "name": "observe",
+      "sha256": "1ec456ce3538914ea7faab7a927c48b62915375c4908f9987673a212916a25ff"
+    },
+    {
+      "name": "cancel",
+      "sha256": "aff3c9a5ff1b5468e3b4d5ce3efce0896b6545f573081055684508e286008550"
+    }
+  ],
+  "dispatcherChange": "Fresh starts routeV3; startAsync/onComplete/attempt arguments unchanged",
+  "addedDeclaration": "executeTurnV3",
+  "singleLayoutDifference": "prepareEmptyContext inline:true→inline:false; original handler and all other V2 layout bytes retained",
+  "contracts": [
+    {
+      "file": "node_modules/@convex-dev/workflow/src/client/workflowContext.ts",
+      "sha256": "dcea75dd43d9d35ce8f01da168ef21562ee888a96574fa0ddfa414856800f6d8",
+      "excerpts": [
+        {
+          "start": 54,
+          "end": 74,
+          "text": "\ntype InlineArgs =\n  | {\n      inline: true;\n      runAt?: never;\n      runAfter?: never;\n      /**\n       * Per-transaction resource limits enforced on this inline step's\n       * transaction. Exceeding a limit throws a catchable error in the\n       * workflow handler.\n       *\n       * **Requires Convex >= 1.41.** Only supported for `inline` steps.\n       */\n      transactionLimits?: TransactionLimits;\n    }\n  | {\n      inline?: false;\n      /** @deprecated `transactionLimits` is only supported when `inline` is true. */\n      transactionLimits?: TransactionLimits;\n    };\n"
+        },
+        {
+          "start": 289,
+          "end": 299,
+          "text": "    name: name ?? safeFunctionName(f),\n    target: {\n      kind: \"function\",\n      functionType,\n      function: f,\n      args: args ?? {},\n    },\n    retry: retry ?? (functionType === \"action\" ? defaults?.retry : undefined),\n    inline: inline ?? false,\n    unstableArgs: unstableArgs ?? defaults?.unstableArgs ?? false,\n    transactionLimits,"
+        }
+      ]
+    },
+    {
+      "file": "node_modules/@convex-dev/workflow/src/client/step.ts",
+      "sha256": "b0af5d5e96b011c76cc816e3c329cfb3dfe9bc3dcaa641a91f208edb589ea5dc",
+      "excerpts": [
+        {
+          "start": 160,
+          "end": 199,
+          "text": "        const args = message.target.args ?? {};\n        const target = message.target;\n\n        let runResult: RunResult | undefined;\n        if (message.inline) {\n          if (target.kind !== \"function\" || target.functionType === \"action\") {\n            throw new Error(\n              \"Inline execution is only supported for queries and mutations.\",\n            );\n          }\n          try {\n            const result =\n              target.functionType === \"query\"\n                ? // cast until transactionLimits is shipped / peer dep\n                  await (this.ctx.runQuery as any)(\n                    target.function as FunctionReference<\n                      typeof target.functionType\n                    >,\n                    target.args,\n                    { transactionLimits: message.transactionLimits },\n                  )\n                : // cast until transactionLimits is shipped / peer dep\n                  await (this.ctx.runMutation as any)(\n                    target.function as FunctionReference<\n                      typeof target.functionType\n                    >,\n                    target.args,\n                    { transactionLimits: message.transactionLimits },\n                  );\n            runResult = { kind: \"success\", returnValue: result ?? null };\n          } catch (error: unknown) {\n            runResult = { kind: \"failed\", error: formatErrorWithStack(error) };\n          }\n        }\n\n        const commonFields = {\n          inProgress: !runResult,\n          name: message.name,\n          args,\n          argsSize: getConvexSize(args as Value),"
+        }
+      ]
+    },
+    {
+      "file": "node_modules/@convex-dev/workpool/src/component/worker.ts",
+      "sha256": "fe53abaed84bf19a9af3ec413fb97cc4c9808a6504cd9230abcd94fa64202040",
+      "excerpts": [
+        {
+          "start": 56,
+          "end": 66,
+          "text": "    try {\n      const returnValue = await (args.fnType === \"query\"\n        ? ctx.runQuery(args.fnHandle as FunctionHandle<\"query\">, fnArgs)\n        : ctx.runMutation(args.fnHandle as FunctionHandle<\"mutation\">, fnArgs));\n      // NOTE: we could run the `saveResult` handler here, or call `ctx.runMutation`,\n      // but we want the mutation to be a separate transaction to reduce the window for OCCs.\n      await ctx.scheduler.runAfter(0, internal.complete.complete, {\n        jobs: [\n          { workId, runResult: { kind: \"success\", returnValue }, attempt },\n        ],\n      });"
+        }
+      ]
+    }
+  ]
+}

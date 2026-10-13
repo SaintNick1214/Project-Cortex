@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-13T12:44:29.410979+00:00",
+  "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+  "target": {
+    "sessionId": "e8cccbc7-fc49-44ef-a61a-d12ca169d472",
+    "id": 6136804,
+    "name": "hushed-cobra-213",
+    "kind": "cloud",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-e8cccbc7-fc49-44ef-a61a-d12ca169d472",
+    "deploymentType": "dev",
+    "isDefault": false,
+    "expiresAt": 1792498394650,
+    "deploymentUrl": "https://hushed-cobra-213.convex.cloud",
+    "disposable": true,
+    "serverExpiryVerified": true
+  },
+  "installedSdk": {
+    "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/e8cccbc7-fc49-44ef-a61a-d12ca169d472/host/node_modules/@cortexmemory/sdk/dist/client-runtime/index.js",
+    "sha256": "b7ef625f4ec0cb6cf782841878de212ae6172f9a86cc2452455bdac43ec459c7",
+    "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448"
+  },
+  "selectedPhasesExecuted": 2,
+  "selectedPhasesTotal": 2,
+  "selectedPhaseExecutionPercent": 100,
+  "negativeExpectedCodePassRatePercent": 80,
+  "phases": [
+    {
+      "phase": "actual installed SDK authorization negatives",
+      "executed": true,
+      "status": "FAIL exact expected-code gate",
+      "passedExpectedCodes": 8,
+      "failedExpectedCodes": 2,
+      "coverage": [
+        "7 original expected scope/principal/immutable-handle/reader denials",
+        "missing JWT UNAUTHENTICATED"
+      ],
+      "failures": [
+        {
+          "name": "expired valid signature",
+          "expected": "UNAUTHENTICATED",
+          "actual": "AUTHENTICATION_TIMEOUT",
+          "actualCodeEvidence": "Exact92-byte scalar AssertionError message reconstructed and matches saved SHA256",
+          "originalFailure": "k9-native-negative-negative-failure.json",
+          "noReturnedObservation": true,
+          "measuredElapsedMs": null,
+          "configuredFixtureTimeoutMs": 4000
+        },
+        {
+          "name": "invalid signature",
+          "expected": "UNAUTHENTICATED",
+          "actual": "AUTHENTICATION_TIMEOUT",
+          "actualCodeEvidence": "Saved independent remaining-class receipt",
+          "noReturnedObservation": true,
+          "noRuntimeRpcStarted": true
+        }
+      ],
+      "noEarlierSevenOrExpiredRerun": true,
+      "limitations": [
+        "Original v1 first-seven before/after baseline hashes were not persisted by the failure catcher and are not retrospectively recovered/claimed.",
+        "Later independent remaining classes have actual unchanged complete bounded table and financial snapshots.",
+        "Timeout is bounded SDK failure without auth callback confirmation, not observed native cryptographic/expiry refusal."
+      ]
+    },
+    {
+      "phase": "reader metadata late revocation and exact readonly restoration",
+      "executed": true,
+      "status": "PASS",
+      "realProfileResponseHeld": true,
+      "freshPostSessionError": "FORBIDDEN",
+      "callerStaleResultSuppressed": true,
+      "oldGrantId": "ns75f5qm722j6626q023nvv51x8g7j20",
+      "newGrantId": "ns75f9yqpnnqhdjjtmv587pjcs8g6ymf",
+      "oldVersion": 1,
+      "newVersion": 2,
+      "restored": true,
+      "samePrincipalMembershipScopeEpochCapsExpiryValidated": true,
+      "ownerAndGlobalsGraphDataFinanceUnchanged": true,
+      "scope": "Metadata getDefaultProfile return-after-revoke only; private owner-conversation remains denied, no private observe late-revocation coverage or ACL broadening."
+    }
+  ],
+  "compactRootShape": {
+    "runtimeModelPolicies": {
+      "rows": 16,
+      "rootRows": 16,
+      "encodings": {
+        "compiled-root-v1": 16
+      },
+      "canonicalPresent": 0,
+      "shapeHashes": [
+        "6e1a81af38477526e1372d905e14bd896456d6e4540777c76d527a5aaba1b660"
+      ],
+      "tableSha256": "a5cb6f218c1337033c23e34a6b1f2cd03b7c279d6b56e2655e79943b9c441049"
+    },
+    "runtimeModelQualifications": {
+      "rows": 14,
+      "rootRows": 14,
+      "encodings": {
+        "compiled-root-v1": 14
+      },
+      "canonicalPresent": 0,
+      "shapeHashes": [
+        "6e1a81af38477526e1372d905e14bd896456d6e4540777c76d527a5aaba1b660"
+      ],
+      "tableSha256": "4a80943fd49e5836fc47a08b76f98737aa317f45f1386f323c5923f448abeb36"
+    },
+    "runtimeBudgetAccounts": {
+      "rows": 22,
+      "rootRows": 22,
+      "encodings": {
+        "compiled-root-v1": 22
+      },
+      "canonicalPresent": 0,
+      "shapeHashes": [
+        "6e1a81af38477526e1372d905e14bd896456d6e4540777c76d527a5aaba1b660"
+      ],
+      "tableSha256": "8e319fc809ec993d09b2aa060b5daee6c8dd0f6d02d4a4e359d687b68a85c150"
+    }
+  },
+  "nativeFinancialCounts": {
+    "runtimeRuns": 4,
+    "runtimeAgentExecutions": 4,
+    "runtimeRunOutbox": 4,
+    "runtimeRunAttempts": 4,
+    "runtimeAgentOperations": 4,
+    "runtimeModelOperations": 30,
+    "runtimeModelAttempts": 30,
+    "runtimeBudgetAccounts": 22,
+    "runtimeMemorySources": 9,
+    "runtimeMemoryVectors": 8,
+    "runtimeMemoryReceipts": 12,
+    "runtimeIngestionEvents": 8,
+    "runtimeIngestionScopes": 1,
+    "runtimeAuthScopes": 6,
+    "facts": 4,
+    "runtimeMemoryChunks": 8,
+    "runtimeMemoryVectorGenerations": 8,
+    "runtimeIngestionStages": 24,
+    "runtimeIngestionJobs": 8,
+    "runtimeModelPolicies": 16,
+    "runtimeModelQualifications": 14
+  },
+  "financialReceipt": {
+    "path": "k9-financial-metadata-1791895263347.json",
+    "sha256": "9c4b057a1c48ca545ff189b0a80fd1f59b9690e1efeb577a40ae071fd55368ff"
+  },
+  "readback": {
+    "receipt": "k9-native-negative-native-readback.json",
+    "noLegacyConversionOrCorruption": true,
+    "actualSourceAndOfficialConvexInspect": "SDK fallback documentation/source129 and official auth callback manager read; no auth source changes"
+  },
+  "serviceScope": {
+    "paidCalls": 0,
+    "paidRetries": 0,
+    "newChats": 0,
+    "recallCalls": 0,
+    "inference": 0,
+    "deployments": 0,
+    "schemaMutations": 0,
+    "testEndpointInstallation": 0,
+    "consequentialMutations": [
+      "Only exact reader grant revocation",
+      "Trusted same-identity/scope/caps/expiry provision new immutable generation version+1"
+    ],
+    "sdkProcessesExited": true,
+    "sdkPortsClosed": true,
+    "furtherServiceCalls": 0,
+    "rootOwnsCleanup": true
+  },
+  "rawReceipts": [
+    {
+      "path": "k9-native-negative-common.mjs",
+      "sha256": "c09b405db3ac00595d38bc519f185f29c7bc69d748321217200315d4f7eec554",
+      "bytes": 7150
+    },
+    {
+      "path": "k9-native-negative-native-readback-v1.log",
+      "sha256": "5e89384a13d9bcf174b4f06813e2e3566747a421f31790e0411ecda2df9b75f8",
+      "bytes": 1601
+    },
+    {
+      "path": "k9-native-negative-native-readback.json",
+      "sha256": "43937b339be59961ebeaff6d5018c55dacbb8a82bfc9b3b3ad8e1188d4278cc2",
+      "bytes": 14328
+    },
+    {
+      "path": "k9-native-negative-native-readback.mjs",
+      "sha256": "8dcf5bb51c3a5dc37a43b1702a5d7343731226d4ca41fa9c773990a96bd7ddb5",
+      "bytes": 3934
+    },
+    {
+      "path": "k9-native-negative-negative-failure.json",
+      "sha256": "fdb57bc38ae8bd9202b78e70dd4b18f71522291817072cac5c341d6e1eae36db",
+      "bytes": 3136
+    },
+    {
+      "path": "k9-native-negative-negatives-v1.log",
+      "sha256": "6101748a1a8dba342cb0362dbc6ee1dbabddb6145407dfc273a985527ac39008",
+      "bytes": 169
+    },
+    {
+      "path": "k9-native-negative-negatives.mjs",
+      "sha256": "abdf3aa15ddb4e73552e92729f0e51b506d58f1d4e4ea10211c04cf18bcbf48c",
+      "bytes": 5684
+    },
+    {
+      "path": "k9-native-negative-post-revoke-outcome.json",
+      "sha256": "525a9425cc5ef10b0533ddfb9e509c20f0915939e1e4761fb547f5c83ad15469",
+      "bytes": 26952
+    },
+    {
+      "path": "k9-native-negative-post-revoke-v1.log",
+      "sha256": "1657fa48f5b06443e1c3b1ea3472cfeb2fcf0cc6087e93ce01541a1ea7587e11",
+      "bytes": 264
+    },
+    {
+      "path": "k9-native-negative-post-revoke.mjs",
+      "sha256": "2db71780563250137eb8f92ac4e4bff0b13f9bfef659489ca2485c3e7ef4cd3e",
+      "bytes": 6429
+    },
+    {
+      "path": "k9-native-negative-reader-grant-before.json",
+      "sha256": "64f51cef242a1f91d6e6faaa055207180c6af6e3e7378a642d0e5e5aa65d870d",
+      "bytes": 2351
+    },
+    {
+      "path": "k9-native-negative-remaining-auth-outcomes.json",
+      "sha256": "af2c03ee3ced922bc24f92e3e62996052eb83c94fca637c4e11270ad5683b44a",
+      "bytes": 27003
+    },
+    {
+      "path": "k9-native-negative-remaining-auth-v1.log",
+      "sha256": "e81b728d26ba9dca9160e786af0a20e08aa5e1b6af479647e3eac6f9decbfbd2",
+      "bytes": 404
+    },
+    {
+      "path": "k9-native-negative-remaining-auth.mjs",
+      "sha256": "2315c08199b223f0333f16add348bf5b9e11d79c49c4135b567ea4385c419ad7",
+      "bytes": 2525
+    }
+  ],
+  "acceptance": "Selected-phase execution complete; expected-code negative gate FAIL preserved; reader phase PASS. No full QA/OCC/SLO completion claim. Independent final classification belongs to root audit."
+}

@@ -105,7 +105,7 @@ it.each(["empty", "pending", "pending_unknown", "barrier_warning"])("inline %s c
 });
 it("fresh starts dispatch the additive Workflow version and retain startAsync/onComplete and duplicate ownership", async () => {
   const f = await fixture(), { run } = await f.start();
-  expect(starts).toHaveLength(1); expect(getFunctionName(starts[0][1] as never)).toBe("runtimeAgent:executeTurnV2");
+  expect(starts).toHaveLength(1); expect(getFunctionName(starts[0][1] as never)).toBe("runtimeAgent:executeTurnV3");
   expect(starts[0][3]).toMatchObject({ startAsync: true, context: { runId: run.runId, attemptNumber: 1 } });
   expect(getFunctionName((starts[0][3] as { onComplete: never }).onComplete)).toBe("runtimeAgent:onWorkflowComplete");
   await f.call(runtime.start, { runId: run.runId }); expect(starts).toHaveLength(1);

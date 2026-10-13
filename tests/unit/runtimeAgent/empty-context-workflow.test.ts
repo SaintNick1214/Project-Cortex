@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, expect, it, jest } from "@jest/globals";
 import { BaseChannel, ChannelClosedError } from "async-channel";
 import { getFunctionName, makeFunctionReference } from "convex/server";
+import type { Value } from "convex/values";
 import { createWorkflowCtx } from "../../../node_modules/@convex-dev/workflow/dist/client/workflowContext.js";
 import { StepExecutor } from "../../../node_modules/@convex-dev/workflow/dist/client/step.js";
 import { assertNativeArgs } from "./native-arguments";
@@ -61,10 +62,10 @@ async function fixture(options: { strict?: boolean; warn?: boolean; pendingOverf
   return { f, args: { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number } };
 }
 async function drive(f: Awaited<ReturnType<typeof fixture>>["f"], args: Awaited<ReturnType<typeof fixture>>["args"], options: {
-  old?: boolean; entries?: Entry[]; journalFault?: boolean; afterBarrier?: () => void;
+  old?: boolean; v3?: boolean; journalModel?: boolean; entries?: Entry[]; journalFault?: boolean; afterBarrier?: () => void;
 } = {}) {
   const channel = new BaseChannel<Request>(), entries: Entry[] = [], invoked: string[] = [], actions: { name: string; args: unknown; retry: boolean }[] = [], nonInline: string[] = [], sleeps: number[] = [];
-  const stop = new Error("CONTROLLED_BEFORE_MODEL_EFFECTS"), journal = makeFunctionReference<"mutation">("test:journal");
+  const stop = new Error("CONTROLLED_BEFORE_MODEL_EFFECTS"), suspended = new Error("CONTROLLED_SEPARATE_STEP_PENDING"), journal = makeFunctionReference<"mutation">("test:journal");
   const native = { runMutation: async (ref: unknown, input: unknown) => {
     const name = getFunctionName(ref as never);
     if (name === "test:journal") {
@@ -82,7 +83,7 @@ async function drive(f: Awaited<ReturnType<typeof fixture>>["f"], args: Awaited<
     options.entries ?? [], channel, Date.now(), undefined);
   const worker = executor.run(); void worker.catch(() => {});
   const context = createWorkflowCtx("workflow:empty" as never, channel);
-  const registration = options.old ? runtime.executeTurn : runtime.executeTurnV2;
+  const registration = options.v3 ? runtime.executeTurnV3 : options.old ? runtime.executeTurn : runtime.executeTurnV2;
   const handler = (registration as unknown as { _handler: (step: unknown, args: unknown) => Promise<null> })._handler;
   const task = handler({ ...context,
     runMutation: async (ref: unknown, input: unknown, settings: unknown) => {
@@ -94,14 +95,15 @@ async function drive(f: Awaited<ReturnType<typeof fixture>>["f"], args: Awaited<
     runAction: async (ref: unknown, input: unknown, settings: { retry: boolean }) => {
       const name = getFunctionName(ref as never); actions.push({ name, args: input, retry: settings.retry });
       if (name === "runtimeAgent:prepareContext") return invoke(runtime.prepareContext, f.ctx, input);
+      if (options.journalModel) return context.runAction(ref as never, input as never, settings);
       throw stop;
     },
     sleep: async (ms: number) => { sleeps.push(ms); jest.mocked(Date.now).mockReturnValue(Date.now() + ms + 1); },
   }, args); void task.catch(() => {});
   let failure: unknown;
-  try { await Promise.race([task, worker.then(() => { throw new Error("UNEXPECTED_BLOCKED_EXECUTOR"); })]); } catch (error) { failure = error; }
+  try { await Promise.race([task, worker.then(() => { throw options.v3 ? suspended : new Error("UNEXPECTED_BLOCKED_EXECUTOR"); })]); } catch (error) { failure = error; }
   channel.close(); try { await worker; } catch (error) { if (!(error instanceof ChannelClosedError) && error !== failure) throw error; }
-  return { entries, invoked, actions, nonInline, sleeps, failure, stop };
+  return { entries, invoked, actions, nonInline, sleeps, failure, stop, suspended };
 }
 it("fresh layout journals empty completion inline and reaches model with no context Action; exact replay repeats no context writes", async () => {
   const { f, args } = await fixture(), first = await drive(f, args);
@@ -167,4 +169,126 @@ it("a journal-write failure rolls back local context in the containing transacti
   expect(f.db.writes).toBe(before); expect(f.db.table("runtimeAgentExecutions")[0].contextState).toBeUndefined();
   const fresh = await drive(f, args); expect(fresh.failure).toBe(fresh.stop); expect(fresh.invoked).toContain("runtimeAgent:prepareEmptyContext");
   expect(f.db.table("runtimeAgentExecutions")[0].contextState).toBe("complete"); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+});
+
+function completeScheduled(entries: Entry[], value: Value, error?: string): Entry[] {
+  const copy = structuredClone(entries), entry = copy.at(-1)!;
+  expect(entry.step.inProgress).toBe(true); expect(entry.step.runResult).toBeUndefined();
+  entry.step.inProgress = false; entry.step.completedAt = Date.now();
+  entry.step.runResult = error ? { kind: "failed", error } : { kind: "success", returnValue: value };
+  return copy;
+}
+async function completeContext(f: Awaited<ReturnType<typeof fixture>>["f"], args: Awaited<ReturnType<typeof fixture>>["args"], entries: Entry[]) {
+  const step = entries.at(-1)!.step;
+  expect(step).toMatchObject({ name: "runtimeAgent:prepareEmptyContext", functionType: "mutation", inProgress: true, args });
+  assertNativeArgs(runtime.prepareEmptyContext, step.args);
+  // The original registered handler executes after the parent journal transaction.
+  // The fake transaction port is not proof of native engine OCC/isolation.
+  const result = await f.call<{ state: "COMPLETE" | "NEEDS_ACTION" } | { state: "FAILED"; failureCode: "CONTEXT_OVERFLOW" }>(runtime.prepareEmptyContext, step.args);
+  return { result, history: completeScheduled(entries, result) };
+}
+it("V3 journals a separate pending context mutation before invoking its original handler; completed-step replay repeats no context work", async () => {
+  const { f, args } = await fixture(), parent = await drive(f, args, { v3: true });
+  expect(parent.failure).toBe(parent.suspended);
+  expect(parent.invoked).toEqual(["runtimeAgent:startContext", "runtimeAgent:contextBarrier"]);
+  expect(parent.entries.map(e => [e.step.name, e.step.inProgress, e.step.runResult?.kind])).toEqual([
+    ["runtimeAgent:startContext", false, "success"], ["runtimeAgent:contextBarrier", false, "success"], ["runtimeAgent:prepareEmptyContext", true, undefined],
+  ]);
+  expect(parent.actions).toEqual([]); expect(f.db.table("runtimeAgentExecutions")[0].contextState).toBe("started");
+  expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+  const completed = await completeContext(f, args, parent.entries); expect(completed.result).toEqual({ state: "COMPLETE" });
+  const writes = f.db.writes;
+  for (let replay = 0; replay < 2; replay++) {
+    const resumed = await drive(f, args, { v3: true, entries: structuredClone(completed.history) });
+    expect(resumed.failure).toBe(resumed.stop); expect(resumed.invoked).toEqual([]); expect(resumed.entries).toEqual([]);
+    expect(resumed.actions).toEqual([{ name: "runtimeAgent:modelStep", args: { ...args, ordinal: 0 }, retry: false }]);
+    expect(f.db.writes).toBe(writes);
+  }
+  expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ contextState: "complete", contextCanonical: "", state: "running" });
+  expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+});
+it("V3 parent journal failure occurs before any context save; fresh retry still queues the original separate handler", async () => {
+  const { f, args } = await fixture(), before = f.db.writes;
+  await expect(f.transaction(async () => {
+    const result = await drive(f, args, { v3: true, journalFault: true });
+    expect(result.failure).toEqual(new Error("CONTROLLED_JOURNAL_FAILURE"));
+    expect(result.invoked).not.toContain("runtimeAgent:prepareEmptyContext");
+    expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined(); throw result.failure;
+  })).rejects.toThrow("CONTROLLED_JOURNAL_FAILURE");
+  expect(f.db.writes).toBe(before); expect(f.db.table("runtimeAgentExecutions")[0].contextState).toBeUndefined();
+  const retried = await drive(f, args, { v3: true }); expect(retried.failure).toBe(retried.suspended);
+  const completed = await completeContext(f, args, retried.entries); expect(completed.result).toEqual({ state: "COMPLETE" });
+  expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+});
+it("V3 preserves nonempty fallback with the original governed context Action and no context/model side effects", async () => {
+  const { f, args } = await fixture({ indexed: true }), parent = await drive(f, args, { v3: true });
+  const completed = await completeContext(f, args, parent.entries); expect(completed.result).toEqual({ state: "NEEDS_ACTION" });
+  expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+  const resumed = await drive(f, args, { v3: true, entries: completed.history });
+  expect(resumed.failure).toEqual(new Error("ORIGINAL_FALLBACK_RETRIEVAL"));
+  expect(resumed.actions).toEqual([{ name: "runtimeAgent:prepareContext", args, retry: false }]);
+  expect(f.db.table("runtimeAgentExecutions")[0].contextState).toBe("started"); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+});
+it("V3 pending overflow persists FAILED result before the separate original durable failContext mutation", async () => {
+  const { f, args } = await fixture({ pendingOverflow: true }), parent = await drive(f, args, { v3: true });
+  const completed = await completeContext(f, args, parent.entries);
+  expect(completed.result).toEqual({ state: "FAILED", failureCode: "CONTEXT_OVERFLOW" });
+  expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ contextState: "started" });
+  expect(f.db.table("runtimeAgentExecutions")[0].contextFailureCode).toBeUndefined();
+  const resumed = await drive(f, args, { v3: true, entries: completed.history });
+  expect(String(resumed.failure)).toContain("CONTEXT_OVERFLOW"); expect(resumed.nonInline).toEqual(["runtimeAgent:failContext"]);
+  expect(resumed.actions).toEqual([]); expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ contextState: "failed", contextFailureCode: "CONTEXT_OVERFLOW" });
+  expect(f.db.table("runtimeRuns")[0]).toMatchObject({ contextCompleteness: "incomplete", contextFailureCode: "CONTEXT_OVERFLOW" });
+});
+it.each([false, true])("V3 retains strict barrier sleep/deadline with warning=%s before scheduling context", async warn => {
+  const { f, args } = await fixture({ strict: true, warn }), parent = await drive(f, args, { v3: true });
+  expect(parent.sleeps).toEqual([100]); expect(parent.actions).toEqual([]);
+  if (warn) {
+    expect(parent.failure).toBe(parent.suspended);
+    const completed = await completeContext(f, args, parent.entries);
+    expect(completed.result).toEqual({ state: "COMPLETE" });
+    expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ contextCompleteness: "incomplete", contextFailureCode: "MEMORY_BARRIER_TIMEOUT" });
+    expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toContain("Cortex context is incomplete (MEMORY_BARRIER_TIMEOUT)");
+    const resumed = await drive(f, args, { v3: true, entries: completed.history }); expect(resumed.failure).toBe(resumed.stop);
+  } else {
+    expect(parent.failure).toEqual(new Error("MEMORY_BARRIER_TIMEOUT"));
+    expect(parent.entries.some(e => e.step.name === "runtimeAgent:prepareEmptyContext")).toBe(false);
+    expect(parent.nonInline).toEqual(["runtimeAgent:failContext"]);
+  }
+  expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+});
+it.each(["revocation", "lease", "cancel", "tombstone"])("V3 queued context freshly denies %s before a save or model dispatch", async fault => {
+  const { f, args } = await fixture(), parent = await drive(f, args, { v3: true });
+  if (fault === "revocation") f.grant.revokedAt = Date.now();
+  if (fault === "lease") f.db.table("runtimeRunOutbox")[0].leaseVersion = args.leaseVersion + 1;
+  if (fault === "cancel") f.db.table("runtimeRuns")[0].cancellationRequestedAt = Date.now();
+  if (fault === "tombstone") f.db.table("runtimeConversations")[0].tombstonedAt = Date.now();
+  const before = f.db.writes; let failure: unknown;
+  try { await completeContext(f, args, parent.entries); } catch (error) { failure = error; }
+  expect(failure).toBeInstanceOf(Error); expect(f.db.writes).toBe(before);
+  expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined();
+  const failedHistory = completeScheduled(parent.entries, null, String(failure));
+  const resumed = await drive(f, args, { v3: true, entries: failedHistory });
+  expect(String(resumed.failure)).toContain(String(failure)); expect(resumed.actions).toEqual([]); expect(resumed.invoked).toEqual([]);
+  expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+});
+it("V3 uses installed durable step scheduling to finish canonical finalization before optional title; title failure preserves Workflow success", async () => {
+  const { f, args } = await fixture(), parent = await drive(f, args, { v3: true }), prepared = await completeContext(f, args, parent.entries);
+  const model = await drive(f, args, { v3: true, journalModel: true, entries: structuredClone(prepared.history) });
+  expect(model.failure).toBe(model.suspended); expect(model.entries.at(-1)!.step).toMatchObject({ name: "model 0", functionType: "action", inProgress: true });
+  // Controlled model and terminal-job result ports exercise Workflow ordering;
+  // actual model/finalization guards remain covered by execution.test.ts.
+  const modelHistory = [...prepared.history, ...model.entries], finalResult = { final: true, savedMessageIds: ["native:final"], calls: [] };
+  const finalizing = await drive(f, args, { v3: true, journalModel: true, entries: completeScheduled(modelHistory, finalResult) });
+  expect(finalizing.failure).toBe(finalizing.suspended);
+  expect(finalizing.entries.at(-1)!.step).toMatchObject({ name: "runtimeAgent:finalize", functionType: "mutation", inProgress: true, args: { ...args, finalMessageIds: ["native:final"] } });
+  expect(finalizing.entries.some(e => e.step.name === "runtimeContentJobs:enqueueParentTitle")).toBe(false);
+  const finalHistory = [...completeScheduled(modelHistory, finalResult), ...finalizing.entries];
+  const title = await drive(f, args, { v3: true, journalModel: true, entries: completeScheduled(finalHistory, null) });
+  expect(title.failure).toBe(title.suspended); expect(title.entries.at(-1)!.step).toMatchObject({ name: "runtimeContentJobs:enqueueParentTitle", functionType: "mutation", inProgress: true,
+    args: { reference: args.reference, runId: args.runId } });
+  const completedHistory = [...completeScheduled(finalHistory, null), ...title.entries];
+  const finished = await drive(f, args, { v3: true, journalModel: true, entries: completeScheduled(completedHistory, null, "CONTROLLED_OPTIONAL_TITLE_DENIED") });
+  expect(finished.failure).toBeUndefined(); expect(finished.entries).toEqual([]); expect(finished.invoked).toEqual([]);
+  expect(f.db.table("runtimeModelAttempts")).toEqual([]);
 });

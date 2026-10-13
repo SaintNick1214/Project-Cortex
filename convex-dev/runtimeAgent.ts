@@ -205,7 +205,7 @@ async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityRefer
   const id = await ctx.db.insert("runtimeAgentExecutions", { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, ...attempt,
     state: "ready", streaming, nextOutputSequence: 0, nextModelStep: 0, toolCount: 0,
     sourceWitnesses: [], mediaJobReferences: [], savedMessageIds: [], savedMessagePins: [], createdAt: now, updatedAt: now });
-  const workflowId = await workflow.start(ctx, ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurnV2"), attempt,
+  const workflowId = await workflow.start(ctx, ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurnV3"), attempt,
     { startAsync: true, onComplete: ref<"mutation", { workflowId: WorkflowId; context: Attempt; result: { kind: "success"; returnValue: null } | { kind: "failed"; error: string } | { kind: "canceled" } }, null>("mutation", "runtimeAgent:onWorkflowComplete"), context: attempt });
   await ctx.db.patch("runtimeAgentExecutions", id, { workflowId });
   return { runId: row.runId, attemptNumber: claimed.attemptNumber, state: "ready" as const };
@@ -274,6 +274,56 @@ export const executeTurnV2 = workflow.define({ args: agentAttempt, returns: v.nu
   traceRuntimePhase(args.runId, args.attemptNumber, "barrier.end");
   traceRuntimePhase(args.runId, args.attemptNumber, "context.begin");
   const preparedContext = await step.runMutation(ref<"mutation", Attempt, EmptyContextResult>("mutation", "runtimeAgent:prepareEmptyContext"), args, { inline: true });
+  if (preparedContext.state === "FAILED") {
+    // Keep failure disposition in its original separate durable transaction.
+    await step.runMutation(ref<"mutation", Attempt & { failureCode: "CONTEXT_OVERFLOW" }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: preparedContext.failureCode });
+    transcriptDenied(preparedContext.failureCode);
+  }
+  if (preparedContext.state === "NEEDS_ACTION") await step.runAction(refs.prepareContext, args, { retry: false, name: "authorized Cortex context" });
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.end");
+  for (let ordinal = 0; ordinal < 33; ordinal++) {
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.begin`);
+    const result = await step.runAction(refs.model, { ...args, ordinal }, { retry: false, name: `model ${ordinal}` });
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.end`);
+    if (result.final) {
+      await step.runMutation(refs.finalize, { ...args, finalMessageIds: result.savedMessageIds });
+      // Canonical answer/ingestion commits before optional work. The content
+      // Workflow retains the original parent/account and runs independently.
+      try {
+        traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.begin");
+        await step.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runId: string }, string | null>("mutation", "runtimeContentJobs:enqueueParentTitle"), { reference: args.reference, runId: args.runId });
+      } catch { /* Title currentness or policy failure never fabricates a title. */ }
+      finally { traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.end"); }
+      return null; }
+    if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
+    for (const call of result.calls) {
+      const prepared = await step.runMutation(refs.begin, { ...args, kind: "tool", ordinal,
+        requestCanonical: call.inputCanonical, toolCallId: call.toolCallId, toolName: call.toolName });
+      if (prepared.state === "waiting_approval") {
+        await step.runMutation(refs.waiting, { ...args, operationId: prepared.operationId });
+        await step.awaitEvent({ name: prepared.operationId, validator: v.literal("approved") });
+      }
+      await step.runAction(refs.tool, { ...args, ordinal, call }, { retry: false, name: `server tool ${call.toolName}` });
+    }
+  }
+  throw new Error("TOOL_STEP_LIMIT");
+} });
+/** Fresh context preparation commits separately from the Workflow journal transaction. */
+export const executeTurnV3 = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.begin");
+  await step.runMutation(ref<"mutation", Attempt, null>("mutation", "runtimeAgent:startContext"), args, { inline: true });
+  for (;;) {
+    const decision = await step.runMutation(ref<"mutation", Attempt, ReturnType<typeof evaluateMemoryBarrier>>("mutation", "runtimeAgent:contextBarrier"), args, { inline: true });
+    if (decision.state === "failed") {
+      await step.runMutation(ref<"mutation", Attempt & { failureCode: string }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: decision.failureCode! });
+      throw new Error(decision.failureCode);
+    }
+    if (decision.state !== "waiting") break;
+    await step.sleep(Math.min(1000, decision.remainingMs), { name: "memory stage barrier" });
+  }
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.end");
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.begin");
+  const preparedContext = await step.runMutation(ref<"mutation", Attempt, EmptyContextResult>("mutation", "runtimeAgent:prepareEmptyContext"), args, { inline: false });
   if (preparedContext.state === "FAILED") {
     // Keep failure disposition in its original separate durable transaction.
     await step.runMutation(ref<"mutation", Attempt & { failureCode: "CONTEXT_OVERFLOW" }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: preparedContext.failureCode });

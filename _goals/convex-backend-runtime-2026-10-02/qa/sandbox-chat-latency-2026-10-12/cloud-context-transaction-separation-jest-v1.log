@@ -1,0 +1,179 @@
+(node:43591) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/execution.test.ts (8.35 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-latency.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/empty-context-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     8.3s | 86/86 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     3.2s | 39/39 passed | /tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ✅     2.3s | 42/42 passed | /tests/unit/runtimeAgent/context-latency.test.ts
+  ✅     1.8s | 19/19 passed | /tests/unit/runtimeAgent/empty-context-workflow.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.20s ( 1.2%) - pending_overflow_warn needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 2. [32m✓[0m    0.16s ( 1.0%) - metadata_overflow needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 3. [32m✓[0m    0.12s ( 0.7%) - inline empty context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 4. [32m✓[0m    0.09s ( 0.6%) - inline pending context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 5. [32m✓[0m    0.09s ( 0.6%) - bounded metadata overflow from the actual combined read still reaches original governed retrieval
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 6. [32m✓[0m    0.09s ( 0.5%) - inline pending_unknown context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 7. [32m✓[0m    0.09s ( 0.5%) - inline barrier_warning context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 8. [32m✓[0m    0.07s ( 0.5%) - the existing incomplete policy keeps overflow on original availability and governed retrieval
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 9. [32m✓[0m    0.07s ( 0.5%) - eligible_index needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+10. [32m✓[0m    0.07s ( 0.4%) - fail overflow returns a marker before invalid profile availability, and original durable fail survives later rejection
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+11. [32m✓[0m    0.06s ( 0.4%) - a journal-write failure rolls back local context in the containing transaction; retry executes fresh original guards
+    /tests/unit/runtimeAgent/empty-context-workflow.test.ts
+
+12. [32m✓[0m    0.06s ( 0.4%) - the exact 32-source pending cap remains valid and the original size/cutoff construction is retained
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+13. [32m✓[0m    0.06s ( 0.4%) - empty eligible indexed context finishes real Agent context without creating a query embedding operation
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+14. [32m✓[0m    0.06s ( 0.3%) - durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    /tests/unit/runtimeAgent/execution.test.ts
+
+15. [32m✓[0m    0.05s ( 0.3%) - fresh layout journals empty completion inline and reaches model with no context Action; exact replay repeats no context writes
+    /tests/unit/runtimeAgent/empty-context-workflow.test.ts
+
+16. [32m✓[0m    0.05s ( 0.3%) - unrepresented indexed context journals NEEDS_ACTION and dispatches the original governed Action exactly once
+    /tests/unit/runtimeAgent/empty-context-workflow.test.ts
+
+17. [32m✓[0m    0.05s ( 0.3%) - an eligible indexed candidate falls back to original governed query embedding
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+18. [32m✓[0m    0.05s ( 0.3%) - V3 preserves nonempty fallback with the original governed context Action and no context/model side effects
+    /tests/unit/runtimeAgent/empty-context-workflow.test.ts
+
+19. [32m✓[0m    0.05s ( 0.3%) - durable Agent execution product boundaries strict readiness and pending context resolve against the owned run budget before model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+20. [32m✓[0m    0.05s ( 0.3%) - atomic native model preparation a prepared exact replay starts once; a changed canonical request remains an idempotency conflict
+    /tests/unit/runtimeAgent/execution.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.59s (10.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      15.89s
+  Test suites:        4
+  Individual tests:   182
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 passed, 4 total
+Tests:       186 passed, 186 total
+Snapshots:   0 total
+Time:        15.894 s
+Ran all test suites within paths "tests/unit/runtimeAgent/empty-context-workflow.test.ts", "tests/unit/runtimeAgent/empty-context-inline.test.ts", "tests/unit/runtimeAgent/context-latency.test.ts", "tests/unit/runtimeAgent/execution.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-jest-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

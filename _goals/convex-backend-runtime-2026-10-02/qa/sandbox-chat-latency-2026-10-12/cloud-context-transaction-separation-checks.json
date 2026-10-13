@@ -1,0 +1,322 @@
+{
+  "version": 1,
+  "recordedAt": "2026-10-13T12:42:13.438Z",
+  "status": "Source/test complete and frozen for one non-author review; native installed V3/OCC/latency still pending",
+  "baselineSourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0 (pinned existing receipts)",
+    "nodePath": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node"
+  },
+  "owned": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "sha256": "c5a5038d15e3dad1cef2df772ff1ff2286fb80804d6dbc8dd61ea6a9a6084a54",
+      "bytes": 100783
+    },
+    {
+      "file": "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "sha256": "ececfb002289eac6663d8bc2b1cf756bacf27781c3c01e17ef41eb9555235af1",
+      "bytes": 17284
+    },
+    {
+      "file": "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+      "sha256": "7a4fd364feabd9603f2cacad4d6e3b824e654eede01d2880a091de59ca3e3912",
+      "bytes": 24597
+    }
+  ],
+  "dependencies": [
+    {
+      "file": "convex-dev/runtimeAgentFence.ts",
+      "sha256": "3969de14ba28b38409ecccea53719f95186cb1ccceab6a33568077385ddb764d",
+      "bytes": 8170
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "b1db603f04c0f9fe44c6ed8aee6db3d293b263734b278fcbfbc39e25549be2a3",
+      "bytes": 115263
+    },
+    {
+      "file": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "e08b6b7ab02dc5fbad91df3ad8a4cd020e72da6b8960d039e14c234a74899909",
+      "bytes": 7492
+    },
+    {
+      "file": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "ee5072db5bff9809f2db27e70ec20beadc5f49db698ca39472488849a5a1e9e5",
+      "bytes": 18711
+    },
+    {
+      "file": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "3389b099333df9dbb7d53b88b1671ef2deac22a08d104f59c9b940b26e10ec47",
+      "bytes": 38135
+    },
+    {
+      "file": "convex-dev/runtimeContentJobs.ts",
+      "sha256": "ba40b90dd57c89f5a7368de6bb0ab16aa1475950eb678a720f813d43c5ee379d",
+      "bytes": 34018
+    },
+    {
+      "file": "tests/unit/runtimeAgent/context-latency.test.ts",
+      "sha256": "2f0d87c6b1dcd4e006f21decf154088274421b8bf271ce3be7c193521b726a6c",
+      "bytes": 23302
+    },
+    {
+      "file": "tests/unit/runtimeAgent/execution.test.ts",
+      "sha256": "e95f489bfb3d0e098c0b48363eb2a70f60ec292cb2dbd7b79c4271299c63338e",
+      "bytes": 70009
+    },
+    {
+      "file": "package.json",
+      "sha256": "d18c8d27e66466b54dc20965f843a70c69b0a6ba46e1035e1f7bb777e96bf1ee",
+      "bytes": 5462
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "ac739a04b864afd9989cd1e26b8a76fa05aee1b4a724262e3c3418e2a13353be",
+      "bytes": 365996
+    }
+  ],
+  "checks": [
+    {
+      "name": "affected Jest",
+      "exitCode": 0,
+      "log": "cloud-context-transaction-separation-jest-v1.log",
+      "json": "cloud-context-transaction-separation-jest-v1.json",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "--experimental-vm-modules",
+          "node_modules/jest/bin/jest.js",
+          "--watchman=false",
+          "--testTimeout=10000",
+          "--runInBand",
+          "--runTestsByPath",
+          "tests/unit/runtimeAgent/execution.test.ts",
+          "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+          "tests/unit/runtimeAgent/context-latency.test.ts",
+          "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+          "--json",
+          "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-jest-v1.json"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "env": {
+          "CORTEX_TEST_ENV_MODE": "explicit",
+          "CONVEX_URL": "http://127.0.0.1:9",
+          "CORTEX_RUNTIME_LATENCY_TRACE": "0"
+        }
+      }
+    },
+    {
+      "name": "root CI TypeScript",
+      "exitCode": 0,
+      "log": "cloud-context-transaction-separation-root-types-v1.log",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "node_modules/typescript/bin/tsc",
+          "--noEmit"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "backend TypeScript",
+      "exitCode": 0,
+      "log": "cloud-context-transaction-separation-backend-types-v1.log",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "node_modules/typescript/bin/tsc",
+          "--project",
+          "convex-dev/tsconfig.json",
+          "--noEmit"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "lint TypeScript",
+      "exitCode": 0,
+      "log": "cloud-context-transaction-separation-lint-types-v1.log",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "node_modules/typescript/bin/tsc",
+          "--project",
+          "tsconfig.lint.json",
+          "--noEmit"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "scoped ESLint",
+      "exitCode": 0,
+      "log": "cloud-context-transaction-separation-eslint-v1.log",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "node_modules/eslint/bin/eslint.js",
+          "convex-dev/runtimeAgent.ts",
+          "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+          "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+          "--report-unused-disable-directives"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "original declarations and installed contract source equivalence",
+      "exitCode": 0,
+      "log": "cloud-context-transaction-separation-equivalence-v1.log",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-equivalence.mjs"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "owned diff whitespace",
+      "exitCode": 0,
+      "command": {
+        "executable": "git",
+        "args": [
+          "diff",
+          "--check",
+          "--",
+          "convex-dev/runtimeAgent.ts",
+          "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+          "tests/unit/runtimeAgent/empty-context-workflow.test.ts"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    }
+  ],
+  "jest": {
+    "success": true,
+    "total": 186,
+    "passed": 186,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 4,
+    "passedSuites": 4,
+    "staticDiscoveryBannerCount": 182,
+    "assertionCounts": [
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+        "total": 86,
+        "passed": 86,
+        "skipped": 0
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "total": 39,
+        "passed": 39,
+        "skipped": 0
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-latency.test.ts",
+        "total": 42,
+        "passed": 42,
+        "skipped": 0
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+        "total": 19,
+        "passed": 19,
+        "skipped": 0
+      }
+    ]
+  },
+  "rawReceipts": [
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-equivalence-v1.log",
+      "sha256": "bc8e1b56022c5d24ce76304142f1bc9c0daa0fecf99f5a89a15550ce3e830af4",
+      "bytes": 310
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-equivalence.json",
+      "sha256": "a9a9ce01c967eb9665e0d736f74caf4f748c79553f89c785cc3760a0910fa209",
+      "bytes": 13143
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-equivalence.mjs",
+      "sha256": "5e80903be7bfb49f9afce3883fb4bb0d458b6c3ca004617c021ca1baee88705a",
+      "bytes": 3423
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-eslint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-jest-v1.json",
+      "sha256": "8c7e5e7ba04298f67efd968acf061dd8239dea9e6af44a043e306fc52ba799b8",
+      "bytes": 85210
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-jest-v1.log",
+      "sha256": "60f8565a4151b7e8d7dfac5c77fe08e8928702faf7f494277a4abba96b370d6e",
+      "bytes": 8997
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-preimage.ts",
+      "sha256": "0b0c216c52a963643dde89982508a99b293f16cdeea4cc7a740bae7a4774fa25",
+      "bytes": 96997
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-transaction-separation-root-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "coordinatorOwnedDocs": {
+    "repository": "SaintNick1214/cortexmemory.dev isolatedbackend-runtime-docs",
+    "changedFile": "docs/architecture/performance.mdx",
+    "sha256": "fa34b456a9b0743f2eea8b8ccb4772b4732c04aa4abedef0e1086302ead4b211",
+    "onlyOneParagraphChanged": true,
+    "buildExit": 0,
+    "route": "/architecture/performance",
+    "browserErrorsOrWarnings": [],
+    "ownedTabClosed": true,
+    "published": false,
+    "authorReexecution": false,
+    "evidence": [
+      {
+        "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-context-separation-build-v5.log",
+        "sha256": "186ecd4fbe5bc222e3b60edfe8b4f7c242572fcb82c257e0399cc6e8de448b80",
+        "bytes": 1568
+      },
+      {
+        "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-context-separation-browser-v5.json",
+        "sha256": "ee8d4d4b68484b3a0a0ea66a7121ecfdc72457e1619b8a89f362d618e44849b0",
+        "bytes": 1557
+      }
+    ]
+  },
+  "mutations": {
+    "service": false,
+    "inference": false,
+    "proofs": false,
+    "gitWrites": false,
+    "source": "convex-dev/runtimeAgent.ts",
+    "tests": [
+      "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "tests/unit/runtimeAgent/empty-context-workflow.test.ts"
+    ]
+  },
+  "nativeProof": "Not claimed by offline tests: actual Convex OCC/isolation/resource limits, disposable install/API registration/readback or measured V3 SLO."
+}
