@@ -11,15 +11,21 @@ const value: RuntimeRun = { version: 1, runId: "run", conversationId: "conversat
   inputMessageIds: ["input"], outputMessageIds: [], failureCode: null, contextCompleteness: "complete", contextFailureCode: null, createdAt: 1, updatedAt: 2 };
 const handle: RuntimeRunHandle = { version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "owner", runId: "run", conversationId: "conversation", agentId: "agent", agentVersion: 1, definitionHash: "definition" };
 const request = { version: 1 as const, agentId: "agent", agentVersion: 1, clientRequestId: "request", parts: [{ type: "text" as const, text: "hello" }] };
-function fixture(autoAuth = true, onLatencyEvent?: (event: RuntimeLatencyEvent) => void) {
-  let current: RuntimeSession = verified, authCallback = (_value: boolean) => {}, tokenFetcher: AuthTokenFetcher = async () => null;
+const envelope = (observation: RuntimeObservation, current: RuntimeSession = verified) => ({ version: 1, session: current, observation });
+function fixture(autoAuth = true, onLatencyEvent?: (event: RuntimeLatencyEvent) => void,
+  scope: { tenantId?: string; memorySpaceId?: string } = { tenantId: "tenant", memorySpaceId: "space" }) {
+  let current: RuntimeSession = verified, privateReads = 0, authCallback = (_value: boolean) => {}, tokenFetcher: AuthTokenFetcher = async () => null;
   const calls: { name: string; args: Record<string, unknown> }[] = [];
   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
   const mutation = jest.fn(async (ref: Parameters<RuntimeClientPort["mutation"]>[0], args: Record<string, unknown>) => {
     const name = getFunctionName(ref); calls.push({ name, args });
     if (name === "runtimeClient:session") return current;
-    if (name === "runtimeAgent:observe") return observe;
+    if (name === "runtimeClient:observeEnvelope") {
+      const expected = args.handle as RuntimeRunHandle;
+      if (expected.principalId !== current.principalId || expected.tenantId !== current.tenantId || expected.memorySpaceId !== current.memorySpaceId) throw new CortexRuntimeError("SESSION_CHANGED");
+      privateReads++; return envelope(observe, current);
+    }
     if (name === "runtimeClient:submitAndStart") return { version: 1, run: value, start: { runId: value.runId, attemptNumber: value.attemptNumber, state: "ready" } };
     if (name === "runtimeMemory:defaultProfile") return { version: 1, profile: { profileId: "profile", dimensions: 1536 } };
     return value;
@@ -32,11 +38,11 @@ function fixture(autoAuth = true, onLatencyEvent?: (event: RuntimeLatencyEvent) 
       const row = { name: getFunctionName(ref), args, update, error, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
     }, close: jest.fn(async () => {}) } as unknown as RuntimeClientPort;
   const fetchToken = jest.fn(async () => "opaque-host-jwt");
-  const client = new CortexRuntimeClient({ deploymentUrl: "https://fixture.convex.cloud", scope: { tenantId: "tenant", memorySpaceId: "space" }, fetchToken, client: port,
+  const client = new CortexRuntimeClient({ deploymentUrl: "https://fixture.convex.cloud", scope, fetchToken, client: port,
     ...(onLatencyEvent ? { onLatencyEvent } : {}) });
   return { client, port, mutation, action, calls, subscriptions, fetchToken, authenticate: (status: boolean) => authCallback(status), token: (forceRefreshToken: boolean) => tokenFetcher({ forceRefreshToken }),
     automaticAuth: (enabled: boolean) => { autoAuth = enabled; },
-    session: (next: RuntimeSession) => { current = next; }, observation: (next: RuntimeObservation) => { observe = next; } };
+    session: (next: RuntimeSession) => { current = next; }, observation: (next: RuntimeObservation) => { observe = next; }, privateReads: () => privateReads };
 }
 const tick = async () => { for (let i = 0; i < 50; i++) await Promise.resolve(); };
 describe("browser remote runtime client", () => {
@@ -72,8 +78,8 @@ describe("browser remote runtime client", () => {
     f.mutation.mockRejectedValueOnce(new Error("PRIVATE_ERROR_TRACE_SENTINEL"));
     await expect(f.client.session()).rejects.toMatchObject({ code: "TRANSPORT_ERROR", outcome: "uncertain" });
     f.authenticate(false);
-    expect(events.filter(event => event.phase === "watcher.wake")).toMatchObject([{ method: "runtimeAgent:observe" }, { method: "runtimeAgent:observe" }]);
-    expect(events.filter(event => event.phase === "rpc.failed")).toMatchObject([{ method: "runtimeClient:session", rpcId: 7, durationMs: expect.any(Number) }]);
+    expect(events.filter(event => event.phase === "watcher.wake")).toMatchObject([{ method: "runtimeClient:observeEnvelope" }, { method: "runtimeClient:observeEnvelope" }]);
+    expect(events.filter(event => event.phase === "rpc.failed")).toMatchObject([{ method: "runtimeClient:session", rpcId: 5, durationMs: expect.any(Number) }]);
     expect(events.at(-1)?.phase).toBe("auth.denied");
     const serialized = JSON.stringify(events);
     for (const value of ["PRIVATE_OUTPUT_TRACE_SENTINEL", "PRIVATE_ERROR_TRACE_SENTINEL", "a".repeat(64), "TRANSPORT_ERROR", "UNAUTHENTICATED"]) expect(serialized).not.toContain(value);
@@ -120,7 +126,7 @@ describe("browser remote runtime client", () => {
     expect(f.subscriptions).toHaveLength(0);
     const close = f.client.watchObservation(result.handle, () => {}); await tick();
     expect(f.subscriptions[0].name).toBe("runtimeClient:signal");
-    expect(f.calls.filter(call => call.name === "runtimeAgent:observe")).toHaveLength(1);
+    expect(f.calls.filter(call => call.name === "runtimeClient:observeEnvelope")).toHaveLength(1);
     expect(f.calls.some(call => ["runs:submit", "runs:get", "runtimeAgent:start"].includes(call.name))).toBe(false);
     close(); await f.client.close();
   });
@@ -224,7 +230,82 @@ describe("browser remote runtime client", () => {
   it("resets one-shot old-attempt cursor before reading replacement output", async () => {
     const f = fixture(); f.observation({ run: { ...value, attemptNumber: 2 }, state: "running", parts: [], cursor: 50, approvals: [] });
     await f.client.observe(handle, { cursor: { attemptNumber: 1, sequence: 50 } });
-    expect(f.calls.filter(call => call.name === "runtimeAgent:observe").map(call => call.args.afterSequence)).toEqual([50, 0]);
+    expect(f.calls.filter(call => call.name === "runtimeClient:observeEnvelope").map(call => call.args.afterSequence)).toEqual([50, 0]);
+    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:observeEnvelope", "runtimeClient:session", "runtimeClient:observeEnvelope", "runtimeClient:session"]);
+  });
+  it("one-shot private observation sends the original configured selectors and has a separate fresh post-session", async () => {
+    const f = fixture();
+    try {
+      expect(await f.client.observe(handle, { finalOnly: true, limit: 17 })).toMatchObject({ run: value, parts: [] });
+      expect(f.calls).toEqual([
+        { name: "runtimeClient:observeEnvelope", args: { tenantId: "tenant", memorySpaceId: "space", handle, afterSequence: 0, finalOnly: true, limit: 17 } },
+        { name: "runtimeClient:session", args: { tenantId: "tenant", memorySpaceId: "space" } },
+      ]);
+      expect(f.port.query).not.toHaveBeenCalled(); expect(f.action).not.toHaveBeenCalled();
+    } finally { await f.client.close(); }
+  });
+  it("an omitted client scope stays omitted in both envelope and independent post-session", async () => {
+    const f = fixture(true, undefined, {});
+    try {
+      await f.client.observe(handle);
+      expect(f.calls.map(call => call.args)).toEqual([{ handle, afterSequence: 0, limit: 100, finalOnly: false }, {}]);
+    } finally { await f.client.close(); }
+  });
+  it.each([
+    { version: 2, session: verified, observation: { run: value, state: "running", parts: [], cursor: 0, approvals: [] } },
+    { version: 1, session: verified, observation: { run: value, state: "running", parts: [], cursor: 0, approvals: [] }, extra: "PRIVATE" },
+    { version: 1, session: { ...verified, privateGrant: "PRIVATE" }, observation: { run: value, state: "running", parts: [], cursor: 0, approvals: [] } },
+    { version: 1, session: verified, observation: { run: value, state: "running", parts: [], cursor: 0, approvals: [], privateContext: "PRIVATE" } },
+  ])("rejects an unknown private envelope contract before any callback %#", async response => {
+    const f = fixture(), update = jest.fn(), error = jest.fn(), fresh = f.mutation.getMockImplementation()!;
+    f.mutation.mockImplementation(async (ref, args) => getFunctionName(ref) === "runtimeClient:observeEnvelope" ? response as never : await fresh(ref, args));
+    try {
+      f.client.watchObservation(handle, update, error); await tick();
+      expect(update).not.toHaveBeenCalled(); expect(error).toHaveBeenCalledWith(expect.objectContaining({ code: "INVALID_RESPONSE", outcome: "uncertain" }));
+      expect(f.subscriptions.every(row => row.closed)).toBe(true);
+    } finally { await f.client.close(); }
+  });
+  it.each(["principal", "tenant", "space", "revoked"])("withholds private output after fresh post-session %s change", async kind => {
+    const f = fixture(), updates = jest.fn(), error = jest.fn(), fresh = f.mutation.getMockImplementation()!;
+    f.observation({ run: value, state: "running", parts: [{ sequence: 1, part: { type: "text", text: "PRIVATE" } }], cursor: 1, approvals: [] });
+    let issued = false;
+    f.mutation.mockImplementation(async (ref, args) => {
+      if (getFunctionName(ref) === "runtimeClient:session" && issued && kind === "revoked") throw { data: { code: "FORBIDDEN", outcome: "not_dispatched" } };
+      const result = await fresh(ref, args);
+      if (getFunctionName(ref) === "runtimeClient:observeEnvelope") {
+        issued = true;
+        if (kind !== "revoked") f.session({ ...verified, ...(kind === "principal" ? { principalId: "other" } : kind === "tenant" ? { tenantId: "other" } : { memorySpaceId: "other" }) });
+      }
+      return result;
+    });
+    try {
+      f.client.watchObservation(handle, updates, error); await tick();
+      expect(updates).not.toHaveBeenCalled(); expect(error).toHaveBeenCalledWith(expect.objectContaining({ code: kind === "revoked" ? "FORBIDDEN" : "SESSION_CHANGED", outcome: "uncertain" }));
+      expect(f.calls.filter(call => call.name === "runtimeClient:observeEnvelope")).toHaveLength(1);
+      expect(f.subscriptions.every(row => row.closed)).toBe(true);
+    } finally { await f.client.close(); }
+  });
+  it("suppresses an observer disposed while the separate post-session is still in flight", async () => {
+    const f = fixture(), update = jest.fn(), fresh = f.mutation.getMockImplementation()!; let release = (_value: unknown) => {};
+    f.mutation.mockImplementation(async (ref, args) => getFunctionName(ref) === "runtimeClient:session"
+      ? await new Promise<unknown>(resolve => { release = resolve; }) as never : await fresh(ref, args));
+    const stop = f.client.watchObservation(handle, update); await tick();
+    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:observeEnvelope"]);
+    stop(); release(verified); await tick();
+    expect(update).not.toHaveBeenCalled(); expect(f.subscriptions.every(row => row.closed)).toBe(true); await f.client.close();
+  });
+  it("reauthentication abandons an old envelope, reacquires current output, and ignores the old late response", async () => {
+    const f = fixture(), updates = jest.fn(), fresh = f.mutation.getMockImplementation()!; let release = (_value: unknown) => {}, reads = 0;
+    f.mutation.mockImplementation(async (ref, args) => {
+      if (getFunctionName(ref) === "runtimeClient:observeEnvelope" && ++reads === 1) return await new Promise<unknown>(resolve => { release = resolve; }) as never;
+      return await fresh(ref, args);
+    });
+    const stop = f.client.watchObservation(handle, updates); await tick();
+    await f.client.refreshAuth(); await tick();
+    expect(reads).toBe(2); expect(updates).toHaveBeenCalledTimes(1);
+    release(envelope({ run: value, state: "running", parts: [{ sequence: 1, part: { type: "text", text: "OLD_PRIVATE" } }], cursor: 1, approvals: [] })); await tick();
+    expect(updates).toHaveBeenCalledTimes(1); expect(JSON.stringify(updates.mock.calls)).not.toContain("OLD_PRIVATE");
+    stop(); await f.client.close();
   });
   it("drains fresh cursor pages once, reacts to approvals, and resets replacement attempt", async () => {
     const f = fixture(), updates = jest.fn<(value: RuntimeObservation) => void>();
@@ -232,21 +313,21 @@ describe("browser remote runtime client", () => {
     // The server page advances only after the first 100-part read. No cached payload is consulted.
     let pages = 0; const fresh = f.mutation.getMockImplementation()!;
     f.mutation.mockImplementation(async (ref, args) => {
-      if (getFunctionName(ref) === "runtimeAgent:observe" && pages++ > 0) return { run: value, state: "running", parts: [], cursor: 100, approvals: [] } as never;
+      if (getFunctionName(ref) === "runtimeClient:observeEnvelope" && pages++ > 0) return envelope({ run: value, state: "running", parts: [], cursor: 100, approvals: [] }) as never;
       return await fresh(ref, args);
     });
     const close = f.client.watchObservation(handle, updates); await tick();
     expect(updates.mock.calls[0][0].parts).toHaveLength(100); expect(f.subscriptions[0].closed).toBe(true);
-    expect(f.calls.filter(call => call.name === "runtimeAgent:observe").map(call => call.args.afterSequence)).toEqual([0]);
+    expect(f.calls.filter(call => call.name === "runtimeClient:observeEnvelope").map(call => call.args.afterSequence)).toEqual([0]);
     // Replacement sends an exhausted old cursor first, then drains from zero.
     f.mutation.mockImplementation(async (ref, args) => {
-      if (getFunctionName(ref) !== "runtimeAgent:observe") return await fresh(ref, args);
+      if (getFunctionName(ref) !== "runtimeClient:observeEnvelope") return await fresh(ref, args);
       f.calls.push({ name: getFunctionName(ref), args });
-      return args.afterSequence === 0 ? { run: { ...value, attemptNumber: 2 }, state: "waiting_approval", parts: [{ sequence: 1, part: { type: "artifact", kind: "memory-receipt", artifactId: "receipt" } }], cursor: 1, approvals: [{ operationId: "op", toolName: "memory_remember", requestHash: "hash" }] } as never
-        : { run: { ...value, attemptNumber: 2 }, state: "running", parts: [], cursor: 100, approvals: [] } as never;
+      return envelope(args.afterSequence === 0 ? { run: { ...value, attemptNumber: 2 }, state: "waiting_approval", parts: [{ sequence: 1, part: { type: "artifact", kind: "memory-receipt", artifactId: "receipt" } }], cursor: 1, approvals: [{ operationId: "op", toolName: "memory_remember", requestHash: "hash" }] }
+        : { run: { ...value, attemptNumber: 2 }, state: "running", parts: [], cursor: 100, approvals: [] }) as never;
     });
     f.subscriptions.at(-1)!.update({ version: 1, marker: "b".repeat(64) }); await tick();
-    expect(f.calls.filter(call => call.name === "runtimeAgent:observe").map(call => call.args.afterSequence)).toEqual([0, 100, 0]);
+    expect(f.calls.filter(call => call.name === "runtimeClient:observeEnvelope").map(call => call.args.afterSequence)).toEqual([0, 100, 0]);
     expect(updates.mock.calls.at(-1)?.[0]).toMatchObject({ cursor: 1, approvals: [{ requestHash: "hash" }] });
     close(); expect(f.subscriptions.every(row => row.closed)).toBe(true);
     expect(f.calls.some(call => call.name === "runtimeAgent:cancel")).toBe(false); expect(f.port.query).not.toHaveBeenCalled(); await f.client.close();
@@ -254,14 +335,15 @@ describe("browser remote runtime client", () => {
   it("reads the current cursor after a short page and drains over 100 terminal parts without filtered-duplicate early completion", async () => {
     const f = fixture(), updates: RuntimeObservation[] = [], reads: number[] = [], fresh = f.mutation.getMockImplementation()!;
     f.mutation.mockImplementation(async (ref, args) => {
-      if (getFunctionName(ref) !== "runtimeAgent:observe") return await fresh(ref, args);
+      if (getFunctionName(ref) !== "runtimeClient:observeEnvelope") return await fresh(ref, args);
+      f.calls.push({ name: getFunctionName(ref), args });
       reads.push(args.afterSequence as number);
       const start = args.afterSequence as number;
       const events = start === 0 ? [{ sequence: 1, part: { type: "text-delta", text: "a" } }, { sequence: 2, part: { type: "text-delta", text: "a" } }]
         : start === 2 ? Array.from({ length: 100 }, (_, i) => ({ sequence: i + 3, part: { type: "text-delta", text: "a" } }))
         : [{ sequence: 103, part: { type: "text", text: "a".repeat(102) } }, { sequence: 104, part: { type: "status", state: "complete" } }];
-      return { run: { ...value, responseStatus: start === 0 ? "running" : "complete" }, state: start === 0 ? "running" : "complete", parts: events,
-        cursor: events.at(-1)!.sequence, approvals: [] } as never;
+      return envelope({ run: { ...value, responseStatus: start === 0 ? "running" : "complete" }, state: start === 0 ? "running" : "complete", parts: events,
+        cursor: events.at(-1)!.sequence, approvals: [] } as RuntimeObservation) as never;
     });
     let stop = () => {};
     stop = f.client.watchObservation(handle, observed => {
@@ -276,13 +358,15 @@ describe("browser remote runtime client", () => {
     expect(events.map(event => event.sequence)).toEqual(Array.from({ length: 104 }, (_, i) => i + 1));
     expect(events.filter(event => event.part.type === "text-delta")).toHaveLength(102);
     expect(f.subscriptions.every(subscription => subscription.closed)).toBe(true);
-    expect(f.calls.filter(call => call.name === "runtimeClient:session")).toHaveLength(6); await f.client.close();
+    expect(f.calls.filter(call => call.name === "runtimeClient:session")).toHaveLength(3);
+    expect(f.calls.filter(call => call.name === "runtimeClient:observeEnvelope")).toHaveLength(3); await f.client.close();
   });
   it("fences a changed verified principal before fresh reactive payload delivery", async () => {
     const f = fixture(), update = jest.fn(), error = jest.fn(); f.session({ ...verified, principalId: "other" });
     f.client.watchRun(handle, update, error); await tick();
     expect(error).toHaveBeenCalledWith(expect.objectContaining({ code: "SESSION_CHANGED" })); expect(update).not.toHaveBeenCalled();
-    expect(f.calls.some(call => call.name === "runtimeAgent:observe")).toBe(false); expect(f.port.query).not.toHaveBeenCalled(); await f.client.close();
+    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:observeEnvelope"]); expect(f.privateReads()).toBe(0);
+    expect(f.port.query).not.toHaveBeenCalled(); await f.client.close();
   });
   it("withholds typed backend error details and never exposes provider diagnostics", async () => {
     const f = fixture(); jest.mocked(f.port.mutation).mockRejectedValueOnce({ data: { version: 1, code: "FORBIDDEN", message: "secret-token", outcome: "not_dispatched" } });
@@ -339,13 +423,31 @@ describe("browser remote runtime client", () => {
     const f = fixture(), update = jest.fn(); let release = (_value: unknown) => {}, reads = 0;
     const fresh = f.mutation.getMockImplementation()!;
     f.mutation.mockImplementation(async (ref, args) => {
-      if (getFunctionName(ref) === "runtimeAgent:observe") { reads++; return await new Promise<unknown>(resolve => { release = resolve; }) as never; }
+      if (getFunctionName(ref) === "runtimeClient:observeEnvelope") { reads++; return await new Promise<unknown>(resolve => { release = resolve; }) as never; }
       return await fresh(ref, args);
     });
     const close = f.client.watchObservation(handle, update); await tick();
     for (let i = 0; i < 20; i++) f.subscriptions[0].update({ version: 1, marker: "a".repeat(64) });
-    await tick(); expect(reads).toBe(1); close(); release({ run: value, state: "running", parts: [], cursor: 0, approvals: [] }); await tick();
+    await tick(); expect(reads).toBe(1); close(); release(envelope({ run: value, state: "running", parts: [], cursor: 0, approvals: [] })); await tick();
     expect(update).not.toHaveBeenCalled(); expect(reads).toBe(1); expect(f.calls.some(call => call.name === "runtimeAgent:cancel")).toBe(false); await f.client.close();
+  });
+
+  it("bounds a stalled private envelope and never delivers or redispatches its late payload", async () => {
+    jest.useFakeTimers();
+    try {
+      const f = fixture(), fresh = f.mutation.getMockImplementation()!; let release = (_value: unknown) => {}, issued = 0;
+      f.mutation.mockImplementation(async (ref, args) => {
+        if (getFunctionName(ref) === "runtimeClient:observeEnvelope") { issued++; return await new Promise<unknown>(resolve => { release = resolve; }) as never; }
+        return await fresh(ref, args);
+      });
+      const client = new CortexRuntimeClient({ deploymentUrl: "https://fixture.convex.cloud", fetchToken: f.fetchToken, client: f.port, requestTimeoutMs: 30 });
+      const pending = client.observe(handle), delivered = jest.fn(); void pending.then(delivered, () => {});
+      const assertion = expect(pending).rejects.toMatchObject({ code: "RPC_DEADLINE_EXCEEDED", outcome: "uncertain" });
+      await tick(); await jest.advanceTimersByTimeAsync(30); await assertion; expect(issued).toBe(1);
+      release(envelope({ run: value, state: "running", parts: [{ sequence: 1, part: { type: "text", text: "LATE_PRIVATE" } }], cursor: 1, approvals: [] })); await tick();
+      expect(delivered).not.toHaveBeenCalled(); expect(issued).toBe(1); expect(f.calls).toEqual([]); expect(f.subscriptions).toEqual([]);
+      await client.close(); await f.client.close();
+    } finally { jest.useRealTimers(); }
   });
 
   it.each(["submit", "submitAndStart"] as const)("bounds stalled %s, retains its late outcome and never redispatches", async method => {

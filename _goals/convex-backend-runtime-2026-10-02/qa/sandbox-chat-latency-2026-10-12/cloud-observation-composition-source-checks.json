@@ -1,0 +1,151 @@
+{
+  "observedAt": "2026-10-13T09:28:13.931Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseHead": "4c2bc7cffafd57b5493f6305f48e390621528793",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "finalJest": {
+    "exitCode": 0,
+    "suites": 8,
+    "passed": 248,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "checks": {
+    "rootTypecheckV2": 0,
+    "backendTypecheckV1": 0,
+    "lintTypecheckV1": 0,
+    "scopedEslintV2": 0,
+    "diffCheck": 0,
+    "originalHandlerAndFenceAstChecks": 16
+  },
+  "preservedFailures": [
+    {
+      "file": "cloud-observation-composition-jest-v1.json",
+      "passed": 135,
+      "failed": 1,
+      "reason": "Added RPC-count assertion used a test override that did not record envelope calls; recorded actual calls in the override, retained the assertion and original red receipt"
+    },
+    {
+      "file": "cloud-observation-composition-root-types-v1.log",
+      "exitCode": 2,
+      "reason": "Two concurrent V18 test-union narrowing errors in observed-json-qualifications.test.ts:86; other author repaired its file, root-typecheck v2 passed"
+    }
+  ],
+  "sources": [
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "bytes": 6634,
+      "sha256": "2a5bdefc3150d0f0fe557b0c31f36e1f45d7aabab64b3a2c38c3f0a32d33b3a0"
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "bytes": 47255,
+      "sha256": "14a255e57bd8cbbd9a57adc9f37ab2c49e8a76e61e18ca2f2779d39e31ef163c"
+    },
+    {
+      "path": "tests/unit/client-runtime/client.test.ts",
+      "bytes": 42075,
+      "sha256": "a4cf9c04a383921b6961b065e5c2e4719b51f38c37167c250d962814e0c5663b"
+    },
+    {
+      "path": "tests/unit/client-runtime/observe-delivery.test.ts",
+      "bytes": 3551,
+      "sha256": "eec1823826efeb34a7c1725f0e499da3b1cef2825e67faec547699abb4738275"
+    },
+    {
+      "path": "tests/unit/client-runtime/observation-native.test.ts",
+      "bytes": 9504,
+      "sha256": "83aa8a98dd4a7d54850ca6c0ece0f11b12cd56c35b6147c132260893a21d7615"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v1.json",
+      "bytes": 66128,
+      "sha256": "adcc68868154305e6ec8222de73f3e4d268226c26b3c5662f3d2916c58906ba9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v1.log",
+      "bytes": 16584,
+      "sha256": "83bdf72d252954cd69633031aa0a81419356c82fc089f4aa7a0defa2ead6e25a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v2.json",
+      "bytes": 64654,
+      "sha256": "f3066af51201c1dd3308dd45af49222ea0f491c39dabf1913039fbcd52130ec7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v2.log",
+      "bytes": 9332,
+      "sha256": "06e61422b1dce765ec5cabfab1f055156c25dd205d856da5f8358d779621f469"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v3.json",
+      "bytes": 117639,
+      "sha256": "dc35ae03d5c7ceecdfbb34099f344e6c6f647bd7fb0258b9e9b60bcb0dc161bd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v3.log",
+      "bytes": 11135,
+      "sha256": "b95bf0c0f0e26d4bd6ebeaec8e016a556c49dca06ee5c2031c09585f27dee241"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v4.json",
+      "bytes": 117670,
+      "sha256": "02c3404bb6c8122e631cd2e425718e9b3f309644c4b6b11b7bc53eceb2ba9a43"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v4.log",
+      "bytes": 11122,
+      "sha256": "10439d6bbe8a9b312ca2e0998f9fa1350ab7fe56085136cafee944c8ba67258d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-root-types-v1.log",
+      "bytes": 1640,
+      "sha256": "28fe704aa663a92fe9396fd975984788070c22d4eea131d0be83462c42cfd1c9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-root-types-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-scoped-eslint-v1.log",
+      "bytes": 1263,
+      "sha256": "78d4a69d901c54993f15d438082b85d6a9ea6762a7cf244b9f4079163d286c24"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-scoped-eslint-v2.log",
+      "bytes": 1263,
+      "sha256": "78d4a69d901c54993f15d438082b85d6a9ea6762a7cf244b9f4079163d286c24"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-diff-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-equivalence.mjs",
+      "bytes": 3892,
+      "sha256": "f0196095f7b1da641abca6bb21319b985dcdb5ad15fbbc14a26cdf942d11bb56"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-equivalence.json",
+      "bytes": 3076,
+      "sha256": "4d0b5a6b24a81d90586628b4a0c0c1ad2885110400aa8ca5202723c501ab93aa"
+    }
+  ],
+  "scope": "Offline controlled original handlers and complete SDK client-runtime regression suite only; no new deployment, inference, browser, native OCC or latency success claimed"
+}

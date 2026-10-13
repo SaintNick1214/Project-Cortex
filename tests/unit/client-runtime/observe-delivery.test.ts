@@ -21,9 +21,11 @@ function fixture(cross: boolean) {
         if (sessions === 2 && cross) clock.mockReturnValue(base + 101);
         return actor;
       }
-      if (getFunctionName(ref) !== "runtimeAgent:observe") throw new Error("UNEXPECTED_RPC");
-      observes++;
-      return { run, state: "complete", parts: [{ sequence: 1, part: { type: "text", text: "private shared source" } }], cursor: 1, approvals: [], deliveryExpiresAt: base + 100 };
+      if (getFunctionName(ref) !== "runtimeClient:observeEnvelope") throw new Error("UNEXPECTED_RPC");
+      // The original pre-session is now evaluated inside the native envelope.
+      // The independent second actor-session RPC remains the final delivery fence.
+      sessions++; observes++;
+      return { version: 1, session: actor, observation: { run, state: "complete", parts: [{ sequence: 1, part: { type: "text", text: "private shared source" } }], cursor: 1, approvals: [], deliveryExpiresAt: base + 100 } };
     },
     action: async () => { throw new Error("PAID_CALL_PROHIBITED"); },
     onUpdate: () => { throw new Error("UNEXPECTED_SUBSCRIPTION"); },
@@ -44,5 +46,6 @@ it("one-shot observe withholds protected parts when consumed share expires durin
   try {
     await expect(f.client.observe(handle)).rejects.toMatchObject({ code: "AUTHORITY_EXPIRED" });
     expect(f.counts()).toEqual({ sessions: 2, observes: 1 });
+    await expect(f.client.session()).rejects.toMatchObject({ code: "UNAUTHENTICATED" });
   } finally { await f.client.close(); }
 });

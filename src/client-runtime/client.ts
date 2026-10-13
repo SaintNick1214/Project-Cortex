@@ -42,7 +42,7 @@ const query = (name: string) => makeFunctionReference<"query", Record<string, un
 const mutation = (name: string) => makeFunctionReference<"mutation", Record<string, unknown>, unknown>(name);
 const action = (name: string) => makeFunctionReference<"action", Record<string, unknown>, unknown>(name);
 const refs = { session: mutation("runtimeClient:session"), signal: query("runtimeClient:signal"), submit: mutation("runs:submit"), submitAndStart: mutation("runtimeClient:submitAndStart"), get: mutation("runs:get"), start: mutation("runtimeAgent:start"),
-  observe: mutation("runtimeAgent:observe"), cancel: mutation("runtimeAgent:cancel"), approve: mutation("runs:approve"), tool: mutation("runtimeAgent:approveTool"),
+  observe: mutation("runtimeClient:observeEnvelope"), cancel: mutation("runtimeAgent:cancel"), approve: mutation("runs:approve"), tool: mutation("runtimeAgent:approveTool"),
   definition: mutation("agentDefinitions:get"), messages: mutation("runtimeTranscript:messages"), conversations: mutation("runtimeTranscript:list"),
   profile: mutation("runtimeMemory:defaultProfile"), recall: action("runtimeMemory:recall"), asset: mutation("runtimeAssets:get"),
   embeddingProfile: mutation("runtimeClientExtensions:embeddingProfile"), readiness: mutation("runtimeClientExtensions:memoryReadiness"),
@@ -260,13 +260,41 @@ export class CortexRuntimeClient {
     return result as { runId: string; attemptNumber: number; state: string; failureCode?: string };
   }
   async get(handle: RuntimeRunHandle): Promise<RuntimeRun> { const { result } = await this.inSession(current => this.mutation(refs.get, this.selector(handle, current))); return this.pinned(handle, run(result)); }
+  private async observeInSession(handle: RuntimeRunHandle, args: Record<string, unknown>): Promise<{ current: RuntimeSession; result: RuntimeObservation }> {
+    this.check(); const epoch = this.generation; await this.authReady;
+    if (epoch !== this.generation) invalid("SESSION_CHANGED"); if (!this.authenticated) invalid("UNAUTHENTICATED");
+    const input = object(handle);
+    if (input.version !== 1 || natural(input.agentVersion) < 1) invalid();
+    const expected: RuntimeRunHandle = { version: 1, tenantId: identifier(input.tenantId), memorySpaceId: identifier(input.memorySpaceId),
+      principalId: identifier(input.principalId), runId: identifier(input.runId, 512), conversationId: identifier(input.conversationId, 512),
+      agentId: identifier(input.agentId, 512), agentVersion: input.agentVersion as number, definitionHash: identifier(input.definitionHash, 512) };
+    const raw = await this.call(() => this.mutation(refs.observe, { ...args, ...this.scope, handle: expected }));
+    try {
+      if (epoch !== this.generation || !this.authenticated) invalid("SESSION_CHANGED");
+      const envelope = object(raw);
+      if (envelope.version !== 1 || Object.keys(envelope).length !== 3
+        || !Object.hasOwn(envelope, "session") || !Object.hasOwn(envelope, "observation")) invalid("INVALID_RESPONSE");
+      const actor = object(envelope.session);
+      if (Object.keys(actor).some(key => !["version", "tenantId", "memorySpaceId", "principalId", "userId", "deliveryExpiresAt"].includes(key))) invalid("INVALID_RESPONSE");
+      const current = session(actor); this.selector(expected, current); this.sessionDeadline(current);
+      const payload = object(envelope.observation);
+      if (Object.keys(payload).some(key => !["run", "state", "parts", "cursor", "approvals", "deliveryExpiresAt"].includes(key))) invalid("INVALID_RESPONSE");
+      const result = observation(payload); this.pinned(expected, result.run);
+      // An envelope's transaction cannot certify a later revocation. Preserve the
+      // original independent post-I/O session, generation and immutable-actor fence.
+      const after = await this.session();
+      if (epoch !== this.generation || !sameScope(current, after) || current.principalId !== after.principalId) invalid("SESSION_CHANGED");
+      if (current.deliveryExpiresAt !== undefined && current.deliveryExpiresAt <= Date.now()) invalid("AUTHORITY_EXPIRED");
+      // Existing one-shot trackDelivery and per-watcher deadline checks consume
+      // the protected-source bound before return/callback, with their original cleanup.
+      return { current, result };
+    } catch (error) { throw new CortexRuntimeError(runtimeError(error).code, "uncertain"); }
+  }
   async observe(handle: RuntimeRunHandle, options: { cursor?: RuntimeOutputCursor; finalOnly?: boolean; limit?: number } = {}): Promise<RuntimeObservation> {
-    const acquired = await this.inSession(async current => {
-      const args = this.selector(handle, current);
-      let result = observation(await this.mutation(refs.observe, { ...args, afterSequence: natural(options.cursor?.sequence ?? 0), limit: options.limit ?? 100, finalOnly: options.finalOnly ?? false }));
-      if (options.cursor && result.run.attemptNumber !== natural(options.cursor.attemptNumber)) result = observation(await this.mutation(refs.observe, { ...args, afterSequence: 0, limit: options.limit ?? 100, finalOnly: options.finalOnly ?? false }));
-      this.pinned(handle, result.run); return result;
-    }); this.trackDelivery(acquired.result.deliveryExpiresAt); return acquired.result;
+    const args = { afterSequence: natural(options.cursor?.sequence ?? 0), limit: options.limit ?? 100, finalOnly: options.finalOnly ?? false };
+    let acquired = await this.observeInSession(handle, args);
+    if (options.cursor && acquired.result.run.attemptNumber !== natural(options.cursor.attemptNumber)) acquired = await this.observeInSession(handle, { ...args, afterSequence: 0 });
+    this.trackDelivery(acquired.result.deliveryExpiresAt); return acquired.result;
   }
   private watch<T>(handle: RuntimeRunHandle, ref: ReturnType<typeof mutation>, args: Record<string, unknown> | (() => Record<string, unknown>), parse: (raw: unknown) => T,
     callback: (value: T) => void, onError?: (error: CortexRuntimeError) => void): () => void {
@@ -288,7 +316,7 @@ export class CortexRuntimeClient {
         while (active && pending) {
           pending = false; const epoch = this.generation;
           try {
-            const acquired = await this.inSession(current => this.mutation(ref, { ...(typeof args === "function" ? args() : args), ...this.selector(handle, current) }));
+            const acquired = await this.observeInSession(handle, typeof args === "function" ? args() : args);
             if (!active || epoch !== this.generation) continue;
             const raw = object(acquired.result), value = parse(raw);
             const bounds = [acquired.current.deliveryExpiresAt, deliveryDeadline(raw.deliveryExpiresAt)].filter((bound): bound is number => bound !== undefined);

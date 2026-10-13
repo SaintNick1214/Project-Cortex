@@ -34,15 +34,46 @@ export const submitAndStart = mutation({
   handler: submitAndStartHandler,
 });
 
+export async function sessionHandler(ctx: MutationCtx, args: Selectors) {
+  const actor = await requireDataAuthority(ctx, args, "read");
+  const expiresAt = await deliveryExpiresAt(ctx, dataAuthorityReference(actor));
+  return { version: 1 as const, tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId,
+    principalId: actor.principalId, userId: actor.userId,
+    ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
+}
 export const session = mutation({
   args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
-  handler: async (ctx, args) => {
-    const actor = await requireDataAuthority(ctx, args, "read");
-    const expiresAt = await deliveryExpiresAt(ctx, dataAuthorityReference(actor));
-    return { version: 1 as const, tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId,
-      principalId: actor.principalId, userId: actor.userId,
-      ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
-  },
+  handler: sessionHandler,
+});
+
+type ObservationHandle = { version: 1; tenantId: string; memorySpaceId: string; principalId: string;
+  runId: string; conversationId: string; agentId: string; agentVersion: number; definitionHash: string };
+/** Compose the original pre-session and private observation in one transaction.
+ * The SDK retains a separate fresh post-session after this response crosses I/O. */
+export async function observeEnvelopeHandler(ctx: MutationCtx, args: Selectors & { handle: ObservationHandle;
+  afterSequence?: number; limit?: number; finalOnly?: boolean }) {
+  // Preserve omitted-selector ambiguity. The supplied handle cannot choose a scope
+  // in place of the original client configuration or establish current authority.
+  const selectors = { ...(args.tenantId === undefined ? {} : { tenantId: args.tenantId }),
+    ...(args.memorySpaceId === undefined ? {} : { memorySpaceId: args.memorySpaceId }) };
+  const current = await sessionHandler(ctx, selectors), expected = args.handle;
+  if (expected.version !== 1 || expected.tenantId !== current.tenantId || expected.memorySpaceId !== current.memorySpaceId
+    || expected.principalId !== current.principalId) transcriptDenied("SESSION_CHANGED");
+  const value = await observeHandler(ctx, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, runId: expected.runId,
+    ...(args.afterSequence === undefined ? {} : { afterSequence: args.afterSequence }),
+    ...(args.limit === undefined ? {} : { limit: args.limit }), ...(args.finalOnly === undefined ? {} : { finalOnly: args.finalOnly }) });
+  const row = value.run;
+  if (row.scope.tenantId !== expected.tenantId || row.scope.memorySpaceId !== expected.memorySpaceId
+    || row.runId !== expected.runId || row.conversationId !== expected.conversationId || row.agentId !== expected.agentId
+    || row.agentVersion !== expected.agentVersion || row.definitionHash !== expected.definitionHash) transcriptDenied("RUN_IDENTITY_CHANGED");
+  return { version: 1 as const, session: current, observation: value };
+}
+export const observeEnvelope = mutation({
+  args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()),
+    handle: v.object({ version: v.literal(1), tenantId: v.string(), memorySpaceId: v.string(), principalId: v.string(),
+      runId: v.string(), conversationId: v.string(), agentId: v.string(), agentVersion: v.number(), definitionHash: v.string() }),
+    afterSequence: v.optional(v.number()), limit: v.optional(v.number()), finalOnly: v.optional(v.boolean()) },
+  handler: observeEnvelopeHandler,
 });
 
 /** Reads the same fenced dependencies as observe, but never delivers its private payload from a cached query. */

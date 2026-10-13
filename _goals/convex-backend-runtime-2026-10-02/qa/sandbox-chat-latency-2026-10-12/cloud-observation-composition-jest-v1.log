@@ -1,0 +1,369 @@
+(node:24531) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/observation-native.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:56:17
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:57:17
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/client-runtime/client.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+      18 | if (!explicitEnvironment) {
+    > 19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+      22 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:10
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      21 | }
+      22 |
+      23 | // Determine which Convex deployment to test against
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:10
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:64:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:65:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● browser remote runtime client › reads the current cursor after a short page and drains over 100 terminal parts without filtered-duplicate early completion
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 3
+    Received length: 0
+    Received array:  []
+
+      355 |     expect(f.subscriptions.every(subscription => subscription.closed)).toBe(true);
+      356 |     expect(f.calls.filter(call => call.name === "runtimeClient:session")).toHaveLength(3);
+    > 357 |     expect(f.calls.filter(call => call.name === "runtimeClient:observeEnvelope")).toHaveLength(3); await f.client.close();
+          |                                                                                   ^
+      358 |   });
+      359 |   it("fences a changed verified principal before fresh reactive payload delivery", async () => {
+      360 |     const f = fixture(), update = jest.fn(), error = jest.fn(); f.session({ ...verified, principalId: "other" });
+
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:357:83)
+
+PASS tests/unit/client-runtime/admission-native.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+      18 | if (!explicitEnvironment) {
+    > 19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+      22 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:10
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      21 | }
+      22 |
+      23 | // Determine which Convex deployment to test against
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:10
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:64:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:65:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/observe-delivery.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+      18 | if (!explicitEnvironment) {
+    > 19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+      22 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:10
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      21 | }
+      22 |
+      23 | // Determine which Convex deployment to test against
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:10
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:64:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:65:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.2s | 30/30 passed | /tests/unit/client-runtime/observation-native.test.ts
+  ✅     1.3s | 32/32 passed | /tests/unit/client-runtime/admission-native.test.ts
+  ❌     0.5s | 71/72 passed | /tests/unit/client-runtime/client.test.ts
+  ✅     0.3s | 2/2 passed | /tests/unit/client-runtime/observe-delivery.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.4%) - private observation transaction composition returns the exact original session and observation projections with selectors 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.3%) - combined native run admission directly composes the original submit/start/get bodies with exact selectors and one durable attempt/account
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.3%) - private observation transaction composition does not fill omitted ambiguous client scope from the supplied handle
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition returns the exact original session and observation projections with selectors 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition a changed expected actor principalId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition returns the exact original session and observation projections with selectors 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - combined native run admission a prior running head preserves the new durable queued request without dispatch
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition a changed expected actor memorySpaceId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition revoked retains the original authority/resource denial and complete prior state
+    /tests/unit/client-runtime/observation-native.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the original observe rechecks a grant after pre-session expire
+    /tests/unit/client-runtime/observation-native.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - combined native run admission same request and streaming contract dedupe without saving, rebudgeting or redispatching
+    /tests/unit/client-runtime/admission-native.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - combined native run admission changed streaming on request replay rolls back all native effects
+    /tests/unit/client-runtime/admission-native.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable conversationId handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable agentId handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable agentVersion handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable definitionHash handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition run_tombstone retains the original authority/resource denial and complete prior state
+    /tests/unit/client-runtime/observation-native.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.26s (4.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.45s
+  Test suites:        4
+  Individual tests:   83
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 135 passed, 136 total
+Snapshots:   0 total
+Time:        6.449 s
+Ran all test suites within paths "tests/unit/client-runtime/client.test.ts", "tests/unit/client-runtime/observe-delivery.test.ts", "tests/unit/client-runtime/observation-native.test.ts", "tests/unit/client-runtime/admission-native.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,259 @@
+(node:25126) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/client.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/client-runtime/assets.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/observation-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/admission-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/observe-delivery.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/content.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/extensions.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/media.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     1.7s | 73/73 passed | /tests/unit/client-runtime/client.test.ts
+  ✅     1.4s | 37/37 passed | /tests/unit/client-runtime/assets.test.ts
+  ✅     0.7s | 30/30 passed | /tests/unit/client-runtime/observation-native.test.ts
+  ✅     0.4s | 32/32 passed | /tests/unit/client-runtime/admission-native.test.ts
+  ✅     0.3s | 26/26 passed | /tests/unit/client-runtime/content.test.ts
+  ✅     0.3s | 21/21 passed | /tests/unit/client-runtime/media.test.ts
+  ✅     0.3s | 27/27 passed | /tests/unit/client-runtime/extensions.test.ts
+  ✅     0.3s | 2/2 passed | /tests/unit/client-runtime/observe-delivery.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.00s (18.5%) - authenticated bounded runtime asset helpers (controlled transport) bounds a hung HTTP operation at its configured deadline
+    /tests/unit/client-runtime/assets.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.5%) - authenticated bounded runtime asset helpers (controlled transport) accepts the exact application upload boundary (controlled, not service qualification)
+    /tests/unit/client-runtime/assets.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.5%) - private observation transaction composition returns the exact original session and observation projections with selectors 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.3%) - combined native run admission directly composes the original submit/start/get bodies with exact selectors and one durable attempt/account
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition does not fill omitted ambiguous client scope from the supplied handle
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition run_tombstone retains the original authority/resource denial and complete prior state
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - combined native run admission changed streaming on request replay rolls back all native effects
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition returns the exact original session and observation projections with selectors 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition returns the exact original session and observation projections with selectors 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition a changed expected actor principalId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - combined native run admission changed payload on request replay rolls back all native effects
+    /tests/unit/client-runtime/admission-native.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition a late grant revocation while projecting private rows is denied by the original delivery recheck and rolls back the fixture
+    /tests/unit/client-runtime/observation-native.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition a changed expected actor tenantId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable conversationId handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable agentId handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable agentVersion handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable definitionHash handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.24s (23.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.42s
+  Test suites:        8
+  Individual tests:   124
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 8
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 8 passed, 8 total
+Tests:       248 passed, 248 total
+Snapshots:   0 total
+Time:        5.416 s
+Ran all test suites matching tests/unit/client-runtime.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-observation-composition-jest-v3.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

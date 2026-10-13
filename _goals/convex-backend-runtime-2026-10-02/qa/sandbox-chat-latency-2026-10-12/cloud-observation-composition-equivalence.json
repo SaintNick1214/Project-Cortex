@@ -1,0 +1,89 @@
+{
+  "status": "PASS",
+  "head": "4c2bc7cffafd57b5493f6305f48e390621528793",
+  "nodeVersion": "v24.15.0",
+  "typescriptVersion": "6.0.3",
+  "checks": [
+    {
+      "label": "original session handler body",
+      "identical": true,
+      "canonicalAstSha256": "9b1d4042d780cca3b9321c99c46ee06ab613fa25d657f541a3e4574b73daf14d"
+    },
+    {
+      "label": "combined admission handler body",
+      "identical": true,
+      "canonicalAstSha256": "758b27fcf849d38a4d4ca7b1d088be3fb9fa3d12637cb01db6a61d1919c74c62"
+    },
+    {
+      "label": "payload-free signal registration",
+      "identical": true,
+      "canonicalAstSha256": "d6928a0e87a277b9cd7be8860f1df390095595cbcdace52bb2e35a2e14942ade"
+    },
+    {
+      "label": "SDK inSession body",
+      "identical": true,
+      "canonicalAstSha256": "30160628a2f7524358bd2c853513930835c1d066092a7a1ebfe66711a74a62f9"
+    },
+    {
+      "label": "SDK session body",
+      "identical": true,
+      "canonicalAstSha256": "582d5f2cac068cf4023d4f5ad130cbd5a69c46b9dba7f4b33ce3e5b081b7036b"
+    },
+    {
+      "label": "SDK installAuth body",
+      "identical": true,
+      "canonicalAstSha256": "dcacbe1b67ce7ce9fd205450911413a00bf2028c88242f6c98f51ce5d3e48dfc"
+    },
+    {
+      "label": "SDK refreshAuth body",
+      "identical": true,
+      "canonicalAstSha256": "76351543dc4d9cdd5e3a6944f3b8afa190e677a9fc35257fe245fc85a331bd34"
+    },
+    {
+      "label": "SDK sessionDeadline body",
+      "identical": true,
+      "canonicalAstSha256": "35bd338aac875ee1820f1043e12d58ddb2b4123823418688dc9412fc645404e3"
+    },
+    {
+      "label": "SDK trackDelivery body",
+      "identical": true,
+      "canonicalAstSha256": "0ed7c3fa7d79c4e954a1fc5acb6e5c313856d6de3a829aee0e65f7ad4a8d6278"
+    },
+    {
+      "label": "SDK call body",
+      "identical": true,
+      "canonicalAstSha256": "0a7551b5301fc57bf4760a82d297f9ad870d8286c1d00b6a8017b08737f5a8a4"
+    },
+    {
+      "label": "SDK watchRun body",
+      "identical": true,
+      "canonicalAstSha256": "4bb7fdffbc67cdb56d9d4a7719aff7c2939fd4934ae2aa9e3be7036a851b2150"
+    },
+    {
+      "label": "SDK watchObservation body",
+      "identical": true,
+      "canonicalAstSha256": "074c42682f6ddcfa2883880f0f6c62517f8707edc522bfd73fdd3896f57f440f"
+    },
+    {
+      "label": "SDK close body",
+      "identical": true,
+      "canonicalAstSha256": "04eed9f7c777c56e84ef6f160dbcf83c135ce38e033e1d5b5729497f7876fcc1"
+    },
+    {
+      "label": "SDK submitAndStart body",
+      "identical": true,
+      "canonicalAstSha256": "c7deec0a1fa98b7ed127fa504cec57212fd81c52d9196077b83662cc275169e9"
+    },
+    {
+      "label": "SDK cancel body",
+      "identical": true,
+      "canonicalAstSha256": "da298ff478eaab08c6e20ac8a42e0769dc50e2300a08437997e919ea8b77809f"
+    },
+    {
+      "label": "original private observe handler body",
+      "identical": true,
+      "canonicalAstSha256": "92a1a1e29f77588d2dfe65e6642557f3bf68344303ff65b9d980ffa2b00f46c3"
+    }
+  ],
+  "scope": "AST equivalence of original authorization/projection and retained SDK fences; no native service/OCC or latency result"
+}
