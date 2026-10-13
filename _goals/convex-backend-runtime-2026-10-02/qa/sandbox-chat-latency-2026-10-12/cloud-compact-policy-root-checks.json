@@ -1,0 +1,501 @@
+{
+  "version": 1,
+  "recordedAt": "2026-10-13T11:26:21.822Z",
+  "scope": "Frozen compact-root source/handler tests only; no service/deployment/inference/SLO acceptance. Parent final joint root type gate pending.",
+  "baseline": "3dd4542563ce9fcb2bbf7ab23741854600effdc3",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0",
+    "nodePath": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "npmCli": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js"
+  },
+  "owned": [
+    {
+      "file": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "e08b6b7ab02dc5fbad91df3ad8a4cd020e72da6b8960d039e14c234a74899909",
+      "bytes": 7492
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "b1db603f04c0f9fe44c6ed8aee6db3d293b263734b278fcbfbc39e25549be2a3",
+      "bytes": 115263
+    },
+    {
+      "file": "convex-dev/agentDefinitions.ts",
+      "sha256": "7b01997af386827e6e55073abdc7703a1a55fd3b092f9c036382443b5476600a",
+      "bytes": 17452
+    },
+    {
+      "file": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "cddc193febe8641af035e708e437eef5981c3354a1da40f774e2c493a340ff5e",
+      "bytes": 131248
+    },
+    {
+      "file": "tests/unit/runtime/profile-policy-selection.test.ts",
+      "sha256": "833267837fa156f4c42d8fb84f7684ceb2675b2eb0af05af17aebd6e24a63a4d",
+      "bytes": 10688
+    },
+    {
+      "file": "tests/unit/runtime/compact-executable-policy.test.ts",
+      "sha256": "f6f6474bcf4f8b3fdd23cb959c602dd87cc0101d0a72f314726aed0e23338d60",
+      "bytes": 5235
+    }
+  ],
+  "observedDependenciesAtFreeze": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "sha256": "0b0c216c52a963643dde89982508a99b293f16cdeea4cc7a740bae7a4774fa25",
+      "bytes": 96997
+    },
+    {
+      "file": "convex-dev/runtimeAgentFence.ts",
+      "sha256": "3969de14ba28b38409ecccea53719f95186cb1ccceab6a33568077385ddb764d",
+      "bytes": 8170
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "395c771941a1ec9d0cbccdcfb3c1d64a716da3a73855d6bfa27db47f2ba77655",
+      "bytes": 5243
+    },
+    {
+      "file": "convex-dev/runtimeGatewayMediaQualifications.ts",
+      "sha256": "68b11c24d55dc184cf2fbf1a1e39e00c13221352e8d735c76a8957e518c5c710",
+      "bytes": 46349
+    },
+    {
+      "file": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "3389b099333df9dbb7d53b88b1671ef2deac22a08d104f59c9b940b26e10ec47",
+      "bytes": 38135
+    },
+    {
+      "file": "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+      "sha256": "7744b24a824d4a9656c9382d207bc6fa6dfda9d975d4ea4f6f1f707b7cbfcff1",
+      "bytes": 29056
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "sha256": "ca2dbd7bde879b411b5d8878a4c0c905e39897df52b3bf12b066f28a8e452e11",
+      "bytes": 25680
+    },
+    {
+      "file": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "ee5072db5bff9809f2db27e70ec20beadc5f49db698ca39472488849a5a1e9e5",
+      "bytes": 18711
+    },
+    {
+      "file": "convex-dev/runtimeTranscript.ts",
+      "sha256": "5c0561422eeff78e70efe63aea359c5d49e97d55924b171291c2271eb1b4ea41",
+      "bytes": 56458
+    },
+    {
+      "file": "src/domain/model-policy.ts",
+      "sha256": "3127d9ce8d8f7b1d359e93e5e5623fb9453424ec784c493ef656b317001bba10",
+      "bytes": 33089
+    },
+    {
+      "file": "src/domain/profile.ts",
+      "sha256": "45691e76e6f6727874b7f6285aa173b28059acf9ffaf7dc360360a72778f6972",
+      "bytes": 4266
+    },
+    {
+      "file": "convex-dev/schema.ts",
+      "sha256": "307a37dfb22f4e17987986bf59018e112ea9b66a2ce369943710a698c090bba8",
+      "bytes": 64401
+    },
+    {
+      "file": "package.json",
+      "sha256": "d18c8d27e66466b54dc20965f843a70c69b0a6ba46e1035e1f7bb777e96bf1ee",
+      "bytes": 5462
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "ac739a04b864afd9989cd1e26b8a76fa05aee1b4a724262e3c3418e2a13353be",
+      "bytes": 365996
+    }
+  ],
+  "checks": [
+    {
+      "name": "affected Jest final v5",
+      "exitCode": 0,
+      "log": "cloud-compact-policy-root-jest-final-v5.log",
+      "json": "cloud-compact-policy-root-jest-final-v5.json",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "--experimental-vm-modules",
+          "node_modules/jest/bin/jest.js",
+          "--watchman=false",
+          "--testTimeout=10000",
+          "--runInBand",
+          "--runTestsByPath",
+          "tests/unit/runtime/model-policy-admission.test.ts",
+          "tests/unit/runtime/profile-policy-selection.test.ts",
+          "tests/unit/runtime/compact-executable-policy.test.ts",
+          "tests/unit/runtime/model-policy-model-drift.test.ts",
+          "tests/unit/runtime/gateway-backend.test.ts",
+          "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+          "tests/unit/runtimeAgent/execution.test.ts",
+          "tests/unit/runtimeContent/jobs.test.ts",
+          "tests/unit/runtimeIngestion/stages.test.ts",
+          "--json",
+          "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-final-v5.json"
+        ],
+        "env": {
+          "CORTEX_TEST_ENV_MODE": "explicit",
+          "CONVEX_URL": "http://127.0.0.1:9",
+          "CORTEX_RUNTIME_LATENCY_TRACE": "0"
+        },
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "root CI TypeScript v2",
+      "exitCode": 2,
+      "log": "cloud-compact-policy-root-root-types-v2.log",
+      "classification": "Only disjoint concurrent vector-delivery-batch test fixture errors; pending parent final joint candidate check. No own-file errors observed.",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "node_modules/typescript/bin/tsc",
+          "--noEmit"
+        ],
+        "env": {},
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "backend TypeScript",
+      "exitCode": 0,
+      "log": "cloud-compact-policy-root-backend-types-v1.log",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "node_modules/typescript/bin/tsc",
+          "--project",
+          "convex-dev/tsconfig.json",
+          "--noEmit"
+        ],
+        "env": {},
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "lint TypeScript",
+      "exitCode": 0,
+      "log": "cloud-compact-policy-root-lint-types-v1.log",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "node_modules/typescript/bin/tsc",
+          "--project",
+          "tsconfig.lint.json",
+          "--noEmit"
+        ],
+        "env": {},
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "scoped ESLint six owned source/test files",
+      "exitCode": 0,
+      "log": "cloud-compact-policy-root-eslint-v1.log",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "node_modules/eslint/bin/eslint.js",
+          "convex-dev/runtimePolicySchema.ts",
+          "convex-dev/runtimeModelPolicy.ts",
+          "convex-dev/agentDefinitions.ts",
+          "tests/unit/runtime/model-policy-admission.test.ts",
+          "tests/unit/runtime/profile-policy-selection.test.ts",
+          "tests/unit/runtime/compact-executable-policy.test.ts",
+          "--report-unused-disable-directives"
+        ],
+        "env": {},
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "source AST/schema and original-test equivalence v2",
+      "exitCode": 0,
+      "log": "cloud-compact-policy-root-equivalence-v2.log",
+      "json": "cloud-compact-policy-root-equivalence.json",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "--import",
+          "./node_modules/tsx/dist/loader.mjs",
+          "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-equivalence.mjs"
+        ],
+        "env": {},
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "pure legacy V9 local overhead",
+      "exitCode": 0,
+      "log": "cloud-compact-policy-root-pure-cost-v1.log",
+      "json": "cloud-compact-policy-root-pure-cost.json",
+      "command": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "args": [
+          "--import",
+          "./node_modules/tsx/dist/loader.mjs",
+          "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-pure-cost.mjs"
+        ],
+        "env": {},
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+      }
+    },
+    {
+      "name": "owned tracked diff whitespace",
+      "exitCode": 0,
+      "command": "git diff --check -- convex-dev/runtimePolicySchema.ts convex-dev/runtimeModelPolicy.ts convex-dev/agentDefinitions.ts tests/unit/runtime/model-policy-admission.test.ts tests/unit/runtime/profile-policy-selection.test.ts"
+    }
+  ],
+  "rawResults": [
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v1.json",
+      "sha256": "235e963dbc027dc9287c8583619ca5e17a9ee7cb56e4006e3f7fdf3319b6c499",
+      "bytes": 1245211,
+      "exitCode": 1,
+      "totalSuites": 1,
+      "passedSuites": 0,
+      "total": 189,
+      "passed": 171,
+      "failed": 18,
+      "skipped": 0,
+      "success": false
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v2.json",
+      "sha256": "a380cd28521a465e87e415d043e7336581ee93467cfa8716e7e19bc889d45c88",
+      "bytes": 114333,
+      "exitCode": 1,
+      "totalSuites": 3,
+      "passedSuites": 2,
+      "total": 207,
+      "passed": 205,
+      "failed": 2,
+      "skipped": 0,
+      "success": false
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v3.json",
+      "sha256": "387b8fa0e84841275a9d2bfca8f4e045b94332e868378f43a52cd7871bd92caf",
+      "bytes": 112401,
+      "exitCode": 1,
+      "totalSuites": 3,
+      "passedSuites": 2,
+      "total": 208,
+      "passed": 207,
+      "failed": 1,
+      "skipped": 0,
+      "success": false
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-ledger-recheck-v4.json",
+      "sha256": "ba33f40134f460a6fedd1793607e4cfeba6a29ce52cf5be3624d429f39fe7767",
+      "bytes": 101107,
+      "exitCode": 0,
+      "totalSuites": 1,
+      "passedSuites": 1,
+      "total": 190,
+      "passed": 190,
+      "failed": 0,
+      "skipped": 0,
+      "success": true
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-final-v5.json",
+      "sha256": "fd70622d6bbf84db50a3414d1352861476247f50037cb4bf1f3ad04fab25e9b8",
+      "bytes": 246822,
+      "exitCode": 0,
+      "totalSuites": 9,
+      "passedSuites": 9,
+      "total": 478,
+      "passed": 478,
+      "failed": 0,
+      "skipped": 0,
+      "success": true
+    }
+  ],
+  "suites": [
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeContent/jobs.test.ts",
+      "total": 40,
+      "passed": 40,
+      "skipped": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+      "total": 193,
+      "passed": 193,
+      "skipped": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/compact-executable-policy.test.ts",
+      "total": 6,
+      "passed": 6,
+      "skipped": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+      "total": 45,
+      "passed": 45,
+      "skipped": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+      "total": 86,
+      "passed": 86,
+      "skipped": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-model-drift.test.ts",
+      "total": 57,
+      "passed": 57,
+      "skipped": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+      "total": 28,
+      "passed": 28,
+      "skipped": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/stages.test.ts",
+      "total": 11,
+      "passed": 11,
+      "skipped": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/profile-policy-selection.test.ts",
+      "total": 12,
+      "passed": 12,
+      "skipped": 0
+    }
+  ],
+  "receipts": [
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-equivalence-v1.log",
+      "sha256": "3abd8d9998df3f75224b96e9374e0239d7a965be4897f6b77c1cdab87275dbc0",
+      "bytes": 604
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-equivalence-v2.log",
+      "sha256": "3abd8d9998df3f75224b96e9374e0239d7a965be4897f6b77c1cdab87275dbc0",
+      "bytes": 604
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-equivalence.json",
+      "sha256": "689beb93fdeb47790fbf388c09fc5a1e0940232618a14938fe0783d2ba5185b1",
+      "bytes": 15912
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-equivalence.mjs",
+      "sha256": "0660ef4ab9faa7a363e5100c7c91038e1de7e0cc72a03267a8ae6624f149d136",
+      "bytes": 6789
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-eslint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-final-v5.json",
+      "sha256": "fd70622d6bbf84db50a3414d1352861476247f50037cb4bf1f3ad04fab25e9b8",
+      "bytes": 246822
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-final-v5.log",
+      "sha256": "e3edd558245ecad2b693e5d9f6d5aa3aeb0c08a72e0b1b1ca98224262f4b0d3d",
+      "bytes": 11413
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v1.json",
+      "sha256": "235e963dbc027dc9287c8583619ca5e17a9ee7cb56e4006e3f7fdf3319b6c499",
+      "bytes": 1245211
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v1.log",
+      "sha256": "7aa958d64b024da6b7e4fbad7b04c0e72632fc7593a53fe49f59886636dfbcd9",
+      "bytes": 282623
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v2.json",
+      "sha256": "a380cd28521a465e87e415d043e7336581ee93467cfa8716e7e19bc889d45c88",
+      "bytes": 114333
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v2.log",
+      "sha256": "8f874b621f9024fbb90bd13dfbf13d7eeb89811d7e99c392033305f9275d4cb9",
+      "bytes": 11510
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v3.json",
+      "sha256": "387b8fa0e84841275a9d2bfca8f4e045b94332e868378f43a52cd7871bd92caf",
+      "bytes": 112401
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v3.log",
+      "sha256": "2c5cf008d40ab34577acd814a30fedb91bd5d36273a06785ae61571e1799dbfe",
+      "bytes": 10382
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-ledger-recheck-v4.json",
+      "sha256": "ba33f40134f460a6fedd1793607e4cfeba6a29ce52cf5be3624d429f39fe7767",
+      "bytes": 101107
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-ledger-recheck-v4.log",
+      "sha256": "bb01a40eb16b8dc2554baf98e2268e787948b0fb053b63a43da73b44eb769759",
+      "bytes": 27107
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-npm-version.log",
+      "sha256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9",
+      "bytes": 7
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-pure-cost-v1.log",
+      "sha256": "71e3cbc9c6f1723ddc532e52d00bff1e7181288e181ef4969e78203be863b136",
+      "bytes": 329
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-pure-cost.json",
+      "sha256": "66c3facc96e881d2f192e7395782d957e7780d629617f006a394abc080854609",
+      "bytes": 3662
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-pure-cost.mjs",
+      "sha256": "d746e9d3992f663e5b96384f9b2c33d9b61fcfc4f77e113f93b100b0e955d3ca",
+      "bytes": 4377
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-root-types-v1.log",
+      "sha256": "507a10a8a4eaf9d5d79b05803948c06c29aca780f3ca70ada2e72e1afc101562",
+      "bytes": 874
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-root-types-v2.log",
+      "sha256": "71a1e4da0d2b2ce05c181a6ae64b0b7553c38c92a0cce6c7b80ad8525ebec46d",
+      "bytes": 3738
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-toolchain.log",
+      "sha256": "c642a0de246dcdc6c51318fe449646fc5067b981a8d09e9ccdb8141a5756339a",
+      "bytes": 9
+    }
+  ]
+}

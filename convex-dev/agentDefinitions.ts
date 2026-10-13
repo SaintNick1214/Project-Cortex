@@ -1,5 +1,6 @@
 /** Owned executable versions; the discovery registry never supplies execution authority. */
 import { ConvexError, v } from "convex/values";
+import { fullRootProvenanceFor, rootProvenanceEncodings, rootProvenanceEqual, rootProvenanceMatches } from "./runtimePolicySchema";
 import { z } from "zod";
 import { mutation } from "./_generated/server";
 import type { QueryCtx } from "./_generated/server";
@@ -80,10 +81,13 @@ async function narrowPolicies(ctx: Pick<QueryCtx, "db">, reference: RuntimeAutho
   const roots = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65);
   const root = roots[0]?.root;
   const manifest = root && lookupDeploymentManifest(root.manifestId, root.revision);
-  if (!manifest || !roots.length || roots.length > 64 || roots.some(row => row.revokedAt !== undefined || canonicalModelJson(row.root) !== canonicalModelJson(root))) denied("CAPABILITY_UNAVAILABLE");
-  if (root!.canonical !== canonicalModelJson(manifest) || root!.hash !== await semanticHash(root!.canonical)) denied();
+  if (!manifest || !roots.length || roots.length > 64) denied("CAPABILITY_UNAVAILABLE");
+  const manifestCanonical = canonicalModelJson(manifest);
+  const expected = rootProvenanceEncodings(fullRootProvenanceFor(manifest, manifestCanonical, await semanticHash(manifestCanonical)), canonicalModelJson);
+  if (roots.some(row => row.revokedAt !== undefined || !rootProvenanceEqual(canonicalModelJson(row.root), canonicalModelJson(root), expected))) denied("CAPABILITY_UNAVAILABLE");
+  if (!rootProvenanceMatches(canonicalModelJson(root), expected)) denied();
   const tenantRows = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "tenant").eq("tenantId", reference.tenantId).eq("active", true)).take(65);
-  if (tenantRows.length > 64 || tenantRows.some(row => row.revokedAt !== undefined || canonicalModelJson(row.root) !== canonicalModelJson(root))) denied();
+  if (tenantRows.length > 64 || tenantRows.some(row => row.revokedAt !== undefined || !rootProvenanceEqual(canonicalModelJson(row.root), canonicalModelJson(root), expected))) denied();
   const tenantPolicies = tenantRows.map(row => JSON.parse(row.canonical) as TrustedModelPolicyRecord);
   const keys = [...new Set(definition.policies.map(p => p.operationKey ?? "agent.respond"))];
   for (const key of keys) {

@@ -1,0 +1,279 @@
+(node:36415) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeContent/jobs.test.ts (12.759 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/compact-executable-policy.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/gateway-backend.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/execution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeIngestion/stages.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/profile-policy-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    12.8s | 40/40 passed | /tests/unit/runtimeContent/jobs.test.ts
+  ✅     2.6s | 193/193 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     2.1s | 86/86 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     1.6s | 28/28 passed | /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ✅     1.5s | 57/57 passed | /tests/unit/runtime/model-policy-model-drift.test.ts
+  ✅     1.5s | 45/45 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ✅     1.0s | 11/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+  ✅     0.3s | 12/12 passed | /tests/unit/runtime/profile-policy-selection.test.ts
+  ✅     0.3s | 6/6 passed | /tests/unit/runtime/compact-executable-policy.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.28s ( 1.2%) - the Agent Workflow commits canonical answer and ingestion while its durable title Workflow remains slow
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 2. [32m✓[0m    0.28s ( 1.1%) - completed automatic title rejects cancel and preserves the canonical answer and liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 3. [32m✓[0m    0.26s ( 1.1%) - completed automatic title rejects wrong-parent and preserves the canonical answer and liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 4. [32m✓[0m    0.26s ( 1.1%) - automatic conversation title binds a genuine active parent model and shares its existing financial account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 5. [32m✓[0m    0.26s ( 1.1%) - completed parent retains title replay/unknown liability and refuses all other admission identities
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 6. [32m✓[0m    0.24s ( 1.0%) - completed automatic title rejects revocation and preserves the canonical answer and liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 7. [32m✓[0m    0.23s ( 1.0%) - completed automatic title rejects edit and preserves the canonical answer and liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 8. [32m✓[0m    0.23s ( 1.0%) - completed automatic title rejects definition and preserves the canonical answer and liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 9. [32m✓[0m    0.22s ( 0.9%) - completed automatic title rejects wrong-run and preserves the canonical answer and liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+10. [32m✓[0m    0.20s ( 0.8%) - completed automatic title rejects lease and preserves the canonical answer and liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+11. [32m✓[0m    0.19s ( 0.8%) - ready derived content rechecks consumed artifact metadata independently of its own output version
+    /tests/unit/runtimeContent/jobs.test.ts
+
+12. [32m✓[0m    0.18s ( 0.8%) - completed automatic title rejects tombstone and preserves the canonical answer and liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+13. [32m✓[0m    0.16s ( 0.6%) - suggestions remain unapplied until one exact user choice; replay never pays or edits twice
+    /tests/unit/runtimeContent/jobs.test.ts
+
+14. [32m✓[0m    0.15s ( 0.6%) - updates an exact retained artifact version while preserving the original history and title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+15. [32m✓[0m    0.14s ( 0.6%) - creates text with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+16. [32m✓[0m    0.13s ( 0.6%) - completed title rechecks every native boundary after current revocation without changing the completed answer
+    /tests/unit/runtimeContent/jobs.test.ts
+
+17. [32m✓[0m    0.13s ( 0.5%) - title failure after dispatch retains unknown liability without rolling back final text or paying again
+    /tests/unit/runtimeContent/jobs.test.ts
+
+18. [32m✓[0m    0.10s ( 0.4%) - recovers two confirmed durable drafts exactly once without another native attempt
+    /tests/unit/runtimeContent/jobs.test.ts
+
+19. [32m✓[0m    0.10s ( 0.4%) - creates code with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+20. [32m✓[0m    0.09s ( 0.4%) - creates sheet with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 3.84s (16.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      24.03s
+  Test suites:        9
+  Individual tests:   454
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 9
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 9 passed, 9 total
+Tests:       478 passed, 478 total
+Snapshots:   0 total
+Time:        24.034 s
+Ran all test suites within paths "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/profile-policy-selection.test.ts", "tests/unit/runtime/compact-executable-policy.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/runtimeAgent/checkpoint-composition.test.ts", "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeContent/jobs.test.ts", "tests/unit/runtimeIngestion/stages.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-final-v5.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

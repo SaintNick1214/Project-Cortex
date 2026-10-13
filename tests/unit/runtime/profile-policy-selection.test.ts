@@ -93,3 +93,26 @@ describe("exact compiled embedding qualification selectors", () => {
     expect(f.db.writes).toBe(before);
   });
 });
+
+it.each(["full", "compact"] as const)("%s provenance retains fresh native profile selection and the original UNKNOWN account", async encoding => {
+  const f = await fixture(), selection = currentMockRootSelection(), manifest = bootstrap.lookupDeploymentManifest(selection.manifestId, selection.expectedRevision)!;
+  const canonical = canonicalModelJson(manifest), { semanticHash } = await import("../../../src/domain/profile");
+  const root = { manifestId: manifest.manifestId, revision: manifest.revision, canonical, hash: await semanticHash(canonical),
+    artifactRevision: manifest.artifactRevision, evidenceHash: manifest.evidenceHash, acceptanceHash: manifest.acceptanceHash };
+  const { canonical: _canonical, ...fields } = root;
+  const stored = encoding === "full" ? root : { encoding: "compiled-root-v1", ...fields };
+  for (const table of ["runtimeModelPolicies", "runtimeModelQualifications"]) for (const row of f.db.table(table)) row.root = stored;
+  const binding = await f.call<{ runBudgetId: string }>(ledger.ensureBudget, { reference: f.reference, operationKey: "embedding.query",
+    requestId: "encoding-native-profile", requestCanonical: canonicalModelJson({ text: "fixture" }) });
+  expect(await f.call(ledger.embeddingProfile, { reference: f.reference, operationKey: "embedding.query", runBudgetId: binding.runBudgetId })).toEqual(small);
+  const tenant = f.db.table("runtimeBudgetAccounts").find(row => row.kind === "tenant")!;
+  tenant.uncertainUnits = 100000; const before = JSON.stringify(f.db.table("runtimeBudgetAccounts"));
+  await f.call(ledger.provisionTenantPolicy, { reference: f.admin, policyCanonical: canonicalModelJson(f.policy()) });
+  expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(before);
+  expect(await f.call(ledger.embeddingProfile, { reference: f.reference, operationKey: "embedding.query", runBudgetId: binding.runBudgetId })).toEqual(large);
+  expect(f.db.table("runtimeBudgetAccounts").filter(row => row.kind === "tenant")).toHaveLength(1); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+  const snapshot = JSON.stringify(f.db.table("runtimeBudgetAccounts"));
+  f.grant.revokedAt = Date.now();
+  await expect(f.call(ledger.provisionTenantPolicy, { reference: f.admin, policyCanonical: canonicalModelJson({ ...f.policy(), version: 2 }) })).rejects.toThrow();
+  expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(snapshot);
+});

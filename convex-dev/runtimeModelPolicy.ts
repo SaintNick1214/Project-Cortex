@@ -17,7 +17,8 @@ import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonical
 import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord, TrustedModelPolicyContext } from "../src/domain/model-policy";
 import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
-import { modelOperationKey, modelSource, visibilityFields } from "./runtimePolicySchema";
+import { modelOperationKey, modelSource, visibilityFields, fullRootProvenanceFor, compactRootProvenance, rootProvenanceEncodings, rootProvenanceEqual, rootProvenanceMatches } from "./runtimePolicySchema";
+import type { RootProvenanceEncodings } from "./runtimePolicySchema";
 import { readCurrentExecutableDefinition } from "./agentDefinitions";
 import { AGENT_TOOL_REGISTRY_VERSION, AGENT_TOOL_REGISTRY_VERSION_V2, agentToolCatalog, agentToolsInputBoundV2, agentToolsInputBound } from "../src/domain/agent-tools";
 import { privateFrameVideoInputBound } from "../src/domain/media-input";
@@ -36,6 +37,7 @@ type Account = Doc<"runtimeBudgetAccounts">;
 type Operation = Doc<"runtimeModelOperations">;
 type Attempt = Doc<"runtimeModelAttempts">;
 type Root = Account["root"];
+type FullRoot = Extract<Root, { canonical: string }>;
 type Source = Infer<typeof modelSource>;
 export const MODEL_LEDGER_STORAGE_LIMITS = Object.freeze({ canonicalBytes: 180_000, privateResultBytes: 60_000, embeddingValuesPerCall: 1 });
 const MAX_CANONICAL_BYTES = MODEL_LEDGER_STORAGE_LIMITS.canonicalBytes;
@@ -176,28 +178,44 @@ function validManifest(manifest: DeploymentPolicyManifest | undefined): asserts 
     } else if (proof.toolContract || qualification.capabilities.includes("tools")) fail("CAPABILITY_UNAVAILABLE");
   }
 }
-async function provenance(manifest: DeploymentPolicyManifest): Promise<Root> {
+async function provenance(manifest: DeploymentPolicyManifest): Promise<FullRoot> {
   const encoded = canonical(manifest);
-  return { manifestId: manifest.manifestId, revision: manifest.revision, canonical: encoded, hash: await semanticHash(encoded),
-    artifactRevision: manifest.artifactRevision, evidenceHash: manifest.evidenceHash, acceptanceHash: manifest.acceptanceHash };
+  return fullRootProvenanceFor(manifest, encoded, await semanticHash(encoded));
+}
+function sameRootEncoded(left: Root, right: Root, expected: RootProvenanceEncodings): boolean {
+  return rootProvenanceEqual(canonical(left), canonical(right), expected);
+}
+/** Representation differences cannot replace a financial/provenance identity. */
+async function sameRoot(left: Root, right: Root): Promise<boolean> {
+  // Preserve original malformed-canonical failure ordering before registry lookup.
+  const leftEncoded = canonical(left), rightEncoded = canonical(right);
+  const manifest = lookupDeploymentManifest(right.manifestId, right.revision);
+  if (!manifest || !isTrustedDeploymentManifest(manifest)) return false;
+  const expected = rootProvenanceEncodings(await provenance(manifest), canonical);
+  return rootProvenanceMatches(leftEncoded, expected) && rootProvenanceMatches(rightEncoded, expected);
+}
+async function verifiedRoot(root: Root) {
+  const manifest = lookupDeploymentManifest(root.manifestId, root.revision); validManifest(manifest);
+  const encodings = rootProvenanceEncodings(await provenance(manifest), canonical);
+  if (!rootProvenanceMatches(canonical(root), encodings)) fail("POLICY_DENIED");
+  return { manifest, encodings };
 }
 async function trustedRoot(root: Root): Promise<DeploymentPolicyManifest> {
-  const manifest = lookupDeploymentManifest(root.manifestId, root.revision); validManifest(manifest);
-  if (canonical(await provenance(manifest)) !== canonical(root)) fail("POLICY_DENIED");
-  return manifest;
+  return (await verifiedRoot(root)).manifest;
 }
-async function activeRoot(ctx: ReadCtx): Promise<{ manifest: DeploymentPolicyManifest; root: Root }> {
+
+async function activeRoot(ctx: ReadCtx): Promise<{ manifest: DeploymentPolicyManifest; root: Root; encodings: RootProvenanceEncodings }> {
   const rows = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65);
   if (!rows.length || rows.length > 64) fail("CAPABILITY_UNAVAILABLE");
   const root = rows[0]!.root;
-  const manifest = await trustedRoot(root);
-  if (rows.length !== manifest.policies.filter((p) => p.scope === "deployment").length || rows.some((row) => row.revokedAt !== undefined || canonical(row.root) !== canonical(root)
+  const { manifest, encodings } = await verifiedRoot(root);
+  if (rows.length !== manifest.policies.filter((p) => p.scope === "deployment").length || rows.some((row) => row.revokedAt !== undefined || !sameRootEncoded(row.root, root, encodings)
     || !manifest.policies.some((policy) => policy.policyId === row.policyId && policy.version === row.version && canonical(policy) === row.canonical))) fail("POLICY_DENIED");
   for (const qualification of manifest.qualifications) {
     const row = single(await ctx.db.query("runtimeModelQualifications").withIndex("by_receipt", (q) => q.eq("receiptId", qualification.receiptId).eq("version", root.revision)).take(2));
-    if (!row || !row.active || row.revokedAt !== undefined || row.canonical !== canonical(qualification) || canonical(row.root) !== canonical(root)) fail("CAPABILITY_UNAVAILABLE");
+    if (!row || !row.active || row.revokedAt !== undefined || row.canonical !== canonical(qualification) || !sameRootEncoded(row.root, root, encodings)) fail("CAPABILITY_UNAVAILABLE");
   }
-  return { manifest, root };
+  return { manifest, root, encodings };
 }
 function evidence(manifest: DeploymentPolicyManifest, snapshot: ModelPolicySnapshotV1): QualifiedDispatchEvidence {
   const proof = single(manifest.dispatchEvidence.filter((entry) => entry.receiptId === snapshot.qualificationReceiptId));
@@ -244,14 +262,14 @@ export async function readTrustedAgentPolicyVersion(ctx: ReadCtx, reference: Run
   const current = await readCurrentExecutableDefinition(ctx, reference, agent, { capability: "run", operationKey: "agent.respond" });
   return { tenantId: current.tenantId, agent: current.agent, policies: current.policies };
 }
-async function policies(ctx: ReadCtx, manifest: DeploymentPolicyManifest, root: Root, reference: RuntimeAuthorityReference, key: ModelOperationKey, agent?: { agentId: string; version: number }): Promise<TrustedModelPolicyRecord[]> {
+async function policies(ctx: ReadCtx, manifest: DeploymentPolicyManifest, root: Root, encodings: RootProvenanceEncodings, reference: RuntimeAuthorityReference, key: ModelOperationKey, agent?: { agentId: string; version: number }): Promise<TrustedModelPolicyRecord[]> {
   const rows = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "tenant").eq("tenantId", reference.tenantId).eq("active", true)).take(65);
   if (rows.length > 64) fail("POLICY_DENIED");
   const agentPolicies = agent ? (await readTrustedAgentPolicyVersion(ctx, reference, agent)).policies : [];
   const selected: TrustedModelPolicyRecord[] = [...manifest.policies.filter((policy) => policy.scope === "deployment" && (!policy.operationKey || policy.operationKey === key)),
     ...agentPolicies.filter((policy) => !policy.operationKey || policy.operationKey === key)];
   for (const row of rows) {
-    if (row.revokedAt !== undefined || canonical(row.root) !== canonical(root) || !row.actorReference) fail("POLICY_DENIED");
+    if (row.revokedAt !== undefined || !sameRootEncoded(row.root, root, encodings) || !row.actorReference) fail("POLICY_DENIED");
     await recheckAuthority(ctx, row.actorReference, { capability: "admin", tenantId: reference.tenantId, memorySpaceId: row.actorReference.memorySpaceId });
     const parsed = tenantPolicySchema.safeParse(decode(row.canonical));
     if (!parsed.success || parsed.data.policyId !== row.policyId || parsed.data.version !== row.version || parsed.data.tenantId !== reference.tenantId) fail("POLICY_DENIED");
@@ -269,8 +287,8 @@ function resolutionContext(reference: RuntimeAuthorityReference, key: ModelOpera
     ...(parentOperationId ? { parentOperationId } : {}) };
 }
 async function resolveCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference, key: ModelOperationKey, runBudgetId: string, source?: Source, parentOperationId?: string, agent?: { agentId: string; version: number }) {
-  const { manifest, root } = await activeRoot(ctx);
-  const records = await policies(ctx, manifest, root, reference, key, agent);
+  const { manifest, root, encodings } = await activeRoot(ctx);
+  const records = await policies(ctx, manifest, root, encodings, reference, key, agent);
   const context = resolutionContext(reference, key, runBudgetId, source, parentOperationId, agent);
   context.authorizedOverrides = records.flatMap((record) => record.override ? [{ ...record.override, policyId: record.policyId, policyVersion: record.version }] : []);
   const resolution = { context, policies: records, qualifications: manifest.qualifications };
@@ -357,7 +375,7 @@ export async function bindTrustedBudget(ctx: WriteCtx, args: BindBudgetArgs): Pr
   const end = add(start, resolved.manifest.budgetWindowMs);
   const tenantScope = canonical(["tenant", args.reference.tenantId]);
   let tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) => q.eq("scopeKey", tenantScope).eq("current", true)).take(2));
-  if (tenant && (tenant.windowEnd <= now || canonical(tenant.root) !== canonical(resolved.root))) {
+  if (tenant && (tenant.windowEnd <= now || !(await sameRoot(tenant.root, resolved.root)))) {
     balanced(tenant);
     if (tenant.reservedUnits || tenant.uncertainUnits || tenant.activeConcurrency || tenant.overrun) fail("BUDGET_EXCEEDED");
     // Policy replacement within a window cannot reset money spent.
@@ -406,11 +424,15 @@ export const ensureBudget = internalMutation({ args: bindingArgs, handler: async
 export const installDeploymentPolicy = internalMutation({ args: { manifestId: v.string(), expectedRevision: v.number() }, handler: async (ctx, args) => {
   text(args.manifestId); integer(args.expectedRevision, 1);
   const manifest = lookupDeploymentManifest(args.manifestId, args.expectedRevision); validManifest(manifest);
-  const root = await provenance(manifest);
+  const full = await provenance(manifest), encodings = rootProvenanceEncodings(full, canonical);
+  let root: Root = compactRootProvenance(full);
   const old = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65);
   if (old.length > 64) fail("POLICY_DENIED");
   const previous = old[0]?.root;
-  if (previous && canonical(previous) !== canonical(root) && args.expectedRevision <= previous.revision) fail("IDEMPOTENCY_CONFLICT");
+  const samePrevious = previous ? sameRootEncoded(previous, root, encodings) : false;
+  if (previous && !samePrevious && args.expectedRevision <= previous.revision) fail("IDEMPOTENCY_CONFLICT");
+  // A validated same-revision installation retains its exact legacy/compact bytes.
+  if (previous && samePrevious) root = previous;
   // Validate complete resolver contracts before writes, including every qualification's feature limits.
   const proofScope = { tenantId: "bootstrap-validation", memorySpaceId: "bootstrap-validation", principalId: "bootstrap-validation", principalVersion: 1,
     membershipId: "bootstrap-validation", membershipVersion: 1, grantId: "bootstrap-validation", grantVersion: 1, tenantEpoch: 1, memorySpaceEpoch: 1 };
@@ -418,11 +440,11 @@ export const installDeploymentPolicy = internalMutation({ args: { manifestId: v.
     const key: ModelOperationKey = qualification.nativeInterface === "embedding" ? "embedding.query" : "agent.respond";
     resolveModelPolicy({ context: { scope: proofScope, operationKey: key, runBudgetId: "bootstrap-validation", authorizedOverrides: [] }, policies: manifest.policies.filter((p) => p.scope === "deployment" && (!p.operationKey || p.operationKey === key)), qualifications: manifest.qualifications });
   }
-  for (const row of old) if (canonical(row.root) !== canonical(root)) await ctx.db.patch("runtimeModelPolicies", row._id, { active: false });
+  for (const row of old) if (!sameRootEncoded(row.root, root, encodings)) await ctx.db.patch("runtimeModelPolicies", row._id, { active: false });
   for (const policy of manifest.policies) {
     const existing = single(await ctx.db.query("runtimeModelPolicies").withIndex("by_policy_version", (q) => q.eq("policyId", policy.policyId).eq("version", policy.version)).take(2));
     if (existing) {
-      if (existing.canonical !== canonical(policy) || canonical(existing.root) !== canonical(root) || existing.revokedAt !== undefined) fail("IDEMPOTENCY_CONFLICT");
+      if (existing.canonical !== canonical(policy) || !sameRootEncoded(existing.root, root, encodings) || existing.revokedAt !== undefined) fail("IDEMPOTENCY_CONFLICT");
       if (!existing.active) await ctx.db.patch("runtimeModelPolicies", existing._id, { active: true });
     } else await ctx.db.insert("runtimeModelPolicies", { policyId: policy.policyId, version: policy.version, scope: policy.scope === "agent" ? "agent" : "deployment",
       ...(policy.scope === "agent" ? { tenantId: policy.tenantId!, agentId: policy.agentId!, agentVersion: policy.agentVersion! } : {}),
@@ -431,7 +453,7 @@ export const installDeploymentPolicy = internalMutation({ args: { manifestId: v.
   for (const qualification of manifest.qualifications) {
     const existing = single(await ctx.db.query("runtimeModelQualifications").withIndex("by_receipt", (q) => q.eq("receiptId", qualification.receiptId).eq("version", root.revision)).take(2));
     if (existing) {
-      if (existing.canonical !== canonical(qualification) || canonical(existing.root) !== canonical(root) || existing.revokedAt !== undefined) fail("IDEMPOTENCY_CONFLICT");
+      if (existing.canonical !== canonical(qualification) || !sameRootEncoded(existing.root, root, encodings) || existing.revokedAt !== undefined) fail("IDEMPOTENCY_CONFLICT");
     } else await ctx.db.insert("runtimeModelQualifications", { receiptId: qualification.receiptId, version: root.revision, canonical: canonical(qualification), root, active: true, createdAt: Date.now() });
   }
   return { manifestId: manifest.manifestId, revision: manifest.revision };
@@ -666,7 +688,7 @@ export async function admitHandler(ctx: MutationCtx, args: Infer<typeof _admissi
     }
   }
   const tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) => q.eq("scopeKey", canonical(["tenant", args.reference.tenantId])).eq("current", true)).take(2));
-  if (!tenant || tenant.windowId !== run.windowId || canonical(tenant.root) !== canonical(root)) fail("BUDGET_EXCEEDED");
+  if (!tenant || tenant.windowId !== run.windowId || !(await sameRoot(tenant.root, root))) fail("BUDGET_EXCEEDED");
   const ceiling = snapshot.costBound.maximumCostUnits;
   capacity(tenant, ceiling, effectiveSnapshot.limits.tenantBudgetUnits, effectiveSnapshot.limits.concurrency);
   capacity(run, ceiling, effectiveSnapshot.limits.runBudgetUnits, effectiveSnapshot.limits.concurrency);

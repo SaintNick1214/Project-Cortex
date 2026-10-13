@@ -1,0 +1,18 @@
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(71,70): error TS18047: 'row' is possibly 'null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(71,92): error TS18047: 'row' is possibly 'null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(72,24): error TS18047: 'row' is possibly 'null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(72,61): error TS18047: 'row' is possibly 'null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(73,11): error TS18047: 'row' is possibly 'null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(73,56): error TS18047: 'row' is possibly 'null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(74,49): error TS18047: 'row' is possibly 'null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(74,49): error TS18048: 'row.lineage' is possibly 'undefined'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(75,50): error TS18047: 'row' is possibly 'null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(76,74): error TS18047: 'row' is possibly 'null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(77,15): error TS2339: Property '_creationTime' does not exist on type '{ _id: Id<"facts">; _creationTime: number; object?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; subject?: string | undefined; lineage?: { ...; } | ... 2 more ... | undefined; ... 31 more ...; sourceType: "fact-extraction" | ... 4 more ... | "a2a"; } | null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(77,45): error TS2339: Property 'tombstonedAt' does not exist on type '{ _id: Id<"facts">; _creationTime: number; object?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; subject?: string | undefined; lineage?: { ...; } | ... 2 more ... | undefined; ... 31 more ...; sourceType: "fact-extraction" | ... 4 more ... | "a2a"; } | null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(77,71): error TS2339: Property 'processingReceiptId' does not exist on type '{ _id: Id<"facts">; _creationTime: number; object?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; subject?: string | undefined; lineage?: { ...; } | ... 2 more ... | undefined; ... 31 more ...; sourceType: "fact-extraction" | ... 4 more ... | "a2a"; } | null'.
+tests/unit/runtimeMemory/vector-delivery-batch.test.ts(100,52): error TS2345: Argument of type '(ref: FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">, args: any) => Promise<...>' is not assignable to parameter of type '(...args: [query: FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">, args?: EmptyObject | undefined, options?: AdvancedRunQueryOptions | undefined] | [query: ...]) => Promise<...>'.
+  Types of parameters 'ref' and 'args' are incompatible.
+    Type '[query: FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">, args?: EmptyObject | undefined, options?: AdvancedRunQueryOptions | undefined] | [query: ...]' is not assignable to type '[ref: FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">, args: any]'.
+      Type '[query: FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">, args?: EmptyObject | undefined, options?: AdvancedRunQueryOptions | undefined]' is not assignable to type '[ref: FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">, args: any]'.
+        Target requires 2 element(s) but source may have fewer.

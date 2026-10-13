@@ -365,10 +365,23 @@ export class ConvexMemoryRepository {
       const { _creationTime: _creationTime, tombstonedAt: _tombstone, processingReceiptId: _receipt, ...payload } = row;
       if (await semanticHash(canonicalMemoryValue(payload)) !== expected.payloadHash) memoryError("STALE_SOURCE", "Consumed recall fact changed before delivery");
     }
+    // This invocation runs in one finalDelivery mutation snapshot. Retain vector
+    // order and per-resource authority reads; only identical profile/budget
+    // initialization is shared, after the original canonical row lookup.
+    const checkedProfiles = new Set<string>();
     for (const expected of bindings.vectors) {
       const row = await this.ctx.db.query("runtimeMemoryVectors").withIndex("by_scope_vector", q =>
         q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("vectorId", expected.vectorId)).unique();
-      const matches = row ? await this.hydrateVectors([{ id: row._id, score: 0 }], expected.profile, expected.runBudgetId, deadlines) : [];
+      let matches: VectorMatch[] = [];
+      if (row) {
+        const profileKey = canonicalMemoryValue([expected.profile, expected.runBudgetId]);
+        if (!checkedProfiles.has(profileKey)) {
+          assertProfileMatches(expected.profile, await this.selectedProfile("embedding.query", expected.runBudgetId));
+          checkedProfiles.add(profileKey);
+        }
+        const authority = await this.authority(undefined, "read");
+        matches = await this.hydrateVectorCandidates([{ id: row._id, score: 0 }], expected.profile, authority, deadlines);
+      }
       const match = matches[0];
       if (!match || await semanticHash(canonicalMemoryValue(match.vector)) !== expected.payloadHash
         || await semanticHash(canonicalMemoryValue(match.chunk)) !== expected.chunkHash) memoryError("STALE_SOURCE", "Consumed recall vector changed before delivery");
@@ -381,6 +394,11 @@ export class ConvexMemoryRepository {
     if (hits.length > 100) memoryError("INVALID_INPUT", "Too many vector candidates");
     assertProfileMatches(profile, await this.selectedProfile("embedding.query", runBudgetId));
     const authority = await this.authority(undefined, "read");
+    return this.hydrateVectorCandidates(hits, profile, authority, deadlines);
+  }
+  /** Callers validate current profile/budget and read authority in their own snapshot. */
+  private async hydrateVectorCandidates(hits: { id: Id<"runtimeMemoryVectors">; score: number }[], profile: EmbeddingProfile,
+    authority: RuntimeAuthority, deadlines?: number[]): Promise<VectorMatch[]> {
     const matches: VectorMatch[] = [];
     for (const hit of hits) {
       const row = await this.ctx.db.get("runtimeMemoryVectors", hit.id);

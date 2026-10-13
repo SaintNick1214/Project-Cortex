@@ -1211,3 +1211,176 @@ describe("Agent budget admission versus charge-only terminal capture", () => {
     const settledWrites = f.db.writes; expect(await f.invoke("captureTerminalEvidence", args)).toEqual(capture); expect(f.db.writes).toBe(settledWrites);
   });
 });
+
+/** Both stored encodings must normalize to the same original compiled provenance. */
+describe("compact compiled root provenance — actual original ledger handlers", () => {
+  type Encoding = "full" | "compact";
+  async function fullRoot() {
+    const canonical = canonicalModelJson(root);
+    return { manifestId: root.manifestId, revision: root.revision, canonical, hash: await semanticHash(canonical),
+      artifactRevision: root.artifactRevision, evidenceHash: root.evidenceHash, acceptanceHash: root.acceptanceHash };
+  }
+  async function representation(f: ReturnType<typeof fixture>, encoding: Encoding) {
+    const full = await fullRoot(), { canonical: _canonical, ...fields } = full;
+    const value = encoding === "full" ? full : { encoding: "compiled-root-v1", ...fields };
+    for (const table of ["runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts"])
+      for (const row of f.db.table(table)) row.root = JSON.parse(JSON.stringify(value));
+    return value;
+  }
+  async function installed(encoding: Encoding) { const f = fixture(); await f.install(); await representation(f, encoding); return f; }
+  function money(f: ReturnType<typeof fixture>) {
+    return f.db.table("runtimeBudgetAccounts").map(({ root: _root, ...row }) => row);
+  }
+  async function noEffects(f: ReturnType<typeof fixture>, action: () => Promise<unknown>) {
+    const snapshot = () => canonicalModelJson({ rows: [...f.db.rows].filter(([, rows]) => rows.length), writes: f.db.writes });
+    const before = snapshot(); await expect(action()).rejects.toThrow(); expect(snapshot()).toBe(before);
+  }
+  it("fresh install stores the exact compact provenance, lowers repeated bytes, and retains canonical controls and bounded indexes", async () => {
+    const f = fixture(); await f.install(); const full = await fullRoot();
+    const roots = [...f.db.table("runtimeModelPolicies"), ...f.db.table("runtimeModelQualifications")].map(row => row.root as Record<string, unknown>);
+    expect(roots).toHaveLength(2); expect(roots.every(value => value.encoding === "compiled-root-v1" && !Object.hasOwn(value, "canonical"))).toBe(true);
+    expect(roots[0]).toEqual({ encoding: "compiled-root-v1", manifestId: full.manifestId, revision: full.revision, hash: full.hash,
+      artifactRevision: full.artifactRevision, evidenceHash: full.evidenceHash, acceptanceHash: full.acceptanceHash });
+    expect(new TextEncoder().encode(canonicalModelJson(roots[0])).length).toBeLessThan(new TextEncoder().encode(canonicalModelJson(full)).length);
+    expect(f.db.table("runtimeModelPolicies")[0].canonical).toBe(canonicalModelJson(root.policies[0]));
+    expect(f.db.table("runtimeModelQualifications")[0].canonical).toBe(canonicalModelJson(root.qualifications[0]));
+    const binding = await f.bind(); expect(f.account("run").root).toEqual(roots[0]); expect(f.account("tenant").root).toEqual(roots[0]);
+    expect(binding).toEqual(await f.bind()); expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(2);
+  });
+  it("legacy full same-revision reinstall retains every original root byte, account window and liability", async () => {
+    const f = await installed("full"), binding = await f.bind(), admitted = await f.admit(binding); await f.checkpoint(admitted);
+    await f.invoke("recover", { reference: f.reference, attemptId: admitted.attemptId });
+    const before = canonicalModelJson({ rows: [...f.db.rows], writes: f.db.writes }); await f.install();
+    expect(canonicalModelJson({ rows: [...f.db.rows], writes: f.db.writes })).toBe(before);
+    const next = await f.bind("next-original-window"); expect(next.runBudgetId).not.toBe(binding.runBudgetId);
+    expect(f.db.table("runtimeBudgetAccounts").filter(row => row.kind === "tenant")).toHaveLength(1);
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, activeConcurrency: 1 });
+    expect(Object.hasOwn(f.account("run").root, "canonical")).toBe(true);
+  });
+  it("full and compact handlers have identical resolve/admit/permit/visibility/settlement/replay outputs and counters", async () => {
+    const outcomes = [];
+    for (const encoding of ["full", "compact"] as const) {
+      const f = await installed(encoding), binding = await f.bind();
+      const resolution = await f.invoke("resolve", { reference: f.reference, operationKey: "agent.respond", runBudgetId: binding.runBudgetId });
+      const admitted = await f.admit(binding), permit = await f.checkpoint(admitted);
+      const duplicatePermit = await f.checkpoint(admitted);
+      const visible = await f.invoke("markVisible", { reference: f.reference, attemptId: admitted.attemptId,
+        outputVisible: true, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false });
+      const settled = await f.settle(admitted), replay = await f.admit(binding); const before = f.db.writes; await f.settle(admitted); expect(f.db.writes).toBe(before);
+      expect(f.account("tenant")).toMatchObject({ settledUnits: 40, uncertainUnits: 0, reservedUnits: 0, activeConcurrency: 0 });
+      expect(f.db.table("runtimeModelOperations")).toHaveLength(1); expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+      outcomes.push({ binding, resolution, admitted, permit, duplicatePermit, visible, settled, replay, money: money(f), attempts: f.db.table("runtimeModelAttempts") });
+    }
+    expect(outcomes[0]).toEqual(outcomes[1]);
+  });
+  it.each(["full", "compact"] as const)("%s preserves UNKNOWN liability, released terminal slots, cancellation and forbidden fallback", async encoding => {
+    const f = await installed(encoding), binding = await f.bind(), a = await f.admit(binding); await f.checkpoint(a);
+    const receipt = JSON.parse(f.receipt(a)) as Record<string, unknown>; delete receipt.aggregateCostUsd; receipt.costSource = "unavailable";
+    await f.invoke("settle", { reference: f.reference, attemptId: a.attemptId, receiptCanonical: canonicalModelJson(receipt) });
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, reservedUnits: 0, activeConcurrency: 0 });
+    expect(await f.admit(binding)).toMatchObject({ status: "uncertain", replayAllowed: false });
+    const oldMoney = canonicalModelJson(money(f)); await f.install(); expect(canonicalModelJson(money(f))).toBe(oldMoney);
+    await f.invoke("cancelBudget", { reference: f.reference, runBudgetId: binding.runBudgetId });
+    await noEffects(f, () => f.admit(binding, 1));
+    await noEffects(f, () => f.invoke("checkFallback", { reference: f.reference, attemptId: a.attemptId, candidateModelId: "unqualified/model" }));
+    expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+  });
+  it("mixed exact roots use explicit compiled equality without retiring/resetting the financial window", async () => {
+    const f = await installed("full"); const full = await fullRoot(), { canonical: _canonical, ...fields } = full;
+    const compact = { encoding: "compiled-root-v1" as const, ...fields };
+    f.db.table("runtimeModelQualifications")[0].root = compact;
+    const first = await f.bind(), a = await f.admit(first); await f.checkpoint(a); await f.invoke("recover", { reference: f.reference, attemptId: a.attemptId });
+    f.account("tenant").root = compact; const original = canonicalModelJson(f.account("tenant"));
+    const second = await f.bind("mixed-representations"); expect(second.runBudgetId).not.toBe(first.runBudgetId);
+    expect(canonicalModelJson(f.account("tenant"))).toBe(original); expect(f.db.table("runtimeBudgetAccounts").filter(row => row.kind === "tenant")).toHaveLength(1);
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, activeConcurrency: 1 });
+    await f.install(); expect(f.db.table("runtimeModelPolicies")[0].root).toEqual(full); expect(f.db.table("runtimeModelQualifications")[0].root).toEqual(compact);
+  });
+  it.each(["encoding", "extra", "canonical", "hash", "artifactRevision", "evidenceHash", "acceptanceHash", "manifestId", "revision"])(
+    "compact %s inconsistency is refused before new model effects", async field => {
+      const f = await installed("compact"), b = await f.bind(); const stored = f.db.table("runtimeModelPolicies")[0].root as Record<string, unknown>;
+      if (field === "encoding") stored.encoding = "compiled-root-v2";
+      else if (field === "extra") stored.callerProof = "untrusted";
+      else if (field === "canonical") stored.canonical = canonicalModelJson(root);
+      else if (field === "revision") stored.revision = 2;
+      else stored[field] = "mismatched";
+      await noEffects(f, () => f.admit(b)); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+    });
+  it.each(["full", "compact"] as const)("%s unchanged visibility still denies current revocation and expired selected evidence", async encoding => {
+    const f = await installed(encoding), b = await f.bind(), a = await f.admit(b); await f.checkpoint(a);
+    const flags = { reference: f.reference, attemptId: a.attemptId, outputVisible: true, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false };
+    await f.invoke("markVisible", flags); f.grant.revokedAt = clock; await noEffects(f, () => f.invoke("markVisible", flags));
+    delete f.grant.revokedAt; jest.spyOn(Date, "now").mockReturnValue(root.dispatchEvidence[0]!.expiresAt);
+    await noEffects(f, () => f.invoke("markVisible", flags)); expect(f.attempt(a.attemptId).outputVisible).toBe(true);
+  });
+  it.each(["qualification-root", "qualification-canonical", "qualification-revoked", "qualification-inactive", "qualification-duplicate", "policy-canonical", "policy-revoked", "policy-duplicate"])(
+    "fresh indexed reads preserve the original %s denial", async fault => {
+      const f = await installed("compact"), b = await f.bind(), q = f.db.table("runtimeModelQualifications")[0], p = f.db.table("runtimeModelPolicies")[0];
+      if (fault === "qualification-root") (q.root as Record<string, unknown>).hash = "b".repeat(64);
+      if (fault === "qualification-canonical") q.canonical = "{}";
+      if (fault === "qualification-revoked") q.revokedAt = clock;
+      if (fault === "qualification-inactive") q.active = false;
+      if (fault === "qualification-duplicate") f.db.seed("runtimeModelQualifications", { ...q, _id: "runtimeModelQualifications:duplicate" });
+      if (fault === "policy-canonical") p.canonical = "{}";
+      if (fault === "policy-revoked") p.revokedAt = clock;
+      if (fault === "policy-duplicate") f.db.seed("runtimeModelPolicies", { ...p, _id: "runtimeModelPolicies:duplicate" });
+      await noEffects(f, () => f.admit(b)); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+    });
+  it.each(["full", "compact"] as const)("%s account corruption fails the original permit proof without refunding reservation", async encoding => {
+    const f = await installed(encoding), b = await f.bind(), a = await f.admit(b); (f.account("run").root as Record<string, unknown>).hash = "b".repeat(64);
+    await noEffects(f, () => f.checkpoint(a)); expect(f.attempt(a.attemptId).checkpointAt).toBeUndefined();
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 100, activeConcurrency: 1 });
+  });
+  it.each(["policy-write", "qualification-write"])("partial compact %s rolls back on the actual install storage fault port", async fault => {
+    const f = fixture(), before = JSON.parse(JSON.stringify([...f.db.rows])) as [string, ReturnType<typeof f.db.table>][];
+    const writes = f.db.writes, sequence = f.db.sequence, insert = f.db.insert.bind(f.db); let reached = false;
+    f.db.insert = async (table, value) => { const id = await insert(table, value); if (table === (fault === "policy-write" ? "runtimeModelPolicies" : "runtimeModelQualifications")) { reached = true; throw new Error("CONTROLLED_INSTALL_STORAGE_FAILURE"); } return id; };
+    const transaction = async () => { try { await f.install(); } catch (error) { f.db.rows = new Map(before); f.db.writes = writes; f.db.sequence = sequence; throw error; } };
+    await expect(transaction()).rejects.toThrow("CONTROLLED_INSTALL_STORAGE_FAILURE"); expect(reached).toBe(true);
+    expect([...f.db.rows]).toEqual(before); expect(f.db.writes).toBe(writes); expect(f.db.table("runtimeBudgetAccounts")).toEqual([]);
+  });
+  it.each(["full", "compact"] as const)("%s secondary children retain exact parent account and cancellation fences", async encoding => {
+    const f = await installed(encoding), b = await f.bind(), parent = await f.admit(b), foreign = await f.bind("foreign-parent-account");
+    const child = await f.invoke<Reserved>("admit", { reference: f.reference, operationKey: "artifact.text", runBudgetId: b.runBudgetId, semanticId: "compact-secondary", ordinal: 0,
+      requestCanonical: canonicalModelJson(request()), parentOperationId: parent.operationId });
+    expect(await f.checkpoint(child)).toMatchObject({ dispatchPermit: true });
+    const owned = f.db.table("runtimeModelOperations").find(row => row._id === parent.operationId)!; owned.cancelled = true;
+    await noEffects(f, () => f.checkpoint(child));
+    await noEffects(f, () => f.admit(foreign, 0, "hello", { semanticId: "foreign-child", parentOperationId: parent.operationId }));
+    expect(f.account("tenant")).toMatchObject({ reservedUnits: 200, activeConcurrency: 2 }); expect(f.db.table("runtimeModelAttempts")).toHaveLength(2);
+  });
+  it("legacy canonical/control metadata mismatches cannot be normalized as valid compact provenance", async () => {
+    for (const field of ["canonical", "hash", "artifactRevision", "evidenceHash", "acceptanceHash", "extra"] as const) {
+      const f = await installed("full"), b = await f.bind(), stored = f.db.table("runtimeModelPolicies")[0].root as Record<string, unknown>;
+      stored[field] = field === "canonical" ? "{}" : "mismatch";
+      await noEffects(f, () => f.admit(b)); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+    }
+  });
+  it("the actual Convex schema serializer retains legacy object plus exact compact union with unchanged ledger indexes", async () => {
+    const serialized = JSON.parse(schema.export()) as { tables: { tableName: string; documentType: { value: Record<string, { fieldType: unknown }> }; indexes: unknown[] }[] };
+    const nativeRoot = (await import("../../../convex-dev/runtimePolicySchema")).rootProvenance;
+    // Convex strips this implemented @internal getter from declarations.
+    const rootJson = (nativeRoot as unknown as { json: unknown }).json;
+    expect(rootJson).toMatchObject({ type: "union", value: [{ type: "object", value: { canonical: { fieldType: { type: "string" } } } },
+      { type: "object", value: { encoding: { fieldType: { type: "literal", value: "compiled-root-v1" } } } }] });
+    for (const table of serialized.tables.filter(table => ["runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts"].includes(table.tableName)))
+      expect(table.documentType.value.root.fieldType).toEqual(rootJson);
+    expect(serialized.tables.filter(table => ["runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"].includes(table.tableName)))
+      .toHaveLength(5);
+    // Serialization and handler denials are observed; this is not a native backend value-validation execution.
+  });
+});
+it("compact root loops hash compiled provenance once per install/active-root invocation, never once per qualification row", async () => {
+  const unused = Array.from({ length: 24 }, (_, index) => ({ ...root.qualifications[0]!, receiptId: `unused:${index}`, modelId: `fixture/unused-${index}` }));
+  root = { ...root, qualifications: [...root.qualifications, ...unused], dispatchEvidence: [...root.dispatchEvidence,
+    ...unused.map(qualification => ({ ...root.dispatchEvidence[0]!, receiptId: qualification.receiptId, modelId: qualification.modelId }))] };
+  const f = fixture(), encoded = canonicalModelJson(root), digest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle); let hashes = 0;
+  jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, data) => {
+    if (new TextDecoder().decode(data as ArrayBuffer) === encoded) hashes++; return await digest(algorithm, data);
+  });
+  await f.install(); expect(f.db.table("runtimeModelQualifications")).toHaveLength(25); expect(hashes).toBe(1);
+  hashes = 0; const writes = f.db.writes; await f.install(); expect(hashes).toBe(1); expect(f.db.writes).toBe(writes);
+  const b = await f.bind(); hashes = 0;
+  expect(await f.invoke("resolve", { reference: f.reference, operationKey: "agent.respond", runBudgetId: b.runBudgetId })).toMatchObject({ snapshot: { limits: { outputTokens: 500 } } });
+  expect(hashes).toBe(1);
+});
