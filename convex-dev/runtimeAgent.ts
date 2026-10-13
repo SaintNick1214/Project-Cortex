@@ -205,7 +205,7 @@ async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityRefer
   const id = await ctx.db.insert("runtimeAgentExecutions", { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, ...attempt,
     state: "ready", streaming, nextOutputSequence: 0, nextModelStep: 0, toolCount: 0,
     sourceWitnesses: [], mediaJobReferences: [], savedMessageIds: [], savedMessagePins: [], createdAt: now, updatedAt: now });
-  const workflowId = await workflow.start(ctx, ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurn"), attempt,
+  const workflowId = await workflow.start(ctx, ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurnV2"), attempt,
     { startAsync: true, onComplete: ref<"mutation", { workflowId: WorkflowId; context: Attempt; result: { kind: "success"; returnValue: null } | { kind: "failed"; error: string } | { kind: "canceled" } }, null>("mutation", "runtimeAgent:onWorkflowComplete"), context: attempt });
   await ctx.db.patch("runtimeAgentExecutions", id, { workflowId });
   return { runId: row.runId, attemptNumber: claimed.attemptNumber, state: "ready" as const };
@@ -258,8 +258,57 @@ export const executeTurn = workflow.define({ args: agentAttempt, returns: v.null
   }
   throw new Error("TOOL_STEP_LIMIT");
 } });
-export const saveContext = internalMutation({ args: { ...agentAttempt, context: v.string(), witnesses: v.array(sourceWitness),
-  completeness: v.union(v.literal("complete"), v.literal("incomplete")), failureCode: v.optional(v.string()), emptyIndexedProfileId: v.optional(v.string()) }, handler: async (ctx, args) => {
+/** Fresh executions use the additive layout; executeTurn retains every historical journal step. */
+export const executeTurnV2 = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.begin");
+  await step.runMutation(ref<"mutation", Attempt, null>("mutation", "runtimeAgent:startContext"), args, { inline: true });
+  for (;;) {
+    const decision = await step.runMutation(ref<"mutation", Attempt, ReturnType<typeof evaluateMemoryBarrier>>("mutation", "runtimeAgent:contextBarrier"), args, { inline: true });
+    if (decision.state === "failed") {
+      await step.runMutation(ref<"mutation", Attempt & { failureCode: string }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: decision.failureCode! });
+      throw new Error(decision.failureCode);
+    }
+    if (decision.state !== "waiting") break;
+    await step.sleep(Math.min(1000, decision.remainingMs), { name: "memory stage barrier" });
+  }
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.end");
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.begin");
+  const preparedContext = await step.runMutation(ref<"mutation", Attempt, EmptyContextResult>("mutation", "runtimeAgent:prepareEmptyContext"), args, { inline: true });
+  if (preparedContext.state === "FAILED") {
+    // Keep failure disposition in its original separate durable transaction.
+    await step.runMutation(ref<"mutation", Attempt & { failureCode: "CONTEXT_OVERFLOW" }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: preparedContext.failureCode });
+    transcriptDenied(preparedContext.failureCode);
+  }
+  if (preparedContext.state === "NEEDS_ACTION") await step.runAction(refs.prepareContext, args, { retry: false, name: "authorized Cortex context" });
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.end");
+  for (let ordinal = 0; ordinal < 33; ordinal++) {
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.begin`);
+    const result = await step.runAction(refs.model, { ...args, ordinal }, { retry: false, name: `model ${ordinal}` });
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.end`);
+    if (result.final) {
+      await step.runMutation(refs.finalize, { ...args, finalMessageIds: result.savedMessageIds });
+      // Canonical answer/ingestion commits before optional work. The content
+      // Workflow retains the original parent/account and runs independently.
+      try {
+        traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.begin");
+        await step.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runId: string }, string | null>("mutation", "runtimeContentJobs:enqueueParentTitle"), { reference: args.reference, runId: args.runId });
+      } catch { /* Title currentness or policy failure never fabricates a title. */ }
+      finally { traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.end"); }
+      return null; }
+    if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
+    for (const call of result.calls) {
+      const prepared = await step.runMutation(refs.begin, { ...args, kind: "tool", ordinal,
+        requestCanonical: call.inputCanonical, toolCallId: call.toolCallId, toolName: call.toolName });
+      if (prepared.state === "waiting_approval") {
+        await step.runMutation(refs.waiting, { ...args, operationId: prepared.operationId });
+        await step.awaitEvent({ name: prepared.operationId, validator: v.literal("approved") });
+      }
+      await step.runAction(refs.tool, { ...args, ordinal, call }, { retry: false, name: `server tool ${call.toolName}` });
+    }
+  }
+  throw new Error("TOOL_STEP_LIMIT");
+} });
+async function saveContextHandler(ctx: MutationCtx, args: Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string }) {
   const current = await executionContext(ctx, args); if (current.execution.contextCanonical !== undefined) transcriptDenied("INVALID_STATE");
   if (utf8Bytes(args.context) > Math.min(16_384, current.definition.context.maxContextTokens) || args.witnesses.length > 32) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
   await checkWitnesses(ctx, args, args.witnesses);
@@ -274,7 +323,9 @@ export const saveContext = internalMutation({ args: { ...agentAttempt, context: 
   await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextCanonical: args.context, contextState: "complete", sourceWitnesses: args.witnesses,
     contextCompleteness: args.completeness, contextFailureCode: args.failureCode, state: "running", updatedAt: Date.now() });
   await ctx.db.patch("runtimeRuns", current.run._id, { contextCompleteness: args.completeness, contextFailureCode: args.failureCode, updatedAt: Date.now() }); return null;
-} });
+}
+export const saveContext = internalMutation({ args: { ...agentAttempt, context: v.string(), witnesses: v.array(sourceWitness),
+  completeness: v.union(v.literal("complete"), v.literal("incomplete")), failureCode: v.optional(v.string()), emptyIndexedProfileId: v.optional(v.string()) }, handler: saveContextHandler });
 export const startContext = internalMutation({ args: agentAttempt, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== undefined) transcriptDenied("INTERRUPTED_REQUIRES_RECONCILIATION");
@@ -356,6 +407,29 @@ export const prepareContext = internalAction({ args: agentAttempt, handler: asyn
   if (utf8Bytes(context) > Math.min(16_384, current.definition.context.maxContextTokens) || witnesses.size > 32) return await fail("CONTEXT_OVERFLOW");
   await ctx.runMutation(refs.context, { ...args, context, witnesses: [...witnesses.values()], completeness, ...(failureCode ? { failureCode } : {}), ...(availability.empty ? { emptyIndexedProfileId: availability.profileId } : {}) }); return null;
 } });
+type EmptyContextResult = { state: "COMPLETE" } | { state: "NEEDS_ACTION" } | { state: "FAILED"; failureCode: "CONTEXT_OVERFLOW" };
+/** Only the original bounded empty proof permits local context completion. */
+export const prepareEmptyContext = internalMutation({ args: agentAttempt, handler: async (ctx, args): Promise<EmptyContextResult> => {
+  const inputs = await contextInputsHandler(ctx, args);
+  if (inputs.kind === "pending_overflow") return { state: "FAILED", failureCode: "CONTEXT_OVERFLOW" };
+  if (!inputs.availability.empty) return { state: "NEEDS_ACTION" };
+  const { current, pending, availability } = inputs;
+  const completeness = pending.completeness === "incomplete" ? "incomplete" : current.execution.contextCompleteness ?? "complete";
+  const failureCode = pending.completeness === "incomplete" ? "CONTEXT_OVERFLOW" : current.execution.contextFailureCode;
+  const witnesses = new Map<string, Witness>();
+  for (const source of pending.sources) {
+    const witness = mergeContextWitness(witnesses.get(source.sourceId), { ...source, permissions: ["canViewMemories"] });
+    if (!witness) transcriptDenied("STALE_CONTEXT"); witnesses.set(source.sourceId, witness);
+  }
+  const context = [completeness === "incomplete" ? `Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.` : "", pending.text].filter(Boolean).join("\n\n");
+  if (utf8Bytes(context) > Math.min(16_384, current.definition.context.maxContextTokens) || witnesses.size > 32) return { state: "FAILED", failureCode: "CONTEXT_OVERFLOW" };
+  // Repeat the complete original save fence in this transaction, including its
+  // source/witness checks and fresh empty/profile re-probe. No external I/O.
+  await saveContextHandler(ctx, { ...args, context, witnesses: [...witnesses.values()], completeness,
+    ...(failureCode ? { failureCode } : {}), emptyIndexedProfileId: availability.profileId });
+  return { state: "COMPLETE" };
+} });
+
 async function beginOperationHandler(ctx: MutationCtx, args: Attempt & { kind: "model" | "tool"; ordinal: number; requestCanonical: string; toolCallId?: string; toolName?: string }) {
   const current = await executionContext(ctx, args);
   if (!Number.isSafeInteger(args.ordinal) || args.ordinal < 0 || args.ordinal > 32 || utf8Bytes(args.requestCanonical) > 180_000) transcriptDenied("INVALID_INPUT");

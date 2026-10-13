@@ -1,0 +1,5 @@
+tests/unit/runtimeAgent/empty-context-inline.test.ts(187,48): error TS2345: Argument of type '(tableOrId: any, idOrPatch: any, value: any) => Promise<void>' is not assignable to parameter of type '(id: string, value: Record<string, unknown>) => Promise<void>'.
+  Target signature provides too few arguments. Expected 3 or more, but got 2.
+tests/unit/runtimeAgent/empty-context-inline.test.ts(187,55): error TS7006: Parameter 'tableOrId' implicitly has an 'any' type.
+tests/unit/runtimeAgent/empty-context-inline.test.ts(187,66): error TS7006: Parameter 'idOrPatch' implicitly has an 'any' type.
+tests/unit/runtimeAgent/empty-context-inline.test.ts(187,77): error TS7006: Parameter 'value' implicitly has an 'any' type.
