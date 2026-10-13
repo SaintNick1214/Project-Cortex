@@ -1,0 +1,1599 @@
+{
+  "version": 1,
+  "scope": "Saved-only K12 first with warm supplement; no live service/source action",
+  "analysisMilestonePercent": 100,
+  "sourceCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "imageId": "sha256:7a933ed4cb36c1951f9e338e4fda3f4c804eaed4f873e447e2749f2f64e82ef1",
+  "target": {
+    "sessionId": "706fb0d2-187d-4855-9ace-376958ab5613",
+    "name": "nautical-ant-358",
+    "id": 6148154
+  },
+  "sloGoalMs": 1000,
+  "sloPassed": false,
+  "clockRules": [
+    "browser performance/SDK atMs share their client monotonic origin; native Date.now/ExecutionTimestamp/Completion use server epoch; do not subtract clock origins",
+    "mutation/query Date.now and executionTimestamp are transaction/snapshot stamps; probe begin=end is not zero execution time",
+    "cached native query userExecutionTime/executionTimestamp belong to original cached result; count its tiny engine call only, not historical duration",
+    "native engine, own userExecution, parent/component/action wait and Completion stamp spans are separate measurements; do not force equality or add nested intervals twice",
+    "model/provider transport internals and exact conflicting rows are opaque; no universal floor or inferred cause"
+  ],
+  "browserCases": [
+    {
+      "label": "first",
+      "runId": "run:b4508c2e5c02dd7c510aa3eee1def4d94b3f805c318450db0da3d474cbb3e3cc",
+      "runBudgetId": "c7b228f1a5cb33b8ddbad3e23f269f0e312e27cee2b3929145907bfe2a100a75",
+      "runCreatedAt": 1791924041987,
+      "responseStatusAtReadback": "COMPLETE",
+      "browser": {
+        "admissionMs": 3637.5,
+        "domMs": 20489.400000095367,
+        "afterPaintMs": 20515.600000023842,
+        "paintIncrementMs": 26.199999928474426,
+        "visibility": "visible",
+        "sloPassed": false,
+        "rpcCountsFromBrowserConsoleSubmitThroughPaint": {
+          "runtimeClient:session": {
+            "begins": 23,
+            "completed": 21,
+            "completedDurationRangeMs": [
+              484.40000009536743,
+              1955.3000000715256
+            ]
+          },
+          "runtimeClient:submitAndStart": {
+            "begins": 1,
+            "completed": 1,
+            "completedDurationRangeMs": [
+              2100.7000000476837,
+              2100.7000000476837
+            ]
+          },
+          "runtimeClient:observeEnvelope": {
+            "begins": 21,
+            "completed": 21,
+            "completedDurationRangeMs": [
+              604.1999999284744,
+              2373.0999999046326
+            ]
+          }
+        },
+        "watcherWakeCount": 21,
+        "firstPrivateTextCarrierNotRetained": true
+      },
+      "nativeSnapshotCoverage": {
+        "executions": 488,
+        "phases": 78,
+        "under1000Cap": true
+      },
+      "serverPartition": [
+        {
+          "from": "run-created",
+          "to": "initial Workflow start",
+          "startOffsetMs": 0,
+          "endOffsetMs": 2513.0,
+          "durationMs": 2513.0
+        },
+        {
+          "from": "initial Workflow start",
+          "to": "initial Workflow completion log",
+          "startOffsetMs": 2513.0,
+          "endOffsetMs": 3728.1396484375,
+          "durationMs": 1215.1396484375
+        },
+        {
+          "from": "initial Workflow completion log",
+          "to": "separate routed context start",
+          "startOffsetMs": 3728.1396484375,
+          "endOffsetMs": 4192.0,
+          "durationMs": 463.8603515625
+        },
+        {
+          "from": "separate routed context start",
+          "to": "separate routed context completion log",
+          "startOffsetMs": 4192.0,
+          "endOffsetMs": 6362.5068359375,
+          "durationMs": 2170.5068359375
+        },
+        {
+          "from": "separate routed context completion log",
+          "to": "resume Workflow start",
+          "startOffsetMs": 6362.5068359375,
+          "endOffsetMs": 8474.0,
+          "durationMs": 2111.4931640625
+        },
+        {
+          "from": "resume Workflow start",
+          "to": "resume Workflow completion log",
+          "startOffsetMs": 8474.0,
+          "endOffsetMs": 9079.66650390625,
+          "durationMs": 605.66650390625
+        },
+        {
+          "from": "resume Workflow completion log",
+          "to": "model Action entry",
+          "startOffsetMs": 9079.66650390625,
+          "endOffsetMs": 9573.952392578125,
+          "durationMs": 494.285888671875
+        },
+        {
+          "from": "model Action entry",
+          "to": "native stream dispatch",
+          "startOffsetMs": 9573.952392578125,
+          "endOffsetMs": 14492,
+          "durationMs": 4918.047607421875
+        },
+        {
+          "from": "native stream dispatch",
+          "to": "processed first native text",
+          "startOffsetMs": 14492,
+          "endOffsetMs": 15118,
+          "durationMs": 626
+        },
+        {
+          "from": "processed first native text",
+          "to": "first public write stored/transaction stamp",
+          "startOffsetMs": 15118,
+          "endOffsetMs": 16657.0,
+          "durationMs": 1539.0
+        },
+        {
+          "from": "first public write stored/transaction stamp",
+          "to": "first public write completion log",
+          "startOffsetMs": 16657.0,
+          "endOffsetMs": 17331.647705078125,
+          "durationMs": 674.647705078125
+        }
+      ],
+      "frontPrefixMs": 9573.952392578125,
+      "protectedPreparationMs": 4918.047607421875,
+      "dispatchToProcessedFirstTextMs": 626,
+      "firstVisibilityPhaseMs": 1528,
+      "wrapperRoots": [
+        {
+          "identifier": "worker:runMutationWrapper",
+          "requestId": "329d23bfe6919ae9",
+          "executionId": "5df3a809-775d-4f18-beb6-6f89fccd8bd1",
+          "startOffsetMs": 2513.0,
+          "completionOffsetMs": 3728.1396484375,
+          "engineMs": 1202.060184,
+          "ownUserMs": 12.93031,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 118,
+          "databaseReadBytes": 88369,
+          "databaseWriteDocuments": 6
+        },
+        {
+          "identifier": "worker:runMutationWrapper",
+          "requestId": "fc3ca4de55b74bed",
+          "executionId": "2a748162-12bd-4da8-a49d-a3d0a3c08a02",
+          "startOffsetMs": 4192.0,
+          "completionOffsetMs": 6362.5068359375,
+          "engineMs": 2146.52162,
+          "ownUserMs": 3.137441,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 301,
+          "databaseReadBytes": 452139,
+          "databaseWriteDocuments": 2
+        },
+        {
+          "identifier": "worker:runMutationWrapper",
+          "requestId": "aef6ec33e7f7b0a8",
+          "executionId": "68dcca31-0ffc-4331-a9e9-b70a9037e4b3",
+          "startOffsetMs": 8474.0,
+          "completionOffsetMs": 9079.66650390625,
+          "engineMs": 580.9834820000001,
+          "ownUserMs": 6.036320000000001,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 13,
+          "databaseReadBytes": 8935,
+          "databaseWriteDocuments": 3
+        }
+      ],
+      "modelChildren": [
+        {
+          "identifier": "runtimeAgent:prepareModelOperation",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "89d232a4-ead5-4a4f-988d-da75b5d5787a",
+          "startOffsetMs": 9669.0,
+          "completionOffsetMs": 10770.271728515625,
+          "engineMs": 1067.9487960000001,
+          "ownUserMs": 177.124099,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 197,
+          "databaseReadBytes": 152907,
+          "databaseWriteDocuments": 3
+        },
+        {
+          "identifier": "runtimeAgent:resolveModelOperation",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "90a7bbed-38c3-4381-8dd4-811bdbe46b34",
+          "startOffsetMs": 10784.0,
+          "completionOffsetMs": 11418.218017578125,
+          "engineMs": 641.888524,
+          "ownUserMs": 128.556054,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 68,
+          "databaseReadBytes": 99119,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:resolveModelOperation",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "921e077d-cce7-4e16-b88b-8edbe29b7f24",
+          "startOffsetMs": 10784.0,
+          "completionOffsetMs": 11425.2666015625,
+          "engineMs": 0.051634,
+          "ownUserMs": 128.556054,
+          "cachedResult": true,
+          "willRetry": false,
+          "databaseReadDocuments": 0,
+          "databaseReadBytes": 0,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "11a48849-6bce-429e-b05f-60a28270abfc",
+          "startOffsetMs": 11434.0,
+          "completionOffsetMs": 11890.484130859375,
+          "engineMs": 459.005517,
+          "ownUserMs": 94.379715,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 48,
+          "databaseReadBytes": 37153,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "ca1caff3-53e0-4703-bf17-8ca4d91c5ea3",
+          "startOffsetMs": 11434.0,
+          "completionOffsetMs": 12053.6416015625,
+          "engineMs": 0.044044,
+          "ownUserMs": 94.379715,
+          "cachedResult": true,
+          "willRetry": false,
+          "databaseReadDocuments": 0,
+          "databaseReadBytes": 0,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "f52e3345-0566-4f47-a90e-08618f783417",
+          "startOffsetMs": 12063.0,
+          "completionOffsetMs": 13298.19287109375,
+          "engineMs": 1231.9862509999998,
+          "ownUserMs": 233.782725,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 175,
+          "databaseReadBytes": 356728,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "0bb02062-e487-48a9-a515-98b700089f82",
+          "startOffsetMs": 13299.0,
+          "completionOffsetMs": 14486.655517578125,
+          "engineMs": 1173.02791,
+          "ownUserMs": 223.432195,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 175,
+          "databaseReadBytes": 356728,
+          "databaseWriteDocuments": 5
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "e8151a54-833e-4367-8850-3be26eb04aa6",
+          "startOffsetMs": 15123.0,
+          "completionOffsetMs": 15891.7587890625,
+          "engineMs": 682.375679,
+          "ownUserMs": 125.886167,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 103,
+          "databaseReadBytes": 149351,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "51b005b1-b010-465e-8c79-804a756809ef",
+          "startOffsetMs": 15893.0,
+          "completionOffsetMs": 16640.86669921875,
+          "engineMs": 741.421476,
+          "ownUserMs": 124.584936,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 103,
+          "databaseReadBytes": 149351,
+          "databaseWriteDocuments": 1
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "d9f8540a-f0b6-4827-928f-e9abd4fbc17c",
+          "startOffsetMs": 16657.0,
+          "completionOffsetMs": 17331.647705078125,
+          "engineMs": 659.221079,
+          "ownUserMs": 113.491962,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 49,
+          "databaseReadBytes": 38133,
+          "databaseWriteDocuments": 3
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "59f245a4-3ff3-4462-8508-d1a4e79ac07d",
+          "startOffsetMs": 16653.0,
+          "completionOffsetMs": 17383.7119140625,
+          "engineMs": 731.757844,
+          "ownUserMs": 122.81044,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 102,
+          "databaseReadBytes": 126565,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "12624fb8-6b99-48f2-b003-ae3b995ed4bd",
+          "startOffsetMs": 17394.0,
+          "completionOffsetMs": 17956.984375,
+          "engineMs": 555.452718,
+          "ownUserMs": 141.915733,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 118,
+          "databaseReadBytes": 229985,
+          "databaseWriteDocuments": 4
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "db35ff6e-a1b5-45e9-82b5-16eefa535eec",
+          "startOffsetMs": 17961.0,
+          "completionOffsetMs": 18354.886962890625,
+          "engineMs": 394.634566,
+          "ownUserMs": 109.017506,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 48,
+          "databaseReadBytes": 37153,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "ef3777c6-77f1-4287-bc11-5a8efd805d06",
+          "startOffsetMs": 18360.0,
+          "completionOffsetMs": 19046.62451171875,
+          "engineMs": 634.619926,
+          "ownUserMs": 142.523545,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 110,
+          "databaseReadBytes": 152999,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "4b7f01e2-f32e-41ed-be42-0e3b369e619e",
+          "startOffsetMs": 19047.0,
+          "completionOffsetMs": 19696.95458984375,
+          "engineMs": 641.448395,
+          "ownUserMs": 138.83325299999998,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 110,
+          "databaseReadBytes": 152999,
+          "databaseWriteDocuments": 1
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "a9b53c0b-1c8e-4cbd-a6f2-6797bb5b551f",
+          "startOffsetMs": 19702.0,
+          "completionOffsetMs": 20144.546875,
+          "engineMs": 432.884656,
+          "ownUserMs": 134.08345999999997,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 49,
+          "databaseReadBytes": 38133,
+          "databaseWriteDocuments": 3
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "04f753e8-fb96-4d3b-b7fc-7b1e960de539",
+          "startOffsetMs": 20824.0,
+          "completionOffsetMs": 21377.854248046875,
+          "engineMs": 535.514509,
+          "ownUserMs": 114.426998,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 52,
+          "databaseReadBytes": 41211,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "bb8424cb-4f70-4a5b-b715-f8cd0de14477",
+          "startOffsetMs": 21379.0,
+          "completionOffsetMs": 21746.28857421875,
+          "engineMs": 354.06938199999996,
+          "ownUserMs": 102.85487,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 52,
+          "databaseReadBytes": 41212,
+          "databaseWriteDocuments": 2
+        },
+        {
+          "identifier": "runtimeAgent:modelStep",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "5cd136aa-97f2-4c3e-9788-4370be8d1b8d",
+          "startOffsetMs": 9573.952392578125,
+          "completionOffsetMs": 21749.63671875,
+          "engineMs": 12339.46301,
+          "ownUserMs": 12156.818934,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 0,
+          "databaseReadBytes": 0,
+          "databaseWriteDocuments": 0
+        }
+      ],
+      "modelPhases": [
+        {
+          "phase": "gateway.construct.begin",
+          "at": 1791924053407
+        },
+        {
+          "phase": "gateway.construct.end",
+          "at": 1791924053415,
+          "durationMs": 9
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1791924054039
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1791924056476,
+          "durationMs": 2437
+        },
+        {
+          "phase": "gateway.native.stream.begin",
+          "at": 1791924056479
+        },
+        {
+          "phase": "gateway.native.stream.ready",
+          "at": 1791924057043,
+          "durationMs": 563
+        },
+        {
+          "phase": "gateway.native.stream.first-part",
+          "at": 1791924057043,
+          "durationMs": 564
+        },
+        {
+          "phase": "gateway.native.stream.first-text",
+          "at": 1791924057105,
+          "durationMs": 626
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1791924057106
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1791924058635,
+          "durationMs": 1528
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1791924058637
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1791924059372,
+          "durationMs": 735
+        },
+        {
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1791924059376
+        },
+        {
+          "phase": "gateway.ledger.capture.end",
+          "at": 1791924059945,
+          "durationMs": 569
+        },
+        {
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1791924060344
+        },
+        {
+          "phase": "gateway.ledger.attach.end",
+          "at": 1791924061686,
+          "durationMs": 1342
+        }
+      ],
+      "observedModelRetryRecords": [
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "f52e3345-0566-4f47-a90e-08618f783417",
+          "startOffsetMs": 12063.0,
+          "completionOffsetMs": 13298.19287109375,
+          "engineMs": 1231.9862509999998,
+          "ownUserMs": 233.782725,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 175,
+          "databaseReadBytes": 356728,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "e8151a54-833e-4367-8850-3be26eb04aa6",
+          "startOffsetMs": 15123.0,
+          "completionOffsetMs": 15891.7587890625,
+          "engineMs": 682.375679,
+          "ownUserMs": 125.886167,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 103,
+          "databaseReadBytes": 149351,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "ef3777c6-77f1-4287-bc11-5a8efd805d06",
+          "startOffsetMs": 18360.0,
+          "completionOffsetMs": 19046.62451171875,
+          "engineMs": 634.619926,
+          "ownUserMs": 142.523545,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 110,
+          "databaseReadBytes": 152999,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "98cf13ddf55d9c9e",
+          "executionId": "04f753e8-fb96-4d3b-b7fc-7b1e960de539",
+          "startOffsetMs": 20824.0,
+          "completionOffsetMs": 21377.854248046875,
+          "engineMs": 535.514509,
+          "ownUserMs": 114.426998,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 52,
+          "databaseReadBytes": 41211,
+          "databaseWriteDocuments": 0
+        }
+      ],
+      "k11Comparison": [
+        {
+          "identifier": "runtimeAgent:prepareModelOperation",
+          "k11Documents": 197,
+          "k12Documents": 197,
+          "k11EngineMs": 359.813061,
+          "k12EngineMs": 1067.9487960000001,
+          "k11OwnUserMs": 103.24456699999999,
+          "k12OwnUserMs": 177.124099,
+          "k11FirstOccurrenceWillRetry": false,
+          "k12FirstOccurrenceWillRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:resolveModelOperation",
+          "k11Documents": 146,
+          "k12Documents": 68,
+          "k11EngineMs": 582.166643,
+          "k12EngineMs": 641.888524,
+          "k11OwnUserMs": 177.54826200000002,
+          "k12OwnUserMs": 128.556054,
+          "k11FirstOccurrenceWillRetry": false,
+          "k12FirstOccurrenceWillRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "k11Documents": 369,
+          "k12Documents": 175,
+          "k11EngineMs": 577.963866,
+          "k12EngineMs": 1231.9862509999998,
+          "k11OwnUserMs": 180.78110999999998,
+          "k12OwnUserMs": 233.782725,
+          "k11FirstOccurrenceWillRetry": true,
+          "k12FirstOccurrenceWillRetry": true
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "k11Documents": 103,
+          "k12Documents": 103,
+          "k11EngineMs": 225.624401,
+          "k12EngineMs": 682.375679,
+          "k11OwnUserMs": 90.305945,
+          "k12OwnUserMs": 125.886167,
+          "k11FirstOccurrenceWillRetry": false,
+          "k12FirstOccurrenceWillRetry": true
+        },
+        {
+          "identifier": "routed/empty context wrapper",
+          "k11Documents": 654,
+          "k12Documents": 301,
+          "k11EngineMs": 1149.5828900000001,
+          "k12EngineMs": 2146.52162,
+          "k11OwnUserMs": 10.578043000000001,
+          "k12OwnUserMs": 3.137441
+        }
+      ],
+      "k11AfterPaintMs": 10364.399999976158,
+      "k11FrontPrefixMs": 5724.40673828125,
+      "k11ProtectedPreparationMs": 2504.59326171875,
+      "steps": [
+        {
+          "stepNumber": 5,
+          "name": "runtimeContentJobs:enqueueParentTitle",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924067391,
+          "completedAt": 1791924070124
+        },
+        {
+          "stepNumber": 4,
+          "name": "runtimeAgent:finalize",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924064598,
+          "completedAt": 1791924066820
+        },
+        {
+          "stepNumber": 3,
+          "name": "model 0",
+          "functionType": "action",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924050461,
+          "completedAt": 1791924063743
+        },
+        {
+          "stepNumber": 2,
+          "name": "runtimeAgent:prepareRoutedContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924044500,
+          "completedAt": 1791924049146
+        },
+        {
+          "stepNumber": 1,
+          "name": "runtimeAgent:contextBarrier",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924044500,
+          "completedAt": 1791924044500
+        },
+        {
+          "stepNumber": 0,
+          "name": "runtimeAgent:startContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924044500,
+          "completedAt": 1791924044500
+        }
+      ]
+    },
+    {
+      "label": "warm",
+      "runId": "run:2fc67ec9386977c6568adb151662c6b3c00e008659d090d6d2b652c1b403526f",
+      "runBudgetId": "b22a75069cfcc0489974a7010b411d52f50b5050443aaeebe9fd3432124b88c0",
+      "runCreatedAt": 1791924097387,
+      "responseStatusAtReadback": "COMPLETE",
+      "browser": {
+        "admissionMs": 2688.7000000476837,
+        "domMs": 12398.399999976158,
+        "afterPaintMs": 12415.299999952316,
+        "paintIncrementMs": 16.899999976158142,
+        "visibility": "visible",
+        "sloPassed": false,
+        "rpcCountsFromBrowserConsoleSubmitThroughPaint": {
+          "runtimeClient:session": {
+            "begins": 18,
+            "completed": 16,
+            "completedDurationRangeMs": [
+              383,
+              1391.8999999761581
+            ]
+          },
+          "runtimeClient:submitAndStart": {
+            "begins": 1,
+            "completed": 1,
+            "completedDurationRangeMs": [
+              1872.8999999761581,
+              1872.8999999761581
+            ]
+          },
+          "runtimeClient:observeEnvelope": {
+            "begins": 17,
+            "completed": 16,
+            "completedDurationRangeMs": [
+              409.2999999523163,
+              1693.5
+            ]
+          }
+        },
+        "watcherWakeCount": 24,
+        "firstPrivateTextCarrierNotRetained": true
+      },
+      "nativeSnapshotCoverage": {
+        "executions": 801,
+        "phases": 174,
+        "under1000Cap": true
+      },
+      "serverPartition": [
+        {
+          "from": "run-created",
+          "to": "initial Workflow start",
+          "startOffsetMs": 0,
+          "endOffsetMs": 1636.0,
+          "durationMs": 1636.0
+        },
+        {
+          "from": "initial Workflow start",
+          "to": "initial Workflow completion log",
+          "startOffsetMs": 1636.0,
+          "endOffsetMs": 2356.9892578125,
+          "durationMs": 720.9892578125
+        },
+        {
+          "from": "initial Workflow completion log",
+          "to": "separate routed context start",
+          "startOffsetMs": 2356.9892578125,
+          "endOffsetMs": 2606.0,
+          "durationMs": 249.0107421875
+        },
+        {
+          "from": "separate routed context start",
+          "to": "separate routed context completion log",
+          "startOffsetMs": 2606.0,
+          "endOffsetMs": 4887.949951171875,
+          "durationMs": 2281.949951171875
+        },
+        {
+          "from": "separate routed context completion log",
+          "to": "resume Workflow start",
+          "startOffsetMs": 4887.949951171875,
+          "endOffsetMs": 5761.0,
+          "durationMs": 873.050048828125
+        },
+        {
+          "from": "resume Workflow start",
+          "to": "resume Workflow completion log",
+          "startOffsetMs": 5761.0,
+          "endOffsetMs": 6028.958984375,
+          "durationMs": 267.958984375
+        },
+        {
+          "from": "resume Workflow completion log",
+          "to": "model Action entry",
+          "startOffsetMs": 6028.958984375,
+          "endOffsetMs": 6595.68603515625,
+          "durationMs": 566.72705078125
+        },
+        {
+          "from": "model Action entry",
+          "to": "native stream dispatch",
+          "startOffsetMs": 6595.68603515625,
+          "endOffsetMs": 8695,
+          "durationMs": 2099.31396484375
+        },
+        {
+          "from": "native stream dispatch",
+          "to": "processed first native text",
+          "startOffsetMs": 8695,
+          "endOffsetMs": 9225,
+          "durationMs": 530
+        },
+        {
+          "from": "processed first native text",
+          "to": "first public write stored/transaction stamp",
+          "startOffsetMs": 9225,
+          "endOffsetMs": 9852.0,
+          "durationMs": 627.0
+        },
+        {
+          "from": "first public write stored/transaction stamp",
+          "to": "first public write completion log",
+          "startOffsetMs": 9852.0,
+          "endOffsetMs": 10208.974609375,
+          "durationMs": 356.974609375
+        }
+      ],
+      "frontPrefixMs": 6595.68603515625,
+      "protectedPreparationMs": 2099.31396484375,
+      "dispatchToProcessedFirstTextMs": 530,
+      "firstVisibilityPhaseMs": 618,
+      "wrapperRoots": [
+        {
+          "identifier": "worker:runMutationWrapper",
+          "requestId": "66d6b16e4aeeb07e",
+          "executionId": "733503b8-71d0-4fd7-849a-7caf920f0ff8",
+          "startOffsetMs": 1636.0,
+          "completionOffsetMs": 2356.9892578125,
+          "engineMs": 688.602762,
+          "ownUserMs": 4.872202,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 136,
+          "databaseReadBytes": 109803,
+          "databaseWriteDocuments": 6
+        },
+        {
+          "identifier": "worker:runMutationWrapper",
+          "requestId": "1c5af2f764e93239",
+          "executionId": "0464c796-ce21-4d0e-8f6f-e5d120b590b3",
+          "startOffsetMs": 2606.0,
+          "completionOffsetMs": 4887.949951171875,
+          "engineMs": 2268.418193,
+          "ownUserMs": 3.065223,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 391,
+          "databaseReadBytes": 580040,
+          "databaseWriteDocuments": 2
+        },
+        {
+          "identifier": "worker:runMutationWrapper",
+          "requestId": "8feacc5d68026989",
+          "executionId": "ff4ff0a0-55d6-4d37-bc95-365d43effc96",
+          "startOffsetMs": 5761.0,
+          "completionOffsetMs": 6028.958984375,
+          "engineMs": 249.89407,
+          "ownUserMs": 2.6759510000000004,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 13,
+          "databaseReadBytes": 8935,
+          "databaseWriteDocuments": 3
+        }
+      ],
+      "modelChildren": [
+        {
+          "identifier": "runtimeAgent:prepareModelOperation",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "87509432-8c48-463e-8481-e3d145b6a3c8",
+          "startOffsetMs": 6653.0,
+          "completionOffsetMs": 7045.8837890625,
+          "engineMs": 368.672949,
+          "ownUserMs": 116.421374,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 233,
+          "databaseReadBytes": 196177,
+          "databaseWriteDocuments": 3
+        },
+        {
+          "identifier": "runtimeAgent:resolveModelOperation",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "8dc0cbbd-0ae5-4a7a-aa83-f6267abcb7e0",
+          "startOffsetMs": 7050.0,
+          "completionOffsetMs": 7406.62255859375,
+          "engineMs": 358.15203099999997,
+          "ownUserMs": 121.37014599999999,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 86,
+          "databaseReadBytes": 121801,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:resolveModelOperation",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "fd37c33e-419b-4b00-a49d-2f06a9b95f97",
+          "startOffsetMs": 7050.0,
+          "completionOffsetMs": 7410.812744140625,
+          "engineMs": 0.042928,
+          "ownUserMs": 121.37014599999999,
+          "cachedResult": true,
+          "willRetry": false,
+          "databaseReadDocuments": 0,
+          "databaseReadBytes": 0,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "0a3df847-5845-4607-ab64-42693fbc62d0",
+          "startOffsetMs": 7418.0,
+          "completionOffsetMs": 7604.948486328125,
+          "engineMs": 187.763857,
+          "ownUserMs": 76.729914,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 57,
+          "databaseReadBytes": 47870,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "be4f63c7-fcdd-4284-8641-2f4ca0090b15",
+          "startOffsetMs": 7418.0,
+          "completionOffsetMs": 7694.33544921875,
+          "engineMs": 0.046390999999999995,
+          "ownUserMs": 76.729914,
+          "cachedResult": true,
+          "willRetry": false,
+          "databaseReadDocuments": 0,
+          "databaseReadBytes": 0,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "d0029d08-95bc-4583-9ef1-ef2538cdb23f",
+          "startOffsetMs": 7697.0,
+          "completionOffsetMs": 8196.27001953125,
+          "engineMs": 496.766586,
+          "ownUserMs": 155.547444,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 220,
+          "databaseReadBytes": 415602,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "166e9808-afe8-4957-92a8-e7930eb89366",
+          "startOffsetMs": 8198.0,
+          "completionOffsetMs": 8688.707275390625,
+          "engineMs": 478.648421,
+          "ownUserMs": 150.853504,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 220,
+          "databaseReadBytes": 415602,
+          "databaseWriteDocuments": 5
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "a7f40658-24fb-4f43-92b1-3cc48347eab6",
+          "startOffsetMs": 9228.0,
+          "completionOffsetMs": 9585.34228515625,
+          "engineMs": 240.271962,
+          "ownUserMs": 91.878688,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 112,
+          "databaseReadBytes": 162718,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "2df0a68d-ee82-4e0f-93df-547e1c8492d8",
+          "startOffsetMs": 9587.0,
+          "completionOffsetMs": 9841.330810546875,
+          "engineMs": 248.04742900000002,
+          "ownUserMs": 88.958655,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 112,
+          "databaseReadBytes": 162718,
+          "databaseWriteDocuments": 1
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "fffde42b-10fa-4e49-b6a1-acfa8b0ca630",
+          "startOffsetMs": 9852.0,
+          "completionOffsetMs": 10208.974609375,
+          "engineMs": 347.64014799999995,
+          "ownUserMs": 123.524428,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 58,
+          "databaseReadBytes": 48850,
+          "databaseWriteDocuments": 3
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "c662de56-3246-43b5-a1f1-606a819cb628",
+          "startOffsetMs": 9851.0,
+          "completionOffsetMs": 10224.4248046875,
+          "engineMs": 374.93495,
+          "ownUserMs": 116.477828,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 111,
+          "databaseReadBytes": 139318,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "c754ae22-d59e-411b-834f-89859096a58a",
+          "startOffsetMs": 10228.0,
+          "completionOffsetMs": 10465.522216796875,
+          "engineMs": 237.910691,
+          "ownUserMs": 87.189904,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 111,
+          "databaseReadBytes": 139318,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "29421d29-6581-48a9-a5a4-827511f4fdae",
+          "startOffsetMs": 10470.0,
+          "completionOffsetMs": 10760.89306640625,
+          "engineMs": 209.12300100000002,
+          "ownUserMs": 79.33335299999999,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 58,
+          "databaseReadBytes": 48850,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "4979f369-bffb-4c15-ac40-7ed0c3d519d2",
+          "startOffsetMs": 10475.0,
+          "completionOffsetMs": 10879.323486328125,
+          "engineMs": 355.39113,
+          "ownUserMs": 125.02092,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 127,
+          "databaseReadBytes": 244928,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "3ec72d07-1c39-45fa-b04e-ff0f50954474",
+          "startOffsetMs": 10762.0,
+          "completionOffsetMs": 10961.41650390625,
+          "engineMs": 188.705718,
+          "ownUserMs": 74.022479,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 58,
+          "databaseReadBytes": 48850,
+          "databaseWriteDocuments": 3
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "4c9e37f0-4bbf-44f2-a4ee-3c5af1284897",
+          "startOffsetMs": 10881.0,
+          "completionOffsetMs": 11711.380615234375,
+          "engineMs": 809.201633,
+          "ownUserMs": 154.968982,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 127,
+          "databaseReadBytes": 244928,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "5558ffe6-5288-4d03-9d4d-8ed5fad30136",
+          "startOffsetMs": 11712.0,
+          "completionOffsetMs": 12177.707763671875,
+          "engineMs": 378.86027,
+          "ownUserMs": 163.772254,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 127,
+          "databaseReadBytes": 244928,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "4cbb3dfc-21e4-46f4-893a-7c322de330a5",
+          "startOffsetMs": 12179.0,
+          "completionOffsetMs": 12779.792236328125,
+          "engineMs": 588.702105,
+          "ownUserMs": 135.24141500000002,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 127,
+          "databaseReadBytes": 244928,
+          "databaseWriteDocuments": 4
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "27cc858f-3a7a-402f-8f62-3053b516eeb1",
+          "startOffsetMs": 12785.0,
+          "completionOffsetMs": 13395.610595703125,
+          "engineMs": 610.978199,
+          "ownUserMs": 112.438702,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 57,
+          "databaseReadBytes": 47870,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "69ef805d-443d-4981-ad32-1f8715671a37",
+          "startOffsetMs": 13401.0,
+          "completionOffsetMs": 13913.210205078125,
+          "engineMs": 485.55733299999997,
+          "ownUserMs": 121.080394,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 119,
+          "databaseReadBytes": 166366,
+          "databaseWriteDocuments": 1
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "0535402c-b6bf-4fd8-818f-ebf06fc1ed9c",
+          "startOffsetMs": 13917.0,
+          "completionOffsetMs": 14129.973388671875,
+          "engineMs": 197.487109,
+          "ownUserMs": 76.126554,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 58,
+          "databaseReadBytes": 48850,
+          "databaseWriteDocuments": 2
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "b828cac4-704f-46a3-b829-862ce9a859d4",
+          "startOffsetMs": 14259.0,
+          "completionOffsetMs": 14476.857666015625,
+          "engineMs": 209.292335,
+          "ownUserMs": 75.165542,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 61,
+          "databaseReadBytes": 52328,
+          "databaseWriteDocuments": 2
+        },
+        {
+          "identifier": "runtimeAgent:modelStep",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "48616b5a-2c65-4859-9594-df3adb2f1174",
+          "startOffsetMs": 6595.68603515625,
+          "completionOffsetMs": 14479.251953125,
+          "engineMs": 7884.721497,
+          "ownUserMs": 7870.782851,
+          "cachedResult": false,
+          "willRetry": false,
+          "databaseReadDocuments": 0,
+          "databaseReadBytes": 0,
+          "databaseWriteDocuments": 0
+        }
+      ],
+      "modelPhases": [
+        {
+          "phase": "gateway.construct.begin",
+          "at": 1791924104796
+        },
+        {
+          "phase": "gateway.construct.end",
+          "at": 1791924104799,
+          "durationMs": 5
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1791924105079
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1791924106077,
+          "durationMs": 998
+        },
+        {
+          "phase": "gateway.native.stream.begin",
+          "at": 1791924106082
+        },
+        {
+          "phase": "gateway.native.stream.ready",
+          "at": 1791924106546,
+          "durationMs": 464
+        },
+        {
+          "phase": "gateway.native.stream.first-part",
+          "at": 1791924106547,
+          "durationMs": 464
+        },
+        {
+          "phase": "gateway.native.stream.first-text",
+          "at": 1791924106612,
+          "durationMs": 529
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1791924106612
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1791924107230,
+          "durationMs": 618
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1791924107233
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1791924107612,
+          "durationMs": 379
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1791924107613
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1791924107853,
+          "durationMs": 240
+        },
+        {
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1791924107860
+        },
+        {
+          "phase": "gateway.ledger.capture.end",
+          "at": 1791924110169,
+          "durationMs": 2309
+        },
+        {
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1791924110786
+        },
+        {
+          "phase": "gateway.ledger.attach.end",
+          "at": 1791924111301,
+          "durationMs": 514
+        }
+      ],
+      "observedModelRetryRecords": [
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "d0029d08-95bc-4583-9ef1-ef2538cdb23f",
+          "startOffsetMs": 7697.0,
+          "completionOffsetMs": 8196.27001953125,
+          "engineMs": 496.766586,
+          "ownUserMs": 155.547444,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 220,
+          "databaseReadBytes": 415602,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "a7f40658-24fb-4f43-92b1-3cc48347eab6",
+          "startOffsetMs": 9228.0,
+          "completionOffsetMs": 9585.34228515625,
+          "engineMs": 240.271962,
+          "ownUserMs": 91.878688,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 112,
+          "databaseReadBytes": 162718,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "29421d29-6581-48a9-a5a4-827511f4fdae",
+          "startOffsetMs": 10470.0,
+          "completionOffsetMs": 10760.89306640625,
+          "engineMs": 209.12300100000002,
+          "ownUserMs": 79.33335299999999,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 58,
+          "databaseReadBytes": 48850,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "4979f369-bffb-4c15-ac40-7ed0c3d519d2",
+          "startOffsetMs": 10475.0,
+          "completionOffsetMs": 10879.323486328125,
+          "engineMs": 355.39113,
+          "ownUserMs": 125.02092,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 127,
+          "databaseReadBytes": 244928,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "4c9e37f0-4bbf-44f2-a4ee-3c5af1284897",
+          "startOffsetMs": 10881.0,
+          "completionOffsetMs": 11711.380615234375,
+          "engineMs": 809.201633,
+          "ownUserMs": 154.968982,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 127,
+          "databaseReadBytes": 244928,
+          "databaseWriteDocuments": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "a6b8dabf8ccdbcd3",
+          "executionId": "5558ffe6-5288-4d03-9d4d-8ed5fad30136",
+          "startOffsetMs": 11712.0,
+          "completionOffsetMs": 12177.707763671875,
+          "engineMs": 378.86027,
+          "ownUserMs": 163.772254,
+          "cachedResult": false,
+          "willRetry": true,
+          "databaseReadDocuments": 127,
+          "databaseReadBytes": 244928,
+          "databaseWriteDocuments": 0
+        }
+      ],
+      "k11Comparison": [
+        {
+          "identifier": "runtimeAgent:prepareModelOperation",
+          "k11Documents": 233,
+          "k12Documents": 233,
+          "k11EngineMs": 1150.712093,
+          "k12EngineMs": 368.672949,
+          "k11OwnUserMs": 175.309711,
+          "k12OwnUserMs": 116.421374,
+          "k11FirstOccurrenceWillRetry": false,
+          "k12FirstOccurrenceWillRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:resolveModelOperation",
+          "k11Documents": 164,
+          "k12Documents": 86,
+          "k11EngineMs": 747.166559,
+          "k12EngineMs": 358.15203099999997,
+          "k11OwnUserMs": 148.36959299999998,
+          "k12OwnUserMs": 121.37014599999999,
+          "k11FirstOccurrenceWillRetry": false,
+          "k12FirstOccurrenceWillRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "k11Documents": 414,
+          "k12Documents": 220,
+          "k11EngineMs": 959.395993,
+          "k12EngineMs": 496.766586,
+          "k11OwnUserMs": 232.659629,
+          "k12OwnUserMs": 155.547444,
+          "k11FirstOccurrenceWillRetry": false,
+          "k12FirstOccurrenceWillRetry": true
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "k11Documents": 112,
+          "k12Documents": 112,
+          "k11EngineMs": 455.81947699999995,
+          "k12EngineMs": 240.271962,
+          "k11OwnUserMs": 124.870273,
+          "k12OwnUserMs": 91.878688,
+          "k11FirstOccurrenceWillRetry": false,
+          "k12FirstOccurrenceWillRetry": true
+        },
+        {
+          "identifier": "routed/empty context wrapper",
+          "k11Documents": 769,
+          "k12Documents": 391,
+          "k11EngineMs": 761.762333,
+          "k12EngineMs": 2268.418193,
+          "k11OwnUserMs": 2.615812,
+          "k12OwnUserMs": 3.065223
+        }
+      ],
+      "k11AfterPaintMs": 11082.699999928474,
+      "k11FrontPrefixMs": 4863.27587890625,
+      "k11ProtectedPreparationMs": 3461.72412109375,
+      "steps": [
+        {
+          "stepNumber": 5,
+          "name": "runtimeContentJobs:enqueueParentTitle",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924114057,
+          "completedAt": 1791924115135
+        },
+        {
+          "stepNumber": 4,
+          "name": "runtimeAgent:finalize",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924112334,
+          "completedAt": 1791924113741
+        },
+        {
+          "stepNumber": 3,
+          "name": "model 0",
+          "functionType": "action",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924103148,
+          "completedAt": 1791924111869
+        },
+        {
+          "stepNumber": 2,
+          "name": "runtimeAgent:prepareRoutedContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924099023,
+          "completedAt": 1791924102394
+        },
+        {
+          "stepNumber": 1,
+          "name": "runtimeAgent:contextBarrier",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924099023,
+          "completedAt": 1791924099023
+        },
+        {
+          "stepNumber": 0,
+          "name": "runtimeAgent:startContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791924099023,
+          "completedAt": 1791924099023
+        }
+      ]
+    }
+  ],
+  "nextCandidate": {
+    "candidate": "Remove redundant UI watchRun; existing continuous finalOnly watchObservation updates setRun(value.run)",
+    "preserved": "Transport observer, finalOnly:true, deny and cleanup, every current backend/SDK authority and independent post-I/O session/principal/generation/source/deadline fence",
+    "threeOwners": [
+      {
+        "owner": "remote transport",
+        "args": "dynamic cursor/limit100/finalOnly false"
+      },
+      {
+        "owner": "UI status",
+        "args": "after0/limit1/finalOnly false"
+      },
+      {
+        "owner": "UI final delivery",
+        "args": "dynamic final cursor/limit100/finalOnly true"
+      }
+    ],
+    "exactRequestCoalescingCannotMergeThreeDifferentArguments": true,
+    "runDtoEquivalence": "observeHandler returns publicRun(current.row), state and approvals independently of finalOnly; watchObservation calls update even for empty parts after pinning run",
+    "testsRequired": [
+      "Two active observer owners",
+      "Same status/memory/approval/cancel transitions",
+      "Continuous final authority denial/expiry/signout",
+      "Disconnect/reconnect/unmount cleanup",
+      "Unchanged output/cursor/SDK/backend guards"
+    ],
+    "actualGainUnmeasured": true
+  },
+  "evidence": [
+    {
+      "path": "run-chain-b4508c2e5c02-1791924079183.json",
+      "sha256": "3bd14dc80d4569f07b9b43ffc19266312aaea25c67839c74c754c749955729bd"
+    },
+    {
+      "path": "service-log-snapshot-1791924077317.json",
+      "sha256": "58b399a48e8850305242f0c2887af24b5eae6b85ae314000f0691c30b944966b"
+    },
+    {
+      "path": "browser/k12-first-events-final.json",
+      "sha256": "4b5bad4e1629643274efa3a5350e704acba4af6ad810fc5a912b29d61f391e1a"
+    },
+    {
+      "path": "browser/k12-first-sdk-events.json",
+      "sha256": "7b0160fe8c5f93c9ef16fe4f9d4dad19adee3d33ec7619624fc8760b74b64729"
+    },
+    {
+      "path": "run-chain-2fc67ec93869-1791924165216.json",
+      "sha256": "4a8b6b5b10a067e1cc2ea158e32645af0f850e83581327f8e004487009cc478a"
+    },
+    {
+      "path": "service-log-snapshot-1791924162410.json",
+      "sha256": "74cc2ab7bb2d0ccc00491c1da6f8f4518d9ffcf149552b6083211894a5975151"
+    },
+    {
+      "path": "browser/k12-first-warm-events.json",
+      "sha256": "31d47003ce3970a2267ac4d56d8c7847dcd7046c6fc7ddbe28f1912687b8a78f"
+    },
+    {
+      "path": "browser/k12-first-warm-sdk-events.json",
+      "sha256": "2d0d95b1b55871b3d8590bd4264332496d0547916cd9e1ca8147a9e1b3beb92d"
+    },
+    {
+      "path": "cloud-k11-delay-chain.json",
+      "sha256": "d36df7bd2ebb4bac021746f56485b6ef99211957749a91be910b63d0c3ab4fa2"
+    },
+    {
+      "path": "cloud-k11-delay-chain.md",
+      "sha256": "bd0300ba565078568081fdf887be0daf6ea5f9b3c5c38f43cd5f3d222ce22765"
+    }
+  ],
+  "committedSourceEvidence": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "committedSourceSha256": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60"
+    },
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "committedSourceSha256": "544304c14c4fc69d3a1a9ff94fe561f13da33bbad2a715ec018c0758eb510ae0"
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "committedSourceSha256": "14a255e57bd8cbbd9a57adc9f37ab2c49e8a76e61e18ca2f2779d39e31ef163c"
+    },
+    {
+      "path": "src/client-runtime/validation.ts",
+      "committedSourceSha256": "2762b6e2f8e85c0871d3f9b5e9b406de35393fab2516ec93b93a0b8af24fcdf4"
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/remote/index.ts",
+      "committedSourceSha256": "cc78f108c8b95b1275542039bd72ed7ba8ee22aa8f4b7fd45e66d61ff89a9957"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/components/RuntimeQuickstart.tsx",
+      "committedSourceSha256": "e227f91cbb6fd1a6c2a2d84888c4634de499bede2a48f0a180f3b5855e9d14fc"
+    }
+  ],
+  "sourceWrites": 0,
+  "serviceReads": 0,
+  "paidCalls": 0,
+  "localAnalysisFailures": [
+    "Exploratory non-Completion identifier selection raised KeyError; subsequent selection explicitly filters Completion/get identifier",
+    "First report-writing heredoc raised unterminated f-string SyntaxError before execution; no partial report or service action occurred"
+  ]
+}
