@@ -1,0 +1,323 @@
+{
+  "observedAt": "2026-10-13T18:19:00.696Z",
+  "target": {
+    "sessionId": "0243a635-96dc-4c03-a2b1-34fbcc8a6e63",
+    "name": "warmhearted-mallard-13",
+    "id": 6144705,
+    "reference": "dev/cortex-sandbox-0243a635-96dc-4c03-a2b1-34fbcc8a6e63"
+  },
+  "freshVerifications": 3,
+  "run": {
+    "runId": "run:d72401624d04b9d23a223df133d70330c0f5740968d3a9b05f0e81da90e30336",
+    "responseStatus": "COMPLETE",
+    "attemptNumber": 1,
+    "createdAt": 1791915383017,
+    "updatedAt": 1791915402353,
+    "outputMessageCount": 1
+  },
+  "execution": {
+    "state": "COMPLETE",
+    "contextState": "COMPLETE",
+    "workflowId": "jd7dre2z32eftvq21ffwpph0hn8g6s94"
+  },
+  "workflows": [
+    {
+      "id": "jd7dre2z32eftvq21ffwpph0hn8g6s94",
+      "generationNumber": 0,
+      "resultKind": "success"
+    }
+  ],
+  "stages": {
+    "durable": [
+      {
+        "sequence": 1,
+        "final": false,
+        "createdAt": 1791915396407,
+        "type": "text-start",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791915396407,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 5
+      },
+      {
+        "sequence": 3,
+        "final": false,
+        "createdAt": 1791915397541,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 2
+      },
+      {
+        "sequence": 4,
+        "final": false,
+        "createdAt": 1791915397541,
+        "type": "text-end",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 5,
+        "final": true,
+        "createdAt": 1791915398988,
+        "type": "text",
+        "nonemptyText": true,
+        "textBytes": 7
+      },
+      {
+        "sequence": 6,
+        "final": true,
+        "createdAt": 1791915398988,
+        "type": "status",
+        "nonemptyText": false,
+        "textBytes": 0
+      }
+    ],
+    "agentOperations": [
+      {
+        "kind": "model",
+        "ordinal": 0,
+        "state": "complete",
+        "createdAt": 1791915393268,
+        "startedAt": 1791915393268,
+        "endedAt": 1791915397884
+      }
+    ],
+    "modelOperations": [
+      {
+        "_id": "t178r6ramzca1btawz4jj93rxh8g7724",
+        "operationKey": "conversation.title",
+        "createdAt": 1791915405826,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "t17bb3w5n4rda8cjwe4r3486b58g6yd7",
+        "operationKey": "agent.respond",
+        "createdAt": 1791915395033,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "t17dwbn1dd54b1tk4pvj3r3b0x8g6gqj",
+        "operationKey": "embedding.query",
+        "createdAt": 1791915387558,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      }
+    ],
+    "modelAttempts": [
+      {
+        "operationDocumentId": "t178r6ramzca1btawz4jj93rxh8g7724",
+        "state": "uncertain",
+        "createdAt": 1791915405826,
+        "checkpointAt": 1791915407201,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "t17bb3w5n4rda8cjwe4r3486b58g6yd7",
+        "state": "uncertain",
+        "createdAt": 1791915395033,
+        "checkpointAt": 1791915395033,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "t17dwbn1dd54b1tk4pvj3r3b0x8g6gqj",
+        "state": "uncertain",
+        "createdAt": 1791915387558,
+        "checkpointAt": 1791915388076,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      }
+    ],
+    "ingestionEvents": [
+      {
+        "eventId": "ingestion:9bc7e199372a20c7d7adc7db8bcb0606e6f3b122d64f0cb17c71b91d554f98ec",
+        "sequence": 6,
+        "eligibility": "eligible",
+        "factsState": "skipped",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791915398988,
+        "updatedAt": 1791915402353
+      },
+      {
+        "eventId": "ingestion:c460d9bd992753ef6f30ded9f8974f69eec4275d90450ae234c0647878aa4a30",
+        "sequence": 5,
+        "eligibility": "eligible",
+        "factsState": "complete",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791915383017,
+        "updatedAt": 1791915394592
+      }
+    ],
+    "ingestionStages": [
+      {
+        "eventId": "ingestion:9bc7e199372a20c7d7adc7db8bcb0606e6f3b122d64f0cb17c71b91d554f98ec",
+        "stage": "vectors",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791915402353
+      },
+      {
+        "eventId": "ingestion:9bc7e199372a20c7d7adc7db8bcb0606e6f3b122d64f0cb17c71b91d554f98ec",
+        "stage": "facts",
+        "state": "skipped",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791915398988
+      },
+      {
+        "eventId": "ingestion:9bc7e199372a20c7d7adc7db8bcb0606e6f3b122d64f0cb17c71b91d554f98ec",
+        "stage": "extract",
+        "state": "skipped",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791915398988
+      },
+      {
+        "eventId": "ingestion:c460d9bd992753ef6f30ded9f8974f69eec4275d90450ae234c0647878aa4a30",
+        "stage": "vectors",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791915394592
+      },
+      {
+        "eventId": "ingestion:c460d9bd992753ef6f30ded9f8974f69eec4275d90450ae234c0647878aa4a30",
+        "stage": "facts",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791915391583
+      },
+      {
+        "eventId": "ingestion:c460d9bd992753ef6f30ded9f8974f69eec4275d90450ae234c0647878aa4a30",
+        "stage": "extract",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791915387566
+      }
+    ],
+    "ingestionJobs": [
+      {
+        "eventId": "ingestion:9bc7e199372a20c7d7adc7db8bcb0606e6f3b122d64f0cb17c71b91d554f98ec",
+        "runBudgetId": "474ae4995fcc82073ca7fbcfce56c558ceed2d401507e5f42cf746fda144d997",
+        "runAccountId": "ps71q7t4km1b1mhsmwjwv5vfph8g60r2",
+        "createdAt": 1791915399499
+      },
+      {
+        "eventId": "ingestion:c460d9bd992753ef6f30ded9f8974f69eec4275d90450ae234c0647878aa4a30",
+        "runBudgetId": "f3b123de7232650d0c7e2ea90efb78d3f62f59e324978250894c1e8a2d076cd2",
+        "runAccountId": "ps7fqmrhwt316sgtav1vj2583x8g7ny7",
+        "createdAt": 1791915384058
+      }
+    ],
+    "titleJobs": [
+      {
+        "jobId": "content:bf9a7556ad15d7fd217c796932adb8cf9cfc0bc665d179f1ac86f42f71566e96",
+        "intent": "title",
+        "state": "ready",
+        "createdAt": 1791915400355,
+        "updatedAt": 1791915412843
+      }
+    ]
+  },
+  "runBudgetId": "d6c0952e9ecf656b0f86ab6e3f3d72a97e9ba564fda6563e6f3be725c73bfc39",
+  "steps": [
+    {
+      "stepNumber": 6,
+      "name": "runtimeContentJobs:enqueueParentTitle",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791915399723,
+      "completedAt": 1791915400894
+    },
+    {
+      "stepNumber": 5,
+      "name": "runtimeAgent:finalize",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791915398420,
+      "completedAt": 1791915399497
+    },
+    {
+      "stepNumber": 4,
+      "name": "model 0",
+      "functionType": "action",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791915392651,
+      "completedAt": 1791915398151
+    },
+    {
+      "stepNumber": 3,
+      "name": "authorized Cortex context",
+      "functionType": "action",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791915385745,
+      "completedAt": 1791915392284
+    },
+    {
+      "stepNumber": 2,
+      "name": "runtimeAgent:prepareEmptyContext",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791915384188,
+      "completedAt": 1791915385503
+    },
+    {
+      "stepNumber": 1,
+      "name": "runtimeAgent:contextBarrier",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791915384188,
+      "completedAt": 1791915384188
+    },
+    {
+      "stepNumber": 0,
+      "name": "runtimeAgent:startContext",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791915384188,
+      "completedAt": 1791915384188
+    }
+  ],
+  "counts": {
+    "agentOperations": 1,
+    "modelOperations": 3,
+    "modelAttempts": 3
+  },
+  "errors": [],
+  "phases": [],
+  "logLineStructures": [],
+  "rawPayloadRetained": false
+}

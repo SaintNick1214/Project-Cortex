@@ -217,7 +217,8 @@ it("the whole model path obeys native RPC schemas, uses private pinned history a
   expect(JSON.stringify(privateContext)).toContain("PRIVATE_MEMORY_CONTEXT"); expect(JSON.stringify(privateContext)).toContain("Hello");
   const preparation = calls.indexOf("runtimeAgent:prepareModelOperation");
   expect(preparation).toBeGreaterThanOrEqual(0);
-  expect(calls.slice(preparation, preparation + 3)).toEqual(["runtimeAgent:prepareModelOperation", "runtimeAgent:hydrateExecution", "runtimeModelPolicy:resolve"]);
+  expect(calls.slice(preparation, preparation + 2)).toEqual(["runtimeAgent:prepareModelOperation", "runtimeAgent:resolveModelOperation"]);
+  expect(calls).not.toContain("runtimeModelPolicy:resolve");
   expect(calls).not.toContain("runtimeAgent:completedModelStep"); expect(calls).not.toContain("runtimeAgent:beginOperation"); expect(calls).not.toContain("runtimeAgent:startOperation");
   expect(calls).toContain("runtimeAgent:recordOutput"); expect(calls).toContain("runtimeAgent:finishOperation"); expect(complete).toHaveBeenCalledTimes(1);
   expect(JSON.stringify(f.db.table("runtimeAgentOutput"))).not.toContain("PROVIDER_SECRET");

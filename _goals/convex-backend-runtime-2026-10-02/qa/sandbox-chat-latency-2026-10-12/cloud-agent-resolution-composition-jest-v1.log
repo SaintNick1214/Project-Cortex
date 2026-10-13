@@ -1,0 +1,234 @@
+(node:61035) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/resolution-composition.test.ts (5.454 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● Agent-only fresh hydration and native policy resolution › preserves the original account-pin failure code/order and leaves state unchanged
+
+    Expected original guard rejection
+
+      50 | }
+      51 | async function failure(call: () => Promise<unknown>) {
+    > 52 |   try { await call(); throw new Error("Expected original guard rejection"); }
+         |                             ^
+      53 |   catch (error) {
+      54 |     if (!(error instanceof Error) || error.message === "Expected original guard rejection") throw error;
+      55 |     return { name: error.name, message: error.message, data: "data" in error ? error.data : undefined };
+
+      at failure (tests/unit/runtimeAgent/resolution-composition.test.ts:52:29)
+      at tests/unit/runtimeAgent/resolution-composition.test.ts:113:38
+
+  ● Agent-only fresh hydration and native policy resolution › the real governed constructor retains two fresh resolutions while removing two action RPCs
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      91 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      92 | }
+    > 93 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      94 | const utf8 = (text: string): number => {
+      95 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      96 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:93:44)
+      at proofFor (convex-dev/runtimeGateway.ts:245:315)
+      at createGovernedGatewayModel (convex-dev/runtimeGateway.ts:481:97)
+      at Module.modelStepHandler (convex-dev/runtimeAgent.ts:655:20)
+      at Object.<anonymous> (tests/unit/runtimeAgent/resolution-composition.test.ts:132:12)
+
+  ● Agent-only fresh hydration and native policy resolution › the second real-constructor resolution fences late grant after the first succeeds
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "FORBIDDEN"
+    Received message:   "Expected function reference in the current component like \"api.file.func\" or \"internal.file.func\", but received reference _reference/childComponent/agent/messages/getMessagesByIds"
+
+          141 |     const x = await fixture(), query = x.f.ctx.runQuery.bind(x.f.ctx); let resolutions = 0;
+          142 |     x.f.ctx.runQuery = (async (reference, args) => {
+        > 143 |       if (getFunctionName(reference) === "runtimeAgent:resolveModelOperation" && ++resolutions === 2) {
+              |           ^
+          144 |         if (fault === "grant") x.f.grant.revokedAt = clock; else x.f.db.table("runtimeModelQualifications")[0].active = false;
+          145 |       }
+          146 |       return await query(reference, args);
+
+      at getFunctionName (node_modules/convex/dist/esm/server/api.js:12:13)
+      at Object.x.f.ctx.runQuery (tests/unit/runtimeAgent/resolution-composition.test.ts:143:11)
+      at nativeById (convex-dev/runtimeTranscript.ts:93:20)
+      at hydrateCutoff (convex-dev/runtimeTranscript.ts:362:87)
+      at hydratePrivateCutoff (convex-dev/runtimeTranscript.ts:378:3)
+      at executionContext (convex-dev/runtimeAgent.ts:132:20)
+      at Function.prepareModelOperationHandler [as _handler] (convex-dev/runtimeAgent.ts:554:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeAgent/resolution-composition.test.ts:34:102
+      at Object.transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/resolution-composition.test.ts:34:70)
+      at Module.modelStepHandler (convex-dev/runtimeAgent.ts:635:20)
+      at tests/unit/runtimeAgent/resolution-composition.test.ts:148:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/resolution-composition.test.ts:148:115
+
+  ● Agent-only fresh hydration and native policy resolution › the second real-constructor resolution fences late qualification after the first succeeds
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "CAPABILITY_UNAVAILABLE"
+    Received message:   "Expected function reference in the current component like \"api.file.func\" or \"internal.file.func\", but received reference _reference/childComponent/agent/messages/getMessagesByIds"
+
+          141 |     const x = await fixture(), query = x.f.ctx.runQuery.bind(x.f.ctx); let resolutions = 0;
+          142 |     x.f.ctx.runQuery = (async (reference, args) => {
+        > 143 |       if (getFunctionName(reference) === "runtimeAgent:resolveModelOperation" && ++resolutions === 2) {
+              |           ^
+          144 |         if (fault === "grant") x.f.grant.revokedAt = clock; else x.f.db.table("runtimeModelQualifications")[0].active = false;
+          145 |       }
+          146 |       return await query(reference, args);
+
+      at getFunctionName (node_modules/convex/dist/esm/server/api.js:12:13)
+      at Object.x.f.ctx.runQuery (tests/unit/runtimeAgent/resolution-composition.test.ts:143:11)
+      at nativeById (convex-dev/runtimeTranscript.ts:93:20)
+      at hydrateCutoff (convex-dev/runtimeTranscript.ts:362:87)
+      at hydratePrivateCutoff (convex-dev/runtimeTranscript.ts:378:3)
+      at executionContext (convex-dev/runtimeAgent.ts:132:20)
+      at Function.prepareModelOperationHandler [as _handler] (convex-dev/runtimeAgent.ts:554:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeAgent/resolution-composition.test.ts:34:102
+      at Object.transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/resolution-composition.test.ts:34:70)
+      at Module.modelStepHandler (convex-dev/runtimeAgent.ts:635:20)
+      at tests/unit/runtimeAgent/resolution-composition.test.ts:148:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/resolution-composition.test.ts:148:115
+
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.5s | 22/26 passed | /tests/unit/runtimeAgent/resolution-composition.test.ts
+  ✅     1.7s | 21/21 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 0.6%) - the actual model action wires only its exact original binding to one native Agent admission/checkpoint parent
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.5%) - real installed Agent/AI SDK smoothing publishes first whitespace-free fragment before text-end/terminal, preserving order once
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.5%) - Agent-only fresh hydration and native policy resolution retains exact original output, all native/component read order and zero effects
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.4%) - empty/start chunks do not consume first-text immediacy and concurrent callbacks keep bounded ordered batches
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.3%) - the whole deferred tool path keeps exact native schemas and its primary model parent; completed tool replay performs no second effect
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution is internal and cannot select a model, policy lane, source, parent, account or request
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 7. [31m✗[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution the real governed constructor retains two fresh resolutions while removing two action RPCs
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.3%) - projects real SDK Date-containing finish-step parts before native RPC serialization, retaining safe text and tool phases
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.3%) - nonstream tool calls retain exact private inputs and public requested phases before the deferred tool
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+10. [32m✓[0m    0.02s ( 0.3%) - confirmed nonstream operation replay returns its canonical result without another native method
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+11. [32m✓[0m    0.02s ( 0.2%) - subsequent text keeps the existing250ms flush threshold after first immediate publication
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+12. [32m✓[0m    0.02s ( 0.2%) - first fragment still executes real recordOutput current guards after cancelled
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+13. [32m✓[0m    0.02s ( 0.2%) - stream failure after first public text retains only that prefix and closes without canonical completion
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+14. [32m✓[0m    0.02s ( 0.2%) - first fragment still executes real recordOutput current guards after revoked
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+15. [32m✓[0m    0.02s ( 0.2%) - concurrent cancellation before first publication denies the queued prefix and cleanup joins all callbacks
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+16. [32m✓[0m    0.02s ( 0.2%) - the whole model path obeys native RPC schemas, uses private pinned history and owns one no-retry stream lifecycle
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+17. [32m✓[0m    0.02s ( 0.2%) - uses the requested native interface with the same owned history and no retries (streaming=true)
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+18. [32m✓[0m    0.02s ( 0.2%) - completed nonstream replay rechecks saved-message pins before returning protected evidence
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+19. [32m✓[0m    0.02s ( 0.2%) - first fragment still executes real recordOutput current guards after input-edited
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+20. [32m✓[0m    0.02s ( 0.2%) - the constructor failure closes the governed lifecycle once and does not publish a completed operation
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.43s (5.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.31s
+  Test suites:        2
+  Individual tests:   47
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       4 failed, 43 passed, 47 total
+Snapshots:   0 total
+Time:        7.313 s
+Ran all test suites within paths "tests/unit/runtimeAgent/resolution-composition.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-jest-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

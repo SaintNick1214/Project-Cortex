@@ -20,7 +20,7 @@ import { readGraphProgress, refreshGraphWatermarks } from "./runtimeGraph";
 type ReadCtx = Pick<QueryCtx, "db" | "runQuery">;
 type Event = Doc<"runtimeIngestionEvents">;
 export interface ContextBoundary { conversationId: string; runId: string; queueSequence: number; anchor: { order: number; stepOrder: number } }
-const contextBoundary = v.object({ conversationId: v.string(), runId: v.string(), queueSequence: v.number(),
+export const contextBoundary = v.object({ conversationId: v.string(), runId: v.string(), queueSequence: v.number(),
   anchor: v.object({ order: v.number(), stepOrder: v.number() }) });
 const refreshRef = makeFunctionReference<"mutation", { reference: RuntimeAuthorityReference }>("runtimeMemoryContext:refreshWatermarks");
 function boundedCutoff(value: number): void {
@@ -117,8 +117,7 @@ export const refreshWatermarks = internalMutation({ args: { reference: runtimeAu
   handler: async (ctx, args) => await refreshScopeWatermarks(ctx, args.reference) });
 export const stageProgress = internalQuery({ args: { reference: runtimeAuthorityReference, cutoff: v.number(), runBudgetId: v.optional(v.string()), graphCutoff: v.optional(v.number()) },
   handler: async (ctx, args) => await readStageProgress(ctx, args.reference, args.cutoff, args.runBudgetId, args.graphCutoff) });
-export const indexedSourceAtCutoff = internalQuery({ args: { reference: runtimeAuthorityReference, sourceId: v.string(), sourceRevision: v.number(), cutoff: v.number(), boundary: v.optional(contextBoundary) },
-  handler: async (ctx, args) => {
+export async function readIndexedSourceAtCutoff(ctx: ReadCtx, args: { reference: RuntimeAuthorityReference; sourceId: string; sourceRevision: number; cutoff: number; boundary?: ContextBoundary }) {
     boundedCutoff(args.cutoff); const repository = new ConvexMemoryRepository(ctx, args.reference, "read");
     const source = await repository.getSource(args.sourceId);
     if (!source || source.lineage.sourceRevision !== args.sourceRevision) ingestionDenied("STALE_SOURCE");
@@ -126,7 +125,9 @@ export const indexedSourceAtCutoff = internalQuery({ args: { reference: runtimeA
       .eq("memorySpaceId", args.reference.memorySpaceId!).eq("lineage.sourceId", args.sourceId).eq("lineage.sourceRevision", args.sourceRevision)).unique();
     return Boolean(event && event.eligibility === "eligible" && event.sequence <= args.cutoff
       && event.contentHash === source.contentHash && event.lineage.sourceEventId === source.lineage.sourceEventId && await withinConversationBoundary(ctx, event, args.boundary));
-  } });
+  }
+export const indexedSourceAtCutoff = internalQuery({ args: { reference: runtimeAuthorityReference, sourceId: v.string(), sourceRevision: v.number(), cutoff: v.number(), boundary: v.optional(contextBoundary) },
+  handler: readIndexedSourceAtCutoff });
 
 /** No eligible unrepresented event means recall's own cutoff filter cannot
  * yield indexed context. Overflow/any candidate conservatively uses recall. */

@@ -1,0 +1,201 @@
+{
+  "schema": "cortex.cloud-query-composition.independent-source-review.v1",
+  "verdict": "PASS",
+  "reviewedAtUTC": "2026-10-13T18:52:25.944966+00:00",
+  "reviewer": "latency_batch_review (non-author)",
+  "policy": "acceptance-policy v2",
+  "scope": "One coherent source/test gate for Agent resolution and source/cutoff query composition; no installed functionality, native OCC or SLO acceptance",
+  "baseline": "6eb45386fb146be330c5c58419e840015b4e936d",
+  "finalSourceFiles": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "d2d108e0e019d94e846acf1ea875b8ad7202edbf6bb52e061129b29fc36f7ddd",
+      "match": true
+    },
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "6c3ecab80b4953e0e4f3c94ca4396217ab5a51738da1ab3bb29163450deaa070",
+      "match": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "c4a76cef99abffd103004345d93643f184a835ef5a29a3d5142305a33ef2e921",
+      "match": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-source-composition.test.ts",
+      "sha256": "f4e3dc440cd33929cd82f2dd6943a05fe090d34dfc44b4d0f9119768d4758c4a",
+      "match": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "sha256": "58244b0cdfae21138a0feaf7b32bfd5070553814b3bdbcad8308aa4bb17c2659",
+      "match": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "sha256": "53a3aa58e2f80f9bdd7efe33f2993c8bb67c9ce90290ec0b21d4f1b7cbc5daf4",
+      "match": true
+    }
+  ],
+  "stageOneAgentPreimageMatches": true,
+  "independentlyCheckedOriginalBodies": {
+    "originalResolveBody": true,
+    "originalIndexedCutoffBody": true,
+    "executionContext": true,
+    "contextInputs": true,
+    "saveContext": true,
+    "modelPreparation": true,
+    "admissionCheckpoint": true,
+    "modelSuffix": true,
+    "toolStep": true
+  },
+  "inspectedRawReceipts": [
+    {
+      "path": "cloud-agent-resolution-composition-checks.json",
+      "sha256": "479f07c6090fa52b3612b51db139a77e74011aec94ea9702f6125893baf890ce"
+    },
+    {
+      "path": "cloud-agent-resolution-composition-root-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitCode": 0
+    },
+    {
+      "path": "cloud-agent-resolution-composition-backend-types-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitCode": 0
+    },
+    {
+      "path": "cloud-agent-resolution-composition-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitCode": 0
+    },
+    {
+      "path": "cloud-agent-resolution-composition-eslint-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitCode": 0
+    },
+    {
+      "path": "cloud-agent-resolution-composition-jest-v1.json",
+      "sha256": "d926058cde0a706e9fe4ce695f78c35a1fba0f267d943abdd7ad59a81cbe6225",
+      "success": false,
+      "passedTests": 43,
+      "failedTests": 4,
+      "skippedTests": 0,
+      "todoTests": 0,
+      "suites": 2
+    },
+    {
+      "path": "cloud-agent-resolution-composition-jest-v2.json",
+      "sha256": "3391e55e7efad731502d6351f20c3df094da79ccd32196c21192c3ce9fde7bcf",
+      "success": true,
+      "passedTests": 47,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "todoTests": 0,
+      "suites": 2
+    },
+    {
+      "path": "cloud-agent-resolution-composition-affected-jest-v1.json",
+      "sha256": "b94ae50efaf05d9b3fb7407826b3a0cd88312e051c5f328e749ce17d9dc8520d",
+      "success": true,
+      "passedTests": 1025,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "todoTests": 0,
+      "suites": 19
+    },
+    {
+      "path": "cloud-agent-resolution-composition-focused-final.json",
+      "sha256": "280605a4098a06f9a363185750b642e55a626f036ee1f062674c13e728f1ba24",
+      "success": true,
+      "passedTests": 26,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "todoTests": 0,
+      "suites": 1
+    },
+    {
+      "path": "cloud-context-source-composition-checks.json",
+      "sha256": "ef049c1143862472912ab4f5b205db57161e214f4ca030ca872f24a2cbaeab63"
+    },
+    {
+      "path": "cloud-context-source-composition-root-types-v3.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitCode": 0
+    },
+    {
+      "path": "cloud-context-source-composition-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitCode": 0
+    },
+    {
+      "path": "cloud-context-source-composition-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitCode": 0
+    },
+    {
+      "path": "cloud-context-source-composition-eslint-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitCode": 0
+    },
+    {
+      "path": "cloud-context-source-composition-affected-v1.json",
+      "sha256": "105f1a23bab2624b7b3f5dbcd711d1a1ed879964f89ba8adf724e3a90d1ae0c6",
+      "success": true,
+      "passedTests": 398,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "todoTests": 0,
+      "suites": 13
+    },
+    {
+      "path": "cloud-context-source-composition-focused-final.json",
+      "sha256": "c3cb8745f1fd9104188599ca8a38b4562e7eee30fda9d3d4907874856ba4cb3a",
+      "success": true,
+      "passedTests": 46,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "todoTests": 0,
+      "suites": 1
+    },
+    {
+      "path": "cloud-agent-resolution-composition-equivalence.json",
+      "sha256": "e16f12b94fd15e9530c79c2f6f44b2f75d8ab8ee862825b27b7b29e8ee88c483"
+    },
+    {
+      "path": "cloud-context-source-composition-equivalence.json",
+      "sha256": "d2e28ffc2acd74b7e94e73230f62f3b66fa10521c9bc683b2496134de3e0f70b"
+    },
+    {
+      "path": "cloud-agent-resolution-composition-report.md",
+      "sha256": "8700d884a3f28b16343c8edb140dfdb8223b83c0b9ca7ac4f98759d04ae38dd9"
+    },
+    {
+      "path": "cloud-context-source-composition-report.md",
+      "sha256": "2dfcc582560c987859296a6d329d02f2f1989e91c42ca2eb14daf2a5b1f5984f"
+    }
+  ],
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "unresolvedBreakingFindings": [],
+  "materialLimits": [
+    "Actual handlers run on controlled DB/component/transport ports, not native service/OCC qualification.",
+    "Both query compositions enlarge a single snapshot readset; resource/contention behavior and timing remain installed-candidate follow-up.",
+    "RPC reductions describe only the selected call intervals; no universal latency, provider-floor or sub-one-second claim.",
+    "Historical red test/type/equivalence checks and K7/K9/K10 latency, expected-code, CLI prompt-marker and generic sequence failures remain unchanged."
+  ],
+  "reviewActions": {
+    "sourceEdits": 0,
+    "testRuns": 0,
+    "services": 0,
+    "paidCalls": 0,
+    "gitMutations": 0
+  }
+}

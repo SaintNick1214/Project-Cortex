@@ -33,14 +33,15 @@ import { dataAuthorityReference, requireDataAuthority, managedConversationAccess
 import { deliveryExpiresAt } from "./runtimeDelivery";
 import { recheckAuthority } from "./runtimeAuth";
 import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
-import type { GatewayAdmissionCheckpoint } from "./runtimeGateway";
-import { admitHandler, checkpointHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
-import { createAgentGatewayCancellationBridge, createGovernedGatewayModel, assertGatewayReservedRequest } from "./runtimeGateway";
+import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
+import { admitHandler, checkpointHandler, resolveHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
+import { createAgentGatewayCancellationBridge, createGovernedGatewayModel, assertGatewayReservedRequest, GatewayDispatchError } from "./runtimeGateway";
 import { createActionMemoryRepository } from "./runtimeMemoryRepository";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sourceContent, commitDerivedInput } from "./runtimeMemorySchema";
 import { registerCompletedToolSource } from "./runtimeIngestion";
-import { readIndexedContextAvailability, readPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
+import { contextBoundary, readIndexedContextAvailability, readIndexedSourceAtCutoff, readPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
+import type { ContextBoundary } from "./runtimeMemoryContext";
 import { traceRuntimePhase } from "./runtimeLatencyTrace";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { recallMemory } from "./runtimeMemoryServices";
@@ -52,6 +53,8 @@ type Attempt = { reference: RuntimeAuthorityReference; runId: string; attemptNum
 type ToolCall = { toolCallId: string; toolName: string; inputCanonical: string };
 type StepResult = { savedMessageIds: string[]; calls: ToolCall[]; final: boolean };
 type Witness = ContextSourceWitness;
+type ContextSourceArgs = { reference: RuntimeAuthorityReference; sourceId: string;
+  expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }; excludedSourceKeys: string[]; cutoff: number; boundary: ContextBoundary };
 function attemptArgs(args: Attempt): Attempt { return { reference: args.reference, runId: args.runId, attemptNumber: args.attemptNumber, leaseVersion: args.leaseVersion }; }
 export type AgentPublicPart = RuntimePublicOutputPart | { type: "status"; state: Doc<"runtimeAgentExecutions">["state"] }
   | { type: "artifact"; artifactId: string; kind: "memory-receipt" } | { type: "media-job"; version: 1; jobId: string; artifactId: string; kind: "image" | "video" };
@@ -64,9 +67,11 @@ const workflow = new WorkflowManager((components as unknown as { workflow: Const
 const refs = {
   claim: ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string; leaseMs: number }, { runId: string; attemptNumber: number; leaseVersion: number } | { runId: string; failureCode: string } | null>("mutation", "runs:claimNext"),
   hydrate: ref<"query", Attempt, Awaited<ReturnType<typeof executionContext>>>("query", "runtimeAgent:hydrateExecution"),
+  resolveModelOperation: ref<"query", Attempt & { runBudgetId: string }, Awaited<ReturnType<typeof resolveModelOperationHandler>>>("query", "runtimeAgent:resolveModelOperation"),
   admitModelOperation: ref<"mutation", Attempt & { operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string }, Awaited<ReturnType<typeof admitModelOperationHandler>>>("mutation", "runtimeAgent:admitModelOperation"),
   prepareModelOperation: ref<"mutation", Attempt & { ordinal: number }, Awaited<ReturnType<typeof prepareModelOperationHandler>>>("mutation", "runtimeAgent:prepareModelOperation"),
   contextInputs: ref<"query", Attempt, Awaited<ReturnType<typeof contextInputsHandler>>>("query", "runtimeAgent:contextInputs"),
+  contextSource: ref<"query", ContextSourceArgs, Awaited<ReturnType<typeof contextSourceHandler>>>("query", "runtimeAgent:contextSource"),
   prepareContext: ref<"action", Attempt, null>("action", "runtimeAgent:prepareContext"),
   context: ref<"mutation", Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string }, null>("mutation", "runtimeAgent:saveContext"),
   begin: ref<"mutation", Attempt & { kind: "model" | "tool"; ordinal: number; requestCanonical: string; toolCallId?: string; toolName?: string },
@@ -148,6 +153,13 @@ async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, args: At
     messages: [...messages, ...currentMessages] };
 }
 export const hydrateExecution = internalQuery({ args: agentAttempt, handler: async (ctx, args) => await executionContext(ctx, args) });
+/** Agent hydration precedes the unchanged policy body in one fresh native read snapshot. */
+async function resolveModelOperationHandler(ctx: QueryCtx, args: Attempt & { runBudgetId: string }) {
+  const current = await executionContext(ctx, attemptArgs(args));
+  if (args.runBudgetId !== current.run.runBudgetId) transcriptDenied("POLICY_DENIED");
+  return await resolveHandler(ctx, { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId });
+}
+export const resolveModelOperation = internalQuery({ args: { ...agentAttempt, runBudgetId: v.string() }, handler: resolveModelOperationHandler });
 async function contextInputsHandler(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt) {
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
@@ -405,6 +417,19 @@ export const failContext = internalMutation({ args: { ...agentAttempt, failureCo
   await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextState: "failed", contextCompleteness: "incomplete", contextFailureCode: args.failureCode, updatedAt: Date.now() });
   await ctx.db.patch("runtimeRuns", current.run._id, { contextCompleteness: "incomplete", contextFailureCode: args.failureCode, updatedAt: Date.now() }); return null;
 } });
+/** One read snapshot retains both original source reads and their current fences. */
+async function contextSourceHandler(ctx: QueryCtx, args: ContextSourceArgs) {
+  const source = await new ConvexMemoryRepository(ctx, args.reference, "read").getSource(args.sourceId); if (!source) transcriptDenied("STALE_CONTEXT");
+  if (source.lineage.sourceEventId !== args.expected.sourceEventId || source.lineage.sourceRevision !== args.expected.sourceRevision
+    || args.expected.contentHash !== undefined && source.contentHash !== args.expected.contentHash) transcriptDenied("STALE_CONTEXT");
+  const key = contextSourceKey(memoryScope(args.reference), source.lineage); if (new Set(args.excludedSourceKeys).has(key)) return null;
+  const eligible = await readIndexedSourceAtCutoff(ctx, { reference: args.reference, sourceId: args.sourceId, sourceRevision: source.lineage.sourceRevision, cutoff: args.cutoff, boundary: args.boundary });
+  return eligible ? source : null;
+}
+export const contextSource = internalQuery({ args: { reference: runtimeAuthorityReference, sourceId: v.string(),
+  expected: v.object({ sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.optional(v.string()) }),
+  excludedSourceKeys: v.array(v.string()), cutoff: v.number(), boundary: contextBoundary }, handler: contextSourceHandler });
+
 export const prepareContext = internalAction({ args: agentAttempt, handler: async (ctx, args): Promise<null> => {
   const inputs = await ctx.runQuery(refs.contextInputs, args);
   const { current, scope, boundary, represented, pending } = inputs;
@@ -422,13 +447,11 @@ export const prepareContext = internalAction({ args: agentAttempt, handler: asyn
   const excluded = new Set([...represented, ...pending.sourceKeys]);
   const provenance = new Map<string, import("../src/domain/contracts").SourceLineage>();
   async function remember(sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }, permission: ContextSourcePermission) {
-    const source = await repository.getSource(sourceId); if (!source) transcriptDenied("STALE_CONTEXT");
-    if (source.lineage.sourceEventId !== expected.sourceEventId || source.lineage.sourceRevision !== expected.sourceRevision
-      || expected.contentHash !== undefined && source.contentHash !== expected.contentHash) transcriptDenied("STALE_CONTEXT");
-    const key = contextSourceKey(scope, source.lineage); if (excluded.has(key)) return false;
-    const eligible = await ctx.runQuery(ref<"query", { reference: RuntimeAuthorityReference; sourceId: string; sourceRevision: number; cutoff: number; boundary: typeof boundary }, boolean>("query", "runtimeMemoryContext:indexedSourceAtCutoff"),
-      { reference: args.reference, sourceId, sourceRevision: source.lineage.sourceRevision, cutoff, boundary });
-    if (!eligible) return false;
+    const source = await ctx.runQuery(refs.contextSource, { reference: args.reference, sourceId,
+      expected: { sourceEventId: expected.sourceEventId, sourceRevision: expected.sourceRevision, ...(expected.contentHash !== undefined ? { contentHash: expected.contentHash } : {}) },
+      excludedSourceKeys: [...excluded], cutoff, boundary });
+    if (!source) return false;
+    const key = contextSourceKey(scope, source.lineage);
     const witness = mergeContextWitness(witnesses.get(sourceId), { sourceId, sourceEventId: source.lineage.sourceEventId,
       sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, permissions: [permission] });
     if (!witness) transcriptDenied("STALE_CONTEXT");
@@ -636,10 +659,16 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
     return await ctx.runMutation(refs.admitModelOperation, { ...attempt, operationId: op.operationId, ordinal: args.ordinal,
       requestCanonical: request.requestCanonical, snapshotCanonical: request.snapshotCanonical });
   });
-  await guard();
-  const resolution = await base.ledger.resolve({ reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId });
+  const resolve: GatewayLedgerPort["resolve"] = async request => {
+    const result = await ctx.runQuery(refs.resolveModelOperation, { ...attempt, runBudgetId: request.runBudgetId });
+    if (canonicalModelJson(request.reference) !== canonicalModelJson(args.reference) || request.operationKey !== "agent.respond"
+      || request.runBudgetId !== current.run.runBudgetId || request.source !== undefined || request.parentOperationId !== undefined) transcriptDenied("POLICY_DENIED");
+    if (result.storageLimits.embeddingValuesPerCall !== 1) throw new GatewayDispatchError("CAPABILITY_UNAVAILABLE");
+    return { ...result, storageLimits: { ...result.storageLimits, embeddingValuesPerCall: 1 } };
+  };
+  const resolution = await resolve({ reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId });
   const governed = await createGovernedGatewayModel({ ...base, ledger: { ...base.ledger,
-    resolve: async request => { await guard(); return await base.ledger.resolve(request); },
+    resolve,
     // The native mutation repeats the complete current Agent fence atomically.
     markVisible: async request => await base.ledger.markVisible(request),
     attachTerminalResult: async request => { await guard(); return await base.ledger.attachTerminalResult(request); },

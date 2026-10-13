@@ -536,7 +536,9 @@ export const embeddingProfile = internalQuery({ args: { reference: runtimeAuthor
   operationKey: v.union(v.literal("embedding.memory"), v.literal("embedding.query")), runBudgetId: v.optional(v.string()) },
   handler: async (ctx, args) => readCurrentEmbeddingProfile(ctx, args.reference, args.operationKey, args.runBudgetId) });
 const resolveArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, runBudgetId: v.string(), source: v.optional(modelSource), parentOperationId: v.optional(v.id("runtimeModelOperations")) };
-export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, args) => {
+const _resolveInput = v.object(resolveArgs);
+/** Shared native body; each caller supplies its own current read snapshot. */
+export async function resolveHandler(ctx: ReadCtx, args: Infer<typeof _resolveInput>) {
   await currentAuthority(ctx, args.reference, args.operationKey); const run = await runAccount(ctx, args.reference, args.runBudgetId);
   const title = await completedContentTitle(ctx, args.reference, run._id, args.operationKey, args.parentOperationId);
   await guardAgentRunBudget(ctx, args.reference, run._id, title);
@@ -553,7 +555,8 @@ export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, a
   await assertContentPolicyPin(ctx, run._id, args.operationKey, resolved.snapshot, true, true);
   return { snapshot: resolved.snapshot, dispatchEvidence: evidence(resolved.manifest, resolved.snapshot), storageLimits: { ...MODEL_LEDGER_STORAGE_LIMITS,
     privateResultBytes: resolved.snapshot.semanticProfile?.profileId === LARGE_EMBEDDING_PROFILE.profileId ? 131_072 : MODEL_LEDGER_STORAGE_LIMITS.privateResultBytes } };
-} });
+}
+export const resolve = internalQuery({ args: resolveArgs, handler: resolveHandler });
 /** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
 export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, request: ReturnType<typeof validateModelRequest>["request"]): number {
   if (request.outputTokens > proof.resultBound.maximumOutputTokens || (proof.nativeInterface === "embedding" && request.texts.length > proof.resultBound.maximumEmbeddingValues)) fail("POLICY_DENIED");

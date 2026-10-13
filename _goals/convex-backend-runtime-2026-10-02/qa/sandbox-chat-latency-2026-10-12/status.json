@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "FreshV3 transactionseparation source/testPASS4.0; K9cleaned actualSLOFAIL retained; nextimmutablebuildpending",
+  "phase": "K10 actual cloud evidence preserved and fresh cleanup verified; next combined RPC composition/source review pending; SLO unmet",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-13T12:48:51.551Z",
+  "updatedAt": "2026-10-13T18:37:29.827Z",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -53,58 +53,67 @@
     ]
   },
   "browserPrerequisite": {
-    "surface": "Main-chat IAB available; root actual QA executed; delegated surface inventory remains separately blocked",
+    "surface": "Root IAB actual K10 QA executed; closed after verified signout clearing",
     "osClipboard": "untouched",
-    "evidence": "browser/k7-root-outcomes.json"
+    "evidence": "browser/k10-signout-cleared.json"
   },
-  "currentEnvironment": {
-    "sessionId": "e8cccbc7-fc49-44ef-a61a-d12ca169d472",
-    "target": "hushed-cobra-213",
-    "id": 6136804,
-    "reference": "dev/cortex-sandbox-e8cccbc7-fc49-44ef-a61a-d12ca169d472",
-    "phase": "CLEANED; launcher65793exit130; fresh exact k9-cleanup-final.json",
-    "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
-    "qualificationMethods": 8,
-    "qualificationPassed": 8,
-    "qualificationMetadata": "k9-native-qualification-metadata.json",
-    "containerId": "babc0c48925a632503cbb0c2f5c99f8ba5972902694a7683dd912795f8bf821b",
-    "backendTraceVerified": true,
-    "cleanup": "k9-cleanup-final.json",
-    "financialSnapshot": "k9-financial-metadata-1791895263347.json"
-  },
+  "currentEnvironment": null,
   "actualSamples": {
-    "generation": "K9",
-    "browserFirstAfterPaintMs": 12433.300000011921,
-    "browserWarmAfterPaintMs": 12882.5,
-    "browserCondition": "First ordinaryscope beforeCLI; warm afteractualfirstpositivefact/vectors2/2; laternativeprovesboth4/4. Exactempty/indexedpath is nativechain evidence, not inferredfromfreshscope",
+    "generation": "K10",
+    "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+    "browserFirstAfterPaintMs": 11181.899999976158,
+    "browserWarmAfterPaintMs": 9365.100000023842,
     "browserLatencyMeasured": true,
-    "responses": "COMPLETE",
-    "nativeMemory": "Bothbrowser+CLIpositivefacts/vectorsfullusage/currentauth/provenancecontiguous8/8PASS",
-    "cliFirstStdoutAcknowledgedMs": 17135.665632,
-    "cliWarmFirstStdoutAcknowledgedMs": 19593.27780099999,
+    "browserResponses": "COMPLETE",
+    "browserNativeMemory": "4/4 positive facts/vectors/current authority/full native usage PASS",
+    "cliFirstStdoutAcknowledgedMs": 15456.622757000005,
+    "cliWarmFirstStdoutAcknowledgedMs": null,
+    "cliWarmOutcome": "waiting_approval; no first text before approval; not a comparable no-tool TTFT sample",
     "cliDeadlineFailure": false,
     "originalDeadlineMs": 30000,
-    "cliCondition": "Aftertwoindexedbrowserturns; warm afterfirstCLImemoryverified6/6",
+    "cliRecovery": "No resubmission: active browser disconnect/reconnect of same waiting-approval run, one approved memory_remember, canonical CLW30 COMPLETE",
+    "originalCliMemoryVerdict": "FAIL: two-message expected sequence excludes approved tool event8; user7/tool8/assistant9 actually contiguous",
+    "readiness": {
+      "factsThrough": 9,
+      "vectorsThrough": 9,
+      "graphRequired": false
+    },
     "subsecondAccepted": false,
     "requiredIntegrationAccepted": false,
-    "receipt": "browser/k9-root-outcomes.json",
-    "cliReceipt": "k9-cli-first-warm-timing.json",
-    "authenticationExpectedCode": {
-      "pass": 8,
-      "fail": 2,
+    "priorAuthenticationExpectedCodeFailures": {
+      "generation": "K9",
       "failures": [
-        "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
-        "invalidsignature→AUTHENTICATION_TIMEOUT"
+        "expired valid signature → AUTHENTICATION_TIMEOUT",
+        "invalid signature → AUTHENTICATION_TIMEOUT"
       ],
-      "noAccessDelivered": true,
-      "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
+      "notRerun": true
     },
-    "readerPostRevoke": "Suppressedheldmetadata withFORBIDDEN; sameidentity/scope/caps/expiry restorednewgrantversion2; ownerscope/data/financeunchanged"
+    "receipts": [
+      "browser/k10-first-warm-events.json",
+      "browser/k10-complete-tool-readiness.json",
+      "browser/k10-active-reconnect.json",
+      "k10-cli-timing-and-approval.json",
+      "k10-cli-memory-native-v2-first-warm-verification-1791915587703.json",
+      "cloud-k10-delay-chain.md",
+      "k10-financial-metadata-1791915701228.json"
+    ],
+    "firstCliPromptCompliance": {
+      "requestedMarker": "CLI30",
+      "actualMarker": "READY30",
+      "exactMatch": false,
+      "textLatencySampleValid": true,
+      "nativeFactChecksRemainSeparate": true
+    },
+    "toolInclusiveSupplement": {
+      "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
+      "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
+      "originalGenericFailPreserved": true
+    }
   },
   "pendingRepairs": [
-    "One independent source/test acceptance forfreshV3 separatedcontextmutation",
-    "Fresh hostedV3 installed-client/browser latency andaffectednegative/race/failurechecks",
-    "Under1000ms goal andfinalindependentaudit remain incomplete"
+    "Fresh Agent-only resolution composition measured from model preparation prefix",
+    "Installed successor cloud latency and applicable functional checks",
+    "Under1000ms goal and final independent audit remain incomplete"
   ],
   "refinements": [
     {
@@ -215,7 +224,8 @@
       "tests": 186,
       "suites": 4,
       "skips": 0,
-      "liveIntegration": "Pendingnewimmutablecloudcandidate; contextcanstillOCC, K9originalfailurepreserved"
+      "liveIntegration": "K10 native separate context step and initial/resume wrappers had no saved OCC retries; browser11.18/9.37s still fail target",
+      "commit": "6eb45386fb146be330c5c58419e840015b4e936d"
     }
   ],
   "priorEnvironmentCleanup": "k3-cleanup-final.json",
@@ -388,11 +398,71 @@
       "issuedCalls": 1,
       "cleanup": "k8-cleanup-final.json",
       "failure": "k8-failed-qualification-metadata.json"
+    },
+    {
+      "sessionId": "e8cccbc7-fc49-44ef-a61a-d12ca169d472",
+      "target": "hushed-cobra-213",
+      "id": 6136804,
+      "reference": "dev/cortex-sandbox-e8cccbc7-fc49-44ef-a61a-d12ca169d472",
+      "phase": "CLEANED; launcher65793exit130; fresh exact k9-cleanup-final.json",
+      "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+      "qualificationMethods": 8,
+      "qualificationPassed": 8,
+      "qualificationMetadata": "k9-native-qualification-metadata.json",
+      "containerId": "babc0c48925a632503cbb0c2f5c99f8ba5972902694a7683dd912795f8bf821b",
+      "backendTraceVerified": true,
+      "cleanup": "k9-cleanup-final.json",
+      "financialSnapshot": "k9-financial-metadata-1791895263347.json"
+    },
+    {
+      "sessionId": "0243a635-96dc-4c03-a2b1-34fbcc8a6e63",
+      "target": "warmhearted-mallard-13",
+      "id": 6144705,
+      "phase": "CLEANED; launcher7389 exit130; exact fresh k10-cleanup-final.json",
+      "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+      "qualificationMethods": 8,
+      "qualificationPassed": 8,
+      "qualificationMetadata": "k10-native-qualification-metadata.json",
+      "backendTraceVerified": true,
+      "financialSnapshot": "k10-financial-metadata-1791915701228.json",
+      "cleanup": "k10-cleanup-final.json"
     }
   ],
   "nextCandidate": {
     "kit": "manual-sandbox-latency-context-transaction-2026-10-13",
-    "phase": "Sourceaccepted, commit/buildpending; no resources",
-    "sourceCommit": "Pendingacceptedcommit"
-  }
+    "phase": "Packaging100%,launcher99PASS,actualREADY",
+    "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+    "imageId": "sha256:7b80b75968ab80ee5ffff058a119eaff79ae5dd007fcdb0d7eb2a7724fdc1663"
+  },
+  "actualSampleHistory": [
+    {
+      "generation": "K9",
+      "browserFirstAfterPaintMs": 12433.300000011921,
+      "browserWarmAfterPaintMs": 12882.5,
+      "browserCondition": "First ordinaryscope beforeCLI; warm afteractualfirstpositivefact/vectors2/2; laternativeprovesboth4/4. Exactempty/indexedpath is nativechain evidence, not inferredfromfreshscope",
+      "browserLatencyMeasured": true,
+      "responses": "COMPLETE",
+      "nativeMemory": "Bothbrowser+CLIpositivefacts/vectorsfullusage/currentauth/provenancecontiguous8/8PASS",
+      "cliFirstStdoutAcknowledgedMs": 17135.665632,
+      "cliWarmFirstStdoutAcknowledgedMs": 19593.27780099999,
+      "cliDeadlineFailure": false,
+      "originalDeadlineMs": 30000,
+      "cliCondition": "Aftertwoindexedbrowserturns; warm afterfirstCLImemoryverified6/6",
+      "subsecondAccepted": false,
+      "requiredIntegrationAccepted": false,
+      "receipt": "browser/k9-root-outcomes.json",
+      "cliReceipt": "k9-cli-first-warm-timing.json",
+      "authenticationExpectedCode": {
+        "pass": 8,
+        "fail": 2,
+        "failures": [
+          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
+          "invalidsignature→AUTHENTICATION_TIMEOUT"
+        ],
+        "noAccessDelivered": true,
+        "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
+      },
+      "readerPostRevoke": "Suppressedheldmetadata withFORBIDDEN; sameidentity/scope/caps/expiry restorednewgrantversion2; ownerscope/data/financeunchanged"
+    }
+  ]
 }

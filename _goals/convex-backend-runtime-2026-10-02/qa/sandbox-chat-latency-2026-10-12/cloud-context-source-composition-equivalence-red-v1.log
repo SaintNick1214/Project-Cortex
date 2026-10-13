@@ -1,0 +1,2 @@
+Node v24.15.0 exit1: Error: original stale lineage/hash conditional after argument binding changed
+The source conditional differs only in indentation after moving it to a top-level handler. The complete cutoff body, validator, original Agent declarations, prepareContext outside remember and witness tail had already compared byte-exact. This initial check is preserved; the successor compares the bound conditional through the official TypeScript printer, not byte equality.

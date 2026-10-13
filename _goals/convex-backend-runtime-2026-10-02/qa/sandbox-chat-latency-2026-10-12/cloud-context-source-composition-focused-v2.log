@@ -1,0 +1,207 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.9s | 45/46 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.09s ( 2.3%) - actual Agent recall wiring and fresh completion fences selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 2. [32m✓[0m    0.07s ( 1.7%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery winning_save without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 3. [32m✓[0m    0.07s ( 1.7%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition revision before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 4. [32m✓[0m    0.07s ( 1.7%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery cancel without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 5. [32m✓[0m    0.07s ( 1.6%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery witness_hash without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 6. [32m✓[0m    0.06s ( 1.6%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition hash before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 7. [32m✓[0m    0.06s ( 1.6%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery lease without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 8. [32m✓[0m    0.06s ( 1.6%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery transcript without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 9. [32m✓[0m    0.06s ( 1.5%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition revocation before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+10. [32m✓[0m    0.06s ( 1.5%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition owner before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+11. [32m✓[0m    0.06s ( 1.5%) - actual Agent recall wiring and fresh completion fences preserves source query fault propagation with no saved context or second embedding attempt
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+12. [32m✓[0m    0.06s ( 1.5%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition tombstone before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+13. [32m✓[0m    0.06s ( 1.4%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition profile before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+14. [32m✓[0m    0.02s ( 0.5%) - actual original source and indexed-cutoff handler composition returns the same current source as the original two handlers, retains both authority/source reads, and never writes
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+15. [32m✓[0m    0.01s ( 0.4%) - actual original source and indexed-cutoff handler composition rejects stale event before exclusions and invalid cutoff
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - actual original source and indexed-cutoff handler composition preserves original getter revoked failure before stale/excluded filtering
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - actual original source and indexed-cutoff handler composition preserves bounded cutoff validation after the source checks
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - actual original source and indexed-cutoff handler composition retains original excluded exclusion without source selection or effects
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - actual original source and indexed-cutoff handler composition preserves original same-conversation run_missing boundary exclusion
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - actual original source and indexed-cutoff handler composition does not reuse authority across invocations
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.92s (23.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.00s
+  Test suites:        1
+  Individual tests:   46
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:62798) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/context-source-composition.test.ts
+  actual original source and indexed-cutoff handler composition
+    ✓ returns the same current source as the original two handlers, retains both authority/source reads, and never writes (21 ms)
+    ✓ retains original excluded exclusion without source selection or effects (7 ms)
+    ✓ retains original after_cutoff exclusion without source selection or effects (6 ms)
+    ✓ retains original ineligible exclusion without source selection or effects (6 ms)
+    ✓ retains original event_hash exclusion without source selection or effects (5 ms)
+    ✓ retains original event_lineage exclusion without source selection or effects (6 ms)
+    ✓ retains original missing_event exclusion without source selection or effects (6 ms)
+    ✓ rejects stale event before exclusions and invalid cutoff (15 ms)
+    ✓ rejects stale revision before exclusions and invalid cutoff (5 ms)
+    ✓ rejects stale hash before exclusions and invalid cutoff (6 ms)
+    ✓ rejects stale missing before exclusions and invalid cutoff (5 ms)
+    ✓ preserves original getter revoked failure before stale/excluded filtering (8 ms)
+    ✓ preserves original getter grant_version failure before stale/excluded filtering (6 ms)
+    ✓ preserves original getter expired failure before stale/excluded filtering (6 ms)
+    ✓ preserves original getter principal failure before stale/excluded filtering (5 ms)
+    ✓ preserves original getter membership failure before stale/excluded filtering (6 ms)
+    ✓ preserves original getter epoch failure before stale/excluded filtering (5 ms)
+    ✓ preserves original getter owner failure before stale/excluded filtering (5 ms)
+    ✓ preserves original getter tombstone failure before stale/excluded filtering (6 ms)
+    ✓ preserves original getter source_tombstone failure before stale/excluded filtering (6 ms)
+    ✓ preserves original getter duplicate failure before stale/excluded filtering (5 ms)
+    ✓ preserves original same-conversation queue boundary exclusion (6 ms)
+    ✓ preserves original same-conversation run_incomplete boundary exclusion (6 ms)
+    ✓ preserves original same-conversation run_deleted boundary exclusion (6 ms)
+    ✓ preserves original same-conversation run_missing boundary exclusion (7 ms)
+    ✓ preserves original same-conversation position boundary exclusion (6 ms)
+    ✓ preserves original same-conversation step_position boundary exclusion (5 ms)
+    ✓ preserves original same-conversation unapproved boundary exclusion (6 ms)
+    ✓ preserves original same-conversation bridge_deleted boundary exclusion (5 ms)
+    ✓ preserves original same-conversation bridge_missing boundary exclusion (5 ms)
+    ✓ preserves bounded cutoff validation after the source checks (8 ms)
+    ✓ does not reuse authority across invocations (7 ms)
+    ✓ retains the cutoff helper's second original getter rather than trusting the first source result (4 ms)
+  actual Agent recall wiring and fresh completion fences
+    ✕ selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings (92 ms)
+    ✓ fresh finalDelivery rejects post-composition revision before context is saved (67 ms)
+    ✓ fresh finalDelivery rejects post-composition hash before context is saved (64 ms)
+    ✓ fresh finalDelivery rejects post-composition revocation before context is saved (60 ms)
+    ✓ fresh finalDelivery rejects post-composition owner before context is saved (60 ms)
+    ✓ fresh finalDelivery rejects post-composition tombstone before context is saved (59 ms)
+    ✓ fresh finalDelivery rejects post-composition profile before context is saved (58 ms)
+    ✓ original saveContext rejects post-delivery lease without overwriting context (64 ms)
+    ✓ original saveContext rejects post-delivery cancel without overwriting context (67 ms)
+    ✓ original saveContext rejects post-delivery transcript without overwriting context (64 ms)
+    ✓ original saveContext rejects post-delivery witness_hash without overwriting context (66 ms)
+    ✓ original saveContext rejects post-delivery winning_save without overwriting context (69 ms)
+    ✓ preserves source query fault propagation with no saved context or second embedding attempt (60 ms)
+
+  ● actual Agent recall wiring and fresh completion fences › selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -1,21 +1,21 @@
+      Array [
+        Object {
+          "contentHash": "5fbba4676a411f378b4e0fce161408163d6b9c5385535e95416cf4da90a5d79e",
+          "permissions": Array [
+    -       "canViewMemories",
+            "canViewFacts",
+    +       "canViewMemories",
+          ],
+          "sourceEventId": "first-prior",
+          "sourceId": "first-prior",
+          "sourceRevision": 1,
+        },
+        Object {
+          "contentHash": "bed18f26afed96df738105fbe1fa1ca1272788dc3198393c7508e1d0d0b60d1a",
+          "permissions": Array [
+    +       "canViewFacts",
+            "canViewMemories",
+    -       "canViewFacts",
+          ],
+          "sourceEventId": "second-prior",
+          "sourceId": "second-prior",
+          "sourceRevision": 1,
+        },
+
+      190 |     const owned = f.db.table("runtimeAgentExecutions")[0]; expect(owned).toMatchObject({ contextState: "complete", contextCompleteness: "complete" });
+      191 |     expect(owned.contextCanonical).toContain(first.source.content); expect(owned.contextCanonical).toContain(second.source.content);
+    > 192 |     expect(owned.sourceWitnesses).toEqual([first.source, second.source].map(source => ({ sourceId: source.lineage.sourceId, sourceEventId: source.lineage.sourceEventId,
+          |                                   ^
+      193 |       sourceRevision: 1, contentHash: source.contentHash, permissions: ["canViewMemories", "canViewFacts"] })));
+      194 |     const delivery = f.calls.find(c => c.name === "runtimeMemory:finalDelivery")!.args as { bindings: { sources: unknown[]; facts: unknown[]; vectors: unknown[] } };
+      195 |     expect(delivery.bindings.sources).toHaveLength(4); expect(delivery.bindings.facts).toHaveLength(2); expect(delivery.bindings.vectors).toHaveLength(2);
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-source-composition.test.ts:192:35)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 45 passed, 46 total
+Snapshots:   0 total
+Time:        4.003 s, estimated 5 s
+Ran all test suites within paths "tests/unit/runtimeAgent/context-source-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-v2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
