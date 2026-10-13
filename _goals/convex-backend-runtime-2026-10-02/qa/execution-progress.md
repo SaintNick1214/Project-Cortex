@@ -2178,3 +2178,13 @@ Historical original scope stays13/17(76.5%),55/61(90.2%),0/12,original-full:fals
 ### 2026-10-13 native JSON and context composition source milestones
 
 Both independent source gates PASS4.0; 410 native and 116 context tests passed, zero skips. Fixed prospective launcher procedure accepted at eight requests / 2700000 unknown liability units within original budgets. Source milestones100%; latency follow-up stays2/4 (50%) until actual installed service/UI and final audit pass. V17 historical actual registry unchanged; no native JSON proof fabricated. K4 failed extraction/UNKNOWN and cleanup remain original observations. See sandbox-chat-latency-2026-10-12/native-json-and-launcher-source-review.md and cloud-context-batch-source-review.md.
+
+### 2026-10-13 K5 immutable installation and actual failure
+
+New sourceb0b4d3e45 packed/157file/backend/Docker/public contract gates passed. K5firstJSON qualification failed beforeREADY, zero native attempts/reservations inretainedledger. Exacttarget savory-peacock-340/6133155 CLEANED withfreshabsenceandcredentialchecks. Liveexceptiondiscardedbylauncher; notclaimedrecovered. Coherentofflineallowlistrepair underway, no paidretry. Latencyfollowup remains2/4(50%). See sandbox-chat-latency-2026-10-12/k5-qualification-failure-report.md.
+
+### 2026-10-13 — K6 hosted outcome and model-preparation source milestone
+
+Latency follow-up remains 2/4 (50%); original non-video scope acceptance is historical. K6 qualified all eight native methods and both canonical CLI turns completed with actual attributed facts, matching managed vectors and contiguous readiness through4. First/warm stdout acknowledgments were9349.773/9343.232ms; managed-default recall actually retrieved jasmine in one governed query attempt (3096.951ms RPC). All19 native slots were released;3.8M retained ceilings are not actual charges. Browser/SLO/final gate remain unaccepted; in-app automation is externally blocked.
+
+The next three-file model-preparation batch passed independent practical-v2 review4.0 after355 tests/5suites/zero skips and74 equivalence checks. It composes four original initial handlers into one mutation and retains later authorization, model/account/lease/source and dispatch fences. This is a source milestone only; K6 uses the earlier immutable source. Raw receipts and reviews are in sandbox-chat-latency-2026-10-12. No production or GitHub action occurred.

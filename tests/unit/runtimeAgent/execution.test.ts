@@ -10,7 +10,7 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
   async cancel(_ctx: unknown, id: string) { cancellations.push(id); }
   async sendEvent(_ctx: unknown, args: unknown) { events.push(args); }
 } }));
-const { installMockRoot, installIngestionMockRoot, transcriptFixture, transcript, runs, invoke } = await import("../runtimeTranscript/fixture");
+const { installMockRoot, installIngestionMockRoot, transcriptFixture, transcript, runs, invoke, clone } = await import("../runtimeTranscript/fixture");
 const runtime = await import("../../../convex-dev/runtimeAgent");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 const memory = await import("../../../convex-dev/runtimeMemory");
@@ -561,5 +561,137 @@ describe("closed server tool contract", () => {
   it("tool input rejects getters before invocation and unknown native names cannot select callbacks", () => {
     const getter = jest.fn(() => "secret"); const input = { limit: 1 }; Object.defineProperty(input, "text", { enumerable: true, get: getter });
     expect(() => tools.validateToolInput("memory.recall", input)).toThrow(); expect(getter).not.toHaveBeenCalled(); expect(() => tools.semanticToolName("arbitrary_tool")).toThrow();
+  });
+});
+
+describe("atomic native model preparation", () => {
+  const snapshot = (f: F) => clone({ rows: f.db.rows, writes: f.db.writes, sequence: f.db.sequence,
+    native: f.native, effects: f.effects, scheduled: f.scheduled });
+  it("matches the original four handler sequence and derives the exact request from verified server state", async () => {
+    const original = await fixture(), { args } = await started(original), combined = await fixture();
+    combined.db.rows = clone(original.db.rows); combined.db.sequence = original.db.sequence; combined.db.writes = original.db.writes;
+    Object.assign(combined.native, clone(original.native)); Object.assign(combined.effects, clone(original.effects));
+    combined.scheduled.splice(0, combined.scheduled.length, ...clone(original.scheduled));
+    const current = await original.call<{ messages: unknown[]; execution: { contextCanonical?: string }; definition: { instructions: unknown } }>(runtime.hydrateExecution, args);
+    expect(await original.call(runtime.completedModelStep, { ...args, ordinal: 0 })).toBeNull();
+    const requestCanonical = original.canonical({ messages: current.messages, context: current.execution.contextCanonical ?? "", instructions: current.definition.instructions });
+    const op = await original.call<{ operationId: string; semanticId: string }>(runtime.beginOperation, { ...args, ordinal: 0, kind: "model", requestCanonical });
+    await original.call(runtime.startOperation, { ...args, operationId: op.operationId });
+    const prepared = await combined.call<{ state: string; current: typeof current; op: typeof op }>(runtime.prepareModelOperation, { ...args, ordinal: 0 });
+    expect(prepared).toEqual({ state: "started", current, op }); expect(snapshot(combined)).toEqual(snapshot(original));
+    expect(combined.db.table("runtimeAgentOperations")).toHaveLength(1);
+    expect(combined.db.table("runtimeAgentOperations")[0]).toMatchObject({ requestCanonical, kind: "model", ordinal: 0, state: "started" });
+    expect(combined.db.table("runtimeRunOutbox")[0].leaseExpiresAt).toBe(Date.now() + 300_000);
+    expect(combined.db.table("runtimeModelOperations")).toEqual([]); expect(combined.db.table("runtimeModelAttempts")).toEqual([]);
+    expect(combined.db.table("runtimeAgentOutput")).toEqual([]);
+  });
+  it("accepts only the original attempt and ordinal native schema, rejecting caller-owned request or context", async () => {
+    const f = await fixture(), { args } = await started(f);
+    expect(() => assertNativeArgs(runtime.prepareModelOperation, { ...args, ordinal: 0 })).not.toThrow();
+    for (const extra of [{ requestCanonical: "{}" }, { messages: [] }, { context: "injected" }, { instructions: {} }, { kind: "tool" }]) {
+      expect(() => assertNativeArgs(runtime.prepareModelOperation, { ...args, ordinal: 0, ...extra })).toThrow("Unknown native field");
+    }
+    const before = snapshot(f);
+    for (const ordinal of [-1, 33, 0.5, NaN, Infinity]) {
+      await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal })).rejects.toThrow("INVALID_INPUT");
+      expect(snapshot(f)).toEqual(before);
+    }
+  });
+  it("completed step replay returns its original canonical result without preparation writes", async () => {
+    const f = await fixture(), { args } = await started(f), { id } = await savedFinal(f, args);
+    const before = snapshot(f);
+    expect(await f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 })).toEqual({ state: "completed", resultCanonical: "{}" });
+    expect(snapshot(f)).toEqual(before); expect(f.db.table("runtimeAgentOperations")[0].nativeMessageIds).toEqual([id]);
+    f.native.messages.get(id)!.message = { role: "assistant", content: "edited protected saved output" };
+    const edited = snapshot(f);
+    await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 })).rejects.toThrow("STALE_TRANSCRIPT");
+    expect(snapshot(f)).toEqual(edited);
+  });
+  it.each(["started", "unknown"])("%s operation replay rejects without model admission, output or a new attempt", async state => {
+    const f = await fixture(), { args } = await started(f);
+    await f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 }); f.db.table("runtimeAgentOperations")[0].state = state;
+    const before = snapshot(f);
+    await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 })).rejects.toThrow("INTERRUPTED_REQUIRES_RECONCILIATION");
+    expect(snapshot(f)).toEqual(before); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+  });
+  it("a prepared exact replay starts once; a changed canonical request remains an idempotency conflict", async () => {
+    const f = await fixture(), { args } = await started(f);
+    const current = await f.call<{ messages: unknown[]; execution: { contextCanonical?: string }; definition: { instructions: unknown } }>(runtime.hydrateExecution, args);
+    const requestCanonical = f.canonical({ messages: current.messages, context: current.execution.contextCanonical ?? "", instructions: current.definition.instructions });
+    await f.call(runtime.beginOperation, { ...args, ordinal: 0, kind: "model", requestCanonical });
+    expect(await f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 })).toMatchObject({ state: "started" });
+    expect(f.db.table("runtimeAgentOperations")).toHaveLength(1);
+    const other = await fixture(), otherArgs = (await started(other)).args;
+    await other.call(runtime.beginOperation, { ...otherArgs, ordinal: 0, kind: "model", requestCanonical: "{}" });
+    const before = snapshot(other);
+    await expect(other.call(runtime.prepareModelOperation, { ...otherArgs, ordinal: 0 })).rejects.toThrow("IDEMPOTENCY_CONFLICT");
+    expect(snapshot(other)).toEqual(before);
+  });
+  it.each(["revoked", "epoch", "definition", "conversation", "input-edit", "expired-lease", "wrong-lease", "wrong-attempt", "cancelled"])("current %s fence denies before preparation effects", async fault => {
+    const f = await fixture(), { args } = await started(f);
+    if (fault === "revoked") f.grant.revokedAt = Date.now();
+    if (fault === "epoch") f.db.table("runtimeAuthScopes").find(row => row.memorySpaceId === "space-a")!.epoch = 2;
+    if (fault === "definition") f.db.table("runtimeAgentDefinitions")[0].revokedAt = Date.now();
+    if (fault === "conversation") f.db.table("runtimeConversations")[0].tombstonedAt = Date.now();
+    if (fault === "input-edit") f.native.messages.get((f.db.table("runtimeRuns")[0].inputMessageIds as string[])[0])!.message = { role: "user", content: "changed source" };
+    if (fault === "expired-lease") f.db.table("runtimeRunOutbox")[0].leaseExpiresAt = Date.now();
+    if (fault === "cancelled") await f.call(runtime.cancel, { runId: args.runId });
+    const before = snapshot(f);
+    await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal: 0,
+      ...(fault === "wrong-lease" ? { leaseVersion: args.leaseVersion + 1 } : {}),
+      ...(fault === "wrong-attempt" ? { attemptNumber: args.attemptNumber + 1 } : {}) })).rejects.toThrow();
+    expect(snapshot(f)).toEqual(before); expect(f.db.table("runtimeAgentOperations")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+  });
+  it.each(["source-edit", "source-tombstone"])("current %s context witness denies before a model operation is prepared", async fault => {
+    const f = await fixture(), { args, owned } = await started(f);
+    const source = f.db.seed("runtimeMemorySources", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId,
+      ownerPrincipalId: f.reference.principalId, lineage: { sourceId: "preparation-source", sourceEventId: "preparation-event", sourceRevision: 1, role: "user", trust: "user_assertion" },
+      content: "private context source", contentHash: await f.hash("private context source"), createdAt: Date.now() });
+    owned.sourceWitnesses = [{ sourceId: "preparation-source", sourceEventId: "preparation-event", sourceRevision: 1, contentHash: source.contentHash }];
+    await f.call(runtime.hydrateExecution, args);
+    if (fault === "source-edit") source.contentHash = "changed"; else source.tombstonedAt = Date.now();
+    const before = snapshot(f);
+    await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 })).rejects.toThrow();
+    expect(snapshot(f)).toEqual(before); expect(f.db.table("runtimeAgentOperations")).toEqual([]);
+  });
+  it.each(["operation-start", "lease-renewal", "execution-state"])("a native %s write failure rolls back the new operation and the complete preparation parent", async fault => {
+    const f = await fixture(), { args } = await started(f), before = snapshot(f), patch = f.db.patch.bind(f.db); let reached = false;
+    jest.spyOn(f.db, "patch").mockImplementation(async (tableOrId: string, idOrPatch: string | Record<string, unknown>, value?: Record<string, unknown>) => {
+      if (typeof idOrPatch === "string") await patch(tableOrId, idOrPatch, value!); else await patch(tableOrId, idOrPatch);
+      const update = typeof idOrPatch === "string" ? value! : idOrPatch;
+      if (fault === "operation-start" && tableOrId === "runtimeAgentOperations" && update.state === "started"
+        || fault === "lease-renewal" && tableOrId === "runtimeRunOutbox" && update.leaseExpiresAt !== undefined
+        || fault === "execution-state" && tableOrId === "runtimeAgentExecutions" && update.state === "running") {
+        reached = true; throw new Error("INJECTED_PREPARATION_WRITE_FAILURE");
+      }
+    });
+    await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 })).rejects.toThrow("INJECTED_PREPARATION_WRITE_FAILURE");
+    expect(reached).toBe(true); expect(snapshot(f)).toEqual(before);
+  });
+  it("a native component-read failure after begin rolls back the inserted operation", async () => {
+    const f = await fixture(), { args } = await started(f), before = snapshot(f), query = f.ctx.runQuery.bind(f.ctx); let reached = false;
+    f.ctx.runQuery = (async (reference, input) => {
+      const component = (reference as Partial<Record<symbol, string>>)[Symbol.for("toReferencePath")];
+      if (component?.endsWith("/getMessagesByIds") && f.db.table("runtimeAgentOperations").length) {
+        reached = true; throw new Error("INJECTED_PREPARATION_COMPONENT_FAILURE");
+      }
+      return await query(reference, input);
+    }) as typeof f.ctx.runQuery;
+    await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 })).rejects.toThrow("INJECTED_PREPARATION_COMPONENT_FAILURE");
+    expect(reached).toBe(true); expect(snapshot(f)).toEqual(before);
+  });
+  it.each(["revoked", "input-edit"])("start's retained hydration rejects a late %s port race after real begin insertion", async fault => {
+    const f = await fixture(), { args } = await started(f), before = snapshot(f), insert = f.db.insert.bind(f.db); let reached = false;
+    f.db.insert = async (table, value) => {
+      const id = await insert(table, value);
+      if (table === "runtimeAgentOperations") {
+        reached = true;
+        if (fault === "revoked") f.grant.revokedAt = Date.now();
+        else f.native.messages.get((f.db.table("runtimeRuns")[0].inputMessageIds as string[])[0])!.message = { role: "user", content: "edited before retained start guard" };
+      }
+      return id;
+    };
+    await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 })).rejects.toThrow(fault === "revoked" ? "FORBIDDEN" : "STALE_TRANSCRIPT");
+    expect(reached).toBe(true); expect(snapshot(f)).toEqual(before); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
   });
 });

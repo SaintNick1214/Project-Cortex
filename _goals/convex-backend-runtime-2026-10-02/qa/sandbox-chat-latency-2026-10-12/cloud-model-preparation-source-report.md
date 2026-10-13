@@ -1,0 +1,43 @@
+# Model preparation RPC composition
+
+Status: COMPLETE for the bounded source/test batch; non-author review and installed hosted-cloud measurement remain pending. This batch removes three initial model-preparation RPC boundaries. It does not establish measured savings or the one-second submission-to-visible-text target. The observed K6 model-action preparation interval was 2,449 ms and includes work retained by this change.
+
+## Change and preserved behavior
+
+`runtimeAgent.ts` now registers internal `prepareModelOperation` with only the original authority/reference/run/attempt/lease tuple and ordinal. Its native mutation sequentially runs the original `executionContext`, completed-step handler, begin-operation handler and start-operation handler. It derives the original canonical messages/context/instructions request from the verified server context. The three original handler bodies were extracted without body changes and remain behind their original registrations and validators for existing callers.
+
+The model action replaces only hydrate/completed/begin/start's four initial RPCs with this single mutation. A completed step still returns the original canonical StepResult before Gateway construction and without new effects. Prepared exact replay starts the same operation; changed requests conflict. Started and UNKNOWN operations retain their reconciliation refusal. Beginning and starting now commit or roll back together; the original outbox lease renewal, operation identity and execution state write remain in their original order. A committed mutation with a lost response is still conservative started/UNKNOWN work under the existing interruption handling; no retry, readmission, refund or not-dispatched inference was added.
+
+The shared snapshot is the native transaction's current authoritative read set, not an authorization cache. All original execution hydrations run, retaining current authority/grant/epoch/tombstone, run/attempt/outbox lease, immutable cutoff/transcript hash and position, saved pins, source/artifact/media witnesses and definition checks. Subsequent action hydration, Agent contextHandler hydration, Gateway resolve/admit/bind/checkpoint/visibility/terminal/attachment guards and the complete Workflow/finalization path are unchanged. There is no new public API, schema, generated binding edit, model selection, funding or paid-call change. Existing generated API types derive the module exports; backend typechecking verifies the new reference. No additional production file or distribution build was introduced.
+
+## Meaningful regressions
+
+`execution.test.ts` invokes the actual registered combined mutation on the existing transactional/component fixture. It compares results and complete persisted/component/scheduler/effect state with the original four registered handlers operating on identical fixture state. It verifies the exact server-built request, original semantic/ordinal identity, lease extension, one started operation and no model admission/output effects.
+
+The new cases reject caller-controlled request/context/messages/instructions/tool-kind fields and invalid ordinals; return completed replay without writes; reject edited protected saved output; refuse started/UNKNOWN replay; retain exact prepared replay and canonical-request conflict behavior; deny revoked grants, changed scope epoch, revoked definitions, conversation tombstones, input edits, expired/wrong leases, wrong attempt and cancellation; and deny edited/tombstoned context source witnesses. Actual DB ports fail after the real operation-start, lease-renewal and execution-state writes, proving complete rollback. An actual component-read failure after insertion also rolls back the new operation. Late grant revocation/input edits injected at the DB insertion port prove start's retained hydration still rejects and rolls back the parent.
+
+`model-owner.test.ts` routes the actual new native mutation through the fixture's transaction boundary and checks that model action preparation is followed by the original fresh hydrate and ledger resolve. It rejects the obsolete outer completed/begin/start RPC calls. Existing real installed Agent/AI SDK early-fragment, streaming/nonstreaming, completion replay, revocation/cancellation/edit, public projection, order/bounds and lifecycle tests remain passing. Dependency suites exercise native model-policy admission, governed dispatch and client delivery contracts. These are actual product handlers with controlled DB/component/model/transport ports; they do not claim native cloud OCC, scheduler latency, inference or service acceptance.
+
+## Verification
+
+All checks ran in `/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion` with pinned Node 24.15.0 and npm CLI 12.2.0 against source baseline `b0b4d3e454f5a13560ac9474b5fb2a397bb5cd2b`. Existing TypeScript/ESLint/Jest installations were used.
+
+- Final focused Jest: exit 0; **5 suites, 355 passed tests, 0 failed, 0 skipped, 0 todo**. Exact paths: `runtimeAgent/execution`, `runtimeAgent/model-owner`, `runtime/model-policy-admission`, `runtime/gateway-dispatch`, `client-runtime/observe-delivery`. Raw log/JSON: `cloud-model-preparation-focused-v3.log` and `cloud-model-preparation-focused-v3.json`. Jest's custom timing reporter has a different individual-test count; the quoted 355 is Jest's canonical result JSON count.
+- Backend typecheck: `node node_modules/typescript/bin/tsc --project convex-dev/tsconfig.json --noEmit`, exit 0. Raw `cloud-model-preparation-backend-types-v1.log`.
+- Lint typecheck: `node node_modules/typescript/bin/tsc --project tsconfig.lint.json --noEmit`, exit 0. Raw `cloud-model-preparation-lint-types-v1.log`.
+- Scoped ESLint over the three changed files with `--report-unused-disable-directives`, exit 0. Raw `cloud-model-preparation-eslint-v1.log`.
+- Installed TypeScript AST comparison: exit 0, **74 checks**. Original extracted handler bodies, native validators/registration kinds, original named helper bodies including executionContext, original registrations/values/refs, the complete modelStep suffix from Gateway construction through finally, and internal-only original Attempt+ordinal ingress all pass. Script/receipt: `cloud-model-preparation-equivalence.mjs` / `cloud-model-preparation-equivalence.json`. Original source preimage is retained in QA.
+
+The two initial Jest launches exited before producing any suite results because the repository test bootstrap requires CONVEX_URL. Their original logs are retained: v1 contains a Watchman warning, v2 is empty. The final invocation uses `CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:3210`, watchman=false, VM modules and runInBand; these selected fixture suites do not contact the bootstrap URL. An initial QA AST script used one excess parent-directory segment and failed module resolution; its original script/log are preserved as v1, with only that QA import/path correction before the successful check. No product/test assertion failure was hidden or relabeled.
+
+Exact commands, exits, discovered suite/test counts and every source/raw-receipt hash are in `cloud-model-preparation-checks.json`, SHA256 `b544d45286aa46b80596ccfd5584c958d5d36ff4448300cff115e5ce7332d3a4`. Passing source/type/lint/test checks were not repeated after QA-only report/script-path edits. No cloud/service/Docker/inference/Git write, package build or current-generation artifact modification was performed.
+
+## Frozen files and reviewer notes
+
+| File | Change | SHA256 |
+|---|---|---|
+| `convex-dev/runtimeAgent.ts` | Three unchanged handler-body extractions; one internal native composition; initial model-action RPC replacement | `b495dd91a7c967660268ae1e2944b343165c95b5caff64fa207de3a1084bfb47` |
+| `tests/unit/runtimeAgent/execution.test.ts` | Actual-handler equivalence, replay, guards, native failure rollback and late port-race regressions | `e95f489bfb3d0e098c0b48363eb2a70f60ec292cb2dbd7b79c4271299c63338e` |
+| `tests/unit/runtimeAgent/model-owner.test.ts` | Actual combined mutation transaction routing and fresh later-call sequence assertions | `664f1d3674db89785492922499a1dd210c271e0243749bca89dde46f7b5ee19d` |
+
+Only these three source/test files were edited; unrelated tracked QA work and the 21 unrelated untracked entries were preserved. The already installed immutable K6 b0b candidate was not changed. Review should assess the new one-transaction read/write and lost-response boundary, original replay/error precedence and retained fresh post-preparation guards. Root's later fresh installed hosted-cloud generation is required for actual timing and native OCC/service evidence. The 2,449 ms observed interval is not wholly removable, and no subsecond outcome is claimed.

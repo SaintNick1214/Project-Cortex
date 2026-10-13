@@ -67,7 +67,11 @@ async function setup(withTool = false, streaming = true) {
   f.ctx.runMutation = (async (reference: unknown, args: unknown) => {
     let name = ""; try { name = getFunctionName(reference as never); } catch { /* Native component. */ }
     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext : name === "runs:cancel" ? runs.cancel : undefined;
-    if (reg) { assertNativeArgs(reg, args); calls.push(name); return await invoke(reg, f.ctx, args); }
+    if (reg) {
+      assertNativeArgs(reg, args); calls.push(name);
+      // The actual combined native mutation commits or rolls back as one parent.
+      return name === "runtimeAgent:prepareModelOperation" ? await f.transaction(async () => await invoke(reg, f.ctx, args)) : await invoke(reg, f.ctx, args);
+    }
     return await mutation(reference as never, args as never);
   }) as typeof f.ctx.runMutation;
   let request = f.request();
@@ -205,6 +209,10 @@ it("the whole model path obeys native RPC schemas, uses private pinned history a
   expect(capturedOptions.embeddingModel).toBeUndefined(); expect(capturedOptions.textEmbeddingModel).toBeUndefined();
   expect(capturedCall).toMatchObject({ maxRetries: 0, maxOutputTokens: 2000, storage: { saveStreamDeltas: { throttleMs: 250, returnImmediately: false, sendSources: false } } });
   expect(JSON.stringify(privateContext)).toContain("PRIVATE_MEMORY_CONTEXT"); expect(JSON.stringify(privateContext)).toContain("Hello");
+  const preparation = calls.indexOf("runtimeAgent:prepareModelOperation");
+  expect(preparation).toBeGreaterThanOrEqual(0);
+  expect(calls.slice(preparation, preparation + 3)).toEqual(["runtimeAgent:prepareModelOperation", "runtimeAgent:hydrateExecution", "runtimeModelPolicy:resolve"]);
+  expect(calls).not.toContain("runtimeAgent:completedModelStep"); expect(calls).not.toContain("runtimeAgent:beginOperation"); expect(calls).not.toContain("runtimeAgent:startOperation");
   expect(calls).toContain("runtimeAgent:recordOutput"); expect(calls).toContain("runtimeAgent:finishOperation"); expect(complete).toHaveBeenCalledTimes(1);
   expect(JSON.stringify(f.db.table("runtimeAgentOutput"))).not.toContain("PROVIDER_SECRET");
 });
