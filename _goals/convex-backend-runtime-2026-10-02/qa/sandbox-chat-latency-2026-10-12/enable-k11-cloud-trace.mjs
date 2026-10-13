@@ -1,0 +1,11 @@
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {loadSession,createContext,PROOFS_ROOT} from '/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs';
+import {verifyCloud,getDeployKey} from '/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs';
+const s=await loadSession(PROOFS_ROOT,'770578bc-9bbd-4616-b257-c033972704da');assert.equal(s.phase,'READY');assert.equal(s.target.name,'curious-warthog-703');assert.equal(s.target.id,6146289);
+const ctx=await createContext(s,{logger:()=>{}});await verifyCloud(s,ctx);
+const key=await getDeployKey(s,ctx),cli=path.join(s.backendDir,'node_modules/convex/bin/main.js');
+const opts={cwd:s.backendDir,env:{CONVEX_DEPLOY_KEY:key,CONVEX_DEPLOYMENT:'dev:'+s.target.name},timeoutMs:30000};
+const set=await ctx.command('latency-backend-flag',ctx.node,[cli,'env','set','CORTEX_RUNTIME_LATENCY_TRACE','1'],opts);assert.equal(set.code,0);
+await verifyCloud(s,ctx);const get=await ctx.command('latency-backend-flag-read',ctx.node,[cli,'env','get','CORTEX_RUNTIME_LATENCY_TRACE'],opts);assert.equal(get.code,0);assert.equal(get.stdout.trim(),'1');
+console.log(JSON.stringify({sessionId:s.id,target:s.target.name,id:s.target.id,phase:s.phase,backendTraceEnabled:true,paidCalls:0}));

@@ -1,0 +1,304 @@
+{
+  "observedAt": "2026-10-13T19:34:43.231Z",
+  "target": {
+    "sessionId": "770578bc-9bbd-4616-b257-c033972704da",
+    "name": "curious-warthog-703",
+    "id": 6146289,
+    "reference": "dev/cortex-sandbox-770578bc-9bbd-4616-b257-c033972704da"
+  },
+  "freshVerifications": 3,
+  "run": {
+    "runId": "run:f625780bd1ba07bec32aeb3ed9b65796f48731b5c3abd4423cc2401c167a99df",
+    "responseStatus": "COMPLETE",
+    "attemptNumber": 1,
+    "createdAt": 1791919379559,
+    "updatedAt": 1791919409425,
+    "outputMessageCount": 1
+  },
+  "execution": {
+    "state": "COMPLETE",
+    "contextState": "COMPLETE",
+    "workflowId": "jd7d4efqm9zs550dwvnx9pyfg98g6q3h"
+  },
+  "workflows": [
+    {
+      "id": "jd7d4efqm9zs550dwvnx9pyfg98g6q3h",
+      "generationNumber": 0,
+      "resultKind": "success"
+    }
+  ],
+  "stages": {
+    "durable": [
+      {
+        "sequence": 1,
+        "final": false,
+        "createdAt": 1791919399954,
+        "type": "text-start",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791919399954,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 2
+      },
+      {
+        "sequence": 3,
+        "final": false,
+        "createdAt": 1791919400689,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 1
+      },
+      {
+        "sequence": 4,
+        "final": false,
+        "createdAt": 1791919400689,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 2
+      },
+      {
+        "sequence": 5,
+        "final": false,
+        "createdAt": 1791919402355,
+        "type": "text-end",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 6,
+        "final": true,
+        "createdAt": 1791919404533,
+        "type": "text",
+        "nonemptyText": true,
+        "textBytes": 5
+      },
+      {
+        "sequence": 7,
+        "final": true,
+        "createdAt": 1791919404533,
+        "type": "status",
+        "nonemptyText": false,
+        "textBytes": 0
+      }
+    ],
+    "agentOperations": [
+      {
+        "kind": "model",
+        "ordinal": 0,
+        "state": "complete",
+        "createdAt": 1791919395563,
+        "startedAt": 1791919395563,
+        "endedAt": 1791919403025
+      }
+    ],
+    "modelOperations": [
+      {
+        "_id": "t17bmmm6zng114qe94317vf6ks8g7h27",
+        "operationKey": "agent.respond",
+        "createdAt": 1791919397291,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "t177dvg7zjrp2wejmkvn7w4mys8g75qb",
+        "operationKey": "embedding.query",
+        "createdAt": 1791919387737,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      }
+    ],
+    "modelAttempts": [
+      {
+        "operationDocumentId": "t17bmmm6zng114qe94317vf6ks8g7h27",
+        "state": "uncertain",
+        "createdAt": 1791919397291,
+        "checkpointAt": 1791919397291,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "t177dvg7zjrp2wejmkvn7w4mys8g75qb",
+        "state": "uncertain",
+        "createdAt": 1791919387737,
+        "checkpointAt": 1791919388641,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      }
+    ],
+    "ingestionEvents": [
+      {
+        "eventId": "ingestion:0caa27d97dac9f4030a61b5e319a05c03c21daa8e8c4ae23c7f4678cf498468c",
+        "sequence": 8,
+        "eligibility": "eligible",
+        "factsState": "skipped",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791919404533,
+        "updatedAt": 1791919409425
+      },
+      {
+        "eventId": "ingestion:b2136d1ac1e495412da05406b53bbb4e3e4e854b2217183765d0c7cc0e2a7e44",
+        "sequence": 7,
+        "eligibility": "eligible",
+        "factsState": "complete",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791919379559,
+        "updatedAt": 1791919392275
+      }
+    ],
+    "ingestionStages": [
+      {
+        "eventId": "ingestion:0caa27d97dac9f4030a61b5e319a05c03c21daa8e8c4ae23c7f4678cf498468c",
+        "stage": "vectors",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791919409425
+      },
+      {
+        "eventId": "ingestion:0caa27d97dac9f4030a61b5e319a05c03c21daa8e8c4ae23c7f4678cf498468c",
+        "stage": "facts",
+        "state": "skipped",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791919404533
+      },
+      {
+        "eventId": "ingestion:0caa27d97dac9f4030a61b5e319a05c03c21daa8e8c4ae23c7f4678cf498468c",
+        "stage": "extract",
+        "state": "skipped",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791919404533
+      },
+      {
+        "eventId": "ingestion:b2136d1ac1e495412da05406b53bbb4e3e4e854b2217183765d0c7cc0e2a7e44",
+        "stage": "vectors",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791919392275
+      },
+      {
+        "eventId": "ingestion:b2136d1ac1e495412da05406b53bbb4e3e4e854b2217183765d0c7cc0e2a7e44",
+        "stage": "facts",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791919388973
+      },
+      {
+        "eventId": "ingestion:b2136d1ac1e495412da05406b53bbb4e3e4e854b2217183765d0c7cc0e2a7e44",
+        "stage": "extract",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791919384382
+      }
+    ],
+    "ingestionJobs": [
+      {
+        "eventId": "ingestion:0caa27d97dac9f4030a61b5e319a05c03c21daa8e8c4ae23c7f4678cf498468c",
+        "runBudgetId": "9e65966d8e381934e903ca40250ea19c844ef55f144298354d0786618097f653",
+        "runAccountId": "ps756zvdrd5dtyx9f9z9kgfkxh8g7ng0",
+        "createdAt": 1791919405378
+      },
+      {
+        "eventId": "ingestion:b2136d1ac1e495412da05406b53bbb4e3e4e854b2217183765d0c7cc0e2a7e44",
+        "runBudgetId": "808313cad2fd6c066ede27bec7b056e0d57595898ecf598dca4144e7861f2aba",
+        "runAccountId": "ps70f4bs3evbfr7bw68t70ghd18g7k6a",
+        "createdAt": 1791919380715
+      }
+    ],
+    "titleJobs": []
+  },
+  "runBudgetId": "ce7a5d7203ef04ddbcacb57ab64699ddbe4890ac6b4b580ca0fca72585759a81",
+  "steps": [
+    {
+      "stepNumber": 6,
+      "name": "runtimeContentJobs:enqueueParentTitle",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791919405788,
+      "completedAt": 1791919406619
+    },
+    {
+      "stepNumber": 5,
+      "name": "runtimeAgent:finalize",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791919403922,
+      "completedAt": 1791919405416
+    },
+    {
+      "stepNumber": 4,
+      "name": "model 0",
+      "functionType": "action",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791919394891,
+      "completedAt": 1791919403371
+    },
+    {
+      "stepNumber": 3,
+      "name": "authorized Cortex context",
+      "functionType": "action",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791919384214,
+      "completedAt": 1791919394583
+    },
+    {
+      "stepNumber": 2,
+      "name": "runtimeAgent:prepareEmptyContext",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791919380896,
+      "completedAt": 1791919383803
+    },
+    {
+      "stepNumber": 1,
+      "name": "runtimeAgent:contextBarrier",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791919380896,
+      "completedAt": 1791919380896
+    },
+    {
+      "stepNumber": 0,
+      "name": "runtimeAgent:startContext",
+      "functionType": "mutation",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791919380896,
+      "completedAt": 1791919380896
+    }
+  ],
+  "counts": {
+    "agentOperations": 1,
+    "modelOperations": 2,
+    "modelAttempts": 2
+  },
+  "errors": [],
+  "phases": [],
+  "logLineStructures": [],
+  "rawPayloadRetained": false
+}

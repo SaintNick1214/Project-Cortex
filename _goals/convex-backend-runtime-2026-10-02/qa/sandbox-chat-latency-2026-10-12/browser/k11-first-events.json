@@ -1,0 +1,50 @@
+{
+  "observedAt": "2026-10-13T19:09:57.275Z",
+  "condition": "First ordinary browser chat before CLI; original visible after-paint clock",
+  "logs": [
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"submit\",\"elapsedMs\":0.10000002384185791}",
+      "timestamp": "2026-10-13T19:09:19.539Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"admission.delivered\",\"elapsedMs\":1745.5,\"runId\":\"run:5855cba0a6a51ad416d9145ab9270a102e6573334ca2281f74ec81ae67103bed\"}",
+      "timestamp": "2026-10-13T19:09:21.283Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"first-text.dom-commit\",\"elapsedMs\":10335.100000023842,\"runId\":\"run:5855cba0a6a51ad416d9145ab9270a102e6573334ca2281f74ec81ae67103bed\"}",
+      "timestamp": "2026-10-13T19:09:29.882Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"first-text.after-paint\",\"elapsedMs\":10364.399999976158,\"runId\":\"run:5855cba0a6a51ad416d9145ab9270a102e6573334ca2281f74ec81ae67103bed\",\"visibility\":\"visible\"}",
+      "timestamp": "2026-10-13T19:09:29.903Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"transport.complete\",\"elapsedMs\":13787.600000023842,\"runId\":\"run:5855cba0a6a51ad416d9145ab9270a102e6573334ca2281f74ec81ae67103bed\"}",
+      "timestamp": "2026-10-13T19:09:33.326Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"answer.complete.dom-commit\",\"elapsedMs\":13792.799999952316,\"runId\":\"run:5855cba0a6a51ad416d9145ab9270a102e6573334ca2281f74ec81ae67103bed\"}",
+      "timestamp": "2026-10-13T19:09:33.338Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"response.status.dom-commit\",\"elapsedMs\":13793.399999976158,\"runId\":\"run:5855cba0a6a51ad416d9145ab9270a102e6573334ca2281f74ec81ae67103bed\"}",
+      "timestamp": "2026-10-13T19:09:33.338Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    }
+  ],
+  "dom": "- main:\n  - paragraph: Cortex\n  - heading \"Memory chat\" [level=1]\n  - paragraph: Responses and memory updates stay available across connections.\n  - button \"Sign out\"\n  - region \"Authentication\":\n    - heading \"Refresh credentials\" [level=2]\n    - paragraph: Use an access token issued by your host authentication provider. It stays in memory for this session.\n    - text: Access token\n    - textbox \"Access token\"\n    - button \"Refresh token\" [disabled]\n    - paragraph: Connected to manual-workspace in sandbox-770578bc-9bbd-4616-b257-c033972704da.\n  - form \"Agent configuration\":\n    - text: Published agent\n    - textbox \"Published agent\": agent:e4a6cbbee1590aabd0bb99a7ab56492d906ae54c04a308a27acd6507f8f629e4\n    - text: Agent version\n    - spinbutton \"Agent version\": \"1\"\n    - button \"Use agent version\"\n    - paragraph: \"Current version: 1 · Memory mode: indexed-plus-pending\"\n  - region \"Chat\":\n    - heading \"Conversation\" [level=2]\n    - button \"New chat\"\n    - generic \"Messages\":\n      - article:\n        - paragraph: You\n        - paragraph: My favorite color is coral. Reply with the exact word READY31 only. Do not call tools.\n      - article:\n        - paragraph: Cortex\n        - paragraph: READY31\n    - text: Message\n    - textbox \"Message\"\n    - button \"Send\" [disabled]\n    - paragraph:\n      - text: \"Response:\"\n      - strong: complete\n    - paragraph:\n      - text: \"Memory:\"\n      - strong: complete\n    - paragraph: \"Context: complete\"\n    - paragraph: \"Run: run:5855cba0a6a51ad416d9145ab9270a102e6573334ca2281f74ec81ae67103bed\"\n    - button \"Disconnect observer\" [disabled]\n    - button \"Reconnect observer\" [disabled]\n    - button \"Cancel run\" [disabled]\n    - text: Observe an existing run\n    - textbox \"Observe an existing run\": run:5855cba0a6a51ad416d9145ab9270a102e6573334ca2281f74ec81ae67103bed\n    - button \"Observe run\"\n  - region \"Memory search\":\n    - heading \"Memory search\" [level=2]\n    - paragraph: cortex-text-small-1536-v1 · 1536 dimensions\n    - text: Search your memory\n    - textbox \"Search your memory\"\n    - button \"Search memory\" [disabled]\n    - group \"Memory readiness\":\n      - generic: Memory readiness\n      - paragraph: Read current indexing status, or require the selected stages to be complete. This check starts no model call.\n      - checkbox \"Require facts\"\n      - text: Require facts\n      - checkbox \"Require vectors\"\n      - text: Require vectors\n      - checkbox \"Require graph\"\n      - text: Require graph\n    - button \"Check memory readiness\"\n  - button \"Show media tools\"\n- button \"Open Next.js Dev Tools\":\n- alert",
+  "paidRetry": false
+}

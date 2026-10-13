@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "input": {
+    "path": "k11-cli-first.typescript",
+    "sha256": "b9991e838e9ac698c80ac7efc70a55f577fa6e3d9b36ab578126f59e760b1155"
+  },
+  "clock": "CLI monotonic atMs; distinct from native epoch clocks",
+  "events": [
+    {
+      "type": "cortex-cli-latency",
+      "phase": "submit.begin",
+      "commandId": 1,
+      "atMs": 4555.341294
+    },
+    {
+      "type": "cortex-cli-latency",
+      "phase": "submit.begin",
+      "commandId": 3,
+      "atMs": 221142.871142
+    },
+    {
+      "type": "cortex-cli-latency",
+      "phase": "answer.first_printed",
+      "commandId": 3,
+      "atMs": 243632.943111,
+      "durationMs": 22490.07196900001
+    }
+  ],
+  "commands": [
+    {
+      "commandId": 1,
+      "kind": "original submit",
+      "outcome": "REQUEST_DEADLINE_EXCEEDED",
+      "deadlineMs": 30000,
+      "firstPrintedObserved": false,
+      "runId": "run:d77e91c8cd9bdf6f38a68e389946a4ff7e75c5cdc38acef590382fedfbe14f12"
+    },
+    {
+      "commandId": 2,
+      "kind": "observe same run",
+      "outcome": "COMPLETE",
+      "separatePaidIntent": false,
+      "runId": "run:d77e91c8cd9bdf6f38a68e389946a4ff7e75c5cdc38acef590382fedfbe14f12",
+      "firstPrintedLatencyAvailable": false
+    },
+    {
+      "commandId": 3,
+      "kind": "warm new submit",
+      "runId": "run:f625780bd1ba07bec32aeb3ed9b65796f48731b5c3abd4423cc2401c167a99df",
+      "outcome": "COMPLETE",
+      "deadlineMs": 30000,
+      "firstPrintedMs": 22490.07196900001,
+      "eventDurationMs": 22490.07196900001,
+      "underOriginalDeadline": true,
+      "under1000Ms": false
+    }
+  ],
+  "finalInteractiveProcessExitCode": 0,
+  "exitEvidence": "Root observed PTY exit 0; a process exit does not erase command 1 failure.",
+  "privateTextRetained": false,
+  "noCommandPairAssumption": true
+}

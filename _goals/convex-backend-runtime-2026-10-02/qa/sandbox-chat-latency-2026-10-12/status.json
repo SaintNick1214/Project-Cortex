@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K10 actual cloud evidence preserved and fresh cleanup verified; next combined RPC composition/source review pending; SLO unmet",
+  "phase": "K11 installed query composition native functional memory PASS; original CLI deadline, expired-auth timeout and cloud1000ms SLO FAIL; exact disposable cleanup verified; bounded current-read investigation ongoing",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-13T18:37:29.827Z",
+  "updatedAt": "2026-10-13T19:37:26.031941+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -53,67 +53,50 @@
     ]
   },
   "browserPrerequisite": {
-    "surface": "Root IAB actual K10 QA executed; closed after verified signout clearing",
+    "surface": "Root IAB actualK11browser measured; signout visibly cleared then tabclosed",
     "osClipboard": "untouched",
-    "evidence": "browser/k10-signout-cleared.json"
+    "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": null,
   "actualSamples": {
-    "generation": "K10",
-    "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
-    "browserFirstAfterPaintMs": 11181.899999976158,
-    "browserWarmAfterPaintMs": 9365.100000023842,
+    "generation": "K11",
+    "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+    "browserFirstAfterPaintMs": 10364.399999976158,
+    "browserWarmAfterPaintMs": 11082.699999928474,
     "browserLatencyMeasured": true,
     "browserResponses": "COMPLETE",
-    "browserNativeMemory": "4/4 positive facts/vectors/current authority/full native usage PASS",
-    "cliFirstStdoutAcknowledgedMs": 15456.622757000005,
-    "cliWarmFirstStdoutAcknowledgedMs": null,
-    "cliWarmOutcome": "waiting_approval; no first text before approval; not a comparable no-tool TTFT sample",
-    "cliDeadlineFailure": false,
+    "browserNativeMemory": "4/4 positive facts/vectors/currentauthority/nativeusage/provenance PASS",
+    "cliFirstStdoutAcknowledgedMs": null,
+    "cliFirstOutcome": "REQUEST_DEADLINE_EXCEEDED at original30000ms; no firstprinted event",
+    "cliWarmFirstStdoutAcknowledgedMs": 22490.07196900001,
+    "cliWarmOutcome": "COMPLETE under original30000ms",
+    "cliRecovery": "Same-run /observe after originaldeadline; no paidretry; COMPLETE and native positive memory",
+    "cliNativeMemory": "8/8 facts/vector contiguous through8/8 PASS",
     "originalDeadlineMs": 30000,
-    "cliRecovery": "No resubmission: active browser disconnect/reconnect of same waiting-approval run, one approved memory_remember, canonical CLW30 COMPLETE",
-    "originalCliMemoryVerdict": "FAIL: two-message expected sequence excludes approved tool event8; user7/tool8/assistant9 actually contiguous",
+    "auth": {
+      "invalidSignature": "UNAUTHENTICATED1568.996ms PASS",
+      "expiredSigned": "AUTHENTICATION_TIMEOUT4002.111ms FAIL; zero protectedpayload/RPC; native reject reason unavailable"
+    },
     "readiness": {
-      "factsThrough": 9,
-      "vectorsThrough": 9,
+      "factsThrough": 8,
+      "vectorsThrough": 8,
       "graphRequired": false
     },
     "subsecondAccepted": false,
     "requiredIntegrationAccepted": false,
-    "priorAuthenticationExpectedCodeFailures": {
-      "generation": "K9",
-      "failures": [
-        "expired valid signature → AUTHENTICATION_TIMEOUT",
-        "invalid signature → AUTHENTICATION_TIMEOUT"
-      ],
-      "notRerun": true
-    },
     "receipts": [
-      "browser/k10-first-warm-events.json",
-      "browser/k10-complete-tool-readiness.json",
-      "browser/k10-active-reconnect.json",
-      "k10-cli-timing-and-approval.json",
-      "k10-cli-memory-native-v2-first-warm-verification-1791915587703.json",
-      "cloud-k10-delay-chain.md",
-      "k10-financial-metadata-1791915701228.json"
-    ],
-    "firstCliPromptCompliance": {
-      "requestedMarker": "CLI30",
-      "actualMarker": "READY30",
-      "exactMatch": false,
-      "textLatencySampleValid": true,
-      "nativeFactChecksRemainSeparate": true
-    },
-    "toolInclusiveSupplement": {
-      "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
-      "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
-      "originalGenericFailPreserved": true
-    }
+      "cloud-k11-delay-chain.md",
+      "k11-auth-diagnostic-outcomes.md",
+      "k11-cli-memory-native-v2-first-warm-verification-1791920063160.json",
+      "k11-financial-metadata-1791920083120.json",
+      "browser/k11-readiness-observation.json",
+      "k11-cleanup-final.json"
+    ]
   },
   "pendingRepairs": [
-    "Fresh Agent-only resolution composition measured from model preparation prefix",
-    "Installed successor cloud latency and applicable functional checks",
-    "Under1000ms goal and final independent audit remain incomplete"
+    "Measured single-native-transaction duplicate-read investigation without guard changes",
+    "ExpiredJWT officialcallback timeout source investigation without raiseddeadline",
+    "Cloud under1000ms and final independent audit remain incomplete"
   ],
   "refinements": [
     {
@@ -226,6 +209,21 @@
       "skips": 0,
       "liveIntegration": "K10 native separate context step and initial/resume wrappers had no saved OCC retries; browser11.18/9.37s still fail target",
       "commit": "6eb45386fb146be330c5c58419e840015b4e936d"
+    },
+    {
+      "name": "Fresh Agent model-resolution and context-source query compositions",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-query-composition-source-review.md",
+      "commit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+      "tests": {
+        "modelAffected": 1025,
+        "modelSuites": 19,
+        "contextAffected": 398,
+        "contextSuites": 13,
+        "skips": 0
+      },
+      "liveIntegration": "Pending fresh immutable hosted candidate; no timing/OCC success inferred"
     }
   ],
   "priorEnvironmentCleanup": "k3-cleanup-final.json",
@@ -429,10 +427,12 @@
     }
   ],
   "nextCandidate": {
-    "kit": "manual-sandbox-latency-context-transaction-2026-10-13",
-    "phase": "Packaging100%,launcher99PASS,actualREADY",
-    "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
-    "imageId": "sha256:7b80b75968ab80ee5ffff058a119eaff79ae5dd007fcdb0d7eb2a7724fdc1663"
+    "kit": "manual-sandbox-latency-query-composition-2026-10-13",
+    "phase": "Fresh packaging finishing; launcher pins not switched yet",
+    "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+    "imageId": "sha256:48563409a20b1362e4dab416c4477877d292cb49f981c1edff65f5f6dd4e3c48",
+    "sourceReview": "cloud-query-composition-source-review.md",
+    "sourceReviewSha256": "b35add945c147f4728ce566a691babde481a7bd5548c04a1699da94b63c846ed"
   },
   "actualSampleHistory": [
     {
@@ -456,13 +456,67 @@
         "pass": 8,
         "fail": 2,
         "failures": [
-          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
-          "invalidsignature→AUTHENTICATION_TIMEOUT"
+          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
+          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
         ],
         "noAccessDelivered": true,
         "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
       },
       "readerPostRevoke": "Suppressedheldmetadata withFORBIDDEN; sameidentity/scope/caps/expiry restorednewgrantversion2; ownerscope/data/financeunchanged"
+    }
+  ],
+  "sampleHistory": [
+    {
+      "generation": "K10",
+      "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+      "browserFirstAfterPaintMs": 11181.899999976158,
+      "browserWarmAfterPaintMs": 9365.100000023842,
+      "browserLatencyMeasured": true,
+      "browserResponses": "COMPLETE",
+      "browserNativeMemory": "4/4 positive facts/vectors/current authority/full native usage PASS",
+      "cliFirstStdoutAcknowledgedMs": 15456.622757000005,
+      "cliWarmFirstStdoutAcknowledgedMs": null,
+      "cliWarmOutcome": "waiting_approval; no first text before approval; not a comparable no-tool TTFT sample",
+      "cliDeadlineFailure": false,
+      "originalDeadlineMs": 30000,
+      "cliRecovery": "No resubmission: active browser disconnect/reconnect of same waiting-approval run, one approved memory_remember, canonical CLW30 COMPLETE",
+      "originalCliMemoryVerdict": "FAIL: two-message expected sequence excludes approved tool event8; user7/tool8/assistant9 actually contiguous",
+      "readiness": {
+        "factsThrough": 9,
+        "vectorsThrough": 9,
+        "graphRequired": false
+      },
+      "subsecondAccepted": false,
+      "requiredIntegrationAccepted": false,
+      "priorAuthenticationExpectedCodeFailures": {
+        "generation": "K9",
+        "failures": [
+          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
+          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
+        ],
+        "notRerun": true
+      },
+      "receipts": [
+        "browser/k10-first-warm-events.json",
+        "browser/k10-complete-tool-readiness.json",
+        "browser/k10-active-reconnect.json",
+        "k10-cli-timing-and-approval.json",
+        "k10-cli-memory-native-v2-first-warm-verification-1791915587703.json",
+        "cloud-k10-delay-chain.md",
+        "k10-financial-metadata-1791915701228.json"
+      ],
+      "firstCliPromptCompliance": {
+        "requestedMarker": "CLI30",
+        "actualMarker": "READY30",
+        "exactMatch": false,
+        "textLatencySampleValid": true,
+        "nativeFactChecksRemainSeparate": true
+      },
+      "toolInclusiveSupplement": {
+        "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
+        "originalGenericFailPreserved": true
+      }
     }
   ]
 }
