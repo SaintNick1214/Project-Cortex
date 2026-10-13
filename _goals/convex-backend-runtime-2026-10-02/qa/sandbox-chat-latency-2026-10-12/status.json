@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K13jointsourcePASS4.2; committingimmediatestart/prepare-scope/2observerbatch; freshcloudmeasurementpending",
+  "phase": "K13 functional native outcomes verified and exact environment cleaned; hosted latency FAIL; deterministic parallel recall repair in progress",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-13T21:17:38.463965+00:00",
+  "updatedAt": "2026-10-13T21:44:13.039Z",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -57,7 +57,19 @@
     "osClipboard": "untouched",
     "evidence": "browser/k11-readiness-observation.json"
   },
-  "currentEnvironment": null,
+  "currentEnvironment": {
+    "sessionId": "90c168d7-c872-4e13-872a-808673687f18",
+    "state": "ABSENT",
+    "generation": "K13",
+    "nativeSLOQualified": false,
+    "database": "reminiscent-gazelle-386",
+    "deploymentId": 6149177,
+    "expiresAt": 1792531499517,
+    "webPort": 3188,
+    "backendTraceEnabled": true,
+    "startupQualificationMethodsPassed": 8,
+    "cleanupReceipt": "k13-cleanup-final.json"
+  },
   "actualSamples": {
     "generation": "K11",
     "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
@@ -456,8 +468,8 @@
         "pass": 8,
         "fail": 2,
         "failures": [
-          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
-          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
+          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
+          "invalidsignature→AUTHENTICATION_TIMEOUT"
         ],
         "noAccessDelivered": true,
         "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
@@ -491,8 +503,8 @@
       "priorAuthenticationExpectedCodeFailures": {
         "generation": "K9",
         "failures": [
-          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
-          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
+          "expired valid signature → AUTHENTICATION_TIMEOUT",
+          "invalid signature → AUTHENTICATION_TIMEOUT"
         ],
         "notRerun": true
       },
@@ -514,7 +526,7 @@
       },
       "toolInclusiveSupplement": {
         "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
-        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
         "originalGenericFailPreserved": true
       }
     }
@@ -612,5 +624,72 @@
     "catalogTests": 24,
     "zeroSkips": true,
     "nativeSLOAccepted": false
+  },
+  "packagingK13": {
+    "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+    "actualCommittedInputs": 2140,
+    "percent": 100,
+    "backendFilesExpected": 157,
+    "nativeQualified": false,
+    "imageId": "sha256:4155c4f494de20db78117d27898455c11f961acc9b3a8d93fb7d1798ef367bb5",
+    "receipt": "kit-checks-immediate-start/packaging-final-receipt.json",
+    "launcherTests": 102,
+    "skipCount": 0,
+    "dryRunExit": 0
+  },
+  "actualSamplesK13": {
+    "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+    "firstBrowserAfterPaintMs": 9897.800000071526,
+    "warmBrowserAfterPaintMs": 9265.299999952316,
+    "firstAdmissionMs": 2475.399999976158,
+    "warmAdmissionMs": 1975.5999999046326,
+    "exactFirstWarmReplies": true,
+    "readinessFactsThrough": 4,
+    "readinessVectorsThrough": 4,
+    "observedWarningErrors": 0,
+    "browserSignedOutAndClosedBeforeCLI": true,
+    "under1000Accepted": false,
+    "nativeFourRunProofPending": true,
+    "generation": "K13",
+    "browserFirstAfterPaintMs": 9897.800000071526,
+    "browserWarmAfterPaintMs": 9265.299999952316,
+    "cliFirstStdoutAcknowledgedMs": 16083.247049000001,
+    "cliWarmFirstStdoutAcknowledgedMs": 17513.351049999997,
+    "responseStates": "4/4 COMPLETE",
+    "nativeMemory": "8/8 strict attributed facts/vectors/current grants/native usage/provenance PASS",
+    "nativeMemoryReceipt": "k13-memory-native-v2-four-run-verification-1791927604019.json",
+    "originalDeadlineMs": 30000,
+    "paidRetry": false,
+    "financialSummary": {
+      "nativeAttempts": 30,
+      "activeSlots": 0,
+      "reservationCeilingsUnits": 4900000,
+      "allSlotsReleased": true,
+      "chargesUnknown": true,
+      "manualCallsNotRetried": true
+    },
+    "cleanup": "ABSENT",
+    "cleanupReceipt": "k13-cleanup-final.json",
+    "subsecondOutcomesPassed": 0,
+    "subsecondOutcomesMeasured": 4,
+    "subsecondAccepted": false,
+    "requiredIntegrationAccepted": false,
+    "finalAuditAccepted": false
+  },
+  "docsV7": {
+    "verdict": "PASS",
+    "review": "docs-immediate-start-source-review-v7.md",
+    "sourcePercent": 100,
+    "buildExit": 0,
+    "actualTwoPageRender": true,
+    "publication": "unavailable while GitHub access is unavailable"
+  },
+  "nextRepair": {
+    "name": "Deterministic parallel backend vector/fact retrieval",
+    "owner": "/root/parallel_recall_repair",
+    "state": "implementation in progress",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false
   }
 }

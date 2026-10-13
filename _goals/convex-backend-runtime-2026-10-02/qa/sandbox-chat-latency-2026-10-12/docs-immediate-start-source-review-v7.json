@@ -1,0 +1,178 @@
+{
+  "schema": "cortex.docs-immediate-start.independent-source-review.v7",
+  "observedAtUTC": "2026-10-13T21:39:13.429400+00:00",
+  "reviewer": "k13_source_review (nonauthor)",
+  "verdict": "PASS",
+  "policy": "Bounded practical baseline v2 source/content review",
+  "scores": {
+    "requirements": 5,
+    "contentQuality": 4,
+    "validation": 4,
+    "patterns": 4,
+    "completeness": 4
+  },
+  "average": 4.2,
+  "breakingFindings": [],
+  "websiteRepository": "SaintNick1214/cortexmemory.dev",
+  "websiteRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+  "visibilityVerified": false,
+  "coreRepository": "SaintNick1214/Project-Cortex",
+  "coreProductBaseline": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "coreSourceGate": "cloud-k13-joint-source-review.json",
+  "currentCoreSourceHashes": {
+    "packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528",
+    "convex-dev/runtimeAgent.ts": "1ec557cb9f652dc49ee932677bddf84ec6ea6494eaee78ed66919e18ef242089",
+    "convex-dev/runtimeClient.ts": "544304c14c4fc69d3a1a9ff94fe561f13da33bbad2a715ec018c0758eb510ae0",
+    "src/client-runtime/validation.ts": "2762b6e2f8e85c0871d3f9b5e9b406de35393fab2516ec93b93a0b8af24fcdf4"
+  },
+  "changedPages": {
+    "docs-site/docs/architecture/performance.mdx": {
+      "sha256": "b13f9f390c286bd5969bf254c33b8e06cd64e2f807ec6575aa066741b6df9cac",
+      "v6Sha256": "ee82def42588418bda9538ee7fddcd30dedc7700c1512254b0d594688c859d15",
+      "changedSinceV6": true
+    },
+    "docs-site/docs/api-reference/runtime-client.mdx": {
+      "sha256": "a97b001914b4a0edef368ef532d8a93c051463cd9e6e0e08420c11e2b49769a5",
+      "v6Sha256": "cd4bc5744bd4e2fda9acd426afb76923823c8e6020ef30ffa84e1b9aa3c5aac9",
+      "changedSinceV6": true
+    }
+  },
+  "retainedPageHashes": {
+    "docs-site/docs/architecture/model-policy.mdx": {
+      "sha256": "7cf8acb413cceb96c5d8c6674debbf8ae1fe36b2547cbf54fd0a5d86e85d1f9f",
+      "v6Sha256": "7cf8acb413cceb96c5d8c6674debbf8ae1fe36b2547cbf54fd0a5d86e85d1f9f",
+      "changedSinceV6": false
+    },
+    "docs-site/docs/getting-started/backend-runtime.mdx": {
+      "sha256": "6246cf77d233d2efb726a3063139cd3b54a1d73eaf911623c58043f4cd3445cd",
+      "v6Sha256": "6246cf77d233d2efb726a3063139cd3b54a1d73eaf911623c58043f4cd3445cd",
+      "changedSinceV6": false
+    },
+    "docs-site/docs/getting-started/five-minute-quickstart.mdx": {
+      "sha256": "ce0e2d2eb082e019cbdc8a9f01a2cba86ab740ce77f495082e425d38d86053db",
+      "v6Sha256": "ce0e2d2eb082e019cbdc8a9f01a2cba86ab740ce77f495082e425d38d86053db",
+      "changedSinceV6": false
+    },
+    "docs-site/docs/getting-started/installation.mdx": {
+      "sha256": "2b5a235a74544a83ce14fe5d778b246a069bcc58874b4912bd8d734140a655b2",
+      "v6Sha256": "2b5a235a74544a83ce14fe5d778b246a069bcc58874b4912bd8d734140a655b2",
+      "changedSinceV6": false
+    },
+    "docs-site/docs/tools/cli-reference.mdx": {
+      "sha256": "2e222740350cfa5551d37725c291df8755a761d3d7168fcbae7c3f06192e49ec",
+      "v6Sha256": "2e222740350cfa5551d37725c291df8755a761d3d7168fcbae7c3f06192e49ec",
+      "changedSinceV6": false
+    }
+  },
+  "requirements": [
+    {
+      "requirement": "Document original immediate Workflow prefix within admission; preserve durable downstream Actions, strict wait and historical journals.",
+      "met": true,
+      "evidence": "performance.mdx current immediate-start paragraph matches accepted runtimeAgent.ts:218-228, unchanged V4 and installed Workflow contracts."
+    },
+    {
+      "requirement": "Document that initial failure can already be reflected in returned run/start states.",
+      "met": true,
+      "evidence": "runtime-client.mdx combined-recovery paragraph matches started.state, unchanged submitAndStartHandler post-start getHandler, and startResult failed/unknown variants."
+    },
+    {
+      "requirement": "Document existing continuous final-authority observer as run/memory status owner alongside text transport.",
+      "met": true,
+      "evidence": "performance.mdx observation paragraph matches accepted RuntimeQuickstart.tsx:202-207; no SDK callback/authorization change."
+    },
+    {
+      "requirement": "Retain the five other accepted MDX pages and make no native/SLO/publication claim.",
+      "met": true,
+      "evidence": "All five other pages match exact v6 hashes; explicit installed measurement/product-target/no-guarantee wording retained."
+    },
+    {
+      "requirement": "Review saved v7 build and render evidence without new service/build/full-goal work.",
+      "met": true,
+      "evidence": "Raw Docusaurus compilation/static generation succeeds with exit0; current HTML markers match both pages; actual performance screenshot viewed; two-page render receipt and zero warning/error count only within sample of100. Reviewer did no build/browser/server/publication action."
+    }
+  ],
+  "acceptedEvidence": [
+    {
+      "path": "docs-authority-routing-source-review-v6.md",
+      "sha256": "b5a76010fa3fbf1797f71ed2b04866373412b913853babea66828195dfd6fb8c"
+    },
+    {
+      "path": "docs-authority-routing-source-review-v6.json",
+      "sha256": "b43c858086b02f4d2f99fcf0cc4b620113bf9afc990360d4af9de7b698e8585f"
+    },
+    {
+      "path": "docs-immediate-start-build-v7.log",
+      "sha256": "e5d9dc1a3e03eb8f63ea2b7200e3292c8f4a8b9012fceadda537e40fa30d8201"
+    },
+    {
+      "path": "docs-immediate-start-build-v7-exit.json",
+      "sha256": "97516100bd94c7cc2c75fa77f3f90f104bbcb0bc0827672ad3fd438da9a4ec45"
+    },
+    {
+      "path": "browser/docs-immediate-start-v7.png",
+      "sha256": "58644d923196d1642b3afb81e60c4699ca9e85f3d3c2b71b049eaa275505c9d6"
+    },
+    {
+      "path": "browser/docs-immediate-start-v7-observation.json",
+      "sha256": "97ca41abe4850352e44a6b753885ab6e0257e3f206e30beeac56ba71e084eb09"
+    }
+  ],
+  "generatedHtml": {
+    "architecture/performance": {
+      "sha256": "df52f75ed97581aac742756e0099409c443cd5591d3fbebcd781be50e1221f22",
+      "immediateStartDurableActionsObserverAndTargetMarkersVerified": true
+    },
+    "api-reference/runtime-client": {
+      "sha256": "c65ff30b1c44680f3b437525fea0b2210a33e6ac544f0c548c37df7d4ccc6b45",
+      "immediateStartDurableActionsEarlyReturnedFailureMarkersVerified": true
+    }
+  },
+  "build": {
+    "exitCode": 0,
+    "rawClientServerCompilationAndStaticGenerationSuccess": true,
+    "retainedWarnings": [
+      "Browserslist caniuse-lite data 11 months old",
+      "Docusaurus update notice 3.9.2 to 3.10.2"
+    ],
+    "reviewerReranBuild": false
+  },
+  "browser": {
+    "coordinatorReceipt": {
+      "observedAt": "2026-10-13T21:17:25.117Z",
+      "actualPerformanceRender": true,
+      "actualApiRender": true,
+      "observedWarningErrorCount": 0,
+      "logSampleLimit": 100
+    },
+    "reviewerViewedSavedPerformanceScreenshot": true,
+    "reviewerFreshBrowserRender": false,
+    "apiRenderProof": "Coordinator-recorded actual render plus current generated HTML marker inspection; no separate saved API screenshot inspected.",
+    "completeConsoleHealthClaim": false
+  },
+  "deltaVerification": {
+    "changedPageSetExactlyTwoAmongSeven": true,
+    "fiveOtherPagesByteIdenticalToV6": true,
+    "apiNewSentencesRemovalRestoresV6HashExactly": true,
+    "performanceExactInverseToV6Claimed": false,
+    "performanceReview": "Current relevant paragraphs and retained source limits inspected directly; no unprovided v6 preimage or guessed inverse is treated as evidence."
+  },
+  "limits": [
+    "Documentation alignment only; no native cloud/OCC/latency acceptance.",
+    "Prior K12 latency failures remain failures; the under-one-second product target is unmet.",
+    "No package publication or deployment is authorized or performed.",
+    "The existing bounded source gate and this docs gate do not replace final candidate qualification/audit."
+  ],
+  "actions": {
+    "docsEdits": 0,
+    "productEdits": 0,
+    "buildReruns": 0,
+    "testReruns": 0,
+    "browserActions": 0,
+    "servicesStarted": 0,
+    "serviceCalls": 0,
+    "inferenceCalls": 0,
+    "publications": 0,
+    "gitWrites": 0,
+    "reviewArtifactsWritten": 2
+  }
+}

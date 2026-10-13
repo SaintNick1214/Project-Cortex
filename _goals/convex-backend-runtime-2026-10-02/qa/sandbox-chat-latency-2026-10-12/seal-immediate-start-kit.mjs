@@ -1,0 +1,57 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+const p='/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs',q=path.dirname(new URL(import.meta.url).pathname),base=p+'/sandbox-env';
+const kit=p+'/manual-sandbox-latency-immediate-start-2026-10-13';
+const sha=x=>createHash('sha256').update(x).digest('hex');
+const manifest=JSON.parse(await fs.readFile(kit+'/image/archives/manifest.json','utf8'));
+const identity=JSON.parse(await fs.readFile(q+'/kit-checks-immediate-start/docker-image-identity.json','utf8'));
+assert.equal(manifest.sourceCommit,'eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd');
+assert.equal(manifest.backend.files,157);assert.equal(manifest.backend.allSourceOutputHashesMatch,true);
+assert.equal(identity.os,'linux');assert.equal(identity.architecture,'arm64');assert.equal(identity.user,'sandbox');
+assert.equal(identity.labels['dev.cortex.manual-sandbox.source'],manifest.sourceCommit);
+assert.equal(identity.labels['dev.cortex.manual-sandbox.path'],kit);
+assert.equal(identity.labels['dev.cortex.manual-sandbox'],identity.kitIdentity.id);
+const actual=JSON.parse((await promisify(execFile)('/Applications/Docker.app/Contents/Resources/bin/docker',['image','inspect',identity.imageId],{maxBuffer:100000})).stdout)[0];
+assert.equal(actual.Id,identity.imageId);assert.equal(actual.Os,'linux');assert.equal(actual.Architecture,'arm64');assert.equal(actual.Config.User,'sandbox');
+for(const [key,value]of Object.entries(identity.labels))assert.equal(actual.Config.Labels[key],value);
+const reviewPath=q+'/cloud-k13-joint-source-review.md',review=await fs.readFile(reviewPath);
+assert.equal(sha(review),'bf79dc86a8562ab85b1940d1c3180529b62e204dac20ccab0ced6413d7068822');assert.ok(/PASS/.test(review.toString()));
+const approvalPath=base+'/procedure-approval.json',originalApproval=await fs.readFile(approvalPath);
+const approval=JSON.parse(originalApproval);
+assert.equal(approval.maximumPaidRequests,8);assert.equal(approval.maximumUnknownLiabilityUnits,2700000);assert.equal(approval.perRunHumanReview,false);
+await fs.writeFile(q+'/procedure-approval-before-immediate-start.json',originalApproval,{flag:'wx'});
+let docker=await fs.readFile(base+'/docker.mjs','utf8');
+await fs.writeFile(q+'/docker-before-immediate-start.mjs',docker,{flag:'wx'});
+const oldImage=/export const IMAGE_ID = '([^']+)'/.exec(docker)[1];
+assert.equal(oldImage,'sha256:7a933ed4cb36c1951f9e338e4fda3f4c804eaed4f873e447e2749f2f64e82ef1');
+assert.ok(!docker.includes('PRIOR_AUTHORITY_ROUTING_IMAGE_ID'));
+for(const [name,value]of Object.entries({IMAGE_ID:identity.imageId,SOURCE_COMMIT:manifest.sourceCommit,BACKEND_MANIFEST_SHA256:manifest.backend.manifestSha256})){
+ const pattern=new RegExp("export const "+name+" = '[^']+'");assert.ok(pattern.test(docker));docker=docker.replace(pattern,"export const "+name+" = '"+value+"'");
+}
+docker=docker.replace('export const LABEL =',"export const PRIOR_AUTHORITY_ROUTING_IMAGE_ID = '"+oldImage+"';\nexport const LABEL =");
+const oldList='PRIOR_COMPACT_VECTOR_IMAGE_ID, PRIOR_CONTEXT_TRANSACTION_IMAGE_ID, PRIOR_QUERY_COMPOSITION_IMAGE_ID]';assert.equal(docker.split(oldList).length,2);
+docker=docker.replace(oldList,'PRIOR_COMPACT_VECTOR_IMAGE_ID, PRIOR_CONTEXT_TRANSACTION_IMAGE_ID, PRIOR_QUERY_COMPOSITION_IMAGE_ID, PRIOR_AUTHORITY_ROUTING_IMAGE_ID]');
+for(const entry of manifest.packages){
+ assert.equal(sha(await fs.readFile(kit+'/image/archives/'+entry.filename)),entry.sha256);
+ const pattern=new RegExp("("+entry.role+": \\{[^\\n]+sha256: ')[^']+");assert.ok(pattern.test(docker));docker=docker.replace(pattern,(_,prefix)=>prefix+entry.sha256);
+}
+await fs.writeFile(base+'/docker.mjs',docker);
+let runner=await fs.readFile(base+'/runner.mjs','utf8');await fs.writeFile(q+'/runner-before-immediate-start.mjs',runner,{flag:'wx'});
+const oldKit="const KIT_NAME = 'manual-sandbox-latency-authority-routing-2026-10-13';";assert.equal(runner.split(oldKit).length,2);
+runner=runner.replace(oldKit,"const KIT_NAME = 'manual-sandbox-latency-immediate-start-2026-10-13';");await fs.writeFile(base+'/runner.mjs',runner);
+approval.procedureHistory.push({approvalSha256:sha(originalApproval),reviewSha256:approval.reviewSha256,sourceCommit:approval.candidateSourceCommit,methods:8,unknownLiabilityUnits:2700000});
+approval.reviewPath=reviewPath;approval.reviewSha256=sha(review);approval.candidateSourceCommit=manifest.sourceCommit;
+for(const row of approval.files)row.sha256=sha(await fs.readFile(path.resolve(base,row.path)));
+const priorReviews=approval.sourceAcceptance?.reviewHashes??{};
+approval.sourceAcceptance={kind:'NORMAL_REVIEWED_SOURCE_PIN_INTEGRATION',sourceCommit:manifest.sourceCommit,kit,imageId:identity.imageId,artifactReceiptSha256:sha(await fs.readFile(kit+'/image/archives/manifest.json')),reviewHashes:{...priorReviews,'cloud-k13-joint-source-review.md':sha(review)}};
+approval.priorManualObservations.push({sessionId:'706fb0d2-187d-4855-9ace-376958ab5613',firstCliMs:17731.584925000003,warmCliMs:18398.853757000004,firstBrowserAfterPaintMs:20515.600000023842,warmBrowserAfterPaintMs:12415.299999952316,environment:'CLEANED',cleanupReceipt:q+'/k12-cleanup-final.json',financialReceipt:q+'/k12-financial-metadata-1791924741658.json',allFourSubsecondOutcomes:'FAIL',allFourNativeMemory:'PASS through8/8',originalFailuresPreserved:true});
+await fs.writeFile(approvalPath,JSON.stringify(approval,null,2)+'\n');
+const {verifyProcedure}=await import(base+'/qualification.mjs');const procedure=await verifyProcedure();
+const {verifyArtifacts}=await import(base+'/docker.mjs');const artifacts=await verifyArtifacts(kit);
+const receipt={observedAt:new Date().toISOString(),scope:'NORMAL_REVIEWED_SOURCE_AND_ARTIFACT_PIN_INTEGRATION',digest:procedure.digest,artifacts,image:identity,maximumPaidRequests:8,maximumUnknownLiabilityUnits:2700000,priorApprovalSha256:sha(originalApproval),oldImageExactCleanupRetained:oldImage,sourceSubstitution:'Reviewed official immediate Workflow prefix, trusted initial completion binding, raw authority scope in original model preparation and two-observer demo; V1–V4 bodies and original strict callback/guards/accounting/budgets/no-retry controls retained',serviceCalls:0,paidCalls:0};
+await fs.writeFile(q+'/procedure-immediate-start-resealed.json',JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({digest:procedure.digest,image:identity.imageId,sourceCommit:manifest.sourceCommit,maximumPaidRequests:8}));
