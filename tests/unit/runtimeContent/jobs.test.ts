@@ -30,10 +30,10 @@ async function fixture() {
   f.ctx.runQuery = (async (ref, args) => route(ref) ? invoke(route(ref), f.ctx, args) : query(ref, args)) as MutationCtx["runQuery"];
   f.ctx.runMutation = (async (ref, args) => route(ref) ? f.transaction(() => invoke(route(ref), f.ctx, args)) : mutation(ref, args)) as MutationCtx["runMutation"];
   const calls: string[] = [];
-  const generate = async (jobId: string, leaseToken: string, text: string) => processContentStageHandler(f.ctx as unknown as ActionCtx, { jobId, leaseToken }, async (composition, binding) => {
+  const generate = async (jobId: string, leaseToken: string, text: string, native?: () => Promise<void>) => processContentStageHandler(f.ctx as unknown as ActionCtx, { jobId, leaseToken }, async (composition, binding) => {
     const r = await composition.ledger.resolve(binding);
     const model: LanguageModelV4 = { specificationVersion: "v4", provider: "convexGateway.chat", modelId: r.snapshot.modelId, supportedUrls: {}, doStream: async () => { throw new Error("No stream"); }, doGenerate: async () => {
-      calls.push(binding.operationKey); return { content: [{ type: "text", text }], finishReason: { unified: "stop", raw: "stop" }, warnings: [], usage: { inputTokens: { total: 8, noCache: 8, cacheRead: 0, cacheWrite: undefined }, outputTokens: { total: 2, text: 2, reasoning: 0 } },
+      calls.push(binding.operationKey); await native?.(); return { content: [{ type: "text", text }], finishReason: { unified: "stop", raw: "stop" }, warnings: [], usage: { inputTokens: { total: 8, noCache: 8, cacheRead: 0, cacheWrite: undefined }, outputTokens: { total: 2, text: 2, reasoning: 0 } },
         response: { body: { id: "fixture", model: r.snapshot.modelId, choices: [{ finish_reason: "stop", message: { content: text } }], usage: { prompt_tokens: 8, completion_tokens: 2, total_tokens: 10 } } } };
     } }; return governGatewayLanguageModel(model, composition, binding, r);
   });
@@ -90,8 +90,8 @@ it("recovers two confirmed durable drafts exactly once without another native at
   expect(await f.call(jobs.reconcile,{jobId:job.jobId})).toMatchObject({state:"ready",artifactVersion:2}); await f.call(jobs.reconcile,{jobId:job.jobId});
   expect(f.db.table("runtimeModelAttempts")).toHaveLength(count);expect(f.db.table("artifacts")[0].versionHistory).toHaveLength(2);expect(f.db.table("runtimeBudgetAccounts").find(row=>row.kind==="run")).toEqual(account);
 });
-it("automatic conversation title binds a genuine active parent model and shares its existing financial account", async () => {
-  const f=await fixture(),run=await f.run(); await f.call(runtime.start,{runId:run.runId});
+async function parentAnswer(f: Awaited<ReturnType<typeof fixture>>) {
+  const run=await f.run(); await f.call(runtime.start,{runId:run.runId});
   const execution=f.db.table("runtimeAgentExecutions")[0], row=f.db.table("runtimeRuns")[0], attempt={reference:f.reference,runId:run.runId,attemptNumber:1,leaseVersion:execution.leaseVersion};
   await f.call(runtime.saveContext,{...attempt,context:"",witnesses:[],completeness:"complete"});
   const op=await f.call<{operationId:string;semanticId:string}>(runtime.beginOperation,{...attempt,kind:"model",ordinal:0,requestCanonical:"{}"}); await f.call(runtime.startOperation,{...attempt,operationId:op.operationId});
@@ -101,12 +101,140 @@ it("automatic conversation title binds a genuine active parent model and shares 
   const input=f.native.messages.get((row.inputMessageIds as string[])[0])!,finalId="native:parent-final";
   f.native.messages.set(finalId,{...input,_id:finalId,stepOrder:1,agentName:`cortex:${run.runId}:1:0`,message:{role:"assistant",content:"Parent answer"}});
   await f.call(runtime.finishOperation,{...attempt,operationId:op.operationId,resultCanonical:"{}",nativeMessageIds:[finalId]});
+  return { run, row, attempt, finalId, op, binding, resolution };
+}
+it("automatic conversation title binds a genuine active parent model and shares its existing financial account", async () => {
+  const f = await fixture(), { run, row } = await parentAnswer(f);
   const jobId=await f.call<string>(jobs.enqueueParentTitle,{reference:f.reference,runId:run.runId}),lease=await f.claim(jobId),accounts=f.db.table("runtimeBudgetAccounts").length;
   await f.generate(jobId,lease.leaseToken,"Hello World");await f.call(jobs.publish,lease);
   const job=f.db.table("runtimeContentJobs")[0];expect(job.runAccountId).toBe(row.runAccountId);expect(job.parentOperationId).toBe(f.db.table("runtimeModelOperations")[0]._id);expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(accounts);
   expect(JSON.parse(f.db.table("runtimeConversations")[0].metadataCanonical as string)).toMatchObject({title:"Hello World"});
   expect(await f.call(jobs.enqueueParentTitle,{reference:f.reference,runId:run.runId})).toBeNull();
   await expect(f.call(jobs.submit,{version:1,requestId:"invented-parent",intent:"title",prompt:"Title",conversationId:run.conversationId,parentRunId:"invented"})).rejects.toBeDefined();
+});
+async function completedTitle() {
+  const f = await fixture(), parent = await parentAnswer(f);
+  await f.call(runtime.finalize, { ...parent.attempt, finalMessageIds: [parent.finalId] });
+  const jobId = await f.call<string>(jobs.enqueueParentTitle, { reference: f.reference, runId: parent.run.runId });
+  return { f, ...parent, jobId };
+}
+it("the Agent Workflow commits canonical answer and ingestion while its durable title Workflow remains slow", async () => {
+  const f = await fixture(), parent = await parentAnswer(f), actions: string[] = [];
+  const step = {
+    runMutation: async (ref: unknown, args: unknown) => {
+      const name = getFunctionName(ref as Parameters<typeof getFunctionName>[0]);
+      if (name === "runtimeAgent:startContext") return null;
+      if (name === "runtimeAgent:contextBarrier") return { state: "ready", remainingMs: 0 };
+      return f.ctx.runMutation(ref as never, args as never);
+    },
+    runAction: async (ref: unknown) => {
+      const name = getFunctionName(ref as Parameters<typeof getFunctionName>[0]); actions.push(name);
+      if (name === "runtimeAgent:prepareContext") return null;
+      if (name === "runtimeAgent:modelStep") return { final: true, calls: [], savedMessageIds: [parent.finalId] };
+      throw new Error(`Unexpected inline title action: ${name}`);
+    },
+  };
+  await (runtime.executeTurn as unknown as { _handler(step: typeof step, args: typeof parent.attempt): Promise<null> })._handler(step, parent.attempt);
+  expect(actions).toEqual(["runtimeAgent:prepareContext", "runtimeAgent:modelStep"]);
+  const job = f.db.table("runtimeContentJobs")[0], accounts = f.db.table("runtimeBudgetAccounts").length;
+  expect(f.db.table("runtimeRuns")[0]).toMatchObject({ responseStatus: "complete", outputMessageIds: [parent.finalId] });
+  expect(f.db.table("runtimeAgentIngestion")).toMatchObject([{ state: "pending", outputMessageIds: [parent.finalId] }]);
+  expect(job).toMatchObject({ state: "pending", runAccountId: parent.row.runAccountId, completedParentTitle: { attemptNumber: 1, leaseVersion: parent.attempt.leaseVersion } });
+  expect(workflows).toHaveLength(2);
+  let release!: () => void, entered!: () => void;
+  const slow = new Promise<void>(resolve => { release = resolve; }), started = new Promise<void>(resolve => { entered = resolve; });
+  const contentStep = { runMutation: f.ctx.runMutation, runAction: async (_ref: unknown, lease: { jobId: string; leaseToken: string }) =>
+    f.generate(lease.jobId, lease.leaseToken, "Hello World", async () => { entered(); await slow; }) };
+  const work = (jobs.execute as unknown as { _handler(step: typeof contentStep, args: { jobId: string }): Promise<null> })._handler(contentStep, { jobId: job.jobId as string });
+  await started;
+  expect(f.db.table("runtimeContentJobs")[0].state).toBe("running");
+  expect(f.db.table("runtimeAgentExecutions")[0].state).toBe("complete");
+  expect(f.db.table("runtimeAgentOutput").filter(row => row.final).map(row => JSON.parse(row.partCanonical as string))).toContainEqual({ type: "status", state: "complete" });
+  const nativeAttempt = f.db.table("runtimeModelAttempts")[1];
+  await f.call(ledger.markVisible, { reference: f.reference, attemptId: nativeAttempt._id, outputVisible: true, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false });
+  release(); await work;
+  expect(f.db.table("runtimeContentJobs")[0]).toMatchObject({ state: "ready", parentOperationId: f.db.table("runtimeModelOperations")[0]._id });
+  expect(f.db.table("runtimeModelOperations")[1]).toMatchObject({ operationKey: "conversation.title", runAccountId: parent.row.runAccountId, parentOperationId: f.db.table("runtimeModelOperations")[0]._id });
+  expect(f.db.table("runtimeModelAttempts")[1]).toMatchObject({ resultAttachmentState: "attached", outputVisible: true, resultWithheld: false });
+  expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(accounts);
+  expect(JSON.parse(f.db.table("runtimeConversations")[0].metadataCanonical as string)).toMatchObject({ title: "Hello World" });
+});
+it.each(["revocation", "definition", "edit", "cancel", "wrong-parent", "wrong-run", "lease", "tombstone"] as const)("completed automatic title rejects %s and preserves the canonical answer and liability", async fault => {
+  const { f, jobId, run } = await completedTitle(), lease = await f.claim(jobId);
+  await f.generate(jobId, lease.leaseToken, "Pending Title");
+  const before = structuredClone(f.db.table("runtimeBudgetAccounts")), attempts = f.db.table("runtimeModelAttempts").length;
+  if (fault === "revocation") f.grant.revokedAt = clock;
+  else if (fault === "definition") f.db.table("runtimeAgentDefinitions")[0].revokedAt = clock;
+  else if (fault === "edit") f.db.table("runtimeConversations")[0].executionRevision = Number(f.db.table("runtimeConversations")[0].executionRevision) + 1;
+  else if (fault === "cancel") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+  else if (fault === "wrong-parent") f.db.table("runtimeContentJobs")[0].parentOperationId = f.db.table("runtimeModelOperations")[1]._id;
+  else if (fault === "wrong-run") f.db.table("runtimeContentJobs")[0].parentRunId = "other-run";
+  else if (fault === "lease") f.db.table("runtimeRunOutbox")[0].leaseExpiresAt = clock - 1;
+  else f.db.table("runtimeConversations")[0].tombstonedAt = clock;
+  const currentAccounts = structuredClone(f.db.table("runtimeBudgetAccounts"));
+  await expect(f.call(jobs.publish, lease)).rejects.toBeDefined();
+  expect(f.db.table("runtimeRuns")[0]).toMatchObject({ runId: run.runId, responseStatus: "complete" });
+  expect(f.db.table("runtimeAgentIngestion")).toHaveLength(1);
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(attempts);
+  expect(f.db.table("runtimeBudgetAccounts")).toEqual(currentAccounts);
+  expect(before.find(row => row.kind === "run")!.uncertainUnits).toBe(200000);
+  expect(f.db.table("runtimeContentJobs")[0].state).toBe("running");
+});
+it("completed parent retains title replay/unknown liability and refuses all other admission identities", async () => {
+  const { f, row, jobId, binding } = await completedTitle(), lease = await f.claim(jobId);
+  const attempts = f.db.table("runtimeModelAttempts").length;
+  for (const operationKey of ["agent.respond", "embedding.query", "artifact.text"] as const) {
+    await expect(f.call(ledger.resolve, { reference: f.reference, runBudgetId: row.runBudgetId, operationKey })).rejects.toBeDefined();
+    await expect(f.call(ledger.admit, { ...binding, operationKey, requestCanonical: "{}" })).rejects.toBeDefined();
+  }
+  await expect(f.call(jobs.submit, { version: 1, requestId: "complete-public-title", intent: "title", prompt: "Title", conversationId: row.conversationId, parentRunId: row.runId })).rejects.toBeDefined();
+  await expect(f.call(runtime.beginOperation, { reference: f.reference, runId: row.runId, attemptNumber: 1, leaseVersion: 1, kind: "tool", ordinal: 1, requestCanonical: "{}", toolCallId: "late", toolName: "memory_recall" })).rejects.toBeDefined();
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(attempts);
+  await f.generate(jobId, lease.leaseToken, "Durable Title");
+  const balances = structuredClone(f.db.table("runtimeBudgetAccounts"));
+  await f.generate(jobId, lease.leaseToken, "Durable Title");
+  expect(f.calls).toEqual(["conversation.title"]); expect(f.db.table("runtimeModelAttempts")).toHaveLength(2);
+  expect(f.db.table("runtimeBudgetAccounts")).toEqual(balances);
+  const job = f.db.table("runtimeContentJobs")[0];
+  await expect(f.call(ledger.admit, { ...binding, operationKey: "conversation.title", parentOperationId: job.parentOperationId, semanticId: "invented-title", requestCanonical: "{}" })).rejects.toBeDefined();
+  f.db.table("runtimeModelOperations")[1].cancelled = true;
+  await expect(f.call(jobs.publish, lease)).rejects.toBeDefined();
+  expect(f.db.table("runtimeRuns")[0].responseStatus).toBe("complete");
+});
+it("completed title rechecks every native boundary after current revocation without changing the completed answer", async () => {
+  const { f, jobId, row } = await completedTitle(), lease = await f.claim(jobId);
+  let release!: () => void, entered!: () => void;
+  const slow = new Promise<void>(resolve => { release = resolve; }), started = new Promise<void>(resolve => { entered = resolve; });
+  const work = f.generate(jobId, lease.leaseToken, "Withheld Title", async () => { entered(); await slow; });
+  const deniedWork = expect(work).rejects.toBeDefined(); await started;
+  const job = f.db.table("runtimeContentJobs")[0], native = f.db.table("runtimeModelAttempts")[1];
+  f.grant.revokedAt = clock;
+  const binding = { reference: f.reference, runBudgetId: row.runBudgetId, operationKey: "conversation.title", parentOperationId: job.parentOperationId };
+  await expect(f.call(ledger.resolve, binding)).rejects.toBeDefined();
+  await expect(f.call(ledger.admit, { ...binding, semanticId: `${jobId}:primary`, ordinal: 0, requestCanonical: native.canonical })).rejects.toBeDefined();
+  await expect(f.call(ledger.checkpoint, { reference: f.reference, attemptId: native._id, requestCanonical: native.canonical })).rejects.toBeDefined();
+  await expect(f.call(ledger.markVisible, { reference: f.reference, attemptId: native._id, outputVisible: true, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false })).rejects.toBeDefined();
+  release(); await deniedWork;
+  expect(f.db.table("runtimeRuns")[0].responseStatus).toBe("complete"); expect(f.db.table("runtimeAgentIngestion")).toHaveLength(1);
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(2); expect(f.calls).toEqual(["conversation.title"]);
+  expect(f.db.table("runtimeContentJobs")[0].state).toBe("running");
+  expect(f.db.table("runtimeConversations")[0].metadataCanonical).toBeUndefined();
+});
+it("title failure after dispatch retains unknown liability without rolling back final text or paying again", async () => {
+  const { f, jobId } = await completedTitle(), lease = await f.claim(jobId);
+  await expect(f.generate(jobId, lease.leaseToken, "Unavailable", async () => { throw new Error("LOST_PROVIDER_TERMINAL"); })).rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+  await f.call(ledger.recover, { reference: f.reference, attemptId: f.db.table("runtimeModelAttempts")[1]._id });
+  await f.call(jobs.failed, { ...lease, uncertain: true });
+  const balances = structuredClone(f.db.table("runtimeBudgetAccounts"));
+  expect(await f.call(jobs.claim, { jobId })).toBeNull();
+  expect(await f.call(jobs.enqueueParentTitle, { reference: f.reference, runId: f.db.table("runtimeRuns")[0].runId })).toBe(jobId);
+  expect(workflows).toHaveLength(2);
+  await expect(f.call(jobs.reconcile, { jobId })).rejects.toBeDefined();
+  expect(f.db.table("runtimeContentJobs")[0].state).toBe("unknown"); expect(f.db.table("runtimeRuns")[0].responseStatus).toBe("complete");
+  expect(f.db.table("runtimeAgentIngestion")).toHaveLength(1); expect(f.db.table("runtimeModelAttempts")).toHaveLength(2);
+  expect(f.db.table("runtimeModelAttempts")[1]).toMatchObject({ state: "uncertain", slotReleased: false });
+  expect(f.db.table("runtimeBudgetAccounts")).toEqual(balances);
+  expect(balances.find(row => row.kind === "run")!.uncertainUnits).toBe(200000);
 });
 it("ready derived content rechecks consumed artifact metadata independently of its own output version", async()=>{
   const f=await fixture(),upstream=await document(f,"upstream"),run=await f.run(),row=f.db.table("runtimeRuns")[0],messageId=(row.inputMessageIds as string[])[0];

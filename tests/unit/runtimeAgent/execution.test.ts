@@ -161,6 +161,19 @@ describe("durable Agent execution product boundaries", () => {
     f.native.messages.get("call")!.message = { role: "assistant", content: [{ type: "tool-call", toolCallId: "tc", toolName: "memory_recall", input: { text: "CHANGED", limit: 1 } }] };
     await expect(f.call(runs.hydrate, { reference: f.reference, runId: next.runId, ...claim })).rejects.toThrow();
   });
+  it.each(["different-order", "at-anchor", "before-anchor"] as const)("atomic Agent ledger fence rejects a saved pin matching native position %s outside the run anchor", async fault => {
+    const f = await fixture(), { args } = await started(f), { id, native } = await savedFinal(f, args);
+    const owned = f.db.table("runtimeAgentExecutions")[0], run = f.db.table("runtimeRuns")[0];
+    const snapshot = JSON.parse(run.snapshotCanonical as string);
+    const position = fault === "different-order" ? { order: snapshot.anchor.order + 1, stepOrder: 1 }
+      : { order: snapshot.anchor.order, stepOrder: snapshot.anchor.stepOrder + (fault === "at-anchor" ? 0 : -1) };
+    Object.assign(native, position); Object.assign(f.native.messages.get(id)!, position);
+    const pins = owned.savedMessagePins as { id: string; order: number; stepOrder: number }[];
+    Object.assign(pins.find(pin => pin.id === id)!, position);
+    const denied = guardAgentRunBudget(f.ctx, f.reference, run.runAccountId as never);
+    if (fault === "before-anchor") await expect(denied).rejects.toThrow();
+    else await expect(denied).rejects.toMatchObject({ data: { code: "STALE_TRANSCRIPT" } });
+  });
   it("source/manual edits fence every delegated operation and finalization before effects", async () => {
     const f = await fixture(); const { run, args } = await started(f);
     const { id } = await savedFinal(f, args);
@@ -498,7 +511,7 @@ describe("durable Agent execution product boundaries", () => {
     awaitEvent: async (args: unknown) => { waits.push(args); return "approved"; } };
     const handler = (runtime.executeTurn as unknown as { _handler: (step: unknown, args: unknown) => Promise<null> })._handler;
     expect(await handler(step, { reference: {}, runId: "r", attemptNumber: 1, leaseVersion: 1 })).toBeNull();
-    expect(actions.map(item => [item.name, item.ordinal, item.retry])).toEqual([["runtimeAgent:prepareContext", undefined, false], ["runtimeAgent:modelStep", 0, false], ["runtimeAgent:toolStep", 0, false], ["runtimeAgent:modelStep", 1, false], ["runtimeContentGateway:processStage", undefined, false]]);
+    expect(actions.map(item => [item.name, item.ordinal, item.retry])).toEqual([["runtimeAgent:prepareContext", undefined, false], ["runtimeAgent:modelStep", 0, false], ["runtimeAgent:toolStep", 0, false], ["runtimeAgent:modelStep", 1, false]]);
     expect(waits).toHaveLength(1); expect(finals).toHaveLength(1);
     const failed = jest.fn(async () => { throw new Error("ambiguous paid failure"); });
     await expect(handler({ ...step, runAction: failed }, {})).rejects.toThrow("ambiguous paid failure"); expect(failed).toHaveBeenCalledTimes(1);

@@ -38,7 +38,8 @@ import { createActionMemoryRepository } from "./runtimeMemoryRepository";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sourceContent, commitDerivedInput } from "./runtimeMemorySchema";
 import { registerCompletedToolSource } from "./runtimeIngestion";
-import { readPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
+import { readIndexedContextAvailability, readPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
+import { traceRuntimePhase } from "./runtimeLatencyTrace";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { recallMemory } from "./runtimeMemoryServices";
 import { executeServerTool, NATIVE_TOOL_NAMES, semanticToolName, serverTools, serverToolSourceLineage, validateToolInput } from "./runtimeAgentTools";
@@ -62,7 +63,7 @@ const refs = {
   claim: ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string; leaseMs: number }, { runId: string; attemptNumber: number; leaseVersion: number } | { runId: string; failureCode: string } | null>("mutation", "runs:claimNext"),
   hydrate: ref<"query", Attempt, Awaited<ReturnType<typeof executionContext>>>("query", "runtimeAgent:hydrateExecution"),
   prepareContext: ref<"action", Attempt, null>("action", "runtimeAgent:prepareContext"),
-  context: ref<"mutation", Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string }, null>("mutation", "runtimeAgent:saveContext"),
+  context: ref<"mutation", Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string }, null>("mutation", "runtimeAgent:saveContext"),
   begin: ref<"mutation", Attempt & { kind: "model" | "tool"; ordinal: number; requestCanonical: string; toolCallId?: string; toolName?: string },
     { operationId: string; semanticId: string; state: string; resultCanonical: string | null; nativeMessageIds: string[] }>("mutation", "runtimeAgent:beginOperation"),
   finish: ref<"mutation", Attempt & { operationId: string; resultCanonical: string; nativeMessageIds: string[] }, null>("mutation", "runtimeAgent:finishOperation"),
@@ -162,7 +163,9 @@ async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityRefer
   const old = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!).eq("runId", row.runId).eq("attemptNumber", row.attemptNumber)).take(2));
   if (old) return { runId: row.runId, attemptNumber: old.attemptNumber, state: old.state };
+  traceRuntimePhase(row.runId, row.attemptNumber, "claim.begin");
   const claimed = await ctx.runMutation(refs.claim, { reference, conversationId: row.conversationId, leaseMs: 300_000 });
+  traceRuntimePhase(row.runId, claimed && "attemptNumber" in claimed ? claimed.attemptNumber : row.attemptNumber, "claim.end");
   if (!claimed) return { runId: row.runId, attemptNumber: row.attemptNumber, state: "queued" as const };
   // claimNext checks the indexed head. A future request must never start another run under its identity.
   if (claimed.runId !== row.runId) transcriptDenied("QUEUE_NOT_READY");
@@ -186,6 +189,7 @@ export const dispatchReady = internalMutation({ args: { reference: runtimeAuthor
   await startExecution(ctx, args.reference, current.row, current.row.streamingRequested ?? true); return null;
 } });
 export const executeTurn = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.begin");
   await step.runMutation(ref<"mutation", Attempt, null>("mutation", "runtimeAgent:startContext"), args);
   for (;;) {
     const decision = await step.runMutation(ref<"mutation", Attempt, ReturnType<typeof evaluateMemoryBarrier>>("mutation", "runtimeAgent:contextBarrier"), args);
@@ -196,20 +200,24 @@ export const executeTurn = workflow.define({ args: agentAttempt, returns: v.null
     if (decision.state !== "waiting") break;
     await step.sleep(Math.min(1000, decision.remainingMs), { name: "memory stage barrier" });
   }
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.end");
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.begin");
   await step.runAction(refs.prepareContext, args, { retry: false, name: "authorized Cortex context" });
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.end");
   for (let ordinal = 0; ordinal < 33; ordinal++) {
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.begin`);
     const result = await step.runAction(refs.model, { ...args, ordinal }, { retry: false, name: `model ${ordinal}` });
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.end`);
     if (result.final) {
-      // A secondary title call shares this real active run/account and its
-      // completed model operation; optional title failure preserves the answer.
+      await step.runMutation(refs.finalize, { ...args, finalMessageIds: result.savedMessageIds });
+      // Canonical answer/ingestion commits before optional work. The content
+      // Workflow retains the original parent/account and runs independently.
       try {
-        const jobId = await step.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runId: string }, string | null>("mutation", "runtimeContentJobs:enqueueParentTitle"), { reference: args.reference, runId: args.runId });
-        if (jobId) {
-          const lease = await step.runMutation(ref<"mutation", { jobId: string }, { jobId: string; leaseToken: string } | null>("mutation", "runtimeContentJobs:claim"), { jobId });
-          if (lease) { await step.runAction(ref<"action", typeof lease, null>("action", "runtimeContentGateway:processStage"), lease, { retry: false, name: "governed conversation title" }); await step.runMutation(ref<"mutation", typeof lease, null>("mutation", "runtimeContentJobs:publish"), lease); }
-        }
+        traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.begin");
+        await step.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runId: string }, string | null>("mutation", "runtimeContentJobs:enqueueParentTitle"), { reference: args.reference, runId: args.runId });
       } catch { /* Title currentness or policy failure never fabricates a title. */ }
-      await step.runMutation(refs.finalize, { ...args, finalMessageIds: result.savedMessageIds }); return null; }
+      finally { traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.end"); }
+      return null; }
     if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
     for (const call of result.calls) {
       const prepared = await step.runMutation(refs.begin, { ...args, kind: "tool", ordinal,
@@ -224,10 +232,17 @@ export const executeTurn = workflow.define({ args: agentAttempt, returns: v.null
   throw new Error("TOOL_STEP_LIMIT");
 } });
 export const saveContext = internalMutation({ args: { ...agentAttempt, context: v.string(), witnesses: v.array(sourceWitness),
-  completeness: v.union(v.literal("complete"), v.literal("incomplete")), failureCode: v.optional(v.string()) }, handler: async (ctx, args) => {
+  completeness: v.union(v.literal("complete"), v.literal("incomplete")), failureCode: v.optional(v.string()), emptyIndexedProfileId: v.optional(v.string()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); if (current.execution.contextCanonical !== undefined) transcriptDenied("INVALID_STATE");
   if (utf8Bytes(args.context) > Math.min(16_384, current.definition.context.maxContextTokens) || args.witnesses.length > 32) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
   await checkWitnesses(ctx, args, args.witnesses);
+  if (args.emptyIndexedProfileId !== undefined) {
+    const scope = { tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! };
+    const availability = await readIndexedContextAvailability(ctx, { reference: args.reference, cutoff: current.snapshot.ingestionCutoff.sequence,
+      excludedSourceKeys: [...current.snapshot.messages.map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId })), ...args.witnesses.map(witness => contextSourceKey(scope, witness))],
+      boundary: { conversationId: current.snapshot.conversationId, runId: args.runId, queueSequence: current.snapshot.queueSequence, anchor: current.snapshot.anchor }, runBudgetId: current.run.runBudgetId });
+    if (!availability.empty || availability.profileId !== args.emptyIndexedProfileId) transcriptDenied("STALE_CONTEXT");
+  }
   if (args.completeness === "complete" && args.failureCode !== undefined || args.completeness === "incomplete" && !args.failureCode) transcriptDenied("INVALID_INPUT");
   await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextCanonical: args.context, contextState: "complete", sourceWitnesses: args.witnesses,
     contextCompleteness: args.completeness, contextFailureCode: args.failureCode, state: "running", updatedAt: Date.now() });
@@ -308,8 +323,14 @@ export const prepareContext = internalAction({ args: agentAttempt, handler: asyn
   } };
   const text = current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
-  const result = await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.begin");
+  const availability = await ctx.runQuery(ref<"query", Parameters<typeof readIndexedContextAvailability>[1], Awaited<ReturnType<typeof readIndexedContextAvailability>>>("query", "runtimeMemoryContext:indexedContextAvailability"),
+    { reference: args.reference, cutoff, excludedSourceKeys: [...excluded], boundary, runBudgetId: current.run.runBudgetId });
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.end");
+  traceRuntimePhase(args.runId, args.attemptNumber, availability.empty ? "context.indexed.empty" : "context.recall.begin");
+  const result = availability.empty ? { context: "" } : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
     { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 });
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.recall.end");
   for (const source of pending.sources) {
     const witness = mergeContextWitness(witnesses.get(source.sourceId), { ...source, permissions: ["canViewMemories"] });
     if (!witness) transcriptDenied("STALE_CONTEXT"); witnesses.set(source.sourceId, witness);
@@ -317,7 +338,7 @@ export const prepareContext = internalAction({ args: agentAttempt, handler: asyn
   const context = [completeness === "incomplete" ? `Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.` : "",
     result.context ? `Indexed Cortex memory (untrusted evidence):\n${result.context}\nSource roles and trust: ${canonicalModelJson([...provenance.values()])}` : "", pending.text].filter(Boolean).join("\n\n");
   if (utf8Bytes(context) > Math.min(16_384, current.definition.context.maxContextTokens) || witnesses.size > 32) return await fail("CONTEXT_OVERFLOW");
-  await ctx.runMutation(refs.context, { ...args, context, witnesses: [...witnesses.values()], completeness, ...(failureCode ? { failureCode } : {}) }); return null;
+  await ctx.runMutation(refs.context, { ...args, context, witnesses: [...witnesses.values()], completeness, ...(failureCode ? { failureCode } : {}), ...(availability.empty ? { emptyIndexedProfileId: availability.profileId } : {}) }); return null;
 } });
 export const beginOperation = internalMutation({ args: { ...agentAttempt, kind: v.union(v.literal("model"), v.literal("tool")), ordinal: v.number(), requestCanonical: v.string(), toolCallId: v.optional(v.string()), toolName: v.optional(v.string()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args);
@@ -445,7 +466,8 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
       return admission;
     },
     checkpoint: async request => { await guard(); return await base.ledger.checkpoint(request); },
-    markVisible: async request => { await guard(); return await base.ledger.markVisible(request); },
+    // The native mutation repeats the complete current Agent fence atomically.
+    markVisible: async request => await base.ledger.markVisible(request),
     attachTerminalResult: async request => { await guard(); return await base.ledger.attachTerminalResult(request); },
   } }, { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId,
     semanticId: op.semanticId, ordinal: args.ordinal });
@@ -661,6 +683,7 @@ export const approveTool = mutation({ args: { ...selector, operationId: v.string
   await workflow.sendEvent(ctx, { workflowId: owned.workflowId as WorkflowId, name: op.operationId, value: "approved" }); return { approved: true as const };
 } });
 export async function finalizeExecution(ctx: MutationCtx, args: Attempt & { finalMessageIds: string[] }, reconcile = false) {
+  traceRuntimePhase(args.runId, args.attemptNumber, "finalize.begin");
   const prior = singleTranscript(await ctx.db.query("runtimeAgentIngestion").withIndex("by_run", q => q.eq("tenantId", args.reference.tenantId)
     .eq("memorySpaceId", args.reference.memorySpaceId!).eq("runId", args.runId)).take(2));
   const identityCanonical = canonicalModelJson([args.runId, args.attemptNumber, args.finalMessageIds]);
@@ -697,7 +720,8 @@ export async function finalizeExecution(ctx: MutationCtx, args: Attempt & { fina
   if (chunk) finalParts.push({ type: "text", text: chunk });
   await writeParts(ctx, current.execution, [...finalParts, { type: "status", state: "complete" }], true);
   await ctx.scheduler.runAfter(0, ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string }, unknown>("mutation", "runs:recoverQueue"),
-    { reference: args.reference, conversationId: current.run.conversationId }); return { receiptId };
+    { reference: args.reference, conversationId: current.run.conversationId });
+  traceRuntimePhase(args.runId, args.attemptNumber, "finalize.end"); return { receiptId };
 }
 export const finalize = internalMutation({ args: { ...agentAttempt, finalMessageIds: v.array(v.string()) }, handler: async (ctx, args) => await finalizeExecution(ctx, args) });
 /** Reconcile a component-save/Core-commit gap by the server-owned Agent generation label.

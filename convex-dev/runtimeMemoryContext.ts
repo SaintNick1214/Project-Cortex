@@ -128,6 +128,31 @@ export const indexedSourceAtCutoff = internalQuery({ args: { reference: runtimeA
       && event.contentHash === source.contentHash && event.lineage.sourceEventId === source.lineage.sourceEventId && await withinConversationBoundary(ctx, event, args.boundary));
   } });
 
+/** No eligible unrepresented event means recall's own cutoff filter cannot
+ * yield indexed context. Overflow/any candidate conservatively uses recall. */
+export async function readIndexedContextAvailability(ctx: ReadCtx, args: { reference: RuntimeAuthorityReference; cutoff: number;
+  excludedSourceKeys: string[]; runBudgetId: string; boundary: ContextBoundary }) {
+  boundedCutoff(args.cutoff);
+  if (args.excludedSourceKeys.length > 1032) ingestionDenied("INVALID_INPUT");
+  const repository = new ConvexMemoryRepository(ctx, args.reference, "read"), authority = await repository.authority();
+  const scope = await readScopeCutoff(ctx, args.reference); if (args.cutoff > scope.sequence) ingestionDenied("INVALID_INPUT");
+  const profile = await readCurrentEmbeddingProfile(ctx, args.reference, "embedding.query", args.runBudgetId);
+  // Preserve existing profile readiness semantics even when no inference runs.
+  await repository.assertProfileReady(profile, args.runBudgetId);
+  const selected = authority.resourceAccess === "own"
+    ? ctx.db.query("runtimeIngestionEvents").withIndex("by_owner_sequence", q => q.eq("tenantId", authority.tenantId).eq("memorySpaceId", args.reference.memorySpaceId!).eq("ownerPrincipalId", authority.principalId).lte("sequence", args.cutoff))
+    : ctx.db.query("runtimeIngestionEvents").withIndex("by_scope_sequence", q => q.eq("tenantId", authority.tenantId).eq("memorySpaceId", args.reference.memorySpaceId!).lte("sequence", args.cutoff));
+  const events = await selected.take(1025), excluded = new Set(args.excludedSourceKeys);
+  if (events.length > 1024) return { empty: false, profileId: profile.profileId };
+  for (const event of events) {
+    if (event.eligibility === "eligible" && !excluded.has(contextSourceKey(scope, event.lineage)) && await withinConversationBoundary(ctx, event, args.boundary)) return { empty: false, profileId: profile.profileId };
+  }
+  await repository.authority();
+  return { empty: true, profileId: profile.profileId };
+}
+export const indexedContextAvailability = internalQuery({ args: { reference: runtimeAuthorityReference, cutoff: v.number(),
+  excludedSourceKeys: v.array(v.string()), runBudgetId: v.string(), boundary: contextBoundary }, handler: readIndexedContextAvailability });
+
 export async function readPendingContext(ctx: ReadCtx, args: { reference: RuntimeAuthorityReference; cutoff: number;
   alreadyRepresented: string[]; maxBytes: number; runBudgetId?: string; boundary?: ContextBoundary }) {
   boundedCutoff(args.cutoff);

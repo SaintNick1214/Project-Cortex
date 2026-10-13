@@ -475,6 +475,70 @@ describe("backend ActionCtx Gateway adapter — offline native composition", () 
     await expect(invalid.ledger.markVisible({ reference: f.reference, attemptId: "attempt" as Doc<"runtimeModelAttempts">["_id"], outputVisible: true,
       toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false })).rejects.toMatchObject({ code: "VISIBILITY_NOT_RECORDED" });
   });
+  it("traces native stream and ledger boundaries without changing delivery, settlement or private correlation", async () => {
+    const prior = process.env.CORTEX_RUNTIME_LATENCY_TRACE;
+    process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
+    const logger = jest.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      const f = fixture(); await f.install(); const binding = { ...await f.bind(), semanticId: "PRIVATE_TRACE_CORRELATION" };
+      const h = await governed(f, binding); const output: LanguageModelV4StreamPart[] = [];
+      try {
+        const reader = (await h.model.doStream(params())).stream.getReader();
+        try { for (;;) { const item = await reader.read(); if (item.done) break; output.push(item.value); } }
+        finally { reader.releaseLock(); }
+      } finally { await h.lifecycle.complete(); }
+      const events = logger.mock.calls.map(([value]) => JSON.parse(String(value)) as { phase: string; durationMs?: number });
+      const phases = events.map(event => event.phase);
+      for (const phase of ["gateway.ledger.resolve.end", "gateway.ledger.admit.end", "gateway.ledger.checkpoint.end", "gateway.native.stream.begin",
+        "gateway.native.stream.ready", "gateway.native.stream.first-part", "gateway.native.stream.first-text", "gateway.ledger.visibility.end", "gateway.ledger.capture.end", "gateway.ledger.attach.end"]) expect(phases).toContain(phase);
+      expect(phases.indexOf("gateway.native.stream.first-text")).toBeLessThan(phases.indexOf("gateway.ledger.visibility.end"));
+      expect(events.filter(event => event.durationMs !== undefined).every(event => Number.isFinite(event.durationMs) && event.durationMs! >= 0)).toBe(true);
+      expect(logger.mock.calls.flat().join("\n")).not.toContain("PRIVATE_TRACE_CORRELATION");
+      expect(output).toContainEqual({ type: "text-delta", id: "governed-text", delta: "answer" });
+      expect(f.attempt().outputVisible).toBe(true); expect(f.account("tenant").settledUnits).toBe(40);
+      expect(tokenLookup).not.toHaveBeenCalled();
+    } finally { if (prior === undefined) delete process.env.CORTEX_RUNTIME_LATENCY_TRACE; else process.env.CORTEX_RUNTIME_LATENCY_TRACE = prior; }
+  });
+  it("records a failed trace boundary while preserving the exact RPC error and avoiding retry", async () => {
+    const prior = process.env.CORTEX_RUNTIME_LATENCY_TRACE;
+    process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
+    const logger = jest.spyOn(console, "log").mockImplementation(() => {});
+    const error = new Error("PRIVATE_RPC_FAILURE"); let calls = 0;
+    try {
+      const f = fixture(); const composition = createBackendGatewayComposition({ ...f.ctx, runMutation: async () => { calls++; throw error; } } as unknown as BackendGatewayContext);
+      await expect(composition.ledger.markVisible({ reference: f.reference, attemptId: "attempt" as Doc<"runtimeModelAttempts">["_id"], outputVisible: true,
+        toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false })).rejects.toBe(error);
+      expect(calls).toBe(1);
+      expect(logger.mock.calls.some(([value]) => (JSON.parse(String(value)) as { phase: string }).phase === "gateway.ledger.visibility.failed")).toBe(true);
+      expect(logger.mock.calls.flat().join("\n")).not.toContain("PRIVATE_RPC_FAILURE");
+    } finally { if (prior === undefined) delete process.env.CORTEX_RUNTIME_LATENCY_TRACE; else process.env.CORTEX_RUNTIME_LATENCY_TRACE = prior; }
+  });
+  it("keeps concurrent admission timing correlated to each original attempt", async () => {
+    const prior = process.env.CORTEX_RUNTIME_LATENCY_TRACE;
+    process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
+    const logger = jest.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      let releaseFirst!: (result: unknown) => void;
+      const firstPending = new Promise(resolve => { releaseFirst = resolve; });
+      let admits = 0;
+      const composition = createBackendGatewayComposition({ runMutation: async (reference: Parameters<typeof server.getFunctionName>[0]) => {
+        if (server.getFunctionName(reference).endsWith(":admit")) {
+          return ++admits === 1 ? firstPending : { status: "reserved", attemptId: "second-attempt" };
+        }
+        return { recorded: true };
+      } } as unknown as BackendGatewayContext);
+      const firstRun = `run:${"a".repeat(64)}`, secondRun = `run:${"b".repeat(64)}`;
+      const request = (runId: string) => ({ runBudgetId: runId.slice(4), operationKey: "agent.respond", semanticId: `cortex:${runId}:1:0` }) as Parameters<typeof composition.ledger.admit>[0];
+      const first = composition.ledger.admit(request(firstRun));
+      await composition.ledger.admit(request(secondRun));
+      releaseFirst({ status: "reserved", attemptId: "first-attempt" }); await first;
+      await composition.ledger.markVisible({ attemptId: "first-attempt", outputVisible: true } as Parameters<typeof composition.ledger.markVisible>[0]);
+      await composition.ledger.markVisible({ attemptId: "second-attempt", outputVisible: true } as Parameters<typeof composition.ledger.markVisible>[0]);
+      const events = logger.mock.calls.map(([value]) => JSON.parse(String(value)) as { phase: string; runId: string });
+      expect(events.filter(event => event.phase === "gateway.ledger.visibility.end").map(event => event.runId)).toEqual([firstRun, secondRun]);
+      expect(admits).toBe(2);
+    } finally { if (prior === undefined) delete process.env.CORTEX_RUNTIME_LATENCY_TRACE; else process.env.CORTEX_RUNTIME_LATENCY_TRACE = prior; }
+  });
 });
 
 

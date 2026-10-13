@@ -24,8 +24,9 @@ import { privateFrameVideoInputBound } from "../src/domain/media-input";
 import { mediaContractSchema, mediaInputBound, mediaResultSchema } from "../src/domain/media-jobs";
 import { allowMediaCompletion } from "./runtimeMediaFence";
 import { parseAgentLanguageResult } from "../src/domain/agent-language";
-import { guardContentRunBudget, assertContentPolicyPin } from "./runtimeContentFence";
+import { guardContentRunBudget, assertContentPolicyPin, completedContentTitle } from "./runtimeContentFence";
 import { guardAgentRunBudget } from "./runtimeAgentFence";
+import type { CompletedAgentTitle } from "./runtimeAgentFence";
 import { currentControlRun } from "./runs";
 import { assertIngestionPolicyPin, guardIngestionRunBudget } from "./runtimeIngestion";
 
@@ -270,7 +271,7 @@ function snapshotOf(record: Pick<Operation, "resolutionCanonical" | "snapshotCan
   if (canonical(snapshot) !== record.snapshotCanonical) fail("POLICY_DENIED");
   return snapshot;
 }
-async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation, permitCancelled = false, asParent = false, mediaCompletion = false) {
+async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation, permitCancelled = false, asParent = false, mediaCompletion = false, titleParent?: CompletedAgentTitle) {
   if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
   await currentAuthority(ctx, reference, operation.operationKey);
   await checkSource(ctx, reference, operation.operationKey, operation.source);
@@ -278,7 +279,9 @@ async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReferen
   const run = await ctx.db.get("runtimeBudgetAccounts", operation.runAccountId);
   if (!run || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId || (run.cancelled && !permitCancelled)) fail("FORBIDDEN");
   if (!permitCancelled) {
-    if (!mediaCompletion) await guardAgentRunBudget(ctx, reference, run._id);
+    const title = asParent ? titleParent : await completedContentTitle(ctx, reference, run._id, operation.operationKey, operation.parentOperationId, operation.semanticId);
+    if (asParent && title && (operation._id !== title.parentOperationId || operation.operationKey !== "agent.respond")) fail("FORBIDDEN");
+    if (!mediaCompletion) await guardAgentRunBudget(ctx, reference, run._id, title);
     await guardIngestionRunBudget(ctx, reference, run._id);
     if (!asParent) await guardContentRunBudget(ctx, reference, run._id, operation.operationKey);
   }
@@ -501,14 +504,15 @@ export const embeddingProfile = internalQuery({ args: { reference: runtimeAuthor
 const resolveArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, runBudgetId: v.string(), source: v.optional(modelSource), parentOperationId: v.optional(v.id("runtimeModelOperations")) };
 export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, args) => {
   await currentAuthority(ctx, args.reference, args.operationKey); const run = await runAccount(ctx, args.reference, args.runBudgetId);
-  await guardAgentRunBudget(ctx, args.reference, run._id);
+  const title = await completedContentTitle(ctx, args.reference, run._id, args.operationKey, args.parentOperationId);
+  await guardAgentRunBudget(ctx, args.reference, run._id, title);
   await guardIngestionRunBudget(ctx, args.reference, run._id);
   await guardContentRunBudget(ctx, args.reference, run._id, args.operationKey);
   await checkSource(ctx, args.reference, args.operationKey, args.source);
   if (args.parentOperationId) {
     const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
     if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
-    await currentOperation(ctx, args.reference, parent, false, true);
+    await currentOperation(ctx, args.reference, parent, false, true, false, title);
   }
   const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, args.runBudgetId, args.source, args.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
   await assertIngestionPolicyPin(ctx, run._id, args.operationKey, resolved.snapshot, true, true);
@@ -583,13 +587,14 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
   await currentAuthority(ctx, args.reference, args.operationKey); integer(args.ordinal); text(args.semanticId);
   await checkSource(ctx, args.reference, args.operationKey, args.source);
   const run = await runAccount(ctx, args.reference, args.runBudgetId);
-  await guardAgentRunBudget(ctx, args.reference, run._id);
+  const title = await completedContentTitle(ctx, args.reference, run._id, args.operationKey, args.parentOperationId, args.semanticId);
+  await guardAgentRunBudget(ctx, args.reference, run._id, title);
   await guardIngestionRunBudget(ctx, args.reference, run._id);
   await guardContentRunBudget(ctx, args.reference, run._id, args.operationKey);
   if (args.parentOperationId) {
     const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
     if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
-    await currentOperation(ctx, args.reference, parent, false, true);
+    await currentOperation(ctx, args.reference, parent, false, true, false, title);
   }
   let operation = single(await ctx.db.query("runtimeModelOperations").withIndex("by_identity", (q) => q.eq("tenantId", args.reference.tenantId)
     .eq("memorySpaceId", args.reference.memorySpaceId!).eq("principalId", args.reference.principalId).eq("semanticId", args.semanticId).eq("operationKey", args.operationKey)).take(2));
@@ -730,9 +735,11 @@ export const markVisible = internalMutation({ args: { ...attemptArgs, ...visibil
   const { attempt, operation } = await attemptContext(ctx, args.attemptId);
   await currentOperation(ctx, args.reference, operation);
   if (attempt.state !== "dispatch_pending" && attempt.state !== "uncertain") fail("POLICY_DENIED");
-  await ctx.db.patch("runtimeModelAttempts", attempt._id, { outputVisible: attempt.outputVisible || args.outputVisible,
+  const visible = { outputVisible: attempt.outputVisible || args.outputVisible,
     toolInputVisible: attempt.toolInputVisible || args.toolInputVisible, toolResultVisible: attempt.toolResultVisible || args.toolResultVisible,
-    toolEffectCommitted: attempt.toolEffectCommitted || args.toolEffectCommitted });
+    toolEffectCommitted: attempt.toolEffectCommitted || args.toolEffectCommitted };
+  // All current fences above still run on every delta, even a monotone no-op.
+  if (Object.entries(visible).some(([key, value]) => attempt[key as keyof typeof visible] !== value)) await ctx.db.patch("runtimeModelAttempts", attempt._id, visible);
   return { recorded: true };
 } });
 const terminalIdentifier = z.string().min(1).max(256).refine((value) => value.trim() === value

@@ -260,11 +260,21 @@ describe("native private policy ledger — offline logic only", () => {
     const { f, b, a } = await admitted(); await f.checkpoint(a);
     const flags = { outputVisible: true, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false };
     await f.invoke("markVisible", { reference: f.reference, attemptId: a.attemptId, ...flags });
+    const writes = f.db.writes;
     await f.invoke("markVisible", { reference: f.reference, attemptId: a.attemptId, ...flags, outputVisible: false });
+    expect(f.db.writes).toBe(writes);
     expect(f.attempt(a.attemptId).outputVisible).toBe(true);
     await f.invoke("cancelBudget", { reference: f.reference, runBudgetId: b.runBudgetId });
     await expect(f.admit(b, 1)).rejects.toThrow();
     await expect(f.invoke("checkFallback", { reference: f.reference, attemptId: a.attemptId, candidateModelId: "unqualified/model" })).rejects.toThrow();
+  });
+  it("unchanged visibility still rechecks revocation and cannot bypass the native authorization fence", async () => {
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    const flags = { reference: f.reference, attemptId: a.attemptId, outputVisible: true, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false };
+    await f.invoke("markVisible", flags); f.grant.revokedAt = clock;
+    const writes = f.db.writes;
+    await expect(f.invoke("markVisible", flags)).rejects.toThrow();
+    expect(f.db.writes).toBe(writes); expect(f.attempt(a.attemptId).outputVisible).toBe(true);
   });
   it("space admin cannot change global/root policy or install own tenant-wide constraints", async () => {
     const f = fixture(); await f.install(); const policy = { policyId: "tenant-rule", version: 1, scope: "deployment", rules: { limits: { tenantBudgetUnits: 999999 } } };

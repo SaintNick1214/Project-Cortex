@@ -3,6 +3,8 @@
  * A new tool/stream envelope remains unavailable until actual evidence is installed. */
 import { ConvexError } from "convex/values";
 import { convexGateway } from "@convex-dev/ai-sdk-provider";
+import { traceRuntimePhase } from "./runtimeLatencyTrace";
+import type { RuntimeLatencyMetadata } from "./runtimeLatencyTrace";
 import { wrapEmbeddingModel, wrapLanguageModel } from "ai";
 import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Result, LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4StreamPart, LanguageModelV4Usage } from "@ai-sdk/provider";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
@@ -25,6 +27,12 @@ type NativeLanguageParams = Omit<LanguageModelV4CallOptions, "reasoning">;
 export interface GatewayBinding {
   reference: RuntimeAuthorityReference; operationKey: ModelOperationKey; runBudgetId: string;
   semanticId: string; ordinal: number; source?: Source; parentOperationId?: OperationId;
+}
+function traceGateway(binding: GatewayBinding, phase: string, metadata: RuntimeLatencyMetadata = {}): void {
+  if (process.env.CORTEX_RUNTIME_LATENCY_TRACE !== "1" || !binding || typeof binding.semanticId !== "string" || typeof binding.runBudgetId !== "string") return;
+  const match = binding.semanticId.match(/^cortex:(run:[a-f0-9]{64}):(\d+):\d+$/);
+  traceRuntimePhase(match?.[1] ?? binding.runBudgetId, match ? Number(match[2]) : 0, phase,
+    { ...metadata, runBudgetId: binding.runBudgetId, semanticId: binding.semanticId, operationKey: binding.operationKey });
 }
 export interface GatewayResolution {
   snapshot: ModelPolicySnapshotV1; dispatchEvidence: QualifiedDispatchEvidence;
@@ -424,7 +432,9 @@ function providerJSON(input: unknown): Record<string, unknown> | undefined {
 }
 export async function createGovernedGatewayModel(composition: GatewayComposition, inputBinding: GatewayBinding): Promise<{ model: LanguageModelV4 | EmbeddingModelV4; lifecycle: GatewayLifecycle }> {
   requireSink(composition);
-  const binding = detachedBinding(inputBinding); const resolution = checkedResolution(await composition.ledger.resolve(resolveArgs(binding))); proofFor(resolution, (composition.now ?? Date.now)());
+  const started = Date.now(); const binding = detachedBinding(inputBinding); traceGateway(binding, "gateway.construct.begin");
+  const resolution = checkedResolution(await composition.ledger.resolve(resolveArgs(binding))); proofFor(resolution, (composition.now ?? Date.now)());
+  traceGateway(binding, "gateway.construct.end", { durationMs: Date.now() - started });
   return resolution.snapshot.nativeInterface === "embedding"
     ? governGatewayEmbeddingModel(convexGateway.embeddingModel(resolution.snapshot.modelId), composition, binding, resolution)
     : governGatewayLanguageModel(convexGateway(resolution.snapshot.modelId), composition, binding, resolution);
@@ -679,7 +689,9 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
       if (nativeIdentity(params) !== nativeIdentity(nativeLanguage(admitted, state.controller.signal))) fail("ADMITTED_REQUEST_MISMATCH");
       let result: Awaited<ReturnType<LanguageModelV4["doGenerate"]>>;
       state.startLifetime(request.timeoutMs);
+      const nativeStarted = Date.now(); traceGateway(binding, "gateway.native.generate.begin");
       try { result = await state.observe("native", doGenerate); } catch { state.endLifetime(); return fail("MODEL_INTERRUPTED"); }
+      traceGateway(binding, "gateway.native.generate.ready", { durationMs: Date.now() - nativeStarted });
       try {
       const raw = providerJSON(result.response?.body); const choices = raw?.choices;
       const reason = Array.isArray(choices) && choices.length === 1 ? (choices[0] as { finish_reason?: string }).finish_reason : undefined;
@@ -699,8 +711,13 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
       if (nativeIdentity(params) !== nativeIdentity(nativeLanguage(admitted, state.controller.signal))) fail("ADMITTED_REQUEST_MISMATCH");
       let result: Awaited<ReturnType<LanguageModelV4["doStream"]>>;
       state.startLifetime(input.get(params)!.timeoutMs);
+      const nativeStarted = Date.now(); traceGateway(binding, "gateway.native.stream.begin");
       try { result = await state.observe("native", doStream); } catch { state.endLifetime(); return fail("MODEL_INTERRUPTED"); }
+      // Official provider acquisition includes its service token, request and
+      // response-header processing. Its internal HTTP stages remain opaque.
+      traceGateway(binding, "gateway.native.stream.ready", { durationMs: Date.now() - nativeStarted });
       const reader = result.stream.getReader();
+      let firstPart = true, firstText = true;
       let observer: ReadableStreamDefaultController<LanguageModelV4StreamPart>; let observerClosed = false;
       const output = new ReadableStream<LanguageModelV4StreamPart>({ start(c) { observer = c; }, cancel() { observerClosed = true; } }, { highWaterMark: 64 });
       let text = ""; let deliveryError: GatewayDispatchError | undefined; let terminalReason: string | undefined; let rawTerminal: Record<string, unknown> | undefined; let id: string | undefined; let actualModel: string | undefined; let textStarted = false; let terminalAttempted = false;
@@ -719,6 +736,7 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
         try {
           while (true) {
             const item = await state.observe("reader", () => reader.read()); if (item.done) break; const part = item.value;
+            if (firstPart) { firstPart = false; traceGateway(binding, "gateway.native.stream.first-part", { durationMs: Date.now() - nativeStarted }); }
             if (part.type === "raw") {
               const raw = providerJSON(part.rawValue); if (!raw || "error" in raw) continue;
               if (typeof raw.id === "string") { if (id && id !== raw.id) fail("UNQUALIFIED_TERMINAL"); id = raw.id; }
@@ -735,6 +753,7 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
             }
             if (part.type === "error") fail("STREAM_INTERRUPTED");
             if (part.type === "text-delta") {
+              if (firstText && part.delta.length) { firstText = false; traceGateway(binding, "gateway.native.stream.first-text", { durationMs: Date.now() - nativeStarted, bytes: new TextEncoder().encode(part.delta).byteLength }); }
               if (!deliveryError) {
                 text += part.delta;
                 if (utf8(text) > state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes / 6) {
@@ -839,7 +858,9 @@ export function governGatewayEmbeddingModel(model: EmbeddingModelV4, composition
       const admitted = validateModelRequest(attempt.snapshot, exactJSON(attempt.requestCanonical, state.resolution.storageLimits.canonicalBytes)).request;
       if (canonicalModelJson(params.values) !== canonicalModelJson(admitted.texts)) fail("ADMITTED_REQUEST_MISMATCH");
       let result: EmbeddingModelV4Result; state.startLifetime(request.timeoutMs);
+      const nativeStarted = Date.now(); traceGateway(binding, "gateway.native.embed.begin");
       try { result = await state.observe("native", doEmbed); } catch { state.endLifetime(); return fail("MODEL_INTERRUPTED"); }
+      traceGateway(binding, "gateway.native.embed.ready", { durationMs: Date.now() - nativeStarted });
       try {
       const raw = providerJSON(result.response?.body);
       if (!raw || !Array.isArray(raw.data) || raw.data.length !== 1 || result.embeddings.length !== 1) fail("UNQUALIFIED_TERMINAL");

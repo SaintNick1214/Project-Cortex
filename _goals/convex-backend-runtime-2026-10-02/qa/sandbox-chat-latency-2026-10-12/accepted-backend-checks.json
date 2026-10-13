@@ -1,0 +1,55 @@
+{
+  "scope": "accepted16-file backend/Gateway batch",
+  "review": "backend-source-review.md",
+  "reviewSha256": "f5a59de51a610dbd3ed84407e1b86b878757af2d8a2204a0c53f7ccaa7a58418",
+  "files": {
+    "convex-dev/runtimeAgent.ts": "1988cf817dc098593fe2110f0c8be49d477754d0d2acb11197522e0c4ec042e2",
+    "convex-dev/runtimeAgentFence.ts": "3969de14ba28b38409ecccea53719f95186cb1ccceab6a33568077385ddb764d",
+    "convex-dev/runtimeContentJobs.ts": "ba40b90dd57c89f5a7368de6bb0ab16aa1475950eb678a720f813d43c5ee379d",
+    "convex-dev/runtimeContentFence.ts": "068092215a1fe50345921ca63a71b1b8697a9abf1e5a61565172ebff0ced3c72",
+    "convex-dev/runtimeContentJobsSchema.ts": "64838343876a9b7570e882a1b60be0216a6452d3bc05fb2c7b686371412f2ebf",
+    "convex-dev/runtimeModelPolicy.ts": "eac62c399488ba4872a75b012cda49f83cae76bf2a443ef97d21af13a0231046",
+    "convex-dev/runtimeMemoryContext.ts": "ee5072db5bff9809f2db27e70ec20beadc5f49db698ca39472488849a5a1e9e5",
+    "convex-dev/runtimeLatencyTrace.ts": "0bf086927cdf685cb8ce53a6e2ca1c79662dfcf62fc8a01084b22a455fb5f1ca",
+    "tests/unit/runtimeContent/jobs.test.ts": "eb84dc51c414e318184df59deaa5f9f4290203b6e8a7dee6f023ee21d6a9253a",
+    "tests/unit/runtimeAgent/execution.test.ts": "1cdfe25dd35eca8e662b2c59155986531ee89ba4509729d4ac2a7b649b152264",
+    "tests/unit/runtimeAgent/context-latency.test.ts": "0c628dcb90b17202f716176d91f7334a09a41e795204356cb003d1b8c5f2c300",
+    "tests/unit/runtime/model-policy-admission.test.ts": "6dac85981b3f8d4abd401f4ffb7eb54b882d9f79ba3c19704246402486a46530",
+    "tests/unit/runtime/latency-trace.test.ts": "b19cb3f2cc8f74ee5530c3e2e88edaef9e69f956ebdf776b3bdca9246d8f4150",
+    "convex-dev/runtimeGateway.ts": "56f8fe9f6de93033554b25034887cbbceedf77811433e0617eda3f32edb9366b",
+    "convex-dev/runtimeGatewayBackend.ts": "e641eaf46b615ec11aa4b9b1305d83d77be57acc444233ecfe1a0ab70e400702",
+    "tests/unit/runtime/gateway-backend.test.ts": "5c7f40eca48d27d50b64baa08b50ef3559b8012cb17c4bd8ba11da2bf755b0e1"
+  },
+  "checks": {
+    "backend-final-tests.json": {
+      "sha256": "0f6db1bbbb5f3815d9085313b8e2f38f43f6f1686dd86faff2c581b131fe938b",
+      "passed": 654,
+      "failed": 0,
+      "skipped": 0,
+      "coverage": "controlled native handlers/peers; no real service"
+    },
+    "backend-trace-privacy-tests.json": {
+      "sha256": "600b70825898ded997ade588d71b021cef3b7f4e29ba4ae54116c95cfe9b0183",
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "coverage": "controlled native handlers/peers; no real service"
+    },
+    "gateway-trace-final-tests.json": {
+      "sha256": "9355c146eeba5bc776572ddf12f9468e07bb3e6f77bfefb8d8cface2eb181a07",
+      "passed": 319,
+      "failed": 0,
+      "skipped": 0,
+      "coverage": "controlled native handlers/peers; no real service"
+    },
+    "gateway-trace-interleaving-tests.json": {
+      "sha256": "f2083fa2c46b4c28a8f762496b40b88b6d526e4d4045769a1725d35dacabbcf4",
+      "passed": 45,
+      "failed": 0,
+      "skipped": 0,
+      "coverage": "controlled native handlers/peers; no real service"
+    }
+  },
+  "underOneSecondAccepted": false,
+  "countsOverlap": true
+}

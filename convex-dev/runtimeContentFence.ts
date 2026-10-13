@@ -14,8 +14,15 @@ import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import { readArtifactContext, checkArtifactContextWitnesses } from "./runtimeArtifactContext";
 import { deliveryExpiresAt } from "./runtimeDelivery";
 import { guardAgentRunBudget } from "./runtimeAgentFence";
+import type { CompletedAgentTitle } from "./runtimeAgentFence";
 type Ctx = Pick<QueryCtx, "db"> & Partial<Pick<QueryCtx, "runQuery">>;
 export type ContentJob = Doc<"runtimeContentJobs">;
+function titleParent(job: ContentJob): CompletedAgentTitle | undefined {
+  if (!job.completedParentTitle) return;
+  if (job.intent !== "title" || job.stage !== "primary" || !job.parentRunId || !job.parentOperationId || !job.sourceMessageId
+    || job.requestId !== `automatic-title:${job.parentRunId}` || job.artifactId || job.sourceArtifactId) contentDenied("POLICY_DENIED");
+  return { ...job.completedParentTitle, runId: job.parentRunId, sourceMessageId: job.sourceMessageId, parentOperationId: job.parentOperationId };
+}
 export function contentDenied(code = "FORBIDDEN"): never { throw new ConvexError({ version: 1, code, message: "Content operation denied.", retryable: false, outcome: "not_dispatched" }); }
 export async function contentJob(ctx: Pick<QueryCtx, "db">, jobId: string): Promise<ContentJob> {
   const row = await ctx.db.query("runtimeContentJobs").withIndex("by_job", q => q.eq("jobId", jobId)).unique();
@@ -59,7 +66,7 @@ export async function checkContentJob(ctx: Ctx, job: ContentJob, reference: Runt
     }
   }
   if (execution && job.parentRunId) {
-    await guardAgentRunBudget(ctx as Pick<QueryCtx, "db" | "runQuery">, reference, job.runAccountId);
+    await guardAgentRunBudget(ctx as Pick<QueryCtx, "db" | "runQuery">, reference, job.runAccountId, titleParent(job));
   }
   if (execution && (job.state !== "running" || job.expiresAt <= Date.now() || !job.leaseToken || !job.leaseExpiresAt || job.leaseExpiresAt <= Date.now())) contentDenied("CONTENT_JOB_EXPIRED");
   await deliveryExpiresAt(ctx, reference, deadlines); return artifact;
@@ -67,6 +74,16 @@ export async function checkContentJob(ctx: Ctx, job: ContentJob, reference: Runt
 async function accountJobs(ctx: Pick<QueryCtx, "db">, accountId: Id<"runtimeBudgetAccounts">) {
   const rows = await ctx.db.query("runtimeContentJobs").withIndex("by_account", q => q.eq("runAccountId", accountId)).take(33);
   if (rows.length > 32) contentDenied("CONTENT_JOB_LIMIT"); return rows;
+}
+/** Derive the exception from a durable internal job, never from model args alone. */
+export async function completedContentTitle(ctx: Ctx, reference: RuntimeAuthorityReference, accountId: Id<"runtimeBudgetAccounts">,
+  key: ModelOperationKey, parentOperationId?: Id<"runtimeModelOperations">, semanticId?: string): Promise<CompletedAgentTitle | undefined> {
+  if (key !== "conversation.title" || !parentOperationId) return;
+  const jobs = (await accountJobs(ctx, accountId)).filter(job => job.completedParentTitle && job.state === "running" && job.parentOperationId === parentOperationId);
+  if (jobs.length > 1) contentDenied("POLICY_DENIED");
+  const job = jobs[0]; if (!job) return;
+  if (canonicalModelJson(job.reference) !== canonicalModelJson(reference) || semanticId !== undefined && semanticId !== `${job.jobId}:primary`) contentDenied("POLICY_DENIED");
+  return titleParent(job);
 }
 function relevant(rows: ContentJob[], key: ModelOperationKey): ContentJob | undefined {
   const standalone = rows.filter(row => !row.parentRunId);

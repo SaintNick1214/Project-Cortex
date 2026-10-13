@@ -38,21 +38,24 @@ export async function publicContentJob(ctx: MutationCtx, job: ContentJob, refere
     ...(job.conversationId ? { conversationId: job.conversationId } : {}), ...(job.artifactId ? { artifactId: job.artifactId } : {}),
     ...result, ...(job.failureCode ? { failureCode: job.failureCode } : {}), ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
 }
-async function parentBinding(ctx: MutationCtx, reference: RuntimeAuthorityReference, runId: string, conversationId?: string) {
+async function parentBinding(ctx: MutationCtx, reference: RuntimeAuthorityReference, runId: string, conversationId?: string, automaticTitle = false) {
   const { row: run } = await currentRun(ctx, reference, runId, "run");
-  if (!run.runBudgetId || !run.runAccountId || run.responseStatus !== "running" || run.conversationId !== conversationId) contentDenied();
-  await guardAgentRunBudget(ctx, reference, run.runAccountId);
-  const rows = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", run.tenantId).eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId).eq("attemptNumber", run.attemptNumber)).take(65);
+  if (!run.runBudgetId || !run.runAccountId || !(run.responseStatus === "running" || automaticTitle && run.responseStatus === "complete") || run.conversationId !== conversationId) contentDenied();
+  const rows = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", run.tenantId).eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId).eq("attemptNumber", run.attemptNumber).eq("kind", "model")).take(34);
+  if (rows.length > 33) contentDenied("CONTEXT_LIMIT_EXCEEDED");
   const model = rows.filter(row => row.kind === "model" && row.state === "complete" && row.nativeModelOperationId).sort((a, b) => b.ordinal - a.ordinal)[0];
   if (!model?.nativeModelOperationId) contentDenied();
   const operation = await ctx.db.get("runtimeModelOperations", model.nativeModelOperationId);
   if (!operation || operation.runAccountId !== run.runAccountId || canonicalModelJson(operation.reference) !== canonicalModelJson(reference)) contentDenied();
   const execution = await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", run.tenantId).eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId).eq("attemptNumber", run.attemptNumber)).unique();
   if (!execution) contentDenied();
-  return { runBudgetId: run.runBudgetId, runAccountId: run.runAccountId, parentOperationId: operation._id, sourceWitnesses: execution.sourceWitnesses, artifactWitnesses: execution.artifactContextWitnesses ?? [] };
+  const completedParentTitle = run.responseStatus === "complete" ? { attemptNumber: run.attemptNumber, leaseVersion: execution.leaseVersion } : undefined;
+  await guardAgentRunBudget(ctx, reference, run.runAccountId, completedParentTitle ? { ...completedParentTitle, runId, sourceMessageId: run.inputMessageIds[0], parentOperationId: operation._id } : undefined);
+  return { runBudgetId: run.runBudgetId, runAccountId: run.runAccountId, parentOperationId: operation._id, completedParentTitle, sourceWitnesses: execution.sourceWitnesses, artifactWitnesses: execution.artifactContextWitnesses ?? [] };
 }
-export async function enqueueContent(ctx: MutationCtx, reference: RuntimeAuthorityReference, input: ContentSubmitV1, dispatch = true) {
+export async function enqueueContent(ctx: MutationCtx, reference: RuntimeAuthorityReference, input: ContentSubmitV1, dispatch = true, automaticTitle = false) {
   const parsed = contentSubmitSchema.safeParse(input); if (!parsed.success || !reference.memorySpaceId) contentDenied("INVALID_CONTENT_INPUT"); const args = parsed.data;
+  if (automaticTitle && (args.intent !== "title" || !args.parentRunId || args.requestId !== `automatic-title:${args.parentRunId}` || !args.sourceMessageId || args.artifact)) contentDenied();
   const s = { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId };
   for (const capability of ["run", "write", "read"] as const) await recheckAuthority(ctx, reference, { ...s, capability });
   let conversation; if (args.conversationId) { conversation = await conversationById(ctx, reference, args.conversationId); if (!conversation) contentDenied(); await managedConversationAccess(ctx, reference, conversation, "write", "canContinue"); }
@@ -60,7 +63,7 @@ export async function enqueueContent(ctx: MutationCtx, reference: RuntimeAuthori
   const requestCanonical = canonicalModelJson(args);
   if (existing) { if (existing.requestCanonical !== requestCanonical) contentDenied("CONTENT_IDEMPOTENCY_CONFLICT"); return existing; }
   const jobId = `content:${await semanticHash(canonicalModelJson([s, reference.principalId, args.requestId]))}`;
-  const parent = args.parentRunId ? await parentBinding(ctx, reference, args.parentRunId, args.conversationId) : undefined;
+  const parent = args.parentRunId ? await parentBinding(ctx, reference, args.parentRunId, args.conversationId, automaticTitle) : undefined;
   const binding = parent ?? await bindTrustedBudget(ctx, { reference, operationKey: contentOperation(args.intent), requestId: jobId, requestCanonical });
   let sourceMessagePin: ContentJob["sourceMessagePin"], sourceWitnesses: ContentJob["sourceWitnesses"] = parent?.sourceWitnesses ?? [], artifactWitnesses: ContentJob["artifactWitnesses"] = parent?.artifactWitnesses ?? [];
   if (args.sourceMessageId) { if (!conversation) contentDenied(); const bridge = await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId).eq("nativeMessageId", args.sourceMessageId!)).unique();
@@ -84,9 +87,9 @@ export async function enqueueContent(ctx: MutationCtx, reference: RuntimeAuthori
     ...conversation ? { conversationId: conversation.conversationId, conversationEpoch: conversation.epoch, conversationRevision: executionRevision(conversation) } : {},
     ...args.sourceMessageId ? { sourceMessageId: args.sourceMessageId, sourceMessagePin } : {}, ...args.parentRunId ? { parentRunId: args.parentRunId } : {},
     ...artifactId ? { artifactId, artifactVersion, artifactHash } : {}, ...args.artifact ? { sourceArtifactId: args.artifact.artifactId } : {}, sourceWitnesses, artifactWitnesses, deliveryArtifactWitnesses: artifactWitnesses.filter(witness => witness.artifactId !== artifactId),
-    runBudgetId: binding.runBudgetId, runAccountId: binding.runAccountId, ...parent ? { parentOperationId: parent.parentOperationId } : {},
+    runBudgetId: binding.runBudgetId, runAccountId: binding.runAccountId, ...parent ? { parentOperationId: parent.parentOperationId, ...(parent.completedParentTitle ? { completedParentTitle: parent.completedParentTitle } : {}) } : {},
     stage: "primary", state: "pending", revision: 1, expiresAt: Date.now() + CONTENT_DEADLINE_MS, createdAt: Date.now(), updatedAt: Date.now() });
-  if (dispatch) { const workflowId = await workflow.start(ctx, makeFunctionReference<"mutation">("runtimeContentJobs:execute") as unknown as Parameters<typeof workflow.start>[1], { jobId }); await ctx.db.patch("runtimeContentJobs", id, { workflowId }); }
+  if (dispatch) { const workflowId = await workflow.start(ctx, makeFunctionReference<"mutation">("runtimeContentJobs:execute") as unknown as Parameters<typeof workflow.start>[1], { jobId }, { startAsync: true }); await ctx.db.patch("runtimeContentJobs", id, { workflowId }); }
   await ctx.scheduler.runAfter(CONTENT_DEADLINE_MS, jobMutation("expire"), { jobId }); return (await ctx.db.get("runtimeContentJobs", id))!;
 }
 export const submit = mutation({ args: { ...selectors, version: v.literal(1), requestId: v.string(), intent: contentIntent, prompt: v.string(), conversationId: v.optional(v.string()), sourceMessageId: v.optional(v.string()), parentRunId: v.optional(v.string()), artifact: v.optional(v.object({ artifactId: v.string(), version: v.number() })) }, handler: async (ctx, args): Promise<RuntimeContentJobV1> => {
@@ -242,7 +245,7 @@ export const applySuggestion = mutation({ args: { ...select, suggestionId: v.str
   await ctx.db.patch("runtimeContentJobs", job._id, { appliedSuggestionId: args.suggestionId, appliedArtifactVersion: version, resultCanonical: canonicalModelJson({ ...result, artifactVersion: version, content, title: artifact.title }), revision: job.revision + 1, updatedAt: Date.now() });
   return publicContentJob(ctx, (await ctx.db.get("runtimeContentJobs", job._id))!, reference);
 } });
-/** Only an active Agent Workflow can create this shared-account automatic title. */
+/** Internal automatic title only: completion does not open public content admission. */
 export const enqueueParentTitle = internalMutation({ args: { reference: runtimeAuthorityReference, runId: v.string() }, handler: async (ctx, args) => {
   const { row: run } = await currentRun(ctx, args.reference, args.runId, "run"); const conversation = await conversationById(ctx, args.reference, run.conversationId); if (!conversation) contentDenied();
   const metadata = conversation.metadataCanonical ? JSON.parse(conversation.metadataCanonical) as Record<string, unknown> : {};
@@ -251,5 +254,5 @@ export const enqueueParentTitle = internalMutation({ args: { reference: runtimeA
   const messages = await ctx.runQuery(agentComponent.messages.getMessagesByIds, { messageIds: [sourceMessageId] }), message = messages[0];
   if (!message || message.message?.role !== "user") contentDenied();
   const content = typeof message.message.content === "string" ? message.message.content : message.message.content.filter(part => part.type === "text").map(part => part.text).join("\n");
-  return (await enqueueContent(ctx, args.reference, { version: 1, requestId: `automatic-title:${run.runId}`, intent: "title", prompt: content, conversationId: run.conversationId, sourceMessageId, parentRunId: run.runId }, false)).jobId;
+  return (await enqueueContent(ctx, args.reference, { version: 1, requestId: `automatic-title:${run.runId}`, intent: "title", prompt: content, conversationId: run.conversationId, sourceMessageId, parentRunId: run.runId }, true, true)).jobId;
 } });

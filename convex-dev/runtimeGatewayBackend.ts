@@ -5,6 +5,7 @@ import type { ActionCtx } from "./_generated/server";
 import type * as ModelPolicy from "./runtimeModelPolicy";
 import { createGovernedGatewayModel, GatewayDispatchError } from "./runtimeGateway";
 import type { GatewayBinding, GatewayComposition } from "./runtimeGateway";
+import { traceRuntimePhase } from "./runtimeLatencyTrace";
 
 type PolicyApi = ApiFromModules<{ runtimeModelPolicy: typeof ModelPolicy }>["runtimeModelPolicy"];
 export type BackendGatewayContext = Pick<ActionCtx, "runQuery" | "runMutation">;
@@ -43,28 +44,53 @@ export async function ensureBackendGatewayBudget(
  * even if delivery authority was revoked. Attachment independently fences output.
  * No second settlement, automatic inference retry or fallback is introduced. */
 export function createBackendGatewayComposition(ctx: BackendGatewayContext): GatewayComposition {
+  type Correlation = { runBudgetId: string; operationKey: string; semanticId?: string };
+  const attempts = new Map<string, Correlation>();
+  const timed = async <T>(phase: string, correlation: Correlation | undefined, invoke: () => Promise<T>): Promise<T> => {
+    if (process.env.CORTEX_RUNTIME_LATENCY_TRACE !== "1") return invoke();
+    const started = Date.now();
+    const match = correlation?.semanticId?.match(/^cortex:(run:[a-f0-9]{64}):(\d+):\d+$/);
+    const runId = match?.[1] ?? correlation?.runBudgetId ?? "unbound-gateway";
+    const attemptNumber = match ? Number(match[2]) : 0;
+    const metadata = { runBudgetId: correlation?.runBudgetId, semanticId: correlation?.semanticId, operationKey: correlation?.operationKey };
+    traceRuntimePhase(runId, attemptNumber, `gateway.ledger.${phase}.begin`, metadata);
+    try {
+      const result = await invoke();
+      traceRuntimePhase(runId, attemptNumber, `gateway.ledger.${phase}.end`, { ...metadata, durationMs: Date.now() - started });
+      return result;
+    } catch (error) {
+      traceRuntimePhase(runId, attemptNumber, `gateway.ledger.${phase}.failed`, { ...metadata, durationMs: Date.now() - started });
+      throw error;
+    }
+  };
   return {
     ledger: {
       resolve: async (args) => {
-        const result = await ctx.runQuery(references.resolve, {
+        const correlation = { runBudgetId: args.runBudgetId, operationKey: args.operationKey };
+        const result = await timed("resolve", correlation, () => ctx.runQuery(references.resolve, {
           reference: args.reference, operationKey: args.operationKey, runBudgetId: args.runBudgetId,
           ...(args.source !== undefined ? { source: args.source } : {}),
           ...(args.parentOperationId !== undefined ? { parentOperationId: args.parentOperationId } : {}),
-        });
+        }));
         if (result.storageLimits.embeddingValuesPerCall !== 1) throw new GatewayDispatchError("CAPABILITY_UNAVAILABLE");
         return { ...result, storageLimits: { ...result.storageLimits, embeddingValuesPerCall: 1 } };
       },
-      admit: async (args) => await ctx.runMutation(references.admit, args),
-      checkpoint: async (args) => await ctx.runMutation(references.checkpoint, args),
+      admit: async (args) => {
+        const correlation = { runBudgetId: args.runBudgetId, operationKey: args.operationKey, semanticId: args.semanticId };
+        const result = await timed("admit", correlation, () => ctx.runMutation(references.admit, args));
+        if (result.status === "reserved") attempts.set(result.attemptId, correlation);
+        return result;
+      },
+      checkpoint: async (args) => await timed("checkpoint", attempts.get(args.attemptId), () => ctx.runMutation(references.checkpoint, args)),
       markVisible: async (args) => {
-        const result = await ctx.runMutation(references.markVisible, args);
+        const result = await timed("visibility", attempts.get(args.attemptId), () => ctx.runMutation(references.markVisible, args));
         if (result.recorded !== true) throw new GatewayDispatchError("VISIBILITY_NOT_RECORDED");
         return { recorded: true };
       },
-      attachTerminalResult: async (args) => await ctx.runMutation(references.attachTerminalResult, args),
+      attachTerminalResult: async (args) => await timed("attach", attempts.get(args.attemptId), () => ctx.runMutation(references.attachTerminalResult, args)),
     },
     terminalSink: {
-      capture: async (evidence) => await ctx.runMutation(references.captureTerminalEvidence, evidence),
+      capture: async (evidence) => await timed("capture", attempts.get(evidence.attemptId), () => ctx.runMutation(references.captureTerminalEvidence, evidence)),
     },
   };
 }
