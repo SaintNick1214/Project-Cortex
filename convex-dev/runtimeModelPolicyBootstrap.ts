@@ -3,7 +3,7 @@ import type { TrustedModelPolicyRecord, TrustedModelQualification } from "../src
 import type { EmbeddingProfile } from "../src/domain/profile";
 import type { QualifiedMediaContractV1 } from "../src/domain/media-jobs";
 import { AGENT_GATEWAY_POLICY_MANIFEST_V5, DEFAULT_GATEWAY_POLICY_MANIFEST, TEXT_GATEWAY_POLICY_MANIFEST_V3 } from "./runtimeGatewayQualifications";
-import { OBSERVED_GATEWAY_POLICY_MANIFEST_V14, OBSERVED_GATEWAY_POLICY_MANIFEST_V15, OBSERVED_GATEWAY_POLICY_MANIFEST_V16, OBSERVED_GATEWAY_POLICY_MANIFEST_V17 } from "./runtimeGatewayMediaQualifications";
+import { OBSERVED_GATEWAY_POLICY_MANIFEST_V14, OBSERVED_GATEWAY_POLICY_MANIFEST_V15, OBSERVED_GATEWAY_POLICY_MANIFEST_V16, OBSERVED_GATEWAY_POLICY_MANIFEST_V17, OBSERVED_GATEWAY_POLICY_MANIFEST_V18 } from "./runtimeGatewayMediaQualifications";
 
 export interface QualifiedDispatchEvidence {
   readonly receiptId: string;
@@ -56,7 +56,7 @@ export interface DeploymentPolicyManifest {
 }
 /** Compiled actual-service candidate; its evidence binding is reviewed with the
  * complete product batch before acceptance. No caller/environment registration. */
-const manifests: readonly DeploymentPolicyManifest[] = Object.freeze([TEXT_GATEWAY_POLICY_MANIFEST_V3, AGENT_GATEWAY_POLICY_MANIFEST_V5, DEFAULT_GATEWAY_POLICY_MANIFEST, OBSERVED_GATEWAY_POLICY_MANIFEST_V14, OBSERVED_GATEWAY_POLICY_MANIFEST_V15, OBSERVED_GATEWAY_POLICY_MANIFEST_V16, OBSERVED_GATEWAY_POLICY_MANIFEST_V17]);
+const manifests: readonly DeploymentPolicyManifest[] = Object.freeze([TEXT_GATEWAY_POLICY_MANIFEST_V3, AGENT_GATEWAY_POLICY_MANIFEST_V5, DEFAULT_GATEWAY_POLICY_MANIFEST, OBSERVED_GATEWAY_POLICY_MANIFEST_V14, OBSERVED_GATEWAY_POLICY_MANIFEST_V15, OBSERVED_GATEWAY_POLICY_MANIFEST_V16, OBSERVED_GATEWAY_POLICY_MANIFEST_V17, OBSERVED_GATEWAY_POLICY_MANIFEST_V18]);
 export function lookupDeploymentManifest(manifestId: string, revision: number): DeploymentPolicyManifest | undefined {
   const selected = manifests.filter((entry) => entry.manifestId === manifestId && entry.revision === revision);
   return selected.length === 1 ? selected[0] : undefined;

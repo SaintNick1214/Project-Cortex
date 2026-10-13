@@ -1,0 +1,939 @@
+{
+  "version": 1,
+  "passed": true,
+  "candidateManifestSha256": "8f107cd04a1a56b14251993743203b8aed727e499e61f71f61a2c60cff22d6fa",
+  "sourceCommit": "b0b4d3e454f5a13560ac9474b5fb2a397bb5cd2b",
+  "actualSuccessfulMethods": 8,
+  "proofGroups": 7,
+  "finiteQualificationExpiry": 1792484091111,
+  "sourceChecks": [
+    {
+      "path": "resolved-openai-compatible/provider-utils/post-to-api.ts",
+      "sha256": "65f5b1575b69aa86207d078aafea6ff9fc8323135b233eced63bd12b1811bb49",
+      "currentDependencyBytesMatch": true
+    },
+    {
+      "path": "@convex-dev/ai-sdk-provider/src/index.ts",
+      "sha256": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613",
+      "actualPinnedBytes": true,
+      "currentDependencyBytesMatch": true
+    },
+    {
+      "path": "@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts",
+      "sha256": "8cedc84f1a015f63c5c0a76ddba664562a1301adb1ed0d8c858e0b740f65a79a",
+      "actualPinnedBytes": true,
+      "currentDependencyBytesMatch": true
+    },
+    {
+      "path": "@ai-sdk/openai-compatible/src/chat/convert-to-openai-compatible-chat-messages.ts",
+      "sha256": "b10a499b057840bff90807eb369bbca45d11dfb6f84f2331a3a23adb9aa2d6b5",
+      "actualPinnedBytes": true,
+      "currentDependencyBytesMatch": true
+    },
+    {
+      "path": "@ai-sdk/provider-utils/src/post-to-api.ts",
+      "sha256": "6495b62e6cf430dcb08221cc2473ba9311d32080e2d1bab0a5c781e3d2180346",
+      "actualPinnedBytes": true,
+      "currentDependencyBytesMatch": false,
+      "currentExecutableMatch": true
+    },
+    {
+      "path": "@ai-sdk/openai-compatible/src/embedding/openai-compatible-embedding-model.ts",
+      "sha256": "24012af5f3fd8f93ec6c6d48690b40bbfc26f907afd4f6b21ee487c8dc225e36",
+      "actualPinnedBytes": true,
+      "currentDependencyBytesMatch": true
+    },
+    {
+      "path": "@ai-sdk/openai-compatible/src/image/openai-compatible-image-model.ts",
+      "sha256": "9df096ebc65b79f4202a3ba051b6136fbfc8d3cd0ae07984a7dba4f52f8f92fd",
+      "actualPinnedBytes": true,
+      "currentDependencyBytesMatch": true
+    },
+    {
+      "path": "host/convex/runtimeGateway.ts",
+      "sha256": "6df226b98503a03cf2a43fe933004cfb1976eeee2e89def4db62f14815f0e944",
+      "actualPinnedBytes": true
+    },
+    {
+      "path": "host/convex/runtimeMemoryGateway.ts",
+      "sha256": "c6bea383bd3e965bbcb6ec44b465566e35de8ef211b6596854acc09853528b35",
+      "actualPinnedBytes": true
+    },
+    {
+      "path": "host/convex/_cortex/shared/domain/model_policy.ts",
+      "sha256": "480bb822b705954d02731e9d5a9fedff1acec2824bb9d5eb744c3ce812ea0338",
+      "actualPinnedBytes": true
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "sha256": "254bd3b4a69560fce7231aaa0e704aee026c305b225f4fe83df635772dcf1e78",
+      "qualifiedBaselineSha256": "7b8df07ff7f45efbabcab980b9d53636f01a10661441830f4c31be5155879755",
+      "qualifiedBaselineBytesUnchanged": false,
+      "installedBaselineExecutableMatchesAfterTypeRemovalAndImportRelocation": true,
+      "unchangedOriginalBodyChecks": [
+        {
+          "name": "traceGateway",
+          "sha256": "ef27eb6ba1039e851d6f9a1598ac8e1201f239cf02294f1cc90fea901eacefe1",
+          "unchanged": true
+        },
+        {
+          "name": "fail",
+          "sha256": "007e48a1983b71653590c8e52a7d5cade308d5b252c0b4aa75ef827ee8e4535d",
+          "unchanged": true
+        },
+        {
+          "name": "record",
+          "sha256": "4d9714a3ae86a8213b69b77f5182508e3135b2ac76189e8e798ded5d8bedb6f6",
+          "unchanged": true
+        },
+        {
+          "name": "arrayValues",
+          "sha256": "7e225888f5c7be95efe305b1297ded5e1ffb0b91964f1c6c82f0368693f91a9a",
+          "unchanged": true
+        },
+        {
+          "name": "stableId",
+          "sha256": "6399bee5dd460ff67ee1a66553a98261d24a7ff2de9f369e709c1a39f856f891",
+          "unchanged": true
+        },
+        {
+          "name": "detachedBinding",
+          "sha256": "d4eb808c7c1b6166be9a4f814135f3a103408962a00d0b7e59d6c6ad461c2746",
+          "unchanged": true
+        },
+        {
+          "name": "checkedResolution",
+          "sha256": "417494165cbf22b07bba454335e6380c3188d7670036df755ae96ea9283a8018",
+          "unchanged": true
+        },
+        {
+          "name": "checkedAdmission",
+          "sha256": "d4138f034ea24be8635af2c906f1aeca67c233ef118ecc6be9bc3e2173b5cf2c",
+          "unchanged": true
+        },
+        {
+          "name": "checkedPermit",
+          "sha256": "7db7db60edfa9e1b5ecdc56f9f49a41409af8c140037f170898d97f9a2e5b736",
+          "unchanged": true
+        },
+        {
+          "name": "captureAcknowledgment",
+          "sha256": "9263a94f92150f2a31f0d5071c12aaf3bc6fad20f90effeefd34b2176adfdc9a",
+          "unchanged": true
+        },
+        {
+          "name": "attachmentAcknowledgment",
+          "sha256": "b0254a6a7c668489784ae36712ededd4c3bbf358cf641942553eb2793c3e6d80",
+          "unchanged": true
+        },
+        {
+          "name": "attachmentConflict",
+          "sha256": "a3ecc70dc8e85c23b6c0183a97cef562b2447b8f0c6f1d54540e62de7f80d720",
+          "unchanged": true
+        },
+        {
+          "name": "detached",
+          "sha256": "c138b8d02d0353737144feb5b20cb7225660dba9e7c232743bf483b6951f6ca8",
+          "unchanged": true
+        },
+        {
+          "name": "exactJSON",
+          "sha256": "e262169de21d9873f409dcc21834b0e08379d300d61f7ce117da0f0e95303946",
+          "unchanged": true
+        },
+        {
+          "name": "json",
+          "sha256": "f99a038a357e3fa111a67dd042684048e0782d1321dd850bcf63a58324cb1a4b",
+          "unchanged": true
+        },
+        {
+          "name": "conservativeUsdDecimal",
+          "sha256": "1656d6ccd48d3da69a06eb2b3ae717efd3e24b01f009aabe9e7410ae6023d091",
+          "unchanged": true
+        },
+        {
+          "name": "embeddingResultCeiling",
+          "sha256": "a5bc188ebf0a0b2ab95b2b0a9dcc173cd511c5bc991d497ba2ddf9ec20c74ef1",
+          "unchanged": true
+        },
+        {
+          "name": "proofFor",
+          "sha256": "432ac56f734c80f38508dd28bf280a07b0d7195682f5021530f1a32c70b67d34",
+          "unchanged": true
+        },
+        {
+          "name": "requestBase",
+          "sha256": "2728098191357fd0272038429bb8b180b2d63ce4deb7007b5c4db67c5c3533b9",
+          "unchanged": true
+        },
+        {
+          "name": "createAgentGatewayCancellationBridge",
+          "sha256": "4749636863edf78b6116d61302e8f22a25167ffbea2f6706728d0891b70d4d70",
+          "unchanged": true
+        },
+        {
+          "name": "agentToolEnvelope",
+          "sha256": "103ff1f30ddceb3fd84eca3a1cea0977e92b9c0e31ff51ce5e2f3cc325b905ed",
+          "unchanged": true
+        },
+        {
+          "name": "languageParams",
+          "sha256": "e26fafec3cb43ae63dc36f991b4275c5d56363abc3d0e8c074ba837e645b909d",
+          "unchanged": true
+        },
+        {
+          "name": "nativeLanguage",
+          "sha256": "740e5656c4956398fa2ec065a566d68abc7c28d2806d26130a9e8fe6e6838f53",
+          "unchanged": true
+        },
+        {
+          "name": "nativeIdentity",
+          "sha256": "ce10170730bea6bb126c90d833e63286276866a1d1ad59710492b777cbf2f219",
+          "unchanged": true
+        },
+        {
+          "name": "usageOf",
+          "sha256": "1330e3fb731415c5f57f18291653f7d0cb7f369d2a6b62abaf4bfdf358a045c1",
+          "unchanged": true
+        },
+        {
+          "name": "nativeUsage",
+          "sha256": "a963db8adc7a41014539d1446ad9b4a99f071623ef87ad4d13e1e55af6d19a5e",
+          "unchanged": true
+        },
+        {
+          "name": "finishReason",
+          "sha256": "74ec66e2d3cde70e8de430db642cf5edfe0ac738c11fb322678a7e5bf44bf6bb",
+          "unchanged": true
+        },
+        {
+          "name": "qualifiedReason",
+          "sha256": "e9de4b69a8bbe31c4b883d81b80c33b7dd721552ee4c74ccb71a727b752e6206",
+          "unchanged": true
+        },
+        {
+          "name": "languageOutput",
+          "sha256": "919dace7e5ef7ef6a7992c699859262ac1dced5348f322395a0b32304108799d",
+          "unchanged": true
+        },
+        {
+          "name": "matchingNativeToolCalls",
+          "sha256": "1a9a206b82ce4bdad628ed2c6e278be579ed5f0a502ce1e751c2392697ee2cb8",
+          "unchanged": true
+        },
+        {
+          "name": "providerJSON",
+          "sha256": "a32269953d6de4c7a91679569f12c94b6a59bf32a10a655765adcf79ecfcf5e4",
+          "unchanged": true
+        },
+        {
+          "name": "createGovernedGatewayModel",
+          "sha256": "c742242e02e504f8ce1a3669a6d30fde3ff9e45b15f7f5f56bc982bc1c723793",
+          "unchanged": true
+        },
+        {
+          "name": "resolveArgs",
+          "sha256": "a89d127eb083d025f1b72ec44f200fb2140e72fc288c06f4bede8d2201a3ca30",
+          "unchanged": true
+        },
+        {
+          "name": "requireSink",
+          "sha256": "db3761aaed8241d799d991a527d7bccbcbb335ada0e50a11a8bd787240783702",
+          "unchanged": true
+        },
+        {
+          "name": "governGatewayLanguageModel",
+          "sha256": "30a698d3385085c4c135b03431b55d6b1c35345d96c54e9fd65cd1fef6b886c2",
+          "unchanged": true
+        },
+        {
+          "name": "governGatewayEmbeddingModel",
+          "sha256": "963be115f3040e45f3c0a1ab5ff07cf0a6fe1eda4078ea38c375ed05d273c35b",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.track",
+          "sha256": "f164d29b8a70cae805065e44081f65007e3edb566c20c44e22f25d9efdb0bbf2",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.own",
+          "sha256": "f0dd00b73244c780e6d10218129eb6b6b7ddce3c4921805eab9ca7d9d8deddeb",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.startLifetime",
+          "sha256": "90de2a20520542ae43e800eca5eb0a8326f175ee71f5c6beb27033fe380a7195",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.endLifetime",
+          "sha256": "c7220d68b49d6682959b8080b368cb06f9287933eb3eebbbe1b13db5a1942d4c",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.canDeliver",
+          "sha256": "f7fc0ce57be48db7a4566c0fd90ca8f908264dfc786a62e06ff4027d96e0306c",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.assertDelivery",
+          "sha256": "1dcc8eb3b8bc7f175ff31dfb912627f4934d93886bbc4e8f049036065f47bb16",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.wait",
+          "sha256": "47ef876073dbb5fc36efc6a119038435ebb5ce83c0acbce6ea837fb417c8d430",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.authority",
+          "sha256": "03fed1033e89a9c9711c4bbf3c2671a803ecc8908004c4b705ce69f7d4b25391",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.observe",
+          "sha256": "482c43713a70a530bc89ba663eb301568f84e015d1ff1ab3efa6798ab455d896",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.cleanup",
+          "sha256": "c6d09cb40b9e2f94d844b5ac160f8e51c605395c58c3b76f52bf65906c85ade3",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.capturePending",
+          "sha256": "3715dee707f60000f5fd631792a642e642481bd2b09954c1463a0bff17e1d73d",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.attachPending",
+          "sha256": "5f9be6bf5c956698e5e6b4b55e5e2defb2d7f67c4f3cdc2aff01b445e7d3d166",
+          "unchanged": true
+        },
+        {
+          "name": "stateFor.terminal",
+          "sha256": "0037dd34d10bfa2025d6736cc26c52b6177330f16934f2eec65af27d06487db2",
+          "unchanged": true
+        }
+      ],
+      "separateBatchDelta": "Optional Agent-only admit/checkpoint composition; original native request/wire, usage/output and model wrappers unchanged. Its source gate is separate."
+    },
+    {
+      "path": "convex-dev/runtimeMemoryGateway.ts",
+      "sha256": "3334366ac6cf51725cc23976bf65ab221d482736e291930dbffce53b38aa1b15",
+      "qualifiedBaselineBytesUnchanged": true,
+      "installedExecutableMatchesAfterTypeRemovalAndImportRelocation": true
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "3127d9ce8d8f7b1d359e93e5e5623fb9453424ec784c493ef656b317001bba10",
+      "qualifiedBaselineBytesUnchanged": true,
+      "installedExecutableMatchesAfterTypeRemovalAndImportRelocation": true
+    },
+    {
+      "path": "src/domain/sources.ts",
+      "sha256": "6686eda984c286e73235ab66efb050c7416a480efe61caeb4521c44173bc679a",
+      "qualifiedBaselineBytesUnchanged": true,
+      "installedExecutableMatchesAfterTypeRemovalAndImportRelocation": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "3b265413cbbf3d64766fc555ce5be84833dc5394e6829ed187fd439f9651774b",
+      "qualifiedBaselineSha256": "506647be62eebf947ec132b7ef44fe65bf3e298bbd7b7a0fb23ba7b8e458e39b",
+      "qualifiedBaselineBytesUnchanged": false,
+      "installedBaselineExecutableMatchesAfterTypeRemovalAndImportRelocation": true,
+      "unchangedOriginalBodyChecks": [
+        {
+          "name": "fail",
+          "sha256": "f14b83bfd7514cd85b42f15df560d891fef99aed42ee8ce0cf83e68cfd72a400",
+          "unchanged": true
+        },
+        {
+          "name": "domainControl",
+          "sha256": "bcbd6bd74b7fc9ae70f842923e31d0d6d9e7459d72904497bdd090db1b446891",
+          "unchanged": true
+        },
+        {
+          "name": "canonicalModelJson",
+          "sha256": "cbe9756cfa7bc3435e006cfd4e4b2d5dff9987f2504766c549cdf9272bb067b1",
+          "unchanged": true
+        },
+        {
+          "name": "resolveModelPolicy",
+          "sha256": "455c932efba0f21850da15152877a0d6184dc32c0bb90cbaf47a33205a1733f6",
+          "unchanged": true
+        },
+        {
+          "name": "validateModelRequest",
+          "sha256": "55db9d42d780eccc427f9931a77bc71b5b3d63507a3d6e027b1e7fa2abe1dee9",
+          "unchanged": true
+        },
+        {
+          "name": "assertModelRequestIdentity",
+          "sha256": "e843d5a5b5f68f922efbfaec26c8e005cde15280185f7add97b996b4f9aeab48",
+          "unchanged": true
+        },
+        {
+          "name": "integer",
+          "sha256": "85dcfdb262743f154d2168b8ce8eb82d097478d6631ecbbb2321b9d8bbf3a925",
+          "unchanged": true
+        },
+        {
+          "name": "add",
+          "sha256": "aef8ccaf54b0eb7fa48e1fb814fa46171aeb83580b7412874729f63237658c8f",
+          "unchanged": true
+        },
+        {
+          "name": "subtract",
+          "sha256": "bbfcc4cc9d974f80cca0cf323284314716b5298e66e6360314c7f907f57ada41",
+          "unchanged": true
+        },
+        {
+          "name": "text",
+          "sha256": "56731da7707fdea58437f949abdd8fa04052ca47a5b145261a19d84f457ba573",
+          "unchanged": true
+        },
+        {
+          "name": "canonical",
+          "sha256": "dd83867e8b7600faf7fbefd23d670e6b8b0eae6c1f14c20a6fc0f7a0f8838ea2",
+          "unchanged": true
+        },
+        {
+          "name": "decode",
+          "sha256": "b812fa03c1ccf7a314e22f20c924d6f240b62fe175360b683c22317b7a21a9ca",
+          "unchanged": true
+        },
+        {
+          "name": "single",
+          "sha256": "2e8f3cf3ecaf49dee20270817955c4e742bb45035daae26c069b002936d864fe",
+          "unchanged": true
+        },
+        {
+          "name": "purpose",
+          "sha256": "724539b7d281f6975ce284fe7b76c91595c475bfbcfbf73ed216f7cdbdd123e4",
+          "unchanged": true
+        },
+        {
+          "name": "currentAuthority",
+          "sha256": "9498ede9311fd80923abe961df923a46029d23f0735c8cdad3b9e4230014f498",
+          "unchanged": true
+        },
+        {
+          "name": "finalActor",
+          "sha256": "fd1a732b495d2222276f43f674a2b8fc8db0f1401eeed146d3b26cc569b937a6",
+          "unchanged": true
+        },
+        {
+          "name": "checkSource",
+          "sha256": "a2027081ae33af8e84abf35b08b896d71e7dce30cb50205c624d40d1132a4f59",
+          "unchanged": true
+        },
+        {
+          "name": "validManifest",
+          "sha256": "0ea0513a58d26f106bfa4a04414c7afec8ea91abf92e93f75823afd73b04de30",
+          "unchanged": true
+        },
+        {
+          "name": "provenance",
+          "sha256": "8d3b3c053e844ef057aa984ca57a9a0a85448e62f1b7faefb6fa59c6fb206856",
+          "unchanged": true
+        },
+        {
+          "name": "trustedRoot",
+          "sha256": "d3469af3edaff480283574fa5cd416f2ff1b0e8c8c056e6e48eaf84515b24a92",
+          "unchanged": true
+        },
+        {
+          "name": "activeRoot",
+          "sha256": "ebb4ebc349b5b53751fcca2ad62bfab0ed0d59c827d09a7943dd41acadee3d97",
+          "unchanged": true
+        },
+        {
+          "name": "evidence",
+          "sha256": "06b75a07df223ebc768e73ed842314a4c0c4bd25a536c487e6cf25d400e16e7a",
+          "unchanged": true
+        },
+        {
+          "name": "assertCurrentEvidence",
+          "sha256": "56f21a8152d1ad6d53f15dabb41a9ed18a2e0df31bec908c39e21ce8ef7f5c3e",
+          "unchanged": true
+        },
+        {
+          "name": "readTrustedAgentPolicyVersion",
+          "sha256": "cad7fe5e3703f8cb16e39ce8b3d945639cbb1f8dc611b80b6b71eca19aa597c1",
+          "unchanged": true
+        },
+        {
+          "name": "policies",
+          "sha256": "f93e812413e6c47d06924f1cc298f63e42e70db7e2dd42ff22af42a806ead474",
+          "unchanged": true
+        },
+        {
+          "name": "resolutionContext",
+          "sha256": "177a3dbaa527bf95ffd4109eeccf344e6d2089b0fc1ad7cfe156be070386be31",
+          "unchanged": true
+        },
+        {
+          "name": "resolveCurrent",
+          "sha256": "8ae30a0e07f7952a535f2bd97ebd8df74c742266fc0f539dbc92171c447e6e01",
+          "unchanged": true
+        },
+        {
+          "name": "snapshotOf",
+          "sha256": "d5c1bfcbce712ab4794b3d7bd191d62552232f39d2c2ce68796c60689a2320f9",
+          "unchanged": true
+        },
+        {
+          "name": "currentOperation",
+          "sha256": "12d81644f588c2e4edbb8d5a393c4819b026ebd931469a2ab2ce07af75df6886",
+          "unchanged": true
+        },
+        {
+          "name": "balanced",
+          "sha256": "0cf90688c8a4c0841cf491f2761028c13502b8f703d3c26bc92eaf57020f1da6",
+          "unchanged": true
+        },
+        {
+          "name": "capacity",
+          "sha256": "2d859fc08a9b4b1bfe5e284cba9254d486a27da7457e537224b502f917b7706d",
+          "unchanged": true
+        },
+        {
+          "name": "heldCapacity",
+          "sha256": "0d19ac4495416e1173a2d4760cad33f6f3ea07555e1829759f80c2f1c1bc85c8",
+          "unchanged": true
+        },
+        {
+          "name": "bindTrustedBudget",
+          "sha256": "d8be8b92ea0f408fc12966596e2fdeeb5c3219e82be95b3f8bfa84887d676f6e",
+          "unchanged": true
+        },
+        {
+          "name": "runAccount",
+          "sha256": "4d06d64729e9ed3b0decf4882f60629e7b9a00c61f1c9a9254e510abed074b8a",
+          "unchanged": true
+        },
+        {
+          "name": "readCurrentEmbeddingProfile",
+          "sha256": "509ac4fc5b8cafc70001ff6b2edc5945ed3d1921b2c9387822e64bc83e702238",
+          "unchanged": true
+        },
+        {
+          "name": "deriveQualifiedInputBound",
+          "sha256": "8e664088f9d6da3a77a2e1bf3b1af3abb2925040e86a45514cbd67b56f9ceaa3",
+          "unchanged": true
+        },
+        {
+          "name": "attemptSnapshot",
+          "sha256": "ee1ae8306f3d252f3b6e678b101f94851dc0bc31e9056ccad2a5565d6dbecf5a",
+          "unchanged": true
+        },
+        {
+          "name": "attemptContext",
+          "sha256": "1030af14b5b1a1b03dbde1ee1f916a0939aaa2bfe2167ad9f4f5a35806d6bf64",
+          "unchanged": true
+        },
+        {
+          "name": "costMicroUnits",
+          "sha256": "a835c2a68ee1469c635a4872beea4bc37078e6a8652a7b8d07c9ca9993a3c577",
+          "unchanged": true
+        },
+        {
+          "name": "permittedResult",
+          "sha256": "59f9f44cfb9e3a422ba2dac8c75918407d6034abdaec7920228565008e15b4fd",
+          "unchanged": true
+        },
+        {
+          "name": "writeUnknown",
+          "sha256": "c15dba5ea0867e4bcb8495c976ae2034850760ec0e6ad0c0f29599c69194c920",
+          "unchanged": true
+        },
+        {
+          "name": "liabilityAuthority",
+          "sha256": "b89acd641169a87a07d307d1a6ffcb50b3c8ec2cc93b71c11ba984d033e3bfab",
+          "unchanged": true
+        },
+        {
+          "name": "validatedPrivateResult",
+          "sha256": "7be633cc6f9a3d74a510ca6bc91fd2c4d22cfcfc6fe3b8a42e50b5bec8c7522e",
+          "unchanged": true
+        },
+        {
+          "name": "completeExtractionUsage",
+          "sha256": "f74b2ad2f440516c3111d00773a7c6cce8e31425e45a9e61a78d5ff57e2ef0af",
+          "unchanged": true
+        },
+        {
+          "name": "observationViolation",
+          "sha256": "650ca4f38762b572d5750d8ef24bd42a6c870d387903e4769cc02e7eb9dbd624",
+          "unchanged": true
+        },
+        {
+          "name": "storedObservationViolation",
+          "sha256": "e482d76499561f4ef2e56b67e70e5bb94aeb2b1c3bfde8e617bcac14cb362ad4",
+          "unchanged": true
+        },
+        {
+          "name": "capturedAttempt",
+          "sha256": "e4047cadacf328159094cb5af2329819b5036afb00b34902fdc76611ed5bbd06",
+          "unchanged": true
+        },
+        {
+          "name": "knownCost",
+          "sha256": "a64679d6375d2281aecb501e6c9d897e2a11fb04e45e9017d44a5b82af9fe89a",
+          "unchanged": true
+        },
+        {
+          "name": "confirmedUnknownResult",
+          "sha256": "a74536dbbe5cc410f9406348c8aa1acbbe077db7392c227dfe442affdf690250",
+          "unchanged": true
+        },
+        {
+          "name": "retainedConfirmedUnknown",
+          "sha256": "8af1731cc03f2691df0ef741322ecc3b7c9176f721b2272284706bba2a1f24ab",
+          "unchanged": true
+        },
+        {
+          "name": "chargeOnly",
+          "sha256": "ed29f21bc12b05d1af87ee2fe8861ae2987d02442c3aaa0cf8d27ffe95356b96",
+          "unchanged": true
+        },
+        {
+          "name": "compatibleRefinement",
+          "sha256": "7a11a8726bcf5f4ad8fe9a05bb7ea45fe08b8d6d2c1154b130c6acac02b49218",
+          "unchanged": true
+        },
+        {
+          "name": "captureIdentity",
+          "sha256": "200deb3ffc408ce2c50a1e42ddeb89365f3fa96dc874fa04ba868ef752cd9b46",
+          "unchanged": true
+        },
+        {
+          "name": "capturedDuplicate",
+          "sha256": "00fe8d7b8d05f9cf5d3ec565bf5330dc57a4ac5b690e84ee63945ed708fe0a28",
+          "unchanged": true
+        },
+        {
+          "name": "accountKnown",
+          "sha256": "dba49abca594542b5adda6cee64c0adffd56ad685062d0f2f8ef5412bab64642",
+          "unchanged": true
+        },
+        {
+          "name": "settleAttempt",
+          "sha256": "9d7c07980769ca739867aa2ce287d09f57f4e80906cfa1d02541c5d1de8fe704",
+          "unchanged": true
+        },
+        {
+          "name": "attachmentDenied",
+          "sha256": "f2c8d171d5bb2fbd9a5cbcfccc5fc2a74a3f2927b2f70a4a13c61bd276f5fc47",
+          "unchanged": true
+        },
+        {
+          "name": "permittedAttachment",
+          "sha256": "ab3e24b21b6d9723c8c9718b9bd460b1aad72acbea165112ef768c0914984a64",
+          "unchanged": true
+        },
+        {
+          "name": "mediaResultPublicationAllowed",
+          "sha256": "f9ebf73552b8e30defab38e64753b5ef25c21a9d3290af41447180a10661f2d4",
+          "unchanged": true
+        },
+        {
+          "name": "retiredScope",
+          "sha256": "ca4421df24a701e6121e53cae5b18282e50580a81560db38eefa8f82a13cb9c8",
+          "unchanged": true
+        },
+        {
+          "name": "fallbackAllowed",
+          "sha256": "6f7a6ef0502c073058b8febf8000cdc8138b0030e7c0e0a5da27695cd3801f40",
+          "unchanged": true
+        },
+        {
+          "name": "admit extracted original handler",
+          "sha256": "96d568891ffd4dd16f7bb15851b28ed09bbd9a35ec63d120f23f6434cdc988fd",
+          "unchanged": true
+        },
+        {
+          "name": "checkpoint extracted original handler",
+          "sha256": "57f19e87b1cdb333ac25b980654294eb0e0c70e71b3eb81eed4fe9a37fb262f2",
+          "unchanged": true
+        }
+      ],
+      "separateBatchDelta": "Original admit/checkpoint body extraction only; source gate separate."
+    },
+    {
+      "path": "ai resolved @ai-sdk/provider",
+      "version": "4.0.21",
+      "sha256": "9a1bbd33a6993716c8d7759f54d4ad175cec9225c592cb3721f8c3b0d161e8d8",
+      "currentDependencyBytesMatch": true
+    },
+    {
+      "path": "@ai-sdk/openai-compatible resolved @ai-sdk/provider",
+      "version": "4.0.3",
+      "sha256": "fe2ffd644e076fbad851fedbed2e69d37c7d7b7c75a408c8aa36f102396765c5",
+      "currentDependencyBytesMatch": true
+    },
+    {
+      "path": "top-level @ai-sdk/provider/package.json",
+      "currentVersion": "4.0.21",
+      "qualifiedRecordedVersion": "4.0.27",
+      "typeOnlyCoreAndFactoryImports": true,
+      "actualConsumerExecutableBytesMatch": true,
+      "nominalPackageLayoutMismatch": true
+    }
+  ],
+  "groups": [
+    {
+      "index": 0,
+      "modes": [
+        "plain"
+      ],
+      "receiptId": "ACTUAL-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b-0",
+      "evidenceHash": "69d815d7e2d271204bda1098d08bacf4f46993dd812fd1171d210feab86a045e",
+      "checkedAt": 1791879332795,
+      "expiresAt": 1792484091111,
+      "boundRevision": "manual-plain-8192-512",
+      "priceRevision": "sandbox-current-prices-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "featureEnvelope": "plain-chat-v1",
+      "nativeTransformHash": "039338854227878c17af1220d1a0121818702fd1e603f88f8e9b2224d23dbb5f"
+    },
+    {
+      "index": 1,
+      "modes": [
+        "title"
+      ],
+      "receiptId": "ACTUAL-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b-1",
+      "evidenceHash": "447dd9127c828fb3a33676c111f3ab7619457bc1d2d46b6901709cc8af427e4e",
+      "checkedAt": 1791879335661,
+      "expiresAt": 1792484091111,
+      "boundRevision": "manual-title-8192-512",
+      "priceRevision": "sandbox-current-prices-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "featureEnvelope": "plain-chat-v1",
+      "nativeTransformHash": "039338854227878c17af1220d1a0121818702fd1e603f88f8e9b2224d23dbb5f"
+    },
+    {
+      "index": 2,
+      "modes": [
+        "small"
+      ],
+      "receiptId": "ACTUAL-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b-2",
+      "evidenceHash": "0dc8ba0a63e73ffd804cf652700e9b47e8390508c15db6f27301b551fef8dd3a",
+      "checkedAt": 1791879338395,
+      "expiresAt": 1792484091111,
+      "boundRevision": "manual-small-8192-1536",
+      "priceRevision": "sandbox-current-prices-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "featureEnvelope": "default-embedding-v1",
+      "nativeTransformHash": "0dfdcdf7ea7223d340cb280f8b20f7fea364c5af6a199d646e4284825e600b0e"
+    },
+    {
+      "index": 3,
+      "modes": [
+        "large"
+      ],
+      "receiptId": "ACTUAL-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b-3",
+      "evidenceHash": "df75e40a0cc436ae8060ac2dce9212be715f19d110d28c595877c5989bdb15c4",
+      "checkedAt": 1791879341416,
+      "expiresAt": 1792484091111,
+      "boundRevision": "manual-large-8192-3072",
+      "priceRevision": "sandbox-current-prices-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "featureEnvelope": "profile-embedding-v1",
+      "nativeTransformHash": "0dfdcdf7ea7223d340cb280f8b20f7fea364c5af6a199d646e4284825e600b0e"
+    },
+    {
+      "index": 4,
+      "modes": [
+        "toolsGenerate",
+        "toolsStream"
+      ],
+      "receiptId": "ACTUAL-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b-4",
+      "evidenceHash": "260b5b73fe17ec2f007c4dade4f5de3a22a4ba692b2304788b0694d35b9a315d",
+      "checkedAt": 1791879344474,
+      "expiresAt": 1792484091111,
+      "boundRevision": "manual-agent-v2-32768-256",
+      "priceRevision": "sandbox-current-prices-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "featureEnvelope": "agent-tools-chat-v2",
+      "nativeTransformHash": "039338854227878c17af1220d1a0121818702fd1e603f88f8e9b2224d23dbb5f"
+    },
+    {
+      "index": 5,
+      "modes": [
+        "image"
+      ],
+      "receiptId": "ACTUAL-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b-5",
+      "evidenceHash": "fc3fd79d1e3991ce1a00f38735bbb6e627053bc74a71cffad89cecdd0cae1ac3",
+      "checkedAt": 1791879363884,
+      "expiresAt": 1792484091111,
+      "boundRevision": "manual-image-1024-low-png",
+      "priceRevision": "sandbox-current-prices-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "featureEnvelope": "media-image-v1",
+      "nativeTransformHash": "cbe6ac92ea9a7ccb1a8fae426488af8a885bcbd5d490fe60a8cf69c68bff3233"
+    },
+    {
+      "index": 6,
+      "modes": [
+        "jsonExtract"
+      ],
+      "receiptId": "ACTUAL-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b-6",
+      "evidenceHash": "d1b0aadf6ca662fb5a2c31b7040c9e0ef3738d060927bdb07e23a4c886a8af03",
+      "checkedAt": 1791879328790,
+      "expiresAt": 1792484091111,
+      "boundRevision": "memory-json-object-8192-512-v1",
+      "priceRevision": "sandbox-current-prices-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "featureEnvelope": "memory-extract-json-object-v1",
+      "nativeTransformHash": "039338854227878c17af1220d1a0121818702fd1e603f88f8e9b2224d23dbb5f"
+    }
+  ],
+  "records": [
+    {
+      "mode": "jsonExtract",
+      "path": "raw-jsonExtract.json",
+      "sha256": "3a7fcced3bdbce03b8df05693ff1e2d76b2a71f317d76bfc9d26e13e19637a60",
+      "bytes": 17873,
+      "issuedAt": 1791879326430,
+      "maximumNewRequests": 1,
+      "newAttempts": 1,
+      "nativeInterface": "chat",
+      "terminalCapturedAt": 1791879328790,
+      "usage": {
+        "cachedInputTokens": 0,
+        "inputTokens": 859,
+        "outputTokens": 48,
+        "reasoningTokens": 0,
+        "totalTokens": 907
+      },
+      "actualAutomaticOutcome": true
+    },
+    {
+      "mode": "plain",
+      "path": "raw-plain.json",
+      "sha256": "39b83d051d06371e70a4e863a64dd3078b9e923e7f5c2c7b97249d76231376d0",
+      "bytes": 5669,
+      "issuedAt": 1791879330665,
+      "maximumNewRequests": 1,
+      "newAttempts": 1,
+      "nativeInterface": "chat",
+      "terminalCapturedAt": 1791879332795,
+      "usage": {
+        "cachedInputTokens": 0,
+        "inputTokens": 19,
+        "outputTokens": 4,
+        "reasoningTokens": 0,
+        "totalTokens": 23
+      },
+      "actualAutomaticOutcome": true
+    },
+    {
+      "mode": "title",
+      "path": "raw-title.json",
+      "sha256": "9e3b751a8acc043546bd97a9863fe24d138bc8db59a85c22da6eb3a5a3517c19",
+      "bytes": 5758,
+      "issuedAt": 1791879334381,
+      "maximumNewRequests": 1,
+      "newAttempts": 1,
+      "nativeInterface": "chat",
+      "terminalCapturedAt": 1791879335661,
+      "usage": {
+        "cachedInputTokens": 0,
+        "inputTokens": 16,
+        "outputTokens": 4,
+        "reasoningTokens": 0,
+        "totalTokens": 20
+      },
+      "actualAutomaticOutcome": true
+    },
+    {
+      "mode": "small",
+      "path": "raw-small.json",
+      "sha256": "41e89d30c2b73f68be8202ac14a6a7e8ddc0990e37b0d4e68a7283de52aa041f",
+      "bytes": 6027,
+      "issuedAt": 1791879337224,
+      "maximumNewRequests": 1,
+      "newAttempts": 1,
+      "nativeInterface": "embedding",
+      "terminalCapturedAt": 1791879338395,
+      "usage": {
+        "inputTokens": 6,
+        "totalTokens": 6
+      },
+      "actualAutomaticOutcome": true
+    },
+    {
+      "mode": "large",
+      "path": "raw-large.json",
+      "sha256": "f3c2c5cc98a9c54d379f815d37609391166cd9231fc89f48c016ac99fe003cac",
+      "bytes": 5842,
+      "issuedAt": 1791879340142,
+      "maximumNewRequests": 1,
+      "newAttempts": 1,
+      "nativeInterface": "embedding",
+      "terminalCapturedAt": 1791879341416,
+      "usage": {
+        "inputTokens": 6,
+        "totalTokens": 6
+      },
+      "actualAutomaticOutcome": true
+    },
+    {
+      "mode": "toolsGenerate",
+      "path": "raw-toolsGenerate.json",
+      "sha256": "cdff37c083c8d9b488726ee3f5b7f2c8aa4fae7859092eab69b67dd12c0d14ff",
+      "bytes": 7724,
+      "issuedAt": 1791879343119,
+      "maximumNewRequests": 1,
+      "newAttempts": 1,
+      "nativeInterface": "chat",
+      "terminalCapturedAt": 1791879344474,
+      "usage": {
+        "cachedInputTokens": 0,
+        "inputTokens": 269,
+        "outputTokens": 11,
+        "reasoningTokens": 0,
+        "totalTokens": 280
+      },
+      "actualAutomaticOutcome": true
+    },
+    {
+      "mode": "toolsStream",
+      "path": "raw-toolsStream.json",
+      "sha256": "334ea66a18b1f1daf906e0ce0ab3ec344fb0849ce032bd7259b2a0bc62e447fc",
+      "bytes": 9452,
+      "issuedAt": 1791879346138,
+      "maximumNewRequests": 1,
+      "newAttempts": 1,
+      "nativeInterface": "chat",
+      "terminalCapturedAt": 1791879348985,
+      "usage": {
+        "cachedInputTokens": 0,
+        "inputTokens": 266,
+        "outputTokens": 10,
+        "reasoningTokens": 0,
+        "totalTokens": 276
+      },
+      "actualAutomaticOutcome": true
+    },
+    {
+      "mode": "image",
+      "path": "raw-image.json",
+      "sha256": "0e09f710afb21f230dde167d0e9c75814037564c860c07c00274ee97f120a5df",
+      "bytes": 1994,
+      "issuedAt": 1791879350591,
+      "maximumNewRequests": 1,
+      "newAttempts": 1,
+      "actualAutomaticOutcome": true
+    }
+  ],
+  "originalActualManifestRoot": {
+    "manifestId": "sandbox-gateway-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+    "revision": 2,
+    "artifactRevision": "6df226b98503a03cf2a43fe933004cfb1976eeee2e89def4db62f14815f0e944",
+    "evidenceHash": "f6ec2415a109e0d34a1283dd51a6272e30462652b70604e7b649f21110add95a",
+    "acceptanceHash": "42d6837ed13f3178c138be449e47733ae8c4d7e5ce7eee66e0c6f3457091da29"
+  },
+  "noNewInference": true,
+  "noServiceReads": true,
+  "aggregateUsdComplete": false,
+  "fullUnknownLiabilityUnits": 2700000,
+  "rawPrivatePromptResultCopied": false,
+  "note": "Existing local receipts/source files inspected only; original issuer/session/Proofs artifacts remain unchanged. Source equivalence removes types and normalizes only relocated relative import basenames."
+}

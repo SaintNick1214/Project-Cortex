@@ -1,0 +1,451 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: convex-dev/runtimeGateway.ts executable contract changed
++ actual - expected
+... Skipped lines
+
+  'import { ConvexError } from "convex/values";\n' +
+    'import { convexGateway } from "@convex-dev/ai-sdk-provider";\n' +
+    'import { traceRuntimePhase } from "runtimeLatencyTrace";\n' +
+    'import { wrapEmbeddingModel, wrapLanguageModel } from "ai";\n' +
+    'import { canonicalModelJson, validateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "model_policy";\n' +
+...
+    '}\n' +
++   'export function assertGatewayReservedRequest(admitted, incoming, snapshotCanonical, canonicalBytes) {\n' +
++   '    const request = exactJSON(incoming, canonicalBytes);\n' +
++   '    const flat = exactJSON(admitted.requestCanonical, canonicalBytes);\n' +
++   '    const validated = validateModelRequest(admitted.snapshot, flat).request;\n' +
++   '    const comparable = { ...validated, semanticId: request.semanticId, childCallId: request.childCallId };\n' +
++   '    if (canonicalModelJson(comparable) !== canonicalModelJson(request) || canonicalModelJson(admitted.snapshot) !== snapshotCanonical)\n' +
++   '        fail("ADMITTED_REQUEST_MISMATCH");\n' +
++   '}\n' +
++   'function checkedAdmissionCheckpoint(input) {\n' +
++   '    const fields = record(input, ["admission", "permit"]);\n' +
++   '    const admission = checkedAdmission(fields.admission);\n' +
++   '    if (admission.status === "reserved") {\n' +
++   '        if (Object.keys(fields).length !== 2)\n' +
++   '            fail("CHECKPOINT_MISMATCH");\n' +
++   '        return { admission, permit: checkedPermit(fields.permit) };\n' +
++   '    }\n' +
++   '    if (Object.keys(fields).length !== 1)\n' +
++   '        fail("CHECKPOINT_MISMATCH");\n' +
++   '    return { admission };\n' +
++   '}\n' +
+    'function checkedPermit(input) {\n' +
+    '    const fields = record(input, ["dispatchPermit", "dispatchIdentity", "snapshot", "requestCanonical", "state", "replayAllowed"]);\n' +
+    '    const keys = Reflect.ownKeys(input);\n' +
+    '    if (fields.dispatchPermit === true && keys.length === 4 && ["dispatchPermit", "dispatchIdentity", "snapshot", "requestCanonical"].every((key) => key in fields)\n' +
+    '        && stableId(fields.dispatchIdentity) && typeof fields.requestCanonical === "string")\n' +
+...
+    '        fail("RESULT_BOUND_EXCEEDED");\n' +
++   '    return resul'... 68099 more characters
+-   '    return result;\n' +
+-   '}\n' +
+-   'export function conservativeUsdDecimal(value) {\n' +
+-   '    if (typeof value === "string")\n' +
+-   '        return /^\\d+(?:\\.\\d+)?$/.test(value) && value.length <= 80 ? value : undefined;\n' +
+-   '    if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || Object.is(value, -0))\n' +
+-   '        return undefined;\n' +
+-   '    if (value === 0)\n' +
+-   '        return "0";\n' +
+-   '    const view = new DataView(new ArrayBuffer(8));\n' +
+-   '    view.setFloat64(0, value);\n' +
+-   '    const bits = view.getBigUint64(0) + 1n;\n' +
+-   '    const exponent = Number((bits >> 52n) & 0x7ffn);\n' +
+-   '    if (exponent === 0x7ff)\n' +
+-   '        return undefined;\n' +
+-   '    const significand = (bits & ((1n << 52n) - 1n)) + (exponent ? 1n << 52n : 0n);\n' +
+-   '    const power = (exponent || 1) - 1023 - 52;\n' +
+-   '    const numerator = significand * 1000000n * (power >= 0 ? 1n << BigInt(power) : 1n);\n' +
+-   '    const denominator = power < 0 ? 1n << BigInt(-power) : 1n;\n' +
+-   '    const units = (numerator + denominator - 1n) / denominator;\n' +
+-   '    if (units > BigInt(Number.MAX_SAFE_INTEGER))\n' +
+-   '        return undefined;\n' +
+-   '    return `${units / 1000000n}.${(units % 1000000n).toString().padStart'... 67024 more characters
+
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v18-applicability.mjs:82:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'import { ConvexError } from "convex/values";\n' +
+    'import { convexGateway } from "@convex-dev/ai-sdk-provider";\n' +
+    'import { traceRuntimePhase } from "runtimeLatencyTrace";\n' +
+    'import { wrapEmbeddingModel, wrapLanguageModel } from "ai";\n' +
+    'import { canonicalModelJson, validateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "model_policy";\n' +
+    'import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, normalizeSourceText } from "profile";\n' +
+    'import { qualifiedTerminalModelId } from "runtimeModelPolicyBootstrap";\n' +
+    'import { FACTS_JSON_SCHEMA } from "extraction";\n' +
+    'import { CONFLICT_DECISION_JSON_SCHEMA } from "conflicts";\n' +
+    'import { AGENT_TOOL_REGISTRY_VERSION, AGENT_TOOL_REGISTRY_VERSION_V2, agentToolCatalog, agentToolsInputBoundV2, agentToolsInputBound } from "agent_tools";\n' +
+    'import { parseAgentLanguageResult } from "agent_language";\n' +
+    'function traceGateway(binding, phase, metadata = {}) {\n' +
+    '    if (process.env.CORTEX_RUNTIME_LATENCY_TRACE !== "1" || !binding || typeof binding.semanticId !== "string" || typeof binding.runBudgetId !== "string")\n' +
+    '        return;\n' +
+    '    const match = binding.semanticId.match(/^cortex:(run:[a-f0-9]{64}):(\\d+):\\d+$/);\n' +
+    '    traceRuntimePhase(match?.[1] ?? binding.runBudgetId, match ? Number(match[2]) : 0, phase, { ...metadata, runBudgetId: binding.runBudgetId, semanticId: binding.semanticId, operationKey: binding.operationKey });\n' +
+    '}\n' +
+    'export const DEFAULT_GATEWAY_OWNED_TIMING = Object.freeze({ terminalObservationMs: 100, terminalPersistenceMs: 5000, cleanupMs: 100 });\n' +
+    'export class GatewayDispatchError extends Error {\n' +
+    '    code;\n' +
+    '    constructor(code) {\n' +
+    '        super("Governed model call did not complete for delivery.");\n' +
+    '        this.code = code;\n' +
+    '        this.name = "GatewayDispatchError";\n' +
+    '    }\n' +
+    '}\n' +
+    'function fail(code) { throw new GatewayDispatchError(code); }\n' +
+    'const utf8 = (text) => {\n' +
+    '    for (const point of text) {\n' +
+    '        const n = point.codePointAt(0);\n' +
+    '        if (n >= 0xd800 && n <= 0xdfff)\n' +
+    '            fail("INVALID_UNICODE");\n' +
+    '    }\n' +
+    '    return new TextEncoder().encode(text).length;\n' +
+    '};\n' +
+    'const count = (value) => Number.isSafeInteger(value) && value >= 0;\n' +
+    'function record(input, keys) {\n' +
+    '    if (!input || typeof input !== "object" || Array.isArray(input))\n' +
+    '        return fail("INVALID_NATIVE_REQUEST");\n' +
+    '    const prototype = Object.getPrototypeOf(input);\n' +
+    '    if (prototype !== Object.prototype && prototype !== null)\n' +
+    '        fail("INVALID_NATIVE_REQUEST");\n' +
+    '    const result = Object.create(null);\n' +
+    '    for (const key of Reflect.ownKeys(input)) {\n' +
+    '        if (typeof key !== "string" || !keys.includes(key))\n' +
+    '            fail("UNSUPPORTED_NATIVE_FIELD");\n' +
+    '        const d = Object.getOwnPropertyDescriptor(input, key);\n' +
+    '        if (!d.enumerable || !("value" in d))\n' +
+    '            fail("INVALID_NATIVE_REQUEST");\n' +
+    '        if (d.value !== undefined)\n' +
+    '            Object.defineProperty(result, key, { value: d.value, enumerable: true });\n' +
+    '    }\n' +
+    '    return result;\n' +
+    '}\n' +
+    'function arrayValues(input) {\n' +
+    '    if (!Array.isArray(input) || Object.getPrototypeOf(input) !== Array.prototype)\n' +
+    '        fail("INVALID_NATIVE_REQUEST");\n' +
+    '    const descriptors = Object.getOwnPropertyDescriptors(input);\n' +
+    '    if (Reflect.ownKeys(input).some((key) => typeof key !== "string" || (key !== "length" && !/^(0|[1-9]\\d*)$/.test(key))))\n' +
+    '        fail("INVALID_NATIVE_REQUEST");\n' +
+    '    const values = [];\n' +
+    '    for (let i = 0; i < input.length; i++) {\n' +
+    '        const d = descriptors[String(i)];\n' +
+    '        if (!d || !d.enumerable || !("value" in d))\n' +
+    '            fail("INVALID_NATIVE_REQUEST");\n' +
+    '        values.push(d.value);\n' +
+    '    }\n' +
+    '    if (Object.keys(descriptors).length !== values.length + 1)\n' +
+    '        fail("INVALID_NATIVE_REQUEST");\n' +
+    '    return values;\n' +
+    '}\n' +
+    'function stableId(value) {\n' +
+    '    if (typeof value !== "string" || value.length < 1 || value.length > 256 || value.trim() !== value)\n' +
+    '        return false;\n' +
+    '    utf8(value);\n' +
+    '    return true;\n' +
+    '}\n' +
+    'function detachedBinding(input) {\n' +
+    '    const fields = record(input, ["reference", "operationKey", "runBudgetId", "semanticId", "ordinal", "source", "parentOperationId"]);\n' +
+    '    if ("source" in fields) {\n' +
+    '        const source = record(fields.source, ["sourceId", "sourceEventId", "sourceRevision", "contentHash"]);\n' +
+    '        if (Object.keys(source).length !== 4 || !stableId(source.sourceId) || !stableId(source.sourceEventId)\n' +
+    '            || !count(source.sourceRevision) || source.sourceRevision < 1 || typeof source.contentHash !== "string" || !/^[a-f0-9]{64}$/.test(source.contentHash))\n' +
+    '            fail("INVALID_SOURCE");\n' +
+    '    }\n' +
+    '    return detached(fields);\n' +
+    '}\n' +
+    'function checkedResolution(input) {\n' +
+    '    const fields = record(input, ["snapshot", "dispatchEvidence", "storageLimits"]);\n' +
+    '    if (Object.keys(fields).length !== 3)\n' +
+    '        fail("CAPABILITY_UNAVAILABLE");\n' +
+    '    return detached(fields);\n' +
+    '}\n' +
+    'function checkedAdmission(input) {\n' +
+    '    const fields = record(input, ["status", "operationId", "attemptId", "snapshot", "requestCanonical", "resultCanonical", "replayAllowed"]);\n' +
+    '    if (!stableId(fields.operationId))\n' +
+    '        fail("ADMITTED_REQUEST_MISMATCH");\n' +
+    '    const keys = Reflect.ownKeys(input);\n' +
+    '    const exact = (allowed, required) => keys.every((key) => typeof key === "string" && allowed.includes(key)) && required.every((key) => key in fields);\n' +
+    '    if (fields.status === "reserved" && exact(["status", "operationId", "attemptId", "snapshot", "requestCanonical"], ["attemptId", "snapshot", "requestCanonical"])\n' +
+    '        && stableId(fields.attemptId) && typeof fields.requestCanonical === "string")\n' +
+    '        return detached(fields);\n' +
+    '    if (fields.status === "replay" && exact(["status", "operationId", "resultCanonical"], ["resultCanonical"]) && typeof fields.resultCanonical === "string")\n' +
+    '        return detached(fields);\n' +
+    '    if (["uncertain", "inflight"].includes(fields.status) && exact(["status", "operationId", "attemptId", "replayAllowed"], ["attemptId"])\n' +
+    '        && stableId(fields.attemptId) && (!keys.includes("replayAllowed") || fields.replayAllowed === false))\n' +
+    '        return detached(fields);\n' +
+    '    return fail("ADMITTED_REQUEST_MISMATCH");\n' +
+    '}\n' +
+    'export function assertGatewayReservedRequest(admitted, incoming, snapshotCanonical, canonicalBytes) {\n' +
+    '    const request = exactJSON(incoming, canonicalBytes);\n' +
+    '    const flat = exactJSON(admitted.requestCanonical, canonicalBytes);\n' +
+    '    const validated = validateModelRequest(admitted.snapshot, flat).request;\n' +
+    '    const comparable = { ...validated, semanticId: request.semanticId, childCallId: request.childCallId };\n' +
+    '    if (canonicalModelJson(comparable) !== canonicalModelJson(request) || canonicalModelJson(admitted.snapshot) !== snapshotCanonical)\n' +
+    '        fail("ADMITTED_REQUEST_MISMATCH");\n' +
+    '}\n' +
+    'function checkedAdmissionCheckpoint(input) {\n' +
+    '    const fields = record(input, ["admission", "permit"]);\n' +
+    '    const admission = checkedAdmission(fields.admission);\n' +
+    '    if (admission.status === "reserved") {\n' +
+    '        if (Object.keys(fields).length !== 2)\n' +
+    '            fail("CHECKPOINT_MISMATCH");\n' +
+    '        return { admission, permit: checkedPermit(fields.permit) };\n' +
+    '    }\n' +
+    '    if (Object.keys(fields).length !== 1)\n' +
+    '        fail("CHECKPOINT_MISMATCH");\n' +
+    '    return { admission };\n' +
+    '}\n' +
+    'function checkedPermit(input) {\n' +
+    '    const fields = record(input, ["dispatchPermit", "dispatchIdentity", "snapshot", "requestCanonical", "state", "replayAllowed"]);\n' +
+    '    const keys = Reflect.ownKeys(input);\n' +
+    '    if (fields.dispatchPermit === true && keys.length === 4 && ["dispatchPermit", "dispatchIdentity", "snapshot", "requestCanonical"].every((key) => key in fields)\n' +
+    '        && stableId(fields.dispatchIdentity) && typeof fields.requestCanonical === "string")\n' +
+    '        return detached(fields);\n' +
+    '    if (fields.dispatchPermit === false && keys.length === 3 && typeof fields.state === "string" && fields.replayAllowed === false)\n' +
+    '        return { dispatchPermit: false, state: fields.state, replayAllowed: false };\n' +
+    '    return fail("CHECKPOINT_MISMATCH");\n' +
+    '}\n' +
+    'function captureAcknowledgment(input) {\n' +
+    '    const ack = record(input, ["evidenceId", "state", "settledCostUnits", "overrun"]);\n' +
+    '    if (!stableId(ack.evidenceId))\n' +
+    '        fail("TERMINAL_CAPTURE_PENDING");\n' +
+    '    if (Reflect.ownKeys(input).length === 1)\n' +
+    '        return { evidenceId: ack.evidenceId };\n' +
+    '    if (!["settled", "confirmed_rejected", "uncertain"].includes(ack.state) || typeof ack.overrun !== "boolean"\n' +
+    '        || ("settledCostUnits" in ack && !count(ack.settledCostUnits)))\n' +
+    '        fail("TERMINAL_CAPTURE_PENDING");\n' +
+    '    if (Object.getOwnPropertyDescriptor(input, "settledCostUnits") && !count(ack.settledCostUnits))\n' +
+    '        fail("TERMINAL_CAPTURE_PENDING");\n' +
+    '    return ack;\n' +
+    '}\n' +
+    'function attachmentAcknowledgment(input) {\n' +
+    '    const ack = record(input, ["attached", "resultWithheld"]);\n' +
+    '    if (Reflect.ownKeys(input).length !== 2 || typeof ack.attached !== "boolean" || typeof ack.resultWithheld !== "boolean"\n' +
+    '        || (!ack.attached && !ack.resultWithheld))\n' +
+    '        fail("TERMINAL_RECONCILIATION_PENDING");\n' +
+    '    return { attached: ack.attached, resultWithheld: ack.resultWithheld };\n' +
+    '}\n' +
+    'function attachmentConflict(error) {\n' +
+    '    try {\n' +
+    '        if (!(error instanceof ConvexError) || Object.getPrototypeOf(error) !== ConvexError.prototype)\n' +
+    '            return false;\n' +
+    '        const descriptor = Object.getOwnPropertyDescriptor(error, "data");\n' +
+    '        if (!descriptor || !("value" in descriptor))\n' +
+    '            return false;\n' +
+    '        const data = record(descriptor.value, ["version", "code", "message", "retryable", "outcome"]);\n' +
+    '        return data.version === 1 && data.code === "IDEMPOTENCY_CONFLICT" && data.retryable === false;\n' +
+    '    }\n' +
+    '    catch {\n' +
+    '        return false;\n' +
+    '    }\n' +
+    '}\n' +
+    'function detached(value) { return JSON.parse(canonicalModelJson(value)); }\n' +
+    'function exactJSON(encoded, maximum) {\n' +
+    '    if (utf8(encoded) > maximum)\n' +
+    '        fail("RESULT_BOUND_EXCEEDED");\n' +
+    '    const value = JSON.parse(encoded);\n' +
+    '    if (canonicalModelJson(value) !== encoded)\n' +
+    '        fail("CANONICAL_MISMATCH");\n' +
+    '    return value;\n' +
+    '}\n' +
+    'function json(encoded, maximum) {\n' +
+    '    const result = canonicalModelJson(encoded);\n' +
+    '    if (utf8(result) > maximum)\n' +
+    '        fail("RESULT_BOUND_EXCEEDED");\n' +
+    '    return resul'... 68099 more characters,
+  expected: 'import { ConvexError } from "convex/values";\n' +
+    'import { convexGateway } from "@convex-dev/ai-sdk-provider";\n' +
+    'import { traceRuntimePhase } from "runtimeLatencyTrace";\n' +
+    'import { wrapEmbeddingModel, wrapLanguageModel } from "ai";\n' +
+    'import { canonicalModelJson, validateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "model_policy";\n' +
+    'import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, normalizeSourceText } from "profile";\n' +
+    'import { qualifiedTerminalModelId } from "runtimeModelPolicyBootstrap";\n' +
+    'import { FACTS_JSON_SCHEMA } from "extraction";\n' +
+    'import { CONFLICT_DECISION_JSON_SCHEMA } from "conflicts";\n' +
+    'import { AGENT_TOOL_REGISTRY_VERSION, AGENT_TOOL_REGISTRY_VERSION_V2, agentToolCatalog, agentToolsInputBoundV2, agentToolsInputBound } from "agent_tools";\n' +
+    'import { parseAgentLanguageResult } from "agent_language";\n' +
+    'function traceGateway(binding, phase, metadata = {}) {\n' +
+    '    if (process.env.CORTEX_RUNTIME_LATENCY_TRACE !== "1" || !binding || typeof binding.semanticId !== "string" || typeof binding.runBudgetId !== "string")\n' +
+    '        return;\n' +
+    '    const match = binding.semanticId.match(/^cortex:(run:[a-f0-9]{64}):(\\d+):\\d+$/);\n' +
+    '    traceRuntimePhase(match?.[1] ?? binding.runBudgetId, match ? Number(match[2]) : 0, phase, { ...metadata, runBudgetId: binding.runBudgetId, semanticId: binding.semanticId, operationKey: binding.operationKey });\n' +
+    '}\n' +
+    'export const DEFAULT_GATEWAY_OWNED_TIMING = Object.freeze({ terminalObservationMs: 100, terminalPersistenceMs: 5000, cleanupMs: 100 });\n' +
+    'export class GatewayDispatchError extends Error {\n' +
+    '    code;\n' +
+    '    constructor(code) {\n' +
+    '        super("Governed model call did not complete for delivery.");\n' +
+    '        this.code = code;\n' +
+    '        this.name = "GatewayDispatchError";\n' +
+    '    }\n' +
+    '}\n' +
+    'function fail(code) { throw new GatewayDispatchError(code); }\n' +
+    'const utf8 = (text) => {\n' +
+    '    for (const point of text) {\n' +
+    '        const n = point.codePointAt(0);\n' +
+    '        if (n >= 0xd800 && n <= 0xdfff)\n' +
+    '            fail("INVALID_UNICODE");\n' +
+    '    }\n' +
+    '    return new TextEncoder().encode(text).length;\n' +
+    '};\n' +
+    'const count = (value) => Number.isSafeInteger(value) && value >= 0;\n' +
+    'function record(input, keys) {\n' +
+    '    if (!input || typeof input !== "object" || Array.isArray(input))\n' +
+    '        return fail("INVALID_NATIVE_REQUEST");\n' +
+    '    const prototype = Object.getPrototypeOf(input);\n' +
+    '    if (prototype !== Object.prototype && prototype !== null)\n' +
+    '        fail("INVALID_NATIVE_REQUEST");\n' +
+    '    const result = Object.create(null);\n' +
+    '    for (const key of Reflect.ownKeys(input)) {\n' +
+    '        if (typeof key !== "string" || !keys.includes(key))\n' +
+    '            fail("UNSUPPORTED_NATIVE_FIELD");\n' +
+    '        const d = Object.getOwnPropertyDescriptor(input, key);\n' +
+    '        if (!d.enumerable || !("value" in d))\n' +
+    '            fail("INVALID_NATIVE_REQUEST");\n' +
+    '        if (d.value !== undefined)\n' +
+    '            Object.defineProperty(result, key, { value: d.value, enumerable: true });\n' +
+    '    }\n' +
+    '    return result;\n' +
+    '}\n' +
+    'function arrayValues(input) {\n' +
+    '    if (!Array.isArray(input) || Object.getPrototypeOf(input) !== Array.prototype)\n' +
+    '        fail("INVALID_NATIVE_REQUEST");\n' +
+    '    const descriptors = Object.getOwnPropertyDescriptors(input);\n' +
+    '    if (Reflect.ownKeys(input).some((key) => typeof key !== "string" || (key !== "length" && !/^(0|[1-9]\\d*)$/.test(key))))\n' +
+    '        fail("INVALID_NATIVE_REQUEST");\n' +
+    '    const values = [];\n' +
+    '    for (let i = 0; i < input.length; i++) {\n' +
+    '        const d = descriptors[String(i)];\n' +
+    '        if (!d || !d.enumerable || !("value" in d))\n' +
+    '            fail("INVALID_NATIVE_REQUEST");\n' +
+    '        values.push(d.value);\n' +
+    '    }\n' +
+    '    if (Object.keys(descriptors).length !== values.length + 1)\n' +
+    '        fail("INVALID_NATIVE_REQUEST");\n' +
+    '    return values;\n' +
+    '}\n' +
+    'function stableId(value) {\n' +
+    '    if (typeof value !== "string" || value.length < 1 || value.length > 256 || value.trim() !== value)\n' +
+    '        return false;\n' +
+    '    utf8(value);\n' +
+    '    return true;\n' +
+    '}\n' +
+    'function detachedBinding(input) {\n' +
+    '    const fields = record(input, ["reference", "operationKey", "runBudgetId", "semanticId", "ordinal", "source", "parentOperationId"]);\n' +
+    '    if ("source" in fields) {\n' +
+    '        const source = record(fields.source, ["sourceId", "sourceEventId", "sourceRevision", "contentHash"]);\n' +
+    '        if (Object.keys(source).length !== 4 || !stableId(source.sourceId) || !stableId(source.sourceEventId)\n' +
+    '            || !count(source.sourceRevision) || source.sourceRevision < 1 || typeof source.contentHash !== "string" || !/^[a-f0-9]{64}$/.test(source.contentHash))\n' +
+    '            fail("INVALID_SOURCE");\n' +
+    '    }\n' +
+    '    return detached(fields);\n' +
+    '}\n' +
+    'function checkedResolution(input) {\n' +
+    '    const fields = record(input, ["snapshot", "dispatchEvidence", "storageLimits"]);\n' +
+    '    if (Object.keys(fields).length !== 3)\n' +
+    '        fail("CAPABILITY_UNAVAILABLE");\n' +
+    '    return detached(fields);\n' +
+    '}\n' +
+    'function checkedAdmission(input) {\n' +
+    '    const fields = record(input, ["status", "operationId", "attemptId", "snapshot", "requestCanonical", "resultCanonical", "replayAllowed"]);\n' +
+    '    if (!stableId(fields.operationId))\n' +
+    '        fail("ADMITTED_REQUEST_MISMATCH");\n' +
+    '    const keys = Reflect.ownKeys(input);\n' +
+    '    const exact = (allowed, required) => keys.every((key) => typeof key === "string" && allowed.includes(key)) && required.every((key) => key in fields);\n' +
+    '    if (fields.status === "reserved" && exact(["status", "operationId", "attemptId", "snapshot", "requestCanonical"], ["attemptId", "snapshot", "requestCanonical"])\n' +
+    '        && stableId(fields.attemptId) && typeof fields.requestCanonical === "string")\n' +
+    '        return detached(fields);\n' +
+    '    if (fields.status === "replay" && exact(["status", "operationId", "resultCanonical"], ["resultCanonical"]) && typeof fields.resultCanonical === "string")\n' +
+    '        return detached(fields);\n' +
+    '    if (["uncertain", "inflight"].includes(fields.status) && exact(["status", "operationId", "attemptId", "replayAllowed"], ["attemptId"])\n' +
+    '        && stableId(fields.attemptId) && (!keys.includes("replayAllowed") || fields.replayAllowed === false))\n' +
+    '        return detached(fields);\n' +
+    '    return fail("ADMITTED_REQUEST_MISMATCH");\n' +
+    '}\n' +
+    'function checkedPermit(input) {\n' +
+    '    const fields = record(input, ["dispatchPermit", "dispatchIdentity", "snapshot", "requestCanonical", "state", "replayAllowed"]);\n' +
+    '    const keys = Reflect.ownKeys(input);\n' +
+    '    if (fields.dispatchPermit === true && keys.length === 4 && ["dispatchPermit", "dispatchIdentity", "snapshot", "requestCanonical"].every((key) => key in fields)\n' +
+    '        && stableId(fields.dispatchIdentity) && typeof fields.requestCanonical === "string")\n' +
+    '        return detached(fields);\n' +
+    '    if (fields.dispatchPermit === false && keys.length === 3 && typeof fields.state === "string" && fields.replayAllowed === false)\n' +
+    '        return { dispatchPermit: false, state: fields.state, replayAllowed: false };\n' +
+    '    return fail("CHECKPOINT_MISMATCH");\n' +
+    '}\n' +
+    'function captureAcknowledgment(input) {\n' +
+    '    const ack = record(input, ["evidenceId", "state", "settledCostUnits", "overrun"]);\n' +
+    '    if (!stableId(ack.evidenceId))\n' +
+    '        fail("TERMINAL_CAPTURE_PENDING");\n' +
+    '    if (Reflect.ownKeys(input).length === 1)\n' +
+    '        return { evidenceId: ack.evidenceId };\n' +
+    '    if (!["settled", "confirmed_rejected", "uncertain"].includes(ack.state) || typeof ack.overrun !== "boolean"\n' +
+    '        || ("settledCostUnits" in ack && !count(ack.settledCostUnits)))\n' +
+    '        fail("TERMINAL_CAPTURE_PENDING");\n' +
+    '    if (Object.getOwnPropertyDescriptor(input, "settledCostUnits") && !count(ack.settledCostUnits))\n' +
+    '        fail("TERMINAL_CAPTURE_PENDING");\n' +
+    '    return ack;\n' +
+    '}\n' +
+    'function attachmentAcknowledgment(input) {\n' +
+    '    const ack = record(input, ["attached", "resultWithheld"]);\n' +
+    '    if (Reflect.ownKeys(input).length !== 2 || typeof ack.attached !== "boolean" || typeof ack.resultWithheld !== "boolean"\n' +
+    '        || (!ack.attached && !ack.resultWithheld))\n' +
+    '        fail("TERMINAL_RECONCILIATION_PENDING");\n' +
+    '    return { attached: ack.attached, resultWithheld: ack.resultWithheld };\n' +
+    '}\n' +
+    'function attachmentConflict(error) {\n' +
+    '    try {\n' +
+    '        if (!(error instanceof ConvexError) || Object.getPrototypeOf(error) !== ConvexError.prototype)\n' +
+    '            return false;\n' +
+    '        const descriptor = Object.getOwnPropertyDescriptor(error, "data");\n' +
+    '        if (!descriptor || !("value" in descriptor))\n' +
+    '            return false;\n' +
+    '        const data = record(descriptor.value, ["version", "code", "message", "retryable", "outcome"]);\n' +
+    '        return data.version === 1 && data.code === "IDEMPOTENCY_CONFLICT" && data.retryable === false;\n' +
+    '    }\n' +
+    '    catch {\n' +
+    '        return false;\n' +
+    '    }\n' +
+    '}\n' +
+    'function detached(value) { return JSON.parse(canonicalModelJson(value)); }\n' +
+    'function exactJSON(encoded, maximum) {\n' +
+    '    if (utf8(encoded) > maximum)\n' +
+    '        fail("RESULT_BOUND_EXCEEDED");\n' +
+    '    const value = JSON.parse(encoded);\n' +
+    '    if (canonicalModelJson(value) !== encoded)\n' +
+    '        fail("CANONICAL_MISMATCH");\n' +
+    '    return value;\n' +
+    '}\n' +
+    'function json(encoded, maximum) {\n' +
+    '    const result = canonicalModelJson(encoded);\n' +
+    '    if (utf8(result) > maximum)\n' +
+    '        fail("RESULT_BOUND_EXCEEDED");\n' +
+    '    return result;\n' +
+    '}\n' +
+    'export function conservativeUsdDecimal(value) {\n' +
+    '    if (typeof value === "string")\n' +
+    '        return /^\\d+(?:\\.\\d+)?$/.test(value) && value.length <= 80 ? value : undefined;\n' +
+    '    if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || Object.is(value, -0))\n' +
+    '        return undefined;\n' +
+    '    if (value === 0)\n' +
+    '        return "0";\n' +
+    '    const view = new DataView(new ArrayBuffer(8));\n' +
+    '    view.setFloat64(0, value);\n' +
+    '    const bits = view.getBigUint64(0) + 1n;\n' +
+    '    const exponent = Number((bits >> 52n) & 0x7ffn);\n' +
+    '    if (exponent === 0x7ff)\n' +
+    '        return undefined;\n' +
+    '    const significand = (bits & ((1n << 52n) - 1n)) + (exponent ? 1n << 52n : 0n);\n' +
+    '    const power = (exponent || 1) - 1023 - 52;\n' +
+    '    const numerator = significand * 1000000n * (power >= 0 ? 1n << BigInt(power) : 1n);\n' +
+    '    const denominator = power < 0 ? 1n << BigInt(-power) : 1n;\n' +
+    '    const units = (numerator + denominator - 1n) / denominator;\n' +
+    '    if (units > BigInt(Number.MAX_SAFE_INTEGER))\n' +
+    '        return undefined;\n' +
+    '    return `${units / 1000000n}.${(units % 1000000n).toString().padStart'... 67024 more characters,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

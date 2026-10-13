@@ -1,0 +1,343 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: src/domain/model-policy.ts executable contract changed
++ actual - expected
+... Skipped lines
+
+  'import { z } from "zod";\n' +
++   'import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, embeddingProfileForModel, normalizeSourceText, semanticHash } from "profile.js";\n' +
++   'import { mediaEnvelopeSchema } from "media_schemas.js";\n' +
+-   'import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, embeddingProfileForModel, normalizeSourceText, semanticHash } from "profile";\n' +
+-   'import { mediaEnvelopeSchema } from "media_schemas";\n' +
+    'export const MODEL_OPERATION_KEYS = Object.freeze([\n' +
+    '    "agent.respond", "memory.extract", "facts.resolve", "memory.summarize", "conversation.title",\n' +
+    '    "artifact.text", "artifact.code", "artifact.sheet", "artifact.suggestions",\n' +
+    '    "embedding.query", "embedding.memory", "media.image.generate", "media.video.generate",\n' +
+    ']);\n' +
+...
+    '        if (policy.override) {\n' +
++   '   '... 18868 more characters
+-   '         '... 18862 more characters
+
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v18-applicability.mjs:81:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'import { z } from "zod";\n' +
+    'import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, embeddingProfileForModel, normalizeSourceText, semanticHash } from "profile.js";\n' +
+    'import { mediaEnvelopeSchema } from "media_schemas.js";\n' +
+    'export const MODEL_OPERATION_KEYS = Object.freeze([\n' +
+    '    "agent.respond", "memory.extract", "facts.resolve", "memory.summarize", "conversation.title",\n' +
+    '    "artifact.text", "artifact.code", "artifact.sheet", "artifact.suggestions",\n' +
+    '    "embedding.query", "embedding.memory", "media.image.generate", "media.video.generate",\n' +
+    ']);\n' +
+    'export const DEFAULT_CHAT_MODEL_ID = "openai/gpt-4o-mini";\n' +
+    'export const MEMORY_JSON_OBJECT_CONTRACT = Object.freeze({\n' +
+    '    modelId: DEFAULT_CHAT_MODEL_ID,\n' +
+    '    promptVersion: "memory-extraction-json-object-prompt-v5",\n' +
+    '    schemaVersion: "facts-v1",\n' +
+    '    toolRegistryVersion: "none-v1",\n' +
+    '    featureEnvelope: "memory-extract-json-object-v1",\n' +
+    '    inputRule: "memory-json-object-chat-utf8-v1",\n' +
+    '    boundRevision: "memory-json-object-8192-512-v1",\n' +
+    '    maximumInputTokens: 8192, maximumContextTokens: 16384, maximumOutputTokens: 512,\n' +
+    '    maximumPrivateResultBytes: 60000, maximumCostUnits: 100000,\n' +
+    '});\n' +
+    'export const MODEL_OPERATION_REGISTRY = Object.freeze(Object.fromEntries(MODEL_OPERATION_KEYS.map((key) => [key, Object.freeze({\n' +
+    '        key,\n' +
+    '        capability: key.startsWith("embedding.") ? "embedding" : key.startsWith("media.image") ? "image" : key.startsWith("media.video") ? "video" : key === "memory.extract" || key === "facts.resolve" ? "structured" : "text",\n' +
+    '        interfaces: Object.freeze(key.startsWith("embedding.") ? ["embedding"] : key.startsWith("media.image") ? ["image"] : key.startsWith("media.video") ? ["video"] : ["chat", "responses"]),\n' +
+    '        availableInThisPacket: true,\n' +
+    '    })])));\n' +
+    'const nonempty = z.string().min(1).max(256).refine((value) => value.trim() === value && value.trim().length > 0);\n' +
+    'const integer = z.number().int().min(0).max(Number.MAX_SAFE_INTEGER);\n' +
+    'const positive = integer.min(1);\n' +
+    'const modelId = z.string().regex(/^[a-z0-9][a-z0-9-]*\\/[A-Za-z0-9][A-Za-z0-9._:-]*$/);\n' +
+    'const operationKey = z.enum(MODEL_OPERATION_KEYS);\n' +
+    'const nativeInterface = z.enum(["chat", "responses", "messages", "embedding", "image", "video"]);\n' +
+    'const capability = z.enum(["text", "structured", "tools", "embedding", "image", "video"]);\n' +
+    'const optionKey = z.enum(["temperature", "topP", "seed", "stopSequences"]);\n' +
+    'const limitsSchema = z.object({\n' +
+    '    inputTokens: positive, contextTokens: positive, outputTokens: positive, toolSteps: integer,\n' +
+    '    timeoutMs: positive, operationBudgetUnits: positive, runBudgetUnits: positive,\n' +
+    '    tenantBudgetUnits: positive, concurrency: positive,\n' +
+    '}).strict();\n' +
+    'export const MODEL_LIMIT_KEYS = Object.freeze(Object.keys(limitsSchema.shape));\n' +
+    'const pinsSchema = z.object({\n' +
+    '    promptVersion: nonempty, schemaVersion: nonempty, extractionVersion: nonempty,\n' +
+    '    toolRegistryVersion: nonempty, priceRevision: nonempty, boundRevision: nonempty,\n' +
+    '}).strict();\n' +
+    'const rulesSchema = z.object({\n' +
+    '    modelId: modelId.optional(), nativeInterface: nativeInterface.optional(),\n' +
+    '    allowedModels: z.array(modelId).min(1).optional(), interfaces: z.array(nativeInterface).min(1).optional(),\n' +
+    '    capabilities: z.array(capability).min(1).optional(), allowedOptions: z.array(optionKey).optional(),\n' +
+    '    allowedTools: z.array(nonempty).optional(), fallbackModels: z.array(modelId).optional(),\n' +
+    '    limits: limitsSchema.partial().optional(), pins: pinsSchema.partial().optional(),\n' +
+    '}).strict();\n' +
+    'const policySchema = z.object({\n' +
+    '    policyId: nonempty, version: positive, scope: z.enum(["deployment", "tenant", "agent"]),\n' +
+    '    tenantId: nonempty.optional(), agentId: nonempty.optional(), agentVersion: positive.optional(),\n' +
+    '    operationKey: operationKey.optional(), rules: rulesSchema,\n' +
+    '    override: z.object({ actorPrincipalId: nonempty, changeRevision: positive, authorizationId: nonempty }).strict().optional(),\n' +
+    '}).strict();\n' +
+    'const costBoundSchema = z.object({\n' +
+    '    kind: z.literal("qualified-call-ceiling"), maximumCostUnits: positive, provenance: nonempty,\n' +
+    '    coversAllProviderCharges: z.literal(true),\n' +
+    '}).strict();\n' +
+    'const qualificationSchema = z.object({\n' +
+    '    receiptId: nonempty, modelId, nativeInterface, capabilities: z.array(capability).min(1),\n' +
+    '    allowedOptions: z.array(optionKey), limits: limitsSchema, costBound: costBoundSchema, priceRevision: nonempty, boundRevision: nonempty,\n' +
+    '}).strict();\n' +
+    'const scopeSchema = z.object({\n' +
+    '    tenantId: nonempty, tenantEpoch: positive, memorySpaceId: nonempty, memorySpaceEpoch: positive,\n' +
+    '    principalId: nonempty, principalVersion: positive, membershipId: nonempty, membershipVersion: positive,\n' +
+    '    grantId: nonempty, grantVersion: positive,\n' +
+    '}).strict();\n' +
+    'const profileSchema = z.object({ profileId: nonempty, modelId, dimensions: positive,\n' +
+    '    normalization: nonempty, chunking: nonempty, indexName: nonempty }).strict();\n' +
+    'const contextSchema = z.object({\n' +
+    '    scope: scopeSchema, agent: z.object({ agentId: nonempty, version: positive }).strict().optional(),\n' +
+    '    operationKey, parentOperationId: nonempty.optional(), runBudgetId: nonempty,\n' +
+    '    source: z.object({ sourceId: nonempty, sourceEventId: nonempty, sourceRevision: positive }).strict().optional(),\n' +
+    '    semanticProfile: profileSchema.optional(),\n' +
+    '    authorizedOverrides: z.array(z.object({ authorizationId: nonempty, actorPrincipalId: nonempty,\n' +
+    '        changeRevision: positive, policyId: nonempty, policyVersion: positive }).strict()),\n' +
+    '}).strict();\n' +
+    'const resolutionSchema = z.object({ context: contextSchema, policies: z.array(policySchema).min(1),\n' +
+    '    qualifications: z.array(qualificationSchema) }).strict();\n' +
+    'function deny(message) { throw new Error(`POLICY_DENIED: ${message}`); }\n' +
+    'function parse(schema, input) {\n' +
+    '    const result = schema.safeParse(input);\n' +
+    '    if (!result.success)\n' +
+    '        throw new Error("INVALID_INPUT: invalid model policy contract");\n' +
+    '    return result.data;\n' +
+    '}\n' +
+    'function freeze(value) {\n' +
+    '    if (value !== null && typeof value === "object") {\n' +
+    '        Object.values(value).forEach((child) => freeze(child));\n' +
+    '        Object.freeze(value);\n' +
+    '    }\n' +
+    '    return value;\n' +
+    '}\n' +
+    'function intersect(left, right) {\n' +
+    '    return [...new Set(left.filter((item) => right === undefined || right.includes(item)))];\n' +
+    '}\n' +
+    'function tighten(left, right) {\n' +
+    '    return Object.fromEntries(MODEL_LIMIT_KEYS.map((key) => [key, Math.min(left[key], right?.[key] ?? left[key])]));\n' +
+    '}\n' +
+    'function assertLimits(limits) {\n' +
+    '    if (limits.inputTokens > limits.contextTokens || limits.outputTokens > limits.contextTokens ||\n' +
+    '        limits.operationBudgetUnits > limits.runBudgetUnits || limits.runBudgetUnits > limits.tenantBudgetUnits) {\n' +
+    '        deny("inconsistent token or monetary bounds");\n' +
+    '    }\n' +
+    '}\n' +
+    'export function resolveModelPolicy(input) {\n' +
+    '    canonicalModelJson(input);\n' +
+    '    const { context, policies, qualifications } = parse(resolutionSchema, input);\n' +
+    '    const operation = MODEL_OPERATION_REGISTRY[context.operationKey];\n' +
+    '    if (!operation.availableInThisPacket || (operation.capability === "video" || operation.capability === "image") && !qualifications.some(receipt => receipt.nativeInterface === operation.capability && receipt.capabilities.includes(operation.capability))) {\n' +
+    '        throw new Error("CAPABILITY_UNAVAILABLE: media qualification belongs to its service gate");\n' +
+    '    }\n' +
+    '    const seen = new Set();\n' +
+    '    for (const policy of policies) {\n' +
+    '        const target = `${policy.scope}:${policy.operationKey ?? "*"}`;\n' +
+    '        if (seen.has(target))\n' +
+    '            deny("ambiguous policy scope");\n' +
+    '        seen.add(target);\n' +
+    '        if ((policy.operationKey && policy.operationKey !== context.operationKey) ||\n' +
+    '            (policy.scope === "deployment" && (policy.tenantId || policy.agentId || policy.agentVersion)) ||\n' +
+    '            (policy.scope !== "deployment" && policy.tenantId !== context.scope.tenantId) ||\n' +
+    '            (policy.scope === "tenant" && (policy.agentId || policy.agentVersion)) ||\n' +
+    '            (policy.scope === "agent" && (!context.agent || policy.agentId !== context.agent.agentId || policy.agentVersion !== context.agent.version))) {\n' +
+    '            deny("policy scope does not match trusted context");\n' +
+    '        }\n' +
+    '        if (policy.scope === "deployment" && policy.override)\n' +
+    '            deny("deployment hard bounds cannot be overridden");\n' +
+    '        if (policy.override && !context.authorizedOverrides.some((auth) => auth.authorizationId === policy.override?.authorizationId &&\n' +
+    '            auth.actorPrincipalId === policy.override.actorPrincipalId && auth.changeRevision === policy.override.changeRevision &&\n' +
+    '            auth.policyId === policy.policyId && auth.policyVersion === policy.version))\n' +
+    '            deny("unauthorized policy override");\n' +
+    '    }\n' +
+    '    const rank = (policy) => ["deployment", "tenant", "agent"].indexOf(policy.scope) + (policy.operationKey ? 3 : 0);\n' +
+    '    const ordered = [...policies].sort((a, b) => rank(a) - rank(b));\n' +
+    '    const deployment = ordered.find((policy) => policy.scope === "deployment" && !policy.operationKey);\n' +
+    '    if (!deployment || deployment.override)\n' +
+    '        deny("missing ordinary deployment hard bounds");\n' +
+    '    const hard = deployment.rules;\n' +
+    '    if (!hard.allowedModels || !hard.interfaces || !hard.capabilities || !hard.allowedOptions || !hard.allowedTools || !hard.fallbackModels)\n' +
+    '        deny("incomplete deployment policy");\n' +
+    '    const hardLimits = parse(limitsSchema, hard.limits);\n' +
+    '    const hardPins = parse(pinsSchema, hard.pins);\n' +
+    '    assertLimits(hardLimits);\n' +
+    '    let limits = hardLimits;\n' +
+    '    let models = [...hard.allowedModels], interfaces = [...hard.interfaces], capabilities = [...hard.capabilities];\n' +
+    '    let options = [...hard.allowedOptions], tools = [...hard.allowedTools], fallbacks = [...hard.fallbackModels];\n' +
+    '    let pins = hardPins;\n' +
+    '    let selected = hard.modelId ?? (operation.capability === "embedding" ? DEFAULT_EMBEDDING_PROFILE.modelId : DEFAULT_CHAT_MODEL_ID);\n' +
+    '    let selectedInterface = hard.nativeInterface ?? (operation.capability === "embedding" ? "embedding" : "chat");\n' +
+    '    for (const policy of ordered) {\n' +
+    '        const rules = policy.rules;\n' +
+    '        if (policy.override) {\n' +
+    '   '... 18868 more characters,
+  expected: 'import { z } from "zod";\n' +
+    'import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, embeddingProfileForModel, normalizeSourceText, semanticHash } from "profile";\n' +
+    'import { mediaEnvelopeSchema } from "media_schemas";\n' +
+    'export const MODEL_OPERATION_KEYS = Object.freeze([\n' +
+    '    "agent.respond", "memory.extract", "facts.resolve", "memory.summarize", "conversation.title",\n' +
+    '    "artifact.text", "artifact.code", "artifact.sheet", "artifact.suggestions",\n' +
+    '    "embedding.query", "embedding.memory", "media.image.generate", "media.video.generate",\n' +
+    ']);\n' +
+    'export const DEFAULT_CHAT_MODEL_ID = "openai/gpt-4o-mini";\n' +
+    'export const MEMORY_JSON_OBJECT_CONTRACT = Object.freeze({\n' +
+    '    modelId: DEFAULT_CHAT_MODEL_ID,\n' +
+    '    promptVersion: "memory-extraction-json-object-prompt-v5",\n' +
+    '    schemaVersion: "facts-v1",\n' +
+    '    toolRegistryVersion: "none-v1",\n' +
+    '    featureEnvelope: "memory-extract-json-object-v1",\n' +
+    '    inputRule: "memory-json-object-chat-utf8-v1",\n' +
+    '    boundRevision: "memory-json-object-8192-512-v1",\n' +
+    '    maximumInputTokens: 8192, maximumContextTokens: 16384, maximumOutputTokens: 512,\n' +
+    '    maximumPrivateResultBytes: 60000, maximumCostUnits: 100000,\n' +
+    '});\n' +
+    'export const MODEL_OPERATION_REGISTRY = Object.freeze(Object.fromEntries(MODEL_OPERATION_KEYS.map((key) => [key, Object.freeze({\n' +
+    '        key,\n' +
+    '        capability: key.startsWith("embedding.") ? "embedding" : key.startsWith("media.image") ? "image" : key.startsWith("media.video") ? "video" : key === "memory.extract" || key === "facts.resolve" ? "structured" : "text",\n' +
+    '        interfaces: Object.freeze(key.startsWith("embedding.") ? ["embedding"] : key.startsWith("media.image") ? ["image"] : key.startsWith("media.video") ? ["video"] : ["chat", "responses"]),\n' +
+    '        availableInThisPacket: true,\n' +
+    '    })])));\n' +
+    'const nonempty = z.string().min(1).max(256).refine((value) => value.trim() === value && value.trim().length > 0);\n' +
+    'const integer = z.number().int().min(0).max(Number.MAX_SAFE_INTEGER);\n' +
+    'const positive = integer.min(1);\n' +
+    'const modelId = z.string().regex(/^[a-z0-9][a-z0-9-]*\\/[A-Za-z0-9][A-Za-z0-9._:-]*$/);\n' +
+    'const operationKey = z.enum(MODEL_OPERATION_KEYS);\n' +
+    'const nativeInterface = z.enum(["chat", "responses", "messages", "embedding", "image", "video"]);\n' +
+    'const capability = z.enum(["text", "structured", "tools", "embedding", "image", "video"]);\n' +
+    'const optionKey = z.enum(["temperature", "topP", "seed", "stopSequences"]);\n' +
+    'const limitsSchema = z.object({\n' +
+    '    inputTokens: positive, contextTokens: positive, outputTokens: positive, toolSteps: integer,\n' +
+    '    timeoutMs: positive, operationBudgetUnits: positive, runBudgetUnits: positive,\n' +
+    '    tenantBudgetUnits: positive, concurrency: positive,\n' +
+    '}).strict();\n' +
+    'export const MODEL_LIMIT_KEYS = Object.freeze(Object.keys(limitsSchema.shape));\n' +
+    'const pinsSchema = z.object({\n' +
+    '    promptVersion: nonempty, schemaVersion: nonempty, extractionVersion: nonempty,\n' +
+    '    toolRegistryVersion: nonempty, priceRevision: nonempty, boundRevision: nonempty,\n' +
+    '}).strict();\n' +
+    'const rulesSchema = z.object({\n' +
+    '    modelId: modelId.optional(), nativeInterface: nativeInterface.optional(),\n' +
+    '    allowedModels: z.array(modelId).min(1).optional(), interfaces: z.array(nativeInterface).min(1).optional(),\n' +
+    '    capabilities: z.array(capability).min(1).optional(), allowedOptions: z.array(optionKey).optional(),\n' +
+    '    allowedTools: z.array(nonempty).optional(), fallbackModels: z.array(modelId).optional(),\n' +
+    '    limits: limitsSchema.partial().optional(), pins: pinsSchema.partial().optional(),\n' +
+    '}).strict();\n' +
+    'const policySchema = z.object({\n' +
+    '    policyId: nonempty, version: positive, scope: z.enum(["deployment", "tenant", "agent"]),\n' +
+    '    tenantId: nonempty.optional(), agentId: nonempty.optional(), agentVersion: positive.optional(),\n' +
+    '    operationKey: operationKey.optional(), rules: rulesSchema,\n' +
+    '    override: z.object({ actorPrincipalId: nonempty, changeRevision: positive, authorizationId: nonempty }).strict().optional(),\n' +
+    '}).strict();\n' +
+    'const costBoundSchema = z.object({\n' +
+    '    kind: z.literal("qualified-call-ceiling"), maximumCostUnits: positive, provenance: nonempty,\n' +
+    '    coversAllProviderCharges: z.literal(true),\n' +
+    '}).strict();\n' +
+    'const qualificationSchema = z.object({\n' +
+    '    receiptId: nonempty, modelId, nativeInterface, capabilities: z.array(capability).min(1),\n' +
+    '    allowedOptions: z.array(optionKey), limits: limitsSchema, costBound: costBoundSchema, priceRevision: nonempty, boundRevision: nonempty,\n' +
+    '}).strict();\n' +
+    'const scopeSchema = z.object({\n' +
+    '    tenantId: nonempty, tenantEpoch: positive, memorySpaceId: nonempty, memorySpaceEpoch: positive,\n' +
+    '    principalId: nonempty, principalVersion: positive, membershipId: nonempty, membershipVersion: positive,\n' +
+    '    grantId: nonempty, grantVersion: positive,\n' +
+    '}).strict();\n' +
+    'const profileSchema = z.object({ profileId: nonempty, modelId, dimensions: positive,\n' +
+    '    normalization: nonempty, chunking: nonempty, indexName: nonempty }).strict();\n' +
+    'const contextSchema = z.object({\n' +
+    '    scope: scopeSchema, agent: z.object({ agentId: nonempty, version: positive }).strict().optional(),\n' +
+    '    operationKey, parentOperationId: nonempty.optional(), runBudgetId: nonempty,\n' +
+    '    source: z.object({ sourceId: nonempty, sourceEventId: nonempty, sourceRevision: positive }).strict().optional(),\n' +
+    '    semanticProfile: profileSchema.optional(),\n' +
+    '    authorizedOverrides: z.array(z.object({ authorizationId: nonempty, actorPrincipalId: nonempty,\n' +
+    '        changeRevision: positive, policyId: nonempty, policyVersion: positive }).strict()),\n' +
+    '}).strict();\n' +
+    'const resolutionSchema = z.object({ context: contextSchema, policies: z.array(policySchema).min(1),\n' +
+    '    qualifications: z.array(qualificationSchema) }).strict();\n' +
+    'function deny(message) { throw new Error(`POLICY_DENIED: ${message}`); }\n' +
+    'function parse(schema, input) {\n' +
+    '    const result = schema.safeParse(input);\n' +
+    '    if (!result.success)\n' +
+    '        throw new Error("INVALID_INPUT: invalid model policy contract");\n' +
+    '    return result.data;\n' +
+    '}\n' +
+    'function freeze(value) {\n' +
+    '    if (value !== null && typeof value === "object") {\n' +
+    '        Object.values(value).forEach((child) => freeze(child));\n' +
+    '        Object.freeze(value);\n' +
+    '    }\n' +
+    '    return value;\n' +
+    '}\n' +
+    'function intersect(left, right) {\n' +
+    '    return [...new Set(left.filter((item) => right === undefined || right.includes(item)))];\n' +
+    '}\n' +
+    'function tighten(left, right) {\n' +
+    '    return Object.fromEntries(MODEL_LIMIT_KEYS.map((key) => [key, Math.min(left[key], right?.[key] ?? left[key])]));\n' +
+    '}\n' +
+    'function assertLimits(limits) {\n' +
+    '    if (limits.inputTokens > limits.contextTokens || limits.outputTokens > limits.contextTokens ||\n' +
+    '        limits.operationBudgetUnits > limits.runBudgetUnits || limits.runBudgetUnits > limits.tenantBudgetUnits) {\n' +
+    '        deny("inconsistent token or monetary bounds");\n' +
+    '    }\n' +
+    '}\n' +
+    'export function resolveModelPolicy(input) {\n' +
+    '    canonicalModelJson(input);\n' +
+    '    const { context, policies, qualifications } = parse(resolutionSchema, input);\n' +
+    '    const operation = MODEL_OPERATION_REGISTRY[context.operationKey];\n' +
+    '    if (!operation.availableInThisPacket || (operation.capability === "video" || operation.capability === "image") && !qualifications.some(receipt => receipt.nativeInterface === operation.capability && receipt.capabilities.includes(operation.capability))) {\n' +
+    '        throw new Error("CAPABILITY_UNAVAILABLE: media qualification belongs to its service gate");\n' +
+    '    }\n' +
+    '    const seen = new Set();\n' +
+    '    for (const policy of policies) {\n' +
+    '        const target = `${policy.scope}:${policy.operationKey ?? "*"}`;\n' +
+    '        if (seen.has(target))\n' +
+    '            deny("ambiguous policy scope");\n' +
+    '        seen.add(target);\n' +
+    '        if ((policy.operationKey && policy.operationKey !== context.operationKey) ||\n' +
+    '            (policy.scope === "deployment" && (policy.tenantId || policy.agentId || policy.agentVersion)) ||\n' +
+    '            (policy.scope !== "deployment" && policy.tenantId !== context.scope.tenantId) ||\n' +
+    '            (policy.scope === "tenant" && (policy.agentId || policy.agentVersion)) ||\n' +
+    '            (policy.scope === "agent" && (!context.agent || policy.agentId !== context.agent.agentId || policy.agentVersion !== context.agent.version))) {\n' +
+    '            deny("policy scope does not match trusted context");\n' +
+    '        }\n' +
+    '        if (policy.scope === "deployment" && policy.override)\n' +
+    '            deny("deployment hard bounds cannot be overridden");\n' +
+    '        if (policy.override && !context.authorizedOverrides.some((auth) => auth.authorizationId === policy.override?.authorizationId &&\n' +
+    '            auth.actorPrincipalId === policy.override.actorPrincipalId && auth.changeRevision === policy.override.changeRevision &&\n' +
+    '            auth.policyId === policy.policyId && auth.policyVersion === policy.version))\n' +
+    '            deny("unauthorized policy override");\n' +
+    '    }\n' +
+    '    const rank = (policy) => ["deployment", "tenant", "agent"].indexOf(policy.scope) + (policy.operationKey ? 3 : 0);\n' +
+    '    const ordered = [...policies].sort((a, b) => rank(a) - rank(b));\n' +
+    '    const deployment = ordered.find((policy) => policy.scope === "deployment" && !policy.operationKey);\n' +
+    '    if (!deployment || deployment.override)\n' +
+    '        deny("missing ordinary deployment hard bounds");\n' +
+    '    const hard = deployment.rules;\n' +
+    '    if (!hard.allowedModels || !hard.interfaces || !hard.capabilities || !hard.allowedOptions || !hard.allowedTools || !hard.fallbackModels)\n' +
+    '        deny("incomplete deployment policy");\n' +
+    '    const hardLimits = parse(limitsSchema, hard.limits);\n' +
+    '    const hardPins = parse(pinsSchema, hard.pins);\n' +
+    '    assertLimits(hardLimits);\n' +
+    '    let limits = hardLimits;\n' +
+    '    let models = [...hard.allowedModels], interfaces = [...hard.interfaces], capabilities = [...hard.capabilities];\n' +
+    '    let options = [...hard.allowedOptions], tools = [...hard.allowedTools], fallbacks = [...hard.fallbackModels];\n' +
+    '    let pins = hardPins;\n' +
+    '    let selected = hard.modelId ?? (operation.capability === "embedding" ? DEFAULT_EMBEDDING_PROFILE.modelId : DEFAULT_CHAT_MODEL_ID);\n' +
+    '    let selectedInterface = hard.nativeInterface ?? (operation.capability === "embedding" ? "embedding" : "chat");\n' +
+    '    for (const policy of ordered) {\n' +
+    '        const rules = policy.rules;\n' +
+    '        if (policy.override) {\n' +
+    '         '... 18862 more characters,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0
