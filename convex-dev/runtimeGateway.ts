@@ -8,7 +8,7 @@ import type { RuntimeLatencyMetadata } from "./runtimeLatencyTrace";
 import { wrapEmbeddingModel, wrapLanguageModel } from "ai";
 import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Result, LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4StreamPart, LanguageModelV4Usage } from "@ai-sdk/provider";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
-import { canonicalModelJson, validateModelRequest } from "../src/domain/model-policy";
+import { canonicalModelJson, validateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "../src/domain/model-policy";
 import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1 } from "../src/domain/model-policy";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
 import type { QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
@@ -220,6 +220,20 @@ function proofFor(resolution: GatewayResolution, now: number): void {
     || p.inputBound.revision !== 1 || !count(p.resultBound.maximumOutputTokens) || !count(p.resultBound.maximumPrivateResultBytes)
     || p.resultBound.maximumPrivateResultBytes < 1 || p.resultBound.maximumPrivateResultBytes > embeddingResultCeiling(p)
     || !count(limits.canonicalBytes) || limits.canonicalBytes < 1 || !count(limits.privateResultBytes) || limits.privateResultBytes < 1 || limits.canonicalBytes > 180_000 || limits.privateResultBytes > embeddingResultCeiling(p) || limits.embeddingValuesPerCall !== 1 || p.resultBound.maximumEmbeddingValues !== 1) fail("CAPABILITY_UNAVAILABLE");
+  if (p.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || p.inputBound.ruleId === MEMORY_JSON_OBJECT_CONTRACT.inputRule
+    || s.pins.promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion || s.pins.boundRevision === MEMORY_JSON_OBJECT_CONTRACT.boundRevision) {
+    if (s.operationKey !== "memory.extract" || s.nativeInterface !== "chat" || s.modelId !== MEMORY_JSON_OBJECT_CONTRACT.modelId
+      || p.inputBound.featureEnvelope !== MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || p.inputBound.ruleId !== MEMORY_JSON_OBJECT_CONTRACT.inputRule
+      || s.pins.promptVersion !== MEMORY_JSON_OBJECT_CONTRACT.promptVersion || s.pins.boundRevision !== MEMORY_JSON_OBJECT_CONTRACT.boundRevision
+      || s.pins.schemaVersion !== MEMORY_JSON_OBJECT_CONTRACT.schemaVersion || s.pins.toolRegistryVersion !== MEMORY_JSON_OBJECT_CONTRACT.toolRegistryVersion
+      || s.allowedOptions.length || s.allowedTools.length || s.capabilities.includes("tools") || s.fallbackCandidates.length
+      || s.limits.inputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumInputTokens || s.limits.contextTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumContextTokens
+      || s.limits.outputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumOutputTokens || s.limits.toolSteps
+      || s.limits.timeoutMs > 60000
+      || s.costBound.maximumCostUnits !== MEMORY_JSON_OBJECT_CONTRACT.maximumCostUnits
+      || !p.resultBound.maximumOutputTokens || p.resultBound.maximumOutputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumOutputTokens || p.supportsStream || p.toolContract || p.embeddingProfile || p.mediaContract) fail("CAPABILITY_UNAVAILABLE");
+    return;
+  }
   if (s.nativeInterface === "chat" && p.inputBound.ruleId === "plain-chat-cookbook-utf8-v1" && p.inputBound.featureEnvelope === "plain-chat-v1" && !s.capabilities.includes("tools")) return;
   if (s.nativeInterface === "chat" && p.inputBound.ruleId === "agent-tools-chat-utf8-v1" && ["agent-tools-chat-v1", "agent-tools-chat-v2"].includes(p.inputBound.featureEnvelope)
     && s.operationKey === "agent.respond" && s.capabilities.includes("tools") && s.pins.toolRegistryVersion === p.toolContract?.registryVersion
@@ -279,12 +293,15 @@ function agentToolEnvelope(value: string): boolean {
 function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal): { params: NativeLanguageParams; request: ModelCallRequest } {
   const native = record(input, standardKeys);
   const agent = agentToolEnvelope(p.inputBound.featureEnvelope);
+  const jsonObject = p.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope;
   for (const key of ["topK", "presencePenalty", "frequencyPenalty", "headers", "providerOptions", "reasoning", ...agent ? [] : ["tools", "toolChoice"]]) if (key in native) fail("UNSUPPORTED_NATIVE_FIELD");
   // AI SDK7 always supplies false for ordinary streams. Only the governed
   // wrapper may turn raw observation on; provider chunks never enter public DTOs.
   if ("includeRawChunks" in native && native.includeRawChunks !== false) fail("UNSUPPORTED_NATIVE_FIELD");
   if (native.abortSignal !== undefined && native.abortSignal !== signal) fail("UNTRUSTED_ABORT_SIGNAL");
-  if (native.responseFormat !== undefined && canonicalModelJson(native.responseFormat) !== '{"type":"text"}') fail("CAPABILITY_UNAVAILABLE");
+  if (jsonObject ? native.responseFormat === undefined || canonicalModelJson(native.responseFormat) !== '{"type":"json"}'
+    : native.responseFormat !== undefined && canonicalModelJson(native.responseFormat) !== '{"type":"text"}') fail("CAPABILITY_UNAVAILABLE");
+  if (jsonObject && ["temperature", "topP", "seed", "stopSequences"].some(key => native[key] !== undefined)) fail("UNSUPPORTED_NATIVE_FIELD");
   if (!Array.isArray(native.prompt)) fail("INVALID_NATIVE_REQUEST");
   // Canonical validation catches sparse/custom-iterator arrays BEFORE map/iteration.
   const messages: NonNullable<ModelCallRequest["messages"]> = arrayValues(native.prompt).map((message: unknown) => {
@@ -341,6 +358,10 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
     request.inputTokens = (s.pins.toolRegistryVersion === AGENT_TOOL_REGISTRY_VERSION_V2 ? agentToolsInputBoundV2 : agentToolsInputBound)(canonicalModelJson({ messages, tools: request.tools, ...request.toolChoice ? { toolChoice: request.toolChoice } : {} }), messages.length, request.tools.length);
   } else request.inputTokens = 3 + messages.reduce((n, m, index) => n + 3 + utf8(m.role) + utf8(request.texts[index]!), 0);
   request.outputTokens = native.maxOutputTokens;
+  if (jsonObject) {
+    request.responseFormat = { type: "json" };
+    request.inputTokens = memoryJsonObjectInputBound(messages, request.outputTokens);
+  }
   // Semantic schemas come from the operation contract, never caller provider options.
   if (s.operationKey === "memory.extract") {
     if (s.pins.schemaVersion !== "facts-v1") fail("CAPABILITY_UNAVAILABLE");
@@ -359,6 +380,7 @@ function nativeLanguage(request: Readonly<ModelCallRequest>, signal: AbortSignal
     : { role: m.role, content: m.parts.map(part => detached(part)) }) as LanguageModelV4CallOptions["prompt"];
   const tools = request.tools.map(tool => ({ type: "function", name: tool.name, ...detached(tool.definition) })) as NonNullable<LanguageModelV4CallOptions["tools"]>;
   return { prompt, ...tools.length ? { tools } : {}, ...request.toolChoice ? { toolChoice: detached(request.toolChoice) } : {},
+  ...request.responseFormat ? { responseFormat: detached(request.responseFormat) } : {},
   maxOutputTokens: request.outputTokens, ...request.options.temperature !== undefined ? { temperature: request.options.temperature } : {},
   ...request.options.topP !== undefined ? { topP: request.options.topP } : {}, ...request.options.seed !== undefined ? { seed: request.options.seed } : {},
   ...request.options.stopSequences ? { stopSequences: [...request.options.stopSequences] } : {}, abortSignal: signal };
@@ -644,10 +666,12 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     utf8(id); utf8(actual);
     const admitted = validateModelRequest(attempt.snapshot, exactJSON(attempt.requestCanonical, resolution.storageLimits.canonicalBytes)).request;
     const observed = usage ? usageOf(usage) : {};
+    const completeExtractionUsage = resolution.snapshot.operationKey !== "memory.extract"
+      || (observed.inputTokens !== undefined && observed.outputTokens !== undefined);
     const nativeBoundViolation = actual !== qualifiedTerminalModelId(resolution.dispatchEvidence)
       || (observed.inputTokens !== undefined && observed.inputTokens > admitted.inputTokens)
       || (observed.outputTokens !== undefined && observed.outputTokens > admitted.outputTokens);
-    if (nativeBoundViolation || !canDeliver()) privateResult = undefined;
+    if (nativeBoundViolation || !completeExtractionUsage || !canDeliver()) privateResult = undefined;
     const cost = resolution.dispatchEvidence.terminalCost === "gateway-aggregate-usd-v1" && usage ? conservativeUsdDecimal(usage.cost) : undefined;
     const receipt = { version: 1, dispatchIdentity: attempt.dispatchIdentity, receiptId: id, modelId: resolution.snapshot.modelId, nativeInterface: resolution.snapshot.nativeInterface,
       outcome: "confirmed", proof: "provider-terminal-v1", costSource: cost === undefined ? "unavailable" : "gateway-aggregate-usd-v1",
@@ -682,6 +706,7 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
   const input = new WeakMap<object, ModelCallRequest>();
   const wrapped = wrapLanguageModel({ model, middleware: { specificationVersion: "v4",
     transformParams: async ({ params, type }) => { const normalized = languageParams(params, state.resolution.snapshot, state.resolution.dispatchEvidence, state.binding, state.controller.signal);
+      if (type === "stream" && state.resolution.dispatchEvidence.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope) fail("CAPABILITY_UNAVAILABLE");
       if (type === "stream") normalized.params.includeRawChunks = true; input.set(normalized.params, normalized.request); return normalized.params; },
     wrapGenerate: ({ params, doGenerate }) => state.own(async () => {
       const request = input.get(params)!; const attempt = await state.admit(request);

@@ -10,7 +10,7 @@ import { getFunctionName } from "convex/server";
 import { convexToJson, type Value } from "convex/values";
 import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../../../src/domain/conflicts";
-import { canonicalModelJson, DEFAULT_CHAT_MODEL_ID, resolveModelPolicy } from "../../../src/domain/model-policy";
+import { canonicalModelJson, DEFAULT_CHAT_MODEL_ID, resolveModelPolicy, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "../../../src/domain/model-policy";
 import type { TrustedModelQualification } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
 import { buildSourceExtractionPrompt, extractSourceFacts, prepareSourceContent } from "../../../src/domain/sources";
@@ -88,17 +88,19 @@ function assertNativeModelSource(registration: unknown, args: unknown): void {
 
 function resolution(binding: GatewayBinding, policyCap: number, evidenceCap: number, allowFallback = false, inputCap = 10000, promptVersion = "p1"): GatewayResolution {
   const embedding = binding.operationKey.startsWith("embedding.");
+  const jsonObject = binding.operationKey === "memory.extract" && promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion;
   const modelId = embedding ? DEFAULT_EMBEDDING_PROFILE.modelId : DEFAULT_CHAT_MODEL_ID;
   const nativeInterface = embedding ? "embedding" as const : "chat" as const;
   const capabilities = embedding ? ["embedding" as const] : ["text" as const, "structured" as const];
   const pins = { promptVersion, schemaVersion: binding.operationKey === "memory.extract" ? "facts-v1"
-    : binding.operationKey === "facts.resolve" ? "conflicts-v1" : "s1", extractionVersion: "e1", toolRegistryVersion: "t1", priceRevision: "fixture-price", boundRevision: "fixture-bound" };
+    : binding.operationKey === "facts.resolve" ? "conflicts-v1" : "s1", extractionVersion: "e1", toolRegistryVersion: jsonObject ? "none-v1" : "t1", priceRevision: "fixture-price", boundRevision: jsonObject ? MEMORY_JSON_OBJECT_CONTRACT.boundRevision : "fixture-bound" };
   const limits = { inputTokens: inputCap, contextTokens: 11000, outputTokens: policyCap, toolSteps: 0, timeoutMs: 1000,
     operationBudgetUnits: 10000, runBudgetUnits: 100000, tenantBudgetUnits: 100000, concurrency: 4 };
+  if (jsonObject) Object.assign(limits, { inputTokens: Math.min(inputCap, 8192), contextTokens: 16384, operationBudgetUnits: 100000, runBudgetUnits: 3000000, tenantBudgetUnits: 10000000, concurrency: 2 });
   const fallbackModels = allowFallback && !embedding ? ["openai/gpt-4o"] : [];
   const qualifications: TrustedModelQualification[] = [modelId, ...fallbackModels].map((id, index) => ({
     receiptId: index === 0 ? "offline-only" : "offline-fallback", modelId: id, nativeInterface, capabilities, allowedOptions: [], limits,
-    costBound: { kind: "qualified-call-ceiling", maximumCostUnits: 100, provenance: "OFFLINE-FIXTURE-NOT-PRICE-EVIDENCE", coversAllProviderCharges: true },
+    costBound: { kind: "qualified-call-ceiling", maximumCostUnits: jsonObject ? 100000 : 100, provenance: "OFFLINE-FIXTURE-NOT-PRICE-EVIDENCE", coversAllProviderCharges: true },
     priceRevision: pins.priceRevision, boundRevision: pins.boundRevision,
   }));
   const snapshot = resolveModelPolicy({ context: { scope: reference, operationKey: binding.operationKey, runBudgetId: binding.runBudgetId,
@@ -111,9 +113,9 @@ function resolution(binding: GatewayBinding, policyCap: number, evidenceCap: num
   return { snapshot, storageLimits: { canonicalBytes: 180000, privateResultBytes: 60000, embeddingValuesPerCall: 1 },
     dispatchEvidence: { receiptId: "offline-only", modelId, nativeInterface, evidenceHash: hash, providerVersion: "0.2.1",
       priceRevision: pins.priceRevision, boundRevision: pins.boundRevision, checkedAt: 0, expiresAt: 100000,
-      terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1",
-      inputBound: { ruleId: embedding ? "default-embedding-utf8-v1" : "plain-chat-cookbook-utf8-v1",
-        featureEnvelope: embedding ? "default-embedding-v1" : "plain-chat-v1", revision: 1, proofHash: hash, documentHash: hash, nativeTransformHash: hash },
+      terminalCost: jsonObject ? "unavailable" : "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1",
+      inputBound: { ruleId: embedding ? "default-embedding-utf8-v1" : jsonObject ? MEMORY_JSON_OBJECT_CONTRACT.inputRule : "plain-chat-cookbook-utf8-v1",
+        featureEnvelope: embedding ? "default-embedding-v1" : jsonObject ? MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope : "plain-chat-v1", revision: 1, proofHash: hash, documentHash: hash, nativeTransformHash: hash },
       resultBound: { maximumPrivateResultBytes: 60000, maximumOutputTokens: evidenceCap, maximumEmbeddingValues: 1, proofHash: hash } } };
 }
 
@@ -132,12 +134,14 @@ function fixture(allowFallback = false) {
   let policyCap = 64; let evidenceCap = 64; let inputCap = 10000; let promptVersion = "p1";
   let replay: unknown; let replayEnabled = false; let admissionFailure: Error | undefined;
   let nativeFailure: Error | undefined; let text = JSON.stringify(extracted); let vectors = [vector()];
+  let rawUsage: unknown = { prompt_tokens: 1, completion_tokens: 1, cost: "0" };
   let afterNative: (() => void) | undefined;
   let admittedId: ((binding: GatewayBinding) => Id<"runtimeModelOperations">) | undefined;
   const resolved = jest.fn<GatewayComposition["ledger"]["resolve"]>(async (binding) => resolution(binding as GatewayBinding, policyCap, evidenceCap, allowFallback, inputCap, promptVersion));
   const checkpoint = jest.fn<GatewayComposition["ledger"]["checkpoint"]>(async (args) => ({ dispatchPermit: true,
     dispatchIdentity: `dispatch-${admissions.length}`, snapshot: resolution(admissions.at(-1)!, policyCap, evidenceCap, allowFallback, inputCap, promptVersion).snapshot, requestCanonical: args.requestCanonical }));
-  const capture = jest.fn<GatewayComposition["terminalSink"]["capture"]>().mockResolvedValue({ evidenceId: "durable-offline-fixture" });
+  const capture = jest.fn<GatewayComposition["terminalSink"]["capture"]>().mockImplementation(async () => promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion
+    ? { evidenceId: "durable-offline-fixture", state: "uncertain", overrun: false } : { evidenceId: "durable-offline-fixture" });
   const attach = jest.fn<GatewayComposition["ledger"]["attachTerminalResult"]>().mockResolvedValue({ attached: true, resultWithheld: false });
   const composition: GatewayComposition = { now: () => 1000, terminalSink: { capture }, ledger: {
     resolve: resolved,
@@ -158,7 +162,7 @@ function fixture(allowFallback = false) {
         finishReason: { unified: "stop", raw: "stop" }, usage: { inputTokens: { total: 1, noCache: 1, cacheRead: 0, cacheWrite: undefined },
           outputTokens: { total: 1, text: 1, reasoning: 0 } }, warnings: [],
         response: { body: { id: "offline-chat", model: DEFAULT_CHAT_MODEL_ID, choices: [{ finish_reason: "stop" }],
-          usage: { prompt_tokens: 1, completion_tokens: 1, cost: "0" } } } };
+          usage: rawUsage } } };
       return result;
     }, doStream: async () => { throw new Error("Memory adapter must not open a chat stream"); },
   };
@@ -180,6 +184,7 @@ function fixture(allowFallback = false) {
     failAdmission: () => { admissionFailure = new Error("Authority revoked before checkpoint"); },
     caps: (policy: number, evidence: number) => { policyCap = policy; evidenceCap = evidence; },
     inputCap: (value: number) => { inputCap = value; },
+    usage: (value: unknown) => { rawUsage = value; },
     promptVersion: (value: string) => { promptVersion = value; },
     afterNative: (callback: () => void) => { afterNative = callback; },
   };
@@ -194,6 +199,50 @@ afterEach(() => {
 });
 
 describe("governed backend memory adapter (offline)", () => {
+  it("uses unchanged v4 trusted/source framing only under the separately qualified v5 native format and preserves replay", async () => {
+    const f = fixture(); f.promptVersion(MEMORY_JSON_OBJECT_CONTRACT.promptVersion); f.caps(512, 512);
+    const model = createGatewayMemoryModel(ctx, f.repository); const facts = await extractSourceFacts(source, model, operation);
+    expect(facts[0]!.lineage).toEqual(source.lineage);
+    const framing = buildSourceExtractionFramingV4(source);
+    expect(f.chatCalls[0]!.prompt).toEqual([{ role: "system", content: framing.system }, { role: "user", content: [{ type: "text", text: framing.prompt }] }]);
+    expect(f.chatCalls[0]!.responseFormat).toEqual({ type: "json" }); expect(f.chatCalls[0]!.maxOutputTokens).toBe(512);
+    const admitted = JSON.parse(f.admissions[0]!.requestCanonical) as import("../../../src/domain/model-policy").ModelCallRequest;
+    expect(admitted.inputTokens).toBe(memoryJsonObjectInputBound(admitted.messages, admitted.outputTokens));
+    expect(admitted).toMatchObject({ responseFormat: { type: "json" }, reservationUnits: 100000 });
+    f.replay({ text: JSON.stringify(extracted) }); expect(await extractSourceFacts(source, model, operation)).toHaveLength(1);
+    expect(f.admissions[1]!.requestCanonical).toBe(f.admissions[0]!.requestCanonical); expect(f.chatCalls).toHaveLength(1);
+    expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1);
+  });
+  it.each(['{"facts":[]}', JSON.stringify(extracted)])("strictly accepts valid v5 instance %# without altering output", async output => {
+    const f = fixture(); f.promptVersion(MEMORY_JSON_OBJECT_CONTRACT.promptVersion); f.text(output);
+    const facts = await extractSourceFacts(source, createGatewayMemoryModel(ctx, f.repository), operation);
+    expect(facts).toHaveLength(output === '{"facts":[]}' ? 0 : 1); expect(f.chatCalls).toHaveLength(1);
+  });
+  it.each(["prose", '```json\n{"facts":[]}\n```', '{"facts":[', JSON.stringify(FACTS_JSON_SCHEMA), '{"facts":[],"extra":true}', '{"facts":"[]"}'])
+    ("never coerces/repairs malformed v5 output %#, including its exact replay", async output => {
+      const f = fixture(); f.promptVersion(MEMORY_JSON_OBJECT_CONTRACT.promptVersion); f.text(output);
+      const model = createGatewayMemoryModel(ctx, f.repository);
+      await expect(extractSourceFacts(source, model, operation)).rejects.toThrow();
+      f.replay({ text: output }); await expect(extractSourceFacts(source, model, operation)).rejects.toThrow();
+      expect(f.chatCalls).toHaveLength(1); expect(f.capture).toHaveBeenCalledTimes(1);
+    });
+  it.each(["input", "output", "invalid", "over-input", "over-output"])("v5 %s usage closes delivery after one native call", async kind => {
+    const f = fixture(); f.promptVersion(MEMORY_JSON_OBJECT_CONTRACT.promptVersion);
+    const usage: Record<string, unknown> = { prompt_tokens: 1, completion_tokens: 1 };
+    if (kind === "input") delete usage.prompt_tokens;
+    if (kind === "output") delete usage.completion_tokens;
+    if (kind === "invalid") usage.prompt_tokens = "1";
+    if (kind === "over-input") usage.prompt_tokens = 8193;
+    if (kind === "over-output") usage.completion_tokens = 513;
+    f.usage(usage);
+    await expect(extractSourceFacts(source, createGatewayMemoryModel(ctx, f.repository), operation)).rejects.toThrow();
+    expect(f.chatCalls).toHaveLength(1); expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).not.toHaveBeenCalled();
+  });
+  it("requires complete actual extraction usage even when the old text proof supplies known cost", async () => {
+    const f = fixture(); f.usage({ cost: "0" });
+    await expect(extractSourceFacts(source, createGatewayMemoryModel(ctx, f.repository), operation)).rejects.toThrow();
+    expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).not.toHaveBeenCalled();
+  });
   it("retains historical source extraction canonical requests exactly", async () => {
     const historical = {
       "memory-schema-prompt-v2": "a35d20964da33be441d81980b78e06fff3c4a7e0c7f5d38d210a9935c53a63ad",

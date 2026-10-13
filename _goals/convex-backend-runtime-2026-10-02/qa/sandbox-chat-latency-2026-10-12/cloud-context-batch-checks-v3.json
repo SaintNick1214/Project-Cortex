@@ -1,0 +1,200 @@
+{
+  "version": 1,
+  "status": "SOURCE_TEST_COMPLETE",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "scope": "offline actual registered Agent/memory helpers on controlled transactional/component/source ports; no service/OCC/SLO claim",
+  "scopeExtension": "Coordinator authorized only execution.test.ts obsolete pendingContext wrapper fault port to actual embeddingProfile port with same budget/authority assertions",
+  "tests": [
+    {
+      "name": "initial",
+      "exit": 1,
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9 CORTEX_RUNTIME_LATENCY_TRACE=0 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --testTimeout=10000 --runInBand --runTestsByPath tests/unit/runtimeAgent/context-latency.test.ts tests/unit/runtimeAgent/inline-barrier.test.ts tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/tool-context.test.ts --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-batch-jest-v1.json",
+      "success": false,
+      "total": 116,
+      "passed": 115,
+      "failed": 1,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 4,
+      "files": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+          "total": 63,
+          "passed": 62
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-latency.test.ts",
+          "total": 42,
+          "passed": 42
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/inline-barrier.test.ts",
+          "total": 7,
+          "passed": 7
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/tool-context.test.ts",
+          "total": 4,
+          "passed": 4
+        }
+      ],
+      "log": "cloud-context-batch-jest-v1.log",
+      "json": "cloud-context-batch-jest-v1.json"
+    },
+    {
+      "name": "failed suite corrected",
+      "exit": 0,
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9 CORTEX_RUNTIME_LATENCY_TRACE=0 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --testTimeout=10000 --runInBand --runTestsByPath tests/unit/runtimeAgent/execution.test.ts --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-batch-execution-recheck-v2.json",
+      "success": true,
+      "total": 63,
+      "passed": 63,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 1,
+      "files": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+          "total": 63,
+          "passed": 63
+        }
+      ],
+      "log": "cloud-context-batch-execution-recheck-v2.log",
+      "json": "cloud-context-batch-execution-recheck-v2.json"
+    },
+    {
+      "name": "final coherent",
+      "exit": 0,
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9 CORTEX_RUNTIME_LATENCY_TRACE=0 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --testTimeout=10000 --runInBand --runTestsByPath tests/unit/runtimeAgent/context-latency.test.ts tests/unit/runtimeAgent/inline-barrier.test.ts tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/tool-context.test.ts --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-batch-jest-final-v3.json",
+      "success": true,
+      "total": 116,
+      "passed": 116,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 4,
+      "files": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+          "total": 63,
+          "passed": 63
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-latency.test.ts",
+          "total": 42,
+          "passed": 42
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/inline-barrier.test.ts",
+          "total": 7,
+          "passed": 7
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/tool-context.test.ts",
+          "total": 4,
+          "passed": 4
+        }
+      ],
+      "log": "cloud-context-batch-jest-final-v3.log",
+      "json": "cloud-context-batch-jest-final-v3.json"
+    }
+  ],
+  "checks": [
+    {
+      "name": "backend types",
+      "exit": 0,
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit -p convex-dev/tsconfig.json",
+      "log": "cloud-context-batch-backend-types-v1.log"
+    },
+    {
+      "name": "lint types",
+      "exit": 0,
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit -p tsconfig.lint.json",
+      "log": "cloud-context-batch-lint-types-v1.log"
+    },
+    {
+      "name": "initial scoped ESLint",
+      "exit": 0,
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts tests/unit/runtimeAgent/context-latency.test.ts --report-unused-disable-directives",
+      "log": "cloud-context-batch-eslint-v1.log"
+    },
+    {
+      "name": "expanded final scoped ESLint",
+      "exit": 0,
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts tests/unit/runtimeAgent/context-latency.test.ts tests/unit/runtimeAgent/execution.test.ts --report-unused-disable-directives",
+      "log": "cloud-context-batch-eslint-v2.log"
+    },
+    {
+      "name": "scoped git diff whitespace",
+      "exit": 0,
+      "command": "git diff --check -- convex-dev/runtimeAgent.ts tests/unit/runtimeAgent/context-latency.test.ts tests/unit/runtimeAgent/execution.test.ts"
+    },
+    {
+      "name": "fourteen AST preserved-body/internal registration checks",
+      "exit": 0,
+      "receipt": "cloud-context-batch-equivalence-v1.json"
+    }
+  ],
+  "files": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "66a21b39c1d07d5bc73ebcf21edf7c1c7a405fe482b4b05ad657367ceaaf0cca"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-latency.test.ts",
+      "sha256": "2f0d87c6b1dcd4e006f21decf154088274421b8bf271ce3be7c193521b726a6c"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "sha256": "3a3b5ffd831188bab1fe9f62a9edf6c699c0d87cdeb2091dcdbedfc7d432b324"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "cloud-context-batch-jest-v1.log",
+      "sha256": "0b98acd1269b9773ed7db33e2467507bd6929b9d759da7f2b7a7bbf20925ea47"
+    },
+    {
+      "path": "cloud-context-batch-jest-v1.json",
+      "sha256": "136d270d76b30993f599ce02c52a6be9d63f958944dc0bf8f30a222f6d5850d2"
+    },
+    {
+      "path": "cloud-context-batch-execution-recheck-v2.log",
+      "sha256": "944455033b9eb4529faeadb59845551dc85f97a7fd612a2cd7b780cfe4ec02fe"
+    },
+    {
+      "path": "cloud-context-batch-execution-recheck-v2.json",
+      "sha256": "6ea4cbf7244e3ba175006d528194d6ffacd3f7b78774e31c566d60746518dc8a"
+    },
+    {
+      "path": "cloud-context-batch-jest-final-v3.log",
+      "sha256": "3e2eba73050a3d77777e44dc1a0da97b715a442dc692ade8e18d0edcb8ae81d6"
+    },
+    {
+      "path": "cloud-context-batch-jest-final-v3.json",
+      "sha256": "10da58a668c904ee0822a928fa96494e9d512fd04e0eed9614dccbe8d52bf700"
+    },
+    {
+      "path": "cloud-context-batch-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-context-batch-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-context-batch-eslint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-context-batch-eslint-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-context-batch-equivalence-v1.json",
+      "sha256": "2a1f87ebcb5cfcd8c03656697590e3cee3f8221a551c31900bf1abad871086a7"
+    }
+  ]
+}

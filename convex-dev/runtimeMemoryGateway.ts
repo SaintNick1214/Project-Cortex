@@ -6,7 +6,7 @@ import { CONFLICT_DECISION_JSON_SCHEMA, parseConflictDecision } from "../src/dom
 import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
 import { buildSourceExtractionPrompt } from "../src/domain/sources";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, semanticHash } from "../src/domain/profile";
-import { canonicalModelJson } from "../src/domain/model-policy";
+import { canonicalModelJson, MEMORY_JSON_OBJECT_CONTRACT } from "../src/domain/model-policy";
 import type { ModelOperationKey } from "../src/domain/model-policy";
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
@@ -111,8 +111,10 @@ export function createGatewayMemoryModel(
           : "Return ONLY a JSON object conforming to this schema. Do not use Markdown fences or add other fields:";
         let system = `${request.system}\n\n${instruction}\n${canonicalModelJson(schema)}`;
         let prompt = request.prompt;
+        const jsonObject = request.purpose === "memory.extract"
+          && call.resolution.snapshot.pins.promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion;
         if (request.purpose === "memory.extract"
-          && call.resolution.snapshot.pins.promptVersion === "memory-extraction-framed-prompt-v4") {
+          && (call.resolution.snapshot.pins.promptVersion === "memory-extraction-framed-prompt-v4" || jsonObject)) {
           if (!call.sourceContent) memoryError("INVALID_INPUT", "Attributed source required for extraction");
           // Only this successor pin changes the actual request. Rebuild from the
           // scoped current source, never interpret or trim the legacy user prompt.
@@ -125,6 +127,7 @@ export function createGatewayMemoryModel(
             { role: "user", content: [{ type: "text", text: prompt }] }],
           maxOutputTokens: Math.min(call.resolution.snapshot.limits.outputTokens,
             call.resolution.dispatchEvidence.resultBound.maximumOutputTokens),
+          ...(jsonObject ? { responseFormat: { type: "json" as const } } : {}),
           abortSignal: call.lifecycle.signal,
         });
         const content = result.content.filter((part) => part.type === "text").map((part) => part.text).join("");

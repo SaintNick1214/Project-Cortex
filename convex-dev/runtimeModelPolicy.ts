@@ -13,7 +13,7 @@ import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
 import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../src/domain/conflicts";
-import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest } from "../src/domain/model-policy";
+import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "../src/domain/model-policy";
 import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord, TrustedModelPolicyContext } from "../src/domain/model-policy";
 import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
@@ -149,6 +149,18 @@ function validManifest(manifest: DeploymentPolicyManifest | undefined): asserts 
     integer(proof.resultBound.maximumPrivateResultBytes, 1); integer(proof.resultBound.maximumOutputTokens);
     integer(proof.inputBound.revision, 1); integer(proof.checkedAt); integer(proof.expiresAt, 1);
     if (proof.checkedAt >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
+    if (proof.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_OBJECT_CONTRACT.inputRule
+      || qualification.boundRevision === MEMORY_JSON_OBJECT_CONTRACT.boundRevision) {
+      if (proof.inputBound.featureEnvelope !== MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_OBJECT_CONTRACT.inputRule
+        || proof.inputBound.revision !== 1 || qualification.boundRevision !== MEMORY_JSON_OBJECT_CONTRACT.boundRevision
+        || proof.nativeInterface !== "chat" || proof.modelId !== MEMORY_JSON_OBJECT_CONTRACT.modelId
+        || !qualification.capabilities.includes("structured") || qualification.capabilities.includes("tools") || qualification.allowedOptions.length
+        || qualification.limits.inputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumInputTokens || qualification.limits.contextTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumContextTokens
+        || qualification.limits.outputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumOutputTokens || qualification.limits.toolSteps
+        || qualification.limits.timeoutMs > 60000
+        || qualification.costBound.maximumCostUnits !== MEMORY_JSON_OBJECT_CONTRACT.maximumCostUnits
+        || !proof.resultBound.maximumOutputTokens || proof.resultBound.maximumOutputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumOutputTokens || proof.supportsStream) fail("CAPABILITY_UNAVAILABLE");
+    }
     if (proof.inputBound.featureEnvelope === "media-image-v1" || proof.inputBound.featureEnvelope === "media-video-async-v1") {
       const media = mediaContractSchema.safeParse(proof.mediaContract);
       if (!media.success || proof.inputBound.ruleId !== "media-native-utf8-v1" || proof.inputBound.revision !== 1
@@ -523,6 +535,18 @@ export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, a
 /** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
 export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, request: ReturnType<typeof validateModelRequest>["request"]): number {
   if (request.outputTokens > proof.resultBound.maximumOutputTokens || (proof.nativeInterface === "embedding" && request.texts.length > proof.resultBound.maximumEmbeddingValues)) fail("POLICY_DENIED");
+  if (proof.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_OBJECT_CONTRACT.inputRule) {
+    if (proof.inputBound.featureEnvelope !== MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_OBJECT_CONTRACT.inputRule
+      || proof.inputBound.revision !== 1 || proof.boundRevision !== MEMORY_JSON_OBJECT_CONTRACT.boundRevision
+      || proof.nativeInterface !== "chat" || proof.modelId !== MEMORY_JSON_OBJECT_CONTRACT.modelId
+      || request.promptVersion !== MEMORY_JSON_OBJECT_CONTRACT.promptVersion || request.schemaVersion !== MEMORY_JSON_OBJECT_CONTRACT.schemaVersion
+      || request.toolRegistryVersion !== MEMORY_JSON_OBJECT_CONTRACT.toolRegistryVersion || !request.responseFormat
+      || canonical(request.responseFormat) !== '{"type":"json"}' || canonical(request.outputSchema) !== canonical(FACTS_JSON_SCHEMA)
+      || request.tools.length || request.toolChoice || request.toolSteps || request.media || request.profile || request.batch
+      || canonical(request.options) !== '{"maxRetries":0}') fail("CAPABILITY_UNAVAILABLE");
+    return domainControl(() => memoryJsonObjectInputBound(request.messages, request.outputTokens));
+  }
+  if (request.responseFormat !== undefined || request.promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion) fail("CAPABILITY_UNAVAILABLE");
   if (proof.inputBound.ruleId === "media-native-utf8-v1" && (proof.inputBound.featureEnvelope === "media-image-v1" || proof.inputBound.featureEnvelope === "media-video-async-v1")) {
     if (!request.media || !proof.mediaContract || request.messages?.length !== 1 || request.messages[0].role !== "user"
       || request.messages[0].parts.length !== 1 || request.messages[0].parts[0].type !== "text" || request.messages[0].parts[0].text !== request.media.prompt
@@ -830,6 +854,9 @@ function validatedPrivateResult(snapshot: ModelPolicySnapshotV1, attempt: Attemp
 }
 type TerminalReceipt = z.infer<typeof receiptSchema>;
 type AttemptContext = Awaited<ReturnType<typeof attemptContext>>;
+function completeExtractionUsage(snapshot: ModelPolicySnapshotV1, receipt: Pick<TerminalReceipt, "usage">): boolean {
+  return snapshot.operationKey !== "memory.extract" || (receipt.usage?.inputTokens !== undefined && receipt.usage.outputTokens !== undefined);
+}
 /** Serving observations are qualification facts independently of monetary support. */
 function observationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1, receipt: Pick<TerminalReceipt, "actualModel" | "usage">, proof: QualifiedDispatchEvidence): boolean {
   integer(attempt.measuredInputTokens, 1); integer(attempt.maximumOutputTokens);
@@ -842,13 +869,16 @@ function observationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1,
  * Inspection is local; unexpected authority/repository read errors still propagate.
  */
 function storedObservationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1, proof: QualifiedDispatchEvidence): boolean {
+  if (snapshot.operationKey === "memory.extract" && attempt.privateResultCanonical !== undefined
+    && attempt.terminalEvidenceCanonical === undefined && attempt.receiptCanonical === undefined) return true;
   if (observationViolation(attempt, snapshot, { actualModel: attempt.actualModel }, proof)
     || (attempt.settledCostUnits !== undefined && attempt.settledCostUnits > attempt.reservationUnits)) return true;
   for (const encoded of [attempt.terminalEvidenceCanonical, attempt.receiptCanonical]) {
     if (encoded === undefined) continue;
     const parsed = receiptSchema.omit({ privateResultCanonical: true }).safeParse(decode(encoded));
     if (!parsed.success || parsed.data.dispatchIdentity !== attempt.dispatchIdentity || parsed.data.modelId !== snapshot.modelId
-      || parsed.data.nativeInterface !== snapshot.nativeInterface || observationViolation(attempt, snapshot, parsed.data, proof)) return true;
+      || parsed.data.nativeInterface !== snapshot.nativeInterface || !completeExtractionUsage(snapshot, parsed.data)
+      || observationViolation(attempt, snapshot, parsed.data, proof)) return true;
   }
   return false;
 }
@@ -934,7 +964,7 @@ async function accountKnown(ctx: WriteCtx, state: AttemptContext, receipt: Termi
   cost: number, privateResult?: string) {
   const { attempt, operation, snapshot, proof, tenant, run } = state;
   const overrun = cost > attempt.reservationUnits || observationViolation(attempt, snapshot, receipt, proof);
-  const deliverResult = privateResult !== undefined && !overrun && !operation.overrun && !tenant.overrun && !run.overrun;
+  const deliverResult = privateResult !== undefined && completeExtractionUsage(snapshot, receipt) && !overrun && !operation.overrun && !tenant.overrun && !run.overrun;
   const fromUnknown = attempt.state === "uncertain";
   for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, {
     reservedUnits: fromUnknown ? account.reservedUnits : subtract(account.reservedUnits, attempt.reservationUnits),
@@ -1065,7 +1095,7 @@ export const captureTerminalEvidence = internalMutation({ args: { attemptId: v.i
   if (captured && cost === undefined) fail("IDEMPOTENCY_CONFLICT", "uncertain");
   const deliverable = !captured && !attempt.terminalEvidenceCanonical
     && ((cost !== undefined && cost <= attempt.reservationUnits && receipt.outcome === "confirmed") || confirmedUnknownResult(attempt, snapshot, receipt, proof))
-    && !observationViolation(attempt, snapshot, receipt, proof)
+    && completeExtractionUsage(snapshot, receipt) && !observationViolation(attempt, snapshot, receipt, proof)
     && await permittedAttachment(ctx, operation.reference, state);
   const accounted = cost === undefined ? await writeUnknown(ctx, state, chargeCanonical)
     : await accountKnown(ctx, state, receipt, chargeCanonical, receiptHash, cost);

@@ -1,0 +1,197 @@
+(node:11523) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/execution.test.ts (7.414 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● durable Agent execution product boundaries › strict readiness and pending context resolve against the owned run budget before model effects
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: null
+
+      330 |       return await originalQuery(ref as never, input as never);
+      331 |     }) as unknown as typeof f.ctx.runQuery;
+    > 332 |     await expect(f.call(runtime.prepareContext, args)).rejects.toThrow("CONTROLLED_STOP_BEFORE_RECALL");
+          |           ^
+      333 |     expect(selections).toHaveLength(1);
+      334 |     expect(selections[0]).toMatchObject({ name: "runtimeMemoryContext:pendingContext", reference: f.reference, runBudgetId });
+      335 |     expect(f.db.table("runtimeModelOperations")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/runtimeAgent/execution.test.ts:332:11)
+
+PASS tests/unit/runtimeAgent/context-latency.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/inline-barrier.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/tool-context.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     7.4s | 62/63 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     2.4s | 42/42 passed | /tests/unit/runtimeAgent/context-latency.test.ts
+  ✅     1.0s | 7/7 passed | /tests/unit/runtimeAgent/inline-barrier.test.ts
+  ✅     1.0s | 4/4 passed | /tests/unit/runtimeAgent/tool-context.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.08s ( 0.7%) - bounded metadata overflow from the actual combined read still reaches original governed retrieval
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 2. [32m✓[0m    0.07s ( 0.6%) - the existing incomplete policy keeps overflow on original availability and governed retrieval
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 3. [32m✓[0m    0.07s ( 0.6%) - empty eligible indexed context finishes real Agent context without creating a query embedding operation
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 4. [32m✓[0m    0.06s ( 0.5%) - an eligible indexed candidate falls back to original governed query embedding
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 5. [31m✗[0m    0.06s ( 0.5%) - durable Agent execution product boundaries strict readiness and pending context resolve against the owned run budget before model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.4%) - cutoff/history exclusions and future queued inputs cannot become indexed context
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.4%) - real pending overflow commits original action failure before an independently invalid profile-readiness check
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.3%) - authorized pending context survives the empty-index path with fresh source witnesses
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.3%) - durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    /tests/unit/runtimeAgent/execution.test.ts
+
+10. [32m✓[0m    0.03s ( 0.3%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [32m✓[0m    0.03s ( 0.3%) - the current barrier's incomplete code survives the combined read and original save
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+12. [32m✓[0m    0.03s ( 0.3%) - the original save detects post-probe eligible_index change within the captured cutoff
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+13. [32m✓[0m    0.03s ( 0.3%) - durable Agent execution product boundaries strict facts barrier waits and then reports the pinned deadline before embedding dispatch
+    /tests/unit/runtimeAgent/execution.test.ts
+
+14. [32m✓[0m    0.03s ( 0.3%) - an unknown indexing outcome remains authorized pending context rather than a false memory-readiness claim
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+15. [32m✓[0m    0.03s ( 0.3%) - the original save detects post-probe profile_generation change within the captured cutoff
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+16. [32m✓[0m    0.03s ( 0.3%) - the atomic save rechecks empty-context approval currentness
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+17. [32m✓[0m    0.03s ( 0.3%) - metadata overflow conservatively retains ordinary retrieval
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+18. [32m✓[0m    0.03s ( 0.3%) - the atomic save rechecks empty-context profile-pin currentness
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+19. [32m✓[0m    0.03s ( 0.3%) - strict inline barrier retains wait/deadline and fails before context/model dispatch
+    /tests/unit/runtimeAgent/inline-barrier.test.ts
+
+20. [32m✓[0m    0.03s ( 0.2%) - dynamic recall records exact source witnesses and threads the primary native operation into the same run budget
+    /tests/unit/runtimeAgent/tool-context.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.86s (7.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      11.96s
+  Test suites:        4
+  Individual tests:   110
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 115 passed, 116 total
+Snapshots:   0 total
+Time:        11.96 s
+Ran all test suites within paths "tests/unit/runtimeAgent/context-latency.test.ts", "tests/unit/runtimeAgent/inline-barrier.test.ts", "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeAgent/tool-context.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-batch-jest-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

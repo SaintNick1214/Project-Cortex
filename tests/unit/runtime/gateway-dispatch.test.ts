@@ -5,7 +5,8 @@ import type { LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4Genera
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { GatewayBinding, GatewayComposition, GatewayLedgerPort, GatewayResolution } from "../../../convex-dev/runtimeGateway";
-import { canonicalModelJson, resolveModelPolicy, validateModelRequest } from "../../../src/domain/model-policy";
+import { canonicalModelJson, resolveModelPolicy, validateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, memoryJsonObjectRequestBody } from "../../../src/domain/model-policy";
+import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
 import type { ModelCallRequest } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
@@ -78,6 +79,77 @@ function fixture(embedding = false) {
   return { r, b, events, receipts, accounting, attachments, attachmentAttempts, admissions, nativeCalls, model, composition, streamParts, count: () => nativeCount,
     disposition: (x: typeof disposition) => { disposition = x; }, revoke: () => { revoked = true; }, captureFail: () => { captureFails = true; }, captureResume: () => { captureFails = false; }, changedPermit: () => { changedPermit = true; }, changedAdmit: () => { changedAdmit = true; } };
 }
+function jsonFixture() {
+  const f = fixture(), c = MEMORY_JSON_OBJECT_CONTRACT;
+  const selectedPins = { ...pins, promptVersion: c.promptVersion, schemaVersion: c.schemaVersion, toolRegistryVersion: c.toolRegistryVersion, boundRevision: c.boundRevision };
+  const limits = { ...f.r.snapshot.limits, inputTokens: 8192, contextTokens: 16384, outputTokens: 512, toolSteps: 0, concurrency: 2 };
+  const q = { receiptId: "synthetic-json", modelId: c.modelId, nativeInterface: "chat" as const, capabilities: ["structured" as const],
+    allowedOptions: [], limits, costBound: { kind: "qualified-call-ceiling" as const, maximumCostUnits: 100000, provenance: "OFFLINE_ONLY", coversAllProviderCharges: true as const },
+    priceRevision: pins.priceRevision, boundRevision: c.boundRevision };
+  const b: GatewayBinding = { ...f.b, operationKey: "memory.extract", source: { sourceId: "source", sourceEventId: "event", sourceRevision: 1, contentHash: hash } };
+  f.r.snapshot = resolveModelPolicy({ context: { scope: reference, operationKey: b.operationKey, runBudgetId: b.runBudgetId, authorizedOverrides: [] },
+    policies: [{ policyId: "json-test", version: 1, scope: "deployment", rules: { modelId: c.modelId, nativeInterface: "chat", allowedModels: [c.modelId], interfaces: ["chat"],
+      capabilities: q.capabilities, allowedOptions: [], allowedTools: [], fallbackModels: [], limits, pins: selectedPins } }], qualifications: [q] });
+  const { supportsStream: _stream, ...proof } = f.r.dispatchEvidence;
+  f.r.dispatchEvidence = { ...proof, receiptId: q.receiptId, boundRevision: c.boundRevision, terminalCost: "unavailable",
+    inputBound: { ...proof.inputBound, ruleId: c.inputRule, featureEnvelope: c.featureEnvelope }, resultBound: { ...proof.resultBound, maximumOutputTokens: 512 } };
+  f.accounting.uncertainUnits = 100000;
+  f.composition.terminalSink.capture = async e => { f.events.push("capture"); f.receipts.push(e.receiptCanonical); f.accounting.activeSlots = 0;
+    return { evidenceId: "json-evidence", state: "uncertain", overrun: false }; };
+  f.composition.ledger.attachTerminalResult = async args => { f.events.push("attach"); f.attachmentAttempts.push(args); f.attachments.push(args); f.accounting.attached = args.privateResultCanonical;
+    return { attached: true, resultWithheld: false }; };
+  const input: LanguageModelV4CallOptions = { prompt: [{ role: "system", content: "Return JSON data." }, { role: "user", content: [{ type: "text", text: 'quoted "\\日本語🧪' }] }],
+    maxOutputTokens: 512, responseFormat: { type: "json" } };
+  return { ...f, b, input };
+}
+
+describe("separately qualified JSON-object extraction lane (offline)", () => {
+  it("dispatches the exact official closed wire body, retains format identity and full UNKNOWN ceiling", async () => {
+    const f = jsonFixture(), bodies: unknown[] = [];
+    const provider = createOpenAICompatible({ name: "convexGateway", supportsStructuredOutputs: true, baseURL: "https://offline.invalid/v1",
+      fetch: async (_u, init) => { bodies.push(JSON.parse(init!.body as string)); return new Response(JSON.stringify(raw('{"facts":[]}')),
+        { status: 200, headers: { "content-type": "application/json" } }); } });
+    const h = governGatewayLanguageModel(provider(f.r.snapshot.modelId), f.composition, f.b, f.r);
+    const result = await h.model.doGenerate(f.input); await h.lifecycle.complete();
+    const admitted = JSON.parse(f.admissions[0]!.requestCanonical) as ModelCallRequest;
+    expect(admitted.responseFormat).toEqual({ type: "json" }); expect(admitted.outputSchema).toEqual(FACTS_JSON_SCHEMA);
+    expect(bodies).toEqual([memoryJsonObjectRequestBody(admitted.messages, admitted.outputTokens)]);
+    expect(admitted.inputTokens).toBe(memoryJsonObjectInputBound(admitted.messages, admitted.outputTokens));
+    expect(admitted.inputTokens).toBe(Buffer.byteLength(JSON.stringify(bodies[0])) + 9);
+    expect(result.content).toEqual([{ type: "text", text: '{"facts":[]}' }]);
+    expect(f.accounting).toMatchObject({ uncertainUnits: 100000, settledUnits: 0, activeSlots: 0 });
+    expect(f.attachments).toHaveLength(1); expect(tokenLookup).not.toHaveBeenCalled();
+  });
+  it.each(["absent", "text", "schema", "name", "options", "role", "stream", "old-proof"])("denies %s before admission/native effects", async kind => {
+    const f = jsonFixture();
+    if (kind === "old-proof") f.r.dispatchEvidence = { ...f.r.dispatchEvidence, inputBound: { ...f.r.dispatchEvidence.inputBound, featureEnvelope: "plain-chat-v1", ruleId: "plain-chat-cookbook-utf8-v1" } };
+    const act = async () => {
+      const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+      if (kind === "absent") delete f.input.responseFormat;
+      if (kind === "text") f.input.responseFormat = { type: "text" };
+      if (kind === "schema") f.input.responseFormat = { type: "json", schema: { type: "object" } };
+      if (kind === "name") f.input.responseFormat = { type: "json", name: "facts" };
+      if (kind === "options") f.input.temperature = 0;
+      if (kind === "role") f.input.prompt = [{ role: "user", content: [{ type: "text", text: "untrusted" }] }];
+      try { return kind === "stream" ? await h.model.doStream(f.input) : await h.model.doGenerate(f.input); } finally { await h.lifecycle.complete(); }
+    };
+    await expect(act()).rejects.toThrow(); expect(f.admissions).toEqual([]); expect(f.count()).toBe(0);
+  });
+  it.each(["input", "output", "invalid", "over-input", "over-output"])("withholds %s usage, captures once and never retries UNKNOWN", async kind => {
+    const f = jsonFixture(); const body = raw('{"facts":[]}') as ReturnType<typeof raw>;
+    if (kind === "input") delete (body.usage as { prompt_tokens?: number }).prompt_tokens;
+    if (kind === "output") delete (body.usage as { completion_tokens?: number }).completion_tokens;
+    if (kind === "invalid") (body.usage as unknown as { prompt_tokens: unknown }).prompt_tokens = "8";
+    if (kind === "over-input") body.usage.prompt_tokens = 8193;
+    if (kind === "over-output") body.usage.completion_tokens = 513;
+    let count = 0; f.model.doGenerate = async () => { count++; return generated('{"facts":[]}', body); };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(f.input)).rejects.toMatchObject({ code: kind.startsWith("over-") ? "QUALIFICATION_OVERRUN" : "TERMINAL_RESULT_WITHHELD" });
+    await expect(h.model.doGenerate(f.input)).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" });
+    expect(count).toBe(1); expect(f.receipts).toHaveLength(1); expect(f.attachments).toEqual([]);
+    expect(f.accounting).toMatchObject({ uncertainUnits: 100000, settledUnits: 0, activeSlots: 0 }); await h.lifecycle.complete();
+  });
+});
 beforeEach(() => { tokenLookup.mockClear(); });
 
 describe("bounded governed Gateway middleware", () => {

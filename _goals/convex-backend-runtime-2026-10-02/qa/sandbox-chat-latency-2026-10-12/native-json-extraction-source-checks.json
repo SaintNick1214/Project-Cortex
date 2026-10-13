@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "scope": "OFFLINE_SOURCE_QUALITY_ONLY",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "defaultV17Unchanged": true,
+  "newProductionFiles": 0,
+  "owned": [
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "3127d9ce8d8f7b1d359e93e5e5623fb9453424ec784c493ef656b317001bba10",
+      "bytes": 33089
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "sha256": "7b8df07ff7f45efbabcab980b9d53636f01a10661441830f4c31be5155879755",
+      "bytes": 78973
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "506647be62eebf947ec132b7ef44fe65bf3e298bbd7b7a0fb23ba7b8e458e39b",
+      "bytes": 113488
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "e630c1433c2dfc1c63de7791806befb967b325ebb58e7652eba921b8b6280d54",
+      "bytes": 5167
+    },
+    {
+      "path": "convex-dev/runtimeMemoryGateway.ts",
+      "sha256": "3334366ac6cf51725cc23976bf65ab221d482736e291930dbffce53b38aa1b15",
+      "bytes": 13644
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "sha256": "f2cf6d5e06f628a1516e28dbbdc161b5fdf4bc640a391a64d430fe2b38bb1130",
+      "bytes": 38645
+    },
+    {
+      "path": "tests/unit/runtime/gateway-dispatch.test.ts",
+      "sha256": "a39a609a8e48872b3c4738ae36e4f07b873fb6b062daefaeb80d1b107c1eeebb",
+      "bytes": 61950
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "873aa036f6e3614cd019661b0ba774b1d2df90df3354247a82920813feb27869",
+      "bytes": 114591
+    },
+    {
+      "path": "tests/unit/runtime/memory-gateway.test.ts",
+      "sha256": "b0cce6f85264e976a5a8de4fe8c3f4d18c2c4fa98297420bf366dae7f7c56c53",
+      "bytes": 63409
+    },
+    {
+      "path": "tests/unit/runtime/gateway-qualification-registry.test.ts",
+      "sha256": "9d241d8457d4c42e22f4ddc8d3ced3bff2bdb732b451225cff536384bd7569bb",
+      "bytes": 9306
+    }
+  ],
+  "unchanged": [
+    {
+      "path": "convex-dev/runtimeGatewayMediaQualifications.ts",
+      "sha256": "2e3f10cebd9207fde5779de0abf51598f1d3c9de80e583dd6053a83d36184fee",
+      "bytes": 22340,
+      "sameAsTrackedHead": true
+    },
+    {
+      "path": "src/domain/sources.ts",
+      "sha256": "6686eda984c286e73235ab66efb050c7416a480efe61caeb4521c44173bc679a",
+      "bytes": 13752,
+      "sameAsTrackedHead": true
+    },
+    {
+      "path": "src/domain/extraction.ts",
+      "sha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b",
+      "bytes": 10991,
+      "sameAsTrackedHead": true
+    }
+  ],
+  "v4Framing": {
+    "sha256": "7674376d34983d08f98eae851f37c5e784778d784916d869329e2ecbd67212c0",
+    "sameAsTrackedHead": true
+  },
+  "selectedTests": {
+    "success": true,
+    "suites": 7,
+    "passed": 410,
+    "failed": 0,
+    "pending": 0,
+    "coverage": [
+      {
+        "path": "tests/unit/runtime/model-policy-admission.test.ts",
+        "passed": 159
+      },
+      {
+        "path": "tests/unit/runtime/gateway-dispatch.test.ts",
+        "passed": 88
+      },
+      {
+        "path": "tests/unit/runtime/memory-gateway.test.ts",
+        "passed": 92
+      },
+      {
+        "path": "tests/unit/runtime/observed-extraction-framing.test.ts",
+        "passed": 4
+      },
+      {
+        "path": "tests/unit/domain/model-policy.test.ts",
+        "passed": 49
+      },
+      {
+        "path": "tests/unit/runtime/gateway-qualification-registry.test.ts",
+        "passed": 6
+      },
+      {
+        "path": "tests/unit/domain/sources.test.ts",
+        "passed": 12
+      }
+    ]
+  },
+  "quality": {
+    "rootType": {
+      "receipt": "native-json-full-type-freeze.log",
+      "exit": 0
+    },
+    "backendType": {
+      "receipt": "native-json-backend-type-r3.log",
+      "exit": 0
+    },
+    "lint": {
+      "receipt": "native-json-scoped-lint-freeze.log",
+      "exit": 0
+    },
+    "diffCheck": {
+      "exit": 0
+    }
+  },
+  "raw": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-json-focused-tests-freeze.json",
+      "sha256": "ea3c13276bb9cfe53f8cced3a18571808664bf1fa9da09e5b3f916ff53fa64c2",
+      "bytes": 205450
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-json-focused-tests-freeze.log",
+      "sha256": "06446b07d8f97839a3b03de1414895d00e4ccdc40fb9447eea6fdf5ff24a88f4",
+      "bytes": 11440
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-json-full-type-freeze.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-json-backend-type-r3.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-json-scoped-lint-freeze.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ]
+}

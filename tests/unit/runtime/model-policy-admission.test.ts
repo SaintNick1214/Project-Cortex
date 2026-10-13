@@ -4,7 +4,8 @@ import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import type { Doc, Id } from "../../../convex-dev/_generated/dataModel";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "../../../convex-dev/runtimeModelPolicyBootstrap";
 import type { ModelCallRequest, TrustedModelPolicyRecord } from "../../../src/domain/model-policy";
-import { canonicalModelJson } from "../../../src/domain/model-policy";
+import { canonicalModelJson, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "../../../src/domain/model-policy";
+import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
 import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
@@ -76,6 +77,120 @@ function fixture() {
   return { ...f, db, invoke, install, bind, admit, checkpoint, account, attempt, receipt, settle };
 }
 async function admitted() { const f = fixture(); await f.install(); const b = await f.bind(); const a = await f.admit(b); return { f, b, a }; }
+async function jsonLedger(terminalCost: "unavailable" | "gateway-aggregate-usd-v1" = "unavailable") {
+  const f = fixture(), c = MEMORY_JSON_OBJECT_CONTRACT;
+  const jsonLimits = { ...limits, inputTokens: 8192, contextTokens: 16384, outputTokens: 512, toolSteps: 0,
+    operationBudgetUnits: 100000, runBudgetUnits: 3000000, tenantBudgetUnits: 10000000 };
+  const q = { ...root.qualifications[0]!, receiptId: "synthetic-json-not-actual", capabilities: ["structured" as const], allowedOptions: [],
+    limits: jsonLimits, boundRevision: c.boundRevision, costBound: { ...root.qualifications[0]!.costBound, maximumCostUnits: 100000 } };
+  const proof = { ...root.dispatchEvidence[0]!, receiptId: q.receiptId, boundRevision: c.boundRevision, terminalCost,
+    inputBound: { ...root.dispatchEvidence[0]!.inputBound, featureEnvelope: c.featureEnvelope, ruleId: c.inputRule },
+    resultBound: { ...root.dispatchEvidence[0]!.resultBound, maximumOutputTokens: 512 } };
+  root = { ...root, policies: [{ ...deployment, rules: { ...deployment.rules, capabilities: ["text", "structured", "embedding"], limits: jsonLimits } },
+    { policyId: "json-extraction", version: 1, scope: "deployment", operationKey: "memory.extract", rules: { allowedOptions: [], allowedTools: [],
+      pins: { promptVersion: c.promptVersion, schemaVersion: c.schemaVersion, toolRegistryVersion: c.toolRegistryVersion, boundRevision: c.boundRevision } } }],
+    qualifications: [...root.qualifications, q], dispatchEvidence: [...root.dispatchEvidence, proof] };
+  await f.install();
+  const content = 'Owned "\\日本語🧪 extraction evidence', contentHash = await semanticHash(content);
+  f.db.seed("runtimeMemorySources", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId, ownerPrincipalId: f.reference.principalId,
+    lineage: { sourceId: "json-source", sourceEventId: "json-event", sourceRevision: 1, role: "user", trust: "user_assertion" }, content, contentHash, createdAt: clock });
+  const source = { sourceId: "json-source", sourceEventId: "json-event", sourceRevision: 1, contentHash };
+  const budget = await f.invoke<Bound>("ensureBudget", { reference: f.reference, operationKey: "memory.extract", requestId: "json-request", requestCanonical: canonicalModelJson({ jsonSource: source }) });
+  const r: ModelCallRequest = { ...request(), promptVersion: c.promptVersion, schemaVersion: c.schemaVersion, toolRegistryVersion: c.toolRegistryVersion,
+    texts: ["Return JSON data.", content], messages: [{ role: "system", parts: [{ type: "text", text: "Return JSON data." }] }, { role: "user", parts: [{ type: "text", text: content }] }],
+    outputTokens: 512, outputSchema: FACTS_JSON_SCHEMA, responseFormat: { type: "json" } };
+  const args = { reference: f.reference, operationKey: "memory.extract", runBudgetId: budget.runBudgetId, semanticId: r.semanticId, ordinal: 0, source, requestCanonical: canonicalModelJson(r) };
+  const admit = async (value = r) => await f.invoke<Reserved>("admit", { ...args, requestCanonical: canonicalModelJson(value) });
+  return { f, r, args, admit, proof, budget };
+}
+
+describe("native JSON-object admission and financial guards (offline handlers)", () => {
+  it.each(["capture", "legacy-settle"])("%s cannot deliver extraction merely because money is known without complete usage", async route => {
+    const { f, args, admit } = await jsonLedger("gateway-aggregate-usd-v1"), a = await admit(); await f.checkpoint(a);
+    const charge = { version: 1, dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptId: "known-cost-incomplete-usage",
+      modelId: MEMORY_JSON_OBJECT_CONTRACT.modelId, nativeInterface: "chat", actualModel: MEMORY_JSON_OBJECT_CONTRACT.modelId,
+      outcome: "confirmed", proof: "provider-terminal-v1", costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: "0.000040", usage: { inputTokens: 2 } };
+    const privateResultCanonical = canonicalModelJson({ text: '{"facts":[]}' });
+    if (route === "capture") {
+      const capture = await f.invoke<{ evidenceId: string }>("captureTerminalEvidence", { attemptId: a.attemptId, dispatchIdentity: charge.dispatchIdentity, receiptCanonical: canonicalModelJson(charge) });
+      expect(await f.invoke("attachTerminalResult", { reference: args.reference, attemptId: a.attemptId, evidenceId: capture.evidenceId, privateResultCanonical }))
+        .toEqual({ attached: false, resultWithheld: true });
+    } else {
+      expect(await f.invoke("settle", { reference: args.reference, attemptId: a.attemptId, receiptCanonical: canonicalModelJson({ ...charge, privateResultCanonical }) }))
+        .toMatchObject({ state: "settled", resultWithheld: true });
+    }
+    expect(f.account("run")).toMatchObject({ settledUnits: 40, activeConcurrency: 0 });
+    expect(f.attempt(a.attemptId).privateResultCanonical).toBeUndefined();
+    await expect(admit()).rejects.toThrow("CAPABILITY_UNAVAILABLE"); expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+  });
+  it("independently derives the whole-body count, preserves format at permit, and selects a separate receipt", async () => {
+    const { f, r, args, admit } = await jsonLedger(); const a = await admit();
+    const request = JSON.parse(a.requestCanonical) as ModelCallRequest;
+    expect(request.inputTokens).toBe(memoryJsonObjectInputBound(request.messages, request.outputTokens)); expect(request.inputTokens).not.toBe(r.inputTokens);
+    expect(f.attempt(a.attemptId).measuredInputTokens).toBe(request.inputTokens);
+    expect(f.attempt(a.attemptId).snapshotCanonical).toContain("synthetic-json-not-actual");
+    expect(await f.checkpoint(a)).toMatchObject({ dispatchPermit: true, requestCanonical: a.requestCanonical });
+    expect(f.account("run")).toMatchObject({ reservedUnits: 100000, activeConcurrency: 1, limitUnits: 3000000 });
+    const changed = { ...request }; delete changed.responseFormat;
+    await expect(f.invoke("checkpoint", { reference: args.reference, attemptId: a.attemptId, requestCanonical: canonicalModelJson(changed) })).rejects.toThrow();
+    expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+  });
+  it.each(["absent", "schema", "wrong-schema", "bound", "role", "source", "revoked"])("denies %s before reservation", async kind => {
+    const { f, r, args, admit } = await jsonLedger(), before = canonicalModelJson(f.db.table("runtimeBudgetAccounts"));
+    if (kind === "absent") delete r.responseFormat;
+    if (kind === "schema") (r as unknown as { responseFormat: unknown }).responseFormat = { type: "json", schema: FACTS_JSON_SCHEMA };
+    if (kind === "wrong-schema") r.outputSchema = { type: "object" };
+    if (kind === "bound") { r.texts[1] = "x".repeat(8192); r.messages![1]!.parts = [{ type: "text", text: r.texts[1] }]; }
+    if (kind === "role") r.messages![1]!.role = "assistant";
+    if (kind === "source") args.source.contentHash = "b".repeat(64);
+    if (kind === "revoked") f.grant.revokedAt = clock;
+    await expect(admit()).rejects.toThrow(); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+    expect(canonicalModelJson(f.db.table("runtimeBudgetAccounts"))).toBe(before);
+  });
+  it.each(["expired", "revoked", "source-changed"])("%s qualification/authority/source at permit preserves original liability without dispatch", async kind => {
+    const { f, admit, proof } = await jsonLedger(), a = await admit();
+    const before = canonicalModelJson(f.db.table("runtimeBudgetAccounts"));
+    if (kind === "expired") jest.spyOn(Date, "now").mockReturnValue(proof.expiresAt);
+    if (kind === "revoked") f.grant.revokedAt = clock;
+    if (kind === "source-changed") f.db.table("runtimeMemorySources")[0]!.contentHash = "c".repeat(64);
+    await expect(f.checkpoint(a)).rejects.toThrow();
+    expect(f.attempt(a.attemptId).checkpointAt).toBeUndefined();
+    expect(canonicalModelJson(f.db.table("runtimeBudgetAccounts"))).toBe(before);
+  });
+  it("does not treat domain tenant priority as an authorized extraction pin switch", async () => {
+    const { f } = await jsonLedger(); const reference = { ...f.reference }; delete reference.memorySpaceId;
+    f.grant.resourceAccess = "tenant";
+    await expect(f.invoke("provisionTenantPolicy", { reference, policyCanonical: canonicalModelJson({ policyId: "caller-json-pin", version: 1,
+      scope: "tenant", tenantId: reference.tenantId, operationKey: "memory.extract", rules: { pins: { promptVersion: MEMORY_JSON_OBJECT_CONTRACT.promptVersion,
+        boundRevision: MEMORY_JSON_OBJECT_CONTRACT.boundRevision } } }) })).rejects.toThrow();
+    expect(f.db.table("runtimeModelPolicies").every(row => row.scope === "deployment")).toBe(true);
+  });
+  it.each(["missing-input", "missing-output", "over-input", "over-output", "valid"])("%s terminal conserves UNKNOWN, slots and replay disposition", async kind => {
+    const { f, r, args, admit } = await jsonLedger(), a = await admit(); await f.checkpoint(a);
+    const usage: Record<string, number> = { inputTokens: 2, outputTokens: 2 };
+    if (kind === "missing-input") delete usage.inputTokens;
+    if (kind === "missing-output") delete usage.outputTokens;
+    if (kind === "over-input") usage.inputTokens = 8193;
+    if (kind === "over-output") usage.outputTokens = 513;
+    const receiptCanonical = canonicalModelJson({ version: 1, dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptId: "json-terminal",
+      modelId: MEMORY_JSON_OBJECT_CONTRACT.modelId, nativeInterface: "chat", actualModel: MEMORY_JSON_OBJECT_CONTRACT.modelId,
+      outcome: "confirmed", proof: "provider-terminal-v1", costSource: "unavailable", usage });
+    const captured = await f.invoke<{ evidenceId: string }>("captureTerminalEvidence", { attemptId: a.attemptId, dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptCanonical });
+    const resultCanonical = canonicalModelJson({ text: '{"facts":[]}' });
+    expect(await f.invoke("attachTerminalResult", { reference: args.reference, attemptId: a.attemptId, evidenceId: captured.evidenceId, privateResultCanonical: resultCanonical }))
+      .toEqual(kind === "valid" ? { attached: true, resultWithheld: false } : { attached: false, resultWithheld: true });
+    expect(f.account("run")).toMatchObject({ uncertainUnits: 100000, settledUnits: 0, reservedUnits: 0, activeConcurrency: 0 });
+    expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100000, settledUnits: 0, reservedUnits: 0, activeConcurrency: 0 });
+    const counts = [f.db.table("runtimeModelOperations").length, f.db.table("runtimeModelAttempts").length];
+    expect(await admit(r)).toMatchObject({ status: kind === "valid" ? "replay" : "uncertain" });
+    if (kind.startsWith("over-")) {
+      expect(f.account("run").overrun).toBe(true);
+      await expect(f.invoke("admit", { ...args, ordinal: 1 })).rejects.toThrow();
+    }
+    expect([f.db.table("runtimeModelOperations").length, f.db.table("runtimeModelAttempts").length]).toEqual(counts);
+    expect(f.db.table("facts")).toEqual([]); expect(f.db.table("runtimeMemoryVectors")).toEqual([]);
+  });
+});
 
 describe("native private policy ledger — offline logic only", () => {
   it("only compiled roots are reachable, and arbitrary operator manifest selectors cannot attest prices", async () => {

@@ -3,11 +3,21 @@ import { AGENT_GATEWAY_POLICY_MANIFEST_V5, DEFAULT_GATEWAY_POLICY_MANIFEST, TEXT
 import type { DeploymentPolicyManifest } from "../../../convex-dev/runtimeModelPolicyBootstrap";
 import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTerminalModelId } from "../../../convex-dev/runtimeModelPolicyBootstrap";
 import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
-import { resolveModelPolicy } from "../../../src/domain/model-policy";
+import { resolveModelPolicy, MEMORY_JSON_OBJECT_CONTRACT } from "../../../src/domain/model-policy";
+import { OBSERVED_GATEWAY_POLICY_MANIFEST_V17 } from "../../../convex-dev/runtimeGatewayMediaQualifications";
 import { DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import { memoryFixture } from "../runtimeMemory/fixture";
 
 describe("compiled actual Gateway qualification candidate", () => {
+  it("keeps V17 plain extraction and refuses to invent an actual JSON successor receipt", () => {
+    const manifest: DeploymentPolicyManifest = OBSERVED_GATEWAY_POLICY_MANIFEST_V17;
+    const snapshot = resolveModelPolicy({ context: { scope: memoryFixture().reference, operationKey: "memory.extract", runBudgetId: "json-unqualified", authorizedOverrides: [] },
+      policies: manifest.policies.filter(policy => !policy.operationKey || policy.operationKey === "memory.extract"), qualifications: manifest.qualifications });
+    expect(snapshot.pins.promptVersion).toBe("memory-extraction-framed-prompt-v4");
+    expect(manifest.dispatchEvidence.every(proof => proof.inputBound.featureEnvelope !== MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope)).toBe(true);
+    expect(manifest.qualifications.every(row => row.boundRevision !== MEMORY_JSON_OBJECT_CONTRACT.boundRevision)).toBe(true);
+    expect(lookupDeploymentManifest(manifest.manifestId, 18)).toBeUndefined();
+  });
   it("trusts only the exact registered object/version, never an equivalent caller object or classification", () => {
     const manifest: DeploymentPolicyManifest = DEFAULT_GATEWAY_POLICY_MANIFEST;
     expect(lookupDeploymentManifest(manifest.manifestId, manifest.revision)).toBe(manifest);

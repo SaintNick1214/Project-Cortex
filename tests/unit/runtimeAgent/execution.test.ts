@@ -323,7 +323,7 @@ describe("durable Agent execution product boundaries", () => {
     f.ctx.runQuery = (async (ref: unknown, input: unknown) => {
       if ((ref as Partial<Record<symbol, string>>)[Symbol.for("toReferencePath")]) return await originalQuery(ref as never, input as never);
       const name = getFunctionName(ref as never); const selected = input as Record<string, unknown>;
-      if (name === "runtimeMemoryContext:pendingContext") {
+      if (name === "runtimeModelPolicy:embeddingProfile") {
         selections.push({ name, ...selected });
         throw new Error("CONTROLLED_STOP_BEFORE_RECALL");
       }
@@ -331,7 +331,7 @@ describe("durable Agent execution product boundaries", () => {
     }) as unknown as typeof f.ctx.runQuery;
     await expect(f.call(runtime.prepareContext, args)).rejects.toThrow("CONTROLLED_STOP_BEFORE_RECALL");
     expect(selections).toHaveLength(1);
-    expect(selections[0]).toMatchObject({ name: "runtimeMemoryContext:pendingContext", reference: f.reference, runBudgetId });
+    expect(selections[0]).toMatchObject({ name: "runtimeModelPolicy:embeddingProfile", reference: f.reference, operationKey: "embedding.query", runBudgetId });
     expect(f.db.table("runtimeModelOperations")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
   });
   it("explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event", async () => {

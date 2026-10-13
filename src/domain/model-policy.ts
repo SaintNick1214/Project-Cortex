@@ -13,6 +13,19 @@ export type ModelOperationKey = typeof MODEL_OPERATION_KEYS[number];
 export type NativeModelInterface = "chat" | "responses" | "messages" | "embedding" | "image" | "video";
 export type ModelCapability = "text" | "structured" | "tools" | "embedding" | "image" | "video";
 export const DEFAULT_CHAT_MODEL_ID = "openai/gpt-4o-mini";
+/** Prospective closed lane. These constants confer no native qualification; a
+ * separately observed compiled proof must select this exact envelope. */
+export const MEMORY_JSON_OBJECT_CONTRACT = Object.freeze({
+  modelId: DEFAULT_CHAT_MODEL_ID,
+  promptVersion: "memory-extraction-json-object-prompt-v5",
+  schemaVersion: "facts-v1",
+  toolRegistryVersion: "none-v1",
+  featureEnvelope: "memory-extract-json-object-v1",
+  inputRule: "memory-json-object-chat-utf8-v1",
+  boundRevision: "memory-json-object-8192-512-v1",
+  maximumInputTokens: 8192, maximumContextTokens: 16384, maximumOutputTokens: 512,
+  maximumPrivateResultBytes: 60000, maximumCostUnits: 100000,
+} as const);
 export const MODEL_OPERATION_REGISTRY = Object.freeze(Object.fromEntries(MODEL_OPERATION_KEYS.map((key) => [key, Object.freeze({
   key,
   capability: key.startsWith("embedding.") ? "embedding" : key.startsWith("media.image") ? "image" : key.startsWith("media.video") ? "video" : key === "memory.extract" || key === "facts.resolve" ? "structured" : "text",
@@ -294,6 +307,7 @@ const requestSchema = z.object({
   toolChoice: z.discriminatedUnion("type", [z.object({ type: z.literal("auto") }).strict(), z.object({ type: z.literal("none") }).strict(),
     z.object({ type: z.literal("required") }).strict(), z.object({ type: z.literal("tool"), toolName: nonempty }).strict()]).optional(),
   outputSchema: canonicalRecordSchema.optional(),
+  responseFormat: z.object({ type: z.literal("json") }).strict().optional(),
   options: z.object({ maxRetries: z.literal(0), temperature: z.number().finite().min(0).max(2).optional(),
     topP: z.number().finite().min(0).max(1).optional(), seed: integer.optional(),
     stopSequences: z.array(z.string().min(1).max(256)).max(16).optional(),
@@ -304,6 +318,29 @@ const requestSchema = z.object({
   batch: z.object({ ordinal: integer, start: integer, end: positive }).strict().optional(),
 }).strict();
 export type ModelCallRequest = z.infer<typeof requestSchema>;
+/** Exact schema-free official compatible-provider body. No hidden schema or
+ * caller options enter this projection. The owned byte bound retains the same
+ * cookbook framing assumption and actual-usage fence as qualified plain chat. */
+export function memoryJsonObjectRequestBody(messages: ModelCallRequest["messages"], outputTokens: number) {
+  const checked = parse(z.array(messageSchema).length(2), JSON.parse(canonicalModelJson(messages)));
+  if (checked[0]!.role !== "system" || checked[1]!.role !== "user" || !Number.isSafeInteger(outputTokens)
+    || outputTokens < 1 || outputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumOutputTokens) deny("invalid JSON-object request body");
+  const content = checked.map(message => {
+    const part = message.parts[0];
+    if (message.parts.length !== 1 || part.type !== "text") deny("JSON-object requires two text messages");
+    for (const point of part.text) {
+      const code = point.codePointAt(0)!;
+      if (code >= 0xd800 && code <= 0xdfff) throw new Error("INVALID_INPUT: malformed Unicode");
+    }
+    return part.text;
+  });
+  return freeze({ model: MEMORY_JSON_OBJECT_CONTRACT.modelId, max_tokens: outputTokens,
+    response_format: { type: "json_object" as const },
+    messages: [{ role: "system" as const, content: content[0]! }, { role: "user" as const, content: content[1]! }] });
+}
+export function memoryJsonObjectInputBound(messages: ModelCallRequest["messages"], outputTokens: number): number {
+  return new TextEncoder().encode(JSON.stringify(memoryJsonObjectRequestBody(messages, outputTokens))).length + 9;
+}
 export interface ValidatedModelRequest {
   readonly request: Readonly<ModelCallRequest>;
   readonly canonical: string;
@@ -321,6 +358,22 @@ export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unk
   const request = parse(requestSchema, detached);
   for (const key of ["promptVersion", "schemaVersion", "extractionVersion", "toolRegistryVersion"] as const) {
     if (request[key] !== snapshot.pins[key]) deny("request changed pinned versions");
+  }
+  const jsonObject = snapshot.pins.promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion
+    || snapshot.pins.boundRevision === MEMORY_JSON_OBJECT_CONTRACT.boundRevision || request.responseFormat !== undefined;
+  if (jsonObject) {
+    if (snapshot.operationKey !== "memory.extract" || snapshot.nativeInterface !== "chat"
+      || snapshot.modelId !== MEMORY_JSON_OBJECT_CONTRACT.modelId
+      || snapshot.pins.promptVersion !== MEMORY_JSON_OBJECT_CONTRACT.promptVersion
+      || snapshot.pins.boundRevision !== MEMORY_JSON_OBJECT_CONTRACT.boundRevision
+      || snapshot.pins.schemaVersion !== MEMORY_JSON_OBJECT_CONTRACT.schemaVersion
+      || snapshot.pins.toolRegistryVersion !== MEMORY_JSON_OBJECT_CONTRACT.toolRegistryVersion
+      || canonicalModelJson(request.responseFormat) !== '{"type":"json"}'
+      || request.tools.length || request.toolChoice || request.toolSteps || request.media || request.profile || request.batch
+      || canonicalModelJson(request.options) !== '{"maxRetries":0}') deny("JSON-object extraction contract mismatch");
+    memoryJsonObjectRequestBody(request.messages, request.outputTokens);
+    if (request.inputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumInputTokens
+      || request.inputTokens + request.outputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumContextTokens) deny("JSON-object request exceeds bounded limits");
   }
   for (const key of ["inputTokens", "outputTokens", "toolSteps", "timeoutMs"] as const) {
     if (request[key] > snapshot.limits[key]) deny("request exceeds bounded limits");

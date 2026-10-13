@@ -62,6 +62,7 @@ const workflow = new WorkflowManager((components as unknown as { workflow: Const
 const refs = {
   claim: ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string; leaseMs: number }, { runId: string; attemptNumber: number; leaseVersion: number } | { runId: string; failureCode: string } | null>("mutation", "runs:claimNext"),
   hydrate: ref<"query", Attempt, Awaited<ReturnType<typeof executionContext>>>("query", "runtimeAgent:hydrateExecution"),
+  contextInputs: ref<"query", Attempt, Awaited<ReturnType<typeof contextInputsHandler>>>("query", "runtimeAgent:contextInputs"),
   prepareContext: ref<"action", Attempt, null>("action", "runtimeAgent:prepareContext"),
   context: ref<"mutation", Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string }, null>("mutation", "runtimeAgent:saveContext"),
   begin: ref<"mutation", Attempt & { kind: "model" | "tool"; ordinal: number; requestCanonical: string; toolCallId?: string; toolName?: string },
@@ -143,6 +144,27 @@ async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, args: At
     messages: [...messages, ...currentMessages] };
 }
 export const hydrateExecution = internalQuery({ args: agentAttempt, handler: async (ctx, args) => await executionContext(ctx, args) });
+async function contextInputsHandler(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt) {
+  const current = await executionContext(ctx, args);
+  if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
+  const scope = { tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! };
+  const cutoff = current.snapshot.ingestionCutoff.sequence;
+  const boundary = { conversationId: current.snapshot.conversationId, runId: args.runId, queueSequence: current.snapshot.queueSequence,
+    anchor: { order: current.snapshot.anchor.order, stepOrder: current.snapshot.anchor.stepOrder } };
+  const represented = current.snapshot.messages.map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId }));
+  const pending = await readPendingContext(ctx, { reference: args.reference, cutoff, alreadyRepresented: represented,
+    maxBytes: Math.min(16_384, current.definition.context.maxContextTokens), boundary, runBudgetId: current.run.runBudgetId });
+  const inputs = { current, scope, boundary, represented, pending };
+  const barrier = current.definition.context.barrier ?? { deadlineMs: 30_000, onFailure: "fail" as const };
+  // Keep the action's durable failContext mutation before any availability/profile error.
+  if (pending.completeness === "incomplete" && barrier.onFailure === "fail") return { ...inputs, kind: "pending_overflow" as const };
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.begin");
+  const availability = await readIndexedContextAvailability(ctx, { reference: args.reference, cutoff,
+    excludedSourceKeys: [...new Set([...represented, ...pending.sourceKeys])], boundary, runBudgetId: current.run.runBudgetId });
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.end");
+  return { ...inputs, kind: "ready" as const, availability };
+}
+export const contextInputs = internalQuery({ args: agentAttempt, handler: contextInputsHandler });
 export const checkToolAuthority = internalQuery({ args: { reference: runtimeAuthorityReference, toolName: v.string() }, handler: async (ctx, args) => {
   if (!Object.prototype.hasOwnProperty.call(NATIVE_TOOL_NAMES, args.toolName)) transcriptDenied("TOOL_DENIED");
   await recheckAuthority(ctx, args.reference, { capability: "tool", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
@@ -279,24 +301,16 @@ export const failContext = internalMutation({ args: { ...agentAttempt, failureCo
   await ctx.db.patch("runtimeRuns", current.run._id, { contextCompleteness: "incomplete", contextFailureCode: args.failureCode, updatedAt: Date.now() }); return null;
 } });
 export const prepareContext = internalAction({ args: agentAttempt, handler: async (ctx, args): Promise<null> => {
-  const current = await ctx.runQuery(refs.hydrate, args);
-  if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
+  const inputs = await ctx.runQuery(refs.contextInputs, args);
+  const { current, scope, boundary, represented, pending } = inputs;
   const cutoff = current.snapshot.ingestionCutoff.sequence;
-  const barrier = current.definition.context.barrier ?? { deadlineMs: 30_000, onFailure: "fail" as const };
   let completeness: "complete" | "incomplete" = current.execution.contextCompleteness ?? "complete"; let failureCode = current.execution.contextFailureCode;
   async function fail(code: "CAPABILITY_UNAVAILABLE" | "MEMORY_STAGE_FAILED" | "MEMORY_BARRIER_TIMEOUT" | "CONTEXT_OVERFLOW"): Promise<never> {
     await ctx.runMutation(ref<"mutation", Attempt & { failureCode: typeof code }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: code });
     return transcriptDenied(code);
   }
-  const scope = { tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! };
-  const boundary = { conversationId: current.snapshot.conversationId, runId: args.runId, queueSequence: current.snapshot.queueSequence,
-    anchor: { order: current.snapshot.anchor.order, stepOrder: current.snapshot.anchor.stepOrder } };
-  const represented = current.snapshot.messages.map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId }));
-  const pending = await ctx.runQuery(ref<"query", { reference: RuntimeAuthorityReference; cutoff: number; alreadyRepresented: string[]; maxBytes: number; boundary: typeof boundary; runBudgetId: string },
-    Awaited<ReturnType<typeof readPendingContext>>>("query", "runtimeMemoryContext:pendingContext"),
-  { reference: args.reference, cutoff, alreadyRepresented: represented, maxBytes: Math.min(16_384, current.definition.context.maxContextTokens), boundary, runBudgetId: current.run.runBudgetId });
+  if (inputs.kind === "pending_overflow") return await fail("CONTEXT_OVERFLOW");
   if (pending.completeness === "incomplete") {
-    if (barrier.onFailure === "fail") return await fail("CONTEXT_OVERFLOW");
     completeness = "incomplete"; failureCode = "CONTEXT_OVERFLOW";
   }
   const repository = createActionMemoryRepository(ctx, args.reference, "read"); const witnesses = new Map<string, Witness>();
@@ -324,10 +338,7 @@ export const prepareContext = internalAction({ args: agentAttempt, handler: asyn
   } };
   const text = current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
-  traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.begin");
-  const availability = await ctx.runQuery(ref<"query", Parameters<typeof readIndexedContextAvailability>[1], Awaited<ReturnType<typeof readIndexedContextAvailability>>>("query", "runtimeMemoryContext:indexedContextAvailability"),
-    { reference: args.reference, cutoff, excludedSourceKeys: [...excluded], boundary, runBudgetId: current.run.runBudgetId });
-  traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.end");
+  const availability = inputs.availability;
   traceRuntimePhase(args.runId, args.attemptNumber, availability.empty ? "context.indexed.empty" : "context.recall.begin");
   const result = availability.empty ? { context: "" } : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
     { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 });
