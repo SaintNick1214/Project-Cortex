@@ -1,0 +1,43 @@
+{
+  "memory": {
+    "command": [
+      "memory_pressure"
+    ],
+    "exitCode": 0,
+    "stdout": "The system has 34359738368 (2097152 pages with a page size of 16384).\n\nStats: \nPages free: 4195 \nPages purgeable: 6104 \nPages purged: 54217852 \n\nSwap I/O:\nSwapins: 668653 \nSwapouts: 940510 \n\nPage Q counts:\nPages active: 451002 \nPages inactive: 535241 \nPages speculative: 208118 \nPages throttled: 0 \nPages wired down: 161292 \n\nCompressor Stats:\nPages used by compressor: 683992 \nPages decompressed: 140741096 \nPages compressed: 180225044 \n\nFile I/O:\nPageins: 169708626 \nPageouts: 9884435 \n\nSystem-wide memory free percentage: 58%\n",
+    "stderr": ""
+  },
+  "disk": {
+    "command": [
+      "df",
+      "-k",
+      "/Users/SaintNick/Documents/Cortex"
+    ],
+    "exitCode": 0,
+    "stdout": "Filesystem   1024-blocks      Used Available Capacity  iused     ifree %iused  Mounted on\n/dev/disk3s5   971350180 855781324  67660052    93% 11740639 676600520    2%   /System/Volumes/Data\n",
+    "stderr": ""
+  },
+  "docker": {
+    "command": [
+      "docker",
+      "info",
+      "--format",
+      "{{json .MemTotal}}"
+    ],
+    "exitCode": 0,
+    "stdout": "8319504384\n",
+    "stderr": ""
+  },
+  "running": {
+    "command": [
+      "docker",
+      "ps",
+      "--format",
+      "{{.ID}}"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "observedAt": "2026-10-14T00:56:56.364728+00:00"
+}

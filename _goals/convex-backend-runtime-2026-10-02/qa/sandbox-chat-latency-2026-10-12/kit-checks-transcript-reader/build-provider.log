@@ -1,0 +1,38 @@
+CLI Building entry: react/index.ts, src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2022
+CLI Cleaning output folder
+CJS Build start
+ESM Build start
+CJS dist/react/index.cjs 24.29 KB
+CJS dist/src/index.cjs   61.48 KB
+CJS ⚡️ Build success in 18ms
+ESM dist/chunk-ZPWP4LTD.js 20.61 KB
+ESM dist/react/index.js    15.14 KB
+ESM dist/src/index.js      37.50 KB
+ESM ⚡️ Build success in 18ms
+DTS Build start
+DTS ⚡️ Build success in 1056ms
+DTS dist/react/index.d.cts    16.05 KB
+DTS dist/src/index.d.cts      39.12 KB
+DTS dist/types-DKEzlhpU.d.cts 21.81 KB
+DTS dist/react/index.d.ts     16.05 KB
+DTS dist/src/index.d.ts       39.12 KB
+DTS dist/types-DKEzlhpU.d.ts  21.81 KB
+CLI Building entry: src/remote/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2022
+CJS Build start
+ESM Build start
+ESM dist/remote/index.js 12.41 KB
+ESM ⚡️ Build success in 12ms
+CJS dist/remote/index.cjs 13.63 KB
+CJS ⚡️ Build success in 12ms
+DTS Build start
+DTS ⚡️ Build success in 572ms
+DTS dist/remote/index.d.cts 2.85 KB
+DTS dist/remote/index.d.ts  2.85 KB
+npm notice run @cortexmemory/vercel-ai-provider@0.39.0 build
+npm notice run tsup src/index.ts react/index.ts --format cjs,esm --dts --clean && tsup src/remote/index.ts --format cjs,esm --dts --out-dir dist/remote

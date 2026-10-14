@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "candidateDigest": "9bc06721a571e054037d4470134b3a9b517989fc7c37b04c5c4b76fb314df76f",
+  "definition": "SHA256 of JSON.stringify(envelope) in retained field order",
+  "envelope": {
+    "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+    "sourceReviewSha256": "7edc522be940a1976ba8feb27edcece779b33d4f692562a2094827febdb6c08d",
+    "sourceReviewJsonSha256": "bda3433d3cf0c5f3402fde958f5c385ba81ff768bb3855168add0a52f832e3f6",
+    "sourceFreezeSha256": "eb0a8ac143529c20b3ef910b62363bf002fcaa24e175bc4794e5a2eaef30703b",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-transcript-reader-2026-10-13",
+    "identitySha256": "7f1801a0126709bfcc593d9cb4c847d2785416a3ad78c5624450b5f08ec407ba",
+    "archiveManifestSha256": "05cd5f983707d80c35c4d4afc542f5b8af29fa6a28300cacaad24c5568577350",
+    "inputManifestSha256": "b10525337c2fc90b00fe2b608ad07e4ba187c5368d41656bb6c6db502a0f5415",
+    "backendManifestSha256": "b50d0bd7c71e982e78c4794426402dd5dc447f1f215a1042cdbb514eba319a6a",
+    "packages": [
+      {
+        "role": "sdk",
+        "sha256": "9ac8a26120ab12209ae34f2fbdd0ee292942ed5d23ebfc2f6ca4a50afd6876b3"
+      },
+      {
+        "role": "cli",
+        "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5"
+      },
+      {
+        "role": "provider",
+        "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53"
+      },
+      {
+        "role": "catalog",
+        "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970"
+      }
+    ],
+    "catalogManifestSha256": "f79cc11523a0515218371d4444d8af160c526cc32a5fde1b4893932a5cacd113",
+    "catalogPayloadSha256": "235c967cc8d054aaa3639c6f48de6ae366d87f48f6998df4ac0d7480ab818909",
+    "imageId": "sha256:b6348f112d76399d79c1b2bdd10ec1499cb9b70291e297192496a27199b1748b",
+    "controls": [
+      {
+        "path": "prepare.mjs",
+        "sha256": "b1fe159620eea58141a0ac7896e2d6f3343c4274d284b2d21603d45980e1c015"
+      },
+      {
+        "path": "image/Dockerfile",
+        "sha256": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f"
+      },
+      {
+        "path": "image/install-candidates.mjs",
+        "sha256": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f"
+      },
+      {
+        "path": "image/entrypoint.mjs",
+        "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+      }
+    ]
+  },
+  "finalReceiptSha256": "27f4fcbc321e7b3dc805a063e58641974f072e267b811adeefe1c35d9e0d7dca",
+  "reportSha256": "c6d32811e63404215f35f4c8117979e721610fe3d51c21d75e26eceb21efc90a",
+  "reportJsonSha256": "dc7905d921c65dc24622cd379c166ec22fca7ea493d80cee2c8e546ad9df4557",
+  "artifactReceiptSha256": "05cd5f983707d80c35c4d4afc542f5b8af29fa6a28300cacaad24c5568577350",
+  "actualV5ExportRootsPassed": true,
+  "actualTranscriptReaderExportsAndRegisteredEndpointSetsPassed": true,
+  "dockerRuntimeContainersAfter": "",
+  "ownedScratchDirectoriesRemaining": [],
+  "originalsPreserved": true,
+  "servicesStarted": 0,
+  "inferenceCalls": 0
+}

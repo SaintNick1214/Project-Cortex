@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "Scoped transcript source independently accepted PASS4.0; committing candidate for fresh packaging",
+  "phase": "K16 CLEANED; exact native bottleneck diagnosis in progress; latency remains failed",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T00:50:02.193736+00:00",
+  "updatedAt": "2026-10-14T01:12:22.791558+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,19 +58,20 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "sessionId": "513d91a6-6cc5-425f-b997-306a6261b868",
-    "generation": "K15",
+    "sessionId": "c530728c-fdc2-4876-8690-13317e55ef8d",
+    "generation": "K16",
     "state": "ABSENT",
-    "database": "formal-newt-698",
-    "deploymentId": 6152307,
-    "expiresAt": 1792539988680,
-    "webPort": 3316,
+    "database": "charming-rabbit-938",
+    "deploymentId": 6153416,
+    "expiresAt": 1792544402587,
+    "webPort": 3124,
     "nativeSLOQualified": false,
     "backendTraceEnabled": true,
     "startupQualificationMethodsPassed": 8,
     "browserSignedOutAndClosedBeforeCLI": true,
     "cliProcessExit": 0,
-    "cleanupReceipt": "k15-cleanup-final.json"
+    "launcherProcessExit": 130,
+    "cleanupReceipt": "k16-cleanup-final.json"
   },
   "actualSamples": {
     "generation": "K11",
@@ -441,12 +442,19 @@
     }
   ],
   "nextCandidate": {
-    "generation": "K14",
-    "sourceCommit": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
-    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-parallel-policy-2026-10-13",
-    "state": "packaging in progress",
-    "sourceAccepted": true,
-    "nativeQualified": false
+    "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+    "generation": "K16",
+    "sourcePercent": 100,
+    "packagingPercent": 100,
+    "cloudPercent": 0,
+    "sourceReview": "native-transcript-read-source-review.md",
+    "imageId": "sha256:b6348f112d76399d79c1b2bdd10ec1499cb9b70291e297192496a27199b1748b",
+    "sessionId": "c530728c-fdc2-4876-8690-13317e55ef8d",
+    "launcherTests": {
+      "passed": 105,
+      "failed": 0,
+      "skipped": 0
+    }
   },
   "actualSampleHistory": [
     {
@@ -837,5 +845,21 @@
     "inMemoryInstalledComponentChecksPassed": 5,
     "cloudQualificationPercent": 0,
     "cloudSpeedClaim": false
+  },
+  "actualK16Samples": {
+    "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+    "firstBrowserAfterPaintMs": null,
+    "firstBrowserOutcome": "UNAVAILABLE wrong initial launcher trace opt-in",
+    "warmBrowserAfterPaintMs": 5197.200000047684,
+    "firstCliStdoutMs": 11371.979422,
+    "warmCliStdoutMs": 14704.853548,
+    "responseComplete": 4,
+    "nativeMemoryEventsPass": 8,
+    "nativeProof": "k16-memory-native-v2-four-run-verification-1791940208091.json",
+    "paidRetry": false,
+    "originalDeadlineMs": 30000,
+    "subsecondPassed": 0,
+    "subsecondFailed": 3,
+    "subsecondUnavailable": 1
   }
 }

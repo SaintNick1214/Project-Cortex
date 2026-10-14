@@ -1,0 +1,305 @@
+{
+  "observedAt": "2026-10-14T01:10:58.514Z",
+  "target": {
+    "sessionId": "c530728c-fdc2-4876-8690-13317e55ef8d",
+    "name": "charming-rabbit-938",
+    "id": 6153416,
+    "reference": "dev/cortex-sandbox-c530728c-fdc2-4876-8690-13317e55ef8d"
+  },
+  "freshVerifications": 27,
+  "run": {
+    "runId": "run:c292ce83aebb2330a546be573868d841fb87d02ee4f3e30c73a885c70f6bdf66",
+    "responseStatus": "COMPLETE",
+    "attemptNumber": 1,
+    "createdAt": 1791940045187,
+    "updatedAt": 1791940060385,
+    "outputMessageCount": 1
+  },
+  "execution": {
+    "state": "COMPLETE",
+    "contextState": "COMPLETE",
+    "workflowId": "jd7fm7e1bp1yh803b97784scpx8g92rs"
+  },
+  "workflows": [
+    {
+      "id": "jd7fm7e1bp1yh803b97784scpx8g92rs",
+      "generationNumber": 0,
+      "workflowHandleSha256": "4f935df116993cc9ce65bcb10408cf3a5209df8cb0c451aede3c182a558c581e",
+      "resultKind": "success"
+    }
+  ],
+  "stages": {
+    "durable": [
+      {
+        "sequence": 1,
+        "final": false,
+        "createdAt": 1791940054177,
+        "type": "text-start",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791940054177,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 3
+      },
+      {
+        "sequence": 3,
+        "final": false,
+        "createdAt": 1791940056184,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 2
+      },
+      {
+        "sequence": 4,
+        "final": false,
+        "createdAt": 1791940056184,
+        "type": "text-end",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 5,
+        "final": true,
+        "createdAt": 1791940056806,
+        "type": "text",
+        "nonemptyText": true,
+        "textBytes": 5
+      },
+      {
+        "sequence": 6,
+        "final": true,
+        "createdAt": 1791940056806,
+        "type": "status",
+        "nonemptyText": false,
+        "textBytes": 0
+      }
+    ],
+    "agentOperations": [
+      {
+        "kind": "model",
+        "ordinal": 0,
+        "state": "complete",
+        "createdAt": 1791940051661,
+        "startedAt": 1791940051661,
+        "endedAt": 1791940056524
+      }
+    ],
+    "modelOperations": [
+      {
+        "_id": "t17bhxszbg1gqtg65zk5rvzepd8g8f38",
+        "operationKey": "conversation.title",
+        "createdAt": 1791940061470,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "t178v5xwww0xqyspgthph493p58g8fej",
+        "operationKey": "agent.respond",
+        "createdAt": 1791940052332,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "t17ekc6mx3ty0wv9yj4ckqzqzs8g94hy",
+        "operationKey": "embedding.query",
+        "createdAt": 1791940048600,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      }
+    ],
+    "modelAttempts": [
+      {
+        "operationDocumentId": "t17bhxszbg1gqtg65zk5rvzepd8g8f38",
+        "state": "uncertain",
+        "createdAt": 1791940061470,
+        "checkpointAt": 1791940062627,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "t178v5xwww0xqyspgthph493p58g8fej",
+        "state": "uncertain",
+        "createdAt": 1791940052332,
+        "checkpointAt": 1791940052332,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "t17ekc6mx3ty0wv9yj4ckqzqzs8g94hy",
+        "state": "uncertain",
+        "createdAt": 1791940048600,
+        "checkpointAt": 1791940048796,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      }
+    ],
+    "ingestionEvents": [
+      {
+        "eventId": "ingestion:2da3422e12a56b877acd39730bf3df89e0e59316216a3bdc169962675f4eaf60",
+        "sequence": 6,
+        "eligibility": "eligible",
+        "factsState": "skipped",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791940056806,
+        "updatedAt": 1791940060385
+      },
+      {
+        "eventId": "ingestion:805528979b9bf92531f3d23e693df3d9a3004b9bf7998776a32b6a535e603a27",
+        "sequence": 5,
+        "eligibility": "eligible",
+        "factsState": "complete",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791940045187,
+        "updatedAt": 1791940058237
+      }
+    ],
+    "ingestionStages": [
+      {
+        "eventId": "ingestion:2da3422e12a56b877acd39730bf3df89e0e59316216a3bdc169962675f4eaf60",
+        "stage": "vectors",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791940060385
+      },
+      {
+        "eventId": "ingestion:2da3422e12a56b877acd39730bf3df89e0e59316216a3bdc169962675f4eaf60",
+        "stage": "facts",
+        "state": "skipped",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791940056806
+      },
+      {
+        "eventId": "ingestion:2da3422e12a56b877acd39730bf3df89e0e59316216a3bdc169962675f4eaf60",
+        "stage": "extract",
+        "state": "skipped",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791940056806
+      },
+      {
+        "eventId": "ingestion:805528979b9bf92531f3d23e693df3d9a3004b9bf7998776a32b6a535e603a27",
+        "stage": "vectors",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791940058237
+      },
+      {
+        "eventId": "ingestion:805528979b9bf92531f3d23e693df3d9a3004b9bf7998776a32b6a535e603a27",
+        "stage": "facts",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791940055293
+      },
+      {
+        "eventId": "ingestion:805528979b9bf92531f3d23e693df3d9a3004b9bf7998776a32b6a535e603a27",
+        "stage": "extract",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791940052123
+      }
+    ],
+    "ingestionJobs": [
+      {
+        "eventId": "ingestion:2da3422e12a56b877acd39730bf3df89e0e59316216a3bdc169962675f4eaf60",
+        "runBudgetId": "d42b059085a4d036412a1fd868ade7b4757f5a88dc141fe7f7b1af3f617f2f22",
+        "runAccountId": "ps747nrj6v4ggj5hp11vrk0n558g9fqr",
+        "createdAt": 1791940057637
+      },
+      {
+        "eventId": "ingestion:805528979b9bf92531f3d23e693df3d9a3004b9bf7998776a32b6a535e603a27",
+        "runBudgetId": "19cf347d2b440a581475b01cd93ddeafa7297bf5595ccc52c8e64182c0ba47fa",
+        "runAccountId": "ps7amdt45twfyjafvy2sep3vs98g94z4",
+        "createdAt": 1791940047037
+      }
+    ],
+    "titleJobs": [
+      {
+        "jobId": "content:d2d0a258b234fa7bbaa04f515509bacce918497da5a9e60eba526fc192406a33",
+        "intent": "title",
+        "state": "ready",
+        "createdAt": 1791940057116,
+        "updatedAt": 1791940068395
+      }
+    ]
+  },
+  "runBudgetId": "c31a4fdd336ddc5a0adbbb739760b5f93c40053bab6eb3a7ffe93e5093dbc2fc",
+  "steps": [
+    {
+      "stepNumber": 2,
+      "name": "context and model turn 0",
+      "functionType": "action",
+      "kind": "function",
+      "functionHandleSha256": "ea309648d415e1a55f04bf601a762b8535b6747fa5c7aa4d41f7b5d0d21e8fa2",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791940045187,
+      "completedAt": 1791940057537
+    },
+    {
+      "stepNumber": 1,
+      "name": "runtimeAgent:contextBarrier",
+      "functionType": "mutation",
+      "kind": "function",
+      "functionHandleSha256": "1507e855d3dbbccb104d778a2b6a9e40cd5005f251c681fbb5e746d6d8109abd",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791940045187,
+      "completedAt": 1791940045187
+    },
+    {
+      "stepNumber": 0,
+      "name": "runtimeAgent:startContext",
+      "functionType": "mutation",
+      "kind": "function",
+      "functionHandleSha256": "8e9e71a021cb8a53032e8a3f7a2a5f207665ed47d6d468dd45c6bfac87590743",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791940045187,
+      "completedAt": 1791940045187
+    }
+  ],
+  "orchestration": {
+    "expectedFreshWorkflow": "executeTurnV5",
+    "nativeNames": [
+      "turnStepV5",
+      "prepareTurnModel",
+      "prepareResolvedModelOperation",
+      "admitPreparedModelOperation"
+    ],
+    "ordinaryTurnJournalCount": 1,
+    "note": "Observed journal metadata only; no old context/model/finalize step is required. Nested native parents are joined from saved native execution/request metadata."
+  },
+  "counts": {
+    "agentOperations": 1,
+    "modelOperations": 3,
+    "modelAttempts": 3
+  },
+  "errors": [],
+  "phases": [],
+  "logLineStructures": [],
+  "rawPayloadRetained": false
+}
