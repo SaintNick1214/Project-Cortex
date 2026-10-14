@@ -1,0 +1,558 @@
+{
+  "schemaVersion": 1,
+  "productFiles": [
+    "convex-dev/runtimeAgent.ts",
+    "convex-dev/runtimeAgentSchema.ts",
+    "convex-dev/runtimeClient.ts",
+    "convex-dev/runtimeMemoryGateway.ts",
+    "convex-dev/runtimeMemoryServices.ts",
+    "src/client-runtime/client.ts",
+    "tests/unit/client-runtime/admission-native.test.ts",
+    "tests/unit/client-runtime/client.test.ts",
+    "tests/unit/runtimeAgent/context-routing.test.ts",
+    "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "tests/unit/runtimeAgent/resolution-composition.test.ts",
+    "tests/unit/runtimeAgent/start-native.test.ts",
+    "tests/unit/runtimeAgent/turn-workflow.test.ts",
+    "convex-dev/runtimeAgentQueryEmbedding.ts",
+    "tests/unit/runtimeAgent/direct-action.test.ts",
+    "tests/unit/runtimeAgent/direct-workflow.test.ts",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+    "tests/unit/runtimeMemory/query-embedding-tail.test.ts"
+  ],
+  "qaEligible": [
+    {
+      "path": "capture-k19-cli-timing.mjs",
+      "bytes": 2274
+    },
+    {
+      "path": "capture-k19-financial-metadata.mjs",
+      "bytes": 8659
+    },
+    {
+      "path": "capture-k19-run-chain.mjs",
+      "bytes": 12159
+    },
+    {
+      "path": "cloud-agent-query-embedding-affected-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-affected-v1.log",
+      "bytes": 16199
+    },
+    {
+      "path": "cloud-agent-query-embedding-focused-final-v4.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-focused-final-v4.log",
+      "bytes": 7654
+    },
+    {
+      "path": "cloud-agent-query-embedding-freeze-before-fixture-reference-type.json",
+      "bytes": 2453
+    },
+    {
+      "path": "cloud-agent-query-embedding-freeze.json",
+      "bytes": 2717
+    },
+    {
+      "path": "cloud-agent-query-embedding-generic-equivalence.json",
+      "bytes": 644
+    },
+    {
+      "path": "cloud-agent-query-embedding-scoped-lint-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-scoped-lint-v1.log",
+      "bytes": 303
+    },
+    {
+      "path": "cloud-agent-query-embedding-scoped-lint-v2.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-scoped-lint-v2.log",
+      "bytes": 0
+    },
+    {
+      "path": "cloud-agent-query-embedding-source-report.md",
+      "bytes": 5661
+    },
+    {
+      "path": "cloud-agent-query-embedding-tail-equivalence.json",
+      "bytes": 654
+    },
+    {
+      "path": "cloud-agent-query-embedding-tail-v2.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-tail-v2.log",
+      "bytes": 6141
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v1.log",
+      "bytes": 13057
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v2.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v2.log",
+      "bytes": 12254
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v3.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v3.log",
+      "bytes": 10392
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v1.log",
+      "bytes": 913
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v2.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v2.log",
+      "bytes": 0
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v3.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v3.log",
+      "bytes": 0
+    },
+    {
+      "path": "cloud-v6-affected-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-v6-affected-v1.json",
+      "bytes": 498690
+    },
+    {
+      "path": "cloud-v6-affected-v1.log",
+      "bytes": 31430
+    },
+    {
+      "path": "cloud-v6-affected-v2.exit",
+      "bytes": 2
+    },
+    {
+      "path": "cloud-v6-affected-v2.json",
+      "bytes": 487882
+    },
+    {
+      "path": "cloud-v6-affected-v2.log",
+      "bytes": 25307
+    },
+    {
+      "path": "cloud-v6-backend-types-v1.log",
+      "bytes": 1054
+    },
+    {
+      "path": "cloud-v6-backend-types-v2.log",
+      "bytes": 441
+    },
+    {
+      "path": "cloud-v6-direct-design.md",
+      "bytes": 3213
+    },
+    {
+      "path": "cloud-v6-direct-tests-v1.json",
+      "bytes": 49074
+    },
+    {
+      "path": "cloud-v6-direct-tests-v1.log",
+      "bytes": 14412
+    },
+    {
+      "path": "cloud-v6-direct-tests-v2.json",
+      "bytes": 9375
+    },
+    {
+      "path": "cloud-v6-direct-tests-v2.log",
+      "bytes": 8798
+    },
+    {
+      "path": "cloud-v6-equivalence-final.log",
+      "bytes": 110
+    },
+    {
+      "path": "cloud-v6-equivalence.json",
+      "bytes": 5459
+    },
+    {
+      "path": "cloud-v6-equivalence.log",
+      "bytes": 110
+    },
+    {
+      "path": "cloud-v6-equivalence.mjs",
+      "bytes": 2671
+    },
+    {
+      "path": "cloud-v6-failed-v7.json",
+      "bytes": 55136
+    },
+    {
+      "path": "cloud-v6-failed-v7.log",
+      "bytes": 7337
+    },
+    {
+      "path": "cloud-v6-failed-v8.json",
+      "bytes": 17090
+    },
+    {
+      "path": "cloud-v6-failed-v8.log",
+      "bytes": 8307
+    },
+    {
+      "path": "cloud-v6-failed-v9.json",
+      "bytes": 26322
+    },
+    {
+      "path": "cloud-v6-failed-v9.log",
+      "bytes": 10164
+    },
+    {
+      "path": "cloud-v6-focused-v3.json",
+      "bytes": 35401
+    },
+    {
+      "path": "cloud-v6-focused-v3.log",
+      "bytes": 16198
+    },
+    {
+      "path": "cloud-v6-focused-v4.json",
+      "bytes": 25501
+    },
+    {
+      "path": "cloud-v6-focused-v4.log",
+      "bytes": 9870
+    },
+    {
+      "path": "cloud-v6-focused-v5.json",
+      "bytes": 22732
+    },
+    {
+      "path": "cloud-v6-focused-v5.log",
+      "bytes": 8148
+    },
+    {
+      "path": "cloud-v6-focused-v6.json",
+      "bytes": 135826
+    },
+    {
+      "path": "cloud-v6-focused-v6.log",
+      "bytes": 20912
+    },
+    {
+      "path": "cloud-v6-native-install-cleanup.json",
+      "bytes": 1740
+    },
+    {
+      "path": "cloud-v6-native-install.log",
+      "bytes": 345
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v1.log",
+      "bytes": 2896
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v2.json",
+      "bytes": 700
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v2.log",
+      "bytes": 3043
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v3.json",
+      "bytes": 1480
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v3.log",
+      "bytes": 16776
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v4.log",
+      "bytes": 18181
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v5.json",
+      "bytes": 1688
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v5.log",
+      "bytes": 16942
+    },
+    {
+      "path": "cloud-v6-native-scheduler.mjs",
+      "bytes": 13591
+    },
+    {
+      "path": "cloud-v6-restored-v10.json",
+      "bytes": 28478
+    },
+    {
+      "path": "cloud-v6-restored-v10.log",
+      "bytes": 7957
+    },
+    {
+      "path": "cloud-v6-root-lint-v1.log",
+      "bytes": 39876
+    },
+    {
+      "path": "cloud-v6-root-types-v1.log",
+      "bytes": 1505
+    },
+    {
+      "path": "cloud-v6-root-types-v2.log",
+      "bytes": 441
+    },
+    {
+      "path": "cloud-v6-root-types-v3.log",
+      "bytes": 0
+    },
+    {
+      "path": "cloud-v6-run-affected.mjs",
+      "bytes": 818
+    },
+    {
+      "path": "cloud-v6-scoped-lint-v1.log",
+      "bytes": 0
+    },
+    {
+      "path": "cloud-v6-scoped-lint-v2.log",
+      "bytes": 0
+    },
+    {
+      "path": "cloud-v6-selected-tests.json",
+      "bytes": 1615
+    },
+    {
+      "path": "cloud-v6-source-freeze.json",
+      "bytes": 12980
+    },
+    {
+      "path": "cloud-v6-source-report.md",
+      "bytes": 6677
+    },
+    {
+      "path": "docs-v6-coherent-build-v1.log",
+      "bytes": 1568
+    },
+    {
+      "path": "docs-v6-coherent-freeze-receipt.json",
+      "bytes": 2472
+    },
+    {
+      "path": "docs-v6-coherent-serve.log",
+      "bytes": 1126
+    },
+    {
+      "path": "k19-collector-offline-check.json",
+      "bytes": 1155
+    },
+    {
+      "path": "k19-collector-pins.mjs",
+      "bytes": 1675
+    },
+    {
+      "path": "k19-collectors-prepared.json",
+      "bytes": 2675
+    },
+    {
+      "path": "service-log-snapshot-k19.mjs",
+      "bytes": 6856
+    },
+    {
+      "path": "v6-admission-envelope-focused-v1.json",
+      "bytes": 59486
+    },
+    {
+      "path": "v6-admission-envelope-focused-v1.log",
+      "bytes": 9288
+    },
+    {
+      "path": "v6-admission-envelope-focused-v2.json",
+      "bytes": 52994
+    },
+    {
+      "path": "v6-admission-envelope-focused-v2.log",
+      "bytes": 8128
+    },
+    {
+      "path": "v6-admission-envelope-focused-v3.json",
+      "bytes": 55436
+    },
+    {
+      "path": "v6-admission-envelope-focused-v3.log",
+      "bytes": 8114
+    },
+    {
+      "path": "v6-admission-envelope-focused-v4.json",
+      "bytes": 55436
+    },
+    {
+      "path": "v6-admission-envelope-focused-v4.log",
+      "bytes": 8131
+    },
+    {
+      "path": "v6-admission-envelope-freeze.json",
+      "bytes": 1383
+    },
+    {
+      "path": "v6-admission-envelope-source-report.md",
+      "bytes": 2314
+    },
+    {
+      "path": "v6-coherent-critical-path-scope.md",
+      "bytes": 3329
+    },
+    {
+      "path": "v6-coherent-source-review-packet.json",
+      "bytes": 4749
+    },
+    {
+      "path": "v6-joint-backend-roots-v1-failure.json",
+      "bytes": 414
+    },
+    {
+      "path": "v6-joint-backend-roots-v1-failure.log",
+      "bytes": 204
+    },
+    {
+      "path": "v6-joint-backend-roots-v2.exit",
+      "bytes": 2
+    },
+    {
+      "path": "v6-joint-backend-roots-v2.json",
+      "bytes": 2238
+    },
+    {
+      "path": "v6-joint-backend-roots-v2.log",
+      "bytes": 2238
+    },
+    {
+      "path": "v6-joint-backend-types-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "v6-joint-backend-types-v1.log",
+      "bytes": 0
+    },
+    {
+      "path": "v6-joint-build-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "v6-joint-build-v1.log",
+      "bytes": 2724
+    },
+    {
+      "path": "v6-joint-lint-types-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "v6-joint-lint-types-v1.log",
+      "bytes": 0
+    },
+    {
+      "path": "v6-joint-packed-contracts-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "v6-joint-packed-contracts-v1.log",
+      "bytes": 252
+    },
+    {
+      "path": "v6-joint-quality-final-receipt.json",
+      "bytes": 3094
+    },
+    {
+      "path": "v6-joint-quality-inputs.json",
+      "bytes": 1608
+    },
+    {
+      "path": "v6-joint-quality-report.md",
+      "bytes": 2315
+    },
+    {
+      "path": "v6-joint-root-types-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "v6-joint-root-types-v1.log",
+      "bytes": 0
+    },
+    {
+      "path": "v6-joint-scoped-lint-v1.exit",
+      "bytes": 2
+    },
+    {
+      "path": "v6-joint-scoped-lint-v1.log",
+      "bytes": 1375
+    },
+    {
+      "path": "verify-k19-cleanup.mjs",
+      "bytes": 3462
+    },
+    {
+      "path": "verify-k19-four-run-memory-readonly.mjs",
+      "bytes": 32526
+    },
+    {
+      "path": "version-regression-k18-addendum.md",
+      "bytes": 4316
+    },
+    {
+      "path": "browser/docs-v6-performance-observation.json",
+      "bytes": 49061
+    },
+    {
+      "path": "browser/docs-v6-runtime-client-observation.json",
+      "bytes": 11114
+    },
+    {
+      "path": "status.json",
+      "bytes": 39027
+    },
+    {
+      "path": "completion-notices.jsonl",
+      "bytes": 14026
+    },
+    {
+      "path": "execution-progress.md",
+      "bytes": 15595
+    }
+  ],
+  "localOnly": [],
+  "excludedUnrelated": [
+    "k11-expired-auth-source-investigation.md",
+    "workflow-trace-repair-report.md",
+    "work/resume/"
+  ],
+  "reviewPending": true,
+  "staged": false
+}

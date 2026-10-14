@@ -1,0 +1,187 @@
+(node:22276) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/direct-action.test.ts (5.379 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● direct cancellation preserves the original run/budget fence and cancels only the recorded scheduled Action
+
+    ConvexError: {"version":1,"code":"INVALID_STATE","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      35 | export function executionRevision(conversation: ManagedConversation): number { return conversation.executionRevision ?? conversation.historyRevision; }
+      36 | export function transcriptDenied(code = "FORBIDDEN"): never {
+    > 37 |   throw new ConvexError({ version: 1, code, message: "Conversation operation denied.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      38 | }
+      39 | export function singleTranscript<T>(rows: T[]): T | undefined { if (rows.length > 1) transcriptDenied("TRANSCRIPT_CONFLICT"); return rows[0]; }
+      40 | export async function conversationById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, conversationId: string) {
+
+      at transcriptDenied (convex-dev/runtimeTranscript.ts:37:9)
+      at activeAttempt (convex-dev/runs.ts:249:91)
+      at executionContext (convex-dev/runtimeAgent.ts:150:90)
+      at Function.prepareDirectTurnHandler [as _handler] (convex-dev/runtimeAgent.ts:1070:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1124:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:167:3)
+
+PASS tests/unit/runtimeAgent/start-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"preparation-authority-fixture-count","unscoped":192,"scoped":28}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:194:11)
+
+PASS tests/unit/runtimeAgent/direct-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.4s | 22/23 passed | /tests/unit/runtimeAgent/direct-action.test.ts
+  ✅     1.8s | 22/22 passed | /tests/unit/runtimeAgent/start-native.test.ts
+  ✅     0.4s | 2/2 passed | /tests/unit/runtimeAgent/direct-workflow.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.20s ( 2.6%) - one direct empty turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 2. [32m✓[0m    0.12s ( 1.5%) - one direct populated_pending turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 3. [32m✓[0m    0.11s ( 1.4%) - one direct final_only turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 4. [32m✓[0m    0.11s ( 1.4%) - installed V6 journal reads completed first operation, owns explicit approval, and never queues ordinal0 inference
+    /tests/unit/runtimeAgent/direct-workflow.test.ts
+
+ 5. [32m✓[0m    0.11s ( 1.4%) - a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 6. [32m✓[0m    0.10s ( 1.4%) - lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 7. [32m✓[0m    0.10s ( 1.3%) - a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 8. [32m✓[0m    0.10s ( 1.3%) - direct claim/preparation equals the original prefix and V5 preparation outcomes
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 9. [32m✓[0m    0.10s ( 1.3%) - completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+10. [32m✓[0m    0.10s ( 1.3%) - revocation after completed tool output denies recovery without attaching a new Workflow
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+11. [32m✓[0m    0.09s ( 1.1%) - provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+12. [32m✓[0m    0.08s ( 1.1%) - the original lease timer retires a crashed direct claim without retrying model work
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+13. [32m✓[0m    0.07s ( 1.0%) - V6 prepared prompt cannot authorize budget changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+14. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize source changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+15. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize qualification changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+16. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize grant changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+17. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize lease changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+18. [32m✓[0m    0.06s ( 0.8%) - duplicate dispatch during a started operation cannot replay or change its UNKNOWN disposition
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+19. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize cancel changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+20. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize source-tombstone changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.82s (23.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.65s
+  Test suites:        3
+  Individual tests:   47
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 46 passed, 47 total
+Snapshots:   0 total
+Time:        7.655 s, estimated 9 s
+Ran all test suites within paths "tests/unit/runtimeAgent/direct-action.test.ts", "tests/unit/runtimeAgent/direct-workflow.test.ts", "tests/unit/runtimeAgent/start-native.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-focused-v4.json

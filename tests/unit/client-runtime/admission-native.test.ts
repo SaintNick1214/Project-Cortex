@@ -2,6 +2,7 @@
  * Native Convex OCC, Workflow execution and timing still require the disposable service lane. */
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { getFunctionName, makeFunctionReference } from "convex/server";
+import { ConvexError } from "convex/values";
 import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import type { RuntimeRun, RuntimeStartResult } from "../../../src/client-runtime/types";
 import { assertNativeArgs } from "../runtimeAgent/native-arguments";
@@ -9,7 +10,7 @@ import { assertNativeArgs } from "../runtimeAgent/native-arguments";
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(input: { handler: unknown }) { return { _handler: input.handler }; }
   async start(ctx: MutationCtx, _ref: unknown, args: Record<string, unknown>) {
-    // This insertion shares the fixture's existing parent rollback, like native Workflow scheduling.
+    // Preserve the historical Workflow fixture; ordinary V6 starts schedule their own Action.
     return await ctx.scheduler.runAfter(0, makeFunctionReference<"mutation">("runtimeAgent:executeTurn"), { args });
   }
 } }));
@@ -18,6 +19,7 @@ const runtime = await import("../../../convex-dev/runtimeAgent");
 const client = await import("../../../convex-dev/runtimeClient");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 type Admission = { version: 1; run: RuntimeRun; start: RuntimeStartResult };
+type AdmissionEnvelope = { version: 1; session: { tenantId: string; memorySpaceId: string; principalId: string }; admission: Admission };
 const initialTrace = process.env.CORTEX_RUNTIME_LATENCY_TRACE;
 beforeEach(() => { installMockRoot(); });
 afterEach(() => {
@@ -40,20 +42,52 @@ async function fixture(options: { maxContextTokens?: number } = {}) {
     const args = { request, ...options }; assertNativeArgs(client.submitAndStart, args);
     return await f.call<Admission>(client.submitAndStart, args);
   };
-  const workflows = () => f.scheduled.filter(row => row.name === "runtimeAgent:executeTurn");
+  const admitEnvelope = async (request = f.request(), options: { streaming?: boolean; tenantId?: string; memorySpaceId?: string } = {}) => {
+    const args = { request, ...options }; assertNativeArgs(client.submitAndStartEnvelope, args);
+    return await f.call<AdmissionEnvelope>(client.submitAndStartEnvelope, args);
+  };
+  const workflows = () => f.scheduled.filter(row => row.name === "runtimeAgent:executeDirectV6");
   const snapshot = () => clone({ rows: f.db.rows, native: f.native, scheduled: f.scheduled, effects: f.effects, writes: f.db.writes });
-  return { ...f, admit, calls, workflows, snapshot };
+  return { ...f, admit, admitEnvelope, calls, workflows, snapshot };
 }
-function afterWorkflow(f: Awaited<ReturnType<typeof fixture>>, change: () => void) {
+function afterDispatch(f: Awaited<ReturnType<typeof fixture>>, change: () => void) {
   const native = f.ctx.scheduler.runAfter.bind(f.ctx.scheduler), reached = { value: false };
   f.ctx.scheduler.runAfter = async (delay, ref, ...args) => {
     const result = await native(delay, ref, ...args);
-    if (getFunctionName(ref) === "runtimeAgent:executeTurn") { reached.value = true; change(); }
+    if (getFunctionName(ref) === "runtimeAgent:executeDirectV6") { reached.value = true; change(); }
     return result;
   };
   return reached;
 }
 describe("combined native run admission", () => {
+  it("native pre-session envelope retains the legacy admission result, exact actor, effects and duplicate ownership", async () => {
+    const f = await fixture(), result = await f.admitEnvelope(), rollback = new Error("LEGACY_DUPLICATE_REFERENCE");
+    let legacyEffects: unknown;
+    expect(Object.keys(result).sort()).toEqual(["admission", "session", "version"]);
+    expect(result.session).toMatchObject({ tenantId: "tenant-a", memorySpaceId: "space-a", principalId: f.reference.principalId });
+    await expect(f.transaction(async () => {
+      expect(await f.admit()).toEqual(result.admission); legacyEffects = f.snapshot(); throw rollback;
+    })).rejects.toBe(rollback);
+    expect(await f.admitEnvelope()).toEqual(result);
+    expect(f.snapshot()).toEqual(legacyEffects); expect(f.effects.saves).toBe(1);
+    expect(f.db.table("runtimeAgentExecutions")).toHaveLength(1); expect(f.workflows()).toHaveLength(1);
+  });
+  it.each(["read_missing", "revoked", "unauthenticated", "cross_scope"])("envelope %s pre-session denial starts no native writes or dispatch", async kind => {
+    const f = await fixture();
+    if (kind === "read_missing") f.grant.capabilities = (f.grant.capabilities as string[]).filter(cap => cap !== "read");
+    if (kind === "revoked") f.grant.revokedAt = Date.now();
+    if (kind === "unauthenticated") f.ctx.auth.getUserIdentity = async () => null;
+    const before = f.snapshot();
+    const denial = await f.admitEnvelope(f.request(), kind === "cross_scope" ? { tenantId: "foreign", memorySpaceId: "space-a" } : {}).catch(error => error as unknown);
+    expect(denial).toBeInstanceOf(ConvexError);
+    expect((denial as ConvexError<{ code: string }>).data.code).toBe(kind === "unauthenticated" ? "UNAUTHENTICATED" : "FORBIDDEN");
+    expect(f.snapshot()).toEqual(before); expect(f.effects.saves).toBe(0); expect(f.workflows()).toEqual([]);
+  });
+  it("envelope scheduling failure rolls back the original admission and returns no actor/admission payload", async () => {
+    const f = await fixture(), before = f.snapshot(), failure = new Error("ENVELOPE_SCHEDULER_FAILURE");
+    const reached = afterDispatch(f, () => { throw failure; });
+    await expect(f.admitEnvelope()).rejects.toBe(failure); expect(reached.value).toBe(true); expect(f.snapshot()).toEqual(before);
+  });
   it("opt-in submit/start/get mutation spans preserve exact registered result and transactional effects", async () => {
     const f = await fixture(), rollback = new Error("REFERENCE_ROLLBACK"); let expected: Admission | undefined, after: unknown;
     delete process.env.CORTEX_RUNTIME_LATENCY_TRACE;
@@ -77,8 +111,8 @@ describe("combined native run admission", () => {
     expect(f.effects.saves).toBe(1); expect(f.workflows()).toHaveLength(1);
   });
   it("an enabled failed start span preserves original failure and complete parent rollback", async () => {
-    const f = await fixture(), before = f.snapshot(), failure = new Error("ORIGINAL_WORKFLOW_FAILURE");
-    const reached = afterWorkflow(f, () => { throw failure; });
+    const f = await fixture(), before = f.snapshot(), failure = new Error("ORIGINAL_SCHEDULER_FAILURE");
+    const reached = afterDispatch(f, () => { throw failure; });
     process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
     const output = jest.spyOn(console, "log").mockImplementation(() => {});
     await expect(f.admit()).rejects.toBe(failure); expect(reached.value).toBe(true); expect(f.snapshot()).toEqual(before);
@@ -184,7 +218,7 @@ describe("combined native run admission", () => {
   });
   it("an altered returned identity after native start rolls back the parent including Workflow insertion", async () => {
     const f = await fixture(), before = f.snapshot();
-    const reached = afterWorkflow(f, () => { f.db.table("runtimeRuns")[0].definitionHash = "unknown"; });
+    const reached = afterDispatch(f, () => { f.db.table("runtimeRuns")[0].definitionHash = "unknown"; });
     // Actual getHandler projects the changed DB row. The final tuple fence
     // catches it after real start/claim/scheduling have already succeeded.
     await expect(f.admit()).rejects.toThrow("TRANSCRIPT_CONFLICT");
@@ -197,7 +231,7 @@ describe("combined native run admission", () => {
   it.each(["read_missing", "grant_expired", "conversation_expired", "conversation_tombstoned", "run_tombstoned", "conversation_epoch"])(
     "%s after Workflow insertion is freshly denied and rolls back every effect", async kind => {
       const f = await fixture(), before = f.snapshot();
-      const reached = afterWorkflow(f, () => {
+      const reached = afterDispatch(f, () => {
         if (kind === "read_missing") f.grant.capabilities = (f.grant.capabilities as string[]).filter(cap => cap !== "read");
         if (kind === "grant_expired") f.grant.expiresAt = Date.now();
         if (kind === "conversation_expired") f.db.table("runtimeConversations")[0].retentionUntil = Date.now();
@@ -232,7 +266,7 @@ describe("combined native run admission", () => {
       const native = f.ctx.scheduler.runAfter.bind(f.ctx.scheduler);
       f.ctx.scheduler.runAfter = async (delay, ref, ...args) => {
         const result = await native(delay, ref, ...args);
-        if (getFunctionName(ref) === "runtimeAgent:executeTurn") {
+        if (getFunctionName(ref) === "runtimeAgent:executeDirectV6") {
           reached = true; expect(f.db.table("runtimeAgentExecutions")).toHaveLength(1); expect(f.workflows()).toHaveLength(1);
           throw new Error("INJECTED_NATIVE_FAILURE");
         }

@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 1,
+  "status": "SOURCE_COMPLETE_FROZEN",
+  "productBaseline": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "qaOnlyHead": "0cb6f10d0697f5143d3c6a660fb79822d61f26d9",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "jest": "explicit offline 127.0.0.1:9"
+  },
+  "ownedFiles": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "67d6c0440c2f0110d96f85b9f2e40294a2581fc3b2e545b95eaca7ec937b9f61",
+      "bytes": 138765
+    },
+    {
+      "path": "convex-dev/runtimeAgentSchema.ts",
+      "sha256": "1f619fd683befd8fc1db0d842d88ed9a8a4586fe542eab1885bf18344e88736e",
+      "bytes": 4090
+    },
+    {
+      "path": "tests/unit/runtimeAgent/direct-action.test.ts",
+      "sha256": "0b3186968dd4b23725b07e1cb16f5a342e085cc4bcecc8443a1eda039c50e3ca",
+      "bytes": 23543
+    },
+    {
+      "path": "tests/unit/runtimeAgent/direct-workflow.test.ts",
+      "sha256": "cdc6ce01bb1f1aa69cc4ae4742666dd57883b26728bd3231f3908fd0db67c0e4",
+      "bytes": 10363
+    },
+    {
+      "path": "tests/unit/runtimeAgent/start-native.test.ts",
+      "sha256": "c54affb8a0e07ebf0d96ef1d76521e6b7a3865f8d7bf6cc0611fe7a3031698e2",
+      "bytes": 22718
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "sha256": "c62207a83294f95108b4383a45d930ba74fbe5e525197ba66f5aeaf4d0968ac7",
+      "bytes": 71105
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-routing.test.ts",
+      "sha256": "ab7cb7575c82c70d112f0210baec3b56d510c57ebf0b001fbd5f6f4dc1b18869",
+      "bytes": 32971
+    },
+    {
+      "path": "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "sha256": "9c9a13a62615adac89b663d4680a6b67fc73e08aef8e5e4a07d0dbb7f62a076c",
+      "bytes": 17359
+    },
+    {
+      "path": "tests/unit/runtimeAgent/turn-workflow.test.ts",
+      "sha256": "a5bed3b6c5a7d032de9e45f4b585ed6941e7d11a3ea42045ebe380fdff4c5d2f",
+      "bytes": 11090
+    },
+    {
+      "path": "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "sha256": "827b31c4f08ad4f82c4b8c0902541b50a9aac6abeb7768d2e16db8ae812591fd",
+      "bytes": 16002
+    }
+  ],
+  "receipts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-source-report.md",
+      "sha256": "4f21507d5c66c86c0645c7ce249a18846335a472af5dea35dd43904edadd7204",
+      "bytes": 6677
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-direct-design.md",
+      "sha256": "35487fe3276fd0a7da7f86ab65f40c662e0f81fc14337b23def89edb74086c6b",
+      "bytes": 3213
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-equivalence.json",
+      "sha256": "13f6a1133f929709a70101413117aaa3854809391cde0ab2141dc22e18244114",
+      "bytes": 5459
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-equivalence-final.log",
+      "sha256": "c4a96a96a668c741f8875a98001ee76331fa1d5ba60a4fc0914127f89ec016a0",
+      "bytes": 110
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-selected-tests.json",
+      "sha256": "dfa0b66045d388b1866802d170f42bf1cf5cfed167bb7a6916982a350e6b8f3d",
+      "bytes": 1615
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-affected-v2.json",
+      "sha256": "e5fbaa6f23aeef86ade6f2e9061866ee1fdae35508f1dc2c79e3cf5b59b48b81",
+      "bytes": 487882
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-affected-v2.log",
+      "sha256": "23182fcaed3e1eb7331b7e41fe83079a8bfa76078a165f4abed3a7ef0afa6785",
+      "bytes": 25307
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-affected-v2.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-restored-v10.json",
+      "sha256": "67f8912afd62331ef66252c73c7822b6dd74578447b49a82b20b5ed67c9f1f69",
+      "bytes": 28478
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-scoped-lint-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-root-lint-v1.log",
+      "sha256": "90e67e721eb8d548d321d5b36ebc3f124f139b65f7aac6ed2044dc65510e3499",
+      "bytes": 39876
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scheduler-v5.json",
+      "sha256": "8d4bbacc5067e2435a26d9481a0a33e47dd58751d75b3a6b5cd19b44ac551e90",
+      "bytes": 1688
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scheduler-v5.log",
+      "sha256": "c9cbd3587c1c9b83455372cf59da50bc71b2a52fb66d07849ab7290c19efb211",
+      "bytes": 16942
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scheduler.mjs",
+      "sha256": "20c83cdaa7f91ce3e3fe076c848271699eb48a59dd40a93da7c20f97206175a0",
+      "bytes": 13591
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-install-cleanup.json",
+      "sha256": "dfbf45a1e811d9ec5676291224f9e09bd94bb7da752c49924099ae5f8760b79c",
+      "bytes": 1740
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-install.log",
+      "sha256": "57be65897dcd5d073918c387af21c02d91c9536e1d05a7fdb0b51f8b98eba1d0",
+      "bytes": 345
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-quality-inputs.json",
+      "sha256": "7bc6ef4244a7bc9e41f682210095ff16a2856c3aa4649cb61a35fb4d94bf2b3f",
+      "bytes": 1608
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-root-types-v1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-backend-types-v1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-lint-types-v1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-scoped-lint-v1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-build-v1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-packed-contracts-v1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-backend-roots-v2.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-backend-roots-v2.json",
+      "sha256": "f654b480b4ea0a20ee3eb0db132f580154663f112f11224a339733eef0b83920",
+      "bytes": 2238
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-query-embedding-freeze.json",
+      "sha256": "4679fe5d93f1740da8134fef0642494cbdff7dc0fbf48480b340edb6c19c9319",
+      "bytes": 2717
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-admission-envelope-freeze.json",
+      "sha256": "6427acff722ce6e532d8d0765ac84b6668c58dbea747dd855776a118dcb80efc",
+      "bytes": 1383
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-quality-final-receipt.json",
+      "sha256": "def75681cc10be1032c12aefb6f73d9edd50658f34655fa257fd7976c5eded12",
+      "bytes": 3094
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-joint-quality-report.md",
+      "sha256": "cbe097e1620da930d028c4775531109caaf54c6a0551c7860d346623cfb6290d",
+      "bytes": 2315
+    }
+  ],
+  "installedPrimaryContractInputs": [
+    {
+      "path": "node_modules/convex/src/server/scheduler.ts",
+      "sha256": "297c8050686e09e8023920aef735376ade32b61fa3aa977c153cbd0ab28af7ca",
+      "bytes": 5954
+    },
+    {
+      "path": "node_modules/@convex-dev/agent/src/vercel/client/start.ts",
+      "sha256": "a54d37635e9f705a5ad2bf37b90b3b66f736799d692d61d7742f2636cb079a7c",
+      "bytes": 13835
+    },
+    {
+      "path": "node_modules/@convex-dev/agent/src/vercel/client/saveInputMessages.ts",
+      "sha256": "d67871146dec2e16bb7317689edad298ad95b933bb6a14e433273542fe72dec4",
+      "bytes": 3123
+    },
+    {
+      "path": "node_modules/@convex-dev/agent/src/vercel/client/search.ts",
+      "sha256": "2a9b50e939d95c5f19a8ad25c33670e89b86fac6895e5aa35c7be71026860875",
+      "bytes": 23005
+    }
+  ],
+  "originalFailedTestReceipts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-affected-v1.json",
+      "sha256": "65a2f389ef0c86101936b8011b510694c5ac0f52df2fa48d0e97abdf923adecd",
+      "bytes": 498690,
+      "passed": 1022,
+      "failed": 2,
+      "total": 1024,
+      "accepted": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-direct-tests-v1.json",
+      "sha256": "509dd96c10140868fee8c26cf261fe59acba158f398c59c128da323d9e9e8814",
+      "bytes": 49074,
+      "passed": 16,
+      "failed": 4,
+      "total": 20,
+      "accepted": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-failed-v8.json",
+      "sha256": "a737f02b455e79a609c0c84b166a89676ba427b004f358f240f311527750f1db",
+      "bytes": 17090,
+      "passed": 31,
+      "failed": 0,
+      "total": 31,
+      "accepted": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-failed-v9.json",
+      "sha256": "0b972fc5a08d64be10c1922b17021627f5b1294ee83ec3af56683c7f91775d1f",
+      "bytes": 26322,
+      "passed": 30,
+      "failed": 1,
+      "total": 31,
+      "accepted": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-focused-v3.json",
+      "sha256": "d65981bb522d9ebab6425fc12d6c78c8aa454c126625dfe09da6ae58c71fa455",
+      "bytes": 35401,
+      "passed": 41,
+      "failed": 6,
+      "total": 47,
+      "accepted": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-focused-v4.json",
+      "sha256": "225717f26575e25b0d9b08ceabd05037d8ff9288d66aa5114aa00c17a0e47e85",
+      "bytes": 25501,
+      "passed": 46,
+      "failed": 1,
+      "total": 47,
+      "accepted": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-focused-v6.json",
+      "sha256": "063b3b17fc30a556856e0d382565fd25d5609eb357a8ca0605129d7bcfa686de",
+      "bytes": 135826,
+      "passed": 224,
+      "failed": 3,
+      "total": 227,
+      "accepted": false
+    }
+  ],
+  "finalTestCounts": {
+    "passed": 1025,
+    "total": 1025,
+    "suites": 29,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "historicalEquivalenceChecks": 20,
+  "scope": "Direct V6 scheduling and persisted tool continuation; fresh context hook retained; original V1-V5 bodies unchanged; resolveModelOperation raw-reader registration only; private embedding and admission envelope separately authored joint scope.",
+  "limitations": [
+    "No installed V6 qualification or cloud/SLO result",
+    "Native component fixture is in-memory with controlled scheduling",
+    "Prepared-context optimization rejected; no594ms saving",
+    "No services/inference/Git writes/Proofs or website edits"
+  ],
+  "scratchRemoved": true,
+  "jointQualityStatus": "PASS; final receipt proves frozen inputs and158 source/output hashes"
+}

@@ -51,6 +51,23 @@ export const session = mutation({
   handler: sessionHandler,
 });
 
+/** Preserve the original SDK pre-session predicate in the admission transaction.
+ * The client still performs its independent post-I/O session and actor fence.
+ * The existing three-field submitAndStart contract remains available unchanged. */
+export async function submitAndStartEnvelopeHandler(ctx: MutationCtx, args: Selectors & { request: unknown; streaming?: boolean }) {
+  const selectors = { ...(args.tenantId === undefined ? {} : { tenantId: args.tenantId }),
+    ...(args.memorySpaceId === undefined ? {} : { memorySpaceId: args.memorySpaceId }) };
+  const current = await sessionHandler(ctx, selectors);
+  const admission = await submitAndStartHandler(ctx, { request: args.request, streaming: args.streaming,
+    tenantId: current.tenantId, memorySpaceId: current.memorySpaceId });
+  if (admission.run.scope.tenantId !== current.tenantId || admission.run.scope.memorySpaceId !== current.memorySpaceId) transcriptDenied("SESSION_CHANGED");
+  return { version: 1 as const, session: current, admission };
+}
+export const submitAndStartEnvelope = mutation({
+  args: { request: v.any(), streaming: v.optional(v.boolean()), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
+  handler: (ctx, args) => submitAndStartEnvelopeHandler(createAuthorityReadScope(ctx), args),
+});
+
 type ObservationHandle = { version: 1; tenantId: string; memorySpaceId: string; principalId: string;
   runId: string; conversationId: string; agentId: string; agentVersion: number; definitionHash: string };
 /** Compose the original pre-session and private observation in one transaction.

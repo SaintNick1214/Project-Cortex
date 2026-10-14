@@ -1,0 +1,152 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:24142) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ✓ one registered preflight produces exact original profile/request/two-resolution data without writes or inference (77 ms)
+  ✓ preflight input refuses before any model/account writes (28 ms)
+  ✓ preflight requestId refuses before any model/account writes (22 ms)
+  ✓ preflight limit refuses before any model/account writes (21 ms)
+  ✓ preflight principal refuses before any model/account writes (24 ms)
+  ✓ preflight lease refuses before any model/account writes (21 ms)
+  ✓ preflight revocation refuses before any model/account writes (19 ms)
+  ✓ preflight expiry refuses before any model/account writes (21 ms)
+  ✓ actual Gateway query plus fresh native parent makes one paid-peer call and retains UNKNOWN capture independently (92 ms)
+  ✓ checkpoint known refusal commits reservation and rolls back only the failing native child (45 ms)
+  ✓ checkpoint unknown refusal commits reservation and rolls back only the failing native child (42 ms)
+  ✓ checkpoint partial_write refusal commits reservation and rolls back only the failing native child (42 ms)
+  ✓ lost successful parent reply cannot issue another permit or native peer call (65 ms)
+  ✓ fresh admission binding rejects a changed proposal without an inference or reservation (38 ms)
+  ✓ fresh admission text rejects a changed proposal without an inference or reservation (37 ms)
+  ✓ fresh admission profile rejects a changed proposal without an inference or reservation (38 ms)
+  ✓ fresh admission revoked rejects a changed proposal without an inference or reservation (33 ms)
+  ✓ fresh admission cancelled rejects a changed proposal without an inference or reservation (39 ms)
+  ✓ generic public-style recall still runs its original guard/profile ports and produces the same tail result (75 ms)
+  ✓ original checkpoint denial after reservation is returned while its grant mutation rolls back (44 ms)
+  ✓ snapshot refusal cannot erase the committed reservation or reach inference (42 ms)
+  ✓ opaque refusal cannot erase the committed reservation or reach inference (42 ms)
+  ✓ hostile-data refusal cannot erase the committed reservation or reach inference (42 ms)
+  ✓ Action rethrows original bounded checkpoint refusal without refund, retry or private attachment (44 ms)
+  ✓ confirmed UNKNOWN output replays through a fresh preflight and admission without another native call or liability (141 ms)
+  ✓ fresh admission retains current qualification refusal before reservation (37 ms)
+  ✓ fresh admission retains current policy refusal before reservation (37 ms)
+  ✓ fresh admission retains current budget refusal before reservation (44 ms)
+  ✓ fresh admission retains current account-reference refusal before reservation (34 ms)
+  ✓ fresh admission retains current parent refusal before reservation (38 ms)
+  ✓ fresh admission retains current source refusal before reservation (36 ms)
+  ✓ fresh admission retains current semantic refusal before reservation (39 ms)
+  ✓ fresh admission retains current batch refusal before reservation (39 ms)
+  ✓ readiness refuses a current authorized incompatible generation before query inference (28 ms)
+  ✓ preflight retains Agent-before-profile failure precedence (16 ms)
+  ✓ compound admission is transactionally identical to the original admission then checkpoint handlers (93 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.3s | 36/36 passed | /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.14s ( 3.2%) - confirmed UNKNOWN output replays through a fresh preflight and admission without another native call or liability
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 2. [32m✓[0m    0.09s ( 2.1%) - compound admission is transactionally identical to the original admission then checkpoint handlers
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 3. [32m✓[0m    0.09s ( 2.1%) - actual Gateway query plus fresh native parent makes one paid-peer call and retains UNKNOWN capture independently
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 4. [32m✓[0m    0.08s ( 1.7%) - one registered preflight produces exact original profile/request/two-resolution data without writes or inference
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 5. [32m✓[0m    0.07s ( 1.7%) - generic public-style recall still runs its original guard/profile ports and produces the same tail result
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 6. [32m✓[0m    0.07s ( 1.5%) - lost successful parent reply cannot issue another permit or native peer call
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 7. [32m✓[0m    0.04s ( 1.0%) - checkpoint known refusal commits reservation and rolls back only the failing native child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 8. [32m✓[0m    0.04s ( 1.0%) - original checkpoint denial after reservation is returned while its grant mutation rolls back
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 9. [32m✓[0m    0.04s ( 1.0%) - Action rethrows original bounded checkpoint refusal without refund, retry or private attachment
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+10. [32m✓[0m    0.04s ( 1.0%) - fresh admission retains current budget refusal before reservation
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+11. [32m✓[0m    0.04s ( 1.0%) - checkpoint unknown refusal commits reservation and rolls back only the failing native child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+12. [32m✓[0m    0.04s ( 1.0%) - checkpoint partial_write refusal commits reservation and rolls back only the failing native child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+13. [32m✓[0m    0.04s ( 1.0%) - snapshot refusal cannot erase the committed reservation or reach inference
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+14. [32m✓[0m    0.04s ( 1.0%) - opaque refusal cannot erase the committed reservation or reach inference
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+15. [32m✓[0m    0.04s ( 1.0%) - hostile-data refusal cannot erase the committed reservation or reach inference
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+16. [32m✓[0m    0.04s ( 0.9%) - fresh admission cancelled rejects a changed proposal without an inference or reservation
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+17. [32m✓[0m    0.04s ( 0.9%) - fresh admission retains current semantic refusal before reservation
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+18. [32m✓[0m    0.04s ( 0.9%) - fresh admission retains current batch refusal before reservation
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+19. [32m✓[0m    0.04s ( 0.9%) - fresh admission binding rejects a changed proposal without an inference or reservation
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+20. [32m✓[0m    0.04s ( 0.9%) - fresh admission profile rejects a changed proposal without an inference or reservation
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.12s (25.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.41s
+  Test suites:        1
+  Individual tests:   36
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        4.411 s, estimated 5 s
+Ran all test suites within paths "tests/unit/runtimeAgent/query-embedding-composition.test.ts".
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

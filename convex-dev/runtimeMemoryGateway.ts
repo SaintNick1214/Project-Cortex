@@ -17,13 +17,21 @@ import { dataAuthorityReference } from "./runtimeDataAuth";
 import { createBackendGatewayComposition, ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
 import type { BackendGatewayContext } from "./runtimeGatewayBackend";
 import { createGovernedGatewayModel, GatewayDispatchError } from "./runtimeGateway";
-import type { GatewayBinding, GatewayComposition } from "./runtimeGateway";
+import type { GatewayBinding, GatewayComposition, GatewayLedgerPort } from "./runtimeGateway";
 import { memoryError } from "./runtimeMemoryRepository";
 
 /** Existing run bindings are server-issued and checked again by the native ledger. */
 export interface MemoryGatewayRun {
   runBudgetId?: string;
   parentOperationId?: Id<"runtimeModelOperations">;
+  /** Private V6 query-only proposals; every admission is freshly fenced in its native parent. */
+  queryEmbedding?: {
+    binding: GatewayBinding;
+    requestCanonical: string;
+    resolutions: readonly [Awaited<ReturnType<GatewayLedgerPort["resolve"]>>, Awaited<ReturnType<GatewayLedgerPort["resolve"]>>];
+    refresh(): Promise<Awaited<ReturnType<GatewayLedgerPort["resolve"]>>>;
+    admitAndCheckpoint: NonNullable<GatewayLedgerPort["admitAndCheckpoint"]>;
+  };
 }
 
 function sourceKey(source: SourceReference): string {
@@ -66,6 +74,24 @@ export function createGatewayMemoryModel(
   } };
   async function prepare(request: InternalModelOperation, key: ModelOperationKey, ordinal: number) {
     if (request.attempt !== 1) memoryError("INVALID_INPUT", "Memory inference retries require a new governed operation");
+    if (key === "embedding.query" && run.queryEmbedding) {
+      const proposal = run.queryEmbedding, binding = proposal.binding;
+      if (ordinal !== 0 || binding.ordinal !== 0 || binding.operationKey !== key || binding.source !== undefined
+        || binding.parentOperationId !== undefined || binding.runBudgetId !== run.runBudgetId
+        || canonicalModelJson(binding.reference) !== canonicalModelJson(reference)
+        || canonicalModelJson(request) !== proposal.requestCanonical) memoryError("POLICY_DENIED", "Query embedding proposal binding changed");
+      const prepared = [...proposal.resolutions];
+      const atomic = createBackendGatewayComposition(ctx, proposal.admitAndCheckpoint);
+      const expectedResolution = { reference: binding.reference, operationKey: binding.operationKey, runBudgetId: binding.runBudgetId };
+      const resolve: GatewayLedgerPort["resolve"] = async args => {
+        if (canonicalModelJson(args) !== canonicalModelJson(expectedResolution)) memoryError("POLICY_DENIED", "Query embedding resolution binding changed");
+        return prepared.shift() ?? await proposal.refresh();
+      };
+      const privateComposition = { ...atomic, ledger: { ...atomic.ledger, resolve } };
+      const resolution = await privateComposition.ledger.resolve(expectedResolution);
+      const governed = await createGovernedGatewayModel(privateComposition, binding);
+      return { ...governed, resolution, sourceContent: undefined };
+    }
     await repository.recheckAuthority();
     let source: GatewayBinding["source"];
     let sourceContent: SourceContent | undefined;

@@ -239,11 +239,12 @@ it("a lost completed native result cannot repeat context saves or create model w
   const f = await fixture(), { args } = await f.start(); expect(await f.call(runtime.prepareRoutedContext, args)).toEqual({ state: "COMPLETE" }); const before = state(f);
   await expect(f.call(runtime.prepareRoutedContext, args)).rejects.toThrow("INVALID_STATE"); expect(state(f)).toEqual(before);
 });
-it("fresh starts route only V4 with immediate initialization and completion/duplicate ownership contracts", async () => {
-  const f = await fixture(), { run } = await f.start(); expect(starts).toHaveLength(1); expect(getFunctionName(starts[0][1] as never)).toBe("runtimeAgent:executeTurnV5");
-  expect(starts[0][3]).toMatchObject({ startAsync: false, context: { runId: run.runId, attemptNumber: 1 } });
-  expect(getFunctionName((starts[0][3] as { onComplete: never }).onComplete)).toBe("runtimeAgent:onInitialWorkflowComplete");
-  await f.call(runtime.start, { runId: run.runId }); expect(starts).toHaveLength(1);
+it("fresh ordinary starts atomically schedule V6 and retain duplicate ownership", async () => {
+  const f = await fixture(), { run } = await f.start(); expect(starts).toEqual([]);
+  const scheduled = f.scheduled.filter(row => row.name === "runtimeAgent:executeDirectV6"); expect(scheduled).toHaveLength(1);
+  expect(scheduled[0].args).toMatchObject({ runId: run.runId, attemptNumber: 1 });
+  expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ executionMode: "direct-v6", directState: "scheduled" });
+  await f.call(runtime.start, { runId: run.runId }); expect(starts).toEqual([]); expect(f.scheduled.filter(row => row.name === "runtimeAgent:executeDirectV6")).toHaveLength(1);
 });
 async function drive(f: Fixture, args: Awaited<ReturnType<Fixture["start"]>>["args"], options: { entries?: Entry[]; journalModel?: boolean } = {}) {
   const channel = new BaseChannel<Request>(), entries: Entry[] = [], invoked: string[] = [], actions: { name: string; args: unknown; retry: boolean }[] = [], failures: string[] = [], sleeps: number[] = [];

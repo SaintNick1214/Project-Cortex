@@ -1,0 +1,291 @@
+(node:23527) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/direct-action.test.ts (5.581 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● V6 populated indexed fallback invokes the actual private preparation parent with the original derived input
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 2
+
+    @@ -1,11 +1,12 @@
+      Object {
+        "attemptNumber": 1,
+        "input": Object {
+          "limit": 10,
+          "requestId": "context:28e51d13f752e68f6d677f7cbd322944f231d81cf81e8b8fc0c520df3b0ae90d",
+    -     "text": "Hello world!",
+    +     "text": "Hello 
+    + world!",
+        },
+        "leaseVersion": 1,
+        "reference": Object {
+          "grantId": "runtimeAuthGrants:5",
+          "grantVersion": 1,
+
+      202 |   }) as MutationCtx["runQuery"];
+      203 |   await expect(direct(f, args)).rejects.toThrow("CONTROLLED_AFTER_ACTUAL_QUERY_PREFLIGHT"); expect(reached).toBe(1);
+    > 204 |   expect(nativeInput).toEqual({ ...args, input: { text: "Hello world!", requestId: `context:${await (await import("../../../src/domain/profile")).semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 } });
+          |                       ^
+      205 |   expect(providerCalls).toBe(0); expect(f.db.table("runtimeModelAttempts")).toEqual([]); expect(f.db.table("runtimeAgentIngestion")).toEqual([]);
+      206 | });
+      207 |
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:204:23)
+
+PASS tests/unit/runtimeAgent/context-routing.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/runtimeAgent/execution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● durable Agent execution product boundaries › start rejects definition-revoked before Workflow or model effects
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attemptNumber": 1, "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "state": "ready"}
+
+      136 |     if (kind === "definition-revoked") f.db.table("runtimeAgentDefinitions")[0].revokedAt = Date.now();
+      137 |     if (kind === "conversation-tombstone") f.db.table("runtimeConversations")[0].tombstonedAt = Date.now();
+    > 138 |     await expect(f.call(runtime.start, { runId: run.runId })).rejects.toThrow(); expect(starts).toEqual([]); expect(f.db.table("runtimeAgentOperations")).toEqual([]);
+          |           ^
+      139 |   });
+      140 |   it("future queued request remains durable and only dispatches after the current head retires", async () => {
+      141 |     const f = await fixture(); const first = await started(f); const next = await f.run("second", first.run.conversationId);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAgent/execution.test.ts:138:11
+
+  ● atomic native model preparation › current definition fence denies before preparation effects
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"current": {"definition": {"agentId": "agent:abaeffbba47824344e26b91a15330fe38650f5ee75978e220b3ac595cd4e5fad", "agentVersion": 1, "context": {"handlerId": "cortex.transcript", "handlerVersion": 1, "maxContextTokens": 160000, "memoryMode": "strict", "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754", "requiredStages": []}, "instructions": {"promptVersion": "prompt-1", "text": "HIDDEN instructions PROVIDER_SECRET"}, "memorySpaceId": "space-a", "ownerPrincipalId": "runtimeAuthPrincipals:1", "policies": [{"agentId": "agent:abaeffbba47824344e26b91a15330fe38650f5ee75978e220b3ac595cd4e5fad", "agentVersion": 1, "policyId": "agent-default", "rules": {"limits": {"toolSteps": 0}}, "scope": "agent", "tenantId": "tenant-a", "version": 1}], "tenantId": "tenant-a", "tools": [], "version": 1}, "execution": {"_creationTime": 1000000, "_id": "runtimeAgentExecutions:24", "attemptNumber": 1, "contextCanonical": "private memory context SENTINEL", "contextCompleteness": "complete", "contextFailureCode": undefined, "contextState": "complete", "createdAt": 1000000, "leaseVersion": 1, "mediaJobReferences": [], "memorySpaceId": "space-a", "nextModelStep": 0, "nextOutputSequence": 0, "reference": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "savedMessageIds": [], "savedMessagePins": [], "sourceWitnesses": [], "state": "running", "streaming": true, "tenantId": "tenant-a", "toolCount": 0, "updatedAt": 1000000, "workflowId": "workflow:1"}, "messages": [{"content": [{"text": "Hello ", "type": "text"}, {"text": "world!", "type": "text"}], "role": "user"}], "run": {"_creationTime": 1000000, "_id": "runtimeRuns:21", "agentId": "agent:abaeffbba47824344e26b91a15330fe38650f5ee75978e220b3ac595cd4e5fad", "agentVersion": 1, "attemptNumber": 1, "authorityReference": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "contextCompleteness": "complete", "contextFailureCode": undefined, "conversationEpoch": 1, "conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "createdAt": 1000000, "definitionHash": "b86b6fbac01c16d3fe3cf0c001d686129da655919aa6465a990a37b2f30114e6", "executionRequested": true, "graphStatus": "not_requested", "historyRevision": 0, "inputMessageIds": ["native:2"], "memorySpaceId": "space-a", "memoryStatus": "pending", "outputMessageIds": [], "ownerPrincipalId": "runtimeAuthPrincipals:1", "queueSequence": 1, "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",[\"create\"],\"input-1\"],\"publicRequest\":{\"agentId\":\"agent:abaeffbba47824344e26b91a15330fe38650f5ee75978e220b3ac595cd4e5fad\",\"agentVersion\":1,\"clientRequestId\":\"input-1\",\"parts\":[{\"text\":\"Hello \",\"type\":\"text\"},{\"text\":\"world!\",\"type\":\"text\"}],\"version\":1},\"version\":1}", "requestIdentityCanonical": "[\"cortex.submit.v1\",\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",[\"create\"],\"input-1\"]", "requestIdentityHash": "fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "responseStatus": "running", "runAccountId": "runtimeBudgetAccounts:12", "runBudgetId": "a3cb7898dbb2a452df6fe2a095262458b3954641ea062324d75e11983dc5ce5c", "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"f4c876dbb4237d7a7dc6ef82c9ba7521bba41993bc5ded8f48ffe9e83f75cb54\",\"contentHash\":\"8b8204d3e902e97094877e40aa68c84aba3083cb8d955f1b337a6635bc2e55b7\",\"nativeMessageId\":\"native:2\",\"order\":0,\"sourceEventId\":\"transcript:conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31:native:2\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31\",\"definitionHash\":\"b86b6fbac01c16d3fe3cf0c001d686129da655919aa6465a990a37b2f30114e6\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"graphSequence\":0,\"requiredStages\":[],\"scopeIdentity\":\"[\\\"tenant-a\\\",\\\"space-a\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"f4c876dbb4237d7a7dc6ef82c9ba7521bba41993bc5ded8f48ffe9e83f75cb54\",\"contentHash\":\"8b8204d3e902e97094877e40aa68c84aba3083cb8d955f1b337a6635bc2e55b7\",\"nativeMessageId\":\"native:2\",\"order\":0,\"sourceEventId\":\"transcript:conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31:native:2\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"runtimeRuns:21\",\"threadId\":\"thread:1\",\"version\":1}", "streamingRequested": true, "tenantId": "tenant-a", "updatedAt": 1000000}, "snapshot": {"anchor": {"canonicalContentHash": "f4c876dbb4237d7a7dc6ef82c9ba7521bba41993bc5ded8f48ffe9e83f75cb54", "contentHash": "8b8204d3e902e97094877e40aa68c84aba3083cb8d955f1b337a6635bc2e55b7", "nativeMessageId": "native:2", "order": 0, "sourceEventId": "transcript:conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31:native:2", "sourceRevision": 1, "stepOrder": 0}, "attemptNumber": 1, "capturedAuthorityReference": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "completeness": "complete", "conversationEpoch": 1, "conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "definitionHash": "b86b6fbac01c16d3fe3cf0c001d686129da655919aa6465a990a37b2f30114e6", "definitionVersion": 1, "historyRevision": 0, "ingestionCutoff": {"graphSequence": 0, "requiredStages": [], "scopeIdentity": "[\"tenant-a\",\"space-a\"]", "sequence": 1}, "messages": [{"canonicalContentHash": "f4c876dbb4237d7a7dc6ef82c9ba7521bba41993bc5ded8f48ffe9e83f75cb54", "contentHash": "8b8204d3e902e97094877e40aa68c84aba3083cb8d955f1b337a6635bc2e55b7", "nativeMessageId": "native:2", "order": 0, "sourceEventId": "transcript:conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31:native:2", "sourceRevision": 1, "stepOrder": 0}], "queueSequence": 1, "runDocId": "runtimeRuns:21", "threadId": "thread:1", "version": 1}, "threadId": "thread:1"}, "op": {"nativeMessageIds": [], "operationId": "agent-op:f94961cc1f25dc8970c1508c747eb79b9ef15c147ee8040066e7cd2346c326d6", "resultCanonical": null, "semanticId": "f94961cc1f25dc8970c1508c747eb79b9ef15c147ee8040066e7cd2346c326d6", "state": "prepared"}, "state": "started"}
+
+      643 |     if (fault === "cancelled") await f.call(runtime.cancel, { runId: args.runId });
+      644 |     const before = snapshot(f);
+    > 645 |     await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal: 0,
+          |           ^
+      646 |       ...(fault === "wrong-lease" ? { leaseVersion: args.leaseVersion + 1 } : {}),
+      647 |       ...(fault === "wrong-attempt" ? { attemptNumber: args.attemptNumber + 1 } : {}) })).rejects.toThrow();
+      648 |     expect(snapshot(f)).toEqual(before); expect(f.db.table("runtimeAgentOperations")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAgent/execution.test.ts:645:11
+
+PASS tests/unit/runtimeAgent/start-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"preparation-authority-fixture-count","unscoped":192,"scoped":28}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:194:11)
+
+PASS tests/unit/runtimeAgent/direct-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.6s | 25/26 passed | /tests/unit/runtimeAgent/direct-action.test.ts
+  ✅     2.8s | 52/52 passed | /tests/unit/runtimeAgent/context-routing.test.ts
+  ✅     2.3s | 39/39 passed | /tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ❌     2.1s | 84/86 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     1.6s | 22/22 passed | /tests/unit/runtimeAgent/start-native.test.ts
+  ✅     1.1s | 2/2 passed | /tests/unit/runtimeAgent/direct-workflow.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.33s ( 2.1%) - one direct empty turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 2. [32m✓[0m    0.20s ( 1.3%) - prepared V6 context constructs exactly the original V5 Agent prompt with pending=true
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 3. [32m✓[0m    0.19s ( 1.2%) - prepared V6 context constructs exactly the original V5 Agent prompt with pending=false
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 4. [32m✓[0m    0.12s ( 0.8%) - one direct populated_pending turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 5. [32m✓[0m    0.12s ( 0.7%) - metadata_overflow needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 6. [32m✓[0m    0.11s ( 0.7%) - a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 7. [32m✓[0m    0.10s ( 0.7%) - one direct final_only turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 8. [32m✓[0m    0.10s ( 0.7%) - a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 9. [32m✓[0m    0.10s ( 0.7%) - completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+10. [32m✓[0m    0.10s ( 0.7%) - lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+11. [32m✓[0m    0.10s ( 0.7%) - revocation after completed tool output denies recovery without attaching a new Workflow
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+12. [32m✓[0m    0.10s ( 0.6%) - direct claim/preparation equals the original prefix and V5 preparation outcomes
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+13. [32m✓[0m    0.08s ( 0.5%) - provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+14. [32m✓[0m    0.07s ( 0.5%) - inline empty context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+15. [32m✓[0m    0.07s ( 0.5%) - pending_overflow_warn needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+16. [32m✓[0m    0.07s ( 0.4%) - installed V6 journal reads completed first operation, owns explicit approval, and never queues ordinal0 inference
+    /tests/unit/runtimeAgent/direct-workflow.test.ts
+
+17. [32m✓[0m    0.06s ( 0.4%) - V6 prepared prompt cannot authorize budget changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+18. [32m✓[0m    0.06s ( 0.4%) - metadata overflow routes conservatively at the original bounded 1025-row cap without full pending/profile work
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+19. [32m✓[0m    0.06s ( 0.4%) - empty falls through to the original exact proof/save outcome
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+20. [32m✓[0m    0.06s ( 0.4%) - V6 prepared prompt cannot authorize qualification changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.22s (14.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      15.63s
+  Test suites:        6
+  Individual tests:   222
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 failed, 4 passed, 6 total
+Tests:       3 failed, 224 passed, 227 total
+Snapshots:   0 total
+Time:        15.632 s, estimated 18 s
+Ran all test suites within paths "tests/unit/runtimeAgent/direct-action.test.ts", "tests/unit/runtimeAgent/direct-workflow.test.ts", "tests/unit/runtimeAgent/start-native.test.ts", "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeAgent/context-routing.test.ts", "tests/unit/runtimeAgent/empty-context-inline.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-focused-v6.json

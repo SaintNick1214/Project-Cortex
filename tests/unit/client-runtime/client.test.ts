@@ -26,7 +26,7 @@ function fixture(autoAuth = true, onLatencyEvent?: (event: RuntimeLatencyEvent) 
       if (expected.principalId !== current.principalId || expected.tenantId !== current.tenantId || expected.memorySpaceId !== current.memorySpaceId) throw new CortexRuntimeError("SESSION_CHANGED");
       privateReads++; return envelope(observe, current);
     }
-    if (name === "runtimeClient:submitAndStart") return { version: 1, run: value, start: { runId: value.runId, attemptNumber: value.attemptNumber, state: "ready" } };
+    if (name === "runtimeClient:submitAndStartEnvelope") return { version: 1, session: current, admission: { version: 1, run: value, start: { runId: value.runId, attemptNumber: value.attemptNumber, state: "ready" } } };
     if (name === "runtimeMemory:defaultProfile") return { version: 1, profile: { profileId: "profile", dimensions: 1536 } };
     return value;
   });
@@ -51,10 +51,10 @@ describe("browser remote runtime client", () => {
     try {
       expect(await f.token(true)).toBe("opaque-host-jwt");
       await f.client.submitAndStart({ ...request, parts: [{ type: "text", text: "PRIVATE_PROMPT_TRACE_SENTINEL" }] });
-      expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:session", "runtimeClient:submitAndStart", "runtimeClient:session"]);
+      expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:submitAndStartEnvelope", "runtimeClient:session"]);
       expect(events.slice(0, 2).map(event => event.phase)).toEqual(["auth.begin", "auth.ready"]);
       const begins = events.filter(event => event.phase === "rpc.begin"), ends = events.filter(event => event.phase === "rpc.end");
-      expect(begins.map(event => event.rpcId)).toEqual([1, 2, 3]); expect(ends.map(event => event.rpcId)).toEqual([1, 2, 3]);
+      expect(begins.map(event => event.rpcId)).toEqual([1, 2]); expect(ends.map(event => event.rpcId)).toEqual([1, 2]);
       expect(begins.map(event => event.method)).toEqual(f.calls.map(call => call.name));
       for (const event of events) {
         expect(Object.isFrozen(event)).toBe(true);
@@ -99,7 +99,7 @@ describe("browser remote runtime client", () => {
     const callback = mode === "sync" ? () => { throw new Error("diagnostic failure"); } : async () => { throw new Error("diagnostic failure"); };
     // Exercise a host accidentally violating the synchronous callback type.
     const f = fixture(true, callback as (event: RuntimeLatencyEvent) => void); expect((await f.client.submitAndStart(request)).handle).toEqual(handle); await tick();
-    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:session", "runtimeClient:submitAndStart", "runtimeClient:session"]);
+    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:submitAndStartEnvelope", "runtimeClient:session"]);
     await f.client.close(); expect(f.port.close).not.toHaveBeenCalled();
   });
   it("diagnostic clock failure uses a finite monotonic fallback without changing admission", async () => {
@@ -113,14 +113,13 @@ describe("browser remote runtime client", () => {
       await f.client.close();
     } finally { clock.mockRestore(); wall.mockRestore(); }
   });
-  it("uses three serial RPCs for combined admission before attaching the durable watcher", async () => {
+  it("uses native pre-session admission and fresh post-session RPCs before attaching the durable watcher", async () => {
     const f = fixture();
     const result = await f.client.submitAndStart(request, { streaming: false });
     expect(result).toEqual({ handle, run: value, start: { runId: "run", attemptNumber: 1, state: "ready" } });
     expect(Object.isFrozen(result.handle)).toBe(true);
     expect(f.calls).toEqual([
-      { name: "runtimeClient:session", args: { tenantId: "tenant", memorySpaceId: "space" } },
-      { name: "runtimeClient:submitAndStart", args: { tenantId: "tenant", memorySpaceId: "space", request, streaming: false } },
+      { name: "runtimeClient:submitAndStartEnvelope", args: { tenantId: "tenant", memorySpaceId: "space", request, streaming: false } },
       { name: "runtimeClient:session", args: { tenantId: "tenant", memorySpaceId: "space" } },
     ]);
     expect(f.subscriptions).toHaveLength(0);
@@ -140,11 +139,11 @@ describe("browser remote runtime client", () => {
     { version: 1, run: { ...value, privateOutput: "must not deliver" }, start: { runId: "run", attemptNumber: 1, state: "ready" } },
   ])("withholds changed or unknown combined output identity %#", async response => {
     const f = fixture(), fresh = f.mutation.getMockImplementation()!;
-    f.mutation.mockImplementation(async (ref, args) => getFunctionName(ref) === "runtimeClient:submitAndStart" ? response as never : await fresh(ref, args));
+    f.mutation.mockImplementation(async (ref, args) => getFunctionName(ref) === "runtimeClient:submitAndStartEnvelope" ? { version: 1, session: verified, admission: response } as never : await fresh(ref, args));
     const pending = f.client.submitAndStart(request);
     await expect(pending).rejects.toBeInstanceOf(CortexRuntimeError);
     await expect(pending).rejects.toMatchObject({ outcome: "uncertain" });
-    expect(f.calls.filter(call => call.name === "runtimeClient:session")).toHaveLength(2);
+    expect(f.calls.filter(call => call.name === "runtimeClient:session")).toHaveLength(1);
     expect(f.subscriptions).toEqual([]); await f.client.close();
   });
   it.each([{ streaming: "false" }, { model: "unsafe" }, { context: "injected" }])("refuses combined execution override before RPC %#", async options => {
@@ -152,19 +151,49 @@ describe("browser remote runtime client", () => {
     expect(f.calls).toEqual([]); await f.client.close();
   });
   it.each([
+    { version: 2, session: verified, admission: {} },
+    { version: 1, session: verified, admission: {}, privateOutput: "must not deliver" },
+    { version: 1, session: { ...verified, authority: "caller claim" }, admission: {} },
+  ])("withholds malformed native admission envelope %# without installing an observer", async raw => {
+    const f = fixture(), fresh = f.mutation.getMockImplementation()!;
+    f.mutation.mockImplementation(async (ref, args) => getFunctionName(ref) === "runtimeClient:submitAndStartEnvelope" ? raw as never : await fresh(ref, args));
+    await expect(f.client.submitAndStart(request)).rejects.toMatchObject({ code: "INVALID_RESPONSE", outcome: "uncertain" });
+    expect(f.subscriptions).toEqual([]); await f.client.close();
+  });
+  it("preserves omitted selectors for native ambiguity checks rather than deriving them from a returned handle", async () => {
+    const f = fixture(true, undefined, {});
+    expect((await f.client.submitAndStart(request)).handle).toEqual(handle);
+    expect(f.calls).toEqual([
+      { name: "runtimeClient:submitAndStartEnvelope", args: { request, streaming: true } },
+      { name: "runtimeClient:session", args: {} },
+    ]);
+    await f.client.close();
+  });
+  it("withholds a valid admission paired with a different claimed native actor at its independent post-I/O fence", async () => {
+    const f = fixture(), fresh = f.mutation.getMockImplementation()!;
+    f.mutation.mockImplementation(async (ref, args) => {
+      const result = await fresh(ref, args);
+      return getFunctionName(ref) === "runtimeClient:submitAndStartEnvelope"
+        ? { ...(result as object), session: { ...verified, principalId: "foreign" } } as never : result;
+    });
+    await expect(f.client.submitAndStart(request)).rejects.toMatchObject({ code: "SESSION_CHANGED", outcome: "uncertain" });
+    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:submitAndStartEnvelope", "runtimeClient:session"]);
+    expect(f.subscriptions).toEqual([]); await f.client.close();
+  });
+  it.each([
     { ...verified, principalId: "foreign" }, { ...verified, memorySpaceId: "foreign" }, { ...verified, tenantId: "foreign" },
   ])("retains the fresh post-I/O combined session fence %#", async changed => {
     const f = fixture(), fresh = f.mutation.getMockImplementation()!;
     f.mutation.mockImplementation(async (ref, args) => { const result = await fresh(ref, args);
-      if (getFunctionName(ref) === "runtimeClient:submitAndStart") f.session(changed); return result; });
+      if (getFunctionName(ref) === "runtimeClient:submitAndStartEnvelope") f.session(changed); return result; });
     await expect(f.client.submitAndStart(request)).rejects.toMatchObject({ code: "SESSION_CHANGED", outcome: "uncertain" });
-    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:session", "runtimeClient:submitAndStart", "runtimeClient:session"]);
+    expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:submitAndStartEnvelope", "runtimeClient:session"]);
     await f.client.close();
   });
   it("withholds admission after time-only grant expiry during its post-I/O session read", async () => {
     const f = fixture(), fresh = f.mutation.getMockImplementation()!;
     f.mutation.mockImplementation(async (ref, args) => { const result = await fresh(ref, args);
-      if (getFunctionName(ref) === "runtimeClient:submitAndStart") f.session({ ...verified, deliveryExpiresAt: Date.now() - 1 }); return result; });
+      if (getFunctionName(ref) === "runtimeClient:submitAndStartEnvelope") f.session({ ...verified, deliveryExpiresAt: Date.now() - 1 }); return result; });
     await expect(f.client.submitAndStart(request)).rejects.toMatchObject({ code: "AUTHORITY_EXPIRED", outcome: "uncertain" });
     expect(f.subscriptions).toEqual([]); await f.client.close();
   });
@@ -378,7 +407,7 @@ describe("browser remote runtime client", () => {
     const f = fixture(); let release = (_value: unknown) => {}, started = () => {};
     const ready = new Promise<void>(resolve => { started = resolve; }); const response = new Promise<unknown>(resolve => { release = resolve; });
     const target = { get: "runs:get", attach: "runs:get", messages: "runtimeTranscript:messages", listConversations: "runtimeTranscript:list",
-      getDefinition: "agentDefinitions:get", getDefaultProfile: "runtimeMemory:defaultProfile", recall: "runtimeMemory:recall", submitAndStart: "runtimeClient:submitAndStart" }[method];
+      getDefinition: "agentDefinitions:get", getDefaultProfile: "runtimeMemory:defaultProfile", recall: "runtimeMemory:recall", submitAndStart: "runtimeClient:submitAndStartEnvelope" }[method];
     f.mutation.mockImplementation(async (ref, _args) => { if (getFunctionName(ref) === "runtimeClient:session") return verified;
       if (getFunctionName(ref) === target) { started(); return await response as RuntimeRun; } return value; });
     if (method === "recall") f.action.mockImplementation(async () => { started(); await response; return { items: [], context: "", profileId: "profile" }; });
@@ -456,7 +485,7 @@ describe("browser remote runtime client", () => {
       const f = fixture(); let release = (_value: unknown) => {}, issued = 0;
       const fresh = f.mutation.getMockImplementation()!;
       f.mutation.mockImplementation(async (ref, args) => {
-        if (getFunctionName(ref) === (method === "submit" ? "runs:submit" : "runtimeClient:submitAndStart")) { issued++; return await new Promise<unknown>(resolve => { release = resolve; }) as never; }
+        if (getFunctionName(ref) === (method === "submit" ? "runs:submit" : "runtimeClient:submitAndStartEnvelope")) { issued++; return await new Promise<unknown>(resolve => { release = resolve; }) as never; }
         return await fresh(ref, args);
       });
       const client = new CortexRuntimeClient({ deploymentUrl: "https://fixture.convex.cloud", fetchToken: f.fetchToken, client: f.port, requestTimeoutMs: 30 });

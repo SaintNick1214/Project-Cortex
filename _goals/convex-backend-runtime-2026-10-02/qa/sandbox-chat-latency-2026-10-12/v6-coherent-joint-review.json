@@ -1,0 +1,166 @@
+{
+  "verdict": "PASS",
+  "scope": "One independent coherent source/test/docs gate for V6 direct ordinary execution, private Agent query embedding composition, and native pre-session admission envelope.",
+  "policy": "Acceptance policy v2: requirements/tests/completeness >=4, code/pattern >=3, zero breaking findings.",
+  "dimensions": {
+    "requirements": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4,
+  "breakingFindings": [],
+  "importantFindings": [],
+  "baseline": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "qaOnlyHead": "0cb6f10d0697f5143d3c6a660fb79822d61f26d9",
+  "sourceHashPacket": {
+    "path": "v6-coherent-source-review-packet.json",
+    "sha256": "143131b3a3f002a81ab5213fa91bc3a713104cc6f1ec321b7b5cc4f66af93486",
+    "files": 19,
+    "sourceAndTestHashesMatchBeforeAfter": true
+  },
+  "productionHashes": {
+    "convex-dev/runtimeAgent.ts": "67d6c0440c2f0110d96f85b9f2e40294a2581fc3b2e545b95eaca7ec937b9f61",
+    "convex-dev/runtimeAgentSchema.ts": "1f619fd683befd8fc1db0d842d88ed9a8a4586fe542eab1885bf18344e88736e",
+    "convex-dev/runtimeClient.ts": "375534f93a758cb9fe6fcafd3fd04f73075419c9793901e6b35bb53fe85cb21b",
+    "convex-dev/runtimeMemoryGateway.ts": "5088a8e6cf8804cf1ff07207f0598a35b45737412b2c9748e52297cf9b68d711",
+    "convex-dev/runtimeMemoryServices.ts": "1c1309e752ba1be8454e560cfaf7c09ff87ca2885e66cec4bf07743fe8bea8c9",
+    "src/client-runtime/client.ts": "ae6243e15ab1a2b40fea4613e4df1ece5da9eafdc1a40fc364a83bb53f27f690",
+    "convex-dev/runtimeAgentQueryEmbedding.ts": "bd1542c4a62ae5c365d4fc52b4ebabb761dc3c7a67f36cf7590ce716af2b88da"
+  },
+  "finalPackets": {
+    "cloud-v6-source-report.md": "4f21507d5c66c86c0645c7ce249a18846335a472af5dea35dd43904edadd7204",
+    "cloud-v6-source-freeze.json": "b2de2bf646b6bb4051eeeae22ef888c056a759e0f993e7f218c3169a47e3fa54",
+    "cloud-v6-equivalence.json": "13f6a1133f929709a70101413117aaa3854809391cde0ab2141dc22e18244114",
+    "cloud-agent-query-embedding-freeze.json": "4679fe5d93f1740da8134fef0642494cbdff7dc0fbf48480b340edb6c19c9319",
+    "v6-admission-envelope-freeze.json": "6427acff722ce6e532d8d0765ac84b6668c58dbea747dd855776a118dcb80efc",
+    "v6-joint-quality-final-receipt.json": "def75681cc10be1032c12aefb6f73d9edd50658f34655fa257fd7976c5eded12",
+    "docs-v6-coherent-freeze-receipt.json": "c75cd81149cfd675a006f796c73c056958b8b994ad4bb895f292141468415a45"
+  },
+  "requirements": {
+    "ordinaryScheduling": "Original claim/execution and scheduled Action identity commit atomically; direct state prevents duplicate preparation/provider replay.",
+    "failureRecovery": "Original failed/cancelled/UNKNOWN disposition and unchanged lease-bound retirement; public reconciliation recovers canonical final output or a persisted first-result continuation, never repeats ordinal0 inference.",
+    "workflowCompatibility": "Strict new definitions keep V5 barriers/deadlines; V1-V5 bodies/callbacks unchanged; additive V6 tool journal owns original approval/tool loop and retry:false later Actions.",
+    "freshContext": "Original executePreparedModelStep/contextHandler fully restored and byte identical. Rejected static prepared-hook prototype is not accepted.",
+    "embeddingPreflight": "Original current Agent, authority, profile/readiness/preparation and two resolution predicates retained; returned proposals do not authorize dispatch.",
+    "embeddingAdmission": "Fresh attempt/input/text/requestId/profile/semantic/ordinal/budget/reference/source/parent/request checks; original admit plus original nested checkpoint.",
+    "accounting": "Checkpoint refusal commits reservation and rolls back child only; lost permit cannot fund another provider call; capture and private attachment remain independently durable; confirmed UNKNOWN replay resolves/admit freshly without a provider repeat.",
+    "recallTail": "Original post-embedding validation, vector/fact overlap, deterministic order/error priority, bindings, source/fact/profile delivery and Action expiry retained; generic recall/ingestion unchanged.",
+    "sdkAdmission": "Native original pre-session before writes + independent fresh post-I/O session; actor/scope/generation/expiry/DTO checks, original return and uncertainty/no-retry contract; ordinary path two RPCs.",
+    "observers": "Original observer post-I/O fence unchanged."
+  },
+  "evidence": {
+    "hashesAndReferencedFrozenReceiptsMatch": true,
+    "authorA": {
+      "raw": "cloud-v6-affected-v2.json",
+      "passed": 1025,
+      "total": 1025,
+      "suites": 29,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "selectedPathsEqualExecuted": true,
+      "directActionCases": 26,
+      "directWorkflowCases": 2
+    },
+    "authorB": {
+      "log": "cloud-agent-query-embedding-focused-final-v4.log",
+      "passed": 47,
+      "total": 47,
+      "suites": 2,
+      "skipped": 0,
+      "exit": 0
+    },
+    "admission": {
+      "raw": "v6-admission-envelope-focused-v4.json",
+      "passed": 118,
+      "total": 118,
+      "suites": 2,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "countsOverlapAndAreNotAdded": true,
+    "installedFixture": {
+      "raw": "cloud-v6-native-scheduler-v5.json",
+      "realInstalledAgentComponent": true,
+      "actualProductHandlers": true,
+      "convex": "1.46.0",
+      "convexTest": "0.0.61",
+      "paidAttempts": 0,
+      "modelMethodsInHookOrderingProof": 0,
+      "schedulingPortsControlled": true,
+      "hostedOrNativeOccProof": false
+    },
+    "historicalEquivalenceChecks": 20,
+    "quality": {
+      "rootTypes": 0,
+      "backendTypes": 0,
+      "lintTypes": 0,
+      "scopedLint": 0,
+      "build": 0,
+      "actualPackedContracts": 0,
+      "correctBuiltRootAssertions": 0,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "backendFiles": 158,
+      "tables": 72,
+      "components": 2,
+      "scopedWarnings": 11,
+      "rootLintWarnings": 238,
+      "rootLintErrors": 0
+    },
+    "documentation": {
+      "ownedPages": 7,
+      "currentHashesMatch": true,
+      "build": 0,
+      "savedIabDomAndPixelsReviewed": true,
+      "boundedWarningsErrors": 0,
+      "tabClosed": true,
+      "serverInterruptedExit": 1,
+      "portAbsent": true,
+      "published": false
+    },
+    "failuresPreserved": [
+      "A direct-v1 16/20, focused-v3 41/47, v4 46/47, focused-v6 224/227, affected-v1 1022/1024",
+      "A rejected v8 comparison, v9 old physical-count assertion; static prepared-hook prototype rejected by actual installed Agent pre-storage ordering",
+      "B affected 967/968; expiry fixture corrected with native1000/Action2000 clocks, original finalDelivery assertion retained",
+      "Initial implementation fixture/type/import/lint failures retained",
+      "Admission-envelope v1 differential counter failure retained; reference snapshot comparison corrected",
+      "Shared built-root v1 incorrect export-name assumption retained; v2 matches actual frozen exports without rebuild/repack"
+    ],
+    "assertionsAndDeadlinesNotWeakened": true
+  },
+  "limits": {
+    "verdictIsSourceOnly": true,
+    "currentV6HostedQualification": false,
+    "currentV6NativeSLOAcceptance": false,
+    "currentV6SpeedClaim": false,
+    "fullGoalAcceptance": false,
+    "goalPercent": 50,
+    "priorK18Latency": {
+      "pass": 0,
+      "fail": 4,
+      "browserMs": [
+        5914,
+        4714
+      ],
+      "cliMs": [
+        10429,
+        9919
+      ]
+    },
+    "next": "Fresh installed fixed four-turn functional/latency qualification and cleanup; supplemental authorized tool/reconnect/approval/ordinal1 coverage before accepting new hosted continuation behavior.",
+    "nonbreakingDebt": [
+      "11 scoped SDK lint warnings and 238 root warnings.",
+      "SDK still has no run-reconciliation wrapper; backend recovery and return union are documented.",
+      "Existing public reconcile header could distinguish no uncertain-call replay from scheduling a retained tool continuation."
+    ],
+    "judgeActions": "Read-only product/test/receipt/official-doc inspection and saved-image viewing; only these two review reports written. No suites/builds/services/inference/Git/Proofs/product edits."
+  },
+  "primaryReferences": [
+    "https://docs.convex.dev/scheduling/scheduled-functions",
+    "https://docs.convex.dev/api/interfaces/server.GenericMutationCtx"
+  ]
+}

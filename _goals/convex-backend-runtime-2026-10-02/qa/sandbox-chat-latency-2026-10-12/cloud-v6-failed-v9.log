@@ -1,0 +1,192 @@
+(node:25187) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/resolution-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● Agent-only fresh hydration and native policy resolution › retains exact output/non-authority read order and first authority lookup order per write epoch
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 18
+
+    @@ -187,17 +187,35 @@
+          "index",
+          "runtimeRunAttempts",
+          "by_run_attempt",
+        ],
+        Array [
+    +     "component",
+    +     Object {},
+    +     Object {
+    +       "messageIds": Array [
+    +         "native:2",
+    +       ],
+    +     },
+    +   ],
+    +   Array [
+          "query",
+          "runtimeTranscriptMessages",
+        ],
+        Array [
+          "index",
+          "runtimeTranscriptMessages",
+          "by_native",
+    +   ],
+    +   Array [
+    +     "component",
+    +     Object {},
+    +     Object {
+    +       "messageIds": Array [
+    +         "native:2",
+    +       ],
+    +     },
+        ],
+        Array [
+          "query",
+          "runtimeTranscriptMessages",
+        ],
+
+      93 |     const exactKey = (value: unknown) => JSON.stringify(value, (_key,item: unknown) => item === undefined ? ["undefined"] : item);
+      94 |     const firstReads = (events: unknown[]) => { const seen = new Set<string>(); return events.filter(event => {const key=exactKey(event);if(seen.has(key))return false;seen.add(key);return true;}); };
+    > 95 |     expect(nonAuthority(reads)).toEqual(nonAuthority(composedReads));
+         |                                 ^
+      96 |     expect(firstReads(authorityReads)).toEqual(composedAuthority);
+      97 |     expect(composedAuthority.length).toBeLessThan(authorityReads.length);
+      98 |     expect(x.state()).toEqual(before); expect(x.f.db.writes).toBe(before.writes);
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/resolution-composition.test.ts:95:33)
+
+PASS tests/unit/runtimeAgent/turn-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.5s | 25/26 passed | /tests/unit/runtimeAgent/resolution-composition.test.ts
+  ✅     1.2s | 5/5 passed | /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 0.7%) - Agent-only fresh hydration and native policy resolution the real governed constructor retains two fresh resolutions while removing two action RPCs
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 2. [31m✗[0m    0.04s ( 0.6%) - Agent-only fresh hydration and native policy resolution retains exact output/non-authority read order and first authority lookup order per write epoch
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.6%) - installed interpreter queues one retry:false ordinary Action after original inline guards; no context/model executes in the parent
+    /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.5%) - Agent-only fresh hydration and native policy resolution the second real-constructor resolution fences late qualification after the first succeeds
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.5%) - strict waiting preserves sleep/deadline and durable failure vs warning=false before ordinary work
+    /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.5%) - Agent-only fresh hydration and native policy resolution the second real-constructor resolution fences late grant after the first succeeds
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.5%) - strict waiting preserves sleep/deadline and durable failure vs warning=true before ordinary work
+    /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.5%) - tool explicit approval remains Workflow-owned and native approval event gates the original server tool Action
+    /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.4%) - journaled ordinary completion returns without another Action/finalization/title step
+    /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+10. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution is internal and cannot select a model, policy lane, source, parent, account or request
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+11. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution fresh native invocations recheck both Agent and model-policy changes without cached resolution
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+12. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original context-hash failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+13. [32m✓[0m    0.01s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original context-tombstone failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+14. [32m✓[0m    0.01s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original proof-expiry failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original policy-payload failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original account-agent-pin failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original principal failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original attempt failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original qualification failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original cancel failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.44s (7.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.82s
+  Test suites:        2
+  Individual tests:   31
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 30 passed, 31 total
+Snapshots:   0 total
+Time:        5.824 s
+Ran all test suites within paths "tests/unit/runtimeAgent/resolution-composition.test.ts", "tests/unit/runtimeAgent/turn-workflow.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-failed-v9.json

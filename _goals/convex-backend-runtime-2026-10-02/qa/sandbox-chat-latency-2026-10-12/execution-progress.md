@@ -68,3 +68,11 @@ Frozen reviewedsourcef7c906b2888a410deb81c6a181e4863ca148e43c packaged in fresh 
 ### K18 native milestone — 2026-10-14T04:36:09.304Z
 
 Collection and cleanup **100%**; latency follow-up **50% (2/4)**. Actual browser first/warm after-paint 5914.400/4714.100 ms; CLI first/warm stdout acknowledgement 10428.897/9919.052 ms. Four COMPLETE responses under original30s; four subsecond FAIL. Native8event proof PASS43freshchecks, exactfacts/vector/currentauthority/provenance and contiguous8/8. Finance31attempts, slots0, allreleased;5MUNKNOWNceilings do not assertactualcharges. Launcherexit130 and onefreshcleanupverificationABSENT. Originalpending CONTEXT_INCOMPLETE and wrong-formatselector failure preserved. No inference retry. Nextcoherentrepair targets measuredwholecriticalpath;sourcegate/packaging do not constitute SLOcompletion.
+
+V6 native pre-session admission envelope source and focused verification: **100%**,118/118/2suites/0skip. Original post-I/O actor/scope/auth-generation/expiry fence remains. Three-author coherent source gate and hosted qualification pending; latency follow-up **50% (2/4)**, native SLO **0/4**. Prepared-context hydration shortcut rejected by installed revocation/pending-write ordering; original fresh hook retained. Historical failures unchanged.
+
+V6 documentation source/build/browser verification in **SaintNick1214/cortexmemory.dev:100%**. Build0; two rendered pages, bounded browser warnings/errors0; temporary tab closed and preview port absent. Seven docs frozen in docs-v6-coherent-freeze-receipt.json. No website commit/publication. Shared core quality running; latency goal **50%**, nativeSLO **0/4**.
+
+V6 shared quality/build/actual packed contracts **100%**: types/scopedlint/build/pack/backendrootsexit0, actualbackend158paths. Original roots-name fixture failure retained; corrected to registered executeDirectV6 without source/build/pack rerun. ONE joint nonauthor source/test/docs review running. Latency goal **50%**; no hosted V6 qualification yet.
+
+V6 joint independent source/test/docs acceptance **100%:PASS4.0/zero breaking findings**. Exact19core/7website hashes verified. Affected1,025/29,root118/2,B47/2 counts overlap; types/lint/build/actualpackedcontractsgreen. HostedV6/toolcontinuation/SLO/finalaudit remainopen; goal **50%**.

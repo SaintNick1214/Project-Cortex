@@ -1,0 +1,11 @@
+# Joint V6 source quality gate
+
+Quality/build milestone: 100%. Repository SaintNick1214/Project-Cortex. All three production owners froze before this single shared gate. Root types, backend types, lint types, affected lint, one SDK/backend build and actual packed public contracts passed under Node 24.15.0/npm 12.2.0. Affected lint reported 0 errors and 11 SDK warnings; no clean-warning claim is made. There was no service, deployment, image, credential or inference action. Independent source review and actual hosted qualification remain pending; the latency follow-up remains 50%, with K18's four SLO failures preserved.
+
+The built backend contains **158 paths, 72 tables and 2 components**. Every source/output digest matches the current frozen source and manifest, including the new `runtimeAgentQueryEmbedding.ts` module. Its `prepare` and `admit` registrations remain internal query/mutation. The built `runtimeClient:submitAndStartEnvelope` public mutation and runtime ESM/CJS endpoint literal are present. Actual V6 direct Action/parent/continuation/retirement and V1–V5 Workflow exports were asserted from built bytes.
+
+The normal packed contract script created and extracted one actual SDK tarball, verified every backend manifest entry/hash, exercised root/runtime/graph ESM+CJS exports, compiled a consumer against packed declarations and executed browser bundles without Node globals. Its owned temporary consumer tree was removed by `finally`; no contract-prefixed scratch directories remain. These checks do not qualify native model behavior or latency.
+
+One additional purposeful export assertion initially assumed `ordinaryActionV6`; the frozen export is `executeDirectV6`, with `prepareDirectTurn` and the actual continuation endpoints. That check failure is retained in `v6-joint-backend-roots-v1-failure.json/log`. Corrected exact export assertions passed in v2. No source change, repeated build, second pack or weakened functional assertion was used to correct the naming mistake.
+
+Exact raw logs/exits, source input hashes, backend hashes, warnings, checks and scratch cleanup are recorded in `v6-joint-quality-final-receipt.json`, `v6-joint-quality-inputs.json` and `v6-joint-backend-roots-v2.json`. Original implementation red receipts are still retained in each owner's source packet.

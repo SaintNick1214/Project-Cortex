@@ -41,7 +41,7 @@ export interface CortexRuntimeClientOptions {
 const query = (name: string) => makeFunctionReference<"query", Record<string, unknown>, unknown>(name);
 const mutation = (name: string) => makeFunctionReference<"mutation", Record<string, unknown>, unknown>(name);
 const action = (name: string) => makeFunctionReference<"action", Record<string, unknown>, unknown>(name);
-const refs = { session: mutation("runtimeClient:session"), signal: query("runtimeClient:signal"), submit: mutation("runs:submit"), submitAndStart: mutation("runtimeClient:submitAndStart"), get: mutation("runs:get"), start: mutation("runtimeAgent:start"),
+const refs = { session: mutation("runtimeClient:session"), signal: query("runtimeClient:signal"), submit: mutation("runs:submit"), submitAndStart: mutation("runtimeClient:submitAndStartEnvelope"), get: mutation("runs:get"), start: mutation("runtimeAgent:start"),
   observe: mutation("runtimeClient:observeEnvelope"), cancel: mutation("runtimeAgent:cancel"), approve: mutation("runs:approve"), tool: mutation("runtimeAgent:approveTool"),
   definition: mutation("agentDefinitions:get"), messages: mutation("runtimeTranscript:messages"), conversations: mutation("runtimeTranscript:list"),
   profile: mutation("runtimeMemory:defaultProfile"), recall: action("runtimeMemory:recall"), asset: mutation("runtimeAssets:get"),
@@ -233,17 +233,32 @@ export class CortexRuntimeClient {
       || normalized.conversationId !== undefined && result.conversationId !== normalized.conversationId) invalid("RUN_IDENTITY_CHANGED");
     return this.handle(result, current);
   }
-  /** Atomically admit immutable text and request execution, with fresh session fences on both sides. */
+  /** Native pre-session/admission envelope followed by the independent fresh post-I/O session. */
   async submitAndStart(request: TextSubmitV1, options: { streaming?: boolean } = {}): Promise<RuntimeAdmissionResult> {
     const normalized = textSubmit(request), settings = object(options);
     if (Object.keys(settings).some(key => key !== "streaming") || settings.streaming !== undefined && typeof settings.streaming !== "boolean") invalid();
-    const acquired = await this.inSession(current => this.mutation(refs.submitAndStart, { request: normalized,
-      tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, streaming: settings.streaming ?? true }));
+    this.check(); const epoch = this.generation; await this.authReady;
+    if (epoch !== this.generation) invalid("SESSION_CHANGED"); if (!this.authenticated) invalid("UNAUTHENTICATED");
+    const raw = await this.call(() => this.mutation(refs.submitAndStart, { request: normalized,
+      ...this.scope, streaming: settings.streaming ?? true }));
     try {
-      const result = admissionResult(acquired.result), value = result.run;
+      if (epoch !== this.generation || !this.authenticated) invalid("SESSION_CHANGED");
+      const envelope = object(raw);
+      if (envelope.version !== 1 || Object.keys(envelope).length !== 3 || !Object.hasOwn(envelope, "session")
+        || !Object.hasOwn(envelope, "admission")) invalid("INVALID_RESPONSE");
+      const actor = object(envelope.session);
+      if (Object.keys(actor).some(key => !["version", "tenantId", "memorySpaceId", "principalId", "userId", "deliveryExpiresAt"].includes(key))) invalid("INVALID_RESPONSE");
+      const current = session(actor);
+      if (this.scope.tenantId !== undefined && current.tenantId !== this.scope.tenantId
+        || this.scope.memorySpaceId !== undefined && current.memorySpaceId !== this.scope.memorySpaceId) invalid("SESSION_CHANGED");
+      this.sessionDeadline(current);
+      const after = await this.session();
+      if (epoch !== this.generation || !sameScope(current, after) || current.principalId !== after.principalId) invalid("SESSION_CHANGED");
+      const result = admissionResult(envelope.admission), value = result.run;
       if (value.agentId !== normalized.agentId || value.agentVersion !== normalized.agentVersion
         || normalized.conversationId !== undefined && value.conversationId !== normalized.conversationId) invalid("RUN_IDENTITY_CHANGED");
-      return { handle: this.handle(value, acquired.current), run: value, start: result.start };
+      const handle = this.handle(value, current);
+      return { handle, run: value, start: result.start };
     } catch (error) {
       // Invalid delivery cannot assert that the native admission/Workflow did not happen.
       throw new CortexRuntimeError(runtimeError(error).code, "uncertain");

@@ -1,0 +1,100 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:24813) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/query-embedding-tail.test.ts
+  ✓ shared tail preserves nonempty native result, ranking/context and exact delivery bindings (staged) (31 ms)
+  ✓ shared tail preserves nonempty native result, ranking/context and exact delivery bindings (legacy-serial) (13 ms)
+  ✓ fresh native final delivery refuses late revoked in the shared tail (11 ms)
+  ✓ fresh native final delivery refuses late source-hash in the shared tail (4 ms)
+  ✓ fresh native final delivery refuses late source-tombstone in the shared tail (4 ms)
+  ✓ fresh native final delivery refuses late fact-version in the shared tail (3 ms)
+  ✓ fresh native final delivery refuses late profile in the shared tail (4 ms)
+  ✓ a real consumed grant expiry is checked again against the Action clock after final RPC returns (5 ms)
+  ✓ invalid profile embedding starts no source/fact/vector delivery work (2 ms)
+  ✓ invalid dimensions embedding starts no source/fact/vector delivery work (2 ms)
+  ✓ invalid nonfinite embedding starts no source/fact/vector delivery work (2 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.7s | 11/11 passed | /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 1.1%) - shared tail preserves nonempty native result, ranking/context and exact delivery bindings (staged)
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.5%) - shared tail preserves nonempty native result, ranking/context and exact delivery bindings (legacy-serial)
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.4%) - fresh native final delivery refuses late revoked in the shared tail
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.2%) - a real consumed grant expiry is checked again against the Action clock after final RPC returns
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - fresh native final delivery refuses late source-hash in the shared tail
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - fresh native final delivery refuses late source-tombstone in the shared tail
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - fresh native final delivery refuses late profile in the shared tail
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - fresh native final delivery refuses late fact-version in the shared tail
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - invalid profile embedding starts no source/fact/vector delivery work
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - invalid dimensions embedding starts no source/fact/vector delivery work
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - invalid nonfinite embedding starts no source/fact/vector delivery work
+    /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.08s (2.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.80s
+  Test suites:        1
+  Individual tests:   11
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        2.798 s, estimated 3 s
+Ran all test suites within paths "tests/unit/runtimeMemory/query-embedding-tail.test.ts".
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

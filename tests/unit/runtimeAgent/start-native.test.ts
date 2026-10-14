@@ -87,8 +87,13 @@ async function fixture(options: { initialReadFailure?: boolean; journalFailure?:
     }
     return mutation(ref as never, args as never);
   })) as MutationCtx["runMutation"];
+  const strictReady = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, { memorySpaceId: "space-a", clientMutationId: "historical-v5-ready", expectedPreviousVersion: 0,
+    definitionInput: { ...f.definitionInput, context: { ...f.definitionInput.context, memoryMode: "strict", requiredStages: [] } } });
+  const readyRequest = () => ({ ...f.request(), agentId: strictReady.agentId, agentVersion: strictReady.version });
   async function start() {
-    let request = f.request();
+    let request = readyRequest();
+    // These historical V5 interpreter cases intentionally select strict Workflow ownership.
+    // The ordinary fresh path is covered independently by direct-action/native tests.
     if (options.strict) {
       const source = await f.source("Prior pending evidence", "start-prior"); await ingestion.enqueueSourceEvent(f.ctx, f.reference, source);
       const published = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, { memorySpaceId: "space-a", clientMutationId: "start-strict", expectedPreviousVersion: 0,
@@ -100,11 +105,11 @@ async function fixture(options: { initialReadFailure?: boolean; journalFailure?:
     const owned = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
     return { run, result, owned, args };
   }
-  return { ...f, get grant() { return f.grant; }, entries, events, starts, start };
+  return { ...f, get grant() { return f.grant; }, entries, events, starts, start, run: async () => await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: readyRequest() }) };
 }
 type Fixture = Awaited<ReturnType<typeof fixture>>;
 const stored = (f: Fixture) => clone({ rows: f.db.rows, writes: f.db.writes, sequence: f.db.sequence, native: f.native, effects: f.effects, scheduled: f.scheduled });
-it("real immediate start sees the inserted execution, journals the inline prefix, and queues the ordinary turn Action before returning its ID", async () => {
+it("real strict immediate start sees the inserted execution, journals the inline prefix, and queues the ordinary turn Action before returning its ID", async () => {
   const f = await fixture(), { run, result, owned } = await f.start();
   expect(result).toEqual({ runId: run.runId, attemptNumber: 1, state: "ready" }); expect(f.starts).toHaveLength(1);
   expect(owned).toMatchObject({ workflowId: f.db.table("workflows")[0]._id, contextState: "started", state: "ready" });

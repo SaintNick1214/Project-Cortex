@@ -9,6 +9,8 @@ export const sourceWitness = contextSourceWitness;
 const scope = { tenantId: v.string(), memorySpaceId: v.string(), runId: v.string(), attemptNumber: v.number() };
 export const runtimeAgentTables = {
   runtimeAgentExecutions: defineTable({ ...scope, workflowId: v.optional(v.string()), reference: runtimeAuthorityReference,
+    executionMode: v.optional(v.literal("direct-v6")), scheduledActionId: v.optional(v.id("_scheduled_functions")),
+    directState: v.optional(v.union(v.literal("scheduled"), v.literal("started"), v.literal("continuation_pending"), v.literal("continuation"))),
     leaseVersion: v.number(), state: v.union(v.literal("ready"), v.literal("running"), v.literal("waiting_approval"),
       v.literal("finalizing"), v.literal("complete"), v.literal("failed"), v.literal("cancelled"), v.literal("unknown")),
     streaming: v.boolean(), nextOutputSequence: v.number(), nextModelStep: v.number(), toolCount: v.number(),

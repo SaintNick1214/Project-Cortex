@@ -1,0 +1,139 @@
+(node:25280) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/admission-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/client-runtime/client.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.9s | 40/40 passed | /tests/unit/client-runtime/admission-native.test.ts
+  ✅     0.4s | 78/78 passed | /tests/unit/client-runtime/client.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.7%) - combined native run admission native pre-session envelope retains the legacy admission result, exact actor, effects and duplicate ownership
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.3%) - combined native run admission opt-in submit/start/get mutation spans preserve exact registered result and transactional effects
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.3%) - combined native run admission changed payload on request replay rolls back all native effects
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.3%) - combined native run admission changed streaming on request replay rolls back all native effects
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.2%) - combined native run admission same request and streaming contract dedupe without saving, rebudgeting or redispatching
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.2%) - combined native run admission a prior running head preserves the new durable queued request without dispatch
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.2%) - combined native run admission envelope read_missing pre-session denial starts no native writes or dispatch
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - combined native run admission approval-required input stays unapproved, requests execution and resumes only after explicit native approval
+    /tests/unit/client-runtime/admission-native.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - combined native run admission a prior unstarted queue head cannot be claimed under a new handle; parent admission rolls back
+    /tests/unit/client-runtime/admission-native.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - combined native run admission a prior waiting_approval head preserves the new durable queued request without dispatch
+    /tests/unit/client-runtime/admission-native.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - combined native run admission read_missing denies and preserves all prior state
+    /tests/unit/client-runtime/admission-native.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - combined native run admission legacy submit/start remains compatible with subsequent same-request combined admission
+    /tests/unit/client-runtime/admission-native.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - combined native run admission envelope scheduling failure rolls back the original admission and returns no actor/admission payload
+    /tests/unit/client-runtime/admission-native.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - combined native run admission directly composes the original submit/start/get bodies with exact selectors and one durable attempt/account
+    /tests/unit/client-runtime/admission-native.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - combined native run admission oversized prefix commits its supported failed disposition and leaves no Workflow/model operation
+    /tests/unit/client-runtime/admission-native.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - combined native run admission run_tombstoned after Workflow insertion is freshly denied and rolls back every effect
+    /tests/unit/client-runtime/admission-native.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - combined native run admission an enabled failed start span preserves original failure and complete parent rollback
+    /tests/unit/client-runtime/admission-native.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - combined native run admission an altered returned identity after native start rolls back the parent including Workflow insertion
+    /tests/unit/client-runtime/admission-native.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - combined native run admission read_missing after Workflow insertion is freshly denied and rolls back every effect
+    /tests/unit/client-runtime/admission-native.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - combined native run admission conversation_expired after Workflow insertion is freshly denied and rolls back every effect
+    /tests/unit/client-runtime/admission-native.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.21s (4.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.47s
+  Test suites:        2
+  Individual tests:   59
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       118 passed, 118 total
+Snapshots:   0 total
+Time:        4.469 s
+Ran all test suites matching tests/unit/client-runtime/client.test.ts|tests/unit/client-runtime/admission-native.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-admission-envelope-focused-v3.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

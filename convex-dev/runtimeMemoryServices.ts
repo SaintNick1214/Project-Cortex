@@ -4,6 +4,7 @@ import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "..
 import { SOURCE_EXTRACTION_POLICY_VERSION, extractSourceFacts, prepareSourceContent, processingIdentityKey, validateModelEmbeddings } from "../src/domain/sources";
 import { deduplicateResults, factToRecallItem, formatForLLM, rankResults } from "../src/domain/recall";
 import type { RecallItem } from "../src/types";
+import type { EmbeddingProfile } from "../src/domain/profile";
 import { canonicalMemoryValue, memoryError } from "./runtimeMemoryRepository";
 
 export function assertMemoryRequestId(requestId: string): void {
@@ -96,6 +97,15 @@ export async function recallMemory(
   await repository.assertProfileReady?.(profile, selection.runBudgetId);
   const result = await model.embed({ purpose: "embedding.query", operationId,
     policyVersion: profile.profileId, attempt: 1, profile, texts: [text] });
+  return await finishRecallFromEmbedding({ repository, clock }, { text, limit: input.limit }, selection, result);
+}
+
+/** Shared original post-embedding recall: private Agent preparation does not grant read/delivery authority. */
+export async function finishRecallFromEmbedding(
+  adapters: Pick<MemoryDomainAdapters, "repository" | "clock">, input: { text: string; limit: number },
+  selection: { profile: EmbeddingProfile; runBudgetId?: string }, result: Awaited<ReturnType<MemoryDomainAdapters["model"]["embed"]>>,
+): Promise<{ items: RecallItem[]; context: string; profileId: string; deliveryExpiresAt?: number }> {
+  const { repository, clock } = adapters, { text } = input, { profile } = selection;
   validateModelEmbeddings(result, profile, 1);
   const query = { text, profile, embedding: result.vectors[0]!, ...(selection.runBudgetId ? { embeddingRunBudgetId: selection.runBudgetId } : {}) };
   const staged = repository.stageRecallReads?.();

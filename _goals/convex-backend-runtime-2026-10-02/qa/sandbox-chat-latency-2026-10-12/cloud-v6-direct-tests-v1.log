@@ -1,0 +1,224 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:21765) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/direct-action.test.ts (6.573 s)
+  ✓ one direct empty turn uses original finalization and registers ingestion once before title (150 ms)
+  ✓ one direct populated_pending turn uses original finalization and registers ingestion once before title (123 ms)
+  ✓ one direct final_only turn uses original finalization and registers ingestion once before title (114 ms)
+  ✕ direct claim/preparation equals the original prefix and V5 preparation outcomes (109 ms)
+  ✓ V6 prepared prompt cannot authorize grant changed before fresh atomic admission (68 ms)
+  ✓ V6 prepared prompt cannot authorize transcript changed before fresh atomic admission (70 ms)
+  ✓ V6 prepared prompt cannot authorize cancel changed before fresh atomic admission (62 ms)
+  ✓ V6 prepared prompt cannot authorize lease changed before fresh atomic admission (61 ms)
+  ✓ V6 prepared prompt cannot authorize source changed before fresh atomic admission (62 ms)
+  ✓ V6 prepared prompt cannot authorize source-tombstone changed before fresh atomic admission (62 ms)
+  ✓ V6 prepared prompt cannot authorize definition changed before fresh atomic admission (57 ms)
+  ✓ V6 prepared prompt cannot authorize qualification changed before fresh atomic admission (68 ms)
+  ✓ V6 prepared prompt cannot authorize budget changed before fresh atomic admission (61 ms)
+  ✓ provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay (78 ms)
+  ✕ a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry (102 ms)
+  ✕ a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry (104 ms)
+  ✓ completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model (112 ms)
+  ✕ lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay (110 ms)
+  ✓ revocation after completed tool output denies recovery without attaching a new Workflow (109 ms)
+  ✓ scheduler failure is atomic with claim/execution and never runs provider work (15 ms)
+
+  ● direct claim/preparation equals the original prefix and V5 preparation outcomes
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -44,11 +44,11 @@
+            "contextCanonical": "",
+            "contextCompleteness": "complete",
+            "contextFailureCode": undefined,
+            "contextState": "complete",
+            "createdAt": 1000000,
+    -       "directState": "scheduled",
+    +       "directState": "started",
+            "executionMode": "direct-v6",
+            "leaseVersion": 1,
+            "mediaJobReferences": Array [],
+            "memorySpaceId": "space-a",
+            "nextModelStep": 0,
+
+       98 |     original = await invoke(runtime.prepareTurnModel, f.ctx, args); throw stop;
+       99 |   })).rejects.toBe(stop); expect(state(f)).toEqual(before);
+    > 100 |   expect(await f.call(runtime.prepareDirectTurn, args)).toEqual(original); expect(providerCalls).toBe(0); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                                         ^
+      101 |   const completed = state(f); expect(await f.call(runtime.prepareDirectTurn, args)).toEqual({ state: "duplicate" }); expect(state(f)).toEqual(completed);
+      102 | });
+      103 | it.each(["grant", "transcript", "cancel", "lease", "source", "source-tombstone", "definition", "qualification", "budget"])("V6 prepared prompt cannot authorize %s changed before fresh atomic admission", async fault => {
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:100:57)
+
+  ● a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry
+
+    TypeError: Cannot read properties of undefined (reading 'get')
+
+      1374 |   if (!owned) transcriptDenied("INVALID_STATE");
+      1375 |   if (owned.executionMode === "direct-v6" && owned.scheduledActionId && !owned.workflowId && owned.state !== "complete") {
+    > 1376 |     const scheduled = await ctx.db.system.get("_scheduled_functions", owned.scheduledActionId);
+           |                                           ^
+      1377 |     if (scheduled?.state.kind === "failed") {
+      1378 |       await interruptDirectHandler(ctx, { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion });
+      1379 |       const updated = await ctx.db.get("runtimeAgentExecutions", owned._id); if (!updated) transcriptDenied("INVALID_STATE"); owned = updated;
+
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1376:43)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at tests/unit/runtimeAgent/direct-action.test.ts:130:21
+
+  ● a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry
+
+    TypeError: Cannot read properties of undefined (reading 'get')
+
+      1374 |   if (!owned) transcriptDenied("INVALID_STATE");
+      1375 |   if (owned.executionMode === "direct-v6" && owned.scheduledActionId && !owned.workflowId && owned.state !== "complete") {
+    > 1376 |     const scheduled = await ctx.db.system.get("_scheduled_functions", owned.scheduledActionId);
+           |                                           ^
+      1377 |     if (scheduled?.state.kind === "failed") {
+      1378 |       await interruptDirectHandler(ctx, { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion });
+      1379 |       const updated = await ctx.db.get("runtimeAgentExecutions", owned._id); if (!updated) transcriptDenied("INVALID_STATE"); owned = updated;
+
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1376:43)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at tests/unit/runtimeAgent/direct-action.test.ts:130:21
+
+  ● lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay
+
+    TypeError: Cannot read properties of undefined (reading 'get')
+
+      1374 |   if (!owned) transcriptDenied("INVALID_STATE");
+      1375 |   if (owned.executionMode === "direct-v6" && owned.scheduledActionId && !owned.workflowId && owned.state !== "complete") {
+    > 1376 |     const scheduled = await ctx.db.system.get("_scheduled_functions", owned.scheduledActionId);
+           |                                           ^
+      1377 |     if (scheduled?.state.kind === "failed") {
+      1378 |       await interruptDirectHandler(ctx, { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion });
+      1379 |       const updated = await ctx.db.get("runtimeAgentExecutions", owned._id); if (!updated) transcriptDenied("INVALID_STATE"); owned = updated;
+
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1376:43)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:143:10)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     6.6s | 16/20 passed | /tests/unit/runtimeAgent/direct-action.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.15s ( 2.2%) - one direct empty turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 2. [32m✓[0m    0.12s ( 1.8%) - one direct populated_pending turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 3. [32m✓[0m    0.11s ( 1.7%) - one direct final_only turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 4. [32m✓[0m    0.11s ( 1.7%) - completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 5. [31m✗[0m    0.11s ( 1.6%) - lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 6. [31m✗[0m    0.11s ( 1.6%) - direct claim/preparation equals the original prefix and V5 preparation outcomes
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 7. [32m✓[0m    0.11s ( 1.6%) - revocation after completed tool output denies recovery without attaching a new Workflow
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 8. [31m✗[0m    0.10s ( 1.5%) - a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 9. [31m✗[0m    0.10s ( 1.5%) - a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+10. [32m✓[0m    0.08s ( 1.2%) - provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+11. [32m✓[0m    0.07s ( 1.0%) - V6 prepared prompt cannot authorize transcript changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+12. [32m✓[0m    0.07s ( 1.0%) - V6 prepared prompt cannot authorize grant changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+13. [32m✓[0m    0.07s ( 1.0%) - V6 prepared prompt cannot authorize qualification changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+14. [32m✓[0m    0.06s ( 0.9%) - V6 prepared prompt cannot authorize cancel changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+15. [32m✓[0m    0.06s ( 0.9%) - V6 prepared prompt cannot authorize source changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+16. [32m✓[0m    0.06s ( 0.9%) - V6 prepared prompt cannot authorize source-tombstone changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+17. [32m✓[0m    0.06s ( 0.9%) - V6 prepared prompt cannot authorize lease changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+18. [32m✓[0m    0.06s ( 0.9%) - V6 prepared prompt cannot authorize budget changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+19. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize definition changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - scheduler failure is atomic with claim/execution and never runs provider work
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.70s (25.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.72s
+  Test suites:        1
+  Individual tests:   20
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 16 passed, 20 total
+Snapshots:   0 total
+Time:        6.723 s
+Ran all test suites within paths "tests/unit/runtimeAgent/direct-action.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-direct-tests-v1.json

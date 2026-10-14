@@ -1,6 +1,6 @@
 /** Original registered handlers on a controlled native/component port; no live OCC or paid inference claim. */
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
-import { getFunctionName } from "convex/server";
+import { getFunctionName, getFunctionAddress } from "convex/server";
 import type { ActionCtx } from "../../../convex-dev/_generated/server";
 import type { GatewayResolution } from "../../../convex-dev/runtimeGateway";
 import { assertNativeArgs } from "./native-arguments";
@@ -18,6 +18,7 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
 } }));
 const { transcriptFixture, installMockRoot, installIngestionMockRoot, ledger, runs, invoke, clone, clock } = await import("../runtimeTranscript/fixture");
 const runtime = await import("../../../convex-dev/runtimeAgent");
+const nativeMessagesAddress = getFunctionAddress((await import("../../../convex-dev/runtimeTranscript")).agentComponent.messages.getMessagesByIds);
 beforeEach(() => { installMockRoot(); });
 afterEach(() => { jest.restoreAllMocks(); });
 async function fixture() {
@@ -56,7 +57,7 @@ async function failure(call: () => Promise<unknown>) {
   }
 }
 describe("Agent-only fresh hydration and native policy resolution", () => {
-  it("retains exact output/non-authority read order and first authority lookup order per write epoch", async () => {
+  it("retains exact output/DB and other-component order while reusing3-to-1 exact transcript lookups", async () => {
     const x = await fixture(), reads: unknown[] = [], authorityReads: unknown[] = [], query = x.f.db.query.bind(x.f.db), get = x.f.db.get.bind(x.f.db);
     // This parent is a query with no application writer. Every lookup below is
     // in epoch zero; mutation epoch invalidation has its own actual-ledger test.
@@ -86,13 +87,17 @@ describe("Agent-only fresh hydration and native policy resolution", () => {
       reads.push(["get", table, id]); if(table.startsWith("runtimeAuth")) authorityReads.push([epoch,"get",table,id]); return await get(table, id);
     });
     const component = x.f.ctx.runQuery.bind(x.f.ctx);
-    x.f.ctx.runQuery = (async (reference, args) => { reads.push(["component", clone(reference), clone(args)]); return await component(reference, args); }) as typeof x.f.ctx.runQuery;
+    x.f.ctx.runQuery = (async (reference, args) => { reads.push(["component", getFunctionAddress(reference), clone(args)]); return await component(reference, args); }) as typeof x.f.ctx.runQuery;
     const before = x.state(), combined = await x.call(), composedReads = clone(reads), composedAuthority = clone(authorityReads); reads.length = 0; authorityReads.length = 0;
     expect(await x.original()).toEqual(combined);
     const nonAuthority = (events: unknown[]) => events.filter(event => !(Array.isArray(event) && ["query","index","get"].includes(String(event[0])) && typeof event[1] === "string" && event[1].startsWith("runtimeAuth")));
     const exactKey = (value: unknown) => JSON.stringify(value, (_key,item: unknown) => item === undefined ? ["undefined"] : item);
     const firstReads = (events: unknown[]) => { const seen = new Set<string>(); return events.filter(event => {const key=exactKey(event);if(seen.has(key))return false;seen.add(key);return true;}); };
-    expect(nonAuthority(reads)).toEqual(nonAuthority(composedReads));
+    const nativeRead = (row: unknown) => Array.isArray(row) && row[0] === "component" && JSON.stringify(row[1]) === JSON.stringify(nativeMessagesAddress);
+    const originalMessages = reads.filter(nativeRead) as unknown[][], composedMessages = composedReads.filter(nativeRead) as unknown[][];
+    expect(originalMessages).toHaveLength(3); expect(composedMessages).toHaveLength(1);
+    for (const row of [...originalMessages, ...composedMessages]) expect(row).toEqual(originalMessages[0]);
+    expect(nonAuthority(reads.filter(row => !nativeRead(row)))).toEqual(nonAuthority(composedReads.filter(row => !nativeRead(row))));
     expect(firstReads(authorityReads)).toEqual(composedAuthority);
     expect(composedAuthority.length).toBeLessThan(authorityReads.length);
     expect(x.state()).toEqual(before); expect(x.f.db.writes).toBe(before.writes);

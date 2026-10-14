@@ -103,12 +103,12 @@ it.each(["empty", "pending", "pending_unknown", "barrier_warning"])("inline %s c
   expect(f.db.table("runtimeModelOperations")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
   if (mode === "pending_unknown") expect(f.db.table("runtimeIngestionEvents")[0].factsState).toBe("unknown");
 });
-it("fresh starts dispatch the additive Workflow version with immediate initialization/onComplete and duplicate ownership", async () => {
-  const f = await fixture(), { run } = await f.start();
-  expect(starts).toHaveLength(1); expect(getFunctionName(starts[0][1] as never)).toBe("runtimeAgent:executeTurnV5");
-  expect(starts[0][3]).toMatchObject({ startAsync: false, context: { runId: run.runId, attemptNumber: 1 } });
-  expect(getFunctionName((starts[0][3] as { onComplete: never }).onComplete)).toBe("runtimeAgent:onInitialWorkflowComplete");
-  await f.call(runtime.start, { runId: run.runId }); expect(starts).toHaveLength(1);
+it("fresh ordinary starts atomically schedule V6 and retain duplicate ownership", async () => {
+  const f = await fixture(), { run } = await f.start(); expect(starts).toEqual([]);
+  const scheduled = f.scheduled.filter(row => row.name === "runtimeAgent:executeDirectV6"); expect(scheduled).toHaveLength(1);
+  expect(scheduled[0].args).toMatchObject({ runId: run.runId, attemptNumber: 1 });
+  expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ executionMode: "direct-v6", directState: "scheduled" });
+  await f.call(runtime.start, { runId: run.runId }); expect(starts).toEqual([]); expect(f.scheduled.filter(row => row.name === "runtimeAgent:executeDirectV6")).toHaveLength(1);
 });
 it.each(["eligible_index", "metadata_overflow", "pending_overflow_warn"])("%s needs the unchanged Action without context or model effects", async mode => {
   const f = await fixture({ onFailure: mode === "pending_overflow_warn" ? "incomplete" : "fail" });

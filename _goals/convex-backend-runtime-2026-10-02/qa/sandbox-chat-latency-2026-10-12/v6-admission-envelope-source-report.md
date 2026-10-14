@@ -1,0 +1,11 @@
+# Native admission envelope source report
+
+Repository: SaintNick1214/Project-Cortex. Baseline product commit: f7c906b2888a410deb81c6a181e4863ca148e43c. Root owns these four source/test files and the separate cortexmemory.dev documentation changes; review ownership stays independent.
+
+The new registered submitAndStartEnvelope executes the existing sessionHandler before admission writes, retains omitted-selector ambiguity, executes the original combined admission handlers under the current actor, and returns the exact session/admission envelope. The original three-field backend submitAndStart endpoint stays available. SDK submitAndStart acquires this envelope then runs its independent fresh post-I/O session, generation, principal, scope and delivery-expiry fences before returning the unchanged public RuntimeAdmissionResult. Ordinary admission uses two client RPCs. Other methods, observation, model controls, source witnesses and background memory ownership retain their existing contracts.
+
+Validation: final focused v4 118/118 tests, 2 suites, 0 skipped, success=true. Existing post-I/O race, expiry, private output, malformed response, deadline and no-retry cases remain. Added exact envelope/actor shape refusal, omitted selectors, foreign claimed actor, native exact legacy-result/effects differential, read/grant/auth/scope denials and scheduling rollback. New native denials assert actual ConvexError and original bounded code, excluding TypeError false positives. The historical Workflow mock remains executeTurn; ordinary V6 dispatch is independently counted as executeDirectV6.
+
+The v1 test failure (duplicate no-op execution patch counter differed) remains preserved. The corrected differential executes the current legacy duplicate from the same transaction snapshot, rolls back the reference, and compares the complete envelope duplicate effects against that reference. v2 113/113; v3 118/118; v4 adds stronger denials and restores the historical mock target, 118/118. No assertions, deadlines or authorization fences were waived.
+
+This controlled transactional/component fixture is source evidence, not native hosted OCC/scheduler/latency qualification. Shared quality/build/contracts and one independent source/test/docs gate remain pending; hosted SLO remains 0/4, latency completion50%.

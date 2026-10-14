@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "phase": "CONTROLS_PREPARED_ONLY",
+  "ready": false,
+  "sourceCommit": "UNREADY",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-v6-direct-2026-10-13",
+  "priorKit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-endpoint-scopes-2026-10-13",
+  "qa": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-v6-direct",
+  "copiedControlFilesOnly": [
+    {
+      "path": "prepare.mjs",
+      "previousSha256": "2fae49e6abf7dfbea2a84fdd27c5629fa23c77513b8abc35e8d3e12106e5aa27",
+      "newSha256": "5a3be692b7c01645eba2798e1a423466cb83a847986476fea83dfc88bc05d325",
+      "identical": false
+    },
+    {
+      "path": "image/Dockerfile",
+      "previousSha256": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f",
+      "newSha256": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f",
+      "identical": true
+    },
+    {
+      "path": "image/install-candidates.mjs",
+      "previousSha256": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f",
+      "newSha256": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f",
+      "identical": true
+    },
+    {
+      "path": "image/entrypoint.mjs",
+      "previousSha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+      "newSha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+      "identical": true
+    }
+  ],
+  "expectedBackendCount": 158,
+  "oldKitRetainedArchiveAndManifestHashes": [
+    {
+      "path": "image/archives/cortexmemory-cli-0.39.0.tgz",
+      "bytes": 538578,
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5"
+    },
+    {
+      "path": "image/archives/cortexmemory-sdk-0.39.0.tgz",
+      "bytes": 1600438,
+      "sha256": "5a6f1813e256b99e4fa25b59f35c68c6738281543cc7811039ce4a1016081d6c"
+    },
+    {
+      "path": "image/archives/cortexmemory-templates-1.3.1.tgz",
+      "bytes": 1708644,
+      "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970"
+    },
+    {
+      "path": "image/archives/cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "bytes": 77673,
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53"
+    },
+    {
+      "path": "image/archives/manifest.json",
+      "bytes": 1750,
+      "sha256": "f45feb1caaedc49437a5bab9a42e75a41373cd18b5ba09fb3d0b0f0e1e3c9a96"
+    }
+  ],
+  "oldKitExtraManifestHashes": [
+    {
+      "path": "artifacts/f7c906b2888a410deb81c6a181e4863ca148e43c/manifest.json",
+      "sha256": "f45feb1caaedc49437a5bab9a42e75a41373cd18b5ba09fb3d0b0f0e1e3c9a96"
+    },
+    {
+      "path": "artifacts/f7c906b2888a410deb81c6a181e4863ca148e43c/build-inputs.json",
+      "sha256": "6480aed5cd437b6fe99c41fbc8c559876a9c1a10afee83a0474d5a4b7ebd8120"
+    },
+    {
+      "path": "staging/f7c906b2888a410deb81c6a181e4863ca148e43c/dist/backend/v1/manifest.json",
+      "sha256": "585a52249d48b8008c897b04b9304f637700d14c2ab7ae3cef7b598cd62df0ae"
+    }
+  ],
+  "identityCreated": false,
+  "archiveStagingDependencyOrEvidenceCopies": 0,
+  "builds": 0,
+  "packs": 0,
+  "dockerActions": 0,
+  "services": 0,
+  "inferenceCalls": 0,
+  "latencyGoalCompletionPercent": 50
+}

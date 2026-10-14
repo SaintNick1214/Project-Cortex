@@ -38,7 +38,16 @@ async function fixture(options: { maxContextTokens?: number } = {}) {
     const registration = route(name); if (registration) assertNativeArgs(registration, args);
     return registration ? await invoke(registration, f.ctx, args) : await query(ref as never, args as never);
   }) as typeof f.ctx.runQuery;
-  return f;
+  const definitionInput = { ...f.definitionInput, context: { ...f.definitionInput.context, memoryMode: "strict", requiredStages: [] } };
+  const ready = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, { memorySpaceId: "space-a", clientMutationId: "historical-workflow-ready", expectedPreviousVersion: 0, definitionInput });
+  // Retire the unused initial fixture definition so existing [0] corruption/
+  // revocation controls still target the actual selected definition.
+  const unused = f.db.table("runtimeAgentDefinitions").find(row => row.agentId === f.published.agentId)!;
+  await f.db.delete("runtimeAgentDefinitions", unused._id);
+  const originalRequest = f.request;
+  const request: typeof f.request = (key, conversationId) => ({ ...originalRequest(key, conversationId), agentId: ready.agentId, agentVersion: ready.version });
+  return { ...f, get grant() { return f.grant; }, definitionInput, request,
+    run: async (key?: string, conversationId?: string) => await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: request(key, conversationId) }) };
 }
 async function started(f: F) {
   const run = await f.run(); await f.call(runtime.start, { runId: run.runId });

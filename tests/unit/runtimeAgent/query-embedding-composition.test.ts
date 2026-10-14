@@ -1,0 +1,217 @@
+/** Original registered handlers and actual Gateway middleware; controlled DB/component/provider peers only. */
+import { afterEach, beforeEach, expect, it, jest } from "@jest/globals";
+import { ConvexError } from "convex/values";
+import { getFunctionName } from "convex/server";
+import type { EmbeddingModelV4 } from "@ai-sdk/provider";
+import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
+import { DEFAULT_EMBEDDING_PROFILE as profile, LARGE_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
+import { canonicalModelJson } from "../../../src/domain/model-policy";
+import { assertNativeArgs } from "./native-arguments";
+
+let nativeCalls = 0;
+const embeddingFactory = jest.fn<(id: string) => EmbeddingModelV4>(id => ({ specificationVersion: "v4", modelId: id,
+  provider: "convexGateway.embedding", maxEmbeddingsPerCall: 1, supportsParallelCalls: false,
+  doEmbed: async () => { nativeCalls++; return { embeddings: [Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0)], warnings: [],
+    response: { body: { id: "controlled-query", model: "text-embedding-3-small", data: [{ index: 0, object: "embedding" }], usage: { prompt_tokens: 1 } } } }; },
+}));
+jest.unstable_mockModule("@convex-dev/ai-sdk-provider", () => ({ convexGateway: Object.assign(() => { throw Error("UNEXPECTED_CHAT"); }, { embeddingModel: embeddingFactory }) }));
+jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
+  define(input: { handler: unknown }) { return { _handler: input.handler }; }
+  async start() { return "workflow:query-embedding"; }
+} }));
+const { ingestionFixture, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
+const { ledger, runs, clone, clock } = await import("../runtimeTranscript/fixture");
+const agent = await import("../../../convex-dev/runtimeAgent");
+const query = await import("../../../convex-dev/runtimeAgentQueryEmbedding");
+const memory = await import("../../../convex-dev/runtimeMemory");
+const { ConvexMemoryRepository, createActionMemoryRepository } = await import("../../../convex-dev/runtimeMemoryRepository");
+const { readCurrentEmbeddingProfile, resolveHandler } = await import("../../../convex-dev/runtimeModelPolicy");
+const { createGatewayMemoryModel } = await import("../../../convex-dev/runtimeMemoryGateway");
+const { recallMemory } = await import("../../../convex-dev/runtimeMemoryServices");
+beforeEach(() => { nativeCalls = 0; installIngestionMockRoot(); });
+afterEach(() => { jest.restoreAllMocks(); });
+async function fixture() {
+  const f = await ingestionFixture(), oldQuery = f.ctx.runQuery.bind(f.ctx), oldMutation = f.ctx.runMutation.bind(f.ctx);
+  const calls: string[] = [];
+  const names = { runtimeAgent: agent, runtimeAgentQueryEmbedding: query, runtimeModelPolicy: ledger, runtimeMemory: memory, runs };
+  function registration(ref: Parameters<typeof getFunctionName>[0]) {
+    let name = ""; try { name = getFunctionName(ref); } catch { return undefined; }
+    const [module, method] = name.split(":");
+    if (!(module in names)) return undefined;
+    const values = names[module as keyof typeof names] as Record<string, unknown>;
+    return values[method] ? { name, value: values[method] } : undefined;
+  }
+  f.ctx.runQuery = (async (ref, args) => { const found = registration(ref); if (!found) return oldQuery(ref, args);
+    calls.push(found.name); assertNativeArgs(found.value, args); return invoke(found.value, f.ctx, args);
+  }) as MutationCtx["runQuery"];
+  let checkpointFault: (() => Promise<void>) | undefined;
+  f.ctx.runMutation = (async (ref, args) => { const found = registration(ref); if (!found) return oldMutation(ref, args);
+    calls.push(found.name); assertNativeArgs(found.value, args);
+    // Native nested mutation partial rollback is an explicit fixture transaction,
+    // not an injected result that pretends the original handler ran.
+    return f.transaction(async () => { if (found.name === "runtimeModelPolicy:checkpoint" && checkpointFault) await checkpointFault();
+      return invoke(found.value, f.ctx, args); });
+  }) as MutationCtx["runMutation"];
+  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() });
+  await f.call(agent.start, { runId: run.runId });
+  const owned = f.db.table("runtimeAgentExecutions")[0], attempt = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
+  await f.call(agent.startContext, attempt);
+  const current = await agent.executionContext(f.ctx, attempt);
+  const text = current.messages.filter(m => m.role === "user").slice(-1).map(m => typeof m.content === "string" ? m.content : m.content.filter(p => p.type === "text").map(p => p.text).join("\n")).join("\n");
+  const input = { text, requestId: `context:${await semanticHash(canonicalModelJson([run.runId, 1]))}`, limit: 10 };
+  const repository = createActionMemoryRepository({ ...f.ctx, vectorSearch: async () => [] } as unknown as ActionCtx, f.reference, "read");
+  const action = { ...f.ctx, vectorSearch: async () => [] } as unknown as ActionCtx;
+  const state = () => clone({ rows: new Map([...f.db.rows].filter(([, rows]) => rows.length)), writes: f.db.writes, native: f.native, effects: f.effects, scheduled: f.scheduled });
+  return { ...f, get grant() { return f.grant; }, attempt, input, repository, action, runBudgetId: current.run.runBudgetId, calls, state,
+    checkpointFault: (value: typeof checkpointFault) => { checkpointFault = value; } };
+}
+type Fixture = Awaited<ReturnType<typeof fixture>>;
+async function preparation(f: Fixture) { return f.call<Awaited<ReturnType<typeof query.prepareAgentQueryEmbeddingHandler>>>(query.prepare, { ...f.attempt, input: f.input }); }
+async function admitArgs(f: Fixture) {
+  const p = await preparation(f), pins = p.resolutions[0].snapshot.pins;
+  const request = { semanticId: p.binding.semanticId, childCallId: "native-placeholder", texts: p.request.texts, inputTokens: Buffer.byteLength(f.input.text), outputTokens: 0,
+    toolSteps: 0, timeoutMs: p.resolutions[0].snapshot.limits.timeoutMs, reservationUnits: p.resolutions[0].snapshot.costBound.maximumCostUnits, promptVersion: pins.promptVersion, schemaVersion: pins.schemaVersion,
+    extractionVersion: pins.extractionVersion, toolRegistryVersion: pins.toolRegistryVersion, profile: p.profile,
+    batch: { ordinal: 0, start: 0, end: 1 }, tools: [], options: { maxRetries: 0 } };
+  return { ...f.attempt, input: f.input, bindingCanonical: canonicalModelJson(p.binding), requestCanonical: canonicalModelJson(request), snapshotCanonical: canonicalModelJson(p.resolutions[0].snapshot) };
+}
+it("one registered preflight produces exact original profile/request/two-resolution data without writes or inference", async () => {
+  expect(query.prepare.isInternal).toBe(true); expect(query.prepare.isQuery).toBe(true);
+  expect(query.admit.isInternal).toBe(true); expect(query.admit.isMutation).toBe(true);
+  const f = await fixture(), before = f.state(), actual = await preparation(f), r = new ConvexMemoryRepository(f.ctx, f.reference, "read");
+  await r.recheckAuthority(); await r.assertReadAuthority(); await r.recheckAuthority();
+  const selected = await readCurrentEmbeddingProfile(f.ctx, f.reference, "embedding.query", f.runBudgetId);
+  await r.assertProfileReady(selected, f.runBudgetId); await r.recheckAuthority();
+  expect(actual.profile).toEqual(selected); expect(actual.resolutions).toEqual([await resolveHandler(f.ctx, actual.binding), await resolveHandler(f.ctx, actual.binding)]);
+  expect(actual.request).toEqual({ purpose: "embedding.query", operationId: `embedding.query:${JSON.stringify([f.reference.tenantId, f.reference.memorySpaceId, f.reference.principalId, f.input.requestId, profile.profileId])}`,
+    policyVersion: profile.profileId, attempt: 1, profile, texts: [f.input.text] });
+  expect(f.state()).toEqual(before); expect(nativeCalls).toBe(0);
+});
+it.each(["input", "requestId", "limit", "principal", "lease", "revocation", "expiry"])("preflight %s refuses before any model/account writes", async fault => {
+  const f = await fixture(), args = { ...f.attempt, input: { ...f.input } };
+  if (fault === "input") args.input.text += " changed";
+  if (fault === "requestId") args.input.requestId = "another-context";
+  if (fault === "limit") args.input.limit = 101;
+  if (fault === "principal") args.reference = { ...args.reference, principalId: "foreign" };
+  if (fault === "lease") args.leaseVersion++;
+  if (fault === "revocation") f.grant.revokedAt = clock;
+  if (fault === "expiry") f.grant.expiresAt = clock;
+  const before = f.state(); await expect(f.call(query.prepare, args)).rejects.toThrow(); expect(f.state()).toEqual(before); expect(nativeCalls).toBe(0);
+});
+it("actual Gateway query plus fresh native parent makes one paid-peer call and retains UNKNOWN capture independently", async () => {
+  const f = await fixture(); f.calls.length = 0;
+  const value = await query.recallAgentMemory(f.action, f.attempt, f.repository, { now: () => clock }, f.input);
+  expect(value).toMatchObject({ profileId: profile.profileId, items: [] }); expect(nativeCalls).toBe(1);
+  expect(f.calls.filter(n => n === "runtimeAgentQueryEmbedding:prepare")).toHaveLength(1);
+  expect(f.calls.filter(n => n === "runtimeAgentQueryEmbedding:admit")).toHaveLength(1);
+  expect(f.calls.filter(n => n === "runtimeModelPolicy:checkpoint")).toHaveLength(1);
+  expect(f.calls.filter(n => n === "runtimeModelPolicy:resolve")).toEqual([]);
+  // Readiness in the native preflight, fresh vector search and final delivery retain their independent profile checks.
+  expect(f.calls.filter(n => n === "runtimeModelPolicy:embeddingProfile")).toHaveLength(3);
+  expect(f.calls.indexOf("runtimeModelPolicy:captureTerminalEvidence")).toBeLessThan(f.calls.indexOf("runtimeModelPolicy:attachTerminalResult"));
+  expect(f.db.table("runtimeModelAttempts")).toMatchObject([{ state: "uncertain", slotReleased: true, resultAttachmentState: "attached" }]);
+  expect(f.effects.saves).toBe(1);
+});
+it.each(["known", "unknown", "partial_write"])("checkpoint %s refusal commits reservation and rolls back only the failing native child", async fault => {
+  const f = await fixture(), args = await admitArgs(f), initialRows = f.db.table("runtimeMemorySources").length;
+  f.checkpointFault(async () => {
+    if (fault === "partial_write") await f.source("Valid source created inside failing checkpoint child", "rolled-back-source");
+    if (fault === "known") throw new ConvexError({ version: 1, code: "FORBIDDEN", message: "Known checkpoint refusal", retryable: false, outcome: "uncertain" });
+    throw new Error("INJECTED_CHECKPOINT_FAILURE");
+  });
+  const result = await f.call<Awaited<ReturnType<typeof query.admitAgentQueryEmbeddingHandler>>>(query.admit, args);
+  expect(result).toHaveProperty("refusal"); expect(f.db.table("runtimeModelAttempts")).toMatchObject([{ state: "reserved", slotReleased: false }]);
+  expect(f.db.table("runtimeMemorySources")).toHaveLength(initialRows);
+  expect(f.db.table("runtimeBudgetAccounts").filter(a => (a.activeConcurrency as number) > 0)).toHaveLength(2);
+  expect(nativeCalls).toBe(0);
+});
+it("lost successful parent reply cannot issue another permit or native peer call", async () => {
+  const f = await fixture(), args = await admitArgs(f), first = await f.call<Awaited<ReturnType<typeof query.admitAgentQueryEmbeddingHandler>>>(query.admit, args);
+  expect(first).toMatchObject({ result: { admission: { status: "reserved" }, permit: { dispatchPermit: true } } });
+  expect(await f.call(query.admit, args)).toMatchObject({ result: { admission: { status: "uncertain", replayAllowed: false } } });
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(1); expect(f.db.table("runtimeModelAttempts")[0].state).toBe("dispatch_pending"); expect(nativeCalls).toBe(0);
+});
+it.each(["binding", "text", "profile", "revoked", "cancelled"])("fresh admission %s rejects a changed proposal without an inference or reservation", async fault => {
+  const f = await fixture(), args = await admitArgs(f);
+  if (fault === "binding") args.bindingCanonical = canonicalModelJson({ ...JSON.parse(args.bindingCanonical), ordinal: 1 });
+  if (fault === "text" || fault === "profile") { const req = JSON.parse(args.requestCanonical); if (fault === "text") req.texts = ["other text"]; else req.profile = { ...req.profile, dimensions: 3072 }; args.requestCanonical = canonicalModelJson(req); }
+  if (fault === "revoked") f.grant.revokedAt = clock;
+  if (fault === "cancelled") f.db.table("runtimeBudgetAccounts").find(a => a.runBudgetId === f.runBudgetId)!.cancelled = true;
+  const before = f.state(); await expect(f.call(query.admit, args)).rejects.toThrow(); expect(f.state()).toEqual(before); expect(nativeCalls).toBe(0);
+});
+it("generic public-style recall still runs its original guard/profile ports and produces the same tail result", async () => {
+  const f = await fixture(), model = createGatewayMemoryModel(f.action, f.repository, { runBudgetId: f.runBudgetId });
+  f.calls.length = 0; const value = await recallMemory({ repository: f.repository, model, clock: { now: () => clock } }, f.input);
+  expect(value).toMatchObject({ profileId: profile.profileId, items: [] }); expect(nativeCalls).toBe(1);
+  expect(f.calls.filter(n => n === "runtimeModelPolicy:embeddingProfile")).toHaveLength(4);
+  expect(f.calls.filter(n => n === "runtimeModelPolicy:resolve")).toHaveLength(2);
+  expect(f.calls.some(n => n.startsWith("runtimeAgentQueryEmbedding:"))).toBe(false);
+});
+
+it("original checkpoint denial after reservation is returned while its grant mutation rolls back", async () => {
+  const f = await fixture(), args = await admitArgs(f), grant = clone(f.grant);
+  f.checkpointFault(async () => { await f.ctx.db.patch("runtimeAuthGrants", f.grant._id as never, { revokedAt: clock }); });
+  const result = await f.call(query.admit, args);
+  expect(result).toMatchObject({ refusal: { kind: "convex", data: { code: "FORBIDDEN" } } });
+  expect(f.grant).toEqual(grant); expect(f.db.table("runtimeModelAttempts")).toMatchObject([{ state: "reserved", slotReleased: false }]);
+  expect(nativeCalls).toBe(0); expect(f.calls.filter(n => n === "runtimeModelPolicy:checkpoint")).toHaveLength(1);
+});
+it.each(["snapshot", "opaque", "hostile-data"])("%s refusal cannot erase the committed reservation or reach inference", async fault => {
+  const f = await fixture(), args = await admitArgs(f);
+  if (fault === "snapshot") args.snapshotCanonical = canonicalModelJson({ ...JSON.parse(args.snapshotCanonical), modelId: "other-model" });
+  else f.checkpointFault(async () => {
+    if (fault === "opaque") throw Symbol("unknown");
+    const error = new ConvexError({ code: "FORBIDDEN" });
+    Object.defineProperty(error, "data", { get() { throw Error("DO_NOT_INVOKE_ERROR_GETTER"); } });
+    Object.defineProperty(error, "message", { get() { throw Error("DO_NOT_INVOKE_MESSAGE_GETTER"); } });
+    throw error;
+  });
+  expect(await f.call(query.admit, args)).toHaveProperty("refusal");
+  expect(f.db.table("runtimeModelAttempts")).toMatchObject([{ state: "reserved", slotReleased: false }]);
+  expect(f.db.table("runtimeBudgetAccounts").filter(a => (a.activeConcurrency as number) > 0)).toHaveLength(2); expect(nativeCalls).toBe(0);
+});
+it("Action rethrows original bounded checkpoint refusal without refund, retry or private attachment", async () => {
+  const f = await fixture(); f.checkpointFault(async () => { await f.ctx.db.patch("runtimeAuthGrants", f.grant._id as never, { revokedAt: clock }); });
+  await expect(query.recallAgentMemory(f.action, f.attempt, f.repository, { now: () => clock }, f.input)).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+  expect(f.db.table("runtimeModelAttempts")).toMatchObject([{ state: "reserved", slotReleased: false }]);
+  expect(f.calls.filter(n => n === "runtimeAgentQueryEmbedding:admit")).toHaveLength(1);
+  expect(f.calls.some(n => n === "runtimeModelPolicy:captureTerminalEvidence" || n === "runtimeModelPolicy:attachTerminalResult")).toBe(false); expect(nativeCalls).toBe(0);
+});
+it("confirmed UNKNOWN output replays through a fresh preflight and admission without another native call or liability", async () => {
+  const f = await fixture(), first = await query.recallAgentMemory(f.action, f.attempt, f.repository, { now: () => clock }, f.input);
+  const attempts = clone(f.db.table("runtimeModelAttempts")), accounts = clone(f.db.table("runtimeBudgetAccounts")); f.calls.length = 0;
+  expect(await query.recallAgentMemory(f.action, f.attempt, f.repository, { now: () => clock }, f.input)).toEqual(first);
+  expect(f.db.table("runtimeModelAttempts")).toEqual(attempts); expect(f.db.table("runtimeBudgetAccounts")).toEqual(accounts); expect(nativeCalls).toBe(1);
+  expect(f.calls.filter(n => n === "runtimeAgentQueryEmbedding:prepare")).toHaveLength(2); // initial proposals plus original fresh replay resolution
+  expect(f.calls.filter(n => n === "runtimeAgentQueryEmbedding:admit")).toHaveLength(1);
+  expect(f.calls.some(n => n === "runtimeModelPolicy:checkpoint" || n === "runtimeModelPolicy:captureTerminalEvidence" || n === "runtimeModelPolicy:attachTerminalResult")).toBe(false);
+});
+it.each(["qualification", "policy", "budget", "account-reference", "parent", "source", "semantic", "batch"])("fresh admission retains current %s refusal before reservation", async fault => {
+  const f = await fixture(), args = await admitArgs(f);
+  if (fault === "qualification") f.db.table("runtimeModelQualifications").forEach(row => { row.revokedAt = clock; });
+  if (fault === "policy") f.db.table("runtimeModelPolicies")[0].canonical = "{}";
+  if (fault === "budget") f.db.table("runtimeBudgetAccounts").forEach(row => { row.uncertainUnits = 10_000_000; });
+  if (fault === "account-reference") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.reference = { ...f.reference, grantVersion: 2 };
+  if (fault === "parent" || fault === "source") args.bindingCanonical = canonicalModelJson({ ...JSON.parse(args.bindingCanonical), [fault === "parent" ? "parentOperationId" : "source"]: fault === "parent" ? "runtimeModelOperations:foreign" : { sourceId: "other", sourceEventId: "other", sourceRevision: 1, contentHash: "a".repeat(64) } });
+  if (fault === "semantic" || fault === "batch") { const request = JSON.parse(args.requestCanonical); if (fault === "semantic") request.semanticId = "another-operation"; else request.batch = { ordinal: 1, start: 1, end: 2 }; args.requestCanonical = canonicalModelJson(request); }
+  const before = f.state(); await expect(f.call(query.admit, args)).rejects.toThrow(); expect(f.state()).toEqual(before); expect(nativeCalls).toBe(0);
+});
+it("readiness refuses a current authorized incompatible generation before query inference", async () => {
+  const f = await fixture(), source = await f.source("User likes apples", "incompatible-source");
+  f.db.seed("runtimeMemoryVectorGenerations", { ...source.lineage, tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, ownerPrincipalId: source.ownerPrincipalId,
+    contentHash: source.contentHash, profile: LARGE_EMBEDDING_PROFILE, processingReceiptId: "incompatible", generation: 1, createdAt: clock });
+  const before = f.state(); await expect(preparation(f)).rejects.toMatchObject({ data: { code: "PROFILE_NOT_READY" } }); expect(f.state()).toEqual(before); expect(nativeCalls).toBe(0);
+});
+it("preflight retains Agent-before-profile failure precedence", async () => {
+  const f = await fixture(); f.grant.revokedAt = clock; f.db.table("runtimeModelPolicies")[0].canonical = "{}";
+  await expect(preparation(f)).rejects.toMatchObject({ data: { code: "FORBIDDEN" } }); expect(nativeCalls).toBe(0);
+});
+
+it("compound admission is transactionally identical to the original admission then checkpoint handlers", async () => {
+  const original = await fixture(), composed = await fixture(), left = await admitArgs(original), right = await admitArgs(composed);
+  const admission = await original.call<Awaited<ReturnType<typeof ledger.admitHandler>>>(ledger.admit, { ...JSON.parse(left.bindingCanonical), requestCanonical: left.requestCanonical });
+  if (admission.status !== "reserved") throw Error("EXPECTED_ORIGINAL_RESERVATION");
+  const permit = await original.call(ledger.checkpoint, { reference: original.reference, attemptId: admission.attemptId, requestCanonical: admission.requestCanonical });
+  expect(await composed.call(query.admit, right)).toEqual({ result: { admission, permit } });
+  expect(composed.state()).toEqual(original.state()); expect(nativeCalls).toBe(0);
+});

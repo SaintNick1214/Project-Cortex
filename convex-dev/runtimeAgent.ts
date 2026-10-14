@@ -46,6 +46,7 @@ import type { ContextBoundary } from "./runtimeMemoryContext";
 import { traceRuntimePhase, traceRuntimeMutationSpan } from "./runtimeLatencyTrace";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { recallMemory } from "./runtimeMemoryServices";
+import { recallAgentMemory } from "./runtimeAgentQueryEmbedding";
 import { executeServerTool, NATIVE_TOOL_NAMES, semanticToolName, serverTools, serverToolSourceLineage, validateToolInput } from "./runtimeAgentTools";
 import { projectNativeOutputParts } from "./runtimeOutputProjection";
 import type { RuntimePublicOutputPart } from "./runtimeOutputProjection";
@@ -72,12 +73,18 @@ const workflowComponent = (components as unknown as { workflow: ConstructorParam
 const workflow = new WorkflowManager(workflowComponent, { workpoolOptions: { maxParallelism: 4 } });
 const freshWorkflow = ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurnV5");
 const freshWorkflowComplete = ref<"mutation", WorkflowCompletion, null>("mutation", "runtimeAgent:onInitialWorkflowComplete");
+const directAction = ref<"action", Attempt, null>("action", "runtimeAgent:executeDirectV6");
+const directRetirement = ref<"mutation", Attempt, null>("mutation", "runtimeAgent:retireDirectV6");
+const toolContinuation = ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeToolsV6");
 const refs = {
   claim: ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string; leaseMs: number }, { runId: string; attemptNumber: number; leaseVersion: number } | { runId: string; failureCode: string } | null>("mutation", "runs:claimNext"),
   hydrate: ref<"query", Attempt, Awaited<ReturnType<typeof executionContext>>>("query", "runtimeAgent:hydrateExecution"),
   resolveModelOperation: ref<"query", Attempt & { runBudgetId: string }, Awaited<ReturnType<typeof resolveModelOperationHandler>>>("query", "runtimeAgent:resolveModelOperation"),
   admitModelOperation: ref<"mutation", Attempt & { operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string }, Awaited<ReturnType<typeof admitModelOperationHandler>>>("mutation", "runtimeAgent:admitModelOperation"),
   prepareModelOperation: ref<"mutation", Attempt & { ordinal: number }, Awaited<ReturnType<typeof prepareModelOperationHandler>>>("mutation", "runtimeAgent:prepareModelOperation"),
+  prepareDirectTurn: ref<"mutation", Attempt, Awaited<ReturnType<typeof prepareDirectTurnHandler>>>("mutation", "runtimeAgent:prepareDirectTurn"),
+  attachDirectContinuation: ref<"mutation", Attempt, string>("mutation", "runtimeAgent:attachDirectContinuation"),
+  interruptDirect: ref<"mutation", Attempt, null>("mutation", "runtimeAgent:interruptDirect"),
   prepareTurnModel: ref<"mutation", Attempt, Awaited<ReturnType<typeof prepareTurnModelHandler>>>("mutation", "runtimeAgent:prepareTurnModel"),
   prepareResolvedModelOperation: ref<"mutation", Attempt & { ordinal: number }, Awaited<ReturnType<typeof prepareResolvedModelOperationHandler>>>("mutation", "runtimeAgent:prepareResolvedModelOperation"),
   admitPreparedModelOperation: ref<"mutation", Attempt & { operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string; bindingCanonical: string }, GatewayAdmissionCheckpoint>("mutation", "runtimeAgent:admitPreparedModelOperation"),
@@ -140,7 +147,7 @@ async function writeParts(ctx: MutationCtx, owned: Doc<"runtimeAgentExecutions">
 async function checkWitnesses(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt, witnesses: Witness[]) {
   await checkContextSourceWitnesses(ctx, args.reference, witnesses);
 }
-async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt, reconcile = false) {
+export async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt, reconcile = false) {
   const current = reconcile ? await currentRun(ctx, args.reference, args.runId, "run") : await activeAttempt(ctx, args);
   const { row, conversation, definition } = current; const owned = await execution(ctx, args);
   if (row.attemptNumber !== args.attemptNumber || row.cancellationRequestedAt !== undefined || row.responseStatus === "cancelled"
@@ -172,7 +179,7 @@ async function resolveModelOperationHandler(ctx: QueryCtx, args: Attempt & { run
   if (args.runBudgetId !== current.run.runBudgetId) transcriptDenied("POLICY_DENIED");
   return await resolveHandler(ctx, { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId });
 }
-export const resolveModelOperation = internalQuery({ args: { ...agentAttempt, runBudgetId: v.string() }, handler: (ctx, args) => resolveModelOperationHandler(createAuthorityReadScope(ctx), args) });
+export const resolveModelOperation = internalQuery({ args: { ...agentAttempt, runBudgetId: v.string() }, handler: (ctx, args) => resolveModelOperationHandler(createAuthorityReadScope(ctx, { nativeTranscript: true }), args) });
 async function contextInputsHandler(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt) {
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
@@ -231,6 +238,15 @@ async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityRefer
   const id = await ctx.db.insert("runtimeAgentExecutions", { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, ...attempt,
     state: "ready", streaming, nextOutputSequence: 0, nextModelStep: 0, toolCount: 0,
     sourceWitnesses: [], mediaJobReferences: [], savedMessageIds: [], savedMessagePins: [], createdAt: now, updatedAt: now });
+  // Strict definitions keep the registered Workflow's original waiting layout.
+  // Ordinary turns schedule one at-most-once Action atomically with the claim.
+  const admitted = await activeAttempt(ctx, attempt);
+  if (admitted.definition.definition.context.memoryMode !== "strict") {
+    const scheduledActionId = await ctx.scheduler.runAfter(0, directAction, attempt);
+    await ctx.db.patch("runtimeAgentExecutions", id, { executionMode: "direct-v6", directState: "scheduled", scheduledActionId });
+    await ctx.scheduler.runAfter(300_000, directRetirement, attempt);
+    return { runId: row.runId, attemptNumber: claimed.attemptNumber, state: "ready" as const };
+  }
   const workflowId = await traceRuntimeMutationSpan(row.runId, claimed.attemptNumber, "start.workflow",
     async () => await workflow.start(ctx, freshWorkflow, attempt,
       { startAsync: false, onComplete: freshWorkflowComplete, context: attempt }));
@@ -488,12 +504,13 @@ async function saveContextHandler(ctx: MutationCtx, args: Attempt & { context: s
 }
 export const saveContext = internalMutation({ args: { ...agentAttempt, context: v.string(), witnesses: v.array(sourceWitness),
   completeness: v.union(v.literal("complete"), v.literal("incomplete")), failureCode: v.optional(v.string()), emptyIndexedProfileId: v.optional(v.string()) }, handler: saveContextHandler });
-export const startContext = internalMutation({ args: agentAttempt, handler: async (ctx, args) => {
+async function startContextHandler(ctx: MutationCtx, args: Attempt) {
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== undefined) transcriptDenied("INTERRUPTED_REQUIRES_RECONCILIATION");
   await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextState: "started", barrierStartedAt: Date.now() }); return null;
-} });
-export const contextBarrier = internalMutation({ args: agentAttempt, handler: async (ctx, args) => {
+}
+export const startContext = internalMutation({ args: agentAttempt, handler: startContextHandler });
+async function contextBarrierHandler(ctx: MutationCtx, args: Attempt) {
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started" || current.execution.barrierStartedAt === undefined) transcriptDenied("INVALID_STATE");
   if (current.definition.context.memoryMode !== "strict") return { state: "ready" as const, remainingMs: 0 };
@@ -509,7 +526,8 @@ export const contextBarrier = internalMutation({ args: agentAttempt, handler: as
     await ctx.db.patch("runtimeRuns", current.run._id, { contextCompleteness: "incomplete", contextFailureCode: decision.failureCode });
   }
   return decision;
-} });
+}
+export const contextBarrier = internalMutation({ args: agentAttempt, handler: contextBarrierHandler });
 export const failContext = internalMutation({ args: { ...agentAttempt, failureCode: v.union(v.literal("CAPABILITY_UNAVAILABLE"),
   v.literal("MEMORY_STAGE_FAILED"), v.literal("MEMORY_BARRIER_TIMEOUT"), v.literal("CONTEXT_OVERFLOW")) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args);
@@ -555,7 +573,7 @@ export const contextSourceBatch = internalQuery({ args: { reference: runtimeAuth
   permission: contextSourcePermission, witnesses: v.array(sourceWitness), priorWitnesses: v.array(sourceWitness),
   excludedSourceKeys: v.array(v.string()), cutoff: v.number(), boundary: contextBoundary }, handler: contextSourceBatchHandler });
 
-export async function prepareContextHandler(ctx: ActionCtx, args: Attempt): Promise<null> {
+export async function prepareContextHandler(ctx: ActionCtx, args: Attempt, recall?: (repository: Parameters<typeof recallAgentMemory>[2], input: Parameters<typeof recallAgentMemory>[4]) => ReturnType<typeof recallAgentMemory>): Promise<null> {
   const inputs = await ctx.runQuery(refs.contextInputs, args);
   const { current, boundary, represented, pending } = inputs;
   const cutoff = current.snapshot.ingestionCutoff.sequence;
@@ -629,7 +647,8 @@ export async function prepareContextHandler(ctx: ActionCtx, args: Attempt): Prom
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
   const availability = inputs.availability;
   traceRuntimePhase(args.runId, args.attemptNumber, availability.empty ? "context.indexed.empty" : "context.recall.begin");
-  const result = availability.empty ? { context: "" } : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
+  const result = availability.empty ? { context: "" } : recall ? await recall(scoped,
+    { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 }) : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
     { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 });
   traceRuntimePhase(args.runId, args.attemptNumber, "context.recall.end");
   for (const source of pending.sources) {
@@ -1013,6 +1032,152 @@ export async function turnStepV5Handler(ctx: ActionCtx, args: Attempt & { ordina
 }
 export const turnStepV5 = internalAction({ args: { ...agentAttempt, ordinal: v.number() }, handler: turnStepV5Handler });
 
+async function finishTurnV6(ctx: ActionCtx, args: Attempt & { ordinal: number }, prepared: Exclude<Awaited<ReturnType<typeof prepareDirectTurnHandler>>, { state: "duplicate" }>): Promise<StepResult> {
+  const attempt = attemptArgs(args);
+  if (prepared.state === "failed_context") {
+    await ctx.runMutation(ref<"mutation", Attempt & { failureCode: "CONTEXT_OVERFLOW" }, null>("mutation", "runtimeAgent:failContext"), { ...attempt, failureCode: prepared.failureCode });
+    transcriptDenied(prepared.failureCode);
+  }
+  if (prepared.state === "needs_context") {
+    await prepareContextHandler(ctx, attempt, (repository, input) => recallAgentMemory(ctx, attempt, repository, { now: () => Date.now() }, input));
+    prepared = await ctx.runMutation(refs.prepareResolvedModelOperation, { ...attempt, ordinal: args.ordinal });
+  }
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.prepare.end");
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.model.begin");
+  const result = await executePreparedModelStep(ctx, args, prepared, prepared.state === "started" ? prepared : undefined);
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.model.end");
+  if (result.final) {
+    await ctx.runMutation(refs.finalize, { ...attempt, finalMessageIds: result.savedMessageIds });
+    try {
+      traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.begin");
+      await ctx.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runId: string }, string | null>("mutation", "runtimeContentJobs:enqueueParentTitle"), { reference: args.reference, runId: args.runId });
+    } catch { /* Optional title failure cannot roll back the canonical answer. */ }
+    finally { traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.end"); }
+  }
+  return result;
+}
+
+/** Fresh-only direct dispatcher. The original context/model helpers still execute
+ * all predicates. The claim and preparation roll back together on refusal. */
+async function prepareDirectTurnHandler(nativeCtx: MutationCtx, args: Attempt) {
+  const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
+  const owned = await execution(ctx, args);
+  if (owned.executionMode !== "direct-v6" || !owned.scheduledActionId) transcriptDenied("INVALID_STATE");
+  if (owned.directState !== "scheduled") {
+    await currentRun(ctx, args.reference, args.runId, "run");
+    return { state: "duplicate" as const };
+  }
+  const current = await executionContext(ctx, args);
+  if (current.definition.context.memoryMode === "strict") transcriptDenied("INVALID_STATE");
+  await startContextHandler(ctx, args);
+  const barrier = await contextBarrierHandler(ctx, args);
+  if (barrier.state !== "ready") transcriptDenied("INVALID_STATE");
+  await ctx.db.patch("runtimeAgentExecutions", owned._id, { directState: "started" });
+  return await prepareTurnModelHandler(ctx, args);
+}
+export const prepareDirectTurn = internalMutation({ args: agentAttempt, handler: prepareDirectTurnHandler });
+
+/** Only the persisted first model result may hand off into a new journal.
+ * Async start attaches the ID before the strict original completion callback. */
+async function attachDirectContinuationHandler(ctx: MutationCtx, args: Attempt) {
+  const current = await executionContext(ctx, args);
+  const owned = current.execution;
+  if (owned.executionMode !== "direct-v6" || !["started", "continuation_pending", "continuation"].includes(owned.directState ?? "")) transcriptDenied("INVALID_STATE");
+  if (owned.workflowId) {
+    if (owned.directState !== "continuation") transcriptDenied("INVALID_STATE");
+    return owned.workflowId;
+  }
+  const canonical = await completedModelStepHandler(ctx, { ...args, ordinal: 0 });
+  if (!canonical) transcriptDenied("RECONCILIATION_INCOMPLETE");
+  const result = JSON.parse(canonical) as StepResult;
+  if (result.final || !Array.isArray(result.calls) || !result.calls.length || result.calls.length > 32) transcriptDenied("INVALID_MODEL_OUTPUT");
+  const workflowId = await workflow.start(ctx, toolContinuation, args, { startAsync: true,
+    onComplete: ref<"mutation", WorkflowCompletion, null>("mutation", "runtimeAgent:onWorkflowComplete"), context: args });
+  await ctx.db.patch("runtimeAgentExecutions", owned._id, { workflowId, directState: "continuation" });
+  return workflowId;
+}
+export const attachDirectContinuation = internalMutation({ args: agentAttempt, handler: attachDirectContinuationHandler });
+
+/** Caught/lost direct work has no automatic retry. A completed tool response
+ * retains a bounded handoff recovery lane; other partial work uses the original
+ * UNKNOWN/final-output reconciliation disposition. */
+async function interruptDirectHandler(ctx: MutationCtx, args: Attempt) {
+  const owned = await execution(ctx, args);
+  if (owned.executionMode !== "direct-v6") transcriptDenied("INVALID_STATE");
+  if (owned.state === "complete" || owned.workflowId || owned.state === "cancelled") return null;
+  try {
+    const completed = await completedModelStepHandler(ctx, { ...args, ordinal: 0 });
+    if (completed && !(JSON.parse(completed) as StepResult).final) {
+      await ctx.db.patch("runtimeAgentExecutions", owned._id, { directState: "continuation_pending" });
+      return null;
+    }
+  } catch (error) {
+    // Original currentness failures must retire work, never enable handoff.
+    if (!(error instanceof ConvexError)) throw error;
+  }
+  return await endInterruptedHandler(ctx, { ...args, cancelled: false });
+}
+export const interruptDirect = internalMutation({ args: agentAttempt, handler: interruptDirectHandler });
+
+export const executeDirectV6 = internalAction({ args: agentAttempt, handler: async (ctx, args) => {
+  try {
+    traceRuntimePhase(args.runId, args.attemptNumber, "direct.prepare.begin");
+    const prepared = await ctx.runMutation(refs.prepareDirectTurn, args);
+    traceRuntimePhase(args.runId, args.attemptNumber, "direct.prepare.end");
+    if (prepared.state === "duplicate") return null;
+    const result = await finishTurnV6(ctx, { ...args, ordinal: 0 }, prepared);
+    if (!result.final) await ctx.runMutation(refs.attachDirectContinuation, args);
+    return null;
+  } catch (error) {
+    await ctx.runMutation(refs.interruptDirect, args);
+    throw error;
+  }
+} });
+
+/** The timer only retires the original attempt after its existing lease. It
+ * cannot schedule a provider retry or extend a lease. */
+export const retireDirectV6 = internalMutation({ args: agentAttempt, handler: async (ctx, args) => {
+  const owned = await execution(ctx, args);
+  if (owned.executionMode !== "direct-v6" || owned.workflowId || ["complete", "failed", "unknown", "cancelled"].includes(owned.state)) return null;
+  const outbox = singleTranscript(await ctx.db.query("runtimeRunOutbox").withIndex("by_run", q => q.eq("tenantId", owned.tenantId)
+    .eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId)).take(2));
+  if (!outbox || outbox.leaseVersion !== args.leaseVersion || outbox.leaseExpiresAt === undefined) transcriptDenied("INVALID_STATE");
+  if (Date.now() < outbox.leaseExpiresAt) { await ctx.scheduler.runAfter(outbox.leaseExpiresAt - Date.now(), directRetirement, args); return null; }
+  const row = singleTranscript(await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", owned.tenantId)
+    .eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId)).take(2));
+  if (!row || row.attemptNumber !== args.attemptNumber) transcriptDenied("INVALID_STATE");
+  try { await ctx.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runBudgetId: string }, unknown>("mutation", "runtimeModelPolicy:cancelBudget"),
+    { reference: owned.reference, runBudgetId: row.runBudgetId }); }
+  catch (error) {
+    if (!(error instanceof ConvexError) || !["FORBIDDEN", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE"].includes(error.data.code as string)) throw error;
+  }
+  await endInterruptedHandler(ctx, { ...args, cancelled: false });
+  return null;
+} });
+
+/** This journal begins after the first completed operation, never before it.
+ * Each later Action remains retry:false with the original tool/approval loop. */
+export const executeToolsV6 = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
+  const canonical = await step.runQuery(ref<"query", Attempt & { ordinal: number }, string | null>("query", "runtimeAgent:completedModelStep"), { ...args, ordinal: 0 });
+  if (!canonical) throw new Error("RECONCILIATION_INCOMPLETE");
+  for (let ordinal = 0; ordinal < 33; ordinal++) {
+    const result = ordinal === 0 ? JSON.parse(canonical) as StepResult : await step.runAction(refs.turn, { ...args, ordinal }, { name: `context and model turn ${ordinal}`, retry: false });
+    if (result.final) { if (ordinal === 0) throw new Error("INVALID_MODEL_OUTPUT"); return null; }
+    if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
+    for (const call of result.calls) {
+      const op = await step.runMutation(refs.begin, { ...args, kind: "tool", ordinal,
+        requestCanonical: call.inputCanonical, toolCallId: call.toolCallId, toolName: call.toolName });
+      if (op.state === "waiting_approval") {
+        await step.runMutation(refs.waiting, { ...args, operationId: op.operationId });
+        await step.awaitEvent({ name: op.operationId, validator: v.literal("approved") });
+      }
+      await step.runAction(refs.tool, { ...args, ordinal, call }, { retry: false, name: `server tool ${call.toolName}` });
+    }
+  }
+  throw new Error("TOOL_STEP_LIMIT");
+} });
+
+
 export async function toolStepHandler(ctx: ActionCtx, args: Attempt & { ordinal: number; call: ToolCall }): Promise<null> {
   const attempt = attemptArgs(args);
   const current = await ctx.runQuery(refs.hydrate, attempt); const op = await ctx.runMutation(refs.begin, { ...attempt, ordinal: args.ordinal, kind: "tool", toolName: args.call.toolName,
@@ -1215,9 +1380,19 @@ export const finalize = internalMutation({ args: { ...agentAttempt, finalMessage
  * It never starts a model/tool call. Pending/error/tool-call-only outputs remain unknown. */
 export const reconcile = mutation({ args: selector, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "run"); const current = await currentRun(ctx, dataAuthorityReference(actor), args.runId, "run");
-  const owned = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", current.row.tenantId).eq("memorySpaceId", current.row.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", current.row.attemptNumber)).take(2));
+  let owned = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", current.row.tenantId).eq("memorySpaceId", current.row.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", current.row.attemptNumber)).take(2));
   if (!owned) transcriptDenied("INVALID_STATE");
+  if (owned.executionMode === "direct-v6" && owned.scheduledActionId && !owned.workflowId && owned.directState !== "continuation_pending" && ["ready", "running"].includes(owned.state)) {
+    const scheduled = await ctx.db.system.get("_scheduled_functions", owned.scheduledActionId);
+    if (scheduled?.state.kind === "failed") {
+      await interruptDirectHandler(ctx, { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion });
+      const updated = await ctx.db.get("runtimeAgentExecutions", owned._id); if (!updated) transcriptDenied("INVALID_STATE"); owned = updated;
+    }
+  }
   const attempt = { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion };
+  if (owned.executionMode === "direct-v6" && owned.directState === "continuation_pending") {
+    return { workflowId: await attachDirectContinuationHandler(ctx, attempt) };
+  }
   if (owned.state === "complete" && owned.ingestionReceiptId) return { receiptId: owned.ingestionReceiptId };
   const fenced = await executionContext(ctx, attempt, true);
   const operations = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId).eq("attemptNumber", owned.attemptNumber).eq("kind", "model")).take(34);
@@ -1246,7 +1421,7 @@ export const reconcile = mutation({ args: selector, handler: async (ctx, args) =
   return await finalizeExecution(ctx, attemptWithFinal(attempt, ids), true);
 } });
 function attemptWithFinal(args: Attempt, ids: string[]) { return { ...args, finalMessageIds: ids }; }
-export const endInterrupted = internalMutation({ args: { ...agentAttempt, cancelled: v.boolean() }, handler: async (ctx, args) => {
+async function endInterruptedHandler(ctx: MutationCtx, args: Attempt & { cancelled: boolean }) {
   const owned = await execution(ctx, args); if (owned.state === "complete" || owned.state === "cancelled" || !args.cancelled && ["failed", "unknown"].includes(owned.state)) return null;
   const row = singleTranscript(await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId)).take(2));
   const operations = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId).eq("attemptNumber", owned.attemptNumber)).take(100);
@@ -1267,7 +1442,8 @@ export const endInterrupted = internalMutation({ args: { ...agentAttempt, cancel
       { reference: owned.reference, conversationId: row.conversationId });
   }
   return null;
-} });
+}
+export const endInterrupted = internalMutation({ args: { ...agentAttempt, cancelled: v.boolean() }, handler: endInterruptedHandler });
 export const onWorkflowComplete = internalMutation({ args: { workflowId: v.string(), context: v.any(), result: v.any() }, handler: async (ctx, args) => {
   const context = args.context as Attempt; const owned = await execution(ctx, context); if (owned.workflowId !== args.workflowId) transcriptDenied();
   if (owned.state !== "complete") await ctx.runMutation(refs.end, { ...context, cancelled: (args.result as { kind?: string }).kind === "canceled" }); return null;
@@ -1340,6 +1516,7 @@ export const cancel = mutation({ args: selector, handler: async (ctx, args) => {
       // Budget cancellation is durable even if the component has already retired its stream.
       try { await abortStream(ctx, agentComponent, { threadId: current.conversation.threadId, order: snapshot.anchor.order, reason: "CANCELLED" }); } catch { /* Late native work remains fenced by the cancelled run budget. */ }
     }
+    if (owned.scheduledActionId) { try { await ctx.scheduler.cancel(owned.scheduledActionId); } catch { /* The original run/budget fence rejects late work. */ } }
     if (owned.workflowId) { try { await workflow.cancel(ctx, owned.workflowId as WorkflowId); } catch { /* A finished Workflow still has its run/budget fenced. */ } }
     await ctx.runMutation(refs.end, { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion, cancelled: true });
   }

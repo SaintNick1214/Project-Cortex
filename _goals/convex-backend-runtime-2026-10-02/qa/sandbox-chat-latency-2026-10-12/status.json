@@ -927,5 +927,62 @@
     "pendingReadiness": "OriginalCONTEXT_INCOMPLETEwhilememorypendingpreserved;onecheckaftermemoryCOMPLETEreturned4/4",
     "automationSelectorFailure": "Wrongformattedfacts4/4selectorfailed;actualDOMconfirmedfacts:completeindexedthrough4of4",
     "nativeSLOQualified": false
+  },
+  "v6CoherentSourceBatch": {
+    "name": "Direct ordinary Action, Agent embedding controls, native admission envelope",
+    "rootEnvelope": {
+      "implementationPercent": 100,
+      "affectedVerificationPercent": 100,
+      "tests": "118/118/2suites/0skip",
+      "nativeQualified": false,
+      "freeze": "v6-admission-envelope-freeze.json"
+    },
+    "embedding": {
+      "implementationPercent": 100,
+      "focusedVerificationPercent": 100,
+      "tests": "47/47/2suites/0skip",
+      "sharedQualityPending": true,
+      "freeze": "cloud-agent-query-embedding-freeze.json"
+    },
+    "agent": {
+      "implementationPercent": 100,
+      "finalAffectedVerification": "PASS1025/1025/29suites/0skip",
+      "originalFreshContextHandler": "retained; prepared-data shortcut rejected by installed revocation/write ordering test"
+    },
+    "docs": {
+      "sourcePercent": 100,
+      "buildAndRenderPercent": 100,
+      "buildExit": 0,
+      "boundedBrowserWarningsErrors": 0,
+      "receipt": "docs-v6-coherent-freeze-receipt.json",
+      "repository": "SaintNick1214/cortexmemory.dev",
+      "published": false
+    },
+    "sharedQuality": {
+      "percent": 100,
+      "types": true,
+      "scopedLint": {
+        "exit": 0,
+        "errors": 0,
+        "warnings": 11
+      },
+      "buildExit": 0,
+      "actualPackedContractsExit": 0,
+      "backendRootsExit": 0,
+      "backendFiles": 158,
+      "receipt": "v6-joint-quality-final-receipt.json",
+      "originalRootsNameFixtureFailure": "Preserved; corrected actual registered name without source/build/pack rerun"
+    },
+    "independentJointReview": {
+      "percent": 100,
+      "verdict": "PASS4.0 source/test/docsONLY",
+      "breakingFindings": 0,
+      "report": "v6-coherent-joint-review.md",
+      "hostedQualified": false
+    },
+    "nativeSLOPercent": 0,
+    "goalPercent": 50,
+    "goalComplete": false,
+    "sourceAcceptancePercent": 100
   }
 }
