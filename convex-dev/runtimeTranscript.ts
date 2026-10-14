@@ -20,7 +20,7 @@ import { boundedIdentifier, clientRequestKey, comparePosition, normalizeTextSubm
 import type { CutoffV1, MessagePin, PublicTranscriptMessage } from "../src/domain/transcript";
 import { dataAuthorityReference, managedConversationAccess, requireDataAuthority, recheckDataAuthority } from "./runtimeDataAuth";
 import type { ScopedDataAuthority } from "./runtimeDataAuth";
-import { recheckAuthority } from "./runtimeAuth";
+import { readNativeTranscriptMessages, recheckAuthority } from "./runtimeAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
@@ -90,7 +90,7 @@ export async function createManagedConversation(ctx: MutationCtx, actor: ScopedD
   return (await ctx.db.get("runtimeConversations", id))!;
 }
 async function nativeById(ctx: Pick<QueryCtx, "runQuery">, ids: string[]) {
-  return await ctx.runQuery(agentComponent.messages.getMessagesByIds, { messageIds: ids });
+  return await readNativeTranscriptMessages(ctx, agentComponent.messages.getMessagesByIds, ids);
 }
 export async function bridgeFor(ctx: Pick<QueryCtx, "db">, conversation: ManagedConversation, nativeMessageId: string) {
   return singleTranscript(await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", conversation.tenantId)

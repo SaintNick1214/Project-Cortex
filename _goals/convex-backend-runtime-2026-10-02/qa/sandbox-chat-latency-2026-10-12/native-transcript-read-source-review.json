@@ -1,0 +1,695 @@
+{
+  "schema": "cortex.native-transcript-read.joint-independent-source-review.v1",
+  "observedAtUTC": "2026-10-14T00:48:46.645317+00:00",
+  "reviewer": "parallel_policy_source_review (independent nonauthor)",
+  "author": "latency_backend_repair",
+  "verdict": "PASS",
+  "scores": {
+    "requirements": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patterns": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "breakingFindings": [],
+  "policy": "Adopted practical goal acceptance-policyv2: requirements/tests/completeness>=4,code/pattern>=3,no breaking findings; cycles waived, original product assertions/deadlines retained; one coherent source/test/docs gate.",
+  "repositories": {
+    "core": "SaintNick1214/Project-Cortex",
+    "coreRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "website": "SaintNick1214/cortexmemory.dev",
+    "websiteRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+    "gitHubVisibilityVerified": false
+  },
+  "productBaseline": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+  "currentHead": "2668cde1d3176d2902f8375ca35fe80112c9af96",
+  "successorQAOnlyVerified": true,
+  "scope": {
+    "productFiles": 3,
+    "newTests": 2,
+    "nativeParentOptIns": [
+      "prepareTurnModel",
+      "prepareResolvedModelOperation",
+      "admitPreparedModelOperation"
+    ],
+    "parentOptions": {
+      "nativeTranscript": true,
+      "policyMetadata": true
+    },
+    "newAPIRegistration": false,
+    "newProductionModule": false,
+    "changedDocPages": 1,
+    "retainedOtherDocs": 6,
+    "nativeSpeedAccepted": false,
+    "fullGoalAccepted": false
+  },
+  "requirements": [
+    {
+      "id": "logical_reads_and_validators",
+      "met": true,
+      "finding": "Both original native lookups and every canonical/private/source/owner/currentness validator remain; interleaved component writers retain second lookup/stale denial.",
+      "evidence": [
+        "convex-dev/runtimeTranscript.ts:352",
+        "convex-dev/runtimeTranscript.ts:377",
+        "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts:51"
+      ]
+    },
+    {
+      "id": "exact_raw_namespace",
+      "met": true,
+      "finding": "Official exact function address and ordered IDs key; same official getMessagesByIds arguments and pure installed component lookup.",
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:63",
+        "convex-dev/runtimeAuth.ts:88",
+        "convex-dev/runtimeTranscript.ts:92",
+        "node_modules/@convex-dev/agent/dist/component/messages.js:591"
+      ]
+    },
+    {
+      "id": "detached_finite_values",
+      "met": true,
+      "finding": "Sixteen entries/250000 accounted raw value+key bytes; clones and overflow fallback verified.",
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:59",
+        "convex-dev/runtimeAuth.ts:73",
+        "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts"
+      ]
+    },
+    {
+      "id": "native_parent_scope",
+      "met": true,
+      "finding": "Only three V5 native parent registrations activate; nested helpers inherit raw reader, Action/new invocation does not; existing policyMetadata activation included.",
+      "evidence": [
+        "convex-dev/runtimeAgent.ts:740",
+        "convex-dev/runtimeAgent.ts:747",
+        "convex-dev/runtimeAgent.ts:822",
+        "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts"
+      ]
+    },
+    {
+      "id": "writer_error_epoch",
+      "met": true,
+      "finding": "DB/component writers invalidate before/after/inflight; failed reads not cached and late epochs cannot populate.",
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:80",
+        "convex-dev/runtimeAuth.ts:178",
+        "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+        "native-transcript-read-convex-test-v2.json"
+      ]
+    },
+    {
+      "id": "fresh_save_and_controls",
+      "met": true,
+      "finding": "Raw transcript and metadata clear before untouched original save guard; full parent differential results/state/denial ordering and existing policy/source/model/accounting checks retained.",
+      "evidence": [
+        "convex-dev/runtimeAgent.ts:628",
+        "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+        "native-transcript-read-equivalence.json"
+      ]
+    },
+    {
+      "id": "journal_and_guard_preservation",
+      "met": true,
+      "finding": "167 original named declarations exact; V1-V5/callbacks and six canonical/private hydration functions exact.",
+      "evidence": [
+        "native-transcript-read-equivalence.json"
+      ]
+    },
+    {
+      "id": "checked_docs_and_tests",
+      "met": true,
+      "finding": "1924/46matching/no skipped; current types/lint/build/contracts0; real in-memory five checks and v12docbuild/render retained failures, with no cloud speed claim.",
+      "evidence": [
+        "native-transcript-read-remaining-checks.json",
+        "native-transcript-read-root-types-v3.json",
+        "docs-k15-outcomes-v12-receipt.json"
+      ]
+    }
+  ],
+  "currentFrozenSourceAndTests": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "a69c9089b017b82fb0307df8fffac7fab9766a1715959fa0de0e3c10ba8f7817",
+      "bytes": 36526,
+      "currentSha256": "a69c9089b017b82fb0307df8fffac7fab9766a1715959fa0de0e3c10ba8f7817",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "sha256": "3685b510a76589246d0ff8ccdc2d2e90a9f2470b2857f35b0cb65d1ff8533765",
+      "bytes": 56493,
+      "currentSha256": "3685b510a76589246d0ff8ccdc2d2e90a9f2470b2857f35b0cb65d1ff8533765",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "0abf300d9a6431c4b3525e10a1f89d645511f30c97844ab2a7dd775be7881e7e",
+      "bytes": 123418,
+      "currentSha256": "0abf300d9a6431c4b3525e10a1f89d645511f30c97844ab2a7dd775be7881e7e",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+      "sha256": "769b378fe6065c9d9b888e72797aed0a20e3fe5b28f307067acaa5955ae77d4f",
+      "bytes": 8752,
+      "currentSha256": "769b378fe6065c9d9b888e72797aed0a20e3fe5b28f307067acaa5955ae77d4f",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+      "sha256": "13ced23472fe28af13918e7310b1017d3b27c6f7eff53dfac0a0afb85a692768",
+      "bytes": 8360,
+      "currentSha256": "13ced23472fe28af13918e7310b1017d3b27c6f7eff53dfac0a0afb85a692768",
+      "matches": true
+    }
+  ],
+  "all5CurrentFilesMatchFreeze": true,
+  "all28FreezeReceiptHashesMatch": true,
+  "independentLiteralPreservation": {
+    "baselinePreimagesMatchActualProduct": true,
+    "unchangedOriginalNamedDeclarations": {
+      "runtimeAuth": 35,
+      "runtimeTranscript": 46,
+      "runtimeAgent": 86
+    },
+    "changedOriginalNames": {
+      "runtimeAuth": [
+        "createAuthorityReadScope"
+      ],
+      "runtimeTranscript": [
+        "nativeById"
+      ],
+      "runtimeAgent": [
+        "prepareEmptyContextHandler",
+        "prepareResolvedModelOperation",
+        "prepareTurnModel",
+        "admitPreparedModelOperation"
+      ]
+    },
+    "sixHydrationCanonicalPrivateSourceBodiesByteExact": true,
+    "workflowV1ThroughV5AndBothCallbacksByteExact": true,
+    "originalLogicalRawHydrationReadsRetained": 2,
+    "rejectedGlobalShortcutNotAccepted": true
+  },
+  "rawReader": {
+    "maxEntries": 16,
+    "maxAccountedRawValueAndKeyBytes": 250000,
+    "javascriptHeapCeilingClaim": false,
+    "functionAndOrderedIdNamespace": true,
+    "detachedValues": true,
+    "noErrorRetention": true,
+    "beforeAfterInFlightWriterFences": true,
+    "lateEpochRefusal": true,
+    "freshSaveClearsBothRawNamespaces": true,
+    "noCrossNativeInvocationActionProcessCache": true,
+    "noAuthorizationValidationSourceDeliveryObservationPaginationCache": true
+  },
+  "tests": {
+    "success": true,
+    "numTotalTests": 1924,
+    "numPassedTests": 1924,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "numTotalTestSuites": 46,
+    "numPassedTestSuites": 46,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0,
+    "exitCode": 0,
+    "uniqueDiscoveredSuites": 46,
+    "discoveryEqualsExecution": true,
+    "allAssertionStatusesPassed": true,
+    "earlier44SuitesRetained": true,
+    "newScopeCases": 13,
+    "newParentCases": 9,
+    "countsOverlapNotAdditive": true,
+    "reviewerReranTests": false
+  },
+  "typedTestApplicability": {
+    "passingScopeSourceSha256": "feae1df339d3ed48e238be8ce0436bce052c47175a0b9f5e7c94f2d712838f46",
+    "retainedBeforeSourceSha256": "feae1df339d3ed48e238be8ce0436bce052c47175a0b9f5e7c94f2d712838f46",
+    "independentlyReconstructedBeforeSha256": "feae1df339d3ed48e238be8ce0436bce052c47175a0b9f5e7c94f2d712838f46",
+    "reversingOnlyTwoErasedCastsExactlyRestoresPassingInput": true,
+    "fullSpreadArgumentForwardingRetained": true,
+    "emittedEqualityReceipt": {
+      "sameExecutable": true,
+      "beforeSha256": "ecf660e38460b7384bc328565c9620cec49b6d3453175cdc98a0b30cdaf11a71",
+      "afterSha256": "ecf660e38460b7384bc328565c9620cec49b6d3453175cdc98a0b30cdaf11a71",
+      "correction": "Two erased exact Parameters/ReturnType signatures for bound overloaded ports; original full argument forwarding retained",
+      "preservedRed": "native-transcript-read-root-types-final.log"
+    },
+    "currentRootTypesExitCode": 0,
+    "currentRootTypesHashesMatch": true
+  },
+  "finalChecks": {
+    "remainingFiveAllExecuted": true,
+    "remainingFiveAllPassed": true,
+    "allFiveCurrentBeforeAfterHashesMatch": true,
+    "observedExits": [
+      {
+        "name": "backend-types-final",
+        "exitCode": 0,
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "node_modules/typescript/bin/tsc",
+          "--project",
+          "convex-dev/tsconfig.json",
+          "--noEmit"
+        ]
+      },
+      {
+        "name": "scoped-eslint-final",
+        "exitCode": 0,
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "node_modules/eslint/bin/eslint.js",
+          "convex-dev/runtimeAuth.ts",
+          "convex-dev/runtimeTranscript.ts",
+          "convex-dev/runtimeAgent.ts",
+          "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+          "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+          "--report-unused-disable-directives"
+        ]
+      },
+      {
+        "name": "root-lint-final",
+        "exitCode": 0,
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "lint"
+        ]
+      },
+      {
+        "name": "build-final",
+        "exitCode": 0,
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "build"
+        ]
+      },
+      {
+        "name": "contracts-final",
+        "exitCode": 0,
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "test:contracts"
+        ]
+      }
+    ],
+    "rootLintWarnings": 237,
+    "rootLintErrors": 0,
+    "scopedLintWarnings": 0,
+    "build": {
+      "sources": 157,
+      "tables": 72,
+      "components": 2
+    },
+    "toolchain": "Node24.15.0/npm12.2 explicit offline",
+    "reviewerReranChecks": false
+  },
+  "installedComponentEvidence": {
+    "convexTestVersion": "0.0.61",
+    "convexVersion": "1.46.0",
+    "agentVersion": "0.7.3",
+    "checks": [
+      {
+        "name": "real official query retains raw readset, nested scope reuse, detached values",
+        "passed": true,
+        "officialNativeReads": 1
+      },
+      {
+        "name": "fresh query invocation does not retain the prior raw scope",
+        "passed": true,
+        "officialNativeReads": 1
+      },
+      {
+        "name": "same parent component+DB writers invalidate before/after and expose writes",
+        "passed": true,
+        "officialNativeReads": 3
+      },
+      {
+        "name": "actual cross-component parent failure rolls all writes back",
+        "passed": true,
+        "officialNativeReads": 4
+      },
+      {
+        "name": "Action calls retain two separate native parent scopes",
+        "passed": true,
+        "officialNativeReads": 2
+      }
+    ],
+    "passed": true,
+    "nativeReads": 11,
+    "realInstalledComponentHandlers": true,
+    "providerCalls": 0,
+    "cloudCalls": 0,
+    "boundary": "Supported in-memory Convex DB/component transactions and rollback; actual native OCC/engine scheduling/latency pending.",
+    "reviewerReadActualFixtureAndInstalledOfficialLookup": true,
+    "officialLookupPureOrderedDbGetAndProjection": true,
+    "sameParentComponentAndCoreWritesVisibilityAndRollbackCovered": true,
+    "hostedNativeOCCSchedulingLatencyAccepted": false,
+    "scratchAbsentVerified": true,
+    "retainedLockSha256Matches": true,
+    "coreManifestHashesStillMatch": true
+  },
+  "controlledParentReadReduction": {
+    "prepareTurnModel": [
+      32,
+      9
+    ],
+    "prepareResolvedModelOperation": [
+      16,
+      3
+    ],
+    "admitPreparedModelOperation": [
+      12,
+      3
+    ],
+    "exactOutputTransactionalStateAndDenialsEqual": true,
+    "nativePhysicalReadOrWallSavingsClaim": false
+  },
+  "docs": {
+    "currentVersion": "v12",
+    "currentPerformanceSha256": "8d1568cbd7815687b93d7d0b222dad8143c27d42d82cc2ce8738a85506b4c155",
+    "allSevenPagesReviewed": [
+      {
+        "path": "docs-site/docs/architecture/performance.mdx",
+        "sha256": "8d1568cbd7815687b93d7d0b222dad8143c27d42d82cc2ce8738a85506b4c155",
+        "priorAcceptedSha256": "b13f9f390c286bd5969bf254c33b8e06cd64e2f807ec6575aa066741b6df9cac",
+        "priorBytesRetained": null
+      },
+      {
+        "path": "docs-site/docs/api-reference/runtime-client.mdx",
+        "sha256": "a97b001914b4a0edef368ef532d8a93c051463cd9e6e0e08420c11e2b49769a5",
+        "priorAcceptedSha256": "a97b001914b4a0edef368ef532d8a93c051463cd9e6e0e08420c11e2b49769a5",
+        "priorBytesRetained": true
+      },
+      {
+        "path": "docs-site/docs/architecture/model-policy.mdx",
+        "sha256": "7cf8acb413cceb96c5d8c6674debbf8ae1fe36b2547cbf54fd0a5d86e85d1f9f",
+        "priorAcceptedSha256": "7cf8acb413cceb96c5d8c6674debbf8ae1fe36b2547cbf54fd0a5d86e85d1f9f",
+        "priorBytesRetained": true
+      },
+      {
+        "path": "docs-site/docs/getting-started/backend-runtime.mdx",
+        "sha256": "6246cf77d233d2efb726a3063139cd3b54a1d73eaf911623c58043f4cd3445cd",
+        "priorAcceptedSha256": "6246cf77d233d2efb726a3063139cd3b54a1d73eaf911623c58043f4cd3445cd",
+        "priorBytesRetained": true
+      },
+      {
+        "path": "docs-site/docs/getting-started/five-minute-quickstart.mdx",
+        "sha256": "ce0e2d2eb082e019cbdc8a9f01a2cba86ab740ce77f495082e425d38d86053db",
+        "priorAcceptedSha256": "ce0e2d2eb082e019cbdc8a9f01a2cba86ab740ce77f495082e425d38d86053db",
+        "priorBytesRetained": true
+      },
+      {
+        "path": "docs-site/docs/getting-started/installation.mdx",
+        "sha256": "2b5a235a74544a83ce14fe5d778b246a069bcc58874b4912bd8d734140a655b2",
+        "priorAcceptedSha256": "2b5a235a74544a83ce14fe5d778b246a069bcc58874b4912bd8d734140a655b2",
+        "priorBytesRetained": true
+      },
+      {
+        "path": "docs-site/docs/tools/cli-reference.mdx",
+        "sha256": "2e222740350cfa5551d37725c291df8755a761d3d7168fcbae7c3f06192e49ec",
+        "priorAcceptedSha256": "2e222740350cfa5551d37725c291df8755a761d3d7168fcbae7c3f06192e49ec",
+        "priorBytesRetained": true
+      }
+    ],
+    "sixOtherAcceptedPagesByteExact": true,
+    "allReceiptHashesMatch": true,
+    "buildExit": 0,
+    "actualIABObservationReviewed": true,
+    "savedV12ScreenshotViewed": true,
+    "reviewerFreshBrowserRender": false,
+    "observedWarningErrors": 0,
+    "sampleLimit": 100,
+    "completeConsoleHealthClaim": false,
+    "browserClosed": true,
+    "serveProcessExitAfterCtrlC": 1,
+    "published": false,
+    "currentHTML": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/build/architecture/performance/index.html",
+      "sha256": "fd3ac83725dbf527f03a2f8f48c942aab5d5226adfd7249bb724873257d7c787",
+      "v5K15MeasuredResultsAndTargetMarkersPresent": true
+    }
+  },
+  "retainedFailures": {
+    "rawTestReceipts": [
+      {
+        "path": "native-transcript-read-new-v1-jest.json",
+        "passed": 10,
+        "failed": 8,
+        "success": false,
+        "relabelled": false
+      },
+      {
+        "path": "native-transcript-read-focused-v2-jest.json",
+        "passed": 69,
+        "failed": 1,
+        "success": false,
+        "relabelled": false
+      },
+      {
+        "path": "native-transcript-read-new-v2-jest.json",
+        "passed": 17,
+        "failed": 2,
+        "success": false,
+        "relabelled": false
+      },
+      {
+        "path": "native-transcript-read-new-v3-jest.json",
+        "passed": 17,
+        "failed": 5,
+        "success": false,
+        "relabelled": false
+      }
+    ],
+    "initialRootTypesExitCode": 2,
+    "initialRootTypesRelabelled": false,
+    "globalHydrationShortcutRejectedAndPreserved": true,
+    "originalOutcomesDenialsSecondReadsRollbackDeadlinesWeakened": false
+  },
+  "nonbreakingDebt": [
+    "Root lint retains237 warnings.",
+    "Byte budget accounts retained raw values and keys, not JavaScript heap/transient clone cost.",
+    "Original-control modules are required differential test fixtures and must remain with the coherent batch or its reproducible generation inputs.",
+    "The optional installed-component helper requires recreating its removed owned scratch from retained lock inputs."
+  ],
+  "limits": [
+    "Source/test/docs acceptance only; fresh hosted immutable-candidate readset/OCC/concurrency/provider qualification remains.",
+    "No native speed from controlled32->9/16->3/12->3 lookup reductions or five in-memory checks.",
+    "K15older2c868source had all4subsecondSLOFAIL and retained30000msCLI deadlines.",
+    "K15capped snapshots/nested timing/fixed clocks/opaque acquisition/discarded conflict fields cannot establish exact savings or recover lost conflict attribution.",
+    "Latency followup remains2/4=50%; no full-goal completion credit."
+  ],
+  "evidence": [
+    {
+      "path": "native-transcript-read-source-report.md",
+      "sha256": "4894161fdd5b82133969ecbf5ed7fe14704b8e25ada6c0f2ba21ae219b23f26c"
+    },
+    {
+      "path": "native-transcript-read-freeze.json",
+      "sha256": "eb0a8ac143529c20b3ef910b62363bf002fcaa24e175bc4794e5a2eaef30703b"
+    },
+    {
+      "path": "native-transcript-read-equivalence.json",
+      "sha256": "11c6c80960291efa731eceb07ae2b53b6d58b7c2ad06ad8a8f5aad8875dd349a"
+    },
+    {
+      "path": "native-transcript-read-equivalence.mjs",
+      "sha256": "042465b20862fcb1cc1b97e691965102a94811b48be075a981faf59902b3cf76"
+    },
+    {
+      "path": "native-transcript-read-before-runtimeAuth.ts",
+      "sha256": "a4c00ccc04536f316e1d9849176791662162e6c285c7b587621dbfca525a46a9"
+    },
+    {
+      "path": "native-transcript-read-before-runtimeTranscript.ts",
+      "sha256": "5c0561422eeff78e70efe63aea359c5d49e97d55924b171291c2271eb1b4ea41"
+    },
+    {
+      "path": "native-transcript-read-before-runtimeAgent.ts",
+      "sha256": "2e556248236cd2cd70a162d5479f505530e44bd07931c1af0a5b99f2e2d9161f"
+    },
+    {
+      "path": "native-transcript-read-original-controls.json",
+      "sha256": "6ecd2562b697d9a1802a9645e1327fe3293f76758b395f01ae8400195c6b2ff6"
+    },
+    {
+      "path": "native-transcript-read-original-runtimeAgent.mjs",
+      "sha256": "b04c564a703b107dcdc06feadfe144e48d8ddfa7abbc4a8d563db3a4caa5d3c4"
+    },
+    {
+      "path": "native-transcript-read-original-runtimeTranscript.mjs",
+      "sha256": "f2cb04c18ae697c91196a8ea9588d29f33ba10c8157c2d4de28da4c91228fd6a"
+    },
+    {
+      "path": "native-transcript-read-build-controls.mjs",
+      "sha256": "6f28faeaa4eb680da54decd9c4b8266061de3704e358753c64e53f2c6cb3a33b"
+    },
+    {
+      "path": "native-transcript-read-discovery.log",
+      "sha256": "efa80d84a2791cdac6fdbf547ee54f8f67a18f50f87b9376108c1a4361d0a089"
+    },
+    {
+      "path": "native-transcript-read-discovery.json",
+      "sha256": "ee339209f7b7414a2bdc3bd2e287808bae498e70b62d1d415cdc90deb8843924"
+    },
+    {
+      "path": "native-transcript-read-selected-paths.json",
+      "sha256": "af2687efc5c483a44723549f5caa54dd3748245900e05ab9c6eba37751600946"
+    },
+    {
+      "path": "native-transcript-read-affected-final-jest.json",
+      "sha256": "a6d492fcdc35bc89b8ee550b8997befaabc841c0e4ad801fe10c807cb3132c25"
+    },
+    {
+      "path": "native-transcript-read-affected-final.log",
+      "sha256": "40b842ede6715d5a90f994482ca770bfc4c673e89ec1b705063dbe477155161e"
+    },
+    {
+      "path": "native-transcript-read-affected-final.json",
+      "sha256": "b164a235b0da84a6576318c5ee73fac24f1fbadf054ff5b1fc522bde145b13c1"
+    },
+    {
+      "path": "native-transcript-read-final-checks.json",
+      "sha256": "340ecf9a80ded309755ac98c16071cb11aeda173264f64d1d6fc3cffb673cdf6"
+    },
+    {
+      "path": "native-transcript-read-root-types-final.log",
+      "sha256": "7d52bd1e3a70f63270d35fa8d6d195b480a67ba4f3118dd3511dc837b955f1cb"
+    },
+    {
+      "path": "native-transcript-read-root-types-final.json",
+      "sha256": "d2fef438e1a5c779173d59c7b4e58275007cf1104f9936ee4caa53a7ed37f83e"
+    },
+    {
+      "path": "native-transcript-read-root-types-v3.json",
+      "sha256": "94451789487558d6fb342ab61f805d7230eb16c2c47ac3e90f57e36a8eb93a85"
+    },
+    {
+      "path": "native-transcript-read-root-types-v3.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-transcript-read-remaining-checks.json",
+      "sha256": "8df6eb07c3cac98787aa626a15643fef7548cf5ee841deee0431f20bb54d3701"
+    },
+    {
+      "path": "native-transcript-read-test-type-equivalence.json",
+      "sha256": "1edd111efbaef43554d303eba03fe4d2de4afb44d1815e91466f7e5892331f35"
+    },
+    {
+      "path": "native-transcript-read-test-before-type-fix.ts",
+      "sha256": "feae1df339d3ed48e238be8ce0436bce052c47175a0b9f5e7c94f2d712838f46"
+    },
+    {
+      "path": "native-transcript-read-convex-test.mjs",
+      "sha256": "9b16a6ec8ae9faf10a4cd53bad9a38686e813cd3d1973cf1e310019d2f3fcd09"
+    },
+    {
+      "path": "native-transcript-read-convex-test-v2.json",
+      "sha256": "9cd1a139aea058fdbc1ef0e3e298896efe08fec30a1eb859bf0cc4dfe2178a07"
+    },
+    {
+      "path": "native-transcript-read-convex-test-v2.log",
+      "sha256": "797e9a661fd2d7c893e95cdf9ee23d2bb4ec0527010a39ff8b5e736283bd5b61"
+    },
+    {
+      "path": "native-transcript-read-package-resolution.json",
+      "sha256": "d04d234f0400ae271323d9c2e8764b06bf5767e491131fd53572a6561e4b6127"
+    },
+    {
+      "path": "native-transcript-read-ephemeral-package-lock.json",
+      "sha256": "ca4e157e9ccd8cd4f3b8923fa8fa506496491e56ada4c8ad180cc10ee210113a"
+    },
+    {
+      "path": "native-transcript-read-ephemeral-cleanup.json",
+      "sha256": "392dd410b7dfeb707c23f0042eacd68ac5c7682dc045b6c7869bdb4ccf57f139"
+    },
+    {
+      "path": "native-transcript-read-new-v1-jest.json",
+      "sha256": "c4dc3dc7dbc919056b181f0074f5aa69e73c71245c510c7344c71f97e68ecb2a"
+    },
+    {
+      "path": "native-transcript-read-focused-v2-jest.json",
+      "sha256": "e744342fae483aa2f5e482b9c2cad928f6f837e6d64b9aa56b6f92c3356ad43b"
+    },
+    {
+      "path": "native-transcript-read-new-v2-jest.json",
+      "sha256": "59605443eb2fde7b88009dcb6fbcec3e808c47a84cb06a5795922ae16b852028"
+    },
+    {
+      "path": "native-transcript-read-new-v3-jest.json",
+      "sha256": "e8d33d928ba4425236c4bd2f18d8f31cb9d3eee05ed592d534cd0561fa080d7c"
+    },
+    {
+      "path": "native-transcript-read-new-v4-jest.json",
+      "sha256": "1431c7230c051501bd20a9743fb84ab5fbce79785e11ff736b33981f6d8544e2"
+    },
+    {
+      "path": "native-transcript-read-rejected-global-hydration.ts",
+      "sha256": "9843e771d923a0b1a26576a7c44b8c116fda9e06d1908b1453016c1faf0c1423"
+    },
+    {
+      "path": "native-transcript-read-root-lint-final.log",
+      "sha256": "c7c2be4bd7f738c99cea072f65a3abc94f818adda03d2cc5d29e8a144cdc7097"
+    },
+    {
+      "path": "native-transcript-read-build-final.log",
+      "sha256": "8bcf16ecdbcd0962302c66a31c7eec4c370a5e0cef9ff3cbd67d33fcbef876ac"
+    },
+    {
+      "path": "native-transcript-read-contracts-final.log",
+      "sha256": "e63c82f0f9158269187f5254807c2b6bc7a2fad0afc94b5a97e3cb24734219f6"
+    },
+    {
+      "path": "docs-k15-outcomes-v12-receipt.json",
+      "sha256": "8ff290814675636048b65f0fde4315d1a43482f4494e7e62b561b8379b7cc7bc"
+    },
+    {
+      "path": "docs-k15-outcomes-build-v12.log",
+      "sha256": "0f5bc7de7d69c241d5844c9d0cb2275027287c48d3302d848de053d7096535a3"
+    },
+    {
+      "path": "browser/docs-k15-outcomes-v12-observation.json",
+      "sha256": "3723a102c2c3b133942e0f614baf0f019cde44a2a626c03edd3d2c2418a3f3ab"
+    },
+    {
+      "path": "browser/docs-k15-outcomes-v12.png",
+      "sha256": "e79a68bf97de38716741e1675db600751f33f2ce3201ce4e4b808490098871de"
+    },
+    {
+      "path": "docs-immediate-start-source-review-v7.json",
+      "sha256": "e33eb30b02ba70c3189f4d1a914b006c3a95ecbb4c68936352352cc9d4af7fc7"
+    },
+    {
+      "path": "cloud-k15-delay-chain.md",
+      "sha256": "9b7d80cd3386ea2656f1832c664f78cf5d88db85131337ef0f82f724f1b5dd99"
+    }
+  ],
+  "actions": {
+    "coreEdits": 0,
+    "testEdits": 0,
+    "docsEdits": 0,
+    "packageEdits": 0,
+    "buildReruns": 0,
+    "testReruns": 0,
+    "browserActions": 0,
+    "serviceCalls": 0,
+    "inferenceCalls": 0,
+    "deployments": 0,
+    "publications": 0,
+    "gitNetworkOperations": 0,
+    "commits": 0,
+    "reviewArtifactWrites": 2
+  },
+  "recommendation": "Accept this bounded source/test/docs batch and continue existing fresh native qualification and measured latency gates without relabelling prior results.",
+  "markdownReportSha256": "7edc522be940a1976ba8feb27edcece779b33d4f692562a2094827febdb6c08d"
+}

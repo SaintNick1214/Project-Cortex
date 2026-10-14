@@ -31,7 +31,7 @@ import { currentRun, currentControlRun, activeAttempt, publicRun } from "./runs"
 import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
-import { recheckAuthority, createAuthorityReadScope, freshPolicyMetadataReads } from "./runtimeAuth";
+import { recheckAuthority, createAuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads } from "./runtimeAuth";
 import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
 import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
 import { admitHandler, checkpointHandler, resolveHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
@@ -625,7 +625,7 @@ async function prepareEmptyContextHandler(ctx: MutationCtx, args: Attempt): Prom
   if (utf8Bytes(context) > Math.min(16_384, current.definition.context.maxContextTokens) || witnesses.size > 32) return { state: "FAILED", failureCode: "CONTEXT_OVERFLOW" };
   // Repeat the complete original save fence in this transaction, including its
   // source/witness checks and fresh empty/profile re-probe. No external I/O.
-  await saveContextHandler(freshPolicyMetadataReads(ctx), { ...args, context, witnesses: [...witnesses.values()], completeness,
+  await saveContextHandler(freshNativeTranscriptReads(freshPolicyMetadataReads(ctx)), { ...args, context, witnesses: [...witnesses.values()], completeness,
     ...(failureCode ? { failureCode } : {}), emptyIndexedProfileId: availability.profileId });
   return { state: "COMPLETE" };
 }
@@ -737,14 +737,14 @@ async function prepareResolvedModelOperationHandler(ctx: MutationCtx, args: Atte
   return { ...prepared, initialResolution, governedResolution };
 }
 export const prepareResolvedModelOperation = internalMutation({ args: { ...agentAttempt, ordinal: v.number() },
-  handler: (ctx, args) => prepareResolvedModelOperationHandler(createAuthorityReadScope(ctx), args) });
+  handler: (ctx, args) => prepareResolvedModelOperationHandler(createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }), args) });
 async function prepareTurnModelHandler(ctx: MutationCtx, args: Attempt) {
   const context = await prepareRoutedContextHandler(ctx, args);
   if (context.state === "FAILED") return { state: "failed_context" as const, failureCode: context.failureCode };
   if (context.state === "NEEDS_ACTION") return { state: "needs_context" as const };
   return await prepareResolvedModelOperationHandler(createAuthorityReadScope(ctx), { ...args, ordinal: 0 });
 }
-export const prepareTurnModel = internalMutation({ args: agentAttempt, handler: prepareTurnModelHandler });
+export const prepareTurnModel = internalMutation({ args: agentAttempt, handler: (ctx, args) => prepareTurnModelHandler(createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }), args) });
 
 export const finishOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), resultCanonical: v.string(), nativeMessageIds: v.array(v.string()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); const owned = await operation(ctx, args, args.operationId);
@@ -819,7 +819,7 @@ async function admitPreparedModelOperationHandler(ctx: MutationCtx, args: Attemp
 }
 export const admitPreparedModelOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), ordinal: v.number(),
   requestCanonical: v.string(), snapshotCanonical: v.string(), bindingCanonical: v.string() },
-  handler: (ctx, args) => admitPreparedModelOperationHandler(createAuthorityReadScope(ctx), args) });
+  handler: (ctx, args) => admitPreparedModelOperationHandler(createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }), args) });
 
 export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v.array(v.any()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); if (args.parts.length > 64) transcriptDenied("INVALID_INPUT");

@@ -1,6 +1,7 @@
 /** Trusted authorization boundary. Registered functions in this module are internal only. */
 import { ConvexError, v } from "convex/values";
-import { makeFunctionReference } from "convex/server";
+import { getFunctionAddress, makeFunctionReference } from "convex/server";
+import type { AgentComponent, MessageDoc } from "@convex-dev/agent";
 import type { FunctionReference, UserIdentity } from "convex/server";
 import { internalMutation, internalQuery } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
@@ -46,6 +47,57 @@ export interface AuthorityReader {
 
 const authorityReadScope: unique symbol = Symbol("cortex.native-authority-read-scope");
 const policyMetadataReadScope: unique symbol = Symbol("cortex.native-policy-metadata-read-scope");
+const nativeTranscriptReadScope: unique symbol = Symbol("cortex.native-transcript-read-scope");
+type NativeMessageReference = AgentComponent["messages"]["getMessagesByIds"];
+interface NativeTranscriptReader {
+  read(reference: NativeMessageReference, messageIds: string[], invoke: () => Promise<(MessageDoc | null)[]>): Promise<(MessageDoc | null)[]>;
+  fresh(): void;
+  beginWrite(): void;
+  endWrite(): void;
+}
+type NativeTranscriptContext = { [nativeTranscriptReadScope]?: NativeTranscriptReader };
+export const NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES = 16;
+export const NATIVE_TRANSCRIPT_READ_SCOPE_MAX_BYTES = 250_000;
+/** Only the official exact message-ID lookup; every canonical/private/currentness
+ * validator remains in its caller. No pagination, source or decision caching. */
+export async function readNativeTranscriptMessages(ctx: Pick<QueryCtx, "runQuery">, reference: NativeMessageReference, messageIds: string[]): Promise<(MessageDoc | null)[]> {
+  const invoke = async () => await ctx.runQuery(reference, { messageIds });
+  const reader = (ctx as NativeTranscriptContext)[nativeTranscriptReadScope];
+  return reader ? await reader.read(reference, messageIds, invoke) : await invoke();
+}
+export function freshNativeTranscriptReads<Ctx>(ctx: Ctx): Ctx {
+  (ctx as NativeTranscriptContext)[nativeTranscriptReadScope]?.fresh();
+  return ctx;
+}
+/** Bound retained raw Convex values, including bytes/undefined/BigInt. */
+function nativeTranscriptBytes(value: unknown): number {
+  if (typeof value === "string") return new TextEncoder().encode(value).length;
+  if (value instanceof ArrayBuffer) return value.byteLength;
+  if (Array.isArray(value)) return value.reduce((total: number, item: unknown) => total + nativeTranscriptBytes(item), 8);
+  if (value !== null && typeof value === "object") return Object.entries(value).reduce((total, [key, item]) => total + nativeTranscriptBytes(key) + nativeTranscriptBytes(item), 8);
+  return 8;
+}
+function createNativeTranscriptReader(): NativeTranscriptReader {
+  const rows = new Map<string, (MessageDoc | null)[]>();
+  let epoch = 0, writers = 0, bytes = 0;
+  const fresh = () => { rows.clear(); bytes = 0; epoch++; };
+  return {
+    fresh,
+    beginWrite: () => { writers++; fresh(); },
+    endWrite: () => { writers--; fresh(); },
+    read: async (reference, messageIds, invoke) => {
+      const key = JSON.stringify([getFunctionAddress(reference), messageIds]), started = epoch;
+      if (!writers && rows.has(key)) return cloneAuthorityValue(rows.get(key)!);
+      const value = cloneAuthorityValue(await invoke());
+      if (!writers && epoch === started && rows.size < NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES) {
+        const size = nativeTranscriptBytes(value) + new TextEncoder().encode(key).length;
+        if (bytes + size <= NATIVE_TRANSCRIPT_READ_SCOPE_MAX_BYTES) { rows.set(key, value); bytes += size; }
+      }
+      return cloneAuthorityValue(value);
+    },
+  };
+}
+
 interface PolicyMetadataReader {
   deploymentRows(): Promise<Doc<"runtimeModelPolicies">[]>;
   qualificationRows(receiptId: string, revision: number): Promise<Doc<"runtimeModelQualifications">[]>;
@@ -88,9 +140,12 @@ function authorityReadKey(method: string, args: readonly (string | undefined)[])
 /** Explicit native invocation only. This reuses raw reads, never an authorization
  * decision: all requirement, generation, expiry and resource predicates still run.
  * Every writer invalidates before/after and suppresses cache use while in flight. */
-export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options?: { policyMetadata: true }): Ctx {
+export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options?: { policyMetadata?: true; nativeTranscript?: true }): Ctx {
   const values = new Map<string, unknown>();
   const metadata = new Map<string, unknown>();
+  // Nested helper scopes share only this explicitly opted-in parent reader.
+  // Native child RPC contexts never receive the symbol through serialized args.
+  const nativeTranscript = (ctx as NativeTranscriptContext)[nativeTranscriptReadScope] ?? (options?.nativeTranscript ? createNativeTranscriptReader() : undefined);
   let epoch = 0, writers = 0;
   let metadataEpoch = 0;
   const freshMetadata = () => { metadata.clear(); metadataEpoch++; };
@@ -121,8 +176,8 @@ export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: 
     return cloneAuthorityValue(value);
   };
   const writing = async (invoke: () => unknown): Promise<unknown> => {
-    invalidate(); writers++;
-    try { return await invoke(); } finally { writers--; invalidate(); }
+    invalidate(); writers++; nativeTranscript?.beginWrite();
+    try { return await invoke(); } finally { writers--; nativeTranscript?.endWrite(); invalidate(); }
   };
   const db = new Proxy(ctx.db, { get(target, key) {
     const value: unknown = Reflect.get(target, key, target);
@@ -140,6 +195,7 @@ export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: 
       : (...args: unknown[]) => Reflect.apply(value, ctx, args) as unknown });
   }
   Object.defineProperty(scoped, authorityReadScope, { value: reader });
+  if (nativeTranscript) Object.defineProperty(scoped, nativeTranscriptReadScope, { value: nativeTranscript });
   if (options?.policyMetadata) Object.defineProperty(scoped, policyMetadataReadScope, { value: {
     deploymentRows: () => readMetadata("deployment", async () => await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65)),
     qualificationRows: (receiptId: string, revision: number) => readMetadata(JSON.stringify(["qualification", receiptId, revision]), async () =>

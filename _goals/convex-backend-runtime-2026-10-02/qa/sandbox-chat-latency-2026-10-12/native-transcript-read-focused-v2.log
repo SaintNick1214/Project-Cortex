@@ -1,0 +1,195 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.9s | 30/30 passed | /tests/unit/runtimeAgent/turn-native-composition.test.ts
+  ❌     3.7s | 9/10 passed | /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ✅     2.3s | 15/15 passed | /tests/unit/runtimeAgent/context-policy-read.test.ts
+  ✅     1.9s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.48s ( 4.0%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 2. [32m✓[0m    0.16s ( 1.4%) - fresh save fence preserves original after-probe qualification-expired denial and transaction rollback
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+ 3. [32m✓[0m    0.12s ( 1.0%) - native context+preparation+two resolutions equal original handler outcomes with warning=false
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 4. [32m✓[0m    0.10s ( 0.9%) - fresh save fence preserves original after-probe root-canonical denial and transaction rollback
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+ 5. [32m✓[0m    0.10s ( 0.8%) - fresh save fence preserves original after-probe qualification-duplicate denial and transaction rollback
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+ 6. [32m✓[0m    0.10s ( 0.8%) - native context+preparation+two resolutions equal original handler outcomes with warning=true
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 7. [32m✓[0m    0.09s ( 0.7%) - empty preserves actual result/state/non-metadata order while reducing exact raw rows
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+ 8. [32m✓[0m    0.09s ( 0.7%) - fresh save fence preserves original after-probe policy-revoked denial and transaction rollback
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+ 9. [32m✓[0m    0.08s ( 0.7%) - new atomic admission equals the original outer hydrate then complete admit/bind/checkpoint parent
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+10. [32m✓[0m    0.07s ( 0.6%) - represented preserves actual result/state/non-metadata order while reducing exact raw rows
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+11. [32m✓[0m    0.07s ( 0.6%) - warning preserves actual result/state/non-metadata order while reducing exact raw rows
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+12. [32m✓[0m    0.06s ( 0.5%) - lost dispatch permit cannot fund/replay another model attempt and retains original UNKNOWN liability
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+13. [32m✓[0m    0.06s ( 0.5%) - fresh save fence preserves original after-probe memory-appeared denial and transaction rollback
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+14. [32m✓[0m    0.06s ( 0.5%) - positive routing does no full profile/probe work; standalone empty and child profile query stay unopted
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+15. [32m✓[0m    0.06s ( 0.5%) - fresh save fence preserves original after-probe qualification-revoked denial and transaction rollback
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+16. [32m✓[0m    0.05s ( 0.5%) - populated context returns to the unchanged Action before model preparation, without saved context or model effects
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+17. [32m✓[0m    0.05s ( 0.4%) - fresh save fence preserves original after-probe revocation denial and transaction rollback
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+18. [32m✓[0m    0.05s ( 0.4%) - fresh save fence preserves original after-probe policy-duplicate denial and transaction rollback
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+19. [32m✓[0m    0.04s ( 0.4%) - fresh save fence preserves original after-probe lease denial and transaction rollback
+    /tests/unit/runtimeAgent/context-policy-read.test.ts
+
+20. [32m✓[0m    0.04s ( 0.4%) - pre-dispatch resolution failure rolls back grouped preparation/context and original interruption remains explicit
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.91s (16.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      11.94s
+  Test suites:        4
+  Individual tests:   70
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+(node:99921) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● default/unscoped remains uncached; nested opted-in helper shares exact IDs/order and detached raw rows
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 5
+    Received number of calls: 4
+
+      13 |   expect(first).toEqual(second); expect(first).not.toBe(second); expect(spy).toHaveBeenCalledTimes(3);
+      14 |   first[0]!.message = { role: "user", content: "local mutation" }; expect(await f.read(ctx)).toEqual(second);
+    > 15 |   await f.read(ctx, [...f.ids].reverse().concat("missing")); await f.read(ctx, [...f.ids, "missing"]); expect(spy).toHaveBeenCalledTimes(5);
+         |                                                                                                                    ^
+      16 |   expect(spy.mock.calls.map(([, args]) => args)).toEqual([{ messageIds: f.ids }, { messageIds: f.ids }, { messageIds: f.ids }, { messageIds: [...f.ids].reverse().concat("missing") }, { messageIds: [...f.ids, "missing"] }]);
+      17 | });
+      18 | it.each(["insert", "patch", "replace", "delete"] as const)("%s invalidates raw native reads before/after, including nested scopes", async method => {
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/native-transcript-read-scope.test.ts:15:116)
+
+PASS tests/unit/runtimeAgent/turn-native-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-policy-read.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeTranscript/managed.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 69 passed, 70 total
+Snapshots:   0 total
+Time:        11.94 s
+Ran all test suites within paths "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts", "tests/unit/runtimeAgent/turn-native-composition.test.ts", "tests/unit/runtimeAgent/context-policy-read.test.ts", "tests/unit/runtimeTranscript/managed.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-transcript-read-focused-v2-jest.json

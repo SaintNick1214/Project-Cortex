@@ -1,0 +1,38 @@
+{
+  "convexTestVersion": "0.0.61",
+  "convexVersion": "1.46.0",
+  "agentVersion": "0.7.3",
+  "checks": [
+    {
+      "name": "real official query retains raw readset, nested scope reuse, detached values",
+      "passed": true,
+      "officialNativeReads": 1
+    },
+    {
+      "name": "fresh query invocation does not retain the prior raw scope",
+      "passed": true,
+      "officialNativeReads": 1
+    },
+    {
+      "name": "same parent component+DB writers invalidate before/after and expose writes",
+      "passed": true,
+      "officialNativeReads": 3
+    },
+    {
+      "name": "actual cross-component parent failure rolls all writes back",
+      "passed": true,
+      "officialNativeReads": 4
+    },
+    {
+      "name": "Action calls retain two separate native parent scopes",
+      "passed": true,
+      "officialNativeReads": 2
+    }
+  ],
+  "passed": true,
+  "nativeReads": 11,
+  "realInstalledComponentHandlers": true,
+  "providerCalls": 0,
+  "cloudCalls": 0,
+  "boundary": "Supported in-memory Convex DB/component transactions and rollback; actual native OCC/engine scheduling/latency pending."
+}
