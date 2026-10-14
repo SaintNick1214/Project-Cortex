@@ -1,0 +1,639 @@
+{
+  "observedAt": "2026-10-14T04:58:05.053Z",
+  "nativeSourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "scope": "K18 qualification, honest latency failures, fresh cleanup, package/launcher controls and reviewable docs observations; product edits and unrelated work excluded",
+  "selected": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k18-cli-timing.mjs",
+      "bytes": 2274,
+      "sha256": "4cd77c27c7a3aecfde91f295b5e503d04239450990e8b18592d40f1641a6a4d8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k18-financial-metadata.mjs",
+      "bytes": 8659,
+      "sha256": "0f0b74c243d6532185d08bd2438cada2ad1bd5be9ec21e8c1ec68a4a1e8aac22"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k18-run-chain.mjs",
+      "bytes": 12001,
+      "sha256": "fc8902ccd7b7e3be20958e5f3988b1bed92ac211e35826599c3e4a7a19948171"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k18-four-run-delay-chain.json",
+      "bytes": 326057,
+      "sha256": "608b98e9d61c68858fe4153b4929d65b6dfa49376bf54504498c4f103370e258"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k18-four-run-delay-chain.md",
+      "bytes": 8148,
+      "sha256": "07b3f1df04e99cbbabc174e279ab91fa03344819ffc018c35f1961152153d1ec"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k18-native-prefix-analysis.json",
+      "bytes": 4886,
+      "sha256": "87ea57103d60cc0b43c645eabe8d2fc17b8a4f391461a57bf8eb5ebf4136b723"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k18-native-prefix-analysis.md",
+      "bytes": 1553,
+      "sha256": "212169388b89980f7e5d4fc335549b5b6cb116be70332fa7488dd9ef94c243bc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docker-before-endpoint-scopes.mjs",
+      "bytes": 18280,
+      "sha256": "bb9c64ab80c03ce4c8d3cef3c96855fd5c672c679e91fa071deb76276d305e13"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k18-performance-build-v1.log",
+      "bytes": 1568,
+      "sha256": "d8670437282c8fcdc0dd32be4726ba62390e3a9cbc38d59ae7eeddc97625792b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k18-performance-receipt.json",
+      "bytes": 851,
+      "sha256": "ba5a6be4177415c161f6a6951f52738e44447105c50f825e018b0074731818c3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k18-performance-serve-v1.log",
+      "bytes": 1126,
+      "sha256": "b61e11a7f26472cdc4d9e92ebc8feac78595a086d4db0f313ae5c45dcc6e23fe"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-scopes-packaging-report.md",
+      "bytes": 3853,
+      "sha256": "6e81cfcdbae51c20d17414ca84adc613d8aa4253e8b8661606ecd1c7ec638fd8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-backend-trace-enabled.json",
+      "bytes": 289,
+      "sha256": "06b5a19b8d650c6fb77880f6275e37887fe6d50262ed4f51ae047a26a62bb0a3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-browser-post-pair-snapshot-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-browser-post-pair-snapshot-v1.log",
+      "bytes": 829,
+      "sha256": "107ebfbf709df29e93af51d1b1b98e061471bd6674731eca7495844d1f8d4ba4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cleanup-final.json",
+      "bytes": 814,
+      "sha256": "e65f70dc7c08bc66f23111e6ef53a99ac0802661e7583c8cd89f45d954a553ed"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cleanup-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cleanup-v1.log",
+      "bytes": 253,
+      "sha256": "c1ce3e96ec75f989185bebe16161612963cdd20d3b1a3c826590e014ffeb6be7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cli-first.typescript",
+      "bytes": 22845,
+      "sha256": "efc2ff8e0069cefddfcf68f1ec2732c874e4695550a4fdfb4a170f86fd6c5093"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cli-post-pair-snapshot-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cli-post-pair-snapshot-v1.log",
+      "bytes": 822,
+      "sha256": "05debe1e36b182e7684ae768692da57ae8fa1f50410506af8d625e587af49def"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cli-pure-timing-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cli-pure-timing-v1.log",
+      "bytes": 229,
+      "sha256": "a470e60a6920274ca496e6f082f481c85a9b4bb4595398f25fb10aa9289ee2cc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cli-pure-timing.json",
+      "bytes": 23681,
+      "sha256": "593af8678618aee8b2eb554ff79c8bcb351092a1127a25feb76174ffb4b46b8b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-client-trace-enabled-before-chat.json",
+      "bytes": 446,
+      "sha256": "b19898fa133abb5a41f3679c700931717630aaada3f93e5f1a540396990a396d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-client-trace-verification-v1-failure.json",
+      "bytes": 254,
+      "sha256": "010fad4b3f04707b1fd04fc77949b332f177e41cbedcdcdc22e0b64c1b33fd70"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-collector-offline-preparation-checks.json",
+      "bytes": 1148,
+      "sha256": "75a84487707c2efe21a114c18db0851f8bfcc0e19aa56558b1f1b07619e3f5a2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-collector-pins.mjs",
+      "bytes": 2141,
+      "sha256": "0b0bf2781d5b80533a6f68460dae31263dbf50b2d4a7710908003edeab5d526a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-collectors-prepared.json",
+      "bytes": 2877,
+      "sha256": "cbde1607afd1b1908076ae011668e364616b1487d83bdd3a06f67f999d053dfb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-finance-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-finance-v1.log",
+      "bytes": 361,
+      "sha256": "d4430276f9547b8856d0b18f0990ce1a260f158b8b0a43f684c0e32183e9ac88"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-financial-metadata-1791952369604.json",
+      "bytes": 39342,
+      "sha256": "9d16e640edcdf2ce095c693ae9dccfbaeb7e523203d3f756f17059ab05ec3c36"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-latency-phase-projection.mjs",
+      "bytes": 992,
+      "sha256": "a8bde11ad23a6c6b20b845e15bf4483f551f7b91df161540356c3fc58aa2aeeb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-latency-phase-projection.test.mjs",
+      "bytes": 2205,
+      "sha256": "6526a162f43631084352f700fe2fd1f9654eda054a9b25ef5923bfcb461fbf6f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-memory-native-v2-four-run-verification-1791952339116.json",
+      "bytes": 89272,
+      "sha256": "27f8b62f27f557d59eda4a12e1d9c1306f4cd77f0af55557c64b8c3a5d7e9fcb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-memory-native-v2-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-memory-native-v2-v1.log",
+      "bytes": 2820,
+      "sha256": "a2ee654c2666547325e2f7b38a3e46adff904ee9bd0a0e3e34492fc5728abf86"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-native-clients-closed-receipt.json",
+      "bytes": 2077,
+      "sha256": "c207c25553c8a5daa49b58c49e7ab0a44fff6a8bb08fac249c12c812e68b0490"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-native-controls-final-receipt.json",
+      "bytes": 4044,
+      "sha256": "42165dbc933f3da079283522dcf958082236a574de17ff682f15a676e3896e1e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-native-controls-report.md",
+      "bytes": 2616,
+      "sha256": "7bf55ca63c3198324669b6780d52bc5a1cd67650b4d6a4fa3dcd989c77b798ef"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-phase-projection-fix-receipt.json",
+      "bytes": 1666,
+      "sha256": "0348d91d129a6e1e285258bdbf595b096e1ffca339b8128b4cf1dea9d03845c9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-phase-projection-tests-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-phase-projection-tests-v1.log",
+      "bytes": 724,
+      "sha256": "8e8895bd1edad542b27630c9164254ecc8d705847c99705d4a380a05423c5abe"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-pins-before-browser-go.mjs",
+      "bytes": 1943,
+      "sha256": "4193bd47277a5bf7d1cdbe810cd60123f69e854599f0bd8727a921475a9e3473"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-pins-before-cli-go.mjs",
+      "bytes": 2038,
+      "sha256": "3edf60eb5d7d5a360a8797173fc101b70d6935afc290ffcecf6f907a5b541701"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-pins-before-ready.mjs",
+      "bytes": 1643,
+      "sha256": "f888b5b8e5d7d9db1651383c868cba07963b7d89097156cae2f6b0ccd3d3cd5d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-pins-ready-receipt.json",
+      "bytes": 797,
+      "sha256": "5f314c6d4c99ec96a2a09e79ac99cff2c21c9e9ab87856ac98e44e6aad51f680"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-2f08d93befe0-1791952435759.json",
+      "bytes": 8473,
+      "sha256": "c0ed5699090220bbad11fe83807d0d4edc8e936da528d82392dc9730666f287c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-2f08d93befe0-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-2f08d93befe0-v1.log",
+      "bytes": 1191,
+      "sha256": "c301a97ef25778cc6e19e6d175aba3d7c2b545ea91afb33b73eb579480fb7e02"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-9e44d2e41d50-1791952430446.json",
+      "bytes": 9129,
+      "sha256": "6def3527d177bba0f37c417306a16ae7c7323baf0133e7f0c5852b3d2c45e23e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-9e44d2e41d50-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-9e44d2e41d50-v1.log",
+      "bytes": 1360,
+      "sha256": "3cdd909ce104f0059774a9bef42e65869b62dac4cb8c5825716ea6fab231e44c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-daf95d43f7b9-1791952419905.json",
+      "bytes": 8531,
+      "sha256": "29faf9f998f90d580492326d323f70f240fe9a282658c7ceb17a3b7efd198f60"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-daf95d43f7b9-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-daf95d43f7b9-v1.log",
+      "bytes": 1360,
+      "sha256": "546a429123dbcff3619a355d5eebbb2e0ae1132d33727a6e0382325b3bbfb785"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-eee4097891a7-1791952425130.json",
+      "bytes": 7875,
+      "sha256": "b8496993fef768651cee10800b61a9a6a3e46d152ed4271c2229880797241642"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-eee4097891a7-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-run-chain-eee4097891a7-v1.log",
+      "bytes": 1191,
+      "sha256": "a7f1b8464e35c43702da821ee5902ce38231559cf92422ccee6cab881da35198"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/artifact-receipt.json",
+      "bytes": 1750,
+      "sha256": "f45feb1caaedc49437a5bab9a42e75a41373cd18b5ba09fb3d0b0f0e1e3c9a96"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/build-cli.log",
+      "bytes": 91,
+      "sha256": "c4d2cb92a2d91b91b538a808ef0eb977534255d7785d908c24e2edf4bf6c715f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/build-image-execution.log",
+      "bytes": 687,
+      "sha256": "5c1ebcf7aa402c27306632acc099223f61231713089ba9b8b1ad4432da95eee3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/build-image.mjs",
+      "bytes": 3694,
+      "sha256": "aa3cfba4bbcac383e11bf3c8f50b63601731b0607c6202bc698605bc95ea1560"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/build-provider.log",
+      "bytes": 1315,
+      "sha256": "7c4bdd03b7f96bf5a301ee3b060ebb9222fbc950312b37f4dd03af62bd502aa9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/build-sdk.log",
+      "bytes": 2722,
+      "sha256": "372efe2f9df1baae7551831cc8309863768c7716f382f3978fb1aefb5da5daa7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/candidate-digest.json",
+      "bytes": 3438,
+      "sha256": "d3f12e5613be7d9c5306dc73864700b7aed4d57ceec26d3d6f3c80f37658d596"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/distribution-closure-comparison.json",
+      "bytes": 1496,
+      "sha256": "58326e3e60834c78b3e699e9b7644bad21307e9dc4e4974d2ac716c66b9784c3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/docker-build-exit.json",
+      "bytes": 987,
+      "sha256": "9662b71cd5d7c78f60792f7643886500ea37be13f781847194a21affe94cc246"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/docker-build-v1.log",
+      "bytes": 2842,
+      "sha256": "58eb2b371fb440b4e6238e9d81d7d58a908312e650bc4b94419c8a4291e6babd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/docker-image-id.txt",
+      "bytes": 71,
+      "sha256": "eb45c7231bed393de6d9ddc2b0c5068e8f23538c69a33fb5a47a86be3bdbcb44"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/docker-image-identity.json",
+      "bytes": 1123,
+      "sha256": "3e4625b9f8b1cf15e30697b835af0947fdaa1317049e74dc4165708a4fc8b021"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/docker-image-inspect-full.json",
+      "bytes": 2642,
+      "sha256": "42112d76c075ce029722984dea63de5adb255cdab7433dd340b49dd9dae4b6a7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/finish-receipts.mjs",
+      "bytes": 4146,
+      "sha256": "6d32d205eb3e009f6425a52dbe3b2527237b95935c00d2726983fdcc78e6ab0a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/pack-catalog.json",
+      "bytes": 209480,
+      "sha256": "b3394ded3a8c76f3e8b9ce20152878e9fe0a6e5b541e1250ed83776f4977ea1a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/pack-cli.json",
+      "bytes": 46861,
+      "sha256": "09cb4a38bebbe836773f53c9b32e3988574a34b6e402b9abb6a13248babe8167"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/pack-provider.json",
+      "bytes": 2048,
+      "sha256": "64e8fbe7077f9714ee9a47cd116f6ac39c2258381a927e28ebab7b1201a6a755"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/pack-sdk.json",
+      "bytes": 33839,
+      "sha256": "9c22eecec3af0b5d5961a049e850435b2f3121c050e7775bf0a044b4878fc306"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/packaging-final-receipt.json",
+      "bytes": 2788,
+      "sha256": "f38b829e581b55f854fbe3b5d33f45439180b5ff336bee9c9fa54a68221c85a8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/packaging-input-pins.json",
+      "bytes": 2285,
+      "sha256": "e5db48eb3f8a53073a65b06836c129eda721e70476e4a4421e52421235b48c1a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/packed-backend-export-closure.json",
+      "bytes": 19554,
+      "sha256": "e96b1c8c1f4740c7b382bfe5e92bfa1597887ad295b6b446bf5ca2772da4b5cc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/packed-cli-dependency-selection.json",
+      "bytes": 235,
+      "sha256": "dccd77d48f2a6c7c154d25b008b2e112beaadf4a15d0cc92566ff43a0965ff53"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/packed-cli-help.log",
+      "bytes": 3768,
+      "sha256": "48d57e4a9961fce570bedc7b84c5d1a792021ebf89657bdbaebc8f878dc7e33d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/packed-cli-version.log",
+      "bytes": 7,
+      "sha256": "f7ada3982d4e3ce9f5b135992938383496e4dbfda2468d51dd676d1dd86f24a0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/packed-template-catalog.json",
+      "bytes": 966,
+      "sha256": "d420a9c784d87489942967d10f8cf9ae45f43879cb45168aba70e713b88824c7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/prepare-exit.json",
+      "bytes": 253,
+      "sha256": "beb6155ff96411340e637de0740f30e2d51387761ea8861744e0d471dc68f266"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/prepare-v1.log",
+      "bytes": 1887,
+      "sha256": "4cabfe0ef2cd4509788b9ebc92b4d74eb6889c52097a024cbb651c2066575bc4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/run-consumers.mjs",
+      "bytes": 1134,
+      "sha256": "9f164a2dcc8120139df30d05e4e933174f6964abf3fab0928793c09beb55983e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-actual-packed-public-contracts-exit.json",
+      "bytes": 590,
+      "sha256": "4134e6ad619b5a7a503a607ffa09c712b06bb778b2c903d1222a230b6390956e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-actual-packed-public-contracts-v1.log",
+      "bytes": 141,
+      "sha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-actual-packed-public-contracts.mjs",
+      "bytes": 9317,
+      "sha256": "e3cc1dba86e99743ea618ce0551eae77a929f42e9f568ca700bf9d35470ae63c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-packed-backend-export-closure-exit.json",
+      "bytes": 596,
+      "sha256": "fbb7e32cf5e58538a0ca60bc84a724f682697d4928e66c68b8e80be1a6218916"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-packed-backend-export-closure-v1.log",
+      "bytes": 118,
+      "sha256": "28e69dd3fb80fcd6c35237100d3a8c28bae9ca64825052cf0395df1cd5ae097d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-packed-backend-export-closure.mjs",
+      "bytes": 7469,
+      "sha256": "23d2cc650bc3122d66e1b704d3d51c1164863d8e5880e3e3c41f9af14147a0df"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-packed-dependent-contracts-exit.json",
+      "bytes": 594,
+      "sha256": "504163fc48451ade970a90fa6fdf67cf9c3f78f6aaef0d6b03344b4daf02dae1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-packed-dependent-contracts-v1.log",
+      "bytes": 175,
+      "sha256": "67a70755186f8f7063e958c6ada40dde7c29e386d1a28446a4f77fa0bf8c114b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-packed-dependent-contracts.mjs",
+      "bytes": 6635,
+      "sha256": "1ee31be9b00d4a8b40f193e09bd1b9d7f69cbc7a28c6506576959ffe843eb135"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-packed-template-catalog-exit.json",
+      "bytes": 590,
+      "sha256": "a78cdcb564db0c9fcf9a59b296cd98017d3505164a898e2faf104b2568a38705"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-packed-template-catalog-v1.log",
+      "bytes": 878,
+      "sha256": "59e704f1e5e57589290f0b7797d5ecee83bb7d95f35cfdefb47c220f4d4cf59f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-endpoint-scopes/verify-packed-template-catalog.mjs",
+      "bytes": 5049,
+      "sha256": "f513bccfabf8794fc1dd5f2d8a55d3e64519e0dd8bdf12de85cc8300a9e74c0d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/local-test-before-endpoint-scopes.mjs",
+      "bytes": 17502,
+      "sha256": "e51b6c2a39a0e036ac225c1a96a7edc6c664684bf0ffb2ad6ec6e5fd3a8ba018"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/procedure-approval-before-endpoint-scopes.json",
+      "bytes": 19496,
+      "sha256": "c2ca51b68186678b669c7154d04a4cdc6adbf282942550e9fe919848b6d53b49"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/procedure-endpoint-scopes-resealed.json",
+      "bytes": 2250,
+      "sha256": "d8aa5ef873b4ad5956985af244afd3aac319b2f60364051665cb60e3c79bdec0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/proofs-endpoint-scopes-tests.log",
+      "bytes": 12317,
+      "sha256": "ee9b2d222b304e4093aea1ac072d95732be4e7a8515a46799094ead367f8ee43"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/runner-before-endpoint-scopes.mjs",
+      "bytes": 27508,
+      "sha256": "c4b6a2fe547c378ed05dc1bc4c63535762737054cc76a26b44abc898a0f908c2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/sandbox-md-before-endpoint-scopes.md",
+      "bytes": 12374,
+      "sha256": "4959d5c9532b28eca5171c0b3f0027c2479c0f1ce4dfaf59c0b6e5511123f6fa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/seal-endpoint-scopes-kit.mjs",
+      "bytes": 6964,
+      "sha256": "c034fd319c6b632933e147289ed9e3ab07514095e3e4bea41234377b2f169922"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k18.mjs",
+      "bytes": 6834,
+      "sha256": "b30214a2a1a62d3759b78ed85d89c0d664c361894c4c033ab2f682d3c6931b20"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k18-cleanup.mjs",
+      "bytes": 3462,
+      "sha256": "2d436d746c5d4be7d8626e372eeef8beedcc032039103a7a5bb908a86d9cb1a5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k18-four-run-memory-readonly.mjs",
+      "bytes": 32526,
+      "sha256": "12f288a8d1a3fedf411a22ae3ce94c9ab8b2673fdadceb57a988bf007c5b2d86"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/docs-k18-performance-observation.json",
+      "bytes": 30544,
+      "sha256": "1adaeab979c44ebb2993886f7d2f4ee8ba963801afe0ed5cb394a884eb12db63"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k18-first-completion-observation.json",
+      "bytes": 5784,
+      "sha256": "7d52c4a950c31ca2e5ff1b1c95fd1869900ee4ce8d3f627f45157e2f3004af18"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k18-first-strict-pending-observation.json",
+      "bytes": 4028,
+      "sha256": "61c1e7edc52b34ae0ea271195a2f48e62f871f5614e2b16c0c3470e33fd0b3fa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k18-first-timing.json",
+      "bytes": 4396,
+      "sha256": "182a2bec1fa7bfd1adefb778b4244b73b7cee55b0448f12785c2199756cad2e8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k18-first-warm-timing.json",
+      "bytes": 8819,
+      "sha256": "ae6ce03a131a4edfab776495681e3d3fb1dda4edf0c7f51fcd05fa2da9147610"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k18-four-event-strict-readiness-recovery.json",
+      "bytes": 97534,
+      "sha256": "7dc536e4ae612a4d0324750cfb5fadd54e8adc27305353eeecc6d810fab002fd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k18-signed-out-before-cli.json",
+      "bytes": 671,
+      "sha256": "e2fdac5f736f878a3a66e58ddbf557d1f733e11a16800b5f04a284b552b3f195"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/status.json",
+      "bytes": 37308,
+      "sha256": "6876a570b800b840047104f82d2cc65fcef1c12242b0f36516d522b133c8b0bb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/completion-notices.jsonl",
+      "bytes": 13308,
+      "sha256": "8335a1f0ca8dc8932f2ef27f94b02554d3023873ab3ca04d95e7b12e74755c4b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/execution-progress.md",
+      "bytes": 14426,
+      "sha256": "81f671eb41fcffbc3754d52d7e747a8e0e84e0fdcdedfa3bc6b02726468b8747"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v6-coherent-critical-path-scope.md",
+      "bytes": 2905,
+      "sha256": "3705d0bf55448b0e8ab9576555be6e68b156e1178137193430013e40d1c86086"
+    }
+  ],
+  "localOnly": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k18-browser-post-pair-1791952198772.json",
+      "bytes": 732962,
+      "sha256": "5d5f8f98e523fbb67184e7f49d05b995d956b330bc096db64f41ad873dc687eb",
+      "reason": "Original local evidence; hash reference only"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k18-cli-post-pair-1791952319648.json",
+      "bytes": 1227559,
+      "sha256": "6cea2dc61c6238eb5d957d00a4296a5d91f3b2089fac0c0c9c3c663f99a0a114",
+      "reason": "Original local evidence; hash reference only"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/docs-k18-performance.png",
+      "bytes": 95595,
+      "sha256": "03e54e01c116f339dfbe45cb5a279efd79def371314e492e77e11ac50e2b1e47",
+      "reason": "Original local evidence; hash reference only"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k18-first-strict-pending.png",
+      "bytes": 120970,
+      "sha256": "e40911b0f3a163d064474065bb570c65e69bf1d620b3f19b21890dfb9572a2b9",
+      "reason": "Original local evidence; hash reference only"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k18-four-event-strict-readiness-recovery.png",
+      "bytes": 124104,
+      "sha256": "988e74dce717ac6a70e3cc09bad36773766de8c8758632134ab6d2bdc9c2dd5b",
+      "reason": "Original local evidence; hash reference only"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "Endpoint scopes and admission timers ONEindependentreviewPASS4.0;source100%;committingforfreshpackaging",
+  "phase": "K18nativecontrolsPASScleanupABSENT;fourlatencysamplesFAIL;measuredwholepathrepairpending",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T03:56:52.556Z",
+  "updatedAt": "2026-10-14T04:36:09.304Z",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,20 +58,13 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "sessionId": "2b6876d8-e68b-4cb1-9a9e-6eee05c07245",
-    "generation": "K17",
-    "state": "ABSENT",
-    "database": "impartial-dodo-83",
-    "deploymentId": 6154753,
-    "expiresAt": 1792548541228,
-    "webPort": 3148,
+    "generation": "K18",
+    "sessionId": "6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e",
+    "state": "CLEANED",
+    "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+    "imageId": "sha256:a1330ff0ee1431af68a69f0b65c82a67acdd8611fb8d1188f6b821b5fc8a708c",
     "nativeSLOQualified": false,
-    "backendTraceEnabled": true,
-    "startupQualificationMethodsPassed": 8,
-    "browserSignedOutAndClosedBeforeCLI": true,
-    "cliProcessExit": 0,
-    "launcherProcessExit": 130,
-    "cleanupReceipt": "k17-cleanup-final.json"
+    "cleanupReceipt": "k18-cleanup-final.json"
   },
   "actualSamples": {
     "generation": "K11",
@@ -109,10 +102,9 @@
     ]
   },
   "pendingRepairs": [
-    "Measured fresh endpoint raw-read reuse, preserving original current fences",
-    "Initial admission child-operation attribution from saved K17 metadata",
+    "Coherent measured ordinary startup/recall/delivery repair preserving current authority/accounting/source/replay gates",
     "ExpiredJWT timeout failure remains unresolved",
-    "Cloud under1000ms and final independent audit incomplete"
+    "Hosted under1000ms and independent final audit incomplete"
   ],
   "refinements": [
     {
@@ -914,6 +906,26 @@
     "finalTimingAffectedGate": "PASS379/13/0skip",
     "goalPercent": 50,
     "review": "endpoint-scope-admission-timing-joint-review.md",
-    "sourceAcceptancePercent": 100
+    "sourceAcceptancePercent": 100,
+    "packagingPercent": 100,
+    "packagingReport": "endpoint-scopes-packaging-report.md",
+    "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c"
+  },
+  "k18ActualSamples": {
+    "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+    "browserFirstAfterPaintMs": 5914.399999976158,
+    "browserWarmAfterPaintMs": 4714.099999904633,
+    "cliFirstStdoutAcknowledgedMs": 10428.896546,
+    "cliWarmFirstStdoutAcknowledgedMs": 9919.051587999998,
+    "responses": "4/4 COMPLETE under original30000ms",
+    "nativeMemory": "8/8 events PASS43freshchecks;contiguousfacts/vectors8/8",
+    "finance": "31attempts;slots0;allreleased;5000000UNKNOWNceilingunitsNOTactualcharges",
+    "latencyPasses": 0,
+    "latencyFailures": 4,
+    "paidRetries": 0,
+    "cleanup": "ABSENT",
+    "pendingReadiness": "OriginalCONTEXT_INCOMPLETEwhilememorypendingpreserved;onecheckaftermemoryCOMPLETEreturned4/4",
+    "automationSelectorFailure": "Wrongformattedfacts4/4selectorfailed;actualDOMconfirmedfacts:completeindexedthrough4of4",
+    "nativeSLOQualified": false
   }
 }

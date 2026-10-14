@@ -60,3 +60,11 @@ Implementation and affected-check milestone100%; one independent review pending.
 ### 2026-10-14T03:56:52.556Z — One joint independent source/test/docs review PASS4.0
 
 Reviewer separate from both authors approved the frozen four production/four test paths and latest K17 website performance source/build/render, zero breakingfindings. Original1121/1123FAIL, separate isolated4/4PASS, wrongPATHNode26lint receipt and correctedNode24/npm12lint0/237warnings remain explicit. Source acceptance100%; native timings/speed unqualified, installedSLO0%, latencygoal50%. Next steps: incremental source commit, immutable package/image, fixed hosted browser/CLI pair measurement, cleanup and saved analysis.
+
+### 2026-10-14T04:14:14.027Z — K18 package/image and launcher integration
+
+Frozen reviewedsourcef7c906b2888a410deb81c6a181e4863ca148e43c packaged in fresh kit via onlyfourcontrolcopies.3isolatedbuilds/4packs/4consumerchecks/1image first-attemptPASS,2140inputpins/157backendoutputs/72tables/2components/8purposefulroots. Imagea1330ff0…, priorK17originalartifacts unchanged, ownedscratch absent. Rootsealer ef903560… preserves8setupcalls/$2.70UNKNOWNceilings andalloldexactcleanupIDs; no newjudge. P107/107PASS/0skip plusdryrun0, noPcommit. K18normalstartupnowpreparingfreshsession6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e withcorrectclienttraceflag beforechat. Prospectivecollector exactcamelCase3labels fix tested7/7; oldhelpers/receipts preserved, readyfalse untilactualpins. Source/packaging100%, nativeSLO0%, goal50%.
+
+### K18 native milestone — 2026-10-14T04:36:09.304Z
+
+Collection and cleanup **100%**; latency follow-up **50% (2/4)**. Actual browser first/warm after-paint 5914.400/4714.100 ms; CLI first/warm stdout acknowledgement 10428.897/9919.052 ms. Four COMPLETE responses under original30s; four subsecond FAIL. Native8event proof PASS43freshchecks, exactfacts/vector/currentauthority/provenance and contiguous8/8. Finance31attempts, slots0, allreleased;5MUNKNOWNceilings do not assertactualcharges. Launcherexit130 and onefreshcleanupverificationABSENT. Originalpending CONTEXT_INCOMPLETE and wrong-formatselector failure preserved. No inference retry. Nextcoherentrepair targets measuredwholecriticalpath;sourcegate/packaging do not constitute SLOcompletion.

@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "candidateDigest": "04e27c1edde15616fe7dcefd7e64d89a346af55752963594a2e014cc3bd59c38",
+  "definition": "SHA256 of JSON.stringify(envelope) in retained field order",
+  "envelope": {
+    "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+    "sourceReviewSha256": "4e5ac8f9fb1726c724e57bc7525835109aa3d0d57c7cb30253668d609cf0d6dc",
+    "sourceReviewJsonSha256": "2aa9255b6f594b3ebd5545199325a469a7ff94dc311e548e3d186b087a1d64b0",
+    "sourcePins": {
+      "convex-dev/runtimeAgent.ts": "6cbde575a009d9ed1368e2fd6fd0791092e6c2ba2eb24447c8403be2ce3508aa",
+      "convex-dev/runtimeClient.ts": "a6fd5c2f00c13cb439c82674540da07dc00cfc8e72f7c82be1b7318109a0f743",
+      "convex-dev/runtimeLatencyTrace.ts": "8fee2317e14653d54da71dd914a0d2befc42629af9e554f9cfc652119c60ac49",
+      "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+      "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db",
+      "tests/unit/runtimeAgent/start-native.test.ts": "97a80efa8fc00ce3ec4639d7ac2f49ea802c82a8bb7c901bf707c31ea56acfff",
+      "tests/unit/runtime/latency-trace.test.ts": "3f5f4979983fe14685131c7ea5b628927542eaf7976b694572e3a1ae355381fa",
+      "tests/unit/client-runtime/admission-native.test.ts": "3e40635a16587d5d752c944f0777c4875aacb2e4dbb9c61e99d1920a43324574"
+    },
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-endpoint-scopes-2026-10-13",
+    "identitySha256": "726fa856c6881189f30a25f60e04cb2c0a73706546ca449126f91d6cc7859b91",
+    "archiveManifestSha256": "f45feb1caaedc49437a5bab9a42e75a41373cd18b5ba09fb3d0b0f0e1e3c9a96",
+    "inputManifestSha256": "21836f8eec9c268b1318b739a0388cfe10042ccad9bccb1542d5ee61f09c7f01",
+    "backendManifestSha256": "585a52249d48b8008c897b04b9304f637700d14c2ab7ae3cef7b598cd62df0ae",
+    "packages": [
+      {
+        "role": "sdk",
+        "sha256": "5a6f1813e256b99e4fa25b59f35c68c6738281543cc7811039ce4a1016081d6c"
+      },
+      {
+        "role": "cli",
+        "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5"
+      },
+      {
+        "role": "provider",
+        "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53"
+      },
+      {
+        "role": "catalog",
+        "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970"
+      }
+    ],
+    "catalogManifestSha256": "f79cc11523a0515218371d4444d8af160c526cc32a5fde1b4893932a5cacd113",
+    "catalogPayloadSha256": "235c967cc8d054aaa3639c6f48de6ae366d87f48f6998df4ac0d7480ab818909",
+    "imageId": "sha256:a1330ff0ee1431af68a69f0b65c82a67acdd8611fb8d1188f6b821b5fc8a708c",
+    "controls": [
+      {
+        "path": "prepare.mjs",
+        "sha256": "2fae49e6abf7dfbea2a84fdd27c5629fa23c77513b8abc35e8d3e12106e5aa27"
+      },
+      {
+        "path": "image/Dockerfile",
+        "sha256": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f"
+      },
+      {
+        "path": "image/install-candidates.mjs",
+        "sha256": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f"
+      },
+      {
+        "path": "image/entrypoint.mjs",
+        "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+      }
+    ]
+  },
+  "allChecksPassed": true,
+  "ownedScratchDirectoriesRemaining": [],
+  "servicesStarted": 0,
+  "inferenceCalls": 0
+}

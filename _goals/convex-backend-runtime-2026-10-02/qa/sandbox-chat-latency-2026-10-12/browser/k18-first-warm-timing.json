@@ -1,0 +1,90 @@
+{
+  "observedAt": "2026-10-14T04:24:07.284Z",
+  "dom": "- main:\n  - paragraph: Cortex\n  - heading \"Memory chat\" [level=1]\n  - paragraph: Responses and memory updates stay available across connections.\n  - button \"Sign out\"\n  - region \"Authentication\":\n    - heading \"Refresh credentials\" [level=2]\n    - paragraph: Use an access token issued by your host authentication provider. It stays in memory for this session.\n    - text: Access token\n    - textbox \"Access token\"\n    - button \"Refresh token\" [disabled]\n    - paragraph: Connected to manual-workspace in sandbox-6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e.\n  - form \"Agent configuration\":\n    - text: Published agent\n    - textbox \"Published agent\": agent:6fab2d070f9688e43a66ff41e910392e80bc91e93dd9bbc580806e966ecff48b\n    - text: Agent version\n    - spinbutton \"Agent version\": \"1\"\n    - button \"Use agent version\"\n    - paragraph: \"Current version: 1 · Memory mode: indexed-plus-pending\"\n  - region \"Chat\":\n    - heading \"Conversation\" [level=2]\n    - button \"New chat\"\n    - generic \"Messages\":\n      - article:\n        - paragraph: You\n        - paragraph: My favorite color is coral. Reply with the exact word READY38 only. Do not call tools.\n      - article:\n        - paragraph: Cortex\n        - paragraph: READY38\n      - article:\n        - paragraph: You\n        - paragraph: I prefer chamomile tea. Reply with the exact word WARM38 only. Do not call tools.\n      - article:\n        - paragraph: Cortex\n        - paragraph: WARM38\n    - text: Message\n    - textbox \"Message\"\n    - button \"Send\" [disabled]\n    - paragraph:\n      - text: \"Response:\"\n      - strong: complete\n    - paragraph:\n      - text: \"Memory:\"\n      - strong: pending\n    - paragraph: \"Context: complete\"\n    - paragraph: \"Run: run:eee4097891a7e1f5e57376e1a10b87d6c673f9614b2885a3641842c7a478e271\"\n    - button \"Disconnect observer\" [disabled]\n    - button \"Reconnect observer\" [disabled]\n    - button \"Cancel run\" [disabled]\n    - text: Observe an existing run\n    - textbox \"Observe an existing run\": run:eee4097891a7e1f5e57376e1a10b87d6c673f9614b2885a3641842c7a478e271\n    - button \"Observe run\"\n  - region \"Memory search\":\n    - heading \"Memory search\" [level=2]\n    - paragraph: cortex-text-small-1536-v1 · 1536 dimensions\n    - text: Search your memory\n    - textbox \"Search your memory\"\n    - button \"Search memory\" [disabled]\n    - group \"Memory readiness\":\n      - generic: Memory readiness\n      - paragraph: Read current indexing status, or require the selected stages to be complete. This check starts no model call.\n      - checkbox \"Require facts\" [checked]\n      - text: Require facts\n      - checkbox \"Require vectors\" [checked]\n      - text: Require vectors\n      - checkbox \"Require graph\"\n      - text: Require graph\n    - button \"Check memory readiness\"\n    - list:\n      - listitem: \"facts: complete · indexed through 2 of 2\"\n      - listitem: \"vectors: complete · indexed through 2 of 2\"\n  - button \"Show media tools\"\n- button \"Open Next.js Dev Tools\":\n- alert",
+  "timing": [
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"submit\",\"elapsedMs\":0}",
+      "timestamp": "2026-10-14T04:23:19.218Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"admission.delivered\",\"elapsedMs\":2002.8999999761581,\"runId\":\"run:daf95d43f7b9b59720e9943c33b75c96380a46385a297d43da233795dece56c6\"}",
+      "timestamp": "2026-10-14T04:23:21.220Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"first-text.dom-commit\",\"elapsedMs\":5895.799999952316,\"runId\":\"run:daf95d43f7b9b59720e9943c33b75c96380a46385a297d43da233795dece56c6\"}",
+      "timestamp": "2026-10-14T04:23:25.124Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"first-text.after-paint\",\"elapsedMs\":5914.399999976158,\"runId\":\"run:daf95d43f7b9b59720e9943c33b75c96380a46385a297d43da233795dece56c6\",\"visibility\":\"visible\"}",
+      "timestamp": "2026-10-14T04:23:25.131Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"transport.complete\",\"elapsedMs\":8315.100000023842,\"runId\":\"run:daf95d43f7b9b59720e9943c33b75c96380a46385a297d43da233795dece56c6\"}",
+      "timestamp": "2026-10-14T04:23:27.532Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"answer.complete.dom-commit\",\"elapsedMs\":8319.5,\"runId\":\"run:daf95d43f7b9b59720e9943c33b75c96380a46385a297d43da233795dece56c6\"}",
+      "timestamp": "2026-10-14T04:23:27.556Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"response.status.dom-commit\",\"elapsedMs\":8320.100000023842,\"runId\":\"run:daf95d43f7b9b59720e9943c33b75c96380a46385a297d43da233795dece56c6\"}",
+      "timestamp": "2026-10-14T04:23:27.556Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"submit\",\"elapsedMs\":0}",
+      "timestamp": "2026-10-14T04:24:00.351Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"admission.delivered\",\"elapsedMs\":1554.8999999761581,\"runId\":\"run:eee4097891a7e1f5e57376e1a10b87d6c673f9614b2885a3641842c7a478e271\"}",
+      "timestamp": "2026-10-14T04:24:01.906Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"first-text.dom-commit\",\"elapsedMs\":4698.799999952316,\"runId\":\"run:eee4097891a7e1f5e57376e1a10b87d6c673f9614b2885a3641842c7a478e271\"}",
+      "timestamp": "2026-10-14T04:24:05.060Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"first-text.after-paint\",\"elapsedMs\":4714.099999904633,\"runId\":\"run:eee4097891a7e1f5e57376e1a10b87d6c673f9614b2885a3641842c7a478e271\",\"visibility\":\"visible\"}",
+      "timestamp": "2026-10-14T04:24:05.065Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"response.status.dom-commit\",\"elapsedMs\":6281.399999976158,\"runId\":\"run:eee4097891a7e1f5e57376e1a10b87d6c673f9614b2885a3641842c7a478e271\"}",
+      "timestamp": "2026-10-14T04:24:06.638Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"transport.complete\",\"elapsedMs\":6586.299999952316,\"runId\":\"run:eee4097891a7e1f5e57376e1a10b87d6c673f9614b2885a3641842c7a478e271\"}",
+      "timestamp": "2026-10-14T04:24:06.937Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"answer.complete.dom-commit\",\"elapsedMs\":6591,\"runId\":\"run:eee4097891a7e1f5e57376e1a10b87d6c673f9614b2885a3641842c7a478e271\"}",
+      "timestamp": "2026-10-14T04:24:06.980Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    }
+  ]
+}

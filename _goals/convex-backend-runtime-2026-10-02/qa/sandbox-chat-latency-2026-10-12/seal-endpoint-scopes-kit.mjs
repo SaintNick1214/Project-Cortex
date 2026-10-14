@@ -1,0 +1,57 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+const p='/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs',q=path.dirname(new URL(import.meta.url).pathname),base=p+'/sandbox-env';
+const kit=p+'/manual-sandbox-latency-endpoint-scopes-2026-10-13';
+const sha=x=>createHash('sha256').update(x).digest('hex');
+const manifest=JSON.parse(await fs.readFile(kit+'/image/archives/manifest.json','utf8'));
+const identity=JSON.parse(await fs.readFile(q+'/kit-checks-endpoint-scopes/docker-image-identity.json','utf8'));
+assert.equal(manifest.sourceCommit,'f7c906b2888a410deb81c6a181e4863ca148e43c');
+assert.equal(manifest.backend.files,157);assert.equal(manifest.backend.allSourceOutputHashesMatch,true);
+assert.equal(identity.os,'linux');assert.equal(identity.architecture,'arm64');assert.equal(identity.user,'sandbox');
+assert.equal(identity.labels['dev.cortex.manual-sandbox.source'],manifest.sourceCommit);
+assert.equal(identity.labels['dev.cortex.manual-sandbox.path'],kit);
+assert.equal(identity.labels['dev.cortex.manual-sandbox'],identity.kitIdentity.id);
+const actual=JSON.parse((await promisify(execFile)('/Applications/Docker.app/Contents/Resources/bin/docker',['image','inspect',identity.imageId],{maxBuffer:100000})).stdout)[0];
+assert.equal(actual.Id,identity.imageId);assert.equal(actual.Os,'linux');assert.equal(actual.Architecture,'arm64');assert.equal(actual.Config.User,'sandbox');
+for(const [key,value]of Object.entries(identity.labels))assert.equal(actual.Config.Labels[key],value);
+const reviewPath=q+'/endpoint-scope-admission-timing-joint-review.md',review=await fs.readFile(reviewPath);
+assert.equal(sha(review),'4e5ac8f9fb1726c724e57bc7525835109aa3d0d57c7cb30253668d609cf0d6dc');assert.ok(/PASS/.test(review.toString()));
+const approvalPath=base+'/procedure-approval.json',originalApproval=await fs.readFile(approvalPath);
+const approval=JSON.parse(originalApproval);
+assert.equal(approval.maximumPaidRequests,8);assert.equal(approval.maximumUnknownLiabilityUnits,2700000);assert.equal(approval.perRunHumanReview,false);
+await fs.writeFile(q+'/procedure-approval-before-endpoint-scopes.json',originalApproval,{flag:'wx'});
+let docker=await fs.readFile(base+'/docker.mjs','utf8');
+await fs.writeFile(q+'/docker-before-endpoint-scopes.mjs',docker,{flag:'wx'});
+const oldImage=/export const IMAGE_ID = '([^']+)'/.exec(docker)[1];
+assert.equal(oldImage,'sha256:fda79d598f57bade27dfdf442e3ef299084406420e3840b2a200b11a514d6218');
+assert.ok(!docker.includes('PRIOR_PROGRESS_SOURCE_BATCH_IMAGE_ID'));
+for(const [name,value]of Object.entries({IMAGE_ID:identity.imageId,SOURCE_COMMIT:manifest.sourceCommit,BACKEND_MANIFEST_SHA256:manifest.backend.manifestSha256})){
+ const pattern=new RegExp("export const "+name+" = '[^']+'");assert.ok(pattern.test(docker));docker=docker.replace(pattern,"export const "+name+" = '"+value+"'");
+}
+docker=docker.replace('export const LABEL =',"export const PRIOR_PROGRESS_SOURCE_BATCH_IMAGE_ID = '"+oldImage+"';\nexport const LABEL =");
+const oldList='PRIOR_COMPACT_VECTOR_IMAGE_ID, PRIOR_CONTEXT_TRANSACTION_IMAGE_ID, PRIOR_QUERY_COMPOSITION_IMAGE_ID, PRIOR_AUTHORITY_ROUTING_IMAGE_ID, PRIOR_IMMEDIATE_START_IMAGE_ID, PRIOR_PARALLEL_POLICY_IMAGE_ID, PRIOR_TURN_CONSOLIDATION_IMAGE_ID, PRIOR_TRANSCRIPT_READER_IMAGE_ID]';assert.equal(docker.split(oldList).length,2);
+docker=docker.replace(oldList,'PRIOR_COMPACT_VECTOR_IMAGE_ID, PRIOR_CONTEXT_TRANSACTION_IMAGE_ID, PRIOR_QUERY_COMPOSITION_IMAGE_ID, PRIOR_AUTHORITY_ROUTING_IMAGE_ID, PRIOR_IMMEDIATE_START_IMAGE_ID, PRIOR_PARALLEL_POLICY_IMAGE_ID, PRIOR_TURN_CONSOLIDATION_IMAGE_ID, PRIOR_TRANSCRIPT_READER_IMAGE_ID, PRIOR_PROGRESS_SOURCE_BATCH_IMAGE_ID]');
+for(const entry of manifest.packages){
+ assert.equal(sha(await fs.readFile(kit+'/image/archives/'+entry.filename)),entry.sha256);
+ const pattern=new RegExp("("+entry.role+": \\{[^\\n]+sha256: ')[^']+");assert.ok(pattern.test(docker));docker=docker.replace(pattern,(_,prefix)=>prefix+entry.sha256);
+}
+await fs.writeFile(base+'/docker.mjs',docker);
+let runner=await fs.readFile(base+'/runner.mjs','utf8');await fs.writeFile(q+'/runner-before-endpoint-scopes.mjs',runner,{flag:'wx'});
+const oldKit="const KIT_NAME = 'manual-sandbox-latency-progress-source-batch-2026-10-13';";assert.equal(runner.split(oldKit).length,2);
+runner=runner.replace(oldKit,"const KIT_NAME = 'manual-sandbox-latency-endpoint-scopes-2026-10-13';");await fs.writeFile(base+'/runner.mjs',runner);
+approval.procedureHistory.push({approvalSha256:sha(originalApproval),reviewSha256:approval.reviewSha256,sourceCommit:approval.candidateSourceCommit,methods:8,unknownLiabilityUnits:2700000});
+approval.reviewPath=reviewPath;approval.reviewSha256=sha(review);approval.candidateSourceCommit=manifest.sourceCommit;
+for(const row of approval.files)row.sha256=sha(await fs.readFile(path.resolve(base,row.path)));
+const priorReviews=approval.sourceAcceptance?.reviewHashes??{};
+approval.sourceAcceptance={kind:'NORMAL_REVIEWED_SOURCE_PIN_INTEGRATION',sourceCommit:manifest.sourceCommit,kit,imageId:identity.imageId,artifactReceiptSha256:sha(await fs.readFile(kit+'/image/archives/manifest.json')),reviewHashes:{...priorReviews,'endpoint-scope-admission-timing-joint-review.md':sha(review)}};
+approval.priorManualObservations.push({sessionId:'2b6876d8-e68b-4cb1-9a9e-6eee05c07245',firstCliMs:10531.912421,warmCliMs:14391.614923000001,firstBrowserAfterPaintMs:6796.200000047684,warmBrowserAfterPaintMs:6149,environment:'CLEANED',cleanupReceipt:q+'/k17-cleanup-final.json',financialReceipt:q+'/k17-financial-metadata-1791944881326.json',subsecondOutcomes:'0PASS/4FAIL',allFourNativeMemory:'PASS through8/8',originalFailuresPreserved:true});
+await fs.writeFile(approvalPath,JSON.stringify(approval,null,2)+'\n');
+const {verifyProcedure}=await import(base+'/qualification.mjs');const procedure=await verifyProcedure();
+const {verifyArtifacts}=await import(base+'/docker.mjs');const artifacts=await verifyArtifacts(kit);
+const receipt={observedAt:new Date().toISOString(),scope:'NORMAL_REVIEWED_SOURCE_AND_ARTIFACT_PIN_INTEGRATION',digest:procedure.digest,artifacts,image:identity,maximumPaidRequests:8,maximumUnknownLiabilityUnits:2700000,priorApprovalSha256:sha(originalApproval),oldImageExactCleanupRetained:oldImage,sourceSubstitution:'Reviewed fresh invocation raw-read scopes at hydration/output/visibility and opt-in mutation-only admission timers; finalDelivery untouched; original guards, V1-V5, barriers, approvals, billable admission, deadlines, accounting and no-retry controls retained',serviceCalls:0,paidCalls:0};
+await fs.writeFile(q+'/procedure-endpoint-scopes-resealed.json',JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({digest:procedure.digest,image:identity.imageId,sourceCommit:manifest.sourceCommit,maximumPaidRequests:8}));

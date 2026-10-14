@@ -1,0 +1,7 @@
+K18 remains 0/4 for the one-second target. Browser paint was 5.914/4.714 seconds; strict native facts/vector proof passed all eight events. The original pending CONTEXT_INCOMPLETE interval remains preserved.
+
+First/warm browser admission native engine was 1512.004/939.459ms, own user execution 156.531/148.783ms. Measured submit/start/get was 288/1122.9/3.1 and 193/639.9/3.9ms. Within start, claimNext was172.3/163.4ms and Workflow start935.4/460.5ms. These nested regions must not be added to start or engine. Child component timing is unavailable in this snapshot.
+
+CLI recall is the larger coherent target: original authority/profile preflight, two policy resolutions, admission/checkpoint, embedding, capture and attachment, vector/fact source validation, fresh final delivery and save remain serial protected regions. Actual first/warm recall was3584/4059ms; provider embedding itself326/413ms, so reducing only admission startup is insufficient. First/warm preparation was4873/5426ms. These recall intervals sit inside preparation and must not be added. The thin JSON preserves exact raw phase joins, including other runs; cached queries and native engine are not JavaScript or provider floor measurements.
+
+The implementable coherent candidate is additive V6 ordinary direct scheduled Action orchestration plus Agent-only embedding native compositions. Retain the original fresh finalDelivery grant fence and capture/attachment durability, with V1–V5 historical journals untouched. This is prospective source work, not a native speed result.

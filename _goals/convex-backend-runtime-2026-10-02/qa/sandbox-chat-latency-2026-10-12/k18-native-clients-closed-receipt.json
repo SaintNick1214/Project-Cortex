@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "sessionId": "6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e",
+  "target": {
+    "name": "tidy-emu-328",
+    "id": 6156264,
+    "reference": "dev/cortex-sandbox-6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e",
+    "teamId": 325340,
+    "projectId": 3200658
+  },
+  "collectorInvocations": 8,
+  "collectorProcessesExit0": true,
+  "exits": [
+    {
+      "name": "k18-browser-post-pair-snapshot-v1",
+      "exit": 0,
+      "logSha256": "107ebfbf709df29e93af51d1b1b98e061471bd6674731eca7495844d1f8d4ba4"
+    },
+    {
+      "name": "k18-cli-post-pair-snapshot-v1",
+      "exit": 0,
+      "logSha256": "05debe1e36b182e7684ae768692da57ae8fa1f50410506af8d625e587af49def"
+    },
+    {
+      "name": "k18-memory-native-v2-v1",
+      "exit": 0,
+      "logSha256": "a2ee654c2666547325e2f7b38a3e46adff904ee9bd0a0e3e34492fc5728abf86"
+    },
+    {
+      "name": "k18-finance-v1",
+      "exit": 0,
+      "logSha256": "d4430276f9547b8856d0b18f0990ce1a260f158b8b0a43f684c0e32183e9ac88"
+    },
+    {
+      "name": "k18-run-chain-daf95d43f7b9-v1",
+      "exit": 0,
+      "logSha256": "546a429123dbcff3619a355d5eebbb2e0ae1132d33727a6e0382325b3bbfb785"
+    },
+    {
+      "name": "k18-run-chain-eee4097891a7-v1",
+      "exit": 0,
+      "logSha256": "a7f1b8464e35c43702da821ee5902ce38231559cf92422ccee6cab881da35198"
+    },
+    {
+      "name": "k18-run-chain-9e44d2e41d50-v1",
+      "exit": 0,
+      "logSha256": "3cdd909ce104f0059774a9bef42e65869b62dac4cb8c5825716ea6fab231e44c"
+    },
+    {
+      "name": "k18-run-chain-2f08d93befe0-v1",
+      "exit": 0,
+      "logSha256": "c301a97ef25778cc6e19e6d175aba3d7c2b545ea91afb33b73eb579480fb7e02"
+    }
+  ],
+  "closedBeforeRootLauncherCleanup": true,
+  "closureEvidence": "Each successful proof/finance/four-join process awaited its existing BaseConvexClient.close finally; two snapshots consumed their bounded HTTP response and released the reader. All collectors returned before root Ctrl-C.",
+  "noAdditionalNativeCallsAfterCleanup": true,
+  "noInferenceCalls": true,
+  "noRetries": true
+}

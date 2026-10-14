@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "cause": "The original lowercase-only phase regex excludes the frozen product label start.claimNext. K18 now additionally accepts exactly its begin/end/failed labels through the actual shared pure projection; the general charset is unchanged.",
+  "preservedPreparedReceiptSha256": "cbde1607afd1b1908076ae011668e364616b1487d83bdd3a06f67f999d053dfb",
+  "preservedOfflineReceiptSha256": "75a84487707c2efe21a114c18db0851f8bfcc0e19aa56558b1f1b07619e3f5a2",
+  "previousSnapshotSha256": "d34d926bb07301ec6057687ebc310b29683ce4b4f3e9835819f5545edb4f775c",
+  "syntax": [
+    {
+      "path": "service-log-snapshot-k18.mjs",
+      "exit": 0,
+      "sha256": "b30214a2a1a62d3759b78ed85d89c0d664c361894c4c033ab2f682d3c6931b20"
+    },
+    {
+      "path": "k18-latency-phase-projection.mjs",
+      "exit": 0,
+      "sha256": "a8bde11ad23a6c6b20b845e15bf4483f551f7b91df161540356c3fc58aa2aeeb"
+    },
+    {
+      "path": "k18-latency-phase-projection.test.mjs",
+      "exit": 0,
+      "sha256": "6526a162f43631084352f700fe2fd1f9654eda054a9b25ef5923bfcb461fbf6f"
+    }
+  ],
+  "pureParserFixtures": {
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "logSha256": "8e8895bd1edad542b27630c9164254ecc8d705847c99705d4a380a05423c5abe"
+  },
+  "unreadyRefusal": {
+    "observed": true,
+    "code": "UNREADY_K18",
+    "networkAttempts": 0
+  },
+  "preservedBounds": {
+    "executions": 1000,
+    "responseBytes": 16777216,
+    "systemTableRows": 256,
+    "timeoutMs": 30000
+  },
+  "oldHelpersUnchanged": true,
+  "frozenProductUnchanged": true,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "ready": false,
+  "preparationPercent": 100
+}
