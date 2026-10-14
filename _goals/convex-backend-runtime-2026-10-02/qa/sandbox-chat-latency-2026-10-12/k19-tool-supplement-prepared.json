@@ -1,0 +1,54 @@
+{
+  "prepared": true,
+  "liveInvocations": 0,
+  "inferenceCalls": 0,
+  "checks": [
+    {
+      "check": "syntax",
+      "file": "k19-tool-supplement-pins.mjs",
+      "exit": 0
+    },
+    {
+      "check": "syntax",
+      "file": "verify-k19-tool-supplement-readonly.mjs",
+      "exit": 0
+    },
+    {
+      "check": "actual module import and UNREADY refusal",
+      "exit": 1,
+      "expectedExit": 1,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k19-tool-supplement-verification-1791957981376.json",
+      "serviceCalls": 0,
+      "clientsClosed": true
+    }
+  ],
+  "files": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k19-tool-supplement-pins.mjs",
+      "sha256": "35f5e8db69eade75e416b709b8410e13a69b4cf6933b1765e45fd6c074b651ce"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k19-tool-supplement-readonly.mjs",
+      "sha256": "dbef1befe545148cbc8cb879795cce67d2f9c4948a41545b6f41ad5f5ab0ca22"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k19-tool-supplement-procedure.md",
+      "sha256": "a847ad67ba38583677703b7c6aabccbba56f6d76e41d5c57ae342d96b9927329"
+    }
+  ],
+  "scope": "QA-only preparation; no K19 collector pin mutation or service access",
+  "sourceReferences": [
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/components/RuntimeQuickstart.tsx",
+      "sha256": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "67d6c0440c2f0110d96f85b9f2e40294a2581fc3b2e545b95eaca7ec937b9f61"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "sha256": "f4ba86380e9db718c7cf1f6a5e06b209b79c7bcb2a96e978e5c00a9c21a7ba7c"
+    }
+  ]
+}

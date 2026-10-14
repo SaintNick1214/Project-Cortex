@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "syntax": true,
+  "results": [
+    {
+      "path": "capture-k19-cli-timing.mjs",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "capture-k19-financial-metadata.mjs",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "capture-k19-run-chain.mjs",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "service-log-snapshot-k19.mjs",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "verify-k19-cleanup.mjs",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "verify-k19-four-run-memory-readonly.mjs",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "k19-collector-pins.mjs",
+      "exit": 0,
+      "stderr": ""
+    }
+  ],
+  "metadataFixtures": [
+    {
+      "name": "runtimeAgentQueryEmbedding:prepare",
+      "match": true
+    },
+    {
+      "name": "runtimeAgentQueryEmbedding:admit",
+      "match": true
+    },
+    {
+      "name": "runtimeClient:submitAndStartEnvelope",
+      "match": true
+    },
+    {
+      "name": "runtimeAgent:executeDirectV6",
+      "match": true
+    }
+  ],
+  "readyFalse": true,
+  "serviceCalls": 0,
+  "inferenceCalls": 0
+}

@@ -1,0 +1,1122 @@
+{
+  "observedAt": "2026-10-14T06:40:49.711Z",
+  "dom": "- main:\n  - paragraph: Cortex\n  - heading \"Memory chat\" [level=1]\n  - paragraph: Responses and memory updates stay available across connections.\n  - button \"Sign out\"\n  - region \"Authentication\":\n    - heading \"Refresh credentials\" [level=2]\n    - paragraph: Use an access token issued by your host authentication provider. It stays in memory for this session.\n    - text: Access token\n    - textbox \"Access token\"\n    - button \"Refresh token\" [disabled]\n    - paragraph: Connected to manual-workspace in sandbox-03af6882-d97e-4c45-a965-fbbe951597b7.\n  - form \"Agent configuration\":\n    - text: Published agent\n    - textbox \"Published agent\": agent:497a372a5d6d5d55d5207f3b2aeb0fe43475fd4851c621fce80f6df747dd6a6b\n    - text: Agent version\n    - spinbutton \"Agent version\": \"1\"\n    - button \"Use agent version\"\n    - paragraph: \"Current version: 1 · Memory mode: indexed-plus-pending\"\n  - region \"Chat\":\n    - heading \"Conversation\" [level=2]\n    - button \"New chat\" [disabled]\n    - generic \"Messages\":\n      - article:\n        - paragraph: You\n        - paragraph: My favorite season is autumn. Reply with the exact word CLI39 only. Do not call tools.\n      - article:\n        - paragraph: Cortex\n        - paragraph: CLI39\n      - article:\n        - paragraph: You\n        - paragraph: I prefer trail walking. Reply with the exact word CLW39 only. Do not call tools.\n      - article:\n        - paragraph: Cortex\n        - paragraph: CLW39\n      - article:\n        - paragraph: You\n        - paragraph: \"Use memory_remember exactly once to remember this preference: My favorite musical instrument is the cello. Wait for its required approval. After the memory operation succeeds, reply only TOOL39.\"\n      - article:\n        - paragraph: Cortex\n        - paragraph\n        - paragraph: \"Backend tool: memory_remember · requested\"\n    - text: Message\n    - textbox \"Message\" [disabled]\n    - button \"Responding…\" [disabled]\n    - paragraph:\n      - text: \"Response:\"\n      - strong: waiting_approval\n    - paragraph:\n      - text: \"Memory:\"\n      - strong: complete\n    - paragraph: \"Context: complete\"\n    - paragraph: \"Run: run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\"\n    - list \"Backend tool activity\":\n      - listitem: \"memory_remember: requested\"\n    - button \"Approve memory_remember\"\n    - button \"Disconnect observer\"\n    - button \"Reconnect observer\" [disabled]\n    - button \"Cancel run\"\n    - text: Observe an existing run\n    - textbox \"Observe an existing run\": run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\n    - button \"Observe run\" [disabled]\n  - region \"Memory search\":\n    - heading \"Memory search\" [level=2]\n    - paragraph: cortex-text-small-1536-v1 · 1536 dimensions\n    - text: Search your memory\n    - textbox \"Search your memory\"\n    - button \"Search memory\" [disabled]\n    - group \"Memory readiness\":\n      - generic: Memory readiness\n      - paragraph: Read current indexing status, or require the selected stages to be complete. This check starts no model call.\n      - checkbox \"Require facts\"\n      - text: Require facts\n      - checkbox \"Require vectors\"\n      - text: Require vectors\n      - checkbox \"Require graph\"\n      - text: Require graph\n    - button \"Check memory readiness\"\n  - button \"Show media tools\"\n- button \"Open Next.js Dev Tools\":\n- alert",
+  "logs": [
+    {
+      "level": "info",
+      "message": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2026-10-14T06:39:21.924Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "[HMR] connected",
+      "timestamp": "2026-10-14T06:39:21.989Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"auth.begin\",\"atMs\":14932.200000047684}",
+      "timestamp": "2026-10-14T06:39:36.159Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"auth.ready\",\"atMs\":15287.800000071526}",
+      "timestamp": "2026-10-14T06:39:36.516Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":15289.300000071526,\"rpcId\":1,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:36.516Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":15638.5,\"rpcId\":1,\"method\":\"runtimeClient:session\",\"durationMs\":349.1999999284744}",
+      "timestamp": "2026-10-14T06:39:36.866Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":15639.300000071526,\"rpcId\":2,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:36.866Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":16014.300000071526,\"rpcId\":2,\"method\":\"runtimeClient:session\",\"durationMs\":375}",
+      "timestamp": "2026-10-14T06:39:37.242Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16014.700000047684,\"rpcId\":3,\"method\":\"agentDefinitions:get\"}",
+      "timestamp": "2026-10-14T06:39:37.242Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":16235.399999976158,\"rpcId\":3,\"method\":\"agentDefinitions:get\",\"durationMs\":220.69999992847443}",
+      "timestamp": "2026-10-14T06:39:37.463Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16235.800000071526,\"rpcId\":4,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:37.463Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":16402.899999976158,\"rpcId\":4,\"method\":\"runtimeClient:session\",\"durationMs\":167.09999990463257}",
+      "timestamp": "2026-10-14T06:39:37.631Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16428.5,\"rpcId\":5,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:37.657Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16428.800000071526,\"rpcId\":6,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:37.657Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16496.899999976158,\"rpcId\":7,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:37.724Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":16599.899999976158,\"rpcId\":5,\"method\":\"runtimeClient:session\",\"durationMs\":171.39999997615814}",
+      "timestamp": "2026-10-14T06:39:37.827Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16600.300000071526,\"rpcId\":8,\"method\":\"runtimeClientExtensions:embeddingProfile\"}",
+      "timestamp": "2026-10-14T06:39:37.828Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":16692.399999976158,\"rpcId\":6,\"method\":\"runtimeClient:session\",\"durationMs\":263.59999990463257}",
+      "timestamp": "2026-10-14T06:39:37.920Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16692.800000071526,\"rpcId\":9,\"method\":\"runtimeClientExtensions:embeddingProfile\"}",
+      "timestamp": "2026-10-14T06:39:37.920Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":16775.899999976158,\"rpcId\":7,\"method\":\"runtimeClient:session\",\"durationMs\":279}",
+      "timestamp": "2026-10-14T06:39:38.003Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16776.200000047684,\"rpcId\":10,\"method\":\"runs:get\"}",
+      "timestamp": "2026-10-14T06:39:38.003Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":16880.800000071526,\"rpcId\":8,\"method\":\"runtimeClientExtensions:embeddingProfile\",\"durationMs\":280.5}",
+      "timestamp": "2026-10-14T06:39:38.108Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16880.899999976158,\"rpcId\":11,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:38.108Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":16988.899999976158,\"rpcId\":9,\"method\":\"runtimeClientExtensions:embeddingProfile\",\"durationMs\":296.09999990463257}",
+      "timestamp": "2026-10-14T06:39:38.216Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":16989.200000047684,\"rpcId\":12,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:38.216Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":17084.200000047684,\"rpcId\":10,\"method\":\"runs:get\",\"durationMs\":308}",
+      "timestamp": "2026-10-14T06:39:38.312Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":17084.5,\"rpcId\":13,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:38.312Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":17167.600000023842,\"rpcId\":11,\"method\":\"runtimeClient:session\",\"durationMs\":286.7000000476837}",
+      "timestamp": "2026-10-14T06:39:38.395Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":17256.899999976158,\"rpcId\":12,\"method\":\"runtimeClient:session\",\"durationMs\":267.6999999284744}",
+      "timestamp": "2026-10-14T06:39:38.485Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":17347.399999976158,\"rpcId\":13,\"method\":\"runtimeClient:session\",\"durationMs\":262.89999997615814}",
+      "timestamp": "2026-10-14T06:39:38.575Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":17348.300000071526,\"rpcId\":14,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:38.576Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":17509.399999976158,\"rpcId\":14,\"method\":\"runtimeClient:session\",\"durationMs\":161.09999990463257}",
+      "timestamp": "2026-10-14T06:39:38.737Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":17510,\"rpcId\":15,\"method\":\"runs:get\"}",
+      "timestamp": "2026-10-14T06:39:38.738Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":17681.5,\"rpcId\":15,\"method\":\"runs:get\",\"durationMs\":171.5}",
+      "timestamp": "2026-10-14T06:39:38.909Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":17681.800000071526,\"rpcId\":16,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:38.909Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":17844.899999976158,\"rpcId\":16,\"method\":\"runtimeClient:session\",\"durationMs\":163.09999990463257}",
+      "timestamp": "2026-10-14T06:39:39.073Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":17845.5,\"rpcId\":17,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:39.073Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":18010,\"rpcId\":17,\"method\":\"runtimeClient:session\",\"durationMs\":164.5}",
+      "timestamp": "2026-10-14T06:39:39.238Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":18010.5,\"rpcId\":18,\"method\":\"runtimeTranscript:messages\"}",
+      "timestamp": "2026-10-14T06:39:39.238Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":18389,\"rpcId\":18,\"method\":\"runtimeTranscript:messages\",\"durationMs\":378.5}",
+      "timestamp": "2026-10-14T06:39:39.617Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":18389.399999976158,\"rpcId\":19,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:39.617Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":18550,\"rpcId\":19,\"method\":\"runtimeClient:session\",\"durationMs\":160.60000002384186}",
+      "timestamp": "2026-10-14T06:39:39.778Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":18551.800000071526,\"rpcId\":20,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:39.783Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":18568.600000023842,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:39.808Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":18571,\"rpcId\":21,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:39.808Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":18816.700000047684,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:40.045Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":18817.800000071526,\"rpcId\":20,\"method\":\"runtimeClient:session\",\"durationMs\":266}",
+      "timestamp": "2026-10-14T06:39:40.045Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":18818.200000047684,\"rpcId\":22,\"method\":\"runs:get\"}",
+      "timestamp": "2026-10-14T06:39:40.045Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":18891.200000047684,\"rpcId\":21,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":320.2000000476837}",
+      "timestamp": "2026-10-14T06:39:40.119Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":18892.100000023842,\"rpcId\":23,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:40.119Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":18989.600000023842,\"rpcId\":22,\"method\":\"runs:get\",\"durationMs\":171.39999997615814}",
+      "timestamp": "2026-10-14T06:39:40.217Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":18989.899999976158,\"rpcId\":24,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:40.218Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":19068.200000047684,\"rpcId\":23,\"method\":\"runtimeClient:session\",\"durationMs\":176.10000002384186}",
+      "timestamp": "2026-10-14T06:39:40.296Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":19069.399999976158,\"rpcId\":25,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:40.297Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":19151.899999976158,\"rpcId\":24,\"method\":\"runtimeClient:session\",\"durationMs\":162}",
+      "timestamp": "2026-10-14T06:39:40.380Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":19153.200000047684,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:40.381Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":19153.600000023842,\"rpcId\":26,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:40.381Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":19157,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:40.384Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":19323.600000023842,\"rpcId\":25,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":254.20000004768372}",
+      "timestamp": "2026-10-14T06:39:40.551Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":19324.300000071526,\"rpcId\":27,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:40.552Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":19494.399999976158,\"rpcId\":26,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":340.7999999523163}",
+      "timestamp": "2026-10-14T06:39:40.723Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":19495.300000071526,\"rpcId\":28,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:40.723Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":19585.600000023842,\"rpcId\":27,\"method\":\"runtimeClient:session\",\"durationMs\":261.2999999523163}",
+      "timestamp": "2026-10-14T06:39:40.814Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":19662.200000047684,\"rpcId\":28,\"method\":\"runtimeClient:session\",\"durationMs\":166.89999997615814}",
+      "timestamp": "2026-10-14T06:39:40.890Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":19663.899999976158,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:40.891Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":19664.200000047684,\"rpcId\":29,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:40.891Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":19665,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:40.892Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":19905.100000023842,\"rpcId\":29,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":240.89999997615814}",
+      "timestamp": "2026-10-14T06:39:41.133Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":19905.5,\"rpcId\":30,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:41.133Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":20077.800000071526,\"rpcId\":30,\"method\":\"runtimeClient:session\",\"durationMs\":172.30000007152557}",
+      "timestamp": "2026-10-14T06:39:41.306Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"submit\",\"elapsedMs\":0}",
+      "timestamp": "2026-10-14T06:39:53.574Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":32352.5,\"rpcId\":31,\"method\":\"runtimeClient:submitAndStartEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:53.580Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376\",\"attemptNumber\":0,\"phase\":\"admission.submit.begin\",\"at\":1791959993644}'",
+      "timestamp": "2026-10-14T06:39:54.213Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376\",\"attemptNumber\":0,\"phase\":\"admission.submit.end\",\"at\":1791959993644,\"durationMs\":186.5999999998603}'",
+      "timestamp": "2026-10-14T06:39:54.214Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\",\"attemptNumber\":0,\"phase\":\"admission.start.begin\",\"at\":1791959993644}'",
+      "timestamp": "2026-10-14T06:39:54.214Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\",\"attemptNumber\":0,\"phase\":\"claim.begin\",\"at\":1791959993644}'",
+      "timestamp": "2026-10-14T06:39:54.214Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\",\"attemptNumber\":0,\"phase\":\"start.claimNext.begin\",\"at\":1791959993644}'",
+      "timestamp": "2026-10-14T06:39:54.214Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\",\"attemptNumber\":0,\"phase\":\"start.claimNext.end\",\"at\":1791959993644,\"durationMs\":188.60000000009313}'",
+      "timestamp": "2026-10-14T06:39:54.214Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\",\"attemptNumber\":1,\"phase\":\"claim.end\",\"at\":1791959993644}'",
+      "timestamp": "2026-10-14T06:39:54.215Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\",\"attemptNumber\":0,\"phase\":\"admission.start.end\",\"at\":1791959993644,\"durationMs\":216}'",
+      "timestamp": "2026-10-14T06:39:54.215Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\",\"attemptNumber\":1,\"phase\":\"admission.get.begin\",\"at\":1791959993644}'",
+      "timestamp": "2026-10-14T06:39:54.215Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "%c[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] color:rgb(0, 145, 255) '{\"runId\":\"run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\",\"attemptNumber\":1,\"phase\":\"admission.get.end\",\"at\":1791959993644,\"durationMs\":3.0999999998603016}'",
+      "timestamp": "2026-10-14T06:39:54.215Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":33197.200000047684,\"rpcId\":31,\"method\":\"runtimeClient:submitAndStartEnvelope\",\"durationMs\":844.7000000476837}",
+      "timestamp": "2026-10-14T06:39:54.426Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":33198,\"rpcId\":32,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:54.426Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":33366.5,\"rpcId\":32,\"method\":\"runtimeClient:session\",\"durationMs\":168.5}",
+      "timestamp": "2026-10-14T06:39:54.594Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-browser-latency\",\"phase\":\"admission.delivered\",\"elapsedMs\":1021.2999999523163,\"runId\":\"run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14\"}",
+      "timestamp": "2026-10-14T06:39:54.595Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":33368.39999997616,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:54.596Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":33368.800000071526,\"rpcId\":33,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:54.596Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":33377.39999997616,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:54.614Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":33378.200000047684,\"rpcId\":34,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:54.614Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":33557.200000047684,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:54.786Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":33557.700000047684,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:54.786Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":33659.800000071526,\"rpcId\":33,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":291}",
+      "timestamp": "2026-10-14T06:39:54.888Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":33660.300000071526,\"rpcId\":35,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:54.888Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":33763.60000002384,\"rpcId\":34,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":385.39999997615814}",
+      "timestamp": "2026-10-14T06:39:54.992Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":33764.300000071526,\"rpcId\":36,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:54.992Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":33845.89999997616,\"rpcId\":35,\"method\":\"runtimeClient:session\",\"durationMs\":185.59999990463257}",
+      "timestamp": "2026-10-14T06:39:55.074Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":33846.60000002384,\"rpcId\":37,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:55.074Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":33959,\"rpcId\":36,\"method\":\"runtimeClient:session\",\"durationMs\":194.69999992847443}",
+      "timestamp": "2026-10-14T06:39:55.187Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":33959.60000002384,\"rpcId\":38,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:39:55.187Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":34074.200000047684,\"rpcId\":37,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":227.60000002384186}",
+      "timestamp": "2026-10-14T06:39:55.302Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":34074.60000002384,\"rpcId\":39,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:55.302Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":34170.89999997616,\"rpcId\":38,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":211.29999995231628}",
+      "timestamp": "2026-10-14T06:39:55.399Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":34171.5,\"rpcId\":40,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:39:55.399Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":34259.60000002384,\"rpcId\":39,\"method\":\"runtimeClient:session\",\"durationMs\":185}",
+      "timestamp": "2026-10-14T06:39:55.487Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":34350.700000047684,\"rpcId\":40,\"method\":\"runtimeClient:session\",\"durationMs\":179.20000004768372}",
+      "timestamp": "2026-10-14T06:39:55.579Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":38955.89999997616,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:00.184Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":38956.39999997616,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:00.184Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":38956.5,\"rpcId\":41,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:00.184Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":38956.800000071526,\"rpcId\":42,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:00.184Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":39234.10000002384,\"rpcId\":41,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":277.60000002384186}",
+      "timestamp": "2026-10-14T06:40:00.462Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":39235,\"rpcId\":43,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:00.462Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":39404.200000047684,\"rpcId\":42,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":447.39999997615814}",
+      "timestamp": "2026-10-14T06:40:00.632Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":39404.700000047684,\"rpcId\":44,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:00.633Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":39597.5,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:00.826Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":39598.200000047684,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:00.826Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":39598.700000047684,\"rpcId\":43,\"method\":\"runtimeClient:session\",\"durationMs\":363.7000000476837}",
+      "timestamp": "2026-10-14T06:40:00.826Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":39598.800000071526,\"rpcId\":44,\"method\":\"runtimeClient:session\",\"durationMs\":194.10000002384186}",
+      "timestamp": "2026-10-14T06:40:00.826Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":39599.200000047684,\"rpcId\":45,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:00.826Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":39599.39999997616,\"rpcId\":46,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:00.826Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":39850.300000071526,\"rpcId\":45,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":251.10000002384186}",
+      "timestamp": "2026-10-14T06:40:01.078Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":39850.700000047684,\"rpcId\":47,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:01.078Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":40019.800000071526,\"rpcId\":46,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":420.40000009536743}",
+      "timestamp": "2026-10-14T06:40:01.247Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":40020.200000047684,\"rpcId\":48,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:01.247Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":40106.200000047684,\"rpcId\":47,\"method\":\"runtimeClient:session\",\"durationMs\":255.5}",
+      "timestamp": "2026-10-14T06:40:01.334Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":40199.5,\"rpcId\":48,\"method\":\"runtimeClient:session\",\"durationMs\":179.29999995231628}",
+      "timestamp": "2026-10-14T06:40:01.427Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":43478.89999997616,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:04.707Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":43479.5,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:04.708Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":43479.800000071526,\"rpcId\":49,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:04.708Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":43480.10000002384,\"rpcId\":50,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:04.708Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":43733.10000002384,\"rpcId\":49,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":253.29999995231628}",
+      "timestamp": "2026-10-14T06:40:04.961Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":43733.800000071526,\"rpcId\":51,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:04.962Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":43976,\"rpcId\":50,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":495.89999997615814}",
+      "timestamp": "2026-10-14T06:40:05.204Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":43976.39999997616,\"rpcId\":52,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:05.204Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":44079.39999997616,\"rpcId\":51,\"method\":\"runtimeClient:session\",\"durationMs\":345.59999990463257}",
+      "timestamp": "2026-10-14T06:40:05.307Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":44310.700000047684,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:05.539Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":44311.10000002384,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:05.539Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":44311.300000071526,\"rpcId\":53,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:05.539Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":44313.5,\"rpcId\":52,\"method\":\"runtimeClient:session\",\"durationMs\":337.10000002384186}",
+      "timestamp": "2026-10-14T06:40:05.540Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":44314,\"rpcId\":54,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:05.541Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":44577.60000002384,\"rpcId\":53,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":266.2999999523163}",
+      "timestamp": "2026-10-14T06:40:05.806Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":44578.10000002384,\"rpcId\":55,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:05.806Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":44749.39999997616,\"rpcId\":54,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":435.39999997615814}",
+      "timestamp": "2026-10-14T06:40:05.977Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":44750,\"rpcId\":56,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:05.977Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":44833.200000047684,\"rpcId\":55,\"method\":\"runtimeClient:session\",\"durationMs\":255.10000002384186}",
+      "timestamp": "2026-10-14T06:40:06.061Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":44924.60000002384,\"rpcId\":56,\"method\":\"runtimeClient:session\",\"durationMs\":174.60000002384186}",
+      "timestamp": "2026-10-14T06:40:06.152Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":47739.800000071526,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:08.968Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":47740.39999997616,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:08.969Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":47740.60000002384,\"rpcId\":57,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:08.969Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":47741,\"rpcId\":58,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:08.969Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":48066.60000002384,\"rpcId\":57,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":326}",
+      "timestamp": "2026-10-14T06:40:09.295Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":48067.200000047684,\"rpcId\":59,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:09.295Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":48247.200000047684,\"rpcId\":58,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":506.2000000476837}",
+      "timestamp": "2026-10-14T06:40:09.475Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":48247.800000071526,\"rpcId\":60,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:09.475Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":48335.10000002384,\"rpcId\":59,\"method\":\"runtimeClient:session\",\"durationMs\":267.89999997615814}",
+      "timestamp": "2026-10-14T06:40:09.563Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":48446.700000047684,\"rpcId\":60,\"method\":\"runtimeClient:session\",\"durationMs\":198.89999997615814}",
+      "timestamp": "2026-10-14T06:40:09.675Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":49592.60000002384,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:10.820Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":49592.89999997616,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:10.820Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":49592.89999997616,\"rpcId\":61,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:10.820Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":49593.10000002384,\"rpcId\":62,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:10.827Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":49908.89999997616,\"rpcId\":61,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":316}",
+      "timestamp": "2026-10-14T06:40:11.137Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":49909.5,\"rpcId\":63,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:11.137Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":50068.10000002384,\"rpcId\":62,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":475}",
+      "timestamp": "2026-10-14T06:40:11.296Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":50068.700000047684,\"rpcId\":64,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:11.297Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":50164.5,\"rpcId\":63,\"method\":\"runtimeClient:session\",\"durationMs\":255}",
+      "timestamp": "2026-10-14T06:40:11.393Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":50254.10000002384,\"rpcId\":64,\"method\":\"runtimeClient:session\",\"durationMs\":185.39999997615814}",
+      "timestamp": "2026-10-14T06:40:11.482Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":52963.300000071526,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:14.192Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":52963.700000047684,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:14.192Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":52963.89999997616,\"rpcId\":65,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:14.192Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":52964.10000002384,\"rpcId\":66,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:14.192Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":53229.5,\"rpcId\":65,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":265.60000002384186}",
+      "timestamp": "2026-10-14T06:40:14.457Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":53230,\"rpcId\":67,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:14.457Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":53390.5,\"rpcId\":66,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":426.39999997615814}",
+      "timestamp": "2026-10-14T06:40:14.619Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":53391.200000047684,\"rpcId\":68,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:14.619Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":53518.89999997616,\"rpcId\":67,\"method\":\"runtimeClient:session\",\"durationMs\":288.89999997615814}",
+      "timestamp": "2026-10-14T06:40:14.747Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":53607.200000047684,\"rpcId\":68,\"method\":\"runtimeClient:session\",\"durationMs\":216}",
+      "timestamp": "2026-10-14T06:40:14.835Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":54215.39999997616,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:15.444Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"watcher.wake\",\"atMs\":54216,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:15.444Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":54216.300000071526,\"rpcId\":69,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:15.444Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":54216.60000002384,\"rpcId\":70,\"method\":\"runtimeClient:observeEnvelope\"}",
+      "timestamp": "2026-10-14T06:40:15.445Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":54481.39999997616,\"rpcId\":69,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":265.09999990463257}",
+      "timestamp": "2026-10-14T06:40:15.709Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":54482,\"rpcId\":71,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:15.710Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":54672,\"rpcId\":70,\"method\":\"runtimeClient:observeEnvelope\",\"durationMs\":455.39999997615814}",
+      "timestamp": "2026-10-14T06:40:15.899Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.begin\",\"atMs\":54672.300000071526,\"rpcId\":72,\"method\":\"runtimeClient:session\"}",
+      "timestamp": "2026-10-14T06:40:15.899Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":54759.60000002384,\"rpcId\":71,\"method\":\"runtimeClient:session\",\"durationMs\":277.60000002384186}",
+      "timestamp": "2026-10-14T06:40:15.987Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    },
+    {
+      "level": "log",
+      "message": "{\"type\":\"cortex-client-latency\",\"version\":1,\"phase\":\"rpc.end\",\"atMs\":54859.10000002384,\"rpcId\":72,\"method\":\"runtimeClient:session\",\"durationMs\":186.79999995231628}",
+      "timestamp": "2026-10-14T06:40:16.086Z",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js"
+    }
+  ]
+}

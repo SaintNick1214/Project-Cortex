@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "ready": false,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "originalsUnchanged": [
+    {
+      "path": "capture-k18-cli-timing.mjs",
+      "sha256": "4cd77c27c7a3aecfde91f295b5e503d04239450990e8b18592d40f1641a6a4d8"
+    },
+    {
+      "path": "capture-k18-financial-metadata.mjs",
+      "sha256": "0f0b74c243d6532185d08bd2438cada2ad1bd5be9ec21e8c1ec68a4a1e8aac22"
+    },
+    {
+      "path": "capture-k18-run-chain.mjs",
+      "sha256": "fc8902ccd7b7e3be20958e5f3988b1bed92ac211e35826599c3e4a7a19948171"
+    },
+    {
+      "path": "service-log-snapshot-k18.mjs",
+      "sha256": "b30214a2a1a62d3759b78ed85d89c0d664c361894c4c033ab2f682d3c6931b20"
+    },
+    {
+      "path": "verify-k18-cleanup.mjs",
+      "sha256": "2d436d746c5d4be7d8626e372eeef8beedcc032039103a7a5bb908a86d9cb1a5"
+    },
+    {
+      "path": "verify-k18-four-run-memory-readonly.mjs",
+      "sha256": "12f288a8d1a3fedf411a22ae3ce94c9ab8b2673fdadceb57a988bf007c5b2d86"
+    }
+  ],
+  "created": [
+    {
+      "path": "capture-k19-cli-timing.mjs",
+      "bytes": 2274,
+      "sha256": "32217d02d24d6803a8be77293d559b93e5baaff34cb559c27d6cd8c75c1a5d25"
+    },
+    {
+      "path": "capture-k19-financial-metadata.mjs",
+      "bytes": 8659,
+      "sha256": "fbb7d2c4ad086399e054f0bb06f5eb4198bd63938cacc3c0b9c3d1b2b18c4585"
+    },
+    {
+      "path": "capture-k19-run-chain.mjs",
+      "bytes": 12159,
+      "sha256": "ee54670bf87ac01da3001b10ed4eaa9d89cbf7e2743ee0288c0211d9d4a76dbc"
+    },
+    {
+      "path": "service-log-snapshot-k19.mjs",
+      "bytes": 6856,
+      "sha256": "a036bf89f8d33949b02536b77ede133fa2bfbb73b336975e481238d5e1c77263"
+    },
+    {
+      "path": "verify-k19-cleanup.mjs",
+      "bytes": 3462,
+      "sha256": "9e8ecdc060458a9c209b511d1a383320be99a50889d98625215b22f768b146cb"
+    },
+    {
+      "path": "verify-k19-four-run-memory-readonly.mjs",
+      "bytes": 32526,
+      "sha256": "e59aed1707c015d7ea85b381db8fc65aa8acf794188c6e74f3c5e661a8b38a20"
+    },
+    {
+      "path": "k19-collector-pins.mjs",
+      "bytes": 1675,
+      "sha256": "9d04601226e316414b61feed1b083387acd08aa7e02f76e7693320283cb375ba"
+    }
+  ],
+  "preservedBounds": {
+    "executions": 1000,
+    "responseBytes": 16777216,
+    "systemTableRows": 256,
+    "timeoutMs": 30000
+  },
+  "metadataChanges": [
+    "Recognize additive V6 Agent, embedding and admission module completions",
+    "Retain observed direct execution mode/state/scheduled ID",
+    "Workflow absence is observed, not required on ordinary direct runs"
+  ],
+  "pending": [
+    "Joint source gate",
+    "Immutable committed candidate",
+    "Fresh target READY and exact phase GO",
+    "Four actual run identities"
+  ]
+}

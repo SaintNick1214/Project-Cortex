@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K18nativecontrolsPASScleanupABSENT;fourlatencysamplesFAIL;measuredwholepathrepairpending",
+  "phase": "K19 native evidence complete; four latency FAIL and supplemental continuation FAIL; coherent whole-path repair pending",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T04:36:09.304Z",
+  "updatedAt": "2026-10-14T07:09:59.240926+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,13 +58,13 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "generation": "K18",
-    "sessionId": "6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e",
+    "generation": "K19",
+    "sessionId": "03af6882-d97e-4c45-a965-fbbe951597b7",
     "state": "CLEANED",
-    "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
-    "imageId": "sha256:a1330ff0ee1431af68a69f0b65c82a67acdd8611fb8d1188f6b821b5fc8a708c",
+    "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
+    "imageId": "sha256:910746b1165ef87f6ef10da25a391b7b9889f9804a625c2af0f1af90c16038ac",
     "nativeSLOQualified": false,
-    "cleanupReceipt": "k18-cleanup-final.json"
+    "cleanupReceipt": "k19-cleanup-final.json"
   },
   "actualSamples": {
     "generation": "K11",
@@ -471,8 +471,8 @@
         "pass": 8,
         "fail": 2,
         "failures": [
-          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
-          "invalidsignature→AUTHENTICATION_TIMEOUT"
+          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
+          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
         ],
         "noAccessDelivered": true,
         "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
@@ -506,8 +506,8 @@
       "priorAuthenticationExpectedCodeFailures": {
         "generation": "K9",
         "failures": [
-          "expired valid signature → AUTHENTICATION_TIMEOUT",
-          "invalid signature → AUTHENTICATION_TIMEOUT"
+          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
+          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
         ],
         "notRerun": true
       },
@@ -529,7 +529,7 @@
       },
       "toolInclusiveSupplement": {
         "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
-        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
         "originalGenericFailPreserved": true
       }
     }
@@ -983,6 +983,78 @@
     "nativeSLOPercent": 0,
     "goalPercent": 50,
     "goalComplete": false,
-    "sourceAcceptancePercent": 100
+    "sourceAcceptancePercent": 100,
+    "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
+    "packaging": {
+      "percent": 100,
+      "report": "v6-direct-packaging-report.md",
+      "imageId": "sha256:910746b1165ef87f6ef10da25a391b7b9889f9804a625c2af0f1af90c16038ac",
+      "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
+      "launcherLocalTests": "108/108/0skip",
+      "preservedFailures": [
+        "proofs-v6-direct-tests-v1.log",
+        "proofs-v6-direct-tests-v2.log"
+      ]
+    },
+    "remoteDelivery": "Blocked by user-reported GitHub suspension/outage; no fetch/push/API attempts"
+  },
+  "k19ActualSamples": {
+    "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
+    "sessionId": "03af6882-d97e-4c45-a965-fbbe951597b7",
+    "target": "expert-bird-765",
+    "id": 6158316,
+    "browserFirstAfterPaintMs": 4882.400000095367,
+    "browserWarmAfterPaintMs": 5896.799999952316,
+    "cliFirstStdoutAcknowledgedMs": 8576.611545,
+    "cliWarmStdoutAcknowledgedMs": 9468.438545999998,
+    "responses": "4/4COMPLETE under original30000ms",
+    "latencyPasses": 0,
+    "latencyFailures": 4,
+    "paidRetries": 0,
+    "diagnosticsVerifiedBeforeChat": true,
+    "browserVisibility": "visible",
+    "browserSignedOutClosedBeforeCLI": true,
+    "cliExit": 0,
+    "firstAutomationSelectorFailure": "Requested30s wait returned in3.6758s; independent originalrun markers/completion retained; no resubmit/no chatdeadlinePASS substitution",
+    "memory": "PASS actual8events/currentauthority/profile/source/provenance/completeusage;43freshchecks;facts/vectors8/8",
+    "memoryReceipt": "k19-memory-native-v2-four-run-verification-1791959794094.json",
+    "memorySha256": "b670453337e01bad8e82c8798e771f8d7167140590e8e40108c614b38f25d114",
+    "supplementalTool": {
+      "runId": "run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14",
+      "verdict": "FAIL;memorytool succeeded,finalanswer failed",
+      "oneIntent": true,
+      "oneApproval": true,
+      "sameRunReconnect": true,
+      "paidRetry": false,
+      "finalOutput": 0,
+      "ordinal1NativeAttempts": 0,
+      "toolMemoryReady": "facts/vectors10/10",
+      "underlyingKnownCause": "POLICY_DENIED: request exceeds bounded limits,pre-Gateway admission",
+      "exactExceededBound": "UNAVAILABLE: one focused numeric projection failed before reconstruction; original caps retained",
+      "leaseExpiryCause": false,
+      "initialActionDeadlineCause": false,
+      "originalFailuresPreserved": true,
+      "strictFinalVerifierGo": false,
+      "browserSignedOutClosed": true,
+      "diagnosis": "k19-supplemental-failure-diagnosis.md"
+    },
+    "finance": {
+      "nativeAttempts": 38,
+      "activeSlots": 0,
+      "allSlotsReleased": true,
+      "reservationCeilingsUnits": 5700000,
+      "chargesUnknown": true,
+      "receipt": "k19-financial-metadata-1791960739936.json",
+      "originalSetupFailure": "k19-finance-v1.log missingrunarg refusedbeforeaccess; correctedv2 actualexit0"
+    },
+    "cleanup": {
+      "status": "ABSENT",
+      "launcherExit": 130,
+      "freshVerificationExit": 0,
+      "receipt": "k19-cleanup-final.json",
+      "allReadersClosed": true
+    },
+    "nativeSLOQualified": false,
+    "delayChain": "cloud-k19-four-run-delay-chain.md"
   }
 }

@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "originalOutcome": "FAILED",
+  "fixedFourOutcome": "PASS8/8 before supplemental",
+  "target": {
+    "sessionId": "03af6882-d97e-4c45-a965-fbbe951597b7",
+    "name": "expert-bird-765",
+    "id": 6158316,
+    "reference": "dev/cortex-sandbox-03af6882-d97e-4c45-a965-fbbe951597b7"
+  },
+  "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
+  "runId": "run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14",
+  "exactPreDispatchCause": {
+    "code": "POLICY_DENIED",
+    "staticSourceReason": "request exceeds bounded limits",
+    "source": "src/domain/model-policy.ts:379",
+    "nativeConsoleHash": "a5d15fa7f05fa6fdcc1547d6e2f3c569195e49426e0835f2199ad7b662d1f090",
+    "nativeConsoleBytes": 77,
+    "exactStaticMessageHashMatch": true,
+    "matchedCandidates": 1,
+    "candidatesChecked": 870
+  },
+  "sourceApplicability": {
+    "agentHash": "67d6c0440c2f0110d96f85b9f2e40294a2581fc3b2e545b95eaca7ec937b9f61",
+    "gatewayHash": "254bd3b4a69560fce7231aaa0e704aee026c305b225f4fe83df635772dcf1e78",
+    "modelPolicyContractHash": "3127d9ce8d8f7b1d359e93e5e5623fb9453424ec784c493ef656b317001bba10",
+    "historicalTurnV5BodyRetained": true
+  },
+  "confirmed": {
+    "firstModelComplete": true,
+    "pendingToolObservedByOfficialSDK": true,
+    "sameRunObserverDisconnectReconnectRootEvidence": true,
+    "approvedRecordedRequestHash": "fab5befdc57eb10d194722fdba43eae0ca8d606f547a7579f14181a8107b0b4a",
+    "toolComplete": true,
+    "oneToolSource": true,
+    "toolSourceFactsVectorsComplete": true,
+    "continuedModelPrepared": true,
+    "continuedModelNativeAttempts": 0,
+    "continuedModelAgentState": "unknown",
+    "finalOutputMessages": 0,
+    "continuationWorkflowResult": "failed",
+    "scheduledDirectActionResult": "success"
+  },
+  "timeEvidence": {
+    "runCreatedAt": 1791959993644,
+    "completedModel0Journal": {
+      "stepNumber": 0,
+      "name": "runtimeAgent:completedModelStep",
+      "functionType": "query",
+      "kind": "function",
+      "functionHandleSha256": "d2bc496e252faaa09fc83b6941d05915c6e20e5e903df73bdb3f5da62cccfdff",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791960011762,
+      "completedAt": 1791960012745
+    },
+    "approvalWaitMs": 95327,
+    "toolActionJournalMs": 13210,
+    "ordinal1JournalMs": 2083,
+    "ordinal1NativeActionMs": 1447.042097,
+    "failureAt": 1791960132638,
+    "currentOutboxLeaseExpiresAt": 1791960425965,
+    "remainingLeaseAtFailureMs": 293327
+  },
+  "dimensionAudit": {
+    "exit": 1,
+    "dimensionsUnavailable": true,
+    "phase": "reconstruct",
+    "errorSha256": "c7690d29293d016026cdbda7cb183f04fdefd183bc91916d20618fc437020644",
+    "errorBytes": 4110,
+    "freshVerifications": 16,
+    "source": "One authorized focused8-table read; reconstruction refused an exact-current binding/validation comparison before numeric calculation; no raw body retained. Which bound crossed is unavailable; no follow-up scan."
+  },
+  "classificationProjectionTests": {
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0
+  },
+  "bounds": {
+    "tableRows": 256,
+    "queryDeadlineMs": 30000,
+    "logExecutions": 1000,
+    "logBytes": 16777216
+  },
+  "references": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k19-supplemental-failure-chain-660d10eaed54-1791960358672.json",
+      "sha256": "ee1df9b27ea931cac84486162f53e5dc9e549604e5c8b5a8406912649c143073"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k19-supplemental-failure-1791960352840.json",
+      "sha256": "a0bdddacbb1a5d7381b14ea68a91539b4465e17968751d17402b47f42889db65"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k19-supplemental-failure-classification-v2-1791960704094.json",
+      "sha256": "b0e00827ba263e5b2f9ce15863fb6a0f9fa77c251f4a0807f17e1e9b4469eb94"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k19-supplemental-bound-projection-1791961285278.json",
+      "sha256": "53d0924e4d40626d2afcd0764e567ebd744e77847ff31487c65ea63e43cde6fb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k19-pending-approval-observation-1791960071971.json",
+      "sha256": "7801230809dd83e490baa2b702ef64302441a761751003d39bbfb8439c3225fd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k19-supplemental-error-projection-v1.log",
+      "sha256": "2989932fe1b6df6dc18c68c2f4414f5264faa012caf435cb33ae763871ca4012"
+    }
+  ],
+  "rawPrivatePayloadRetained": false,
+  "paidCalls": 0,
+  "mutations": 0,
+  "reconcileInvoked": false,
+  "capOrDeadlineIncreased": false,
+  "allClientsClosed": true,
+  "nextSourceWorkNotAuthorized": true
+}
