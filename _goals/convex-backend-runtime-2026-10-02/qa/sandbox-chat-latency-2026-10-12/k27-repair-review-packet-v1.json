@@ -1,0 +1,76 @@
+{
+  "repository": "SaintNick1214/Project-Cortex",
+  "baseline": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+  "head": "194bfd788e6fa7316707023ecd8d8bdcb813dc17",
+  "scope": "K27 prompt trust + bounded raw source traversal + actual public recall source binding; one nonauthor source/test/docs gate",
+  "acceptancePolicy": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+  "sourceOnly": true,
+  "nativeCandidateStatus": "NOT_RUN",
+  "fullGoalAcceptance": false,
+  "hashes": {
+    "core": {
+      "convex-dev/runtimeAgent.ts": "01815d263be26037eec232bd8dc39f40151d3862801e6067da754691f7168527",
+      "convex-dev/runtimeAgentContext.ts": "b9cb9996932692d5cc25b3e97f4e360862614295283843eac46418607918b6fd",
+      "convex-dev/runtimeAgentRecall.ts": "b0596a5a100193893f637ae17470b84b2295c81a7b0732f2baf6e2f20ed620f1",
+      "convex-dev/runtimeAuth.ts": "de99f67288c0028199b7ae7862c9bc543e748f2b46d0d112a6948df78934f5c0",
+      "convex-dev/runtimeDataAuth.ts": "83c95f437d3f403917c4873c18025bf74d32f2a970d6da5bb636602a7de3e3f9",
+      "convex-dev/runtimeMemory.ts": "b9ea0f1977867e3920d669a294290c3505bebbb15ad5e270195b624ab05fa693",
+      "convex-dev/runtimeMemoryQuery.ts": "c7e342d80d22b092b32e4484ffc7ea217225a19819fd89a944bd34abf9bce0e0",
+      "convex-dev/runtimeMemoryRepository.ts": "f6e95950489ca1318aae9d45c99282a98a776e707dcd860fcacd7cad8f1a97e3",
+      "tests/unit/runtimeAgent/request-preflight.test.ts": "850fd36ac362807c02469cdaeac367111111cbb1adccfdda10eea46c88d3962f",
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "e17703735890d991cd20485a8a7e20fb4c6e13d5bbae3782705d119ec1e154c0",
+      "tests/unit/runtimeAuth/managed-source-read-scope.test.ts": "bb42ff44d6213f12536204ebd0b7c7d0f5fbe04cfd8314a3d7268ed1bdbc4402",
+      "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "283a49818593be176297caca596181ecd7fbd2327a8cd01347de6bb2c151ac55",
+      "tests/unit/runtimeMemory/query-composition.test.ts": "841ab7e46fffaf3e2f50f65a19f4d159e485ea5eb30c179a623d34f3d0992b23",
+      "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "cf6e4ca3f192e7206d3960d2514b92640af09ec874c2066f839f3c7e9c3d83c2",
+      "tests/unit/runtimeAgent/prompt-trust-v8.test.ts": "d15b4c23a358b5eb7fb1db2b7e3eb6f9753c4bbf5e63ace879057ed78ea89fc2"
+    },
+    "website": {
+      "docs-site/docs/api-reference/memory-operations.mdx": "c49e4a477ae283cf61c651e70b4a8ba60af3e9abd80e3178c09733f894516c58",
+      "docs-site/docs/api-reference/runtime-client.mdx": "8f4e105d4a766669744221a92a2d629d6f784df14a20eaa608dc1f75842a7d9f",
+      "docs-site/docs/architecture/model-policy.mdx": "311a540aa65acf8f7e75ec922f8e75dd7e667d7c0cb3629b9b754c8179e91f8a",
+      "docs-site/docs/architecture/performance.mdx": "64b606ab34fe9c95c039ebe44d5be85213da343af77ea619112dcd037b7c7761",
+      "docs-site/docs/core-features/memory-orchestration.mdx": "cfab8ea645d5f7671af3eb6073a7831108dd15b5519ef6902d24cdbb9bd3d43f",
+      "docs-site/docs/getting-started/backend-runtime.mdx": "5e1cf3fa198e0ec58a8755adfa221aad59570d1bfc762b486638791722f56423",
+      "docs-site/docs/getting-started/five-minute-quickstart.mdx": "ca2a8d0c230f904c3d2d2684efc1076c4005a50a08aa36326606dd0a27b084a0",
+      "docs-site/docs/getting-started/installation.mdx": "53b9b12ceb170883b9d42c9e9f6418346b7b7ae7499d20fa768c7157b213a5cd",
+      "docs-site/docs/reference/cheat-sheet.mdx": "686a6414a43033c518ba1506775e69a2bb6fc815fa0fa01c8027c1eb94fbcc83",
+      "docs-site/docs/tools/cli-reference.mdx": "8dc647e752e14123e82039d535395ed262537c8ad8aa19f8bfd8695d13ac954f"
+    },
+    "proofs": {
+      "SANDBOX.md": "90821350f27162ecfa497dec604430dfd8d32bcc167bf31665c9227acc4f61aa"
+    },
+    "evidence": {
+      "k27-repair-joint-quality-final-receipt-v1.json": "0d93be90b261896d9e975a3c678629480ad6cbba6f66e8b549240aca1b6efa6d",
+      "k27-repair-joint-quality-inputs.json": "9bdfea993149c3a271066ac7cf084ac8bdeff3938cca3eed15df59a875b2481f",
+      "k27-prompt-trust-freeze.json": "61069845d716869c73dba9ec22e848e28ee0d45e821aaa4b7f68b9e8829d89e1",
+      "k27-prompt-trust-checks.json": "844649ddded7c833ce4af8247bb844fd6e953edd85b582c593d2512f294471a4",
+      "k27-prompt-trust-report.md": "67f650933112f62298f53115b97c99402cb081903234f6cd0c43fb01f5843485",
+      "k27-prompt-trust-source-equivalence.json": "d14987ff9e1e392fff903045997663528aef53f29987ea6321deaeb4fd670000",
+      "k27-affected-v1.json": "8f56f57247ab23e5dad75a2119a065160742987b5c71597b69aa60e0d15413d9",
+      "k27-affected-v1-exit.json": "f5fc91bba1df2ef3668defb4ee60f3d0d968a31f0ba963a64829e7cedab80a84",
+      "k27-owned-types-v1-exit.json": "a7204114f1f4b9c821da806396157cd7b514658a8d1d2700289d221c81acb960",
+      "k27-scoped-lint-v1-exit.json": "acbaeb1e6fec585d95e6f35213192b12a2958ac83759991997bd0eb38447e49d",
+      "k27-equivalence.json": "9ee85d4fb530d9f1a11899eb5c27c0af0921a058dd1f1f46f998a0186c08c522",
+      "docs-k27-public-final-receipt-v1.json": "3b1d6becec2bfbc3b13e2c4be72a7964e559288073a7dc8e452b7c47614d3bf8",
+      "docs-k27-public-render-v1.json": "f52f1d27fbd36e580e3c5b7e2b72bbbe44233f2cb7b8c605dc413d97076269cd",
+      "k27-native-qualification-plan.md": "26e7ad409f6bcfc4552fabed06d543000d969506a4413bc9c07d9d8309316219",
+      "k26-four-run-critical-path-readonly.md": "8228b9775f1051c31826a642328a68b1b688b67d8c45efeb17abb79574591140",
+      "k26-request-order-diagnosis-1792003978819.json": "1b624b7139d24ef1300fa12630ff432cfe5d8393d030b1cab66c4eb26c2a6a8d"
+    }
+  },
+  "constraints": [
+    "Original source/authority/expiry/revocation/tombstone/isolation and final freshness fences remain enforced",
+    "No mutation-side stale reads or authority decision cache; bounded per-invocation raw rows only",
+    "V8 exact fitter/preflight/wire body and required current/tool chronology; legacy V1-V7 unchanged",
+    "Original per-call budgets/caps and canonical row storage unchanged",
+    "No native/SLO acceptance from mocked source checks; current hosted samples SLO0/4 and marker3/4 preserved",
+    "One coherent source/test/docs review; no receipt/custody/controller subjudge loops"
+  ],
+  "roots": {
+    "core": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "website": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+    "proofs": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+    "qa": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12"
+  }
+}

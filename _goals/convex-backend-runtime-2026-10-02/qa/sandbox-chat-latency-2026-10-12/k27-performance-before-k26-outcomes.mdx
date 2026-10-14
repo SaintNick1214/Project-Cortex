@@ -1,0 +1,79 @@
+---
+id: performance
+title: Performance
+---
+
+# Performance and limits
+
+Cortex stores the complete canonical transcript as individual message rows. A model request uses a bounded selection from that history and indexed memory. Response completion, asynchronous memory readiness and optional graph readiness are separate states.
+
+## Bounded work
+
+The current bounded Agent policy selects at most four recent messages, four relevant memories, four relevant facts and four pending entries, with a 16-entry assembled ceiling. Required current input and complete tool-call/result groups stay together. Instructions, context wrappers, tool definitions and output reserve must also fit the qualified model input and budget limits. Optional whole entries can be dropped; required content that cannot fit refuses before another model call. These limits do not delete transcript rows.
+
+Published policy separately bounds output tokens, tool steps, timeout, budget and concurrency. Strict barriers capture a finite cutoff and selected stages; incomplete coverage is an explicit result. See [memory orchestration](../core-features/memory-orchestration.mdx) and [model policy](model-policy.mdx).
+
+Runtime client authentication defaults to 10,000 ms; RPC observation defaults to 12,000 ms, within supported configurable bounds. A mutation timeout can leave its outcome uncertain. Retain its request/run identity and use observation or recovery rather than automatically issuing another paid intent.
+
+Private upload and delivery are capped at **20,000,000 decoded bytes**. A provider can impose smaller limits. Asynchronous video generation remains deferred because the official Convex AI Gateway does not support it.
+
+## Admission and answer completion
+
+`submitAndStart` combines the original session check, admission and start in one backend mutation, then performs an independent fresh session RPC before delivery. Observation retains current principal, scope, source and expiry checks. The Basic interactive process reuses one connection for sequential commands while keeping its per-command session checks; exit, timeout, failure and configuration drift close that ownership.
+
+Ordinary runs use direct backend scheduling. Tool approval and later model steps use durable continuation without replaying the first model operation. Strict Agents retain their captured stage barriers. Your application submits and observes the run; it does not add another model/tool loop or memory writer.
+
+## Current hosted measurements
+
+Submission to first visible answer text below **1,000 ms** is the target. It has not been achieved by the latest tested backend candidate. These October 14 samples use the unreleased SDK/CLI/provider 0.39 candidates, Basic 1.4.2 and Vercel quickstart 1.4.2 against one disposable hosted Convex database.
+
+| Client and measured boundary | First turn | Warm turn | Below one second |
+| --- | ---: | ---: | --- |
+| Vercel quickstart, visible after paint | 6.22 seconds | 3.88 seconds | No |
+| Basic CLI, first stdout acknowledgement | 7.25 seconds | 10.24 seconds | No |
+
+All four replies completed. Their ordinary memory proof passed four attributed user facts, eight matching source vectors and contiguous facts/vectors through eight events. Separate capture/replay/recall/isolation and signed-token denial checks passed. One approved memory tool survived observer disconnect/reconnect, completed its effect and final answer, and reached strict facts/vectors readiness through 11 of 11. A separate one-shot capture passed two unequal same-slot fact candidates with exact bindings and one qualified resolver call. Newly created in-plan UPDATE/SUPERSEDE remains an explicit unqualified refusal. These scoped results do not establish full goal acceptance.
+
+The exact disposable resources were independently verified absent after testing. Original failed samples and the full sequence of earlier results remain preserved in the Project-Cortex goal QA receipts. These measurements do not reconstruct a same-environment benchmark of the published 0.35 and 0.37 legacy SDKs.
+
+## Where the time goes
+
+The server trace separates preparation, model acquisition and protected output delivery:
+
+| Sample | Native admission epoch to main dispatch | Dispatch to processed first model text | Processed text to first durable Cortex output |
+| --- | ---: | ---: | ---: |
+| Browser first | 3,563 ms | 568 ms | 839 ms |
+| Browser warm | 2,287 ms | 575 ms | 395 ms |
+| CLI first | 4,805 ms | 517 ms | 450 ms |
+| CLI warm | 8,270 ms | 575 ms | 491 ms |
+
+These server clocks have different origins from browser paint and CLI stdout clocks. Nested work overlaps, so the table must not be added to the client measurements above. The Gateway/provider interval is measured through the application's processed-text phase; it is not raw network first byte.
+
+The warm CLI spends 4.48 seconds in recall: embedding acquisition takes 0.329 seconds, while the protected tail after embedding takes 3.74 seconds. Another 0.947 seconds follows for context saving and main-model preparation. The matches/delivery and save/preparation regions read 899 and 905 documents respectively, despite only nine distinct sources in the later ordinary proof inventory. Its final request contains three memories, two facts and three messages.
+
+Source inspection identifies repeated validation of the same source/conversation/bridge/origin-run dependency graph before and after final entry selection. Those slow pre-dispatch regions show no optimistic concurrency retry. The aggregate metrics do not expose exact per-table attribution, and engine time minus own-user time does not establish a network or CPU explanation. Work to reduce repeated raw source reads is in progress; its hosted speed benefit is unqualified.
+
+The browser samples use their recent canonical messages without indexed recall. Their preparation delay therefore cannot be attributed to embedding. Protected publication, observation and fresh post-I/O session checks add further work for both clients. Authorization, current source revisions, qualification and per-call accounting remain enforced.
+
+## Latency diagnostics
+
+Diagnostics are opt-in scalar metadata. They omit prompts, output, credentials and raw errors. Enable each flag in the process that owns its clock:
+
+| Surface | Enablement | Observable boundaries |
+| --- | --- | --- |
+| SDK | `onLatencyEvent` client option | Authentication, per-RPC begin/end/failure and watcher wake |
+| Backend | `CORTEX_RUNTIME_LATENCY_TRACE=1` | Claim, context, policy, Gateway acquisition/processed text and finalization |
+| Basic CLI | `CORTEX_RUNTIME_LATENCY_TRACE=1` | SDK events, submission and first answer write acknowledged by stdout |
+| Vercel quickstart | `NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1` | SDK events, submission, admission, first-text DOM commit/after-paint and canonical completion |
+
+The [SDK event contract](../api-reference/runtime-client.mdx#opt-in-client-latency-events) includes phase, timestamp and optional RPC identity, method and duration. Pair events on the same clock. A watcher wake is not a painted answer, and a local deadline can precede eventual RPC settlement.
+
+The quickstart records DOM commit in React's layout phase and an after-paint marker with two animation frames, including document visibility. Canonical answer completion waits for the matching transported assistant message. Measure first visible text separately from response completion, memory indexing, title work and graph readiness.
+
+Convex mutation `Date.now()` is fixed inside a transaction. A zero difference does not prove zero execution time; opt-in native mutation spans use `performance.now()`. Workflow handlers can replay and do not expose the same process environment, so use their actual journal step metadata. Inclusive parent durations already contain child work.
+
+The official Gateway provider acquires its service token and performs its HTTP request without exposing separate subphase hooks. Its internal routing, external-provider queue and raw network-first-byte subdivisions remain unavailable. Do not assign those unknown intervals to Cortex, Convex or the provider by subtraction.
+
+## Measure the right states
+
+Measure hosted Convex when it is the deployment's primary use case. Docker can host the canonical clients while the backend remains hosted. Label local Convex measurements separately, and distinguish first/warm, empty/populated context and actual browser paint from CLI stdout.

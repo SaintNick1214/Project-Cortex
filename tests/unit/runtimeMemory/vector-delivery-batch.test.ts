@@ -379,3 +379,30 @@ describe("per-source delivery lifetimes and native budget fences", () => {
     if (expired) expect(result).toMatchObject({ error: { code: "LEASE_EXPIRED" } }); else expect(result).toEqual({ value: { version: 1 } });
   });
 });
+
+it.each([true, false])("K27 public delivery shared=%s compares with the exact K26 scope, not the historical profile algorithm", async shared => {
+  const f = await setup(3), { createAuthorityReadScope } = await import("../../../convex-dev/runtimeAuth");
+  const writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db), scope = memoryScope(f.reference);
+  const leaves: SourceContent[] = [];
+  for (let i = 0; i < (shared ? 1 : 3); i++) {
+    const prepared = await prepareSourceContent(scope, explicitSourceLineage(scope, `k27-parent-${i}`), `Independent parent ${i}`, { now: () => clock });
+    await writer.putSource(prepared.source); leaves.push(prepared.source);
+  }
+  // Only original source graph records are added; vectors/bindings/profile stay exact.
+  f.db.table("runtimeMemorySources").slice(0, 3).forEach((row, i) => {
+    const leaf = leaves[shared ? 0 : i]!;
+    row.contextSourceWitnesses = [{ sourceId: leaf.lineage.sourceId, sourceEventId: leaf.lineage.sourceEventId,
+      sourceRevision: leaf.lineage.sourceRevision, contentHash: leaf.contentHash, permissions: ["canViewMemories"] }];
+  });
+  const before = storedState(f), trace = track(f);
+  const expected = await new ConvexMemoryRepository(createAuthorityReadScope(f.ctx), f.reference, "read").checkDelivery(f.bindings, f.ctx);
+  const baseline = [...trace.reads], identities = [...trace.readKeys].sort(); trace.reads.length = 0; trace.readKeys.clear();
+  expect(await f.call(finalDelivery, { reference: f.reference, bindings: f.bindings })).toEqual(expected);
+  expect([...trace.readKeys].sort()).toEqual(identities);
+  const notRaw = (rows: string[]) => rows.filter(table => !table.startsWith("runtimeAuth") && !["runtimeMemorySources", "runtimeConversations", "runtimeTranscriptMessages", "runtimeRuns"].includes(table));
+  expect(notRaw(trace.reads)).toEqual(notRaw(baseline)); expect(storedState(f)).toBe(before);
+  if (shared) expect(trace.reads.length).toBeLessThan(baseline.length);
+  else expect(trace.reads.length).toBe(baseline.length); // No repeated graph identity to remove.
+  console.info(JSON.stringify({ type: "k27-public-final-delivery", shared, baselineReads: baseline.length, optimizedReads: trace.reads.length,
+    exactRawIdentitySet: true, applicationWrites: 0, providerCalls: 0, nativeLatency: "UNAVAILABLE" }));
+});

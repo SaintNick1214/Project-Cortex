@@ -20,7 +20,7 @@ import { contextBoundary } from "./runtimeMemoryContext";
 import type { ContextBoundary } from "./runtimeMemoryContext";
 import { readCurrentEmbeddingProfile } from "./runtimeModelPolicy";
 import { internalQuery, internalMutation } from "./_generated/server";
-import { createAuthorityReadScope, createV8AuthorityReadScope, withManagedSourceReads, freshManagedSourceReads } from "./runtimeAuth";
+import { createAuthorityReadScope, createV8AuthorityReadScope, withManagedSourceValidationReads, freshManagedSourceReads } from "./runtimeAuth";
 import { contextSourceBatchHandler } from "./runtimeAgent";
 import { currentQuery, boundedRefusal, throwRefusal } from "./runtimeAgentQueryEmbedding";
 import type { AgentQueryEmbeddingAttempt } from "./runtimeAgentQueryEmbedding";
@@ -60,7 +60,7 @@ async function currentRead(ctx: QueryCtx, args: Args, expectedVersion?: 8) {
 export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args, expectedVersion?: 8) {
   const ctx = expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx, { managedSources: true }) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
   const { current, repository } = await currentRead(ctx, args, expectedVersion);
-  const sourceCtx = expectedVersion === 8 ? withManagedSourceReads(nativeCtx, ctx) : nativeCtx;
+  const sourceCtx = expectedVersion === 8 ? withManagedSourceValidationReads(nativeCtx, ctx) : nativeCtx;
   const [vector, facts] = await Promise.allSettled([
     (async () => { const authority = await repository.authority(undefined, "read");
       await repository.assertProfileReady(args.profile, current.run.runBudgetId); return { resourceAccess: authority.resourceAccess }; })(),
@@ -78,8 +78,9 @@ export const prepareReads = internalQuery({ args: nativeArgs, handler: prepareRe
 export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }, expectedVersion?: 8, invocationScope?: QueryCtx) {
   const ctx = invocationScope ?? (expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx, { managedSources: true }) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true }));
   const { current, repository } = await currentRead(ctx, args, expectedVersion), bindings = emptyBindings();
-  // Share only raw ancestry rows. These source fences retain uncached authority.
-  const sourceCtx = expectedVersion === 8 ? withManagedSourceReads(nativeCtx, ctx) : nativeCtx;
+  // Outer source getters remain uncached; only each recursive traversal gets
+  // a fresh, bounded raw authority reader in this native snapshot.
+  const sourceCtx = expectedVersion === 8 ? withManagedSourceValidationReads(nativeCtx, ctx) : nativeCtx;
   const matches = await repository.hydrateVectors(args.hits, args.profile, current.run.runBudgetId);
   await captureRecallVectors(bindings, matches, args.profile, { runBudgetId: current.run.runBudgetId });
   const selectedVectors = await contextSourceBatchHandler(sourceCtx, { reference: args.reference, ...args.selection, permission: "canViewMemories",

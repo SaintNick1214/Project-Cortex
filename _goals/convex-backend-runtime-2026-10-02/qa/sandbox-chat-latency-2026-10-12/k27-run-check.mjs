@@ -1,0 +1,10 @@
+import {spawn} from 'node:child_process';
+import {openSync,closeSync,writeFileSync} from 'node:fs';
+import {dirname,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const q=dirname(fileURLToPath(import.meta.url)),r='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion';
+const [label,...args]=process.argv.slice(2),startedAt=Date.now(),log=join(q,`${label}.log`),fd=openSync(log,'wx');
+const env={...process.env,PATH:'/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:'+process.env.PATH,npm_config_userconfig:'/dev/null',CONVEX_URL:'http://127.0.0.1:9',CORTEX_TEST_ENV_MODE:'explicit'};
+const child=spawn('/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node',args,{cwd:r,env,stdio:['ignore',fd,fd]});
+child.on('error',error=>{writeFileSync(join(q,`${label}-spawn-error.json`),JSON.stringify({name:error.name,code:error.code}));});
+child.on('close',(exitCode,signal)=>{closeSync(fd);writeFileSync(join(q,`${label}-exit.json`),JSON.stringify({startedAt,completedAt:Date.now(),exitCode,signal,cwd:r,command:[child.spawnfile,...args],node:process.version,offlineUrl:env.CONVEX_URL,explicitEnvironment:true,log},null,2)+'\n');console.log(JSON.stringify({label,exitCode,signal,log}));process.exitCode=exitCode??1;});

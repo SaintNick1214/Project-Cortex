@@ -3,11 +3,11 @@ import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { action, internalMutation, internalQuery, mutation } from "./_generated/server";
-import type { ActionCtx } from "./_generated/server";
+import type { ActionCtx, QueryCtx } from "./_generated/server";
 import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { commitDerivedInput, sourceContent, memoryDeliveryBindings } from "./runtimeMemorySchema";
-import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope, memoryReferences } from "./runtimeMemoryRepository";
+import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope, memoryReferences, captureRecallFact } from "./runtimeMemoryRepository";
 import { assertMemoryRequestId, explicitSourceLineage, rememberMemory } from "./runtimeMemoryServices";
 import { normalizeSourceText } from "../src/domain/profile";
 import { embeddingProfile } from "./runtimeMemorySchema";
@@ -15,7 +15,7 @@ import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth"
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
-import { createAuthorityReadScope } from "./runtimeAuth";
+import { createMemorySourceReadScope, withManagedSourceValidationReads } from "./runtimeAuth";
 import {publicRecallPreparation,recallPublicMemory} from './runtimeMemoryQuery';
 
 /** Describes the fresh managed index. Retrieval still requires its qualified, governed query call. */
@@ -40,20 +40,33 @@ export const writeDerived = internalMutation({ args: { ...scopedArgs, input: com
     await ctx.runMutation(makeFunctionReference("runtimeIngestion:registerCompletedDerived") as unknown as FunctionReference<"mutation", "internal",
       { reference: RuntimeAuthorityReference; receiptId: string }, null>, { reference: args.reference, receiptId: result.receiptId }); return result;
   } });
-export const readFacts = internalQuery({ args: { ...scopedArgs, query: v.object({
+/** Original fact read and its per-fact source binding in one fresh snapshot.
+ * The public Action still owns ranking, then its independent final mutation. */
+export async function readBoundFactsHandler(nativeCtx: QueryCtx, args: { reference: RuntimeAuthorityReference; query: Parameters<ConvexMemoryRepository["listFacts"]>[0] }) {
+  const ctx = createMemorySourceReadScope(nativeCtx), repository = new ConvexMemoryRepository(ctx, args.reference, "read");
+  const facts = await repository.listFacts(args.query), bindings = { sources: [], facts: [], vectors: [] } as import("./runtimeMemoryRepository").MemoryDeliveryBindings;
+  const sourceCtx = withManagedSourceValidationReads(nativeCtx, ctx);
+  for (const fact of facts) await captureRecallFact(bindings, fact,
+    await new ConvexMemoryRepository(sourceCtx, args.reference, "read").getSource(fact.lineage.sourceId));
+  await new ConvexMemoryRepository(nativeCtx, args.reference, "read").recheckAuthority();
+  return { facts, bindings };
+}
+export const readFacts = internalQuery({ args: { ...scopedArgs, includeBindings: v.optional(v.literal(true)), query: v.object({
   subject: v.optional(v.string()), factType: v.optional(v.union(v.literal("preference"), v.literal("identity"), v.literal("knowledge"),
     v.literal("relationship"), v.literal("event"), v.literal("observation"), v.literal("custom"))), limit: v.number(),
-}) }, handler: async (ctx, args) => await new ConvexMemoryRepository(createAuthorityReadScope(ctx), args.reference, args.capability).listFacts(args.query) });
+}) }, handler: async (ctx, args) => args.includeBindings
+  ? await readBoundFactsHandler(ctx, args)
+  : await new ConvexMemoryRepository(createMemorySourceReadScope(ctx), args.reference, args.capability).listFacts(args.query) });
 export const checkProfileReady = internalQuery({ args: { ...scopedArgs, profile: embeddingProfile, runBudgetId: v.optional(v.string()) },
-  handler: async (ctx, args) => { await new ConvexMemoryRepository(createAuthorityReadScope(ctx), args.reference, args.capability).assertProfileReady(args.profile, args.runBudgetId); return null; } });
+  handler: async (ctx, args) => { await new ConvexMemoryRepository(createMemorySourceReadScope(ctx), args.reference, args.capability).assertProfileReady(args.profile, args.runBudgetId); return null; } });
 export const readVectorMatches = internalQuery({ args: { ...scopedArgs, profile: embeddingProfile, runBudgetId: v.optional(v.string()), hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })) },
-  handler: async (ctx, args) => await new ConvexMemoryRepository(createAuthorityReadScope(ctx), args.reference, args.capability).hydrateVectors(args.hits, args.profile, args.runBudgetId) });
+  handler: async (ctx, args) => await new ConvexMemoryRepository(createMemorySourceReadScope(ctx), args.reference, args.capability).hydrateVectors(args.hits, args.profile, args.runBudgetId) });
 /** Final action delivery always runs in a fresh transaction after all cached reads and model awaits. */
 export const finalDelivery = internalMutation({ args: { reference: runtimeAuthorityReference, bindings: memoryDeliveryBindings },
   handler: async (ctx, args) => {
     // Read-only raw reuse is confined to this native snapshot. The final grant
     // recheck remains unscoped, including revocation after the last source/hash.
-    return await new ConvexMemoryRepository(createAuthorityReadScope(ctx), args.reference, "read").checkDelivery(args.bindings, ctx);
+    return await new ConvexMemoryRepository(createMemorySourceReadScope(ctx), args.reference, "read").checkDelivery(args.bindings, ctx);
   } });
 
 const authorize = makeFunctionReference<"query", { requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>("runtimeAuth:authorize") as unknown as

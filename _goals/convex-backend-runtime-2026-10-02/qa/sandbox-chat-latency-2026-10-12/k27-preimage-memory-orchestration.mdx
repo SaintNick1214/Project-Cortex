@@ -1,0 +1,53 @@
+---
+id: memory-orchestration
+title: Memory Orchestration
+sidebar_position: 1
+---
+
+# Memory orchestration
+
+Cortex derives memory from the canonical executable transcript and other eligible retained sources. The backend owns extraction, fact resolution, summaries, chunking, embedding and optional graph projection. Your UI submits a turn and observes its run.
+
+## Response and indexing are separate
+
+`responseStatus` reports execution; `memoryStatus` and `graphStatus` report asynchronous stages. A completed response can have pending or failed indexing. Render each status independently rather than keeping a response spinner open until all work finishes.
+
+Facts, canonical chunks and profile-specific vectors retain tenant/space, source revision and hash provenance. Current authority and source versions are checked before context use and publication. An edit or deletion invalidates stale derivations and fences in-flight work.
+
+## Pending context
+
+The `indexed-plus-pending` memory mode combines authorized indexed results with eligible approved transcript history and authorized pending sources. This allows recent information to participate before indexing catches up. Pending context still obeys source revision, approval, visibility, retention and token bounds.
+
+## Canonical history and model context
+
+The complete canonical transcript is stored as individual message rows, with conversation/order, actor, revision and source metadata. A model request is a bounded selection from that history and memory. Omitting a row from a request does not delete it or prevent authorized history retrieval.
+
+The new V8 request policy defaults to at most four recent messages, four relevant memory entries and four relevant facts. Required current input and complete tool-call/result groups are retained together. Pending context has a separate four-entry bound, with a 16-entry total request bound, and must report incomplete coverage when required evidence cannot fit. Selected facts use existing source relevance and lexical matching; this does not add fact embeddings or another inference call.
+
+Those counts are maxima. The assembled request includes instructions, context wrappers, tool definitions and output reserve, and must pass the published model input/context/cost limits. Optional whole entries are removed to fit; required content that cannot fit fails before a new model call. Full transcript pagination and memory indexing remain separate from this selection. Historical execution versions keep their existing behavior. An earlier V8 continuation was safely refused because early fitting missed its actual shape. K23 completed its approved memory tool and final answer, all four positive chat facts, eight current-profile vectors, contiguous indexing through eight events, repeated-capture negatives and strict facts/vectors through 11 of 11 after the tool. K24 completed the approved tool continuation and separate capture checks, but a warm-chat fact-routing failure left contiguous facts/vectors through event 2. The strict barrier refused incomplete coverage. A source repair now binds each unequal candidate to its original resolution ordinal; new native qualification remains pending. Historical extraction failures remain preserved. Subsecond latency remains open; these functional outcomes do not establish full candidate acceptance.
+
+## Contiguous watermarks
+
+Ordered commits advance a stage's watermark only through consecutive completed events. A later success cannot jump over an earlier pending, failed or missing event. A captured cutoff identifies the point in history required by a consistency check.
+
+`memoryReadiness()` reports `cutoff`, `graphCutoff`, selected profile and stage watermarks. Each stage includes `indexedThrough`, `complete` and an optional `hole` with sequence/state. It does no inference.
+
+```ts
+import type { CortexRuntimeClient } from '@cortexmemory/sdk/runtime';
+
+export async function requireIndexedMemory(client: CortexRuntimeClient) {
+  return client.memoryReadiness({ strictStages: ['facts', 'vectors'] });
+}
+```
+
+Scope-wide counters require a space or tenant grant. An own-only actor uses its run's memory/graph status instead of reading the whole space's counters.
+
+## Strict Agent barriers
+
+A published Agent can select `strict` with explicit required stages, a captured cutoff and bounded barrier behavior. Failure can fail the run or return explicitly incomplete context according to its published policy. Strict execution never silently switches to a weaker mode. Missing graph or other required capability remains an explicit error.
+
+Every extraction, resolution, summary and embedding call is [qualified and budgeted](../architecture/model-policy.mdx). Applications do not call `memory.remember()` after a remote response or configure a second extractor. See [runtime client](../api-reference/runtime-client.mdx) for profile, readiness and recall APIs.
+
+K25 subsequently passed the fixed four-run memory proof (four attributed user facts, eight vectors and contiguous facts/vectors through eight), separate capture/recall/isolation checks, and an approved tool with reconnect/final answer and strict facts/vectors through 11 of 11. The live ordinary extractions each retained one candidate; two-unequal-candidate service coverage remains separate. All four measured latency samples exceeded one second. These scoped successes do not relabel K24 failures or establish full goal acceptance.
+
+A separate K25 one-shot capture naturally produced three retained fact candidates, including two unequal values in the same normalized slot. All three exact source bindings passed native persistence checks. The original plan used deterministic ADD for the first same-slot value and the different-slot value, and one qualified resolver call returned ADD for the second same-slot value. Facts/vectors completed with no retry. This establishes that live branch; it does not qualify UPDATE or SUPERSEDE of a newly created in-plan target, which retains its explicit refusal.

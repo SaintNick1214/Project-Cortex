@@ -14,6 +14,11 @@ const actualAuth = await import("../../../convex-dev/runtimeAuth");
 let enabled = true;
 const scopes: unknown[] = [];
 jest.unstable_mockModule("../../../convex-dev/runtimeAuth", () => ({ ...actualAuth,
+  // K27 replaces only these memory read-entry factories. Keep the same
+  // original uncached reference and all outcome/denial assertions.
+  createMemorySourceReadScope: <Ctx extends Parameters<typeof actualAuth.createMemorySourceReadScope>[0]>(ctx: Ctx) => {
+    const scoped = enabled ? actualAuth.createMemorySourceReadScope(ctx) : ctx; scopes.push(scoped); return scoped;
+  },
   createAuthorityReadScope: <Ctx extends Parameters<typeof actualAuth.createAuthorityReadScope>[0]>(ctx: Ctx) => {
     const scoped = enabled ? actualAuth.createAuthorityReadScope(ctx) : ctx; scopes.push(scoped); return scoped;
   },

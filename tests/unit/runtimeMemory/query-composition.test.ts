@@ -98,3 +98,55 @@ it('actual public Action preserves committed reservation after bounded checkpoin
   await expect(invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId})).rejects.toMatchObject({data:{code:'MEMORY_OPERATION_FAILED',outcome:'uncertain'}});
   expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'reserved',slotReleased:false}]);expect(calls).toBe(0);
 });
+
+async function populatedPublicFixture() {
+  const f=await fixture();
+  const {prepareSourceContent}=await import('../../../src/domain/sources');
+  const {memoryScope}=await import('../../../convex-dev/runtimeMemoryRepository');
+  const scope=memoryScope(f.reference),writer=new ConvexMemoryRepository(f.ctx,f.reference,'write',f.ctx.db);
+  for(let i=0;i<3;i++) {
+    const text=`Independent preference ${i}`,source=await f.source(text,`public-bound-source-${i}`);
+    const prepared=await prepareSourceContent(scope,source.lineage,text,{now:()=>clock});
+    const identity={sourceId:source.lineage.sourceId,sourceEventId:source.lineage.sourceEventId,sourceRevision:1,stage:'facts' as const,semanticPolicyVersion:'controlled-public-v1'};
+    const fact={_id:'',factId:`public-bound-fact-${i}`,tenantId:scope.tenantId,memorySpaceId:scope.memorySpaceId,ownerPrincipalId:scope.principalId,
+      lineage:source.lineage,extractionPolicyVersion:'controlled-public-v1',fact:text,factType:'preference' as const,confidence:90,sourceType:'manual' as const,tags:[],version:1,createdAt:clock,updatedAt:clock};
+    await writer.commitDerived({source:identity,identity,chunks:prepared.chunks,facts:[fact],expectedFactVersions:{[fact.factId]:0}});
+  }
+  return f;
+}
+it('actual populated public API uses one bound fact RPC instead of per-fact RPCs with identical original replayed outcome',async()=>{
+  const f=await populatedPublicFixture();f.rpc.length=0;
+  const actual=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId});
+  const optimized=[...f.rpc];expect(actual).toHaveProperty('items');expect((actual as {items:unknown[]}).items).toHaveLength(3);expect(calls).toBe(1);
+  expect(optimized.filter(name=>name==='runtimeMemory:readFacts')).toHaveLength(1);
+  expect(optimized.filter(name=>name==='runtimeMemory:readSource')).toHaveLength(0);f.rpc.length=0;
+  const expected=await recallMemory({repository:f.repository,model:createGatewayMemoryModel(f.action,f.repository,{runBudgetId:f.args.runBudgetId}),clock:{now:()=>clock}},f.input);
+  expect(actual).toEqual(expected);expect(calls).toBe(1); // Attached native operation replay, no second provider dispatch.
+  expect(f.rpc.filter(name=>name==='runtimeMemory:readSource')).toHaveLength(3);
+  expect(f.db.table('runtimeModelAttempts')).toHaveLength(1);
+  console.info(JSON.stringify({type:'k27-public-fact-rpc-count',facts:3,baselineFactAndSourceRPCs:4,optimizedFactAndSourceRPCs:1,providerCalls:1,retries:0,nativeLatency:'UNAVAILABLE'}));
+});
+it.each(['revocation','source-revision','source-tombstone'])('bound fact read preserves the original late %s denial and no partial output',async fault=>{
+  const results:unknown[]=[];
+  for(const bound of [false,true]) {
+    const f=await populatedPublicFixture(),list=ConvexMemoryRepository.prototype.listFacts;
+    let fired=0;
+    const spy=jest.spyOn(ConvexMemoryRepository.prototype,'listFacts').mockImplementation(async function(this:InstanceType<typeof ConvexMemoryRepository>,...args){
+      const facts=await list.apply(this,args);
+      if(++fired===1) {
+        if(fault==='revocation')f.grant.revokedAt=clock;
+        if(fault==='source-revision')(f.db.table('runtimeMemorySources')[0].lineage as {sourceRevision:number}).sourceRevision++;
+        if(fault==='source-tombstone')f.db.table('runtimeMemorySources')[0].tombstonedAt=clock;
+      }
+      return facts;
+    });
+    const writes=f.db.writes;
+    try {
+      const repository=createActionMemoryRepository(f.action,f.reference,'read',bound?{boundRecallFacts:true}:undefined);
+      await repository.listFacts({limit:10});throw Error('EXPECTED_REFUSAL');
+    } catch(error){if(!(error instanceof ConvexError))throw error;results.push(error.data);}
+    finally{spy.mockRestore();}
+    expect(fired).toBe(1);expect(f.db.writes).toBe(writes);expect(calls).toBe(0);
+  }
+  expect(results[1]).toEqual(results[0]);expect(results[1]).toHaveProperty('code',fault==='source-revision'?'STALE_SOURCE':'FORBIDDEN');
+});

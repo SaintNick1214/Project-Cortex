@@ -1,0 +1,922 @@
+{
+  "baselineProductCommit": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+  "observedHead": "194bfd788e6fa7316707023ecd8d8bdcb813dc17",
+  "files": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "de99f67288c0028199b7ae7862c9bc543e748f2b46d0d112a6948df78934f5c0",
+      "baselineSha256": "d8be2c9c1c45540eabd64dd3bbb41d772eef97d38afe65a96087b75e7f7c79e7"
+    },
+    {
+      "path": "convex-dev/runtimeDataAuth.ts",
+      "sha256": "83c95f437d3f403917c4873c18025bf74d32f2a970d6da5bb636602a7de3e3f9",
+      "baselineSha256": "12d64473b6d0b2d6f2ef15657bb34cc130e3687e4997e641fe4076fcf8bf8765"
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "b0596a5a100193893f637ae17470b84b2295c81a7b0732f2baf6e2f20ed620f1",
+      "baselineSha256": "a940b26695edde613339876f7c7802c4b2bde52027d4fd073a921d9f42bbb287"
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "sha256": "b9ea0f1977867e3920d669a294290c3505bebbb15ad5e270195b624ab05fa693",
+      "baselineSha256": "228d03e879af431c68ec54bb75dc1aeb4a32600be852346a2f03e09967505051"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryQuery.ts",
+      "sha256": "c7e342d80d22b092b32e4484ffc7ea217225a19819fd89a944bd34abf9bce0e0",
+      "baselineSha256": "3aefa0d62301f909b2ec5d2417037a0562ff713f727941ad0e1945c41d0ee6ce"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "f6e95950489ca1318aae9d45c99282a98a776e707dcd860fcacd7cad8f1a97e3",
+      "baselineSha256": "8f709ce143026616646d97349d731a9a2db6565df4bdd9ef355778047d0ad812"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+      "sha256": "bb42ff44d6213f12536204ebd0b7c7d0f5fbe04cfd8314a3d7268ed1bdbc4402",
+      "baselineSha256": "67d78ccb96a680fc0907052efbd0c623cd6d3d420e299468b0c239d1615ef4bb"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "e17703735890d991cd20485a8a7e20fb4c6e13d5bbae3782705d119ec1e154c0",
+      "baselineSha256": "deaec4922c56dcd03bce33989946c3eaf71a8f23b0bb4aaba325ea91e740574a"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+      "sha256": "283a49818593be176297caca596181ecd7fbd2327a8cd01347de6bb2c151ac55",
+      "baselineSha256": "e23d7fdd2c675f66b8c219c7e789e1ab28b0c16927763fab20c56e716753ef92"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+      "sha256": "cf6e4ca3f192e7206d3960d2514b92640af09ec874c2066f839f3c7e9c3d83c2",
+      "baselineSha256": "7744b24a824d4a9656c9382d207bc6fa6dfda9d975d4ea4f6f1f707b7cbfcff1"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "sha256": "841ab7e46fffaf3e2f50f65a19f4d159e485ea5eb30c179a623d34f3d0992b23",
+      "baselineSha256": "650ee000be22b8ec977f8684ab8b40f7b069eed54cb15b32235c7e41c5d9c5db"
+    }
+  ],
+  "checks": [
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "withManagedSourceReads",
+      "pass": true,
+      "baselineBodySha256": "f9b4724fd005f108cb0611c94fa3e1b69fe5813986955426f25473bb1f61c609",
+      "actualBodySha256": "f9b4724fd005f108cb0611c94fa3e1b69fe5813986955426f25473bb1f61c609",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "readManagedSourceRows",
+      "pass": true,
+      "baselineBodySha256": "33e137ef2d5371b45a6fc71971bfb47f0305927118c3f4f43ddc6f54edbf01bb",
+      "actualBodySha256": "33e137ef2d5371b45a6fc71971bfb47f0305927118c3f4f43ddc6f54edbf01bb",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "readManagedConversationRows",
+      "pass": true,
+      "baselineBodySha256": "88fa87021a2192adff4a14d9de29fd9aa5b5cc3fb95aa6ec6f43e33fb755652b",
+      "actualBodySha256": "88fa87021a2192adff4a14d9de29fd9aa5b5cc3fb95aa6ec6f43e33fb755652b",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "readManagedTranscriptBridgeRows",
+      "pass": true,
+      "baselineBodySha256": "e41cae17bf9f26e70e4b89f24941a16eb7c509cb56e48ac4ee5d1f3ab6e5291b",
+      "actualBodySha256": "e41cae17bf9f26e70e4b89f24941a16eb7c509cb56e48ac4ee5d1f3ab6e5291b",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "readManagedSourceRunRows",
+      "pass": true,
+      "baselineBodySha256": "80e8d150e138f02103bf43507fd9df70c26c5681a0a386f36949d0a9b546f664",
+      "actualBodySha256": "80e8d150e138f02103bf43507fd9df70c26c5681a0a386f36949d0a9b546f664",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "createAuthorityReadScope",
+      "pass": true,
+      "baselineBodySha256": "91bb7d989cbd0e7348eceac044b25994312c8578deaf99964ca4a98c159b5a7e",
+      "actualBodySha256": "91bb7d989cbd0e7348eceac044b25994312c8578deaf99964ca4a98c159b5a7e",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "createV8AuthorityReadScope",
+      "pass": true,
+      "baselineBodySha256": "a18c82970f783032276eab74bd01dccad4940a67c8ebeab61b8ed412fcb4138d",
+      "actualBodySha256": "a18c82970f783032276eab74bd01dccad4940a67c8ebeab61b8ed412fcb4138d",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "createUncachedAuthorityReader",
+      "pass": true,
+      "baselineBodySha256": "a9c286a0bdfea09bd081581be6dde81ac853a3bc800d83d6172f92c84d21fb65",
+      "actualBodySha256": "a9c286a0bdfea09bd081581be6dde81ac853a3bc800d83d6172f92c84d21fb65",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "readNativeTranscriptMessages",
+      "pass": true,
+      "baselineBodySha256": "d7b761785c534ad5bda5603921250ba9beca97dc8b9d05c0408ea190023ffec8",
+      "actualBodySha256": "d7b761785c534ad5bda5603921250ba9beca97dc8b9d05c0408ea190023ffec8",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "freshManagedSourceReads",
+      "pass": true,
+      "baselineBodySha256": "9ca0fa9be7e68a56df97eeab014c5a4256795d59b10735e2aac46d3b1d7351d7",
+      "actualBodySha256": "9ca0fa9be7e68a56df97eeab014c5a4256795d59b10735e2aac46d3b1d7351d7",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "freshPolicyMetadataReads",
+      "pass": true,
+      "baselineBodySha256": "24c621cffb5afb9b3b1453ece0f3bd5364b783e51399f60e14d5c8270d21487c",
+      "actualBodySha256": "24c621cffb5afb9b3b1453ece0f3bd5364b783e51399f60e14d5c8270d21487c",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "managedSourceIsCurrent",
+      "pass": true,
+      "baselineBodySha256": "00f9a0f4bd7da3a9ee0d28bdb85d6a02b46a6af681b69e25d231a57ed820e9a2",
+      "actualBodySha256": "2c80df6e78acb870053c7c67cad6e48e7a2a9de85eb018c225579dd8c4ce1c59",
+      "comparison": "explicit wrapper-only mask"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "dataDenied",
+      "pass": true,
+      "baselineBodySha256": "29ebf51bc5affc2c3e431151f633ef01da62a12ba40a3cd53dc614ce99226a2f",
+      "actualBodySha256": "29ebf51bc5affc2c3e431151f633ef01da62a12ba40a3cd53dc614ce99226a2f",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "concrete",
+      "pass": true,
+      "baselineBodySha256": "d9460576ce7060793afa7ab0490c12730e5b6fdaa50e95ad4f207b3db1693d2c",
+      "actualBodySha256": "d9460576ce7060793afa7ab0490c12730e5b6fdaa50e95ad4f207b3db1693d2c",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "requireDataAuthority",
+      "pass": true,
+      "baselineBodySha256": "637db4f724d6874ac84ed540dba26a2f20b668373ea8e86a2bde79f8060a9da8",
+      "actualBodySha256": "637db4f724d6874ac84ed540dba26a2f20b668373ea8e86a2bde79f8060a9da8",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "recheckDataAuthority",
+      "pass": true,
+      "baselineBodySha256": "86f6ea7b93a0d439e5896c4cd6639f104c007be523644a0ba9fbed839ad74ed1",
+      "actualBodySha256": "86f6ea7b93a0d439e5896c4cd6639f104c007be523644a0ba9fbed839ad74ed1",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "internalQueryRef",
+      "pass": true,
+      "baselineBodySha256": "c4b39b2498cd8b812cd4ff2b4ee560e768d7bb8acddffff13dbcd7fa9bec74aa",
+      "actualBodySha256": "c4b39b2498cd8b812cd4ff2b4ee560e768d7bb8acddffff13dbcd7fa9bec74aa",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "dataAuthorityReference",
+      "pass": true,
+      "baselineBodySha256": "f69c821d1e27fbd64349d71e9d85a77d1f421054d6a84b66bd9e7c341e825725",
+      "actualBodySha256": "f69c821d1e27fbd64349d71e9d85a77d1f421054d6a84b66bd9e7c341e825725",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "requireActionDataAuthority",
+      "pass": true,
+      "baselineBodySha256": "76b9ca326cc69a240788c5e739b639138b3c17f28027815a05dc753ad577cb9b",
+      "actualBodySha256": "76b9ca326cc69a240788c5e739b639138b3c17f28027815a05dc753ad577cb9b",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "recheckActionDataAuthority",
+      "pass": true,
+      "baselineBodySha256": "15999fa4f4f943d1f334a69e582b89cf7d36bf73fc3cd191037957222d61b2ab",
+      "actualBodySha256": "15999fa4f4f943d1f334a69e582b89cf7d36bf73fc3cd191037957222d61b2ab",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "bindDataActor",
+      "pass": true,
+      "baselineBodySha256": "3ab28ba4dc2f7f6a2cdc5f75e348d2c7a6f7ef778d3391cc823832c77b0c7888",
+      "actualBodySha256": "3ab28ba4dc2f7f6a2cdc5f75e348d2c7a6f7ef778d3391cc823832c77b0c7888",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "rejectUnqualifiedEmbedding",
+      "pass": true,
+      "baselineBodySha256": "530e6fa7641e0a902709136d718f3be48374a917a046a654387ca9e10340db73",
+      "actualBodySha256": "530e6fa7641e0a902709136d718f3be48374a917a046a654387ca9e10340db73",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "resource",
+      "pass": true,
+      "baselineBodySha256": "e743d5f475660cde6cef9ea6f7c3ee08d187d58e35bfa237769746bac8087f94",
+      "actualBodySha256": "e743d5f475660cde6cef9ea6f7c3ee08d187d58e35bfa237769746bac8087f94",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "assertOwnedResource",
+      "pass": true,
+      "baselineBodySha256": "95771d2e3a64e10a12aef1d4b8d92d0c0216b7f97d2dcc201124a75f7389a098",
+      "actualBodySha256": "95771d2e3a64e10a12aef1d4b8d92d0c0216b7f97d2dcc201124a75f7389a098",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "sameLineage",
+      "pass": true,
+      "baselineBodySha256": "48dbe4bdedc24fa103b934251d1db00049bd93774e5f87b6ce9e8779b0d9149d",
+      "actualBodySha256": "48dbe4bdedc24fa103b934251d1db00049bd93774e5f87b6ce9e8779b0d9149d",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "linkedDataBinding",
+      "pass": true,
+      "baselineBodySha256": "8e0d9f5ba7c239649d5d896f341ba9708243364b49438256c39463ee83979e26",
+      "actualBodySha256": "8e0d9f5ba7c239649d5d896f341ba9708243364b49438256c39463ee83979e26",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "retainedLinks",
+      "pass": true,
+      "baselineBodySha256": "f767162ec29ab5518201cf6eae08f28f8eb4ccad972367e52ed731aaeae0f2b1",
+      "actualBodySha256": "f767162ec29ab5518201cf6eae08f28f8eb4ccad972367e52ed731aaeae0f2b1",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "allLinkedWitnesses",
+      "pass": true,
+      "baselineBodySha256": "7b7b5fbbde7b8712810106e67bd28b785dd64c16da34c35aedd7d29e3844ecf8",
+      "actualBodySha256": "7b7b5fbbde7b8712810106e67bd28b785dd64c16da34c35aedd7d29e3844ecf8",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "authorizeLinkedWitnesses",
+      "pass": true,
+      "baselineBodySha256": "839ae1dd249762787def6534cf979de109a04737010bfb5913158427557e5b42",
+      "actualBodySha256": "839ae1dd249762787def6534cf979de109a04737010bfb5913158427557e5b42",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "reloadLinkedWitnesses",
+      "pass": true,
+      "baselineBodySha256": "8b864f10547ec6771e0e80f747152bc998286e2c33bee6bee40f01370c51d0f1",
+      "actualBodySha256": "8b864f10547ec6771e0e80f747152bc998286e2c33bee6bee40f01370c51d0f1",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "managedConversationAccess",
+      "pass": true,
+      "baselineBodySha256": "f35db9ce77f6a71ded25a7fa00067fbe30ead203a136224b7de1d8ca82f7d396",
+      "actualBodySha256": "f35db9ce77f6a71ded25a7fa00067fbe30ead203a136224b7de1d8ca82f7d396",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "evaluateManagedSource",
+      "pass": true,
+      "baselineBodySha256": "ecc36e9560ea54718ff192f18d02e12725f4e48055dc205ffa081df34c07c207",
+      "actualBodySha256": "ecc36e9560ea54718ff192f18d02e12725f4e48055dc205ffa081df34c07c207",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "checkManagedSource",
+      "pass": true,
+      "baselineBodySha256": "cde31157fd445e284b53125e8382f0c538a763fc340c1636ab5500785433c806",
+      "actualBodySha256": "cde31157fd445e284b53125e8382f0c538a763fc340c1636ab5500785433c806",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "artifactDependenciesAreCurrent",
+      "pass": true,
+      "baselineBodySha256": "c9a738be45f76d7334bdd5c2676896431cda0baceaa03b5e74766dd054f5f666",
+      "actualBodySha256": "c9a738be45f76d7334bdd5c2676896431cda0baceaa03b5e74766dd054f5f666",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "managedCachedSourcesAreCurrent",
+      "pass": true,
+      "baselineBodySha256": "cae9f58c6044dc55b0acf39d493e7ebe725cfd2c5375df95edcba5301cc9bc53",
+      "actualBodySha256": "cae9f58c6044dc55b0acf39d493e7ebe725cfd2c5375df95edcba5301cc9bc53",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "sourceWitness",
+      "pass": true,
+      "baselineBodySha256": "7d6817a6811665e727f6a346847f08d031fe28c8e48436afa09616a6332b9403",
+      "actualBodySha256": "7d6817a6811665e727f6a346847f08d031fe28c8e48436afa09616a6332b9403",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "sameSource",
+      "pass": true,
+      "baselineBodySha256": "bcb0cf0a52b49953361fc72d93a0e4b9413c18229e059a04a892d475913b40c0",
+      "actualBodySha256": "bcb0cf0a52b49953361fc72d93a0e4b9413c18229e059a04a892d475913b40c0",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "sourceResource",
+      "pass": true,
+      "baselineBodySha256": "70ea8cf920e334dcef6efa2df192307aee4fbb5101edb8009298abb7cce58bfa",
+      "actualBodySha256": "70ea8cf920e334dcef6efa2df192307aee4fbb5101edb8009298abb7cce58bfa",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "uniqueSourceWitnesses",
+      "pass": true,
+      "baselineBodySha256": "63bf3bc7ed341bd99b19154a2e858e0cd045f18347dbcde996f7161238252bc5",
+      "actualBodySha256": "63bf3bc7ed341bd99b19154a2e858e0cd045f18347dbcde996f7161238252bc5",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "authorizeSourceWitnesses",
+      "pass": true,
+      "baselineBodySha256": "7043010abff5c751ab70e590b24d15c26f2e6062372551503ff6efc2798665cb",
+      "actualBodySha256": "7043010abff5c751ab70e590b24d15c26f2e6062372551503ff6efc2798665cb",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "reloadSourceWitnesses",
+      "pass": true,
+      "baselineBodySha256": "3923d9486f79858dacc66d8272faa78938f416da2c821f187cb87d7f27d98a28",
+      "actualBodySha256": "3923d9486f79858dacc66d8272faa78938f416da2c821f187cb87d7f27d98a28",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "recheckSourceWitnesses",
+      "pass": true,
+      "baselineBodySha256": "77e32b95ab601ec32fa708799390c76ac19425989295adcd461a6b68947699bb",
+      "actualBodySha256": "77e32b95ab601ec32fa708799390c76ac19425989295adcd461a6b68947699bb",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "assertCurrentGrant",
+      "pass": true,
+      "baselineBodySha256": "952e1a2c816c8e25ed940159950827489de823a7ff7d6f6b8520540faf29d0a3",
+      "actualBodySha256": "952e1a2c816c8e25ed940159950827489de823a7ff7d6f6b8520540faf29d0a3",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "finalizeDataRead",
+      "pass": true,
+      "baselineBodySha256": "2e23209d0db0a3d8d2eb5bb35a0c4d0a1ffb3f5c7c665d81a0cb13c39b78ce9d",
+      "actualBodySha256": "2e23209d0db0a3d8d2eb5bb35a0c4d0a1ffb3f5c7c665d81a0cb13c39b78ce9d",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "finalizeDataReadDelivery",
+      "pass": true,
+      "baselineBodySha256": "85c775f4912e094899b7a7af4850fed55dcf80517181ef7b9bab0c12676cd0b8",
+      "actualBodySha256": "85c775f4912e094899b7a7af4850fed55dcf80517181ef7b9bab0c12676cd0b8",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "sourceTimestamp",
+      "pass": true,
+      "baselineBodySha256": "749401969bf0946f281fc642e98ced868ca45ab2a6ccf2fa92ac86c3c14a6fdb",
+      "actualBodySha256": "749401969bf0946f281fc642e98ced868ca45ab2a6ccf2fa92ac86c3c14a6fdb",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "manualSourceText",
+      "pass": true,
+      "baselineBodySha256": "3e811a1b31874a1a1d5e6fa9f2b923e71a6e30eddea1736a2c278c638cf396ea",
+      "actualBodySha256": "3e811a1b31874a1a1d5e6fa9f2b923e71a6e30eddea1736a2c278c638cf396ea",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "canonicalSource",
+      "pass": true,
+      "baselineBodySha256": "153dedbb3fa9afb70382cc0ecf61dfe06ecc25ecf9fab79fd58693b2f0717922",
+      "actualBodySha256": "153dedbb3fa9afb70382cc0ecf61dfe06ecc25ecf9fab79fd58693b2f0717922",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "sourceIsCurrent",
+      "pass": true,
+      "baselineBodySha256": "8a775fe9d7198ee36c0a3376aac9ad4b1b5fb7c9af285fae6494de89d38a6832",
+      "actualBodySha256": "8a775fe9d7198ee36c0a3376aac9ad4b1b5fb7c9af285fae6494de89d38a6832",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "nonemptySelector",
+      "pass": true,
+      "baselineBodySha256": "1a7cb7b26fec536171424c3be75455eb73a967e9433cfaa4caf66603349f01a2",
+      "actualBodySha256": "1a7cb7b26fec536171424c3be75455eb73a967e9433cfaa4caf66603349f01a2",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "assertDataLinks",
+      "pass": true,
+      "baselineBodySha256": "0d28d9a456a01bcdd0d321b78dbe228f746115b26e002d6a28f33bd385518027",
+      "actualBodySha256": "0d28d9a456a01bcdd0d321b78dbe228f746115b26e002d6a28f33bd385518027",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "assertDataRow",
+      "pass": true,
+      "baselineBodySha256": "b1d0b414674f79e4d79099c5540aa8acdeb9e04ba4277c9f8b45f053c69a03b8",
+      "actualBodySha256": "b1d0b414674f79e4d79099c5540aa8acdeb9e04ba4277c9f8b45f053c69a03b8",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "getScopedMemory",
+      "pass": true,
+      "baselineBodySha256": "14fae7a9c7706e59faef5d0562f10245214e590a0604c0bcf07fb382990b6813",
+      "actualBodySha256": "14fae7a9c7706e59faef5d0562f10245214e590a0604c0bcf07fb382990b6813",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "getScopedFact",
+      "pass": true,
+      "baselineBodySha256": "ff50c21fc769027627bab2db1b8be95af73481bb5490d11fc6efc7cae966c1ff",
+      "actualBodySha256": "ff50c21fc769027627bab2db1b8be95af73481bb5490d11fc6efc7cae966c1ff",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "currentRows",
+      "pass": true,
+      "baselineBodySha256": "dbf99ce70ab8e2576bbfad45f6c02c285ace69a713ff6a4fb97ac0e57222073e",
+      "actualBodySha256": "dbf99ce70ab8e2576bbfad45f6c02c285ace69a713ff6a4fb97ac0e57222073e",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "listScopedMemories",
+      "pass": true,
+      "baselineBodySha256": "ac9e5cf4c1307ffca15b702663518ce780390f9b0b83491f8c859fcae88976e8",
+      "actualBodySha256": "ac9e5cf4c1307ffca15b702663518ce780390f9b0b83491f8c859fcae88976e8",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "listScopedFacts",
+      "pass": true,
+      "baselineBodySha256": "0904d7a1f94f0d2ef63fee65f05b863960c1e792e7633aedb1fa86a471f57339",
+      "actualBodySha256": "0904d7a1f94f0d2ef63fee65f05b863960c1e792e7633aedb1fa86a471f57339",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "searchScopedMemories",
+      "pass": true,
+      "baselineBodySha256": "20bc14fe3d54c02bf8a26cbeb9549fa730fb2c48c7c9646ae386580634278f52",
+      "actualBodySha256": "20bc14fe3d54c02bf8a26cbeb9549fa730fb2c48c7c9646ae386580634278f52",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "searchScopedFacts",
+      "pass": true,
+      "baselineBodySha256": "f00b82072042980eaaa39173a2bb962df5010519dc61a18263457841193ed834",
+      "actualBodySha256": "f00b82072042980eaaa39173a2bb962df5010519dc61a18263457841193ed834",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "manualSourceKey",
+      "pass": true,
+      "baselineBodySha256": "1f96803364af7805fdef657fbdf669ed24cd1144913af47e9cc4e52bdb3f9967",
+      "actualBodySha256": "1f96803364af7805fdef657fbdf669ed24cd1144913af47e9cc4e52bdb3f9967",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "manualDataSource",
+      "pass": true,
+      "baselineBodySha256": "a03ab1069f336beaa91f6b671bcd086b2fa0bf44588c64fe25e6f050893d6155",
+      "actualBodySha256": "a03ab1069f336beaa91f6b671bcd086b2fa0bf44588c64fe25e6f050893d6155",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "reviseDataSource",
+      "pass": true,
+      "baselineBodySha256": "0c436f18939b1836b7c354bb9aad06c96245ff0f6aebc7a739cb58d51213b001",
+      "actualBodySha256": "0c436f18939b1836b7c354bb9aad06c96245ff0f6aebc7a739cb58d51213b001",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "tombstoneDataRow",
+      "pass": true,
+      "baselineBodySha256": "c0ebb9c08e8a55b343a879f69ddf0a7f59951a840b4318c3261c5a68690f90d7",
+      "actualBodySha256": "c0ebb9c08e8a55b343a879f69ddf0a7f59951a840b4318c3261c5a68690f90d7",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "getScopedMemoryDocument",
+      "pass": true,
+      "baselineBodySha256": "dc3532684c395dd082de0e85bddaba3a4f6a784e369213a8b4c205f1f398df24",
+      "actualBodySha256": "dc3532684c395dd082de0e85bddaba3a4f6a784e369213a8b4c205f1f398df24",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "getScopedFactDocument",
+      "pass": true,
+      "baselineBodySha256": "d11e201ce01fd6019698437d431efd18d85610b2932203ae8e305950fa201ce9",
+      "actualBodySha256": "d11e201ce01fd6019698437d431efd18d85610b2932203ae8e305950fa201ce9",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "dataEditor",
+      "pass": true,
+      "baselineBodySha256": "31dc0462b469f65ddcb1b0a7facc5a7a7b8ebf8954dd8df472cf9e8577ff43a1",
+      "actualBodySha256": "31dc0462b469f65ddcb1b0a7facc5a7a7b8ebf8954dd8df472cf9e8577ff43a1",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "getHistoricalScopedFact",
+      "pass": true,
+      "baselineBodySha256": "9e732948c01cd605962e6efaba796a3a27ed7b44186c75d303bd96dacbc22742",
+      "actualBodySha256": "9e732948c01cd605962e6efaba796a3a27ed7b44186c75d303bd96dacbc22742",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "finalMutationDelivery",
+      "pass": true,
+      "baselineBodySha256": "94d68619b47f5589171870dcf978d8a500a79d79516cb88cdb4a26059414a67c",
+      "actualBodySha256": "94d68619b47f5589171870dcf978d8a500a79d79516cb88cdb4a26059414a67c",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "dataBackendFailure",
+      "pass": true,
+      "baselineBodySha256": "f1213a2002449ba2a90667cabc6f959b33edf51558b34c39df84724dd12b05e8",
+      "actualBodySha256": "f1213a2002449ba2a90667cabc6f959b33edf51558b34c39df84724dd12b05e8",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "protectedDataRead",
+      "pass": true,
+      "baselineBodySha256": "f249a44a7404121ba62fa06a1f4d41bb22082b174e64d8fe959594eff7bb4f7a",
+      "actualBodySha256": "f249a44a7404121ba62fa06a1f4d41bb22082b174e64d8fe959594eff7bb4f7a",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "protectedDataAuthorityReader",
+      "pass": true,
+      "baselineBodySha256": "1d59c7b6d1729f45397f07a72c35944a3a2329eb41a4f2158a91cd7a0ed8a586",
+      "actualBodySha256": "1d59c7b6d1729f45397f07a72c35944a3a2329eb41a4f2158a91cd7a0ed8a586",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "ordinaryDataReadDenial",
+      "pass": true,
+      "baselineBodySha256": "54b8ad881f2860457e1d7a1fbd174c76019f89e9553fdf9b45075256baacd751",
+      "actualBodySha256": "54b8ad881f2860457e1d7a1fbd174c76019f89e9553fdf9b45075256baacd751",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "optionalMutationRead",
+      "pass": true,
+      "baselineBodySha256": "2a6d5f2151808b32ba5e4f7e99213b16b25af4226f4aaff0571d634941d7d7e6",
+      "actualBodySha256": "2a6d5f2151808b32ba5e4f7e99213b16b25af4226f4aaff0571d634941d7d7e6",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "memoryMutationResult",
+      "pass": true,
+      "baselineBodySha256": "f8b0029b1c9c31334487992ed3c2b75dd04ea438c7a4696863c0999eef2d8f77",
+      "actualBodySha256": "f8b0029b1c9c31334487992ed3c2b75dd04ea438c7a4696863c0999eef2d8f77",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "factMutationResult",
+      "pass": true,
+      "baselineBodySha256": "db86aa23b181fccee5d0964da0e846e0a12a12fb0cbc546f6f059961764ed858",
+      "actualBodySha256": "db86aa23b181fccee5d0964da0e846e0a12a12fb0cbc546f6f059961764ed858",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "prepareMutationRowsWrite",
+      "pass": true,
+      "baselineBodySha256": "bae89c2c46f14881247eadbdf2bd55dd0c9d93aaab7beb1bab9c05914c060006",
+      "actualBodySha256": "bae89c2c46f14881247eadbdf2bd55dd0c9d93aaab7beb1bab9c05914c060006",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "canReadMutationRows",
+      "pass": true,
+      "baselineBodySha256": "f0f0c7ab6d217abe25b1802a8d864429485940afcc966458ce23d461140861df",
+      "actualBodySha256": "f0f0c7ab6d217abe25b1802a8d864429485940afcc966458ce23d461140861df",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "finalizeMutationRowsRead",
+      "pass": true,
+      "baselineBodySha256": "6f09f5a0d801f96311cd7a4e691c920ba0e6130dcc6f0b57738d916cc41e9a4f",
+      "actualBodySha256": "6f09f5a0d801f96311cd7a4e691c920ba0e6130dcc6f0b57738d916cc41e9a4f",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "declaration": "prepareReadsHandler",
+      "pass": true,
+      "baselineBodySha256": "8a9cf6d6df92c341215ff1d8f25cca4e07b6b48448e1a68b40ed53c023aaeb1c",
+      "actualBodySha256": "fdcd7e2e13f7918690711897ada5d95de8421a5028f400e389f6a7b5f436c7b4",
+      "comparison": "explicit wrapper-only mask"
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "declaration": "readMatchesHandler",
+      "pass": true,
+      "baselineBodySha256": "2fdb13fd175523df8efa0cf9f3528181a123d969562eb15abe756bf2f49133d7",
+      "actualBodySha256": "c38de4b510aea13fe253dd2b74a6660c90b2b2bfef251ecf96142e359bdc1fe2",
+      "comparison": "explicit wrapper-only mask"
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "declaration": "finalDeliveryV8Handler",
+      "pass": true,
+      "baselineBodySha256": "e358ace79902cc92e1e1835c9a9323ad2c5b94b457cdff18f746e6aab8bf5d3b",
+      "actualBodySha256": "e358ace79902cc92e1e1835c9a9323ad2c5b94b457cdff18f746e6aab8bf5d3b",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "declaration": "readMatchesAndDeliveryV8Handler",
+      "pass": true,
+      "baselineBodySha256": "140b9803ac4b5c3252bdb46f4c84b1a4e814bc0fe335cfd18a421bb7d9329250",
+      "actualBodySha256": "140b9803ac4b5c3252bdb46f4c84b1a4e814bc0fe335cfd18a421bb7d9329250",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "declaration": "finishAgentRecall",
+      "pass": true,
+      "baselineBodySha256": "a40af349e091ebdd46da425d41a73ae037072b8d7edb5f19809e60c8e0c3aa05",
+      "actualBodySha256": "a40af349e091ebdd46da425d41a73ae037072b8d7edb5f19809e60c8e0c3aa05",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "declaration": "finishAgentRecallV8",
+      "pass": true,
+      "baselineBodySha256": "6a3f7e38370ae86e59b79d0abdb980f94369c6cd368e85bad348df3f57176e21",
+      "actualBodySha256": "6a3f7e38370ae86e59b79d0abdb980f94369c6cd368e85bad348df3f57176e21",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "declaration": "binding",
+      "pass": true,
+      "baselineBodySha256": "26a1519feb14cd31062a4aba1120d7bafcb9de617ae9a6a1aa95e83047096251",
+      "actualBodySha256": "26a1519feb14cd31062a4aba1120d7bafcb9de617ae9a6a1aa95e83047096251",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "declaration": "preparePublicRecallHandler",
+      "pass": true,
+      "baselineBodySha256": "df5cef91673e39b306c01d00bfe9865610baa7ea2bd395d6b23b1be89dae5b20",
+      "actualBodySha256": "df5cef91673e39b306c01d00bfe9865610baa7ea2bd395d6b23b1be89dae5b20",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "declaration": "admitPublicRecallHandler",
+      "pass": true,
+      "baselineBodySha256": "af6b48a3628c616baa487f537f0d1428211b00b8fde05d47568cdce2149aeb73",
+      "actualBodySha256": "af6b48a3628c616baa487f537f0d1428211b00b8fde05d47568cdce2149aeb73",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "declaration": "recallPublicMemory",
+      "pass": true,
+      "baselineBodySha256": "0d257433cf32101be611e88156df376a94c8462d853db9fa54c6194c62c5704c",
+      "actualBodySha256": "84a33b336924f0ddba7d29a42953ed78fdcd066a82614e1cc165ba98fc4cf994",
+      "comparison": "explicit wrapper-only mask"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryRepository.ts",
+      "declaration": "ConvexMemoryRepository",
+      "pass": true,
+      "baselineBodySha256": "9097d7a2cc76cfa04584caa1a54b19451bbe486388a900739fbf284188b05521",
+      "actualBodySha256": "9097d7a2cc76cfa04584caa1a54b19451bbe486388a900739fbf284188b05521",
+      "comparison": "token-identical"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryRepository.ts",
+      "declaration": "createActionMemoryRepository",
+      "pass": true,
+      "baselineBodySha256": "049ab1991c5c7bf3625d5068961ab0ae50eefe3f0049fa1c97698a185f9c04f4",
+      "actualBodySha256": "0ba29ddfbff21098688692bf5637348d7eccb732cd44625b10f11d82120638a3",
+      "comparison": "explicit wrapper-only mask"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "original reader mapping",
+      "pass": true
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "declaration": "registered name/kind set",
+      "pass": true,
+      "before": [
+        "authorize:internalQuery",
+        "deletePrincipal:internalMutation",
+        "deleteScope:internalMutation",
+        "provision:internalMutation",
+        "recheck:internalQuery",
+        "revokeGrant:internalMutation",
+        "revokeMembership:internalMutation",
+        "tombstoneResource:internalMutation"
+      ],
+      "after": [
+        "authorize:internalQuery",
+        "deletePrincipal:internalMutation",
+        "deleteScope:internalMutation",
+        "provision:internalMutation",
+        "recheck:internalQuery",
+        "revokeGrant:internalMutation",
+        "revokeMembership:internalMutation",
+        "tombstoneResource:internalMutation"
+      ]
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "declaration": "registered name/kind set",
+      "pass": true,
+      "before": [],
+      "after": []
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "declaration": "registered name/kind set",
+      "pass": true,
+      "before": [
+        "finalDeliveryV8:internalMutation",
+        "prepareReads:internalQuery",
+        "prepareReadsV8:internalQuery",
+        "readMatches:internalQuery",
+        "readMatchesAndDeliveryV8:internalMutation",
+        "readMatchesV8:internalQuery"
+      ],
+      "after": [
+        "finalDeliveryV8:internalMutation",
+        "prepareReads:internalQuery",
+        "prepareReadsV8:internalQuery",
+        "readMatches:internalQuery",
+        "readMatchesAndDeliveryV8:internalMutation",
+        "readMatchesV8:internalQuery"
+      ]
+    },
+    {
+      "file": "convex-dev/runtimeMemory.ts",
+      "declaration": "registered name/kind set",
+      "pass": true,
+      "before": [
+        "checkAuthority:internalQuery",
+        "checkProfileReady:internalQuery",
+        "defaultProfile:mutation",
+        "finalDelivery:internalMutation",
+        "readFacts:internalQuery",
+        "readSource:internalQuery",
+        "readVectorMatches:internalQuery",
+        "recall:action",
+        "remember:action",
+        "writeDerived:internalMutation",
+        "writeSource:internalMutation"
+      ],
+      "after": [
+        "checkAuthority:internalQuery",
+        "checkProfileReady:internalQuery",
+        "defaultProfile:mutation",
+        "finalDelivery:internalMutation",
+        "readFacts:internalQuery",
+        "readSource:internalQuery",
+        "readVectorMatches:internalQuery",
+        "recall:action",
+        "remember:action",
+        "writeDerived:internalMutation",
+        "writeSource:internalMutation"
+      ]
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "declaration": "registered name/kind set",
+      "pass": true,
+      "before": [
+        "admit:internalMutation",
+        "prepare:internalQuery"
+      ],
+      "after": [
+        "admit:internalMutation",
+        "prepare:internalQuery"
+      ]
+    },
+    {
+      "file": "convex-dev/runtimeMemoryRepository.ts",
+      "declaration": "registered name/kind set",
+      "pass": true,
+      "before": [],
+      "after": []
+    }
+  ],
+  "originalTestControls": [
+    {
+      "file": "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+      "originalTestCallbacksUnchanged": 15
+    },
+    {
+      "file": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "originalTestCallbacksUnchanged": 35
+    },
+    {
+      "file": "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+      "originalTestCallbacksUnchanged": 15
+    },
+    {
+      "file": "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+      "originalTestCallbacksUnchanged": 21
+    },
+    {
+      "file": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "originalTestCallbacksUnchanged": 6
+    }
+  ],
+  "intentionalDeltas": [
+    "fresh traversal-local raw reader only on exact-owner graph-only source views; full readers unchanged",
+    "public native read entries opt into graph-only raw family",
+    "internal readFacts optional includeBindings branch; old array response unchanged",
+    "public post-embedding repository opts into source/fact binding in same readFacts snapshot; same finalDelivery RPC"
+  ],
+  "nativePerformance": "UNAVAILABLE",
+  "registeredSetUnchanged": true
+}

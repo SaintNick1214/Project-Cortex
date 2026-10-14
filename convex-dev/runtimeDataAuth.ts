@@ -14,7 +14,7 @@ import { contextWitnessPermissions } from "../src/domain/context-witness";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { assertResourceScope, createAuthorityReader, recheckAuthority, requireAuthority, resolveAuthority, resolveAuthorityReference,
-  readManagedSourceRows, readManagedConversationRows, readManagedTranscriptBridgeRows, readManagedSourceRunRows } from "./runtimeAuth";
+  freshManagedSourceValidation, readManagedSourceRows, readManagedConversationRows, readManagedTranscriptBridgeRows, readManagedSourceRunRows } from "./runtimeAuth";
 import type { AuthorityReader, GrantRecord } from "./runtimeAuth";
 
 export type ScopedDataAuthority = RuntimeAuthority & { memorySpaceId: string; memorySpaceEpoch: number };
@@ -190,7 +190,7 @@ export async function managedConversationAccess(ctx: ReadCtx, reference: Runtime
  * Return false for retired evidence; current access is still rechecked and never obtained from a share token alone. */
 export async function managedSourceIsCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference,
   source: Doc<"runtimeMemorySources">, capability: "read" | "write", permission?: ConversationPermission, deadlines?: number[]): Promise<boolean> {
-  return await evaluateManagedSource(ctx, reference, source, capability, permission,
+  return await evaluateManagedSource(freshManagedSourceValidation(ctx), reference, source, capability, permission,
     { visiting: new Set(), verified: new Map(), remaining: 256, deadlines });
 }
 type ManagedSourceTraversal = { visiting: Set<string>; verified: Map<string, boolean>; remaining: number; deadlines?: number[] };

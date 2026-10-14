@@ -191,3 +191,54 @@ describe("managed-source writer epochs and native isolation", () => {
     expect(await read(view, f, f.first)).toBe(false);
   });
 });
+
+// K27 compares with the accepted K26 graph-only view above, not an older raw path.
+describe("fresh traversal-local authority rows", () => {
+  it.each([true, false])("same exact raw identity set with shared ancestry=%s and fresh outer source fences", async shared => {
+    const f = setup();
+    const { withManagedSourceValidationReads } = await import("../../../convex-dev/runtimeAuth");
+    const end = shared ? f.first : f.makeSource("distinct", [f.makeSource("distinct-leaf")]);
+    const queries = observe(f), get = f.db.get.bind(f.db), gets: string[] = [];
+    jest.spyOn(f.db, "get").mockImplementation(async (table, id) => { gets.push(JSON.stringify([table, id])); return get(table, id); });
+    const baseline = withManagedSourceReads(f.ctx, createV8AuthorityReadScope(f.ctx, { managedSources: true }));
+    const original = [await read(baseline, f, f.first), await read(baseline, f, end)];
+    const originalGets = [...gets], originalQueries = [...queries]; gets.length = 0; queries.length = 0;
+    const view = withManagedSourceValidationReads(f.ctx, createV8AuthorityReadScope(f.ctx, { managedSources: true }));
+    expect([await read(view, f, f.first), await read(view, f, end)]).toEqual(original);
+    expect(new Set(gets)).toEqual(new Set(originalGets));
+    expect(new Set(queries.map(row => row.identity))).toEqual(new Set(originalQueries.map(row => row.identity)));
+    expect(gets.length).toBeLessThan(originalGets.length / 2);
+    expect(queries.filter(row => !row.table.startsWith("runtimeAuth"))).toEqual(originalQueries.filter(row => !row.table.startsWith("runtimeAuth")));
+    const optimizedGets = gets.length, optimizedQueries = queries.length;
+    // A later logical traversal is a fresh authority fence even without a writer.
+    f.grant.revokedAt = 1000; await expect(read(view, f, end)).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.writes).toBe(0);
+    console.info(JSON.stringify({ type: "k27-traversal-raw-reads", shared, baselineGets: originalGets.length, optimizedGets,
+      baselineQueries: originalQueries.length, optimizedQueries, nativeLatency: "UNAVAILABLE" }));
+  });
+  it("graph-only/unbranded and wrong-owner contexts do not acquire a traversal reader", async () => {
+    const f = setup(), auth = await import("../../../convex-dev/runtimeAuth"), parent = createV8AuthorityReadScope(f.ctx, { managedSources: true });
+    expect(auth.withManagedSourceValidationReads({ ...f.ctx }, parent).db).toBe(f.ctx.db);
+    const view = withManagedSourceReads(f.ctx, parent); expect(auth.freshManagedSourceValidation(view)).toBe(view);
+    expect(auth.freshManagedSourceValidation(f.ctx)).toBe(f.ctx);
+    const current = auth.withManagedSourceValidationReads(f.ctx, parent);
+    expect(auth.freshManagedSourceValidation(current)).not.toBe(current);
+  });
+  it.each(["success", "error", "pending"])("a %s sibling writer invalidates/suppresses every live traversal reader", async mode => {
+    const f = setup(), auth = await import("../../../convex-dev/runtimeAuth");
+    let release!: () => void;
+    const wait = new Promise<void>(resolve => { release = resolve; });
+    const patch = f.db.patch.bind(f.db);
+    jest.spyOn(f.db, "patch").mockImplementation(async (...args) => {
+      await patch(...args); if (mode === "pending") await wait; if (mode === "error") throw Error("WRITER_FAILED");
+    });
+    const parent = createV8AuthorityReadScope(f.ctx, { managedSources: true }), traversal = auth.freshManagedSourceValidation(auth.withManagedSourceValidationReads(f.ctx, parent));
+    const requirement = { capability: "read" as const, tenantId: "tenant-a", memorySpaceId: "space-a" };
+    await recheckAuthority(traversal, f.reference, requirement);
+    const issued = parent.db.patch("runtimeAuthGrants", f.grant._id as Id<"runtimeAuthGrants">, { revokedAt: 1000 });
+    const settled = issued.catch(error => { if (mode !== "error") throw error; expect(error).toEqual(Error("WRITER_FAILED")); });
+    try { await expect(recheckAuthority(traversal, f.reference, requirement)).rejects.toThrow("FORBIDDEN"); }
+    finally { release(); await settled; }
+    await expect(recheckAuthority(traversal, f.reference, requirement)).rejects.toThrow("FORBIDDEN");
+  });
+});

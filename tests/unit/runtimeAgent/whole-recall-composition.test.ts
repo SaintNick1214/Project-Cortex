@@ -576,3 +576,57 @@ it.each([true, false])("save/candidate shared=%s ancestry reduces reads inside e
     total: originalReads.length, graphQueries: originalGraph.length }, optimized: { total: actualReads.length, graphQueries: actualGraph.length },
     exactStateAndMutableReadSequenceEqual: true, independentChild: true, billableAttempts: 0, nativeLatency: "UNAVAILABLE" }));
 });
+
+/** K26's exact activation set: retain every scope descriptor except the new
+ * traversal factory. The unchanged graph-only helper remains its real control. */
+function k26GraphScope(ctx: MutationCtx) {
+  const scope = createV8AuthorityReadScope(ctx, { managedSources: true });
+  const copy = Object.create(Object.getPrototypeOf(scope)) as MutationCtx;
+  let removed = 0;
+  for (const key of Reflect.ownKeys(scope)) {
+    if (typeof key === "symbol" && key.description === "cortex.native-managed-source-validation-scope") { removed++; continue; }
+    Object.defineProperty(copy, key, Object.getOwnPropertyDescriptor(scope, key)!);
+  }
+  expect(removed).toBe(1); return copy;
+}
+const uniqueRawReads = (reads: GraphRead[]) => [...new Set(reads.map(row => JSON.stringify(graphReadIdentity(row))))].sort();
+it.each([true, false])("K27 incremental K26 read/delivery comparison shared=%s retains all outcomes and raw identities", async shared => {
+  const f = await ancestryFixture(shared), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan }, before = wholeState(f);
+  const observed = instrumentGraphReads(f), scope = k26GraphScope(f.ctx);
+  const read = await whole.readMatchesHandler(f.ctx, args, 8, scope);
+  const delivery = await whole.finalDeliveryV8Handler(f.ctx, { reference: f.reference, bindings: read.bindings }, scope);
+  const baseline = clone(observed.reads); observed.clear();
+  expect(await f.call(whole.readMatchesAndDeliveryV8, args)).toEqual({ read, delivery });
+  const optimized = clone(observed.reads);
+  expect(originalMutableReads(optimized)).toEqual(originalMutableReads(baseline));
+  expect(uniqueRawReads(optimized)).toEqual(uniqueRawReads(baseline));
+  expect(optimized.length).toBeLessThan(baseline.length * 0.75);
+  // The independent raw final authority fence remains present in both paths.
+  expect(optimized.filter(row => row.phase === "final" && row.table === "runtimeAuthGrants").length).toBeGreaterThan(0);
+  expect(wholeState(f)).toEqual(before);
+  console.info(JSON.stringify({ type: "k27-incremental-k26-tail", shared, baseline: { total: baseline.length, documents: baseline.reduce((n,r)=>n+r.documents,0) },
+    optimized: { total: optimized.length, documents: optimized.reduce((n,r)=>n+r.documents,0) }, uniqueRawIdentitySetEqual: true, applicationWrites: 0, nativeLatency: "UNAVAILABLE" }));
+});
+it.each([true, false])("K27 incremental K26 save/fresh-child comparison shared=%s preserves state and complete native readset", async shared => {
+  const f = await ancestryFixture(shared), save = { ...f.attempt, context: "", entries: [], witnesses: [f.topWitness], completeness: "complete" as const };
+  const before = { ...wholeState(f), sequence: f.db.sequence }, observed = instrumentGraphReads(f), nativeMutation = f.ctx.runMutation;
+  const restore = () => { f.db.rows = clone(before.rows); f.db.writes = before.writes; f.db.sequence = before.sequence;
+    Object.assign(f.native, clone(before.native)); Object.assign(f.effects, before.effects); f.scheduled.splice(0, f.scheduled.length, ...clone(before.scheduled)); };
+  f.ctx.runMutation = (async (reference, args) => {
+    if (getFunctionName(reference) === "runtimeAgent:prepareResolvedModelCandidateV8")
+      return f.transaction(() => agent.prepareResolvedModelCandidateV8Handler(k26GraphScope(f.ctx), args as Parameters<typeof agent.prepareResolvedModelCandidateV8Handler>[1]));
+    return nativeMutation.call(f.ctx, reference, args);
+  }) as MutationCtx["runMutation"];
+  const original = await f.transaction(() => agent.saveAndPrepareContextV8Handler(k26GraphScope(f.ctx), save));
+  const after = wholeState(f), baseline = clone(observed.reads); restore(); observed.clear(); f.ctx.runMutation = nativeMutation;
+  expect(await f.call(agent.saveAndPrepareContextV8, save)).toEqual(original);
+  const optimized = clone(observed.reads);
+  expect(wholeState(f)).toEqual(after); expect(originalMutableReads(optimized)).toEqual(originalMutableReads(baseline));
+  expect(uniqueRawReads(optimized)).toEqual(uniqueRawReads(baseline));
+  // K26 already retains these raw rows in each full parent and fresh child.
+  // Keep that scope; this batch adds no save/candidate read reduction.
+  expect(optimized.length).toBe(baseline.length);
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+  console.info(JSON.stringify({ type: "k27-incremental-k26-save-child", shared, baseline: { total: baseline.length, documents: baseline.reduce((n,r)=>n+r.documents,0) },
+    optimized: { total: optimized.length, documents: optimized.reduce((n,r)=>n+r.documents,0) }, uniqueRawIdentitySetEqual: true, independentChild: true, billableAttempts: 0, nativeLatency: "UNAVAILABLE" }));
+});

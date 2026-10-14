@@ -1,0 +1,686 @@
+---
+id: memory-operations
+title: "Explicit Memory API"
+sidebar_position: 2
+---
+
+# Explicit Memory API
+
+Use this namespace for independent memory ingestion, record search and maintenance. Runtime Agent turns already own their extraction/embedding pipeline; do not call `remember` or `rememberStream` to mirror a remote response. Local semantic/extraction callbacks belong to advanced explicit administration and do not bypass runtime model policy.
+
+## Usage boundary
+
+Access the namespace on an explicitly configured root `Cortex` client. Host JWT and deployment-operator transports are distinct; validate current resource scope and do not infer authority from `AuthContext` metadata. See [administrative operations](../security/admin-operations.mdx).
+
+## Remember, search and validation
+
+In the new local candidate, ordinary authenticated `cortex.memory.remember(params)` submits one backend-owned canonical exchange capture. The backend stores a separate row per message and schedules memory asynchronously. The result has `conversation` and a `durable` receipt; `memories` and `facts` are initially empty, so inspect the receipt's indexing status or use [`rememberStatus`](runtime-client.mdx#capture-an-external-exchange). The latest disposable cloud scenario passed distinct repeated captures, exact replay, canonical provenance, contiguous facts/vectors, public recall and access/lock/deletion/revocation negatives. Earlier failures remain recorded. The subsequent candidate also passed all four ordinary chat memory outcomes; the latency target remains unresolved; see [measured outcomes](../architecture/performance.mdx#latency-diagnostics).
+
+An optional caller-supplied `requestId` provides exact replay. Without one, each invocation generates a new identity, including identical exchanges at different points in a conversation. Retain an explicit identity for recovery; an uncertain capture error carries the generated request ID when applicable. `participantId`, ownership labels and metadata remain subject to verified grants. The ordinary path accepts no local extraction/embedding callbacks or processing-policy overrides; unsupported options receive `CAPABILITY_UNAVAILABLE` before dispatch.
+
+Explicit deployment-operator orchestration remains a separate historical administrative contract. The options, synchronous layer results and local callbacks described below apply to that operator path. They do not describe ordinary backend capture and cannot bypass runtime model policy. For ordinary application chat, use the remote runtime, which already owns canonical capture and indexing.
+
+Supply a nonempty `conversationId`, `userMessage` and `agentResponse`. At least one of `userId` or `agentId` must own the exchange; `userName` is required when `userId` is present. `participantId` records the contributing participant. An omitted `memorySpaceId` uses `"default"` with a warning; explicit space IDs are preferable for administration. `importance` is 0–100; tags must be nonempty strings. Missing required fields raise `MemoryValidationError` with `code: MISSING_REQUIRED_FIELD` and `field`; missing ownership uses `OWNER_REQUIRED`; invalid importance uses `INVALID_IMPORTANCE`.
+
+`RememberOptions.extractFacts` defaults to false. Extraction and embedding callbacks are advanced local processing supplied by the operator. `factDeduplication` defaults to semantic matching with structural fallback when no embedding callback is configured. Belief revision can be disabled with `beliefRevision: false`; when enabled it records ADD/UPDATE/SUPERSEDE/NONE actions in `factRevisions`. `RememberResult.conversation` identifies the stored exchange; `memories` and `facts` contain the resulting records. Do not infer that a nonempty response guarantees every downstream layer completed.
+
+`search` returns `MemoryEntry[]` normally and `EnrichedMemory[]` with `enrichConversation: true`. Enrichment wraps each memory in `memory` and adds available `conversation`, `sourceMessages` and `facts`; those related records are optional. `get` returns null when the memory is absent and uses the same wrapper when `includeConversation: true`. Explicit search embeddings must be nonempty arrays of finite numbers and match the configured profile dimension. `minScore` is 0–1, `minImportance` is 0–100. A configured local embedding generator makes automatic search embedding an operator capability; generation failure falls back to text search. Use the remote `recall` endpoint for ordinary application retrieval under runtime policy.
+
+```ts
+import type { Cortex } from '@cortexmemory/sdk';
+
+export async function ingestApprovedExchange(cortex: Cortex, spaceId: string) {
+  const result = await cortex.memory.remember({
+    memorySpaceId: spaceId,
+    conversationId: 'admin-import-001',
+    userId: 'user-123',
+    userName: 'Alex',
+    userMessage: 'My preferred delivery window is Tuesday morning.',
+    agentResponse: 'I recorded Tuesday morning as your preference.',
+    importance: 70,
+    tags: ['delivery'],
+  }, { extractFacts: false, beliefRevision: false });
+  return { conversationId: result.conversation.conversationId,
+    memoryIds: result.memories.map(memory => memory.memoryId) };
+}
+
+export async function searchApprovedMemory(cortex: Cortex, spaceId: string) {
+  const results = await cortex.memory.search(spaceId, 'delivery', {
+    userId: 'user-123', limit: 10, minImportance: 50,
+    enrichConversation: true,
+  });
+  return results.map(result => ({ id: result.memory.memoryId,
+    text: result.memory.content, sourceMessages: result.sourceMessages ?? [] }));
+}
+```
+
+`forget` removes the vector memory and associated facts. Without `deleteConversation`, the ACID conversation is preserved and `restorable` is true. `deleteEntireConversation: true` with `deleteConversation: true` deletes the whole referenced conversation. The individual-message branch currently reports referenced message count without deleting those messages; do not use it as a user erasure guarantee. Missing memory raises `MEMORY_NOT_FOUND`. Use the [supported user erasure workflow](user-operations.mdx#supported-erasure-and-receipts) for an administrative deletion request.
+
+`recall` returns ranked/deduplicated `items`, `sources`, `totalResults`, `queryTimeMs`, `graphExpansionApplied` and optional formatted `context`. Per-call limits override configured/environment defaults: memories 20, facts 15, graph hops 2, entities per hop 5, results per entity 3 and total 30. `graphHops: 0` disables expansion. These explicit recall limits are separate from runtime Agent context policy.
+
+## Version and bulk operation outcomes
+
+`getVersion` and `getAtTimestamp` return null when no matching retained version exists. `getHistory` returns version/content/optional embedding/timestamp entries. `update` requires at least one content/embedding/importance/tags change. `delete`, `deleteMany` and `archive` may report `DomainPartial`; inspect exact physical outcomes before continuing. Archive intents identify the selected resource and mutation identity; preserve them across recovery. Exports return serialized `data`, format, count and export timestamp rather than writing a file for you.
+
+The retained `autoEmbed`/`autoSummarize` flags do not provision a hosted embedding or summarization service. Current explicit processing uses supported configured/local callbacks; runtime processing uses backend policy.
+
+## Operator parameters and result contracts {#parameter-and-result-contracts}
+
+These are reference definitions for the explicit operator APIs. Ordinary capture accepts the limited fields described above and checks existing verified scope; it does not auto-register grants, users or spaces. Optional fields use `?`; timestamps are milliseconds since epoch unless an operation accepts a `Date`. Resource identifiers and participant metadata do not grant runtime authority.
+
+### `RememberParams`
+
+```text
+export interface RememberParams {
+  requestId?: string;
+  expectedRevision?: number;
+  memorySpaceId?: string;
+  tenantId?: string;
+  conversationId: string;
+  userMessage: string;
+  agentResponse: string;
+  userId?: string;
+  agentId?: string;
+  userName?: string;
+  participantId?: string;
+  skipLayers?: SkippableLayer[];
+  extractContent?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<string | null>;
+  generateEmbedding?: (content: string) => Promise<number[] | null>;
+  extractFacts?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<Array<{
+    fact: string;
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "observation"
+      | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>;
+  autoEmbed?: boolean;
+  autoSummarize?: boolean;
+  importance?: number;
+  tags?: string[];
+  factDeduplication?: "semantic" | "structural" | "exact" | false;
+  observer?: OrchestrationObserver;
+}
+```
+
+| Field | Meaning and defaults |
+| --- | --- |
+| `memorySpaceId` | Memory space for isolation. If not provided, defaults to 'default' with a warning. Auto-registers the memory space if it doesn't exist. |
+| `tenantId` | Multi-tenancy: SaaS platform isolation. When provided, all data is scoped to this tenant. Note: If using authContext, tenantId is auto-injected unless explicitly provided here. |
+| `conversationId` | Conversation ID. Required. |
+| `userMessage` | The user's message content. Required. |
+| `agentResponse` | The agent's response content. Required. |
+| `userId` | User ID for user-owned memories. At least one of userId or agentId is required. Auto-creates user profile if it doesn't exist (unless 'users' is in skipLayers). |
+| `agentId` | Agent ID for agent-owned memories. At least one of userId or agentId is required. Auto-registers agent if it doesn't exist (unless 'agents' is in skipLayers). |
+| `userName` | Display name for the user (used in conversation tracking). Required when userId is provided. |
+| `participantId` | Participant ID for Hive Mode tracking. This tracks WHO stored the memory within a shared memory space, distinct from userId/agentId which indicates ownership. |
+| `skipLayers` | Layers to explicitly skip during orchestration. By default, all configured layers are enabled. |
+| `factDeduplication` | Fact deduplication strategy. Defaults to 'semantic' for maximum effectiveness. - 'semantic': Embedding-based similarity (most accurate, requires generateEmbedding) - 'structural': Subject + predicate + object match (fast, good accuracy) - 'exact': Normalized text match (fastest, lowest accuracy) - false: Disable deduplication (previous behavior) The generateEmbedding function (if provided) is automatically reused for semantic matching. |
+| `observer` | Observer for real-time orchestration monitoring. Provides callbacks for tracking layer-by-layer progress during the remember() orchestration flow. Integration-agnostic. |
+
+### `RememberOptions`
+
+```text
+export interface RememberOptions extends GraphSyncOption {
+  extractFacts?: boolean;
+  extractContent?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<string | null>;
+  generateEmbedding?: (content: string) => Promise<number[] | null>;
+  autoEmbed?: boolean;
+  autoSummarize?: boolean;
+  beliefRevision?:
+    | {
+        enabled?: boolean;
+        slotMatching?: boolean;
+        llmResolution?: boolean;
+      }
+    | false;
+}
+```
+
+| Field | Meaning and defaults |
+| --- | --- |
+| `extractFacts` | Extract facts from conversation (default: false) |
+| `extractContent` | Custom extraction function |
+| `generateEmbedding` | Custom embedding function |
+| `autoEmbed` | Retained compatibility field; does not enable a cloud embedding service. |
+| `beliefRevision` | Belief Revision configuration () When enabled, extracted facts are checked against existing facts to determine if they should CREATE, UPDATE, SUPERSEDE, or be skipped. Set to `false` to disable belief revision entirely for this call. |
+
+Also inherits `GraphSyncOption`. See [shared contracts](../reference/types-interfaces.mdx#shared-domain-options).
+
+### `RememberResult`
+
+```text
+export interface RememberResult {
+  conversation: {
+    messageIds: string[];
+    conversationId: string;
+  };
+  memories: MemoryEntry[];
+  facts: FactRecord[];
+  factRevisions?: Array<{
+    action: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
+    fact: FactRecord;
+    superseded?: FactRecord[];
+    reason?: string;
+  }>;
+}
+```
+
+| Field | Meaning and defaults |
+| --- | --- |
+| `factRevisions` | Belief revision actions taken for each extracted fact () Only populated when belief revision is enabled (default when LLM configured). Each entry describes what action was taken for a fact and why. |
+
+### `SearchMemoryOptions`
+
+```text
+export interface SearchMemoryOptions extends SearchMemoriesOptions {
+  enrichConversation?: boolean;
+}
+```
+
+Also inherits `SearchMemoriesOptions`. See [shared contracts](../reference/types-interfaces.mdx#shared-domain-options).
+
+### `SearchMemoriesOptions`
+
+```text
+export interface SearchMemoriesOptions {
+  tenantId?: string;
+  participantId?: string;
+  embedding?: number[];
+  userId?: string;
+  tags?: string[];
+  sourceType?: SourceType;
+  minImportance?: number;
+  limit?: number;
+  minScore?: number;
+  queryCategory?: string;
+}
+```
+
+| Field | Meaning and defaults |
+| --- | --- |
+| `queryCategory` | Category to boost for bullet-proof retrieval (e.g., "addressing_preference") |
+
+### `GetMemoryOptions`
+
+```text
+export interface GetMemoryOptions extends DomainReadOptions {
+  includeConversation?: boolean;
+}
+```
+
+Also inherits `DomainReadOptions`. See [shared contracts](../reference/types-interfaces.mdx#shared-domain-options).
+
+### `EnrichedMemory`
+
+```text
+export interface EnrichedMemory {
+  memory: MemoryEntry;
+  conversation?: Conversation;
+  sourceMessages?: Message[];
+  facts?: FactRecord[];
+}
+```
+
+### `MemoryEntry`
+
+```text
+export interface MemoryEntry extends GraphCaptureMetadata {
+  _id: string;
+  memoryId: string;
+  memorySpaceId: string;
+  tenantId?: string;
+  participantId?: string;
+  userId?: string;
+  agentId?: string;
+  content: string;
+  contentType: ContentType;
+  embedding?: number[];
+  sourceType: SourceType;
+  sourceUserId?: string;
+  sourceUserName?: string;
+  sourceTimestamp: number;
+  messageRole?: "user" | "agent" | "system";
+  conversationRef?: ConversationRef;
+  immutableRef?: ImmutableRef;
+  mutableRef?: MutableRef;
+  factsRef?: FactsRef;
+  importance: number;
+  tags: string[];
+  enrichedContent?: string;
+  factCategory?: string;
+  version: number;
+  previousVersions: MemoryVersion[];
+  createdAt: number;
+  updatedAt: number;
+  lastAccessed?: number;
+  accessCount: number;
+}
+```
+
+Also inherits `GraphCaptureMetadata`. See [shared contracts](../reference/types-interfaces.mdx#shared-domain-options).
+
+### `StoreMemoryInput`
+
+```text
+export interface StoreMemoryInput {
+  content: string;
+  contentType: ContentType;
+  tenantId?: string;
+  participantId?: string;
+  embedding?: number[];
+  userId?: string;
+  agentId?: string;
+  messageRole?: "user" | "agent" | "system";
+  enrichedContent?: string;
+  factCategory?: string;
+  source: {
+    type: SourceType;
+    userId?: string;
+    userName?: string;
+    timestamp?: number;
+  };
+  conversationRef?: ConversationRef;
+  immutableRef?: ImmutableRef;
+  mutableRef?: MutableRef;
+  factsRef?: FactsRef;
+  metadata: MemoryMetadata;
+  extractFacts?: (content: string) => Promise<Array<{
+    fact: string;
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "observation"
+      | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>;
+}
+```
+
+### `StoreMemoryResult`
+
+```text
+export interface StoreMemoryResult {
+  memory: MemoryEntry;
+  facts: FactRecord[];
+}
+```
+
+### `ForgetOptions`
+
+```text
+export interface ForgetOptions {
+  deleteConversation?: boolean;
+  deleteEntireConversation?: boolean;
+}
+```
+
+### `ForgetResult`
+
+```text
+export interface ForgetResult {
+  memoryDeleted: boolean;
+  conversationDeleted: boolean;
+  messagesDeleted: number;
+  factsDeleted: number;
+  factIds: string[];
+  restorable: boolean;
+}
+```
+
+### `ListMemoriesFilter`
+
+```text
+export interface ListMemoriesFilter {
+  memorySpaceId: string;
+  tenantId?: string;
+  userId?: string;
+  participantId?: string;
+  sourceType?: SourceType;
+  limit?: number;
+  enrichFacts?: boolean;
+}
+```
+
+### `RecallParams`
+
+```text
+export interface RecallParams {
+  memorySpaceId: string;
+  query: string;
+  embedding?: number[];
+  userId?: string;
+  tenantId?: string;
+  sources?: {
+    vector?: boolean;
+    facts?: boolean;
+    graph?: boolean;
+  };
+  graphExpansion?: {
+    enabled?: boolean;
+    maxDepth?: number;
+    relationshipTypes?: string[];
+    expandFromFacts?: boolean;
+    expandFromMemories?: boolean;
+  };
+  minImportance?: number;
+  minConfidence?: number;
+  tags?: string[];
+  createdAfter?: Date;
+  createdBefore?: Date;
+  limits?: RecallLimits;
+  limit?: number;
+  includeConversation?: boolean;
+  formatForLLM?: boolean;
+  observer?: OrchestrationObserver;
+}
+```
+
+| Field | Meaning and defaults |
+| --- | --- |
+| `memorySpaceId` | Memory space to search in |
+| `query` | Natural language query |
+| `embedding` | Pre-computed embedding for semantic search (recommended for best results) |
+| `userId` | Filter by user ID (common in H2A chatbots) |
+| `tenantId` | Filter by tenant ID for multi-tenancy (SaaS platform isolation) |
+| `sources` | Source selection - ALL ENABLED BY DEFAULT. Only specify to DISABLE sources. |
+| `graphExpansion` | Graph expansion configuration - ENABLED BY DEFAULT if graph configured. Graph is the key to relational context discovery. |
+| `minImportance` | Minimum importance score (0-100) |
+| `minConfidence` | Minimum confidence for facts (0-100) |
+| `tags` | Filter by tags |
+| `createdAfter` | Only include items created after this date |
+| `createdBefore` | Only include items created before this date |
+| `limits` | Structured limits for per-source control. See RecallLimits interface for detailed options. Defaults come from environment variables or SDK defaults. |
+| `limit` | Maximum number of results (backward compatibility). Alias for limits.total - if both provided, limits.total takes precedence. |
+| `includeConversation` | Enrich with ACID conversation data. Default: true |
+| `formatForLLM` | Generate LLM-ready context string. Default: true |
+| `observer` | Observer for real-time recall orchestration monitoring. Provides callbacks for tracking layer-by-layer progress during the recall() context retrieval flow. Integration-agnostic. |
+
+### `RecallLimits`
+
+```text
+export interface RecallLimits {
+  memories?: number;
+  facts?: number;
+  graphHops?: number;
+  graphEntitiesPerHop?: number;
+  graphResultsPerEntity?: number;
+  total?: number;
+}
+```
+
+| Field | Meaning and defaults |
+| --- | --- |
+| `memories` | Maximum memories to fetch from vector search. Env: CORTEX_RECALL_LIMIT_MEMORIES Default: 20 |
+| `facts` | Maximum facts to fetch from semantic/text search. Env: CORTEX_RECALL_LIMIT_FACTS Default: 15 |
+| `graphHops` | Graph traversal depth. - 0: Disabled (no graph expansion) - 1: Immediate relationships only - 2: Two-hop traversal (default) Env: CORTEX_RECALL_GRAPH_HOPS Default: 2 |
+| `graphEntitiesPerHop` | Maximum entities to expand per graph hop. Controls the branching factor of graph traversal. Env: CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP Default: 5 |
+| `graphResultsPerEntity` | Maximum memories/facts to fetch per discovered entity. Env: CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY Default: 3 |
+| `total` | Final aggregate limit on total results returned. Applied after merge, dedupe, and ranking. Env: CORTEX_RECALL_LIMIT_TOTAL Default: 30 |
+
+### `RecallResult`
+
+```text
+export interface RecallResult {
+  items: RecallItem[];
+  sources: RecallSourceBreakdown;
+  context?: string;
+  totalResults: number;
+  queryTimeMs: number;
+  graphExpansionApplied: boolean;
+}
+```
+
+| Field | Meaning and defaults |
+| --- | --- |
+| `items` | Unified results (merged, deduped, ranked) |
+| `sources` | Breakdown by source |
+| `context` | Formatted context for LLM injection. Present when formatForLLM: true (default). |
+| `totalResults` | Total number of results before limit |
+| `queryTimeMs` | Query execution time in milliseconds |
+| `graphExpansionApplied` | Whether graph expansion was applied |
+
+### `UpdateMemoryOptions`
+
+```text
+export interface UpdateMemoryOptions extends GraphSyncOption {}
+```
+
+Also inherits `GraphSyncOption`. See [shared contracts](../reference/types-interfaces.mdx#shared-domain-options).
+
+### `UpdateMemoryResult`
+
+```text
+export interface UpdateMemoryResult {
+  memory: MemoryEntry;
+  factsReextracted?: FactRecord[];
+}
+```
+
+### `DeleteMemoryOptions`
+
+```text
+export interface DeleteMemoryOptions extends GraphSyncOption {}
+```
+
+Also inherits `GraphSyncOption`. See [shared contracts](../reference/types-interfaces.mdx#shared-domain-options).
+
+### `DeleteMemoryResult`
+
+```text
+export interface DeleteMemoryResult {
+  deleted: boolean;
+  memoryId: string;
+  factsDeleted: number;
+  factIds: string[];
+}
+```
+
+### `ExportMemoriesOptions`
+
+```text
+export interface ExportMemoriesOptions {
+  tenantId?: string;
+  signal?: AbortSignal;
+  deadlineMs?: number;
+  memorySpaceId: string;
+  userId?: string;
+  format: "json" | "csv";
+  includeEmbeddings?: boolean;
+  includeFacts?: boolean;
+}
+```
+
+## Public methods
+
+The following signatures describe the TypeScript namespace. Parameter and result fields are defined on this page; the installed `@cortexmemory/sdk` declarations also provide their compile-time types. Signatures are reference notation, not application code to execute.
+
+### `remember`
+
+Remember a conversation exchange (stores in both ACID and Vector)
+
+```text
+cortex.memory.remember(params: RememberParams, options?: RememberOptions): Promise<RememberResult>
+```
+
+### `rememberStream`
+
+Remember a conversation exchange from a streaming response (ENHANCED)
+
+```text
+cortex.memory.rememberStream(params: RememberStreamParams, options?: import("../types/streaming").StreamingOptions): Promise<import("../types/streaming").EnhancedRememberStreamResult>
+```
+
+### `forget`
+
+Forget a memory (delete from Vector and optionally ACID)
+
+```text
+cortex.memory.forget(memorySpaceId: string, memoryId: string, options?: ExtendedForgetOptions): Promise<ForgetResult>
+```
+
+### `get`
+
+Get memory with optional ACID enrichment
+
+```text
+cortex.memory.get(memorySpaceId: string, memoryId: string, options?: GetMemoryOptions & { includeConversation?: false }): Promise<MemoryEntry | null>
+cortex.memory.get(memorySpaceId: string, memoryId: string, options: GetMemoryOptions & { includeConversation: true }): Promise<EnrichedMemory | null>
+cortex.memory.get(memorySpaceId: string, memoryId: string, options: GetMemoryOptions): Promise<MemoryEntry | EnrichedMemory | null>
+cortex.memory.get(memorySpaceId: string, memoryId: string, options?: GetMemoryOptions): Promise<MemoryEntry | EnrichedMemory | null>
+```
+
+### `search`
+
+Search memories with optional ACID enrichment
+
+```text
+cortex.memory.search(memorySpaceId: string, query: string, options?: SearchMemoryOptions & { enrichConversation?: false }): Promise<MemoryEntry[]>
+cortex.memory.search(memorySpaceId: string, query: string, options: SearchMemoryOptions & { enrichConversation: true }): Promise<EnrichedMemory[]>
+cortex.memory.search(memorySpaceId: string, query: string, options: SearchMemoryOptions): Promise<MemoryEntry[] | EnrichedMemory[]>
+cortex.memory.search(memorySpaceId: string, query: string, options?: SearchMemoryOptions): Promise<MemoryEntry[] | EnrichedMemory[]>
+```
+
+### `recall`
+
+Recall context from all memory layers with unified orchestration.
+
+```text
+cortex.memory.recall(params: RecallParams): Promise<RecallResult>
+```
+
+### `store`
+
+Store memory with smart layer detection and optional fact extraction
+
+```text
+cortex.memory.store(memorySpaceId: string, input: StoreMemoryInput): Promise<StoreMemoryResult>
+```
+
+### `update`
+
+Update a memory with optional fact re-extraction
+
+```text
+cortex.memory.update(memorySpaceId: string, memoryId: string, updates: { content?: string; embedding?: number[]; importance?: number; tags?: string[]; }, options?: UpdateMemoryOptions): Promise<UpdateMemoryResult>
+```
+
+### `delete`
+
+Delete a memory with cascade delete of facts
+
+```text
+cortex.memory.delete(memorySpaceId: string, memoryId: string, options?: DeleteMemoryOptions & DomainReadOptions): Promise<DeleteMemoryResult & {partial?: DomainPartial}>
+```
+
+### `list`
+
+List memories with optional fact enrichment
+
+```text
+cortex.memory.list(filter: ListMemoriesFilter & { enrichFacts?: false }): Promise<MemoryEntry[]>
+cortex.memory.list(filter: ListMemoriesFilter & { enrichFacts: true }): Promise<EnrichedMemory[]>
+cortex.memory.list(filter: ListMemoriesFilter): Promise<MemoryEntry[] | EnrichedMemory[]>
+```
+
+### `count`
+
+Count memories (delegates to vector.count)
+
+```text
+cortex.memory.count(filter: CountMemoriesFilter): Promise<number>
+```
+
+### `updateMany`
+
+Update many memories and track affected facts
+
+```text
+cortex.memory.updateMany(filter: { memorySpaceId: string; userId?: string; sourceType?: SourceType; }, updates: { importance?: number; tags?: string[]; }): Promise<UpdateManyResult>
+```
+
+### `deleteMany`
+
+Delete many memories with batch cascade delete of facts
+
+```text
+cortex.memory.deleteMany(filter: {memorySpaceId: string; tenantId?: string; participantId?: string; userId?: string; sourceType?: SourceType}, options?: DomainReadOptions): Promise<DeleteManyResult & {partial?: DomainPartial}>
+```
+
+### `export`
+
+Export memories with optional fact inclusion
+
+```text
+cortex.memory.export(options: ExportMemoriesOptions): Promise<{format: string; data: string; count: number; exportedAt: number}>
+```
+
+### `archive`
+
+Archive a memory and mark associated facts as expired
+
+```text
+cortex.memory.archive(memorySpaceId: string, memoryId: string, options?: DomainReadOptions & {intent?: MemoryArchiveIntent}): Promise<ArchiveResult & {partial?: DomainPartial; intent: MemoryArchiveIntent}>
+```
+
+### `restoreFromArchive`
+
+Restore memory from archive
+
+```text
+cortex.memory.restoreFromArchive(memorySpaceId: string, memoryId: string, options?: DomainReadOptions): ReturnType<VectorAPI["restoreFromArchive"]>
+```
+
+### `getVersion`
+
+Get specific version of a memory
+
+```text
+cortex.memory.getVersion(memorySpaceId: string, memoryId: string, version: number): Promise<{ memoryId: string; version: number; content: string; embedding?: number[]; timestamp: number; } | null>
+```
+
+### `getHistory`
+
+Get version history of a memory
+
+```text
+cortex.memory.getHistory(memorySpaceId: string, memoryId: string): Promise< Array<{ memoryId: string; version: number; content: string; embedding?: number[]; timestamp: number; }> >
+```
+
+### `getAtTimestamp`
+
+Get memory version at specific point in time (temporal query)
+
+```text
+cortex.memory.getAtTimestamp(memorySpaceId: string, memoryId: string, timestamp: number | Date): Promise<{ memoryId: string; version: number; content: string; embedding?: number[]; timestamp: number; } | null>
+```
+
+## Errors and lifecycle
+
+Validation, missing capability, authorization, stale version and partial/unknown committed outcomes are explicit. Inspect operation/write/deletion receipts before recovery; do not repeat an external effect under a new identity after uncertainty. Close owned clients and graph resources at the end of the server workflow.
+
+See [runtime client](./runtime-client.mdx) for ordinary app execution and [error handling](../reference/error-handling.mdx) for recovery boundaries.

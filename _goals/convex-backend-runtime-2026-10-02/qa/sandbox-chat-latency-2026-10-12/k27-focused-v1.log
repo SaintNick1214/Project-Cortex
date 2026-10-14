@@ -1,0 +1,322 @@
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:50205) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/vector-delivery-batch.test.ts (8.943 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts (6.595 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"whole-recall-physical-query-count","kind":"controlled-handler","outerCalls":["runtimeAgentRecall:prepareReads","runtimeAgentRecall:readMatches","runtimeMemory:finalDelivery"],"physicalQueries":{"runtimeAgentRecall:prepareReads":1,"_reference/childComponent/agent/messages/getMessagesByIds":4,"runtimeAgentRecall:readMatches":1,"runtimeModelPolicy:embeddingProfile":1},"embeddingProfileBeforeDelivery":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:109:11)
+
+    console.info
+      {"type":"k25-private-read-parent-counts","kind":"controlled-original-handlers","initial":{"oldGets":6,"newGets":3,"oldQueries":238,"newQueries":219},"tail":{"oldGets":39,"newGets":36,"oldQueries":158,"newQueries":139},"mutableReadSequencesEqual":true,"applicationWrites":0,"cloudLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:442:10)
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":true,"original":{"queries":684,"graphQueries":135,"graphDocuments":135},"optimized":{"queries":429,"graphQueries":8,"graphDocuments":8},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:521:11
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":false,"original":{"queries":688,"graphQueries":135,"graphDocuments":135},"optimized":{"queries":493,"graphQueries":12,"graphDocuments":12},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:521:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":true,"original":{"total":389,"graphQueries":198},"optimized":{"total":543,"graphQueries":16},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:575:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":false,"original":{"total":397,"graphQueries":198},"optimized":{"total":639,"graphQueries":24},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:575:11
+
+FAIL tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● registered facts preserves exact result/order with its explicitly accepted scope activation
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 20
+    Received:   20
+
+      87 |   assertNativeArgs(registration, args); const actual = await f.call(registration, args);
+      88 |   expect(actual).toEqual(expected); expect(stored(f)).toEqual(after); expect(observed.nonAuth()).toEqual(nonAuth);
+    > 89 |   if (requireReduction) expect(observed.authReads().length).toBeLessThan(auth);
+         |                                                             ^
+      90 |   return { unscopedAuthReads: auth, scopedAuthReads: observed.authReads().length, nonAuthReadWriteOrderEntries: nonAuth.length };
+      91 | }
+      92 | it.each(["facts", "vectors", "delivery", "profile"])("registered %s preserves exact result/order with its explicitly accepted scope activation", async kind => {
+
+      at differential (tests/unit/runtimeMemory/authority-scope-entries.test.ts:89:61)
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:97:18
+
+  ● registered vectors preserves exact result/order with its explicitly accepted scope activation
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 22
+    Received:   22
+
+      87 |   assertNativeArgs(registration, args); const actual = await f.call(registration, args);
+      88 |   expect(actual).toEqual(expected); expect(stored(f)).toEqual(after); expect(observed.nonAuth()).toEqual(nonAuth);
+    > 89 |   if (requireReduction) expect(observed.authReads().length).toBeLessThan(auth);
+         |                                                             ^
+      90 |   return { unscopedAuthReads: auth, scopedAuthReads: observed.authReads().length, nonAuthReadWriteOrderEntries: nonAuth.length };
+      91 | }
+      92 | it.each(["facts", "vectors", "delivery", "profile"])("registered %s preserves exact result/order with its explicitly accepted scope activation", async kind => {
+
+      at differential (tests/unit/runtimeMemory/authority-scope-entries.test.ts:89:61)
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:97:18
+
+  ● registered delivery preserves exact result/order with its explicitly accepted scope activation
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 37
+    Received:   37
+
+      87 |   assertNativeArgs(registration, args); const actual = await f.call(registration, args);
+      88 |   expect(actual).toEqual(expected); expect(stored(f)).toEqual(after); expect(observed.nonAuth()).toEqual(nonAuth);
+    > 89 |   if (requireReduction) expect(observed.authReads().length).toBeLessThan(auth);
+         |                                                             ^
+      90 |   return { unscopedAuthReads: auth, scopedAuthReads: observed.authReads().length, nonAuthReadWriteOrderEntries: nonAuth.length };
+      91 | }
+      92 | it.each(["facts", "vectors", "delivery", "profile"])("registered %s preserves exact result/order with its explicitly accepted scope activation", async kind => {
+
+      at differential (tests/unit/runtimeMemory/authority-scope-entries.test.ts:89:61)
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:97:18
+
+  ● registered profile preserves exact result/order with its explicitly accepted scope activation
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 18
+    Received:   18
+
+      87 |   assertNativeArgs(registration, args); const actual = await f.call(registration, args);
+      88 |   expect(actual).toEqual(expected); expect(stored(f)).toEqual(after); expect(observed.nonAuth()).toEqual(nonAuth);
+    > 89 |   if (requireReduction) expect(observed.authReads().length).toBeLessThan(auth);
+         |                                                             ^
+      90 |   return { unscopedAuthReads: auth, scopedAuthReads: observed.authReads().length, nonAuthReadWriteOrderEntries: nonAuth.length };
+      91 | }
+      92 | it.each(["facts", "vectors", "delivery", "profile"])("registered %s preserves exact result/order with its explicitly accepted scope activation", async kind => {
+
+      at differential (tests/unit/runtimeMemory/authority-scope-entries.test.ts:89:61)
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:97:18
+
+PASS tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"controlled-managed-source-graph-reads","originalGraphQueries":70,"scopedGraphQueries":17,"originalGraphDocuments":70,"scopedGraphDocuments":17,"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/managed-source-read-scope.test.ts:92:13)
+
+    console.info
+      {"type":"k27-traversal-raw-reads","shared":true,"baselineGets":120,"optimizedGets":6,"baselineQueries":255,"optimizedQueries":43,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:216:13
+
+    console.info
+      {"type":"k27-traversal-raw-reads","shared":false,"baselineGets":78,"optimizedGets":6,"baselineQueries":176,"optimizedQueries":42,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:216:13
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     8.9s | 36/36 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+  ✅     6.6s | 80/80 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ❌     2.9s | 29/33 passed | /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ✅     1.3s | 16/16 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+  ✅     0.8s | 34/34 passed | /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.23s ( 5.9%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 2. [32m✓[0m    1.08s ( 5.2%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [32m✓[0m    0.66s ( 3.2%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [32m✓[0m    0.18s ( 0.9%) - save/candidate shared=false ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.17s ( 0.8%) - save/candidate shared=true ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 6. [32m✓[0m    0.17s ( 0.8%) - V8 real shared=true ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 7. [32m✓[0m    0.15s ( 0.7%) - V8 real shared=false ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 8. [32m✓[0m    0.14s ( 0.7%) - same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [32m✓[0m    0.12s ( 0.6%) - V8 context/preflight parent equals both original registered read handlers with zero effects
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.10s ( 0.5%) - original delivery outcome and failure precedence does not move profile initialization ahead of an absent or ambiguous canonical row
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+11. [32m✓[0m    0.10s ( 0.5%) - original delivery outcome and failure precedence matches one/many unchanged vectors with no application or financial effect
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+12. [32m✓[0m    0.09s ( 0.4%) - snapshot-local exact profile/budget initialization checks 10 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+13. [32m✓[0m    0.08s ( 0.4%) - private assembler consumes the native preflight proposal without a second preparation handoff
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [32m✓[0m    0.08s ( 0.4%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+15. [32m✓[0m    0.08s ( 0.4%) - actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+16. [32m✓[0m    0.07s ( 0.3%) - per-source delivery lifetimes and native budget fences retains native ingestion lease fence (expired=false) inside current profile selection
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+17. [31m✗[0m    0.07s ( 0.3%) - registered vectors preserves exact result/order with its explicitly accepted scope activation
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+18. [32m✓[0m    0.07s ( 0.3%) - snapshot-local exact profile/budget initialization matches the original native read-set tables while reducing repeated profile initialization
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+19. [32m✓[0m    0.07s ( 0.3%) - per-source delivery lifetimes and native budget fences preserves late vector unapproved-message despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+20. [32m✓[0m    0.06s ( 0.3%) - per-source delivery lifetimes and native budget fences retains each vector's consumed data-share deadline and returns their earliest bound
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 4.75s (22.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      20.73s
+  Test suites:        5
+  Individual tests:   188
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       4 failed, 195 passed, 199 total
+Snapshots:   0 total
+Time:        20.734 s
+Ran all test suites within paths "tests/unit/runtimeAuth/managed-source-read-scope.test.ts", "tests/unit/runtimeAgent/whole-recall-composition.test.ts", "tests/unit/runtimeMemory/vector-delivery-batch.test.ts", "tests/unit/runtimeMemory/query-composition.test.ts", "tests/unit/runtimeMemory/authority-scope-entries.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-focused-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

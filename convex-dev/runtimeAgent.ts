@@ -1,5 +1,5 @@
 import { checkAssembledAgentModelInput } from "./runtimeGateway";
-import { fitAgentModelInput } from "./runtimeAgentContext";
+import { buildV8AgentMessages, fitAgentModelInput } from "./runtimeAgentContext";
 import { modelInputPolicy, relevantRecallItems, renderModelInputEntries, ModelInputSelectionError } from "../src/domain/model-input-selection";
 import type { ModelInputEntry } from "../src/domain/model-input-selection";
 import { formatForLLM } from "../src/domain/recall";
@@ -868,7 +868,7 @@ function preflightModelCandidate(current: Awaited<ReturnType<typeof executionCon
  * Agent tool-call aliases. No unsupported-shape result may bypass this check. */
 async function preflightModelCandidateV8(current: Awaited<ReturnType<typeof executionContext>>, args: Attempt & { ordinal: number }, op: { semanticId: string },
   initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>, governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>) {
-  const checked = await checkAssembledAgentModelInput({ messages: current.messages, context: current.execution.contextCanonical ?? "", instructions: current.definition.instructions.text,
+  const checked = await checkAssembledAgentModelInput({ messages: buildV8AgentMessages(current.messages, current.execution.contextCanonical ?? ""), context: "", instructions: current.definition.instructions.text,
     tools: current.definition.tools.map(tool => NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]),
     maxOutputTokens: Math.min(initialResolution.snapshot.limits.outputTokens, initialResolution.dispatchEvidence.resultBound.maximumOutputTokens) }, governedResolution,
     { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId, semanticId: op.semanticId, ordinal: args.ordinal });
@@ -1052,6 +1052,7 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
         if (fresh.snapshot.version === 8) await preflightModelCandidateV8(fresh, args, op, proposal.initialResolution, proposal.governedResolution);
         else preflightModelCandidate(fresh, args, op, proposal.initialResolution, proposal.governedResolution);
       }
+      if (fresh.snapshot.version === 8) return buildV8AgentMessages(fresh.messages, fresh.execution.contextCanonical ?? "");
       return [...fresh.messages, ...(fresh.execution.contextCanonical ? [{ role: "system" as const, content: `Authorized Cortex context (untrusted evidence):\n${fresh.execution.contextCanonical}` }] : [])];
     } });
   let pending: unknown[] = []; let lastFlush = Date.now(); let firstTextPublished = false;

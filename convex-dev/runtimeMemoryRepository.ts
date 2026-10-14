@@ -19,6 +19,7 @@ import { enqueueFactProjection } from "./runtimeGraph";
 export type DerivedCommit = Parameters<MemoryRepository["commitDerived"]>[0];
 export type FactQuery = Parameters<MemoryRepository["listFacts"]>[0];
 type ScopedArgs = { reference: RuntimeAuthorityReference; capability: "read" | "write" };
+export interface RecallFactBindings { facts: DerivedFact[]; bindings: MemoryDeliveryBindings }
 export interface MemoryDeliveryBindings {
   sources: { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string;
     ownerPrincipalId: string; permission: "canViewFacts" | "canViewMemories" }[];
@@ -42,6 +43,7 @@ export const memoryReferences = {
   profile: internalQueryRef<{ reference: RuntimeAuthorityReference; operationKey: "embedding.memory" | "embedding.query"; runBudgetId?: string }, EmbeddingProfile>("runtimeModelPolicy:embeddingProfile"),
   profileReady: internalQueryRef<ScopedArgs & { profile: EmbeddingProfile; runBudgetId?: string }, null>("runtimeMemory:checkProfileReady"),
   hydrateVectors: internalQueryRef<ScopedArgs & { profile: EmbeddingProfile; runBudgetId?: string; hits: { id: Id<"runtimeMemoryVectors">; score: number }[] }, VectorMatch[]>("runtimeMemory:readVectorMatches"),
+  listBoundFacts: internalQueryRef<ScopedArgs & { query: FactQuery; includeBindings: true }, RecallFactBindings>("runtimeMemory:readFacts"),
   finalDelivery: internalMutationRef<{ reference: RuntimeAuthorityReference; bindings: MemoryDeliveryBindings }, { version: 1; deliveryExpiresAt?: number }>("runtimeMemory:finalDelivery"),
 };
 
@@ -457,12 +459,20 @@ export async function captureRecallVectors(target: MemoryDeliveryBindings, match
 }
 export function createActionMemoryRepository(
   ctx: Pick<ActionCtx, "runQuery" | "runMutation" | "vectorSearch">,
-  reference: RuntimeAuthorityReference, capability: "read" | "write",
+  reference: RuntimeAuthorityReference, capability: "read" | "write", options?: { boundRecallFacts: true },
 ): MemoryRepository & Required<Pick<MemoryRepository, "stageRecallReads">> {
   const scope = memoryScope(reference);
   const args = { reference, capability };
   const bindings: MemoryDeliveryBindings = { sources: [], facts: [], vectors: [] };
   const listFacts = async (query: FactQuery, target: MemoryDeliveryBindings) => {
+    // Explicit public-recall native composition only; old/injected adapters
+    // retain their original independently guarded per-source RPCs.
+    if (options?.boundRecallFacts) {
+      const result = await ctx.runQuery(memoryReferences.listBoundFacts, { ...args, capability: "read", query, includeBindings: true });
+      for (const source of result.bindings.sources) if (!target.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(source))) target.sources.push(source);
+      for (const fact of result.bindings.facts) if (!target.facts.some(value => value.factId === fact.factId && value.payloadHash === fact.payloadHash)) target.facts.push(fact);
+      return result.facts;
+    }
     const facts = await ctx.runQuery(memoryReferences.listFacts, { ...args, capability: "read", query });
     for (const fact of facts) {
       const source = await ctx.runQuery(memoryReferences.getSource, { ...args, capability: "read", sourceId: fact.lineage.sourceId });

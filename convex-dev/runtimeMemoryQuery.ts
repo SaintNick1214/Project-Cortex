@@ -7,10 +7,10 @@ import type {QueryCtx,MutationCtx,ActionCtx} from './_generated/server';
 import type {RuntimeAuthorityReference} from '../src/auth/verified';
 import type {MemoryModel,MemoryRepository} from '../src/domain/contracts';
 import {runtimeAuthorityReference} from './runtimeAuthSchema';
-import {createAuthorityReadScope} from './runtimeAuth';
+import {createAuthorityReadScope,createMemorySourceReadScope} from './runtimeAuth';
 import {canonicalModelJson} from '../src/domain/model-policy';
 import {normalizeSourceText,semanticHash} from '../src/domain/profile';
-import {ConvexMemoryRepository,memoryError} from './runtimeMemoryRepository';
+import {ConvexMemoryRepository,memoryError,createActionMemoryRepository} from './runtimeMemoryRepository';
 import {assertMemoryRequestId,finishRecallFromEmbedding} from './runtimeMemoryServices';
 import {readCurrentEmbeddingProfile,resolveHandler,admitHandler,MODEL_LEDGER_STORAGE_LIMITS} from './runtimeModelPolicy';
 import {GatewayDispatchError,assertGatewayReservedRequest} from './runtimeGateway';
@@ -53,7 +53,7 @@ export async function preparePublicRecallHandler(ctx:QueryCtx,a:Args) {
     return {kind:'prepared' as const,...selected,resolutions:[initial,governed] as const};
   }catch(error){return {kind:'refused' as const,refusal:boundedRefusal(error)};}
 }
-export const prepare=internalQuery({args,handler:(ctx,a)=>preparePublicRecallHandler(createAuthorityReadScope(ctx,{policyMetadata:true}),a)});
+export const prepare=internalQuery({args,handler:(ctx,a)=>preparePublicRecallHandler(createMemorySourceReadScope(ctx),a)});
 type AdmitArgs=Args&{bindingCanonical:string;requestCanonical:string;snapshotCanonical:string};
 type Admission={result:GatewayAdmissionCheckpoint}|{refusal:Refusal};
 const checkpoint=makeFunctionReference('runtimeModelPolicy:checkpoint') as unknown as FunctionReference<'mutation','internal',
@@ -90,5 +90,5 @@ export async function recallPublicMemory(ctx:ActionCtx,reference:RuntimeAuthorit
       if('refusal' in result)return throwRefusal(result.refusal);return result.result;
     }}});
   const embedded=await model.embed(proposal.request);
-  return finishRecallFromEmbedding({repository,clock:{now:()=>Date.now()}},{text:normalizeSourceText(input.text),limit:input.limit},{profile:proposal.profile,runBudgetId},embedded);
+  return finishRecallFromEmbedding({repository:createActionMemoryRepository(ctx,reference,'read',{boundRecallFacts:true}),clock:{now:()=>Date.now()}},{text:normalizeSourceText(input.text),limit:input.limit},{profile:proposal.profile,runBudgetId},embedded);
 }
