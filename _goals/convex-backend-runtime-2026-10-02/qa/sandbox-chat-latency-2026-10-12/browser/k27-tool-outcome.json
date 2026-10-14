@@ -1,0 +1,29 @@
+{
+  "runId": "run:bdafdde98694753462e110e580576132a6911d837aed63527f10f04d4ef8b1d1",
+  "expected": "TOOL47",
+  "actual": "TOOL47",
+  "response": "complete",
+  "memory": "complete",
+  "tool": "memory_remember",
+  "toolState": "succeeded",
+  "receiptId": "ff0b839e2e25c999fa285d280864e29474f0e517b2a4f7a7d46435f787e24fd8",
+  "observerDisconnects": 1,
+  "observerReconnects": 1,
+  "approvalClicks": 1,
+  "submitRPCs": 1,
+  "approvalRPCs": 1,
+  "strictStages": [
+    "facts",
+    "vectors"
+  ],
+  "cutoff": 11,
+  "factsThrough": 11,
+  "vectorsThrough": 11,
+  "initialApprovalLocatorWait": "FAIL deadline exceeded; actual approval later observed on same original run; no resubmission",
+  "paidRetries": 0,
+  "ordinarySLOSample": false,
+  "humanApprovalWaitExcluded": true,
+  "dom": "- main:\n  - paragraph: Cortex\n  - heading \"Memory chat\" [level=1]\n  - paragraph: Responses and memory updates stay available across connections.\n  - button \"Sign out\"\n  - region \"Authentication\":\n    - heading \"Refresh credentials\" [level=2]\n    - paragraph: Use an access token issued by your host authentication provider. It stays in memory for this session.\n    - text: Access token\n    - textbox \"Access token\"\n    - button \"Refresh token\" [disabled]\n    - paragraph: Connected to manual-workspace in sandbox-acd3400a-4d6a-4589-bbaa-9c7fac860369.\n  - form \"Agent configuration\":\n    - text: Published agent\n    - textbox \"Published agent\": agent:e8ebfce5c9e4c63aaf247f0bbc15fe03bdb1c364c0186cf1f1008ee0267e9d38\n    - text: Agent version\n    - spinbutton \"Agent version\": \"1\"\n    - button \"Use agent version\"\n    - paragraph: \"Current version: 1 · Memory mode: indexed-plus-pending\"\n  - region \"Chat\":\n    - heading \"Conversation\" [level=2]\n    - button \"New chat\"\n    - generic \"Messages\":\n      - article:\n        - paragraph: You\n        - paragraph: Use memory_remember to store that my favorite tree is cedar. After the tool is approved, reply exactly TOOL47.\n      - article:\n        - paragraph: Cortex\n        - paragraph: TOOL47\n        - paragraph: \"Backend tool: memory_remember · succeeded\"\n        - paragraph: \"Memory operation receipt: ff0b839e2e25c999fa285d280864e29474f0e517b2a4f7a7d46435f787e24fd8\"\n    - text: Message\n    - textbox \"Message\"\n    - button \"Send\" [disabled]\n    - paragraph:\n      - text: \"Response:\"\n      - strong: complete\n    - paragraph:\n      - text: \"Memory:\"\n      - strong: complete\n    - paragraph: \"Context: complete\"\n    - paragraph: \"Run: run:bdafdde98694753462e110e580576132a6911d837aed63527f10f04d4ef8b1d1\"\n    - list \"Backend tool activity\":\n      - listitem: \"memory_remember: succeeded\"\n    - button \"Disconnect observer\" [disabled]\n    - button \"Reconnect observer\" [disabled]\n    - button \"Cancel run\" [disabled]\n    - text: Observe an existing run\n    - textbox \"Observe an existing run\": run:bdafdde98694753462e110e580576132a6911d837aed63527f10f04d4ef8b1d1\n    - button \"Observe run\"\n  - region \"Memory search\":\n    - heading \"Memory search\" [level=2]\n    - paragraph: cortex-text-small-1536-v1 · 1536 dimensions\n    - text: Search your memory\n    - textbox \"Search your memory\"\n    - button \"Search memory\" [disabled]\n    - group \"Memory readiness\":\n      - generic: Memory readiness\n      - paragraph: Read current indexing status, or require the selected stages to be complete. This check starts no model call.\n      - checkbox \"Require facts\" [checked]\n      - text: Require facts\n      - checkbox \"Require vectors\" [checked]\n      - text: Require vectors\n      - checkbox \"Require graph\"\n      - text: Require graph\n    - button \"Check memory readiness\"\n    - list:\n      - listitem: \"facts: complete · indexed through 11 of 11\"\n      - listitem: \"vectors: complete · indexed through 11 of 11\"\n  - button \"Show media tools\"\n- button \"Open Next.js Dev Tools\":\n- alert",
+  "screenshotSha256": "17069c4974f3b5cd540f303ce210fcaa89d7635d112ddf1dce2d094a748bcc64",
+  "screenshotLocalOnly": true
+}

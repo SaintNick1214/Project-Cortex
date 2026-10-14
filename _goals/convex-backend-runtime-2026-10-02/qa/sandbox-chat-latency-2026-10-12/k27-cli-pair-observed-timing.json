@@ -1,0 +1,51 @@
+{
+  "samples": [
+    {
+      "label": "cli-first",
+      "runId": "run:d53e02e026d255e3ecd7bd7d295d3bd284e7abb6587a10f075b661f92493aba3",
+      "commandId": 1,
+      "firstStdoutAcknowledgedMs": 8836.408003999999,
+      "expected": "CLI47",
+      "observedChunks": [
+        "CLI",
+        "47"
+      ],
+      "response": "complete",
+      "nativeCanonicalSemanticProof": "PENDING"
+    },
+    {
+      "label": "cli-warm",
+      "runId": "run:a01e5eb715396ea9920e9ea5b0a43e20f5775890bd0d19039db501d0aecf9444",
+      "commandId": 3,
+      "firstStdoutAcknowledgedMs": 9348.042045999995,
+      "expected": "CLW47",
+      "observedChunks": [
+        "CL",
+        "W47"
+      ],
+      "response": "complete",
+      "nativeCanonicalSemanticProof": "PENDING"
+    }
+  ],
+  "readinessCutoffs": [
+    6,
+    8
+  ],
+  "firstMemoryCompleteBeforeWarm": true,
+  "allClientsClosed": true,
+  "exit": {
+    "dockerExecExitCode": 0,
+    "teeExitCode": 0,
+    "source": "zsh pipestatus captured immediately after pipeline"
+  },
+  "logSha256": "92581a732fd6fb9bdd19f43bf033c34ba49c7acf8310b5e1bd9496192a2c9bdd",
+  "sloPass": 0,
+  "sloTotal": 2,
+  "zeroToolPrefix": true,
+  "backendTraceEnabledBeforeCLI": true,
+  "readinessCommands": [
+    2,
+    4
+  ],
+  "paidRetries": 0
+}

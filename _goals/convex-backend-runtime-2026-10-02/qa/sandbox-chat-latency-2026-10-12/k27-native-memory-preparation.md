@@ -1,0 +1,14 @@
+# K27 native memory controls prepared
+
+**READY_TO_RUN only after exact target READY and the corresponding Root GO. Native qualification is UNRUN.** Source is `6ce044425b7e52270cdf89cde0ea3a8fbb42f91a`; prospective kit is `manual-sandbox-prompt-trust-2026-10-14`. Image, archives, target, expiry and actual run IDs remain explicit NOT_READY placeholders. No service calls, clients, models or mutations ran during preparation.
+
+Four new files were individually adapted:
+
+- `k27-collector-pins.mjs`: established K27_PINS/requireK27ReadyPins/requireK27Run exports. `ready:false`; the target-only guard does **not** require four run IDs, allowing Root's exclusive auth-first phase once exact target pins arrive. Markers are READY47/WARM47/CLI47/CLW47; tools come after all four ordinary samples.
+- `k27-four-run-memory-readonly.mjs`: uses the original **zero-prefix** K26 helper, never its prefixed successor. Exact source/event/candidate/native-usage/current-profile assertions, 45 fresh target checks, 256-row bounds, 30-second queries, original 2/4/6/8 floors and exact sequences 1–8 remain unchanged.
+- `k27-native-ordinary-memory.mjs`: original two distinct convenience capture intents, supplied-ID replay/conflict, one public recall and dedicated-scope access/append-lock/status/deletion/revocation controls. Original assertions, 12-second RPC and 30-second operation/readiness/query bounds, zero paid retries and $3/run/$10/tenant controls remain. No supplemental unequal-candidate case added.
+- `k27-ordinary-memory-pins.mjs`: original exact-target/artifact and completed four-proof interlock. A recorded baseline FAIL remains FAIL and is never converted to functional acceptance.
+
+Preparation receipt `k27-native-memory-preparation.json` records original/adapted hashes, original unchanged recheck, and exact reverse normalization. The three memory helpers reverse byte-exactly using only K27/K26, namespace and kit substitutions; collector executable code reverses exactly after separately declared pin-data replacements. All four `node --check` executions passed under pinned Node24.15.0. One standalone target-pin guard invocation exited1 with the expected static UNREADY_K27 refusal, before any service/client access. Raw syntax/refusal logs are retained. No broad tests, judge, product/Proofs/website/Git changes or old-helper overwrites occurred.
+
+After Root supplies READY, the four proof's invocation is pinned Node24.15.0 with `NODE_OPTIONS=--import /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs`, `CORTEX_K27_MEMORY_TURN_COMPLETE_CONFIRMED=1`, then positional `SESSION NAME ID BROWSER_FIRST BROWSER_WARM CLI_FIRST CLI_WARM` from exact pins. The separate ordinary invocation additionally requires `CORTEX_K27_FOUR_RUN_PROOF_RECEIPT` pointing to the fresh K27 result, `CORTEX_K27_ORDINARY_MEMORY_GO=1`, and its original paired target/artifact arguments. These commands remain unexecuted.

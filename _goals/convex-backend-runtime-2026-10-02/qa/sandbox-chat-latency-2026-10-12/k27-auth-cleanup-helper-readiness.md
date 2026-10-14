@@ -1,0 +1,8 @@
+# K27 auth and cleanup preparation
+
+**PREPARED / NOT_READY / NOT_EXECUTED.** Accepted source `6ce044425b7e52270cdf89cde0ea3a8fbb42f91a`; kit `manual-sandbox-prompt-trust-2026-10-14`. Image and target are unknown. A owns `k27-collector-pins.mjs`; no shared pins were edited.
+
+- Auth: `k27-run-auth-once.mjs` launches `k27-auth-close-qualification-readonly.mjs` after the original READY guard and `CORTEX_K27_AUTH_GO=1`. Root must authorize its exclusive idle window FIRST, before any browser/CLI/memory writes. Original signed-owner, expired-valid-signature and invalid-signature expectations;4000ms auth/RPC bounds;256-event metadata; raw inventory/finance equality; zero protected negative payload and client closure are retained. The only diagnostic-body changes are generation/kit names plus the accepted source guard; inverse restores K26 exactly. No native/service invocation occurred.
+- Cleanup: `verify-k27-cleanup.mjs` consumes A's exact ready pins only after explicit CLEANED GO and `CORTEX_K27_CLEANUP_GO=1`. It reads the actual new direct-child exit receipt, asserting130/no pipeline and matching journal PID. The original approved project/team, exact deployment absence, nondefault-dev reference,30s GET/Docker bounds, exact Docker negative and four owned private-directory ENOENT oracles remain. Actual `k27-cleanup-final.json` is created only after successful observations, with no overwrite.
+
+Prepared files and exact hashes are in `k27-auth-cleanup-helper-readiness.json`. Existing K26 helpers and receipts remain intact. No tests, builds, services, clients, paid calls or product/P/W/Git changes were made. Auth GO and later separate cleanup GO are pending.

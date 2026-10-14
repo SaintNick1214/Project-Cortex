@@ -1,0 +1,320 @@
+{
+  "status": "READONLY_DIAGNOSIS_COMPLETE",
+  "target": {
+    "sessionId": "acd3400a-4d6a-4589-bbaa-9c7fac860369",
+    "name": "ideal-dolphin-181",
+    "id": 6175898
+  },
+  "sourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "runId": "run:d53e02e026d255e3ecd7bd7d295d3bd284e7abb6587a10f075b661f92493aba3",
+  "responseStatus": "complete",
+  "attemptNumber": 1,
+  "binding": {
+    "agentOrdinal": 0,
+    "semanticIdSha256": "e6485e781b35e282cdb8a5221cb6b0fcf4e120d8ec4ce7d57a0d5677144373a9",
+    "modelOperationIdSha256": "01d41484bd012becb2b389cb4de2b4e3ee3c979b5382832103c0e21a51af9c73",
+    "attemptIdSha256": "010d399a30fa2d217210f502da918cd78d1ccc4eb3679aeb5887796648174805",
+    "dispatchIdentitySha256": "a7fe952739455a4101060634e1923574e389d9d3dd96b7188927f87f3360f74d",
+    "operationMatchesAgentSemantic": true,
+    "attemptCount": 1,
+    "state": "uncertain",
+    "resultAttachmentState": "attached"
+  },
+  "request": {
+    "sha256": "225155ad4ed6c14cd97ceef73cc0b04db06f8609cd8e77272cf37f82a89e6f55",
+    "utf8Bytes": 7123,
+    "markerCounts": {
+      "READY47": 6,
+      "WARM47": 4,
+      "CLI47": 2,
+      "CLW47": 0,
+      "TOOL47": 0
+    },
+    "exactRequestedDirectiveCLI47": true,
+    "exactOlderDirectiveREADY47": true,
+    "containsTopazSyntheticPreference": true,
+    "canonicalSha256": "2d8b0e6a0c4cf2b83a84465bbfe4b7e9d4f1404886eeeef22d2085d21a488f04",
+    "messages": [
+      {
+        "index": 0,
+        "role": "system",
+        "sha256": "45dd012a5b7d2135575e72fccfc5b961c70bd0fd9097a5c30a041c8ff42e63c7",
+        "utf8Bytes": 305,
+        "markerCounts": {
+          "READY47": 0,
+          "WARM47": 0,
+          "CLI47": 0,
+          "CLW47": 0,
+          "TOOL47": 0
+        },
+        "exactRequestedDirectiveCLI47": false,
+        "exactOlderDirectiveREADY47": false,
+        "containsTopazSyntheticPreference": false,
+        "partTypes": [
+          "text"
+        ]
+      },
+      {
+        "index": 1,
+        "role": "assistant",
+        "sha256": "63d0dfc82a15090f58871f288e33d62994e762f022b75b990fdde0dcd6d257cf",
+        "utf8Bytes": 2843,
+        "markerCounts": {
+          "READY47": 3,
+          "WARM47": 2,
+          "CLI47": 0,
+          "CLW47": 0,
+          "TOOL47": 0
+        },
+        "exactRequestedDirectiveCLI47": false,
+        "exactOlderDirectiveREADY47": true,
+        "containsTopazSyntheticPreference": false,
+        "partTypes": [
+          "text"
+        ]
+      },
+      {
+        "index": 2,
+        "role": "user",
+        "sha256": "64add86b6e915e015ef082a8b526d27c0084f5a1aab615246cc234768baa46ef",
+        "utf8Bytes": 61,
+        "markerCounts": {
+          "READY47": 0,
+          "WARM47": 0,
+          "CLI47": 1,
+          "CLW47": 0,
+          "TOOL47": 0
+        },
+        "exactRequestedDirectiveCLI47": true,
+        "exactOlderDirectiveREADY47": false,
+        "containsTopazSyntheticPreference": true,
+        "partTypes": [
+          "text"
+        ]
+      }
+    ],
+    "lastUserIndex": 2,
+    "latestRole": "user"
+  },
+  "candidateEntryPool": [
+    {
+      "index": 0,
+      "kind": "memory",
+      "keySha256": "2f2b75ac297e1ed6082f137716121bd3497987c97e72a07ea8c1a8dc57d5f577",
+      "sha256": "bc33e1afe75fa3bea1c3585cb2859fec1bc441e4633670df886d6efe06a22fc9",
+      "utf8Bytes": 513,
+      "markerCounts": {
+        "READY47": 1,
+        "WARM47": 0,
+        "CLI47": 0,
+        "CLW47": 0,
+        "TOOL47": 0
+      },
+      "exactRequestedDirectiveCLI47": false,
+      "exactOlderDirectiveREADY47": true,
+      "containsTopazSyntheticPreference": false
+    },
+    {
+      "index": 1,
+      "kind": "memory",
+      "keySha256": "86b2ba7a0d174341dc2202e1936cd8ef9603d02a7f290a959ebea9bb445f74be",
+      "sha256": "440d233fc3757cfed52bb74c644e491154d720e4373fb58c3b3808d9fa39334c",
+      "utf8Bytes": 512,
+      "markerCounts": {
+        "READY47": 0,
+        "WARM47": 1,
+        "CLI47": 0,
+        "CLW47": 0,
+        "TOOL47": 0
+      },
+      "exactRequestedDirectiveCLI47": false,
+      "exactOlderDirectiveREADY47": false,
+      "containsTopazSyntheticPreference": false
+    },
+    {
+      "index": 2,
+      "kind": "memory",
+      "keySha256": "516fffbcc460c68c929cad49666fef3612f7995bd73a4527c38920aaf57e13db",
+      "sha256": "b84efe0532c0c0798da1f2ff1702791e9ad117087b13819e064b3ca43649023b",
+      "utf8Bytes": 472,
+      "markerCounts": {
+        "READY47": 0,
+        "WARM47": 1,
+        "CLI47": 0,
+        "CLW47": 0,
+        "TOOL47": 0
+      },
+      "exactRequestedDirectiveCLI47": false,
+      "exactOlderDirectiveREADY47": false,
+      "containsTopazSyntheticPreference": false
+    },
+    {
+      "index": 3,
+      "kind": "memory",
+      "keySha256": "a6bd7c3fbb3ea7c5d4722d7896cceec2b7af71083da4b63aa9e9275ec82eaf33",
+      "sha256": "7d19d14a13f9a254f034d4c48340f534c38347c2f93249eab75da3ab653c2644",
+      "utf8Bytes": 473,
+      "markerCounts": {
+        "READY47": 1,
+        "WARM47": 0,
+        "CLI47": 0,
+        "CLW47": 0,
+        "TOOL47": 0
+      },
+      "exactRequestedDirectiveCLI47": false,
+      "exactOlderDirectiveREADY47": false,
+      "containsTopazSyntheticPreference": false
+    },
+    {
+      "index": 4,
+      "kind": "fact",
+      "keySha256": "4afe3e4c3919c0a9157c7710ec294adc9bcaec4f57ca3c3f90adbb9a162a023e",
+      "sha256": "b98434da6d03991c256a9dac58fb866f77747349776c397b4617c52d5ba5cbeb",
+      "utf8Bytes": 523,
+      "markerCounts": {
+        "READY47": 0,
+        "WARM47": 0,
+        "CLI47": 0,
+        "CLW47": 0,
+        "TOOL47": 0
+      },
+      "exactRequestedDirectiveCLI47": false,
+      "exactOlderDirectiveREADY47": false,
+      "containsTopazSyntheticPreference": false
+    },
+    {
+      "index": 5,
+      "kind": "fact",
+      "keySha256": "d6facaf44cef671d5a5c3601f916ac9034cbdef16b89d7c63890d9b0a230ed6c",
+      "sha256": "4ea9752161a9cb8a0645fab5cb8281c328918dd9003153c055e0041be962d571",
+      "utf8Bytes": 537,
+      "markerCounts": {
+        "READY47": 1,
+        "WARM47": 0,
+        "CLI47": 0,
+        "CLW47": 0,
+        "TOOL47": 0
+      },
+      "exactRequestedDirectiveCLI47": false,
+      "exactOlderDirectiveREADY47": false,
+      "containsTopazSyntheticPreference": false
+    },
+    {
+      "index": 6,
+      "kind": "fact",
+      "keySha256": "414077224617c2d8c793d19fdf888660eec70cb171c0112800fa67a09bc65395",
+      "sha256": "4e79999eaefe9dec4985e2138eb71dd617cd589e5c1a30961b92b8c9936d076b",
+      "utf8Bytes": 523,
+      "markerCounts": {
+        "READY47": 0,
+        "WARM47": 0,
+        "CLI47": 0,
+        "CLW47": 0,
+        "TOOL47": 0
+      },
+      "exactRequestedDirectiveCLI47": false,
+      "exactOlderDirectiveREADY47": false,
+      "containsTopazSyntheticPreference": false
+    }
+  ],
+  "nativeInput": [
+    {
+      "idSha256": "04129bb12cb3599b52314767a4a7061e0c08eb363bd710e7ea68392dbe4703ab",
+      "status": "success",
+      "order": 0,
+      "stepOrder": 0,
+      "sha256": "62e5782a3025fc0679643ce680a8bfb3bbd42bd627116c7b9378378835b73a24",
+      "utf8Bytes": 61,
+      "markerCounts": {
+        "READY47": 0,
+        "WARM47": 0,
+        "CLI47": 1,
+        "CLW47": 0,
+        "TOOL47": 0
+      },
+      "exactRequestedDirectiveCLI47": true,
+      "exactOlderDirectiveREADY47": false,
+      "containsTopazSyntheticPreference": true
+    }
+  ],
+  "nativeOutput": [
+    {
+      "idSha256": "bc289fa064e4b757338511dcf21e96b0e81fc54089f348f3465047460030e9e5",
+      "status": "success",
+      "order": 0,
+      "stepOrder": 1,
+      "sha256": "2f8c61efd43ee65905c0b5c07e97f4fad5c41361e36bcc66b0ea010bdbf17538",
+      "utf8Bytes": 20,
+      "markerCounts": {
+        "READY47": 0,
+        "WARM47": 0,
+        "CLI47": 1,
+        "CLW47": 0,
+        "TOOL47": 0
+      },
+      "exactRequestedDirectiveCLI47": false,
+      "exactOlderDirectiveREADY47": false,
+      "containsTopazSyntheticPreference": false
+    }
+  ],
+  "privateNativeResult": {
+    "sha256": "7848ba9adc8260ecd7806cd8d8a4f0d4cdb9420e7a0567c2665ff24d5a128e63",
+    "utf8Bytes": 24,
+    "markerCounts": {
+      "READY47": 0,
+      "WARM47": 0,
+      "CLI47": 1,
+      "CLW47": 0,
+      "TOOL47": 0
+    },
+    "exactRequestedDirectiveCLI47": false,
+    "exactOlderDirectiveREADY47": false,
+    "containsTopazSyntheticPreference": false
+  },
+  "queryCount": 6,
+  "tables": [
+    {
+      "name": "runtimeRuns",
+      "componentPath": "",
+      "rows": 4
+    },
+    {
+      "name": "runtimeAgentExecutions",
+      "componentPath": "",
+      "rows": 4
+    },
+    {
+      "name": "runtimeAgentOperations",
+      "componentPath": "",
+      "rows": 4
+    },
+    {
+      "name": "runtimeModelOperations",
+      "componentPath": "",
+      "rows": 36
+    },
+    {
+      "name": "runtimeModelAttempts",
+      "componentPath": "",
+      "rows": 36
+    },
+    {
+      "name": "messages",
+      "componentPath": "agent",
+      "rows": 8
+    }
+  ],
+  "rawPayloadRetained": false,
+  "paidCalls": 0,
+  "mutations": 0,
+  "knownOutput": "NOT_OBSERVED_K27: outcome must come from the exact new run",
+  "limits": {
+    "rowsPerTable": 256,
+    "queryDeadlineMs": 30000
+  },
+  "limitations": [
+    "Stored native governed request proves what was bound before official Gateway dispatch; unavailable provider-internal prompt transformations remain unproven.",
+    "Marker presence/order is evidence, not a causal model-behavior explanation. No full private text/result is retained."
+  ],
+  "clientClosed": true
+}

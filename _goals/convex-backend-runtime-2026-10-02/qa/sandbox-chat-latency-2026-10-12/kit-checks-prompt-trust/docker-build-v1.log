@@ -1,0 +1,52 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.48kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.15.0-bookworm-slim@sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/7] FROM docker.io/library/node:24.15.0-bookworm-slim@sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d
+#4 resolve docker.io/library/node:24.15.0-bookworm-slim@sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 4.05MB 0.0s done
+#5 DONE 0.1s
+
+#6 [2/7] RUN npm install --global --ignore-scripts npm@12.2.0  && test "$(node --version)" = "v24.15.0"  && test "$(npm --version)" = "12.2.0"  && (getent group "20" >/dev/null || groupadd --gid "20" sandbox)  && useradd --uid "501" --gid "20" --create-home --shell /bin/bash sandbox  && mkdir -p /opt/cortex /work /run/cortex-secrets  && chown "501:20" /opt/cortex /work /run/cortex-secrets
+#6 CACHED
+
+#7 [3/7] COPY archives/ /opt/archives/
+#7 DONE 0.1s
+
+#8 [4/7] COPY install-candidates.mjs /opt/install-candidates.mjs
+#8 DONE 0.0s
+
+#9 [5/7] RUN chmod 0444 /opt/archives/*.tgz /opt/archives/manifest.json  && node /opt/install-candidates.mjs  && cd /opt/cortex  && npm install --ignore-scripts --no-audit --no-fund  && node --input-type=module -e 'import fs from "node:fs";for(const [name,version]of [["sdk","0.39.0"],["cli","0.39.0"],["vercel-ai-provider","0.39.0"],["templates","1.3.3"]]){const p=JSON.parse(fs.readFileSync("node_modules/@cortexmemory/"+name+"/package.json"));if(p.version!==version)throw Error("Candidate version mismatch");}'  && ln -s /opt/cortex/node_modules/.bin/cortex /usr/local/bin/cortex  && rm -f /opt/install-candidates.mjs
+#9 5.911 
+#9 5.911 added 93 packages in 6s
+#9 DONE 5.9s
+
+#10 [6/7] COPY entrypoint.mjs /opt/entrypoint.mjs
+#10 DONE 0.5s
+
+#11 [7/7] WORKDIR /work
+#11 DONE 0.0s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 4.0s done
+#12 exporting manifest sha256:5b5dda97d6004ef3d92ce7f3374f2444f4046526cb9c013138e136c3f15407cf 0.0s done
+#12 exporting config sha256:820c6c1d48c2d555b6723eb93b386212ce740e635de44a9a67602e68d1ba9309 done
+#12 exporting attestation manifest sha256:ce479dc3dfc366ba715514c86f10494e10c8ec966a7a1b8f49a58866d47e3ff9 done
+#12 exporting manifest list sha256:7b2568d008df68301e7dd81692f532092c725cd549f656fc566f91254e73a83c done
+#12 naming to docker.io/library/cortex-sandbox-prompt-trust:20261014 done
+#12 unpacking to docker.io/library/cortex-sandbox-prompt-trust:20261014
+#12 unpacking to docker.io/library/cortex-sandbox-prompt-trust:20261014 1.4s done
+#12 DONE 5.4s

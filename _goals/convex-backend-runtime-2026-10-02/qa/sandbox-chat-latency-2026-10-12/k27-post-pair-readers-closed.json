@@ -1,0 +1,21 @@
+{
+  "status": "BOTH_PREPARED_READERS_CLOSED",
+  "sequence": [
+    "capture-k27-run-chain.mjs exactCLIwarm",
+    "k27-request-order-readonly.mjs exactCLIfirst"
+  ],
+  "helperExits": {
+    "chain": 0,
+    "requestOrder": 0
+  },
+  "requestOrderClientClosed": true,
+  "chainClosure": "Original helper finallyawaitclient.close; directprocess exited0.",
+  "receipts": {
+    "k27-run-chain-a01e5eb71539-1792007510475.json": "062151e7ac319b7942709e71be41dced36aba470b5447cc4c00ab5c7cebdb937",
+    "k27-request-order-diagnosis-1792007532557.json": "b6b6050868b403e3d9f45f1c713a235b8dd636291527855c4d9e1ef96ecc188c"
+  },
+  "retries": 0,
+  "modelCalls": 0,
+  "mutations": 0,
+  "extraQueriesBeyondPreparedHelpers": 0
+}
