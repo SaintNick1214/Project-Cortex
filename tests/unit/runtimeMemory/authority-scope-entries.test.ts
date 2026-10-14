@@ -150,8 +150,13 @@ async function observationFixture() {
 }
 it("observation entry preserves private projections, handle checks and original fresh post-session endpoint", async () => {
   const { f, handle } = await observationFixture(), counts = await differential(f, client.observeEnvelope, { handle, limit: 10 }, false);
-  expect(counts.scopedAuthReads).toBe(counts.unscopedAuthReads); const beforeScopes = scopes.length;
-  await f.call(client.observeEnvelope, { handle, limit: 10 }); expect(scopes.length).toBe(beforeScopes);
+  // Accepted K29 retains raw authority rows within this native observation snapshot.
+  // The differential above still checks identical observation/effects/non-auth reads;
+  // the separate post-session and fresh revocation checks below remain independent.
+  expect(counts.scopedAuthReads).toBeLessThan(counts.unscopedAuthReads); const beforeScopes = scopes.length;
+  const priorScope=scopes.at(-1);
+  await f.call(client.observeEnvelope, { handle, limit: 10 }); expect(scopes.length).toBe(beforeScopes+1);expect(scopes.at(-1)).not.toBe(priorScope);
+  const beforeSession=scopes.length;await f.call(client.session,{});expect(scopes.length).toBe(beforeSession);
   f.grant.revokedAt = clock; await expect(f.call(client.session, {})).rejects.toThrow("FORBIDDEN"); await expect(f.call(client.observeEnvelope, { handle })).rejects.toThrow("FORBIDDEN");
 });
 it.each(["facts", "vectors", "delivery", "profile"])("new %s invocation freshly denies grant revocation rather than using a prior scope", async kind => {

@@ -5,6 +5,8 @@ import type { UIMessage } from "ai";
 import { CortexRuntimeClient, runtimePublicPart } from "@cortexmemory/sdk/runtime";
 import type { RuntimeRun, RuntimeRunHandle, RuntimeSession, RuntimeObservation, RuntimeToolApproval,
   RuntimeEmbeddingProfile, RuntimeRecallResult, RuntimeMemoryReadiness, RuntimeMemoryStage, RuntimePublicPart } from "@cortexmemory/sdk/runtime";
+import { MemoryEffortControl, MemoryEffortStatus } from "./MemoryEffortControl";
+import type { MemoryEffort } from "@cortexmemory/sdk/runtime";
 import { CortexRemoteTransport } from "@cortexmemory/vercel-ai-provider/remote";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
@@ -56,6 +58,7 @@ export function RuntimeQuickstart() {
   const [requestedAgentId, setRequestedAgentId] = useState(process.env.NEXT_PUBLIC_CORTEX_AGENT_ID ?? "");
   const [agentVersion, setAgentVersion] = useState(Number(process.env.NEXT_PUBLIC_CORTEX_AGENT_VERSION ?? "1"));
   const [requestedVersion, setRequestedVersion] = useState(process.env.NEXT_PUBLIC_CORTEX_AGENT_VERSION ?? "1");
+  const [effortSupported,setEffortSupported]=useState(false);
   const [memoryMode, setMemoryMode] = useState<string | null>(null);
   const denyConnection = useCallback((caught: unknown) => {
     if (!owned.current) return;
@@ -87,7 +90,7 @@ export function RuntimeQuickstart() {
         candidate = client;
         owned.current = client; const session = await client.session();
         if (!agentId) throw { code: "AGENT_REQUIRED" };
-        const definition = await client.getDefinition(agentId, agentVersion); setMemoryMode(definition.memoryMode);
+        const definition = await client.getDefinition(agentId, agentVersion); setMemoryMode(definition.memoryMode); setEffortSupported(definition.inputSelectionVersion===2&&definition.memoryEffortPolicyVersion===1);
         setConnection({ client, session }); setChatKey(key => key + 1);
       }
     } catch (caught) {
@@ -105,7 +108,7 @@ export function RuntimeQuickstart() {
     try {
       const version = Number(requestedVersion);
       const definition = await connection.client.getDefinition(requestedAgentId.trim(), version);
-      setAgentId(definition.agentId); setAgentVersion(version); setMemoryMode(definition.memoryMode); setChatKey(key => key + 1);
+      setAgentId(definition.agentId); setAgentVersion(version); setMemoryMode(definition.memoryMode); setEffortSupported(definition.inputSelectionVersion===2&&definition.memoryEffortPolicyVersion===1); setChatKey(key => key + 1);
     } catch (caught) { setError(errorCode(caught)); } finally { setBusy(false); }
   }
   return <main className="mx-auto min-h-screen max-w-5xl px-4 py-8 sm:px-8">
@@ -132,11 +135,12 @@ export function RuntimeQuickstart() {
       <button className={button} disabled={busy}>Use agent version</button>
       <p className="w-full py-2 text-sm text-gray-300">Current version: {agentVersion} · Memory mode: {memoryMode ?? "loading"}</p>
     </form>}
-    {connection && agentId && <RuntimeChat key={chatKey} connection={connection} agentId={agentId} agentVersion={agentVersion} onNewChat={() => setChatKey(key => key + 1)} onDenied={denyConnection} />}
+    {connection && agentId && <RuntimeChat key={chatKey} connection={connection} effortSupported={effortSupported} agentId={agentId} agentVersion={agentVersion} onNewChat={() => setChatKey(key => key + 1)} onDenied={denyConnection} />}
   </main>;
 }
 
-function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }: { connection: Connection; agentId: string; agentVersion: number; onNewChat: () => void; onDenied: (error: unknown) => void }) {
+function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied, effortSupported }: { effortSupported:boolean; connection: Connection; agentId: string; agentVersion: number; onNewChat: () => void; onDenied: (error: unknown) => void }) {
+  const [effort,setEffort]=useState<MemoryEffort>("normal");
   const [prompt, setPrompt] = useState("");
   const [handle, setHandle] = useState<RuntimeRunHandle | null>(null);
   const [run, setRun] = useState<RuntimeRun | null>(null);
@@ -216,7 +220,7 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
     event.preventDefault(); if (!prompt.trim()) return;
     setError(null); setDisconnected(false); const text = prompt; setPrompt("");
     latency.begin(chat.messages.length);
-    try { await chat.sendMessage({ text }); } catch (caught) { latency.failed(); setError(errorCode(caught)); }
+    try { await chat.sendMessage({ text },effortSupported?{body:{memory:{effort}}}:undefined); } catch (caught) { latency.failed(); setError(errorCode(caught)); }
   }
   async function resume(attach = false) {
     setError(null);
@@ -238,7 +242,7 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
   }
   async function search(event: FormEvent) {
     event.preventDefault(); setSearching(true); setRecall(null); setError(null);
-    try { setRecall(await connection.client.recall({ text: query, requestId: crypto.randomUUID(), limit: 5 })); }
+    try { setRecall(await connection.client.recall({ text: query, requestId: crypto.randomUUID(), memory:{effort} })); }
     catch (caught) { setError(errorCode(caught)); } finally { setSearching(false); }
   }
   async function checkReadiness(event: FormEvent) {
@@ -265,8 +269,10 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
           {message.parts.map((part, index) => <RuntimePart key={index} part={part} onOpenMedia={() => setShowMedia(true)} />)}</article>)}
       </div>
       {historyIncomplete && <p className="mt-3 text-sm text-amber-300">This view contains the first 100 transcript messages. Older or later pages remain available through the paginated transcript API.</p>}
+      <MemoryEffortControl value={effort} onChange={setEffort} supported={effortSupported} disabled={active||disconnected} />
       <form onSubmit={submit} className="mt-5 flex flex-wrap items-end gap-3"><label className="min-w-0 flex-1">Message<textarea className={input} value={prompt} onChange={event => setPrompt(event.target.value)} rows={3} required disabled={active || disconnected} /></label>
         <button className={button} disabled={active || disconnected || !prompt.trim()}>{active ? "Responding…" : "Send"}</button></form>
+      <MemoryEffortStatus trace={run?.memoryEffort} />
       {run && <div className="mt-5 rounded-lg border border-white/10 p-3 text-sm" aria-live="polite" data-testid="run-status"><p>Response: <strong>{run.responseStatus}</strong></p><p>Memory: <strong>{run.memoryStatus}</strong></p>
         {run.contextCompleteness && <p>Context: {run.contextCompleteness}</p>}{(run.failureCode || run.contextFailureCode) && <p role="alert" className="text-red-300">{run.failureCode ?? run.contextFailureCode}</p>}
         <p className="mt-2 break-all text-gray-400">Run: {run.runId}</p></div>}
@@ -283,7 +289,7 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
       {profile && <p className="mt-2 text-sm text-gray-300" data-testid="embedding-profile">{profile.profileId} · {profile.dimensions} dimensions</p>}
       <form onSubmit={search} className="mt-4 flex flex-wrap items-end gap-3"><label className="min-w-0 flex-1">Search your memory<input className={input} value={query} onChange={event => setQuery(event.target.value)} required /></label>
         <button className={button} disabled={searching || !query.trim()}>{searching ? "Searching…" : "Search memory"}</button></form>
-      {recall && <div className="mt-4" aria-live="polite">{!recall.items.length && <p>No indexed memories match this search.</p>}<ul className="space-y-3">{recall.items.map(item => <li key={`${item.type}:${item.id}`} className="rounded-lg bg-white/5 p-3"><span className="mr-2 text-sm text-cortex-300">{item.type}</span>{item.content}</li>)}</ul></div>}
+      {recall && <div className="mt-4" aria-live="polite"><MemoryEffortStatus trace={recall.memoryEffort} />{!recall.items.length && <p>{recall.memoryEffort?.unavailableStages.length?"No results; some memory sources are unavailable.":recall.memoryEffort&&recall.memoryEffort.stopReasons.some(reason=>reason!=="exhausted")?"No results within the retrieval limits.":"No indexed memories match this search."}</p>}<ul className="space-y-3">{recall.items.map(item => <li key={`${item.type}:${item.id}`} className="rounded-lg bg-white/5 p-3"><span className="mr-2 text-sm text-cortex-300">{item.type}</span>{item.content}</li>)}</ul></div>}
       <form onSubmit={checkReadiness} className="mt-5 rounded-lg border border-white/10 p-3">
         <fieldset><legend className="font-medium">Memory readiness</legend>
           <p className="mt-2 text-sm text-gray-300">Read current indexing status, or require the selected stages to be complete. This check starts no model call.</p>

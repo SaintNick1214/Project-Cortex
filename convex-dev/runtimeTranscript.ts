@@ -1,3 +1,4 @@
+import type { EffectiveMemoryEffortPolicy } from "../src/domain/memory-effort";
 import { artifactMetadataWitness, checkArtifactContextWitnesses, readArtifactContext } from "./runtimeArtifactContext";
 import type { ArtifactContextWitness } from "../src/domain/artifact-context";
 import { bindNativeAssetReferences, publicMessageAssets, releaseAssetReferences } from "./runtimeAssetCatalog";
@@ -352,9 +353,17 @@ export async function captureCutoff(ctx: ReadCtx, conversation: ManagedConversat
   return snapshot;
 }
 /** Fresh V8 selection reads bounded metadata, then verifies official native content. */
+export function selectedPolicyForRun(policyInput: Parameters<typeof modelInputPolicy>[0],run: Pick<Doc<"runtimeRuns">,"memoryEffortCanonical">):ModelInputSelectionPolicy {
+  const policy=modelInputPolicy(policyInput);
+  if(policy.version!==2)return policy;
+  if(!run.memoryEffortCanonical)transcriptDenied("STALE_TRANSCRIPT");
+  const effort=JSON.parse(run.memoryEffortCanonical) as EffectiveMemoryEffortPolicy;
+  if(effort.policyVersion!=="memory-effort-v1"||effort.version!==1)transcriptDenied("STALE_TRANSCRIPT");
+  return modelInputPolicy({...policy,effort:{...policy.effort!,maxContextTokens:effort.maxContextTokens},optionalEntries:effort.maxEntries});
+}
 export async function captureSelectedCutoff(ctx: ReadCtx, conversation: ManagedConversation, run: Doc<"runtimeRuns">,
-  requiredStages: ("facts" | "vectors" | "graph")[], policyInput?: ModelInputSelectionPolicy): Promise<CutoffV8> {
-  const policy = modelInputPolicy(policyInput);
+  requiredStages: ("facts" | "vectors" | "graph")[], policyInput?: Parameters<typeof modelInputPolicy>[0]): Promise<CutoffV8> {
+  const policy = selectedPolicyForRun(policyInput,run);
   await checkConversation(ctx, run.authorityReference, conversation, "run");
   if (run.conversationEpoch !== conversation.epoch || !run.inputMessageIds.length) transcriptDenied("STALE_TRANSCRIPT");
   const input = await nativeById(ctx, run.inputMessageIds);
@@ -372,14 +381,19 @@ export async function captureSelectedCutoff(ctx: ReadCtx, conversation: ManagedC
   const pins: MessagePin[] = [...inputPins], ids = new Set(inputPins.map(pin => pin.nativeMessageId));
   const positions = new Set(inputPins.map(pin => canonicalModelJson([pin.order, pin.stepOrder])));
   if (positions.size !== pins.length) transcriptDenied("TRANSCRIPT_CONFLICT");
+  const effort=policy.version===2?JSON.parse(run.memoryEffortCanonical!) as EffectiveMemoryEffortPolicy:undefined;
+  const scanLimit=effort?.maxWork??MODEL_INPUT_RECENT_SCAN_LIMIT;
+  const historyCeiling=effort?.maxEntries===null?policy.recentMessages:Math.min(policy.recentMessages,inputPins.length+(effort?.maxEntries??policy.recentMessages));
+  let selectedUnits=input.reduce((sum,message)=>sum+utf8Bytes(canonicalModelJson(privateModelMessage(message!))),0),pinBytes=0;
+  let recentStopReason:"input"|"work"|undefined;
   const candidates = await ctx.db.query("runtimeTranscriptMessages").withIndex("by_conversation_position", q => q.eq("tenantId", conversation.tenantId)
     .eq("memorySpaceId", conversation.memorySpaceId).eq("conversationId", conversation.conversationId).lte("order", anchor.order))
-    .order("desc").take(MODEL_INPUT_RECENT_SCAN_LIMIT);
-  for (let offset = 0; offset < candidates.length && pins.length < policy.recentMessages; offset += 4) {
+    .order("desc").take(scanLimit);
+  selection: for (let offset = 0; offset < candidates.length && pins.length < historyCeiling; offset += 4) {
     const batch = candidates.slice(offset, offset + 4).filter(bridge => !ids.has(bridge.nativeMessageId) && bridge.approved
       && bridge.tombstonedAt === undefined && bridge.role !== "tool" && comparePosition(bridge, anchor) <= 0);
     const natives = await nativeById(ctx, batch.map(bridge => bridge.nativeMessageId));
-    for (let i = 0; i < batch.length && pins.length < policy.recentMessages; i++) {
+    for (let i = 0; i < batch.length && pins.length < historyCeiling; i++) {
       const bridge = batch[i]!;
       if (bridge.runId && bridge.runId !== run.runId) {
         const previous = singleTranscript(await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", conversation.tenantId)
@@ -388,12 +402,18 @@ export async function captureSelectedCutoff(ctx: ReadCtx, conversation: ManagedC
       }
       const native = await verifyMessage(ctx, conversation, bridge, natives[i]);
       if (native.status !== "success" || !textOnlyModelMessage(privateModelMessage(native))) continue;
+      const units=utf8Bytes(canonicalModelJson(privateModelMessage(native)))+64;
+      if(effort&&selectedUnits+units>effort.maxContextTokens){recentStopReason="input";continue;}
+      const nextPinBytes=utf8Bytes(canonicalModelJson({nativeMessageId:native._id,order:native.order,stepOrder:native.stepOrder,sourceEventId:bridge.sourceEventId,sourceRevision:bridge.revision,contentHash:bridge.contentHash,canonicalContentHash:"a".repeat(64)}));
+      if(effort&&pinBytes+nextPinBytes>120000){recentStopReason="work";break selection;}
+      selectedUnits+=units;pinBytes+=nextPinBytes;
       const position = canonicalModelJson([native.order, native.stepOrder]); if (positions.has(position)) transcriptDenied("TRANSCRIPT_CONFLICT");
       positions.add(position); ids.add(native._id);
       pins.push({ nativeMessageId: native._id, order: native.order, stepOrder: native.stepOrder, sourceEventId: bridge.sourceEventId,
         sourceRevision: bridge.revision, contentHash: bridge.contentHash, canonicalContentHash: await canonicalMessageHash(native) });
     }
   }
+  if(effort&&candidates.length===scanLimit&&pins.length<historyCeiling)recentStopReason="work";
   const ingestion = await readScopeSequence(ctx, run.authorityReference);
   const graph = await ctx.db.query("runtimeGraphScopes").withIndex("by_scope", q => q.eq("tenantId", conversation.tenantId).eq("memorySpaceId", conversation.memorySpaceId)).unique();
   const snapshot: CutoffV8 = { version: 8, conversationId: conversation.conversationId, threadId: conversation.threadId,
@@ -402,7 +422,7 @@ export async function captureSelectedCutoff(ctx: ReadCtx, conversation: ManagedC
     anchor, messages: pins.sort(comparePosition), ingestionCutoff: { scopeIdentity: canonicalModelJson([conversation.tenantId, conversation.memorySpaceId]),
       sequence: ingestion.sequence, graphSequence: graph?.sequence ?? 0, requiredStages }, capturedAuthorityReference: run.authorityReference,
     completeness: pins.length > policy.maxMessages ? "incomplete" : "complete",
-    inputSelection: { version: 1, policy, policyHash: await semanticHash(canonicalModelJson(policy)),
+    inputSelection: { version: policy.version, ...(recentStopReason?{recentStopReason}:{}),...(policy.version===2 ? {effort:JSON.parse(run.memoryEffortCanonical!) as EffectiveMemoryEffortPolicy}:{}), policy, policyHash: await semanticHash(canonicalModelJson(policy)),
       mandatoryMessageIds: [...run.inputMessageIds], coverage: "selected" } };
   if (utf8Bytes(canonicalModelJson(snapshot)) > 180_000) transcriptDenied("CONTEXT_INCOMPLETE");
   return snapshot;
@@ -411,7 +431,7 @@ export async function captureSelectedCutoff(ctx: ReadCtx, conversation: ManagedC
 export async function hydrateSelectedCutoff(ctx: ReadCtx, conversation: ManagedConversation, run: Doc<"runtimeRuns">, snapshot: CutoffV8) {
   if (snapshot.version !== 8 || !snapshot.inputSelection) transcriptDenied("STALE_TRANSCRIPT");
   const policy = modelInputPolicy(snapshot.inputSelection.policy);
-  if (snapshot.version !== 8 || snapshot.inputSelection.version !== 1 || snapshot.inputSelection.coverage !== "selected"
+  if (snapshot.version !== 8 || snapshot.inputSelection.version !== policy.version || snapshot.inputSelection.coverage !== "selected"
     || snapshot.inputSelection.policyHash !== await semanticHash(canonicalModelJson(policy)) || snapshot.messages.length > policy.maxMessages
     || canonicalModelJson(snapshot.inputSelection.mandatoryMessageIds) !== canonicalModelJson(run.inputMessageIds)
     || !snapshot.inputSelection.mandatoryMessageIds.every(id => snapshot.messages.some(pin => pin.nativeMessageId === id))) transcriptDenied("STALE_TRANSCRIPT");

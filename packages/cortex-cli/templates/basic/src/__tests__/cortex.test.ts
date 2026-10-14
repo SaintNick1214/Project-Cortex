@@ -50,7 +50,7 @@ describe("per-operation client ownership", () => {
   it("pins selectors and closes after a verified positive", async () => {
     const f = runtimeMock(), factory = vi.fn(() => f.client);
     expect(await withRuntime(async () => "token", async () => "result", { config, factory })).toBe("result");
-    expect(factory).toHaveBeenCalledWith(expect.objectContaining({ scope: { tenantId: "tenant", memorySpaceId: "space" }, authTimeoutMs: 10000, requestTimeoutMs: 12000 }));
+    expect(factory).toHaveBeenCalledWith(expect.objectContaining({ scope: { tenantId: "tenant", memorySpaceId: "space" }, authTimeoutMs: 10000, requestTimeoutMs: config.timeoutMs }));
     expect(f.client.session).toHaveBeenCalledTimes(2); expect(f.client.close).toHaveBeenCalledOnce();
   });
   it("closes on failed authentication without invoking the work", async () => {

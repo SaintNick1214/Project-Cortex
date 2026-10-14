@@ -1,6 +1,7 @@
 "use client";
 import { useChat } from "@ai-sdk/react";
 import type {
+  MemoryEffort,
   RuntimeContentJobV1,
   RuntimeObservation,
   RuntimeRun,
@@ -10,12 +11,18 @@ import type {
 import { CortexRuntimeClient } from "@cortexmemory/sdk/runtime";
 import { CortexRemoteTransport } from "@cortexmemory/vercel-ai-provider/remote";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  MemoryEffortControl,
+  MemoryEffortStatus,
+} from "./memory-effort-control";
 
 export function RuntimeChatSDK({
   conversationId,
 }: {
   conversationId?: string;
 }) {
+  const [effort, setEffort] = useState<MemoryEffort>("normal");
+  const [effortSupported, setEffortSupported] = useState(false);
   const [token, setToken] = useState("");
   const tokenRef = useRef("");
   tokenRef.current = token;
@@ -157,13 +164,17 @@ export function RuntimeChatSDK({
         await client.close();
         return;
       }
-      await client.getDefinition(agentId, agentVersion);
+      const definition = await client.getDefinition(agentId, agentVersion);
       if (attemptRef.current !== attempt) {
         await client.close();
         return;
       }
       setIdentity(
         `${session.tenantId} / ${session.memorySpaceId} / ${session.principalId}`
+      );
+      setEffortSupported(
+        definition.inputSelectionVersion === 2 &&
+          definition.memoryEffortPolicyVersion === 1
       );
       const transport = new CortexRemoteTransport({
         agentId,
@@ -429,7 +440,14 @@ export function RuntimeChatSDK({
       )}
       {connection ? (
         <>
-          <ChatPanel connection={connection} onError={protectedFailure} />
+          <ChatPanel
+            connection={connection}
+            effort={effort}
+            effortSupported={effortSupported}
+            onError={protectedFailure}
+            run={run}
+            setEffort={setEffort}
+          />
           <section aria-label="Run status">
             <h2 className="text-xl">Run status</h2>
             <p>
@@ -530,7 +548,7 @@ export function RuntimeChatSDK({
                 if (typeof text === "string") {
                   busy(async (isCurrent) => {
                     const value = await connection.client.recall({
-                      limit: 5,
+                      memory: { effort },
                       requestId: crypto.randomUUID(),
                       text,
                     });
@@ -570,7 +588,15 @@ export function RuntimeChatSDK({
 function ChatPanel({
   connection,
   onError,
+  effort,
+  setEffort,
+  effortSupported,
+  run,
 }: {
+  effort: MemoryEffort;
+  setEffort: (value: MemoryEffort) => void;
+  effortSupported: boolean;
+  run?: RuntimeRun;
   connection: { client: CortexRuntimeClient; transport: CortexRemoteTransport };
   onError: (error: unknown) => void;
 }) {
@@ -596,11 +622,21 @@ function ChatPanel({
           </article>
         ))}
       </div>
+      <MemoryEffortControl
+        disabled={status === "submitted" || status === "streaming"}
+        onChange={setEffort}
+        supported={effortSupported}
+        value={effort}
+      />
+      <MemoryEffortStatus trace={run?.memoryEffort} />
       <form
         onSubmit={(event) => {
           event.preventDefault();
           if (text.trim()) {
-            sendMessage({ text }).catch(onError);
+            sendMessage(
+              { text },
+              effortSupported ? { body: { memory: { effort } } } : undefined
+            ).catch(onError);
             setText("");
           }
         }}

@@ -948,3 +948,6 @@ export type {GraphRebuildTransport,GraphRebuildSelection,GraphErasureTransport,G
 export { AgentRegistryWriteReceiptError, AgentRegistryCapabilityError, AgentRegistryCommittedResultError } from "./agents";
 export type { AgentRegistryWriteReceipt, AgentRegistryScope } from "./agents";
 export { AssetCapabilityUnavailableError } from "./assets/errors";
+
+export type { MemoryEffort, MemoryEffortRequest, MemoryEffortPolicyV1, EffectiveMemoryEffortPolicy, MemoryEffortTrace, MemoryEffortStopReason } from "./domain/memory-effort.js";
+export { MEMORY_EFFORT_POLICY_V1, normalizeMemoryEffortRequest, resolveMemoryEffortPolicy } from "./domain/memory-effort.js";

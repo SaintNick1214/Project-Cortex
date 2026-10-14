@@ -111,7 +111,7 @@ async function backendFixture(version) {
   return { directory, demo, sdk, cli, manifest };
 }
 
-for (const version of ["1.3.0", "1.4.0", "1.4.1", "1.4.2"]) {
+for (const version of ["1.3.0", "1.4.0", "1.4.1", "1.4.2", "1.5.0"]) {
 test(`${version} runtime preparation awaits the selected additive composer and preserves the private app registration`, async () => {
   const f = await backendFixture(version);
   try {
@@ -155,7 +155,7 @@ test("runtime composition missing its distribution fails without falling back to
 test("unreviewed template versions and unknown provider templates refuse before composition", async () => {
   const f = await backendFixture("1.4.3");
   try {
-    for (const version of ["1.4.3", "1.5.0", "2.0.0"])
+    for (const version of ["1.4.3", "1.5.1", "2.0.0"])
       await assert.rejects(prepareCiDemoBackend({ directory: f.demo, sdkDirectory: f.sdk, cliSource: f.cli, manifest: { ...f.manifest, version } }), /explicit canonical template version/);
     await assert.rejects(prepareCiDemoBackend({ directory: f.demo, sdkDirectory: f.sdk, cliSource: f.cli, manifest: { ...f.manifest, name: "unknown", version: "1.3.0" } }), /Unrecognized canonical demo/);
     await assert.rejects(readFile(join(f.demo, "legacy-selection.json")), { code: "ENOENT" });
@@ -216,7 +216,7 @@ test("selected npm and pnpm override conflicts refuse before backend writes whil
   } finally { await rm(f.directory, { recursive: true, force: true }); }
 });
 
-for (const version of ["1.3.0", "1.4.0", "1.4.1", "1.4.2"]) for (const manager of ["npm@12.2.0", "pnpm@10.33.0"]) {
+for (const version of ["1.3.0", "1.4.0", "1.4.1", "1.4.2", "1.5.0"]) for (const manager of ["npm@12.2.0", "pnpm@10.33.0"]) {
 test(`${manager} ${version} resolves emitted runtime dependencies as direct app edges before the frozen install`, async () => {
   const f = await fixture(manager);
   try {

@@ -41,7 +41,7 @@ const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = aw
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
 beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; });
 afterEach(() => { jest.restoreAllMocks(); });
-async function fixture(v8 = false) {
+async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
   const prepared = await prepareSourceContent(scope, explicitSourceLineage(scope, "whole-source"), "My favorite season is autumn", { now: () => clock });
   await writer.putSource(prepared.source);await ingestion.enqueueSourceEvent(f.ctx, f.reference, prepared.source);
@@ -54,6 +54,13 @@ async function fixture(v8 = false) {
     tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId, profile, embedding: Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0), processingReceiptId: await processingIdentityKey(identity) }],
     facts: [fact], expectedFactVersions: { "whole-fact": 0 } });
   Object.assign(f.db.table("runtimeIngestionEvents")[0], { factsState: "complete", vectorsState: "complete", vectorProfilesComplete: [profile.profileId] });
+  for(let i=0;i<independentSeeds;i++){
+    const current=await prepareSourceContent(scope,explicitSourceLineage(scope,`direct-seed-${i}`),`Independent direct source ${i}`,{now:()=>clock});await writer.putSource(current.source);await ingestion.enqueueSourceEvent(f.ctx,f.reference,current.source);
+    const lineage=current.source.lineage,identity={...lineage,stage:"facts" as const,semanticPolicyVersion:"independent-v1"};
+    const fact:DerivedFact={_id:"",factId:`independent-${i}`,tenantId:scope.tenantId,memorySpaceId:scope.memorySpaceId,ownerPrincipalId:scope.principalId,lineage,extractionPolicyVersion:"independent-v1",fact:`Hello world independent match ${i}`,factType:"knowledge",confidence:90,sourceType:"manual",tags:[],version:1,createdAt:clock,updatedAt:clock};
+    await writer.commitDerived({source:lineage,identity,facts:[fact],expectedFactVersions:{[fact.factId]:0}});
+  }
+  for(const event of f.db.table("runtimeIngestionEvents"))Object.assign(event,{factsState:"complete",vectorsState:"complete",vectorProfilesComplete:[profile.profileId]});
   const startupMutation = f.ctx.runMutation.bind(f.ctx);
   f.ctx.runMutation = (async (ref, args) => {
     let name = "";try { name = getFunctionName(ref); } catch { return startupMutation(ref, args); }
@@ -61,14 +68,14 @@ async function fixture(v8 = false) {
     return startupMutation(ref, args);
   }) as MutationCtx["runMutation"];
   const published = v8 ? await f.call<{agentId:string;version:number}>(definitions.publishVersion, { memorySpaceId:"space-a",clientMutationId:"v8-recall-read-scope",expectedPreviousVersion:0,
-    definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:await definitions.executableRegistryHashV3(),
-      inputSelection:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}} }) : undefined;
-  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: { ...f.request(), ...(published ? {agentId:published.agentId,agentVersion:published.version}: {}) } });await f.call(agent.start, { runId: run.runId });
+    definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:effortAware?await definitions.executableRegistryHashV4():await definitions.executableRegistryHashV3(),handlerVersion:effortAware?2:1,
+      inputSelection:effortAware?{version:2,...(seedWork===undefined?{}:{effort:{version:1,maxWork:seedWork}})}:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}} }) : undefined;
+  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: { ...f.request(), ...(published ? {agentId:published.agentId,agentVersion:published.version,...(effortAware?{memory:{effort}}:{})}: {}) } });await f.call(agent.start, { runId: run.runId });
   const owned = f.db.table("runtimeAgentExecutions")[0];
   const attempt = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };await f.call(agent.startContext, attempt);
   const current = await agent.executionContext(f.ctx, attempt);
   const input = { text: current.messages.filter(m => m.role === "user").slice(-1).map(m => typeof m.content === "string" ? m.content : m.content.filter(p => p.type === "text").map(p => p.text).join("\n")).join("\n"),
-    requestId: `context:${await semanticHash(canonicalModelJson([run.runId, 1]))}`, limit: 10 };
+    requestId: `context:${await semanticHash(canonicalModelJson([run.runId, 1]))}`, limit: (await import("../../../src/domain/memory-effort")).memoryEffortCandidateLimit(current.snapshot.version===8?current.snapshot.inputSelection.effort:undefined),...(effortAware?{memory:{effort}}:{}) };
   const selection = { cutoff: current.snapshot.ingestionCutoff.sequence, boundary: { conversationId: current.snapshot.conversationId, runId: run.runId,
     queueSequence: current.snapshot.queueSequence, anchor: { order: current.snapshot.anchor.order, stepOrder: current.snapshot.anchor.stepOrder } }, excludedSourceKeys: [] };
   const args = { ...attempt, input, profile, selection }, calls: string[] = [], physicalQueries: string[] = [];
@@ -98,6 +105,36 @@ async function matched(f: Fixture, prepared?: Awaited<ReturnType<typeof whole.pr
   const proposed = prepared ?? await plan(f);
   return await f.call<Awaited<ReturnType<typeof whole.readMatchesHandler>>>(whole.readMatches, { ...f.args, hits: f.hits, factPlan: proposed.factPlan });
 }
+it("actual V8 Action uses shared indexed traversal for effort-aware recall and keeps its source witnesses",async()=>{
+ const f=await fixture(true,true),selected:unknown[]=[];
+ const result=await whole.finishAgentRecallV8(f.action,f.attempt,{now:()=>clock},f.input,profile,{profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},{...f.selection,onSelected:value=>selected.push(value)},clock);
+ expect(result.memoryEffort).toMatchObject({requestedEffort:"normal",maxDepth:4,maxEntries:8,selected:2});expect(result.items.find(item=>item.id==="whole-fact")?.retrieval?.depth).toBe(2);
+ expect(selected).toMatchObject([{witnesses:[expect.objectContaining({sourceId:expect.any(String)})]}]);expect(f.calls).toContain("runtimeAgentRecall:readMatchesV8");
+});
+it("V2 traversal cannot replace a stale prepared fact binding with a new version while delivering its old text",async()=>{
+ const f=await fixture(true,true);const args={...f.args,hits:f.hits,factPlan:(await f.call<Awaited<ReturnType<typeof whole.prepareReadsHandler>>>(whole.prepareReadsV8,f.args)).factPlan};
+ // Seed a fact explicitly in the prepared read plan, isolating the cross-RPC race.
+ const row=f.db.table("facts")[0]!,reader=new ConvexMemoryRepository(f.ctx,f.reference,"read"),prior=(await reader.listFacts({limit:1}))[0]!;
+ const {captureRecallFact}=await import("../../../convex-dev/runtimeMemoryRepository");const bindings={sources:[],facts:[],vectors:[]};await captureRecallFact(bindings,prior,await reader.getSource(prior.lineage.sourceId));
+ args.factPlan={kind:"ready",facts:[prior],bindings};await f.db.patch("facts",row._id,{fact:"changed current value",version:2});
+ await expect(f.call(whole.readMatchesV8,args)).rejects.toThrow("STALE_SOURCE");
+});
+it("Fast Agent retrieval starts after prior embedding latency and retains real linked context",async()=>{
+ const f=await fixture(true,true,"fast"),afterEmbedding=clock+1000;
+ const result=await whole.finishAgentRecallV8(f.action,f.attempt,{now:()=>afterEmbedding},f.input,profile,{profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},{...f.selection,onSelected:()=>{}},afterEmbedding);
+ expect(result.items.some(item=>item.id==="whole-fact"&&item.retrieval?.depth===2)).toBe(true);expect(result.memoryEffort!.stopReasons).not.toContain("deadline");expect(result.memoryEffort!.requestedEffort).toBe("fast");
+});
+it("actual Max Agent composition selects all12 independent direct matches beyond the old10 seed ceiling",async()=>{
+ const f=await fixture(true,true,"max",12);expect(f.input.limit).toBeGreaterThan(12);
+ const result=await whole.finishAgentRecallV8(f.action,f.attempt,{now:()=>clock},f.input,profile,{profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},{...f.selection,onSelected:()=>{}},clock);
+ const independent=result.items.filter(item=>item.id.startsWith("independent-"));expect(independent).toHaveLength(12);expect(independent.every(item=>item.retrieval?.depth===1)).toBe(true);expect(independent.map(item=>item.id)).toContain("independent-11");expect(result.memoryEffort!.maxEntries).toBeNull();
+});
+it("Max Agent reports a clamped direct-seed work bound instead of claiming complete discovery",async()=>{
+ const f=await fixture(true,true,"max",13,96);expect(f.input.limit).toBe(12);
+ f.db.table("facts").find(row=>row.factId==="independent-0")!.tombstonedAt=clock;
+ const result=await whole.finishAgentRecallV8(f.action,f.attempt,{now:()=>clock},f.input,profile,{profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},{...f.selection,onSelected:()=>{}},clock);
+ expect(result.items.filter(item=>item.id.startsWith("independent-")).length).toBe(11);expect(result.items.some(item=>item.id==="independent-11")).toBe(true);expect(result.items.some(item=>item.id==="independent-12")).toBe(false);expect(result.memoryEffort!.stopReasons).toContain("work");expect(result.memoryEffort!.unavailableStages).toContain("direct-fact-candidate-work-bound");
+});
 it("registered plan/matches reproduce original ordered selection, bindings and current delivery", async () => {
   const f = await fixture(), repository = createActionMemoryRepository(f.action, f.reference, "read"), reads = repository.stageRecallReads();
   const [vectors, facts] = await Promise.all([reads.searchVectors({ text: f.input.text, profile, embedding: Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0), embeddingRunBudgetId: f.current.run.runBudgetId }, 10), reads.listFacts({ limit: 10 })]);

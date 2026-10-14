@@ -1,8 +1,9 @@
 import { jest } from "@jest/globals";
 import { getFunctionName } from "convex/server";
 import type { AuthTokenFetcher } from "convex/browser";
-import { CortexRuntimeClient, CortexRuntimeError } from "../../../src/client-runtime/index";
-import type { RuntimeClientPort, RuntimeLatencyEvent, RuntimeObservation, RuntimeRun, RuntimeRunHandle, RuntimeSession } from "../../../src/client-runtime/index";
+import { CortexRuntimeClient, CortexRuntimeError, runtimeMemoryEffortTrace } from "../../../src/client-runtime/index";
+import { emptyMemoryEffortTrace, resolveMemoryEffortPolicy } from "../../../src/domain/memory-effort";
+import type { RuntimeClientPort, RuntimeLatencyEvent, RuntimeObservation, RuntimeRecallResult, RuntimeRecallItem, RuntimeRun, RuntimeRunHandle, RuntimeSession } from "../../../src/client-runtime/index";
 
 const verified: RuntimeSession = { version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "owner", userId: "user" };
 const value: RuntimeRun = { version: 1, runId: "run", conversationId: "conversation", agentId: "agent", agentVersion: 1,
@@ -30,7 +31,7 @@ function fixture(autoAuth = true, onLatencyEvent?: (event: RuntimeLatencyEvent) 
     if (name === "runtimeMemory:defaultProfile") return { version: 1, profile: { profileId: "profile", dimensions: 1536 } };
     return value;
   });
-  const action = jest.fn(async (ref: Parameters<RuntimeClientPort["action"]>[0], args: Record<string, unknown>) => { calls.push({ name: getFunctionName(ref), args }); return { items: [], context: "", profileId: "profile" }; });
+  const action = jest.fn(async (ref: Parameters<RuntimeClientPort["action"]>[0], args: Record<string, unknown>): Promise<RuntimeRecallResult> => { calls.push({ name: getFunctionName(ref), args }); return { items: [], context: "", profileId: "profile" }; });
   const port = { setAuth: (fetcher: AuthTokenFetcher, callback: (value: boolean) => void) => { tokenFetcher = fetcher; authCallback = callback; if (autoAuth) callback(true); },
     query: jest.fn(async () => { throw new Error("PRIVATE_QUERY_PROHIBITED"); }), mutation,
     action,
@@ -573,4 +574,79 @@ describe("browser remote runtime client", () => {
     });
   });
 
+});
+
+
+describe("memory effort public runtime contract",()=>{
+  it.each(["fast","normal","high","max"] as const)("forwards %s requests without client-side policy clamping or hidden result limits",async effort=>{
+    const f=fixture();try{
+      await f.client.submitAndStart({...request,memory:{effort,maxEntries:0,maxContextTokens:100}});
+      expect(f.calls.find(call=>call.name==="runtimeClient:submitAndStartEnvelope")?.args.request).toEqual({...request,memory:{effort,maxEntries:0,maxContextTokens:100}});
+      await f.client.recall({requestId:"effort-recall",text:"facts",memory:{effort}});
+      expect(f.calls.find(call=>call.name==="runtimeMemory:recall")?.args).toEqual({tenantId:"tenant",memorySpaceId:"space",requestId:"effort-recall",text:"facts",memory:{effort}});
+      expect(f.port.query).not.toHaveBeenCalled();
+    }finally{await f.client.close();}
+  });
+  it("preserves old omitted bindings and explicit caller limits while normalizing an explicit empty control",async()=>{
+    const f=fixture();try{
+      await f.client.submit(request);
+      expect(f.calls.find(call=>call.name==="runs:submit")?.args.request).toEqual(request);
+      await f.client.recall({requestId:"limited",text:"facts",limit:3,memory:{}});
+      expect(f.calls.find(call=>call.name==="runtimeMemory:recall")?.args).toMatchObject({limit:3,memory:{effort:"normal"}});
+    }finally{await f.client.close();}
+  });
+  it.each([null,[],"fast",{effort:"instant"},{maxEntries:-1},{maxContextTokens:0},{maxDepth:99},{effort:"normal",model:"foreign"}])("rejects invalid control %j before any RPC",async memory=>{
+    const f=fixture();try{
+      await expect(f.client.submitAndStart({...request,memory} as Parameters<typeof f.client.submitAndStart>[0])).rejects.toMatchObject({code:"INVALID_INPUT"});
+      await expect(f.client.recall({text:"facts",requestId:"invalid",memory} as Parameters<typeof f.client.recall>[0])).rejects.toMatchObject({code:"INVALID_INPUT"});
+      expect(f.calls).toHaveLength(0);expect(f.action).not.toHaveBeenCalled();
+    }finally{await f.client.close();}
+  });
+  it("refuses memory getters and symbols without invoking user code",async()=>{
+    const f=fixture(),get=jest.fn(()=>"max");try{
+      for(const memory of [Object.defineProperty({},"effort",{get,enumerable:true}),{effort:"normal",[Symbol("private")]:true},Object.create({effort:"max"})]) {
+        await expect(f.client.submit({...request,memory})).rejects.toMatchObject({code:"INVALID_INPUT"});
+      }
+      expect(get).not.toHaveBeenCalled();expect(f.calls).toHaveLength(0);
+    }finally{await f.client.close();}
+  });
+  it("retains attributed public recall metadata and validates the new evidence path",async()=>{
+    const f=fixture(),item:RuntimeRecallItem={type:"memory",id:"chunk",content:"useful evidence",score:0.8,source:"vector",tenantId:"tenant",userId:"owner",memory:{memoryId:"chunk",tags:["tag"]},graphContext:{connectedEntities:["entity"]},retrieval:{depth:1,path:["source:key"]}};
+    f.action.mockImplementation(async()=>({items:[item],context:"useful evidence",profileId:"profile"}));
+    try{const result=await f.client.recall({text:"facts",requestId:"attribution",memory:{effort:"max"}});expect(result.items).toEqual([item]);expect(result.items[0]?.retrieval?.path).not.toBe(item.retrieval!.path);}
+    finally{await f.client.close();}
+  });
+  it("projects server trace through admission and recall without private metadata",async()=>{
+    const f=fixture(),trace={...emptyMemoryEffortTrace(resolveMemoryEffortPolicy({effort:"max"})),reachedDepth:10,visited:12,selected:10,stopReasons:["work" as const],unavailableStages:["external_graph"]};
+    const original=f.mutation.getMockImplementation()!;
+    f.mutation.mockImplementation(async(ref,args)=>getFunctionName(ref)==="runtimeClient:submitAndStartEnvelope"?{version:1,session:verified,admission:{version:1,run:{...value,memoryEffort:trace},start:{runId:value.runId,attemptNumber:value.attemptNumber,state:"ready"}}}:original(ref,args));
+    f.action.mockImplementation(async()=>Object.assign({items:[],context:"",profileId:"profile"},{memoryEffort:trace}));
+    try {
+      const admission=await f.client.submitAndStart({...request,memory:{effort:"max"}}),recall=await f.client.recall({text:"facts",requestId:"trace"});
+      expect(admission.run.memoryEffort).toEqual(trace);expect(recall.memoryEffort).toEqual(trace);
+      expect(admission.run.memoryEffort).not.toBe(trace);expect(admission.run.memoryEffort?.stopReasons).not.toBe(trace.stopReasons);
+      expect(()=>runtimeMemoryEffortTrace({...trace,evidenceText:"PRIVATE_TEXT"})).toThrow("INVALID_RESPONSE");
+      expect(()=>runtimeMemoryEffortTrace({...trace,unavailableStages:Array(17).fill("stage")})).toThrow("INVALID_RESPONSE");
+      expect(()=>runtimeMemoryEffortTrace({...trace,stopReasons:["complete"]})).toThrow("INVALID_RESPONSE");
+    }finally{await f.client.close();}
+  });
+});
+
+
+describe("Max recall transport deadline",()=>{
+ it("allows a real delayed Max action past the old12s default without retrying",async()=>{
+  jest.useFakeTimers();const f=fixture();f.action.mockImplementation(async()=>{await new Promise(resolve=>setTimeout(resolve,13000));return {items:[],context:"useful bounded Max result",profileId:"profile"};});
+  try{const pending=f.client.recall({text:"facts",requestId:"max-delay",memory:{effort:"max"}});await tick();await jest.advanceTimersByTimeAsync(13001);await expect(pending).resolves.toMatchObject({context:"useful bounded Max result"});expect(f.action).toHaveBeenCalledTimes(1);}
+  finally{await f.client.close();jest.useRealTimers();}
+ });
+ it("retains the ordinary12s guard and respects explicit shorter Max caller deadlines",async()=>{
+  jest.useFakeTimers();const f=fixture();f.action.mockImplementation(async()=>{await new Promise(resolve=>setTimeout(resolve,13000));return {items:[],context:"late",profileId:"profile"};});
+  const bounded=new CortexRuntimeClient({deploymentUrl:"https://unit.invalid",fetchToken:async()=>"opaque",client:f.port,requestTimeoutMs:25});
+  try{
+   const ordinary=expect(f.client.recall({text:"facts",requestId:"normal-delay",memory:{effort:"normal"}})).rejects.toMatchObject({code:"RPC_DEADLINE_EXCEEDED",outcome:"uncertain"});
+   await tick();await jest.advanceTimersByTimeAsync(12001);await ordinary;
+   const lower=expect(bounded.recall({text:"facts",requestId:"bounded-max",memory:{effort:"max"}})).rejects.toMatchObject({code:"RPC_DEADLINE_EXCEEDED",outcome:"uncertain"});
+   await tick();await jest.advanceTimersByTimeAsync(26);await lower;await jest.advanceTimersByTimeAsync(13000);expect(f.action).toHaveBeenCalledTimes(2);
+  }finally{await bounded.close();await f.client.close();jest.useRealTimers();}
+ });
 });

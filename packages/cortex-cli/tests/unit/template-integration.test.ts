@@ -40,7 +40,7 @@ describe("current canonical catalog prospective integration",()=>{
   it.each(["basic","vercel-ai-quickstart","chat-sdk"] as const)("%s full schema/app preflight is write-free at an absent destination",async id=>{
     const parent=await root(),target=path.join(parent,"prospective"),before=await tree(parent);
     const prepared=await prepareTemplateInit(target,id,inputs());
-    expect(prepared.template.version).toBe(id === "chat-sdk" ? "1.4.2" : "1.4.0");
+    expect(prepared.template.version).toBe("1.5.0");
     const integration=await prepareTemplateIntegration(prepared,{dryRun:true,graph:"none"});
     expect(integration?.summary).toMatchObject({sdkVersion:"0.39.0",packageManager:id==="chat-sdk"?"pnpm":"npm"});
     expect(integration?.summary?.conflicts).toEqual([]);
@@ -57,7 +57,7 @@ describe("current canonical catalog prospective integration",()=>{
     expect(outputs.map(o=>o.identity)).toEqual([outputs[0].identity,outputs[0].identity]);
     expect(await tree(first)).toEqual(await tree(second));
     expect(services.install).not.toHaveBeenCalled();
-    expect((await readTemplateBaseline(first,"basic"))?.identity.version).toBe("1.4.0");
+    expect((await readTemplateBaseline(first,"basic"))?.identity.version).toBe("1.5.0");
   });
   it.each(["basic","vercel-ai-quickstart","chat-sdk"] as const)("%s immutable 1.2 payload refuses the real current SDK before any effect",async id=>{
     const parent=await root(),target=path.join(parent,"retained-legacy"),before=await tree(parent);

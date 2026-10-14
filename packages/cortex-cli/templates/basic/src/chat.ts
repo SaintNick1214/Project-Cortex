@@ -1,15 +1,17 @@
 /** Submit only new text. History, model/tool loops and memory writes belong to the backend. */
-import type { RuntimeRunHandle, RuntimeObservation } from "@cortexmemory/sdk/runtime";
+import type { RuntimeRunHandle, RuntimeObservation, MemoryEffortRequest } from "@cortexmemory/sdk/runtime";
 import type { RuntimeClient, RuntimeConfig } from "./cortex.js";
+import { memoryRequest } from "./memory-effort.js";
 import { AppError, identifier } from "./cortex.js";
 export function message(value: unknown): string {
   if (typeof value !== "string" || !value.trim() || new TextEncoder().encode(value).byteLength > 16000) throw new AppError("INVALID_MESSAGE");
   return value;
 }
-export async function chat(client: RuntimeClient, config: RuntimeConfig, input: { requestId: string; message: string; conversationId?: string }) {
+export async function chat(client: RuntimeClient, config: RuntimeConfig, input: { requestId: string; message: string; conversationId?: string; memory?: MemoryEffortRequest }) {
   const requestId = identifier(input.requestId), text = message(input.message);
+  const memory=input.memory===undefined?undefined:memoryRequest(input.memory);
   const { handle, run } = await client.submitAndStart({ version: 1, agentId: config.agentId, agentVersion: config.agentVersion, clientRequestId: requestId,
-    ...(input.conversationId === undefined ? {} : { conversationId: identifier(input.conversationId) }), parts: [{ type: "text", text }] }, { streaming: true });
+    ...(input.conversationId === undefined ? {} : { conversationId: identifier(input.conversationId) }), parts: [{ type: "text", text }], ...(memory===undefined?{}:{memory}) }, { streaming: true });
   return { version: 1 as const, handle, run };
 }
 export async function observe(client: RuntimeClient, runId: string, options: { cursor?: number; attemptNumber?: number; finalOnly?: boolean } = {}) {

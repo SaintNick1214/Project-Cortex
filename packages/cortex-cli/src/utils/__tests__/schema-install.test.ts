@@ -367,7 +367,7 @@ describe("installer preservation", () => {
     const manifest = JSON.parse(
       fs.readFileSync(path.join(project, "package.json"), "utf8"),
     );
-    expect(manifest.version).toBe("1.4.0");
+    expect(manifest.version).toBe("1.5.0");
     expect(manifest.scripts.build).toBe("tsc");
     expect(manifest.scripts["build:convex"]).toBe("convex deploy");
     const minimal = path.join(root, "backend-only");

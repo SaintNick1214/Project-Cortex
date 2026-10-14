@@ -669,6 +669,7 @@ export default defineSchema({
     .index("by_factId", ["factId"]) // Unique lookup
     .index("by_runtime_scope_factId", ["tenantId", "memorySpaceId", "factId"])
     .index("by_runtime_source", ["tenantId", "memorySpaceId", "lineage.sourceId", "lineage.sourceRevision"])
+    .index("by_runtime_source_fact",["tenantId","memorySpaceId","lineage.sourceId","lineage.sourceRevision","factId"])
     .index("by_history_tenant_fact", ["tenantId", "factId"])
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
     .index("by_tenantId", ["tenantId"]) // Tenant's facts

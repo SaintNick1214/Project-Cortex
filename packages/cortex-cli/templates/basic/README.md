@@ -28,6 +28,7 @@ Plain text creates and prints one request ID, admits the run, then displays its 
 - `/approve-input [runId]` approves input; `/approve-tool <operationId> <toolName> <requestHash>` uses the exact displayed server request hash for the current run.
 - `/cancel [runId]` requests server cancellation. Closing an observation only disconnects locally.
 - `/recall <requestId> <query>` performs a governed retrieval, independently of chat.
+- `/effort` or `/effort show` displays the local choice. `/effort fast|normal|high|max` changes subsequent sends and recalls. It starts no remote work. Normal is the initial choice; omission keeps legacy bindings compatible. Explicit effort requires an Agent definition advertising selection version 2 and effort policy version 1; unsupported definitions fail `INVALID_INPUT`. Max has no preset hop or entry cap, while backend policy, input, work and deadlines still bound retrieval. Server metadata reports effective bounds and stops separately from the selected choice.
 - `/history`, `/conversations`, `/profile`, `/readiness`, `/session`, `/new`, `/exit` expose fresh verified metadata/history. Session changes fail closed.
 
 Response completion can precede facts/vectors/graph readiness. A published strict Agent definition controls its barrier; a status read does not change that policy. `PROFILE_NOT_READY`, `CAPABILITY_UNAVAILABLE`, `POLICY_DENIED`, `FORBIDDEN` and deadline/unknown outcomes are actionable errors, not echo-mode success.
@@ -49,7 +50,7 @@ curl http://127.0.0.1:3001/chat \
   -d '{"requestId":"caller-stable-1","message":"Hello"}'
 ```
 
-`POST /chat` returns 202 with a verified handle and run status. Continue with `GET /runs/:id`, `GET /runs/:id/observe`, `POST /runs/:id/start`, `POST /runs/:id/cancel`, or input/tool approval endpoints. Observation cursor resume uses both `cursor` and `attemptNumber`; a nonzero cursor without its attempt is rejected. Use `POST /recall` with `{requestId,query}`, `GET /history/:id?cursor=...`, `/conversations`, `/profile` and `/readiness`. `/health` exposes only application health, without private scope metadata.
+`POST /chat` returns 202 with a verified handle and run status. Continue with `GET /runs/:id`, `GET /runs/:id/observe`, `POST /runs/:id/start`, `POST /runs/:id/cancel`, or input/tool approval endpoints. Observation cursor resume uses both `cursor` and `attemptNumber`; a nonzero cursor without its attempt is rejected. Both `/chat` and `/recall` accept optional `memory: {effort,maxEntries?,maxContextTokens?}`. Effort is `fast`, `normal`, `high` or `max`; ceilings can only lower backend bounds. Recall has no application default result cap; an explicit `limit` is preserved. Use `POST /recall` with `{requestId,query}`, `GET /history/:id?cursor=...`, `/conversations`, `/profile` and `/readiness`. `/health` exposes only application health, without private scope metadata.
 
 ## Checks
 

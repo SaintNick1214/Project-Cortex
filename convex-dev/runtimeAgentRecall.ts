@@ -1,3 +1,6 @@
+import type { MemoryEffortRequest } from "../src/domain/memory-effort";
+import { traverseConvexMemory,factEvidenceNode,sourceEvidenceNode } from "./runtimeMemoryTraversal";
+import { memoryEffortRequest } from "./runtimeMemorySchema";
 /** Private ordinary Agent read pipeline. Proposals never establish current authority. */
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
@@ -29,7 +32,7 @@ import { ConvexMemoryRepository, captureRecallFact, captureRecallVectors, canoni
 import type { MemoryDeliveryBindings } from "./runtimeMemoryRepository";
 import { completeRecallDelivery, vectorRecallItems } from "./runtimeMemoryServices";
 
-type Input = { text: string; requestId: string; limit: number };
+type Input = { text: string; requestId: string; limit: number;memory?:MemoryEffortRequest };
 type Selection = { cutoff: number; boundary: ContextBoundary; excludedSourceKeys: string[] };
 export type AgentRecallSelection = Selection & { onSelected(value: { witnesses: ContextSourceWitness[]; provenance: [string, SourceLineage][]; sourceScores?: [string, number][]; itemLineages?: [string, SourceLineage][] }): void };
 const privateInlineSelection = Symbol("private-inline-agent-selection");
@@ -39,12 +42,12 @@ export function withPrivateInlineAgentSelection(selection: AgentRecallSelection)
   return Object.defineProperty({ ...selection }, privateInlineSelection, { value: true });
 }
 type Args = AgentQueryEmbeddingAttempt & { input: Input; profile: EmbeddingProfile; selection: Selection };
-type FactPlan = { kind: "ready"; facts: DerivedFact[]; bindings: MemoryDeliveryBindings } | { kind: "refused"; refusalCanonical: string };
+type FactPlan = { kind: "ready"; facts: DerivedFact[]; bindings: MemoryDeliveryBindings;candidateWorkBound?:true } | { kind: "refused"; refusalCanonical: string };
 const emptyBindings = (): MemoryDeliveryBindings => ({ sources: [], facts: [], vectors: [] });
 const selectionArgs = v.object({ cutoff: v.number(), boundary: contextBoundary, excludedSourceKeys: v.array(v.string()) });
-const inputArgs = v.object({ text: v.string(), requestId: v.string(), limit: v.number() });
+const inputArgs = v.object({ text: v.string(), requestId: v.string(), limit: v.number(),memory:v.optional(memoryEffortRequest) });
 const nativeArgs = { ...agentAttempt, input: inputArgs, profile: embeddingProfile, selection: selectionArgs };
-const factPlanArgs = v.union(v.object({ kind: v.literal("ready"), facts: v.array(derivedFact), bindings: memoryDeliveryBindings }),
+const factPlanArgs = v.union(v.object({ kind: v.literal("ready"), facts: v.array(derivedFact), bindings: memoryDeliveryBindings,candidateWorkBound:v.optional(v.literal(true)) }),
   v.object({ kind: v.literal("refused"), refusalCanonical: v.string() }));
 
 async function currentRead(ctx: QueryCtx, args: Args, expectedVersion?: 8) {
@@ -64,9 +67,9 @@ export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args, expec
   const [vector, facts] = await Promise.allSettled([
     (async () => { const authority = await repository.authority(undefined, "read");
       await repository.assertProfileReady(args.profile, current.run.runBudgetId); return { resourceAccess: authority.resourceAccess }; })(),
-    (async (): Promise<FactPlan> => { const values = await repository.listFacts({ limit: args.input.limit }), bindings = emptyBindings();
-      for (const fact of values) await captureRecallFact(bindings, fact, await new ConvexMemoryRepository(sourceCtx, args.reference, "read").getSource(fact.lineage.sourceId));
-      return { kind: "ready", facts: values, bindings }; })(),
+    (async (): Promise<FactPlan> => { const candidates = args.input.memory===undefined?{facts:await repository.listFacts({ limit: args.input.limit }),candidateWorkBound:false}:await repository.searchFactCandidates(args.input.text,args.input.limit), bindings = emptyBindings();
+      for (const fact of candidates.facts) await captureRecallFact(bindings, fact, await new ConvexMemoryRepository(sourceCtx, args.reference, "read").getSource(fact.lineage.sourceId));
+      return { kind: "ready", facts: candidates.facts, bindings,...(candidates.candidateWorkBound?{candidateWorkBound:true as const}:{}) }; })(),
   ]);
   if (vector.status === "rejected") throw vector.reason;
   const factPlan: FactPlan = facts.status === "fulfilled" ? facts.value
@@ -113,10 +116,30 @@ export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hit
   for (const [key, value] of selectedFacts.provenance) provenance.set(key, value);
   for (const source of factBindings.sources) if (!bindings.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(source))) bindings.sources.push(source);
   for (const fact of factBindings.facts) if (!bindings.facts.some(value => value.factId === fact.factId && value.payloadHash === fact.payloadHash)) bindings.facts.push(fact);
+  const effort=current.snapshot.version===8?current.snapshot.inputSelection.effort:undefined;
+  const effortResult=effort?await traverseConvexMemory(sourceCtx,repository,[...selectedVectors.selectedIndexes.map(index=>{const match=matches[index]!;return {...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!};}),...selectedFacts.selectedIndexes.map(index=>factEvidenceNode(facts[index]!))],effort,bindings,async node=>{
+    const selected=await contextSourceBatchHandler(sourceCtx,{reference:args.reference,...args.selection,permission:node.item.type==="fact"?"canViewFacts":"canViewMemories",witnesses:[],priorWitnesses:witnesses.has(node.lineage.sourceId)?[witnesses.get(node.lineage.sourceId)!]:[],items:[{sourceId:node.lineage.sourceId,expected:{sourceEventId:node.lineage.sourceEventId,sourceRevision:node.lineage.sourceRevision}}]});
+    for(const next of selected.witnesses){const merged=mergeContextWitness(witnesses.get(next.sourceId),next);if(!merged)memoryError("STALE_CONTEXT","Traversal source changed");witnesses.set(next.sourceId,merged);}
+    for(const [key,lineage] of selected.provenance)provenance.set(key,lineage);
+    return selected.selectedIndexes.length===1;
+  }):undefined;
+  if(effortResult){
+    for(const stage of [...(args.factPlan.candidateWorkBound?["direct-fact-candidate-work-bound"]:[]),...(args.hits.length===args.input.limit?["direct-vector-candidate-work-bound"]:[])]){
+      if(!effortResult.memoryEffort.unavailableStages.includes(stage))effortResult.memoryEffort.unavailableStages.push(stage);
+      if(!effortResult.memoryEffort.stopReasons.includes("work"))effortResult.memoryEffort.stopReasons.push("work");
+    }
+    const retainedSources=new Set(bindings.sources.map(value=>value.sourceId));
+    for(const [sourceId,witness] of witnesses){
+      if(!retainedSources.has(sourceId)){witnesses.delete(sourceId);continue;}
+      const permissions=[...new Set(bindings.sources.filter(value=>value.sourceId===sourceId).map(value=>value.permission))];
+      witnesses.set(sourceId,{...witness,permissions});
+    }
+    for(const [key,lineage] of provenance)if(!retainedSources.has(lineage.sourceId))provenance.delete(key);
+  }
   await new ConvexMemoryRepository(nativeCtx, args.reference, "read").recheckAuthority();
-  return { vectorItems: vectorRecallItems(selectedVectors.selectedIndexes.map(index => matches[index]!)),
+  return { ...(effortResult?{effortResult}:{}),vectorItems: vectorRecallItems(selectedVectors.selectedIndexes.map(index => matches[index]!)),
     facts: selectedFacts.selectedIndexes.map(index => facts[index]!), bindings, witnesses: [...witnesses.values()], provenance: [...provenance.entries()],
-    itemLineages: [...selectedVectors.selectedIndexes.map(index => [`memory:${matches[index]!.chunk.chunkId}`, matches[index]!.source.lineage] as [string, SourceLineage]), ...selectedFacts.selectedIndexes.map(index => [`fact:${facts[index]!.factId}`, facts[index]!.lineage] as [string, SourceLineage])],
+    itemLineages: [...(effortResult?.itemLineages??[]),...selectedVectors.selectedIndexes.map(index => [`memory:${matches[index]!.chunk.chunkId}`, matches[index]!.source.lineage] as [string, SourceLineage]), ...selectedFacts.selectedIndexes.map(index => [`fact:${facts[index]!.factId}`, facts[index]!.lineage] as [string, SourceLineage])],
     sourceScores: selectedVectors.selectedIndexes.map(index => [contextSourceKey({ tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! }, matches[index]!.source.lineage), matches[index]!.score] as [string, number]) };
 }
 export const readMatches = internalQuery({ args: { ...nativeArgs, hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })), factPlan: factPlanArgs }, handler: readMatchesHandler });
@@ -125,7 +148,7 @@ const matchesRef = makeFunctionReference("runtimeAgentRecall:readMatches") as un
 
 /** Actual fresh native reads around the original Action-only ANN search. */
 export async function finishAgentRecall(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, clock: DomainClock, input: Input,
-  profile: EmbeddingProfile, result: Parameters<typeof validateModelEmbeddings>[0], selection: AgentRecallSelection) {
+  profile: EmbeddingProfile, result: Parameters<typeof validateModelEmbeddings>[0], selection: AgentRecallSelection,startedAt?:number) {
   validateModelEmbeddings(result, profile, 1);
   const { onSelected, ...scope } = selection;
   const args = { ...attempt, input, profile, selection: scope };
@@ -139,7 +162,7 @@ export async function finishAgentRecall(ctx: ActionCtx, attempt: AgentQueryEmbed
   const read = await ctx.runQuery(matchesRef, { ...args, factPlan: plan.factPlan, hits: hits.map(hit => ({ id: hit._id, score: hit._score })) });
   onSelected({ witnesses: read.witnesses, provenance: read.provenance, sourceScores: read.sourceScores, itemLineages: read.itemLineages });
   return await completeRecallDelivery({ clock, finalDelivery: async () => await ctx.runMutation(memoryReferences.finalDelivery,
-    { reference: attempt.reference, bindings: read.bindings }) }, input, profile.profileId, read.vectorItems, read.facts);
+    { reference: attempt.reference, bindings: read.bindings }) }, input, profile.profileId, read.vectorItems, read.facts,read.effortResult,startedAt);
 }
 
 export const prepareReadsV8 = internalQuery({ args: nativeArgs, handler: (ctx, args) => prepareReadsHandler(ctx, args, 8) });
@@ -176,8 +199,9 @@ export const readMatchesAndDeliveryV8 = internalMutation({ args: { ...nativeArgs
 const matchesDeliveryV8Ref = makeFunctionReference("runtimeAgentRecall:readMatchesAndDeliveryV8") as unknown as FunctionReference<"mutation", "internal", Parameters<typeof readMatchesHandler>[1], Awaited<ReturnType<typeof readMatchesAndDeliveryV8Handler>>>;
 
 export async function finishAgentRecallV8(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, clock: DomainClock, input: Input,
-  profile: EmbeddingProfile, result: Parameters<typeof validateModelEmbeddings>[0], selection: AgentRecallSelection) {
+  profile: EmbeddingProfile, result: Parameters<typeof validateModelEmbeddings>[0], selection: AgentRecallSelection,startedAt?:number) {
   validateModelEmbeddings(result, profile, 1);
+  if(startedAt===undefined&&input.memory!==undefined)startedAt=clock.now();
   const { onSelected, ...scope } = selection;
   const args = { ...attempt, input, profile, selection: scope };
   const plan = await ctx.runQuery(prepareV8Ref, args);
@@ -197,5 +221,5 @@ export async function finishAgentRecallV8(ctx: ActionCtx, attempt: AgentQueryEmb
     if (!combined) return await ctx.runMutation(deliveryV8Ref, { reference: attempt.reference, bindings: read.bindings });
     if (combined.refusal !== undefined) throwRefusal(combined.refusal);
     return combined.delivery;
-  } }, input, profile.profileId, read.vectorItems, read.facts);
+  } }, input, profile.profileId, read.vectorItems, read.facts,read.effortResult,startedAt);
 }

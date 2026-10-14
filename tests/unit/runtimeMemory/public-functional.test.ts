@@ -18,7 +18,8 @@ const {memoryScope}=await import('../../../convex-dev/runtimeMemoryRepository');
 const memory = await import("../../../convex-dev/runtimeMemory");
 const { memoryFixture, registeredHandler } = await import("./fixture");
 
-type Input = { tenantId?: string; memorySpaceId?: string; text: string; requestId: string; limit?: number };
+type Input = { tenantId?: string; memorySpaceId?: string; text: string; requestId: string; limit?: number;
+  memory?: import("../../../src/domain/memory-effort").MemoryEffortRequest };
 const input: Input = { tenantId: "tenant-a", memorySpaceId: "space-a", text: "  I prefer dark mode\r\n", requestId: "public-remember" };
 const facts = { facts: [{ fact: "User prefers dark mode", factType: "preference", subject: "user-a", predicate: "prefers",
   object: "dark mode", confidence: 0.91, tags: ["ui"], entities: [], relations: [] }] };
@@ -112,7 +113,7 @@ describe("functional public memory wiring with an offline model", () => {
     expect(f.searches[0]).toMatchObject({ filter: { key: "scopeProfileOwnerKey", value: JSON.stringify([
       "tenant-a", "space-a", DEFAULT_EMBEDDING_PROFILE.profileId, f.principal._id]) } });
     expect(f.policyRequests[1]).toMatchObject({ operationKey: "embedding.query", requestId: "public-recall",
-      requestCanonical: canonicalModelJson({ purpose: "recall", text: "preferences", limit: 10 }) });
+      requestCanonical: canonicalModelJson({ purpose: "recall", text: "preferences", limit: 100,memory:{effort:"normal"},memoryEffortPolicyVersion:1 }) });
   });
   it("reuses normalized request account and derived receipt without duplicate persistent data", async () => {
     const f = setup(); const first = await remember(f); const writes = f.db.writes;
@@ -160,6 +161,14 @@ describe("functional public memory wiring with an offline model", () => {
   it.each([0, 101, 1.5, Number.NaN])("invalid recall limit %p stops before budget or query model", async (limit) => {
     const f = setup(); expect(await rejection(async () => await recall(f, { ...input, limit }))).toMatchObject({ code: "INVALID_INPUT", outcome: "not_dispatched" });
     expect(f.policyRequests).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
+  });
+  it.each([{maxEntries:-1},{maxEntries:1.5},{maxContextTokens:0},{maxContextTokens:1.5}])("invalid public memory ceilings %p return INVALID_INPUT before financial/model writes", async (memory) => {
+    const f=setup();
+    expect(await rejection(async()=>await recall(f,{...input,memory}))).toMatchObject({code:"INVALID_INPUT",outcome:"not_dispatched"});
+    expect(f.policyRequests).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.operations).toEqual([]);
+    expect(f.searches).toEqual([]); expect(f.db.writes).toBe(0);
+    expect(f.db.table("runtimeBudgetAccounts").filter(row=>row.kind==="run")).toEqual([]);
+    expect(f.db.table("runtimeModelAttempts")).toEqual([]); noDerived(f);
   });
   it("late revocation after preflight denies source persistence with the functional uncertain envelope", async () => {
     const f = setup(); f.setAfterBudgetHook(() => { f.grant.revokedAt = 1; });

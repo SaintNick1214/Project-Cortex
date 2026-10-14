@@ -1,9 +1,11 @@
 /** Browser-only v1 contracts. Selectors are verified by the backend, never authority. */
+import type { MemoryEffortRequest, MemoryEffortTrace } from "../domain/memory-effort.js";
+export type { MemoryEffort, MemoryEffortRequest, MemoryEffortTrace, MemoryEffortPolicyV1, EffectiveMemoryEffortPolicy, MemoryEffortStopReason } from "../domain/memory-effort.js";
 export interface RuntimeScope { readonly tenantId: string; readonly memorySpaceId: string }
 export interface RuntimeSession extends RuntimeScope { readonly version: 1; readonly principalId: string; readonly userId: string; readonly deliveryExpiresAt?: number }
 export interface TextSubmitV1 {
   version: 1; agentId: string; agentVersion: number; conversationId?: string;
-  clientRequestId: string; parts: { type: "text"; text: string }[];
+  clientRequestId: string; parts: { type: "text"; text: string }[]; memory?: MemoryEffortRequest;
 }
 export type RuntimeResponseStatus = "queued" | "waiting_approval" | "running" | "complete" | "failed" | "cancelled";
 export type RuntimeStageStatus = "pending" | "complete" | "failed" | "not_requested";
@@ -13,7 +15,7 @@ export interface RuntimeRun {
   memoryStatus: RuntimeStageStatus; graphStatus: RuntimeStageStatus; attemptNumber: number;
   cancellationRequested: boolean; inputMessageIds: string[]; outputMessageIds: string[];
   failureCode: string | null; contextCompleteness: "complete" | "incomplete" | null; contextFailureCode: string | null;
-  createdAt: number; updatedAt: number;
+  createdAt: number; updatedAt: number; memoryEffort?: MemoryEffortTrace;
 }
 /** Restorable server identity; possession of a handle grants no access. */
 export interface RuntimeRunHandle extends RuntimeScope {
@@ -63,8 +65,12 @@ export interface RuntimeRecallItem {
   type: "memory" | "fact"; id: string; content: string; score: number; source: string;
   /** Additional attributed, public retrieval metadata; never a model request. */
   memory?: Readonly<Record<string, unknown>>; fact?: Readonly<Record<string, unknown>>;
+  retrieval?: { depth: number; path: string[] };
+  tenantId?: string; userId?: string;
+  graphContext?: { connectedEntities: string[]; relationshipPath?: string };
 }
-export interface RuntimeRecallResult { items: RuntimeRecallItem[]; context: string; profileId: string; deliveryExpiresAt?: number }
+export interface RuntimeRecallRequest { text: string; requestId: string; limit?: number; memory?: MemoryEffortRequest }
+export interface RuntimeRecallResult { items: RuntimeRecallItem[]; context: string; profileId: string; deliveryExpiresAt?: number; memoryEffort?: MemoryEffortTrace }
 /** Capture supplied text once; indexing runs asynchronously under backend policy. */
 export interface RuntimeRememberInput {
   conversationId: string; requestId: string; userMessage: string; agentResponse: string;
@@ -85,7 +91,7 @@ export interface RuntimeTranscriptMessage {
   order: number; stepOrder: number; status: "pending" | "success" | "failed"; revision: number;
 }
 export interface RuntimeTranscriptPage { page: RuntimeTranscriptMessage[]; isDone: boolean; continueCursor: string | null }
-export interface RuntimeDefinition { agentId: string; version: number; definitionHash: string; tools: { toolId: string; toolVersion: number }[]; memoryMode: string }
+export interface RuntimeDefinition { agentId: string; version: number; definitionHash: string; tools: { toolId: string; toolVersion: number }[]; memoryMode: string; inputSelectionVersion?: 2; memoryEffortPolicyVersion?: 1 }
 export interface RuntimeConversation {
   conversationId: string; type: "user-agent" | "agent-agent"; visibility: "private" | "space";
   manualWriteLocked: boolean; requireApproval: boolean; historyRevision: number; epoch: number;

@@ -21,6 +21,7 @@ export type FactQuery = Parameters<MemoryRepository["listFacts"]>[0];
 type ScopedArgs = { reference: RuntimeAuthorityReference; capability: "read" | "write" };
 export interface RecallFactBindings { facts: DerivedFact[]; bindings: MemoryDeliveryBindings }
 export interface MemoryDeliveryBindings {
+  version?:2;
   sources: { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string;
     ownerPrincipalId: string; permission: "canViewFacts" | "canViewMemories" }[];
   facts: { factId: string; payloadHash: string }[];
@@ -318,35 +319,47 @@ export class ConvexMemoryRepository {
       )).take(1025);
     if (rows.length > 1024) memoryError("QUERY_TOO_BROAD", "Fact scope exceeds bounded scan; narrower indexed selection is required");
     const facts: DerivedFact[] = [];
+    for (const row of rows) { const fact = await this.currentFact(row, authority); if (fact) facts.push(fact); if (facts.length === query.limit) break; }
+    return facts;
+  }
+  async currentFact(row: Doc<"facts">, authority?: RuntimeAuthority): Promise<DerivedFact | null> {
+    authority ??= await this.authority(undefined,"read");
     const reader = createAuthorityReader(this.ctx);
-    for (const row of rows) {
       if (!row.ownerPrincipalId || !row.lineage || !row.extractionPolicyVersion || row.tombstonedAt !== undefined
         || row.supersededBy || (row.validUntil !== undefined && row.validUntil <= this.clock.now())
-        || (query.subject !== undefined && row.subject !== query.subject)
-        || (query.factType !== undefined && row.factType !== query.factType)
-        || (authority.resourceAccess === "own" && row.ownerPrincipalId !== authority.principalId)) continue;
+        || (authority.resourceAccess === "own" && row.ownerPrincipalId !== authority.principalId)) return null;
       assertResourceScope(authority, { resourceType: "fact", resourceId: row.factId, tenantId: row.tenantId,
         memorySpaceId: row.memorySpaceId, ownerPrincipalId: row.ownerPrincipalId });
       if (await reader.hasTombstone({ tenantId: this.scope.tenantId, memorySpaceId: this.scope.memorySpaceId, resourceType: "fact", resourceId: row.factId })
-        || await reader.hasTombstone({ tenantId: this.scope.tenantId, resourceType: "fact", resourceId: row.factId })) continue;
+        || await reader.hasTombstone({ tenantId: this.scope.tenantId, resourceType: "fact", resourceId: row.factId })) return null;
       const source = await this.visibleSource(row.lineage.sourceId, authority, "canViewFacts");
       if (!source || !sameReference(source.lineage, row.lineage) || source.ownerPrincipalId !== row.ownerPrincipalId
-        || row.lineage.role === "assistant" || canonicalMemoryValue(row.lineage) !== canonicalMemoryValue(source.lineage)) continue;
+        || row.lineage.role === "assistant" || canonicalMemoryValue(row.lineage) !== canonicalMemoryValue(source.lineage)) return null;
       const { _creationTime: _creationTime, tombstonedAt: _tombstonedAt, processingReceiptId: _receipt,
         lineage, ownerPrincipalId, extractionPolicyVersion, ...record } = row;
       // fact-extraction is an old schema-only source type; fresh runtime writes use manual/tool.
-      if (record.sourceType === "fact-extraction") continue;
+      if (record.sourceType === "fact-extraction") return null;
       const sourceType = record.sourceType;
-      facts.push({ ...record, sourceType, lineage, ownerPrincipalId, extractionPolicyVersion });
-      if (facts.length === query.limit) break;
-    }
-    return facts;
+      return { ...record, sourceType, lineage, ownerPrincipalId, extractionPolicyVersion };
+  }
+  async searchFactCandidates(text: string, limit: number): Promise<{facts:DerivedFact[];candidateWorkBound:boolean}> {
+    boundedLimit(limit); const authority = await this.authority(undefined,"read");
+    const rows = await this.ctx.db.query("facts").withSearchIndex("by_content",q => {
+      const indexed = q.search("fact",text.slice(0,1024)).eq("tenantId",this.scope.tenantId).eq("memorySpaceId",this.scope.memorySpaceId);
+      return authority.resourceAccess === "own" ? indexed.eq("ownerPrincipalId",authority.principalId) : indexed;
+    }).take(limit);
+    const facts: DerivedFact[]=[]; for(const row of rows) {const fact=await this.currentFact(row,authority);if(fact)facts.push(fact);} return {facts,candidateWorkBound:rows.length===limit};
+  }
+  async searchFacts(text:string,limit:number):Promise<DerivedFact[]>{return (await this.searchFactCandidates(text,limit)).facts;}
+  async getFact(factId:string): Promise<DerivedFact|null> {
+    const row=await this.ctx.db.query("facts").withIndex("by_runtime_scope_factId",q=>q.eq("tenantId",this.scope.tenantId).eq("memorySpaceId",this.scope.memorySpaceId).eq("factId",factId)).unique();
+    return row ? await this.currentFact(row) : null;
   }
   /** Bounded exact consumed-row checks; this method is registered only as an internal mutation. */
   async checkDelivery(bindings: MemoryDeliveryBindings, finalAuthorityCtx: Pick<QueryCtx, "db"> = this.ctx): Promise<{ version: 1; deliveryExpiresAt?: number }> {
     // Recall admits 100 facts and 100 vectors, plus its one-fact preflight.
-    if (bindings.sources.length > 201 || bindings.facts.length > 101 || bindings.vectors.length > 100
-      || new TextEncoder().encode(canonicalMemoryValue(bindings)).byteLength > 262144) memoryError("INVALID_INPUT", "Recall delivery bindings exceed the bounded envelope");
+    if (bindings.sources.length > (bindings.version===2?8193:201) || bindings.facts.length > (bindings.version===2?4196:101) || bindings.vectors.length > 100
+      || new TextEncoder().encode(canonicalMemoryValue(bindings)).byteLength > (bindings.version===2?2097152:262144)) memoryError("INVALID_INPUT", "Recall delivery bindings exceed the bounded envelope");
     const deadlines: number[] = []; await this.authority(undefined, "read");
     for (const expected of bindings.sources) {
       const current = await this.getSource(expected.sourceId, expected.permission, deadlines);

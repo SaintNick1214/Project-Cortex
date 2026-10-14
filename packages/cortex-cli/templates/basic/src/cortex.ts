@@ -54,7 +54,7 @@ export async function withRuntime<T>(fetchToken: CortexRuntimeClientOptions["fet
   if (connection?.entry && (connection.entry.configKey !== configKey || connection.entry.fetchToken !== fetchToken || connection.entry.factory !== options.factory)) { closeRuntimeConnection(connection); throw new AppError("RUNTIME_CONFIGURATION_CHANGED"); }
   const entry = connection?.entry ?? { configKey, closed: false, fetchToken, factory: options.factory, client: (options.factory ?? (settings => new CortexRuntimeClient(settings)))({ deploymentUrl: config.deploymentUrl, fetchToken,
     scope: { ...(config.tenantId ? { tenantId: config.tenantId } : {}), ...(config.memorySpaceId ? { memorySpaceId: config.memorySpaceId } : {}) },
-    authTimeoutMs: Math.min(config.timeoutMs, 10000), requestTimeoutMs: Math.min(config.timeoutMs, 12000),
+    authTimeoutMs: Math.min(config.timeoutMs, 10000), requestTimeoutMs: config.timeoutMs,
     ...(process.env.CORTEX_RUNTIME_LATENCY_TRACE === "1" ? { onLatencyEvent: event => console.error(JSON.stringify({ type: "cortex-client-latency", ...event })) } : {}) }) };
   if (connection) { connection.entry = entry; connection.busy = true; }
   const client = entry.client;

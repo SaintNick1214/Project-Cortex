@@ -1,3 +1,4 @@
+import { resolveMemoryEffortPolicy } from "../src/domain/memory-effort";
 /** Atomic admission and durable serialized work. Task07 alone dispatches models. */
 import { saveMessages } from "@convex-dev/agent";
 import { makeFunctionReference } from "convex/server";
@@ -58,6 +59,7 @@ export function publicRun(row: Doc<"runtimeRuns">) {
     attemptNumber: row.attemptNumber, cancellationRequested: row.cancellationRequestedAt !== undefined,
     inputMessageIds: row.inputMessageIds, outputMessageIds: row.outputMessageIds, failureCode: row.failureCode ?? null,
     contextCompleteness: row.contextCompleteness ?? null, contextFailureCode: row.contextFailureCode ?? null,
+    ...(row.memoryEffortTraceCanonical ? {memoryEffort:JSON.parse(row.memoryEffortTraceCanonical)} : {}),
     createdAt: row.createdAt, updatedAt: row.updatedAt };
 }
 /** Status publication is a public projection dependency, never an execution guard dependency. */
@@ -75,6 +77,9 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown; 
   let binding: Awaited<ReturnType<typeof bindTextSubmission>>;
   try { binding = await bindTextSubmission(args.request, actor); } catch { return transcriptDenied("INVALID_INPUT"); }
   const definition = await readCurrentExecutableDefinition(ctx, reference, binding.normalized.agentSelector, { capability: "run", operationKey: "agent.respond" });
+  const effortAware=definition.definition.context.handlerId==="cortex.transcript.relevant" && definition.definition.context.handlerVersion===2;
+  if(binding.normalized.publicRequest.memory!==undefined&&!effortAware)transcriptDenied("INVALID_INPUT");
+  const memoryEffort=effortAware?resolveMemoryEffortPolicy(binding.normalized.publicRequest.memory,definition.definition.context.inputSelection?.version===2?definition.definition.context.inputSelection.effort:undefined):undefined;
   const replay = singleTranscript(await ctx.db.query("runtimeRuns").withIndex("by_request", q => q.eq("tenantId", actor.tenantId)
     .eq("memorySpaceId", actor.memorySpaceId).eq("ownerPrincipalId", actor.principalId).eq("requestIdentityHash", binding.identityHash)).take(2));
   if (replay) {
@@ -103,6 +108,7 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown; 
   const now = Date.now();
   const id = await ctx.db.insert("runtimeRuns", { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, ownerPrincipalId: actor.principalId,
     runId, conversationId: conversation.conversationId, conversationEpoch: conversation.epoch,
+    ...(memoryEffort ? {memoryEffortCanonical:canonicalModelJson(memoryEffort)} : {}),
     requestIdentityCanonical: binding.identityCanonical, requestIdentityHash: binding.identityHash, requestCanonical: binding.requestCanonical,
     agentId: definition.agent.agentId, agentVersion: definition.agent.version, definitionHash: definition.definitionHash, authorityReference: reference,
     ...(definition.definition.context.handlerId === "cortex.transcript.relevant" ? { modelInputVersion: 8 as const } : {}),

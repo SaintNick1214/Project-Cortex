@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
 import { readUIMessageStream } from "ai";
 import type { ChatTransport, UIMessage, UIMessageChunk } from "ai";
-import type { RuntimeClientPort, RuntimeObservation, RuntimeRun, RuntimeRunHandle, TextSubmitV1 } from "@cortexmemory/sdk/runtime";
+import type { RuntimeClientPort, RuntimeObservation, RuntimeRun, RuntimeRunHandle, TextSubmitV1, MemoryEffortRequest, MemoryEffortTrace } from "@cortexmemory/sdk/runtime";
 import { CortexRemoteTransport } from "../../src/remote/index";
 import { CortexRuntimeClient, CortexRuntimeError } from "@cortexmemory/sdk/runtime";
 import { getFunctionName } from "convex/server";
@@ -10,7 +10,7 @@ const handle: RuntimeRunHandle = { version: 1, tenantId: "tenant", memorySpaceId
 const run: RuntimeRun = { version: 1, runId: "run", conversationId: "conversation", agentId: "agent", agentVersion: 1, scope: { tenantId: "tenant", memorySpaceId: "space" },
   definitionHash: "definition", queueSequence: 1, responseStatus: "running", memoryStatus: "pending", graphStatus: "not_requested", attemptNumber: 1, cancellationRequested: false,
   inputMessageIds: ["input"], outputMessageIds: [], failureCode: null, contextCompleteness: "complete", contextFailureCode: null, createdAt: 1, updatedAt: 2 };
-function fixture() {
+function fixture(memory?:MemoryEffortRequest) {
   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
   const client = { submitAndStart: jest.fn(async (_request: TextSubmitV1, _options: { streaming?: boolean }) => ({ handle, run, start: { runId: run.runId, attemptNumber: 1, state: "ready" as const } })), submit: jest.fn(async (_request: TextSubmitV1) => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
@@ -18,7 +18,7 @@ function fixture() {
       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
     } };
   const onRun = jest.fn(), onObservation = jest.fn();
-  const transport = new CortexRemoteTransport({ client: client as unknown as CortexRuntimeClient, agentId: "agent", agentVersion: 1, onRun, onObservation });
+  const transport = new CortexRemoteTransport({ client: client as unknown as CortexRuntimeClient, agentId: "agent", agentVersion: 1, onRun, onObservation,memory });
   const update = (parts: RuntimeObservation["parts"], responseStatus: RuntimeRun["responseStatus"] = "running", index = subscriptions.length - 1,
     extra: Partial<RuntimeObservation> = {}) => subscriptions[index].update({ run: { ...run, responseStatus }, state: responseStatus, parts,
       cursor: parts.at(-1)?.sequence ?? 0, approvals: [], ...extra });
@@ -29,19 +29,19 @@ const send = (id = "message", text = "hello"): Parameters<ChatTransport<UIMessag
 async function drain(stream: ReadableStream<UIMessageChunk>) { const reader = stream.getReader(), chunks: UIMessageChunk[] = [];
   try { for (;;) { const next = await reader.read(); if (next.done) break; chunks.push(next.value); } return chunks; } finally { reader.releaseLock(); } }
 describe("AI SDK 7 remote transport", () => {
-  it("actual SDK transport attaches its primary watcher after three admission RPCs without separate get/start", async () => {
+  it("actual SDK transport verifies the native admission envelope and post-session before watching without separate get/start", async () => {
     const calls: string[] = [], prewatch: string[][] = [];
     const port = {
       setAuth: (_fetcher: unknown, ready: (accepted: boolean) => void) => ready(true),
       mutation: async (ref: Parameters<RuntimeClientPort["mutation"]>[0], args: Record<string, unknown>) => {
         const name = getFunctionName(ref); calls.push(name);
         if (name === "runtimeClient:session") return { version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "owner", userId: "owner" };
-        if (name === "runtimeClient:submitAndStart") {
-          expect(args).toEqual({ tenantId: "tenant", memorySpaceId: "space", streaming: true,
+        if (name === "runtimeClient:submitAndStartEnvelope") {
+          expect(args).toEqual({ streaming: true,
             request: { version: 1, agentId: "agent", agentVersion: 1, clientRequestId: "message", parts: [{ type: "text", text: "hello" }] } });
-          return { version: 1, run, start: { runId: "run", attemptNumber: 1, state: "ready" } };
+          return { version: 1, session: { version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "owner", userId: "owner" }, admission: { version: 1, run, start: { runId: "run", attemptNumber: 1, state: "ready" } } };
         }
-        if (name === "runtimeAgent:observe") return { run: { ...run, responseStatus: "complete" }, state: "complete", cursor: 1, approvals: [], parts: [{ sequence: 1, part: { type: "text", text: "answer" } }] };
+        if (name === "runtimeClient:observeEnvelope") return {version:1,session:{version:1,tenantId:"tenant",memorySpaceId:"space",principalId:"owner",userId:"owner"},observation:{ run: { ...run, responseStatus: "complete" }, state: "complete", cursor: 1, approvals: [], parts: [{ sequence: 1, part: { type: "text", text: "answer" } }] }};
         throw new Error("UNEXPECTED_RPC");
       },
       query: async () => { throw new Error("PRIVATE_QUERY_PROHIBITED"); },
@@ -52,11 +52,11 @@ describe("AI SDK 7 remote transport", () => {
     try {
       const transport = new CortexRemoteTransport({ client, agentId: "agent", agentVersion: 1 });
       const chunks = await drain(await transport.sendMessages(send()));
-      expect(prewatch[0]).toEqual(["runtimeClient:session", "runtimeClient:submitAndStart", "runtimeClient:session"]);
+      expect(prewatch[0]).toEqual(["runtimeClient:submitAndStartEnvelope", "runtimeClient:session"]);
       // Admission pins the current attempt; no redundant reset/read is needed for attempt 1.
       expect(prewatch).toHaveLength(1);
-      expect(calls).toEqual(["runtimeClient:session", "runtimeClient:submitAndStart", "runtimeClient:session",
-        "runtimeClient:session", "runtimeAgent:observe", "runtimeClient:session"]);
+      expect(calls).toEqual(["runtimeClient:submitAndStartEnvelope", "runtimeClient:session",
+        "runtimeClient:observeEnvelope", "runtimeClient:session"]);
       expect(chunks.filter(part => part.type === "text-delta")).toEqual([{ type: "text-delta", id: "cortex:run:text", delta: "answer" }]);
     } finally { await client.close(); }
   });
@@ -205,5 +205,41 @@ describe("AI SDK 7 remote transport", () => {
     expect((await reader.read()).value).toMatchObject({ type: "text-start" });
     f.subscriptions[0].error(new CortexRuntimeError("FORBIDDEN")); await expect(reader.read()).rejects.toMatchObject({ code: "FORBIDDEN" }); reader.releaseLock();
     expect(f.client.start).not.toHaveBeenCalled(); expect(f.client.submitAndStart).not.toHaveBeenCalled();
+  });
+});
+
+
+describe("remote memory effort request and trace",()=>{
+  it("snapshots a default request and per-message overrides without changing the pending request",async()=>{
+    const memory:MemoryEffortRequest={effort:"fast"},f=fixture(memory);memory.effort="max";
+    const first=await f.transport.sendMessages(send());f.transport.disconnect();await drain(first);
+    expect(f.client.submitAndStart.mock.calls[0][0].memory).toEqual({effort:"fast"});
+    const next=await f.transport.sendMessages({...send("next"),body:{memory:{effort:"high",maxEntries:2}}});f.transport.disconnect();await drain(next);
+    expect(f.client.submitAndStart.mock.calls[1][0].memory).toEqual({effort:"high",maxEntries:2});
+    expect(f.client.submitAndStart.mock.calls[0][0].memory).toEqual({effort:"fast"});
+  });
+  it("normalizes equivalent replay controls but rejects changed effort without a duplicate dispatch",async()=>{
+    const f=fixture(),first=await f.transport.sendMessages({...send(),body:{memory:{}}});f.transport.disconnect();await drain(first);
+    const replay=await f.transport.sendMessages({...send(),body:{memory:{effort:"normal"}}});f.transport.disconnect();await drain(replay);
+    expect(f.client.submitAndStart).toHaveBeenCalledTimes(1);
+    await expect(f.transport.sendMessages({...send(),body:{memory:{effort:"max"}}})).rejects.toMatchObject({code:"IDEMPOTENCY_CONFLICT"});
+    expect(f.client.submitAndStart).toHaveBeenCalledTimes(1);
+    await expect(f.transport.reconnectToStream({chatId:"chat",body:{memory:{effort:"fast"}}})).rejects.toMatchObject({code:"UNSUPPORTED_TRANSPORT_OPTIONS"});
+    expect(f.client.start).not.toHaveBeenCalled();
+  });
+  it.each([undefined,null,[],{effort:"instant"},{maxEntries:-1},{maxContextTokens:0},{maxDepth:8},{effort:"normal",apiKey:"private"}])("refuses invalid memory %j before any backend call",async memory=>{
+    const f=fixture();await expect(f.transport.sendMessages({...send(),body:{memory}})).rejects.toMatchObject({code:"INVALID_INPUT"});expect(f.client.submitAndStart).not.toHaveBeenCalled();
+  });
+  it("refuses memory accessors without invoking caller code",async()=>{
+    const f=fixture(),get=jest.fn(()=>({effort:"max"}));
+    await expect(f.transport.sendMessages({...send(),body:Object.defineProperty({},"memory",{get,enumerable:true})})).rejects.toMatchObject({code:"UNSUPPORTED_TRANSPORT_OPTIONS"});
+    await expect(f.transport.sendMessages({...send(),body:{memory:Object.defineProperty({},"effort",{get,enumerable:true})}})).rejects.toMatchObject({code:"INVALID_INPUT"});
+    expect(get).not.toHaveBeenCalled();expect(f.client.submitAndStart).not.toHaveBeenCalled();
+  });
+  it("carries server effective limits/stops in official AI7 message metadata and status",async()=>{
+    const f=fixture(),trace:MemoryEffortTrace={version:1,policyVersion:"memory-effort-v1",requestedEffort:"max",effectiveEffort:"max",maxDepth:null,maxEntries:null,maxContextTokens:4096,targetFirstAnswerMs:30000,reachedDepth:10,visited:20,expanded:10,selected:9,deduplicated:1,entriesByKind:{memory:4,fact:5,pending:0,history:0},selectedInputUnits:100,durationMs:123,stopReasons:["input"],unavailableStages:["external_graph"]};
+    const stream=await f.transport.sendMessages({...send(),body:{memory:{effort:"max"}}});f.update([{sequence:1,part:{type:"text",text:"answer"}}],"complete",undefined,{run:{...run,responseStatus:"complete",memoryEffort:trace}});
+    const messages:UIMessage[]=[];for await(const message of readUIMessageStream({stream}))messages.push(message);
+    expect(messages.at(-1)?.metadata).toMatchObject({memoryEffort:trace});expect(f.client.submitAndStart).toHaveBeenCalledTimes(1);expect(f.subscriptions[0].closed).toBe(true);
   });
 });

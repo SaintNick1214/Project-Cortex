@@ -5,17 +5,17 @@ import { makeFunctionReference } from "convex/server";
 import { fixturePlan } from "./runtime-fixtures.mjs";
 
 const fail = code => { throw new Error(code); };
-const registryHash = "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631";
+const registryHash = "5152bd0c3f8e35907c2d57c0a3467e2450e8db0dfb5174c552024c954554a515";
 
-/** The observed V2 registry and Agent bound; setup never attests a qualification. */
+/** The current V4 effort-aware registry and Agent bound; setup never attests a qualification. */
 export function remoteAgentDefinition() {
   return {
-    instructions: { text: "Acknowledge the user's validation marker in one short sentence. Do not call tools.", promptVersion: "ci-remote-agent-v2" },
+    instructions: { text: "Acknowledge the user's validation marker in one short sentence. Do not call tools.", promptVersion: "ci-remote-agent-v3" },
     tools: ["memory.remember", "memory.recall", "media.image.generate", "media.video.generate", "artifact.read"]
       .map(toolId => ({ toolId, toolVersion: 1, registryHash,
         requiredCapability: "tool", approval: toolId.startsWith("media.") ? "explicit" : "none" })),
-    context: { handlerId: "cortex.transcript", handlerVersion: 1, registryHash,
-      memoryMode: "indexed-plus-pending", requiredStages: [], maxContextTokens: 4096 },
+    context: { handlerId: "cortex.transcript.relevant", handlerVersion: 2, registryHash,
+      memoryMode: "indexed-plus-pending", requiredStages: [], maxContextTokens: 4096, inputSelection:{version:2} },
     policies: [{ policyId: "ci-remote-agent-only", version: 2, operationKey: "agent.respond", rules: {
       pins: { boundRevision: "agent-tools-v2-32768-256-shared3m-v1", toolRegistryVersion: "cortex-media-tools-v2" },
       allowedTools: ["memory_recall", "memory_remember", "media_image_generate", "media_video_generate", "artifact_read"],
@@ -74,7 +74,7 @@ export async function publishRemoteAgent(env, createClient = (url, signal) => ne
       agentId: published.agentId, version: published.version,
     });
     if (current?.agentId !== published.agentId || current.version !== published.version
-      || current.definitionHash !== published.definitionHash || current.memoryMode !== "indexed-plus-pending"
+      || current.definitionHash !== published.definitionHash || current.memoryMode !== "indexed-plus-pending" || current.inputSelectionVersion!==2 || current.memoryEffortPolicyVersion!==1
       || JSON.stringify(current.tools) !== JSON.stringify(remoteAgentDefinition().tools.map(({ toolId, toolVersion }) => ({ toolId, toolVersion })))) {
       fail("CI_REMOTE_CURRENT_DEFINITION_MISMATCH");
     }

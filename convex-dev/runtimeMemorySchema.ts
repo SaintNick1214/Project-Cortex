@@ -60,6 +60,7 @@ export const commitDerivedInput = v.object({
 
 /** Internal action delivery bindings contain identifiers and hashes, never recalled text. */
 export const memoryDeliveryBindings = v.object({
+  version:v.optional(v.literal(2)),
   sources: v.array(v.object({ ...sourceReference, contentHash: v.string(), ownerPrincipalId: v.string(),
     permission: v.union(v.literal("canViewFacts"), v.literal("canViewMemories")) })),
   facts: v.array(v.object({ factId: v.string(), payloadHash: v.string() })),
@@ -67,7 +68,12 @@ export const memoryDeliveryBindings = v.object({
     chunkHash: v.string(), runBudgetId: v.optional(v.string()) })),
 });
 
+export const memoryEffortRequest = v.object({ effort: v.optional(v.union(v.literal("fast"),v.literal("normal"),v.literal("high"),v.literal("max"))), maxEntries:v.optional(v.number()), maxContextTokens:v.optional(v.number()) });
 export const runtimeMemoryTables = {
+  runtimeMemoryFactEntities: defineTable({ tenantId:v.string(),memorySpaceId:v.string(),ownerPrincipalId:v.string(),entityKey:v.string(),factId:v.string(),factVersion:v.number(),...sourceReference })
+    .index("by_scope_entity",["tenantId","memorySpaceId","entityKey","factId"])
+    .index("by_owner_entity",["tenantId","memorySpaceId","ownerPrincipalId","entityKey","factId"])
+    .index("by_scope_fact",["tenantId","memorySpaceId","factId"]),
   /** Backend-owned ingress; never converts a pre-existing Agent conversation. */
   runtimeMemoryCaptureConversations: defineTable({tenantId:v.string(),memorySpaceId:v.string(),ownerPrincipalId:v.string(),
     conversationId:v.string(),conversationEpoch:v.number(),ingressKind:v.literal('remember-exchange-v1'),captureAppendLocked:v.boolean()})

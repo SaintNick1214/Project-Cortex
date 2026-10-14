@@ -7,9 +7,9 @@ import type {EmbeddingModelV4} from '@ai-sdk/provider';
 import type {MutationCtx,ActionCtx} from '../../../convex-dev/_generated/server';
 import {canonicalModelJson} from '../../../src/domain/model-policy';
 import {DEFAULT_EMBEDDING_PROFILE as profile} from '../../../src/domain/profile';
-let calls=0;
+let calls=0,embeddingAdvanceMs=0;
 const native=jest.fn<(id:string)=>EmbeddingModelV4>(id=>({specificationVersion:'v4',modelId:id,provider:'convexGateway.embedding',maxEmbeddingsPerCall:1,supportsParallelCalls:false,
-  doEmbed:async()=>{calls++;return {embeddings:[Array.from({length:1536},(_,i)=>i===0?1:0)],warnings:[],response:{body:{id:'controlled-public-query',model:'text-embedding-3-small',data:[{index:0,object:'embedding'}],usage:{prompt_tokens:1}}}};}}));
+  doEmbed:async()=>{calls++;if(embeddingAdvanceMs)jest.spyOn(Date,"now").mockReturnValue(clock+embeddingAdvanceMs);return {embeddings:[Array.from({length:1536},(_,i)=>i===0?1:0)],warnings:[],response:{body:{id:'controlled-public-query',model:'text-embedding-3-small',data:[{index:0,object:'embedding'}],usage:{prompt_tokens:1}}}};}}));
 jest.unstable_mockModule('@convex-dev/ai-sdk-provider',()=>({convexGateway:Object.assign(()=>{throw Error('No chat');},{embeddingModel:native})}));
 let nativeSnapshotReads=true;
 const originalAuth=await import('../../../convex-dev/runtimeAuth');
@@ -35,8 +35,9 @@ const {ConvexMemoryRepository,createActionMemoryRepository}=await import('../../
 const {readCurrentEmbeddingProfile,resolveHandler}=await import('../../../convex-dev/runtimeModelPolicy');
 const {createGatewayMemoryModel}=await import('../../../convex-dev/runtimeMemoryGateway');
 const {recallMemory}=await import('../../../convex-dev/runtimeMemoryServices');
-beforeEach(()=>{calls=0;nativeSnapshotReads=true;installIngestionMockRoot();});afterEach(()=>{jest.restoreAllMocks();});
-async function fixture() {
+type CompleteRecallDelivery = typeof import('../../../convex-dev/runtimeMemoryServices').completeRecallDelivery;
+beforeEach(()=>{calls=0;embeddingAdvanceMs=0;nativeSnapshotReads=true;installIngestionMockRoot();});afterEach(()=>{jest.restoreAllMocks();});
+async function fixture(effortAware=false,effort:"fast"|"normal"|"high"|"max"="normal") {
   const f=await ingestionFixture(),oldQuery=f.ctx.runQuery.bind(f.ctx),oldMutation=f.ctx.runMutation.bind(f.ctx),rpc:string[]=[];
   const names={runtimeMemory:memory,runtimeMemoryQuery:query,runtimeModelPolicy:ledger,runtimeAuth:auth};
   const registration=(ref:Parameters<typeof getFunctionName>[0])=>{let name:string;try{name=getFunctionName(ref);}catch{return;}
@@ -45,8 +46,8 @@ async function fixture() {
   let fault:(()=>Promise<void>)|undefined;
   f.ctx.runMutation=(async(ref,args)=>{const found=registration(ref);if(!found)return oldMutation(ref,args);rpc.push(found.name);
     return f.transaction(async()=>{if(['runtimeModelPolicy:checkpoint','runtimeModelPolicy:checkpointRecall'].includes(found.name)&&fault)await fault();return invoke(found.value,f.ctx,args);});}) as MutationCtx['runMutation'];
-  const input={text:'coral preference',requestId:'public-query',limit:10};
-  const budget=await f.call<{runBudgetId:string}>(ledger.ensureBudget,{reference:f.reference,operationKey:'embedding.query',requestId:input.requestId,requestCanonical:canonicalModelJson({purpose:'recall',text:input.text,limit:input.limit})});
+  const input={text:'coral preference',requestId:'public-query',limit:10,...(effortAware?{memory:{effort,maxEntries:10}}:{})};
+  const budget=await f.call<{runBudgetId:string}>(ledger.ensureBudget,{reference:f.reference,operationKey:'embedding.query',requestId:input.requestId,requestCanonical:canonicalModelJson({...{purpose:'recall',text:input.text,limit:input.limit},...(effortAware?{memory:input.memory,memoryEffortPolicyVersion:1}:{})})});
   const args={reference:f.reference,runBudgetId:budget.runBudgetId,input},action={...f.ctx,vectorSearch:async()=>[]} as unknown as ActionCtx,
     repository=createActionMemoryRepository(action,f.reference,'read');
   const state=()=>clone({rows:new Map([...f.db.rows].filter(([,rs])=>rs.length)),writes:f.db.writes,effects:f.effects,native:f.native,scheduled:f.scheduled});
@@ -64,9 +65,9 @@ it('combined query reruns original read/profile/readiness/two-resolution predica
   expect(p.profile).toEqual(currentProfile);expect(p.resolutions).toEqual([await resolveHandler(f.ctx,p.binding),await resolveHandler(f.ctx,p.binding)]);
   expect(p.request.texts).toEqual([f.input.text]);expect(f.state()).toEqual(before);expect(calls).toBe(0);
 });
-it('actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent',async()=>{
-  const f=await fixture();f.rpc.length=0;
-  const actual=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId});
+it('actual public Action resolves Normal and keeps one native preparation and one admit/checkpoint parent',async()=>{
+  const f=await fixture(true);f.rpc.length=0;
+  const actual=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
   expect(actual).toMatchObject({items:[],context:'',profileId:profile.profileId});expect(calls).toBe(1);
   expect(f.rpc.filter(n=>n==='runtimeMemoryQuery:prepare')).toHaveLength(1);expect(f.rpc.filter(n=>n==='runtimeMemoryQuery:admit')).toHaveLength(1);
   expect(f.rpc.filter(n=>n==='runtimeModelPolicy:checkpointRecall')).toHaveLength(1);expect(f.rpc.filter(n=>n==='runtimeModelPolicy:resolve')).toEqual([]);
@@ -75,7 +76,7 @@ it('actual public Action and governed model produce the original generic result 
   const before=calls,referenceModel=createGatewayMemoryModel(f.action,f.repository,{runBudgetId:f.args.runBudgetId});
   // Existing attached operation replays without another controlled provider call.
   const expected=await recallMemory({repository:f.repository,model:referenceModel,clock:{now:()=>clock}},f.input);
-  expect(expected).toEqual(actual);expect(calls).toBe(before);
+  expect(actual).toEqual({...expected,memoryEffort:actual.memoryEffort});expect(actual.memoryEffort).toMatchObject({requestedEffort:"normal",maxDepth:4,maxEntries:8});expect(calls).toBe(before);
 });
 it.each(['revoked','expired','wrong_owner','wrong_budget','changed_text','changed_limit','duplicate_grant'])('fresh native preparation rejects %s before dispatch or ledger writes',async fault=>{
   const f=await fixture(),args={...f.args,input:{...f.input}};
@@ -110,13 +111,13 @@ it.each(['grant','qualification','policy','cancelled_budget'])('fresh admission 
   const before=f.state();await expect(f.call(query.admit,args)).rejects.toBeInstanceOf(ConvexError);expect(f.state()).toEqual(before);expect(calls).toBe(0);
 });
 it('actual public Action preserves committed reservation after bounded checkpoint refusal and dispatches no provider',async()=>{
-  const f=await fixture();f.checkpointFault(async()=>{throw new ConvexError({version:1,code:'FORBIDDEN',retryable:false,outcome:'uncertain'});});
+  const f=await fixture(true);f.checkpointFault(async()=>{throw new ConvexError({version:1,code:'FORBIDDEN',retryable:false,outcome:'uncertain'});});
   await expect(invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId})).rejects.toMatchObject({data:{code:'MEMORY_OPERATION_FAILED',outcome:'uncertain'}});
   expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'reserved',slotReleased:false}]);expect(calls).toBe(0);
 });
 
-async function populatedPublicFixture(withVectors=false) {
-  const f=await fixture();
+async function populatedPublicFixture(withVectors=false,effortAware=false,effort:"fast"|"normal"="normal") {
+  const f=await fixture(effortAware,effort);
   const {prepareSourceContent,processingIdentityKey}=await import('../../../src/domain/sources');
   const {memoryScope}=await import('../../../convex-dev/runtimeMemoryRepository');
   const scope=memoryScope(f.reference),writer=new ConvexMemoryRepository(f.ctx,f.reference,'write',f.ctx.db);
@@ -133,20 +134,25 @@ async function populatedPublicFixture(withVectors=false) {
   if(withVectors)f.action.vectorSearch=(async()=>f.db.table('runtimeMemoryVectors').map(row=>({_id:row._id as Id<'runtimeMemoryVectors'>,_score:0.9}))) as ActionCtx['vectorSearch'];
   return f;
 }
-it('actual populated public API uses three native read/delivery parents with identical original replayed outcome',async()=>{
-  const f=await populatedPublicFixture();f.rpc.length=0;
-  const actual=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId});
-  const optimized=[...f.rpc];expect(actual).toHaveProperty('items');expect((actual as {items:unknown[]}).items).toHaveLength(3);expect(calls).toBe(1);
+it('actual populated public API shares bounded evidence traversal and retains independent governed delivery',async()=>{
+  const f=await populatedPublicFixture(false,true);f.rpc.length=0;
+  const actual=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+  const optimized=[...f.rpc];expect(actual).toHaveProperty('items');expect((actual as {items:unknown[]}).items).toHaveLength(6);expect(calls).toBe(1);
   expect(optimized.filter(name=>name==='runtimeMemory:readFacts')).toHaveLength(0);
   expect(optimized.filter(name=>name==='runtimeMemoryQuery:prepareReads')).toHaveLength(1);
   expect(optimized.filter(name=>name==='runtimeMemoryQuery:readMatches')).toHaveLength(1);
   expect(optimized.filter(name=>name==='runtimeMemoryQuery:finalRecallDelivery')).toHaveLength(1);
   expect(optimized.filter(name=>name==='runtimeMemory:readSource')).toHaveLength(0);f.rpc.length=0;
   const expected=await recallMemory({repository:f.repository,model:createGatewayMemoryModel(f.action,f.repository,{runBudgetId:f.args.runBudgetId}),clock:{now:()=>clock}},f.input);
-  expect(actual).toEqual(expected);expect(calls).toBe(1); // Attached native operation replay, no second provider dispatch.
+  expect(actual.items.filter(item=>item.type==="fact").map(({id,content,fact})=>({id,content,fact}))).toEqual(expected.items.map(({id,content,fact})=>({id,content,fact})));expect(actual.memoryEffort).toMatchObject({requestedEffort:"normal",maxDepth:4,selected:6});expect(calls).toBe(1); // Attached operation replays without another provider dispatch.
   expect(f.rpc.filter(name=>name==='runtimeMemory:readSource')).toHaveLength(3);
   expect(f.db.table('runtimeModelAttempts')).toHaveLength(1);
   console.info(JSON.stringify({type:'k27-public-fact-rpc-count',facts:3,baselineFactAndSourceRPCs:4,optimizedFactAndSourceRPCs:1,providerCalls:1,retries:0,nativeLatency:'UNAVAILABLE'}));
+});
+it("Fast public recall retains eligible context when governed embedding took longer than its separate retrieval-stage allowance",async()=>{
+ const f=await populatedPublicFixture(false,true,"fast");embeddingAdvanceMs=1000;
+ const actual=await invoke(memory.recall,f.action as never,{...f.input,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(actual.items.length).toBeGreaterThan(0);expect(actual.memoryEffort).toMatchObject({requestedEffort:"fast",maxDepth:2});expect(actual.memoryEffort!.stopReasons).not.toContain("deadline");expect(calls).toBe(1);
 });
 it.each(['revocation','source-revision','source-tombstone'])('bound fact read preserves the original late %s denial and no partial output',async fault=>{
   const results:unknown[]=[];

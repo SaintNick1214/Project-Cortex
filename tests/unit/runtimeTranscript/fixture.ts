@@ -114,12 +114,13 @@ export class TranscriptDb {
           gt: (key: string, value: number | string) => { filters.push(row => (field(row, key) as typeof value) > value); return q; },
           lte: (key: string, value: number) => { filters.push(row => (field(row, key) as number) <= value); return q; } };
         callback(q);
-        keys = table === "runtimeAssetReferences" && name === "by_owner" ? ["ownerVersion"]
+        keys = table === "runtimeMemoryFactEntities" || name === "by_runtime_source_fact" ? ["factId"] : table === "runtimeAssetReferences" && name === "by_owner" ? ["ownerVersion"]
           : table === "runtimeGraphDependencies" && name === "by_upstream" ? ["dependentSourceId"]
           : table === "runtimeGraphSources" ? name === "by_tenant_source" ? ["memorySpaceId"] : ["tenantId", "memorySpaceId", "sourceId"]
           : name === "by_scope_revision" ? ["revision"] : name === "by_queue" ? ["revision", "createdAt"] : name === "by_scope_sequence" || name === "by_owner_sequence" ? ["sequence"] : name === "by_scoped_version" ? ["version"] : name === "by_conversation_status" || name === "by_conversation_queue" || name === "by_conversation" ? ["queueSequence", "sequence"] : name === "by_conversation_position" ? ["order", "stepOrder"] : [];
         return builder;
       },
+      withSearchIndex:(_name:string,callback:(q:unknown)=>unknown)=>{const q={search:(key:string,value:string)=>{const words=value.toLowerCase().split(/\s+/);filters.push(row=>words.some(word=>String(field(row,key)).toLowerCase().includes(word)));return q;},eq:(key:string,value:unknown)=>{filters.push(row=>field(row,key)===value);return q;}};callback(q);return builder;},
       filter: (callback: (q: { field(path: string): (row: Row) => unknown; eq(a: unknown, b: unknown): (row: Row) => boolean;
         gt(a: unknown, b: number): (row: Row) => boolean; and(...items: ((row: Row) => boolean)[]): (row: Row) => boolean;
         or(...items: ((row: Row) => boolean)[]): (row: Row) => boolean }) => (row: Row) => boolean) => {

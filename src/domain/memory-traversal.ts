@@ -1,0 +1,59 @@
+import type { RecallItem } from "../types/index.js";
+import type { SourceLineage } from "./contracts.js";
+import type { EffectiveMemoryEffortPolicy, MemoryEffortStopReason } from "./memory-effort.js";
+import { emptyMemoryEffortTrace } from "./memory-effort.js";
+export interface MemoryEvidenceNode { key: string; item: RecallItem; lineage: SourceLineage; depth?: number; path?: string[] }
+export interface MemoryEvidenceEdge { node: MemoryEvidenceNode; relationship: "supporting-source" | "derived-fact" | "exact-entity" }
+export interface MemoryEvidencePage { edges: MemoryEvidenceEdge[]; cursor: string | null; unavailableStages?: string[]; work?: number }
+/** BFS over actual bounded adjacency. Membership/hydration rows never add depth. */
+export async function traverseMemoryEvidence(input: {
+  seeds: readonly MemoryEvidenceNode[]; policy: EffectiveMemoryEffortPolicy; now(): number;
+  cancelled?(): boolean | Promise<boolean>;
+  expand(node: MemoryEvidenceNode, cursor: string | null, limit: number): Promise<MemoryEvidencePage>;
+}) {
+  const start = input.now(), trace = emptyMemoryEffortTrace(input.policy), seen = new Map<string, MemoryEvidenceNode>();
+  const queue: MemoryEvidenceNode[] = [], selected: MemoryEvidenceNode[] = [];
+  let work = 0,candidateBytes=0;
+  const stop = (reason: MemoryEffortStopReason) => { if (!trace.stopReasons.includes(reason)) trace.stopReasons.push(reason); };
+  const add = (node: MemoryEvidenceNode, depth: number, path: string[]) => {
+    if (!Number.isFinite(node.item.score) || node.item.score <= 0) { stop("relevance"); return; }
+    if (seen.has(node.key)) { trace.deduplicated++; return; }
+    const bytes=new TextEncoder().encode(JSON.stringify({key:node.key,content:node.item.content,path})).length;
+    if(candidateBytes+bytes>input.policy.maxCandidateBytes){stop("work");return;}candidateBytes+=bytes;
+    const next = { ...node, depth, path }; seen.set(node.key, next); queue.push(next); trace.reachedDepth = Math.max(trace.reachedDepth, depth);
+  };
+  for (const seed of input.seeds.slice(0,input.policy.maxWork).sort((a,b) => b.item.score-a.item.score || a.key.localeCompare(b.key))) {
+    if (++work > input.policy.maxWork) { stop("work"); break; } add(seed, 1, [seed.key]);
+  }
+  const bounded = async () => {
+    if (await input.cancelled?.()) { stop("cancellation"); return true; }
+    if (input.now() - start >= input.policy.retrievalDeadlineMs) { stop("deadline"); return true; }
+    if (work >= input.policy.maxWork) { stop("work"); return true; } return false;
+  };
+  for (let index=0; index<queue.length; index++) {
+    if (await bounded()) break;
+    const node = queue[index]!;
+    if (input.policy.maxEntries !== null && selected.length >= input.policy.maxEntries) { stop("entries"); break; }
+    // Conservative UTF-8 units include metadata/citations and never undercount text.
+    const units = new TextEncoder().encode(JSON.stringify({ content: node.item.content, key: node.key, depth: node.depth, path: node.path })).length;
+    if (trace.selectedInputUnits + units > input.policy.maxContextTokens) { stop("input"); continue; }
+    selected.push(node); trace.selectedInputUnits += units;
+    if (input.policy.maxDepth !== null && node.depth! >= input.policy.maxDepth) { stop("depth"); continue; }
+    let cursor: string | null = null;
+    do {
+      if (await bounded()) break;
+      const page = await input.expand(node,cursor,Math.min(input.policy.pageSize,input.policy.maxWork-work));
+      work += Math.max(1,page.work ?? page.edges.length); trace.expanded++;
+      if (await bounded()) break;
+      for (const stage of page.unavailableStages ?? []) if (!trace.unavailableStages.includes(stage)) trace.unavailableStages.push(stage);
+      for (const edge of page.edges) add(edge.node,node.depth!+1,[...node.path!,edge.node.key]);
+      if (page.cursor === cursor && page.cursor !== null) throw new Error("INVALID_STATE: adjacency cursor did not advance");
+      cursor = page.cursor;
+    } while (cursor !== null);
+  }
+  trace.visited=seen.size; trace.selected=selected.length; trace.durationMs=Math.max(0,input.now()-start);
+  for(const node of selected) trace.entriesByKind[node.item.type]++;
+  if(trace.unavailableStages.length) stop("unavailable");
+  if(!trace.stopReasons.length) stop("exhausted");
+  return { nodes:selected, trace };
+}

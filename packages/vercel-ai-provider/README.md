@@ -87,6 +87,26 @@ The [canonical quickstart component](quickstart/components/RuntimeQuickstart.tsx
 [ChatSDK template](../cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx)
 show complete React wiring, private view clearing, history, recall and readiness.
 
+## Memory effort
+
+Effort-aware Agent definitions advertise `inputSelectionVersion: 2` and
+`memoryEffortPolicyVersion: 1`. Set `memory: { effort: "normal" }` on
+`CortexRemoteTransportOptions` for a fixed default, or use a stable React transport
+with `sendMessage({ text }, { body: { memory: { effort: "high" } } })`.
+The exact request body accepts only `memory`; headers and arbitrary metadata remain
+unsupported. `maxEntries` and `maxContextTokens` are optional lower request ceilings.
+
+Fast, Normal, High and Max request backend memory effort. Normal is the backend
+default for new definitions. Max removes preset hop and entry caps; administrator,
+input, work and deadline limits still apply. Omit `memory` for legacy definitions;
+explicit effort on an unsupported definition fails `INVALID_INPUT`. A message ID binds
+its normalized effort request. Reconnect retains the original request; change effort
+only for a new message ID.
+
+Optional `memoryEffort` in message metadata and status reports the server's effective
+bounds, reached depth, counts and stop reasons. `unavailableStages` means partial
+retrieval. Retrieval duration is separate from submission-to-first-answer latency.
+
 ## Reconnect, approve and cancel
 
 `transport.state` is a bounded local projection for reconnect, never an authorization
@@ -100,7 +120,8 @@ submit or start another run. Server identity and grants are checked again.
 client on unmount, and clear messages, history, recalled context, job/artifact views and
 Blob previews when authentication or authority expires.
 
-The SDK bounds authentication (10 seconds by default) and RPC observation (12 seconds).
+The SDK bounds authentication (10 seconds by default) and ordinary RPCs (12 seconds). Explicit Max recall has a 30-second default; an explicit
+`requestTimeoutMs` still takes precedence, including a shorter caller deadline.
 A mutation timeout has an uncertain outcome; inspect the original run/job/request instead
 of blindly retrying paid work with a new identity. `refreshAuth()` verifies a fresh host
 JWT while retaining the same authorized run. Scope labels do not grant access.

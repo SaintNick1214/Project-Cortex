@@ -5,8 +5,10 @@ import { localRequest } from "./local-request.js";
 import { pathToFileURL } from "node:url";
 import { AppError, CortexRuntimeError, bearer, identifier, runtimeConfig, withRuntime } from "./cortex.js";
 import type { RuntimeFactory, RuntimeConfig } from "./cortex.js";
+import { memoryRequest } from "./memory-effort.js";
 import { chat, message, observe } from "./chat.js";
 const BODY_BYTES = 32768;
+function validLimit(value:unknown):number {if(typeof value!=="number" || !Number.isSafeInteger(value) || value<1) throw new AppError("INVALID_LIMIT");return value;}
 export async function readJson(request: Request): Promise<Record<string, unknown>> {
   const length = request.headers.get("content-length");
   if (length !== null && (!/^\d+$/.test(length) || Number(length) > BODY_BYTES)) throw new AppError("BODY_TOO_LARGE", 413);
@@ -37,7 +39,8 @@ export function createApp(options: { config?: RuntimeConfig; factory?: RuntimeFa
     { config, factory: options.factory, signal: request.signal });
   app.post("/chat", async c => {
     const body = await readJson(c.req.raw), input = { requestId: identifier(body.requestId), message: message(body.message),
-      ...(body.conversationId === undefined ? {} : { conversationId: identifier(body.conversationId) }) };
+      ...(body.conversationId === undefined ? {} : { conversationId: identifier(body.conversationId) }),
+      ...(body.memory===undefined?{}:{memory:memoryRequest(body.memory)}) };
     return c.json(await remote(c.req.raw, client => chat(client, config, input)), 202);
   });
   app.get("/runs/:id", async c => c.json(await remote(c.req.raw, async client => client.get(await client.attach(identifier(c.req.param("id")))))));
@@ -53,7 +56,7 @@ export function createApp(options: { config?: RuntimeConfig; factory?: RuntimeFa
     const approval = { operationId: identifier(body.operationId), toolName: identifier(body.toolName), requestHash: identifier(body.requestHash) };
     return c.json(await remote(c.req.raw, async client => client.approveTool(await client.attach(identifier(c.req.param("id"))), approval)));
   });
-  app.post("/recall", async c => { const body = await readJson(c.req.raw), input = { requestId: identifier(body.requestId), text: message(body.query), limit: 10 };
+  app.post("/recall", async c => { const body = await readJson(c.req.raw), input = { requestId: identifier(body.requestId), text: message(body.query), ...(body.memory===undefined?{}:{memory:memoryRequest(body.memory)}), ...(body.limit===undefined?{}:{limit:validLimit(body.limit)}) };
     return c.json(await remote(c.req.raw, client => client.recall(input)));
   });
   app.get("/history/:id", async c => c.json(await remote(c.req.raw, client => client.messages(identifier(c.req.param("id")), { cursor: c.req.query("cursor") ?? null, limit: 100 }))));

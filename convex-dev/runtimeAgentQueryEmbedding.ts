@@ -1,3 +1,7 @@
+import { memoryEffortCandidateLimit } from "../src/domain/memory-effort";
+import type { MemoryEffortRequest } from "../src/domain/memory-effort";
+import { canonicalMemoryValue } from "./runtimeMemoryRepository";
+import { memoryEffortRequest } from "./runtimeMemorySchema";
 import { boundedRefusal, throwRefusal } from "./runtimeMemoryRefusal";
 import type { Refusal } from "./runtimeMemoryRefusal";
 export { boundedRefusal, throwRefusal } from "./runtimeMemoryRefusal";
@@ -27,10 +31,10 @@ import type { AgentRecallSelection } from "./runtimeAgentRecall";
 import { assertMemoryRequestId, finishRecallFromEmbedding } from "./runtimeMemoryServices";
 
 export type AgentQueryEmbeddingAttempt = { reference: RuntimeAuthorityReference; runId: string; attemptNumber: number; leaseVersion: number };
-type Input = { text: string; requestId: string; limit: number };
+type Input = { text: string; requestId: string; limit: number;memory?:MemoryEffortRequest };
 type EmbeddingRequest = Parameters<MemoryModel["embed"]>[0];
 const attemptArgs = { reference: runtimeAuthorityReference, runId: v.string(), attemptNumber: v.number(), leaseVersion: v.number() };
-const inputArgs = v.object({ text: v.string(), requestId: v.string(), limit: v.number() });
+const inputArgs = v.object({ text: v.string(), requestId: v.string(), limit: v.number(),memory:v.optional(memoryEffortRequest) });
 type NativeArgs = AgentQueryEmbeddingAttempt & { input: Input };
 export type AgentQueryEmbeddingProposal = Awaited<ReturnType<typeof prepareAgentQueryEmbeddingHandler>>;
 
@@ -44,7 +48,9 @@ export async function currentQuery(ctx: Pick<QueryCtx, "db" | "runQuery">, args:
   const userText = current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
   const requestId = `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`;
-  if (text !== normalizeSourceText(userText) || args.input.requestId !== requestId || args.input.limit !== 10) memoryError("POLICY_DENIED", "Agent query embedding input changed");
+  if (text !== normalizeSourceText(userText) || args.input.requestId !== requestId || args.input.limit !== memoryEffortCandidateLimit(current.snapshot.version===8?current.snapshot.inputSelection.effort:undefined)) memoryError("POLICY_DENIED", "Agent query embedding input changed");
+  const requested=current.snapshot.version===8&&current.snapshot.inputSelection.version===2 ? {effort:current.snapshot.inputSelection.effort!.requestedEffort}:undefined;
+  if(canonicalMemoryValue(args.input.memory)!==canonicalMemoryValue(requested))memoryError("POLICY_DENIED","Agent effort changed");
   return { current, text };
 }
 async function queryBinding(ctx: QueryCtx | MutationCtx, args: NativeArgs, text: string, runBudgetId: string) {
@@ -161,7 +167,8 @@ export async function recallAgentMemoryV8(ctx: ActionCtx, attempt: AgentQueryEmb
       },
     } });
   const result = await model.embed(proposal.request);
-  if (selection) return await finishAgentRecallV8(ctx, attempt, clock, input, proposal.profile, result, selection);
+  const startedAt=input.memory===undefined?undefined:clock.now();
+  if (selection) return await finishAgentRecallV8(ctx, attempt, clock, input, proposal.profile, result, selection,startedAt);
   return await finishRecallFromEmbedding({ repository, clock }, { text: normalizeSourceText(input.text), limit: input.limit },
     { profile: proposal.profile, runBudgetId: proposal.binding.runBudgetId }, result);
 }

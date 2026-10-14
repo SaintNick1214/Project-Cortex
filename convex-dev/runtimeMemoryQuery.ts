@@ -1,3 +1,8 @@
+import type { MemoryEffortRequest } from "../src/domain/memory-effort";
+import { resolveMemoryEffortPolicy,memoryEffortCandidateLimit } from "../src/domain/memory-effort";
+import { traverseConvexMemory,factEvidenceNode,sourceEvidenceNode } from "./runtimeMemoryTraversal";
+import { memoryEffortRequest } from "./runtimeMemorySchema";
+import { publicRecallBudgetRequest } from "./runtimeMemoryServices";
 /** Original public recall preparation in one fresh native snapshot. */
 import {v} from 'convex/values';
 import {makeFunctionReference} from 'convex/server';
@@ -24,16 +29,16 @@ import type {GatewayBinding,GatewayResolution,GatewayCheckpoint,GatewayAdmission
 import {createGatewayMemoryModel} from './runtimeMemoryGateway';
 import {boundedRefusal,throwRefusal} from './runtimeMemoryRefusal';
 import type {Refusal} from './runtimeMemoryRefusal';
-type Input={text:string;requestId:string;limit:number};
+type Input={text:string;requestId:string;limit:number;memory?:MemoryEffortRequest};
 type Args={reference:RuntimeAuthorityReference;runBudgetId:string;input:Input};
-const args={reference:runtimeAuthorityReference,runBudgetId:v.string(),input:v.object({text:v.string(),requestId:v.string(),limit:v.number()})};
+const args={reference:runtimeAuthorityReference,runBudgetId:v.string(),input:v.object({text:v.string(),requestId:v.string(),limit:v.number(),memory:v.optional(memoryEffortRequest)})};
 async function binding(ctx:Pick<QueryCtx,'db'|'runQuery'>,a:Args) {
   assertMemoryRequestId(a.input.requestId);const text=normalizeSourceText(a.input.text);
   if(!Number.isSafeInteger(a.input.limit)||a.input.limit<1||a.input.limit>100)memoryError('INVALID_INPUT','Limit must be between 1 and 100');
   const key=canonicalModelJson(['run',a.reference.tenantId,a.reference.memorySpaceId,a.reference.principalId,'embedding.query',a.input.requestId]);
   if(await semanticHash(key)!==a.runBudgetId)memoryError('POLICY_DENIED','Recall budget binding changed');
   const accounts=await ctx.db.query('runtimeBudgetAccounts').withIndex('by_run',q=>q.eq('runBudgetId',a.runBudgetId)).take(2);
-  if(accounts.length!==1||accounts[0].requestCanonical!==canonicalModelJson({purpose:'recall',text,limit:a.input.limit}))memoryError('POLICY_DENIED','Recall request binding changed');
+  if(accounts.length!==1||accounts[0].requestCanonical!==canonicalModelJson(publicRecallBudgetRequest(text,a.input.limit,a.input.memory)))memoryError('POLICY_DENIED','Recall request binding changed');
   const profile=await readCurrentEmbeddingProfile(ctx,a.reference,'embedding.query',a.runBudgetId);
   const operationId=`embedding.query:${JSON.stringify([a.reference.tenantId,a.reference.memorySpaceId,a.reference.principalId,a.input.requestId,profile.profileId])}`;
   const request:Parameters<MemoryModel['embed']>[0]={purpose:'embedding.query',operationId,policyVersion:profile.profileId,attempt:1,profile,texts:[text]};
@@ -86,6 +91,7 @@ const admitRef=makeFunctionReference('runtimeMemoryQuery:admit') as unknown as F
 /** Public native read parents only. No model proposal grants retrieval authority.
  * Keep ANN outside Convex queries and ranking before the independent final mutation. */
 type ReadArgs=Args&{profile:EmbeddingProfile};
+function directLimit(input:Input){return input.memory===undefined?input.limit:Math.min(input.limit,memoryEffortCandidateLimit(resolveMemoryEffortPolicy(input.memory)));}
 const readArgs={...args,profile:embeddingProfile};
 function readRepository(ctx:QueryCtx,a:ReadArgs) {
   assertMemoryRequestId(a.input.requestId);
@@ -112,11 +118,11 @@ export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hi
       await captureRecallVectors(branch,matches,a.profile,{runBudgetId:a.runBudgetId});return {matches,bindings:branch};
     }),
     Promise.resolve().then(async()=>{
-      const facts=await repository.listFacts({limit:a.input.limit}),branch:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]};
+      const candidates=a.input.memory===undefined?{facts:await repository.listFacts({limit:a.input.limit}),candidateWorkBound:false}:await repository.searchFactCandidates(a.input.text,directLimit(a.input)),facts=candidates.facts,branch:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]};
       for(const fact of facts)await captureRecallFact(branch,fact,
         await new ConvexMemoryRepository(sourceCtx,a.reference,'read').getSource(fact.lineage.sourceId));
       await new ConvexMemoryRepository(nativeCtx,a.reference,'read').recheckAuthority();
-      return {facts,bindings:branch};
+      return {facts,bindings:branch,candidateWorkBound:candidates.candidateWorkBound};
     }),
   ]);
   if(vectorRead.status==='rejected')throw vectorRead.reason;
@@ -129,7 +135,13 @@ export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hi
   }
   // Original post-staged authority fence remains raw and current.
   await new ConvexMemoryRepository(nativeCtx,a.reference,'read').recheckAuthority();
-  return {vectorItems:vectorRecallItems(matches),facts,bindings};
+  const effortResult=a.input.memory===undefined?undefined:await traverseConvexMemory(sourceCtx,repository,[...matches.map(match=>({...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!})),...facts.map(fact=>factEvidenceNode(fact))],resolveMemoryEffortPolicy(a.input.memory),bindings);
+  if(effortResult)for(const stage of [...(factRead.value.candidateWorkBound?["direct-fact-candidate-work-bound"]:[]),...(a.hits.length===directLimit(a.input)?["direct-vector-candidate-work-bound"]:[])]){
+    if(!effortResult.memoryEffort.unavailableStages.includes(stage))effortResult.memoryEffort.unavailableStages.push(stage);
+    if(!effortResult.memoryEffort.stopReasons.includes("work"))effortResult.memoryEffort.stopReasons.push("work");
+  }
+  if(effortResult&&a.input.text.length>1024){effortResult.memoryEffort.unavailableStages.push("query-search-work-bound");effortResult.memoryEffort.stopReasons.push("work");}
+  return {vectorItems:vectorRecallItems(matches),facts,bindings,...(effortResult?{effortResult}:{})};
 }
 export const readMatches=internalQuery({args:{...readArgs,hits:v.array(v.object({id:v.id('runtimeMemoryVectors'),score:v.number()}))},handler:readRecallMatchesHandler});
 /** Independent final mutation follows Action ranking; every source is read again. */
@@ -142,17 +154,18 @@ export const finalRecallDelivery=internalMutation({args:{reference:runtimeAuthor
 const finalRecallDeliveryRef=makeFunctionReference('runtimeMemoryQuery:finalRecallDelivery') as unknown as FunctionReference<'mutation','internal',Parameters<typeof finalRecallDeliveryHandler>[1],Awaited<ReturnType<typeof finalRecallDeliveryHandler>>>;
 const prepareReadsRef=makeFunctionReference('runtimeMemoryQuery:prepareReads') as unknown as FunctionReference<'query','internal',ReadArgs,Awaited<ReturnType<typeof prepareRecallReadsHandler>>>;
 const readMatchesRef=makeFunctionReference('runtimeMemoryQuery:readMatches') as unknown as FunctionReference<'query','internal',Parameters<typeof readRecallMatchesHandler>[1],Awaited<ReturnType<typeof readRecallMatchesHandler>>>;
-export async function finishPublicRecall(ctx:ActionCtx,a:ReadArgs,embedded:Awaited<ReturnType<MemoryModel['embed']>>,clock={now:()=>Date.now()}) {
+export async function finishPublicRecall(ctx:ActionCtx,a:ReadArgs,embedded:Awaited<ReturnType<MemoryModel['embed']>>,clock={now:()=>Date.now()},startedAt?:number) {
   validateModelEmbeddings(embedded,a.profile,1);
+  if(startedAt===undefined&&a.input.memory!==undefined)startedAt=clock.now();
   const plan=await ctx.runQuery(prepareReadsRef,a),scope=memoryScope(a.reference);
   const hits=await ctx.vectorSearch('runtimeMemoryVectors',a.profile.indexName===LARGE_EMBEDDING_PROFILE.indexName?'by_large_embedding_v1':'by_default_embedding_v1',{
-    vector:[...embedded.vectors[0]!],limit:a.input.limit,filter:q=>plan.resourceAccess==='own'
+    vector:[...embedded.vectors[0]!],limit:directLimit(a.input),filter:q=>plan.resourceAccess==='own'
       ?q.eq('scopeProfileOwnerKey',vectorOwnerScopeKey(scope.tenantId,scope.memorySpaceId,a.profile.profileId,scope.principalId))
       :q.eq('scopeProfileKey',vectorScopeKey(scope.tenantId,scope.memorySpaceId,a.profile.profileId)),
   });
   const read=await ctx.runQuery(readMatchesRef,{...a,hits:hits.map(hit=>({id:hit._id,score:hit._score}))});
   return await completeRecallDelivery({clock,finalDelivery:async()=>await ctx.runMutation(finalRecallDeliveryRef,{reference:a.reference,bindings:read.bindings})},
-    a.input,a.profile.profileId,read.vectorItems,read.facts);
+    a.input,a.profile.profileId,read.vectorItems,read.facts,read.effortResult,startedAt);
 }
 /** Budget creation/capture/attachment keep their original independent committed boundaries. */
 export async function recallPublicMemory(ctx:ActionCtx,reference:RuntimeAuthorityReference,repository:MemoryRepository,runBudgetId:string,input:Input,proposal:Awaited<ReturnType<typeof preparePublicRecallHandler>>) {
@@ -167,5 +180,6 @@ export async function recallPublicMemory(ctx:ActionCtx,reference:RuntimeAuthorit
       if('refusal' in result)return throwRefusal(result.refusal);return result.result;
     }}});
   const embedded=await model.embed(proposal.request);
-  return await finishPublicRecall(ctx,{...native,input:{...input,text:normalizeSourceText(input.text)},profile:proposal.profile},embedded);
+  const startedAt=Date.now();
+  return await finishPublicRecall(ctx,{...native,input:{...input,text:normalizeSourceText(input.text)},profile:proposal.profile},embedded,undefined,startedAt);
 }

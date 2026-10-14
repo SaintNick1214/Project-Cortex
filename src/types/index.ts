@@ -2989,6 +2989,8 @@ export interface RecallParams {
  * Individual item in recall results - either a memory or a fact.
  */
 export interface RecallItem {
+  /** Server-verified logical evidence depth and canonical path keys. */
+  retrieval?: { depth: number; path: string[] };
   /** Item type */
   type: "memory" | "fact";
 
@@ -3059,6 +3061,8 @@ export interface RecallSourceBreakdown {
  * with LLM-ready context formatting.
  */
 export interface RecallResult {
+  /** Server-owned discovery/fitting outcome; hosted latency targets are separate. */
+  memoryEffort?: import("../domain/memory-effort.js").MemoryEffortTrace;
   /** Unified results (merged, deduped, ranked) */
   items: RecallItem[];
 
@@ -4118,3 +4122,5 @@ export type {
   UserExportEvent,
   UserExportBlob,
 } from "../users/export";
+
+export type { MemoryEffort, MemoryEffortRequest, MemoryEffortPolicyV1, EffectiveMemoryEffortPolicy, MemoryEffortTrace, MemoryEffortStopReason } from "../domain/memory-effort.js";

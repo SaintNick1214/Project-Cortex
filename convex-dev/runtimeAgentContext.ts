@@ -39,6 +39,10 @@ export async function fitAgentModelInput(input: {
       lastCheck = await checkAssembledAgentModelInput({ messages: buildV8AgentMessages(messages, context), context: "",
         instructions: input.instructions, tools: input.tools, maxOutputTokens: input.maxOutputTokens },
       input.resolution, input.binding);
+      if(input.policy.version===2&&lastCheck.supported&&lastCheck.withinBound){
+        const request=JSON.parse(lastCheck.requestCanonical) as ModelCallRequest;
+        if(request.inputTokens>(input.policy.effort?.maxContextTokens??32768))return {supported:true,withinBound:false};
+      }
       return lastCheck;
     },
   });
@@ -53,5 +57,5 @@ export async function fitAgentModelInput(input: {
     selectedPending: selected.entryKeys.filter(key => input.entries.find(entry => entry.key === key)?.kind === "pending").length,
     contextBytes: utf8Bytes(selected.context), inputTokens: request.inputTokens, inputLimit: input.resolution.snapshot.limits.inputTokens,
   });
-  return selected;
+  return {...selected,inputTokens:request.inputTokens};
 }

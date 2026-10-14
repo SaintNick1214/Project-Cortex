@@ -15,10 +15,19 @@ const fixtures = vi.hoisted(() => ({
     };
     onAuthChange: (authenticated: boolean) => void;
   }>,
+  sendMessage: vi.fn(
+    async (_message: unknown, _options?: unknown) => undefined
+  ),
   transports: vi.fn(),
 }));
 vi.mock("@ai-sdk/react", () => ({
-  useChat: () => ({ messages: [], status: "ready" }),
+  useChat: () => ({
+    messages: [],
+    resumeStream: vi.fn(),
+    sendMessage: fixtures.sendMessage,
+    setMessages: vi.fn(),
+    status: "ready",
+  }),
 }));
 vi.mock("@cortexmemory/vercel-ai-provider/remote", () => ({
   CortexRemoteTransport: class {
@@ -50,6 +59,7 @@ vi.mock("@cortexmemory/sdk/runtime", () => ({
 beforeEach(() => {
   fixtures.clients.length = 0;
   fixtures.transports.mockClear();
+  fixtures.sendMessage.mockClear();
   vi.stubEnv("NEXT_PUBLIC_CONVEX_URL", "https://fixture.convex.cloud");
 });
 afterEach(() => vi.unstubAllEnvs());
@@ -299,6 +309,83 @@ it("an ordinary operation error preserves the current authorized history", async
     expect(ui.element.textContent).toContain("retained-private-history-id");
     expect(ui.element.textContent).toContain("Network temporarily unavailable");
     expect(client.close).not.toHaveBeenCalled();
+  } finally {
+    await ui.close();
+  }
+});
+
+it("effort-aware Chat control defaults Normal and captures the next request through the real component wiring", async () => {
+  const ui = await mount();
+  try {
+    await act(async () => ui.button("Connect").click());
+    await act(async () =>
+      fixtures.clients[0]!.definition.resolve({
+        agentId: "current",
+        inputSelectionVersion: 2,
+        memoryEffortPolicyVersion: 1,
+      })
+    );
+    const select = ui.element.querySelector<HTMLSelectElement>(
+      'select[aria-label="Memory effort"]'
+    )!;
+    expect(select.value).toBe("normal");
+    expect(select.disabled).toBe(false);
+    const input = ui.element.querySelector<HTMLTextAreaElement>(
+      'textarea[aria-label="Message"]'
+    )!;
+    const write = async (text: string) => {
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(
+          HTMLTextAreaElement.prototype,
+          "value"
+        )!.set!.call(input, text);
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      await act(async () =>
+        input
+          .closest("form")!
+          .dispatchEvent(
+            new Event("submit", { bubbles: true, cancelable: true })
+          )
+      );
+    };
+    await write("normal request");
+    expect(fixtures.sendMessage.mock.calls[0]).toEqual([
+      { text: "normal request" },
+      { body: { memory: { effort: "normal" } } },
+    ]);
+    await act(async () => {
+      select.value = "max";
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await write("max request");
+    expect(fixtures.sendMessage.mock.calls[1]).toEqual([
+      { text: "max request" },
+      { body: { memory: { effort: "max" } } },
+    ]);
+    expect(fixtures.sendMessage.mock.calls[0][1]).toEqual({
+      body: { memory: { effort: "normal" } },
+    });
+  } finally {
+    await ui.close();
+  }
+});
+it("old Chat Agent definitions expose legacy selection and disable unsupported effort choices", async () => {
+  const ui = await mount();
+  try {
+    await act(async () => ui.button("Connect").click());
+    await act(async () =>
+      fixtures.clients[0]!.definition.resolve({ agentId: "legacy" })
+    );
+    expect(
+      ui.element.querySelector<HTMLSelectElement>(
+        'select[aria-label="Memory effort"]'
+      )!.disabled
+    ).toBe(true);
+    expect(ui.element.textContent).toContain(
+      "This Agent version uses legacy memory selection"
+    );
+    expect(fixtures.sendMessage).not.toHaveBeenCalled();
   } finally {
     await ui.close();
   }

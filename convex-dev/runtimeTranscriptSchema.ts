@@ -58,6 +58,7 @@ export const runtimeTranscriptTables = {
     .index("by_legacy_id", ["tenantId", "memorySpaceId", "conversationId", "legacyMessageId"]),
   runtimeRuns: defineTable({ ...scope, runId: v.string(), conversationId: v.string(), conversationEpoch: v.number(),
     requestIdentityCanonical: v.string(), requestIdentityHash: v.string(), requestCanonical: v.string(),
+    memoryEffortCanonical:v.optional(v.string()), memoryEffortTraceCanonical:v.optional(v.string()),
     agentId: v.string(), agentVersion: v.number(), definitionHash: v.string(), authorityReference: runtimeAuthorityReference,
     inputMessageIds: v.array(v.string()), queueSequence: v.number(), historyRevision: v.number(),
     runBudgetId: v.string(), runAccountId: v.id("runtimeBudgetAccounts"), responseStatus,

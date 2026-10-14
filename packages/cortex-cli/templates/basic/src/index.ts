@@ -1,10 +1,12 @@
 /** Interactive CLI owns one transport; every command retains fresh session checks. */
 import { createInterface } from "node:readline/promises";
+import type { ReadLineOptions } from "node:readline";
 import { randomUUID } from "node:crypto";
 import { pathToFileURL } from "node:url";
-import type { RuntimeRunHandle, RuntimeObservation, CortexRuntimeClientOptions } from "@cortexmemory/sdk/runtime";
+import type { RuntimeRunHandle, RuntimeObservation, CortexRuntimeClientOptions, MemoryEffortRequest } from "@cortexmemory/sdk/runtime";
 import type { RuntimeConfig, RuntimeFactory, RuntimeConnection } from "./cortex.js";
 import { AppError, CortexRuntimeError, hostToken, withRuntime, identifier, closeRuntimeConnection } from "./cortex.js";
+import { memoryRequest } from "./memory-effort.js";
 import { chat, observe, terminal, watch } from "./chat.js";
 /** Display only freshly delivered backend parts; reconcile canonical final text with its streamed prefix. */
 function observationPrinter(onFirstPrinted?: () => void): (value: RuntimeObservation) => void {
@@ -35,11 +37,14 @@ function observationPrinter(onFirstPrinted?: () => void): (value: RuntimeObserva
       if (finalStarted && finalText.startsWith(displayed)) print(finalText.slice(displayed.length));
       else if (finalStarted) print(`\nFinal answer:\n${finalText}`, finalText);
       console.log(`\nRun ${value.run.runId}: ${value.state}; memory ${value.run.memoryStatus}; graph ${value.run.graphStatus}`);
+      if(value.run.memoryEffort) console.log(JSON.stringify({type:"cortex-memory-effort",...value.run.memoryEffort}));
+      else console.log("Memory effort metadata unavailable for this Agent version.");
     }
   };
 }
 export interface CliOptions { config?: RuntimeConfig; factory?: RuntimeFactory; fetchToken?: CortexRuntimeClientOptions["fetchToken"]; signal?: AbortSignal; connection?: RuntimeConnection }
 export function createCli(options: CliOptions = {}) {
+  let effort: MemoryEffortRequest | undefined;
   let conversationId: string | undefined, current: RuntimeRunHandle | undefined, commandSequence = 0, latencyAt = 0;
   const clock = () => {
     let at: number | undefined; try { at = performance.now(); } catch { /* Diagnostic clock fallback only. */ }
@@ -52,8 +57,15 @@ export function createCli(options: CliOptions = {}) {
     const text = line.trim(); if (!text) return true;
     if (["/exit", "/quit"].includes(text)) return false;
     if (text === "/new") { conversationId = undefined; current = undefined; console.log("Next send starts a new conversation."); return true; }
+    if(text.split(/\s+/,1)[0]==="/effort") {
+      const args=text.split(/\s+/).slice(1);
+      if(args.length===0 || args.length===1 && args[0]==="show") console.log(`Memory effort: ${effort?.effort??"normal"}. Effective bounds and stops are reported by the backend; older Agent definitions retain their original selection.`);
+      else if(args.length===1) {effort=memoryRequest({effort:args[0]}); console.log(`Memory effort for the next request: ${effort.effort}`);}
+      else throw new AppError("INVALID_MEMORY_EFFORT");
+      return true;
+    }
     if (text === "/clear") { console.clear(); return true; }
-    if (text === "/help") { console.log("/send <requestId> <text>, /observe [runId], /watch [runId], /cancel [runId], /approve-input [runId], /approve-tool <operationId> <toolName> <requestHash>, /recall <requestId> <query>, /history, /conversations, /profile, /readiness, /session, /new, /exit. Plain text generates one request ID and displays the backend response; /send returns the handle for later observation. No request is automatically retried."); return true; }
+    if (text === "/help") { console.log("/effort [show|fast|normal|high|max], /send <requestId> <text>, /observe [runId], /watch [runId], /cancel [runId], /approve-input [runId], /approve-tool <operationId> <toolName> <requestHash>, /recall <requestId> <query>, /history, /conversations, /profile, /readiness, /session, /new, /exit. Plain text generates one request ID and displays the backend response; /send returns the handle for later observation. No request is automatically retried."); return true; }
     const isSubmission = !text.startsWith("/") || text.split(/\s+/, 1)[0] === "/send", commandId = ++commandSequence;
     const latency = (phase: "submit.begin" | "answer.first_printed", atMs: number) => {
       if (!trace || !isSubmission || submittedAt === undefined) return;
@@ -61,6 +73,7 @@ export function createCli(options: CliOptions = {}) {
         ...(phase === "answer.first_printed" ? { durationMs: Math.max(0, atMs - submittedAt) } : {}) })); } catch { /* Optional diagnostics only. */ }
     };
     if (submittedAt !== undefined) latency("submit.begin", submittedAt);
+    const requestedMemory=effort===undefined?undefined:{...effort};
     await withRuntime(options.fetchToken ?? (async () => hostToken()), async (client, config) => {
       const [command, ...args] = text.split(/\s+/);
       const handle = async () => { const id = args[0] ?? current?.runId; if (!id) throw new AppError("RUN_ID_REQUIRED"); return client.attach(identifier(id)); };
@@ -69,7 +82,7 @@ export function createCli(options: CliOptions = {}) {
       else if (command === "/readiness") console.log(JSON.stringify(await client.memoryReadiness()));
       else if (command === "/conversations") console.log(JSON.stringify(await client.listConversations()));
       else if (command === "/history") { if (!conversationId) throw new AppError("CONVERSATION_REQUIRED"); console.log(JSON.stringify(await client.messages(conversationId))); }
-      else if (command === "/recall") { const [requestId, ...query] = args; console.log(JSON.stringify(await client.recall({ requestId: identifier(requestId), text: query.join(" "), limit: 10 }))); }
+      else if (command === "/recall") { const [requestId, ...query] = args; console.log(JSON.stringify(await client.recall({ requestId: identifier(requestId), text: query.join(" "), ...(requestedMemory===undefined?{}:{memory:requestedMemory}) }))); }
       else if (command === "/cancel") console.log(JSON.stringify(await client.cancel(await handle())));
       else if (command === "/approve-input") { const owned = await handle(); await client.approveInput(owned); console.log(JSON.stringify(await client.start(owned, { streaming: true }))); }
       else if (command === "/approve-tool") { if (!current) throw new AppError("RUN_ID_REQUIRED"); const [operationId, toolName, requestHash] = args; console.log(JSON.stringify(await client.approveTool(await client.attach(current.runId), { operationId: identifier(operationId), toolName: identifier(toolName), requestHash: identifier(requestHash) }))); }
@@ -79,7 +92,7 @@ export function createCli(options: CliOptions = {}) {
         if (command.startsWith("/") && command !== "/send") throw new AppError("UNKNOWN_COMMAND");
         const requestId = command === "/send" ? identifier(args[0]) : randomUUID(), message = command === "/send" ? args.slice(1).join(" ") : text;
         console.log(`Request ID: ${requestId}`);
-        const result = await chat(client, config, { requestId, message, ...(conversationId ? { conversationId } : {}) });
+        const result = await chat(client, config, { requestId, message, ...(requestedMemory===undefined?{}:{memory:requestedMemory}), ...(conversationId ? { conversationId } : {}) });
         if (options.signal?.aborted) throw new AppError("REQUEST_ABORTED", 499);
         current = result.handle; conversationId = current.conversationId;
         console.log(`Run ${current.runId}: ${result.run.responseStatus}. Use /observe or /watch to resume; /cancel asks the backend to cancel.`);
@@ -89,7 +102,7 @@ export function createCli(options: CliOptions = {}) {
     return true;
   };
 }
-export async function main(options: Omit<CliOptions, "signal"> & { input?: NodeJS.ReadableStream; output?: NodeJS.WritableStream } = {}) {
+export async function main(options: Omit<CliOptions, "signal"> & { input?: ReadLineOptions["input"]; output?: ReadLineOptions["output"] } = {}) {
   const controller = new AbortController(), rl = createInterface({ input: options.input ?? process.stdin, output: options.output ?? process.stdout });
   const connection: RuntimeConnection = {};
   const config = options.config ? Object.freeze({ ...options.config }) : undefined;

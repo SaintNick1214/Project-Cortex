@@ -1,12 +1,12 @@
 import type { ChatTransport, UIMessage, UIMessageChunk } from "ai";
-import { CortexRuntimeError, runtimePublicPart } from "@cortexmemory/sdk/runtime";
-import type { CortexRuntimeClient, RuntimeObservation, RuntimePublicPart, RuntimeRunHandle, RuntimeToolApproval, TextSubmitV1 } from "@cortexmemory/sdk/runtime";
+import { CortexRuntimeError, runtimePublicPart, normalizeMemoryEffortRequest } from "@cortexmemory/sdk/runtime";
+import type { CortexRuntimeClient, RuntimeObservation, RuntimePublicPart, RuntimeRunHandle, RuntimeToolApproval, TextSubmitV1, MemoryEffortRequest, MemoryEffortTrace } from "@cortexmemory/sdk/runtime";
 
 export interface CortexRemoteMetadata {
   version: 1; runId: string; conversationId: string; tenantId: string; memorySpaceId: string;
   definitionHash: string; attemptNumber: number; cursor: number; responseStatus: string;
   memoryStatus: string; graphStatus: string; contextCompleteness: "complete" | "incomplete" | null;
-  failureCode: string | null; contextFailureCode: string | null;
+  failureCode: string | null; contextFailureCode: string | null; memoryEffort?: MemoryEffortTrace;
 }
 /** A local reconnect snapshot, not authorization. Server session/identity are reverified on use. */
 export interface CortexRemoteState {
@@ -15,8 +15,11 @@ export interface CortexRemoteState {
   /** Bounded projection of server-authored references. Job/asset state is fetched freshly by the host. */
   projections?: RuntimePublicPart[];
 }
+export interface CortexRemoteRequestBody { memory: MemoryEffortRequest }
 export interface CortexRemoteTransportOptions {
   client: CortexRuntimeClient; agentId: string; agentVersion: number; conversationId?: string; finalOnly?: boolean;
+  /** Default for new requests; each request snapshots this value. */
+  memory?: MemoryEffortRequest;
   onRun?: (handle: RuntimeRunHandle) => void; onObservation?: (observation: RuntimeObservation) => void;
   /** Restore only from this app's retained state; no model/context/tool/authority overrides. */
   state?: CortexRemoteState;
@@ -26,11 +29,15 @@ interface Replay { canonical: string; request: TextSubmitV1; handle?: RuntimeRun
 /** AI SDK 7 transport for one canonical remote conversation. It performs no inference or memory writing. */
 export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> implements ChatTransport<UI_MESSAGE> {
   private current?: CortexRemoteState;
+  private readonly defaultMemory?: MemoryEffortRequest;
   private conversationId?: string;
   private readonly replays = new Map<string, Replay>();
   private closeObservation?: () => void;
   constructor(private readonly options: CortexRemoteTransportOptions) {
     this.conversationId = options.conversationId;
+    const memory=Object.getOwnPropertyDescriptor(options,"memory");
+    if(memory && !("value" in memory)) throw new CortexRuntimeError("INVALID_INPUT");
+    if(memory?.value!==undefined) this.defaultMemory=Object.freeze(this.memoryRequest(memory.value));
     if (options.state) {
       if (options.state.version !== 1 || options.state.handle.agentId !== options.agentId || options.state.handle.agentVersion !== options.agentVersion
         || options.conversationId !== undefined && options.state.handle.conversationId !== options.conversationId
@@ -59,24 +66,33 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
   }
   setConversation(conversationId?: string): void { this.disconnect(); this.conversationId = conversationId; this.current = undefined; }
   private requireRun(): RuntimeRunHandle { if (!this.run) throw new CortexRuntimeError("RUN_REQUIRED"); return this.run; }
-  private requestOptions(options: { body?: unknown; headers?: unknown; metadata?: unknown }) {
-    // Host authentication belongs to ConvexClient.setAuth; chat request knobs cannot select authority/models/context.
-    if (options.body !== undefined || options.headers !== undefined || options.metadata !== undefined) throw new CortexRuntimeError("UNSUPPORTED_TRANSPORT_OPTIONS");
+  private memoryRequest(input: unknown): MemoryEffortRequest {
+    try { if(input===undefined) throw new Error("INVALID_INPUT"); return normalizeMemoryEffortRequest(input as MemoryEffortRequest); }
+    catch { throw new CortexRuntimeError("INVALID_INPUT"); }
+  }
+  private requestOptions(options: { body?: unknown; headers?: unknown; metadata?: unknown }, submission=false): MemoryEffortRequest | undefined {
+    // Authentication/model/network knobs remain outside chat request options.
+    if(options.headers!==undefined || options.metadata!==undefined) throw new CortexRuntimeError("UNSUPPORTED_TRANSPORT_OPTIONS");
+    if(options.body===undefined) return submission ? this.defaultMemory : undefined;
+    if(!submission || !options.body || typeof options.body!=="object" || ![Object.prototype,null].includes(Object.getPrototypeOf(options.body))) throw new CortexRuntimeError("UNSUPPORTED_TRANSPORT_OPTIONS");
+    const descriptors=Object.getOwnPropertyDescriptors(options.body);
+    if(Reflect.ownKeys(descriptors).length!==1 || !Object.hasOwn(descriptors,"memory") || !("value" in descriptors.memory)) throw new CortexRuntimeError("UNSUPPORTED_TRANSPORT_OPTIONS");
+    return this.memoryRequest(descriptors.memory.value);
   }
   async sendMessages(options: Parameters<ChatTransport<UI_MESSAGE>["sendMessages"]>[0]): Promise<ReadableStream<UIMessageChunk>> {
-    this.requestOptions(options);
+    const memory=this.requestOptions(options,true);
     if (options.trigger !== "submit-message") throw new CortexRuntimeError("UNSUPPORTED_REGENERATION");
     const last = options.messages[options.messages.length - 1];
     if (!last || last.role !== "user" || !last.id || !last.parts.length || last.parts.some(part => part.type !== "text")) throw new CortexRuntimeError("TEXT_ONLY_REQUEST_REQUIRED");
     const parts = last.parts.map(part => { if (part.type !== "text") throw new CortexRuntimeError("TEXT_ONLY_REQUEST_REQUIRED"); return { type: "text" as const, text: part.text }; });
     const key = JSON.stringify([options.chatId, last.id]);
     // A replay keeps its original create/existing selector even after onRun fills conversationId.
-    const canonical = JSON.stringify([this.options.agentId, this.options.agentVersion, parts]);
+    const canonical = JSON.stringify([this.options.agentId, this.options.agentVersion, parts, ...(memory===undefined?[]:[memory])]);
     let replay = this.replays.get(key);
     if (replay && replay.canonical !== canonical) throw new CortexRuntimeError("IDEMPOTENCY_CONFLICT");
     if (!replay) {
       const request: TextSubmitV1 = { version: 1, agentId: this.options.agentId, agentVersion: this.options.agentVersion,
-        clientRequestId: last.id, parts, ...(this.conversationId === undefined ? {} : { conversationId: this.conversationId }) };
+        clientRequestId: last.id, parts, ...(memory===undefined?{}:{memory:{...memory}}), ...(this.conversationId === undefined ? {} : { conversationId: this.conversationId }) };
       replay = { canonical, request }; this.replays.set(key, replay);
     }
     if (!replay.handle && !replay.pending) {
@@ -108,7 +124,7 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
     const metadata = (observation: RuntimeObservation): CortexRemoteMetadata => ({ version: 1, runId: handle.runId, conversationId: handle.conversationId,
       tenantId: handle.tenantId, memorySpaceId: handle.memorySpaceId, definitionHash: handle.definitionHash, attemptNumber: observation.run.attemptNumber,
       cursor: state.cursor, responseStatus: observation.run.responseStatus, memoryStatus: observation.run.memoryStatus,
-      graphStatus: observation.run.graphStatus, contextCompleteness: observation.run.contextCompleteness, failureCode: observation.run.failureCode, contextFailureCode: observation.run.contextFailureCode });
+      graphStatus: observation.run.graphStatus, contextCompleteness: observation.run.contextCompleteness, failureCode: observation.run.failureCode, contextFailureCode: observation.run.contextFailureCode, ...(observation.run.memoryEffort===undefined?{}:{memoryEffort:observation.run.memoryEffort}) });
     return new ReadableStream<UIMessageChunk>({ start: controller => {
       const close = () => { if (!active) return; active = false; stop(); signal?.removeEventListener("abort", abort); if (this.closeObservation === close) this.closeObservation = undefined; controller.close(); };
       const fail = (error: unknown) => { if (!active) return; active = false; stop(); signal?.removeEventListener("abort", abort); if (this.closeObservation === close) this.closeObservation = undefined;

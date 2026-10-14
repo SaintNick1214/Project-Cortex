@@ -21,6 +21,7 @@ export class MemoryTestDb {
   rows = new Map<string, Row[]>();
   writes = 0;
   sequence = 0;
+  reads: {table:string;index?:string;limit:number}[]=[];
   table(name: string): Row[] { if (!this.rows.has(name)) this.rows.set(name, []); return this.rows.get(name)!; }
   seed(table: string, value: Record<string, unknown>): Row {
     const row = { ...value, _id: typeof value._id === "string" ? value._id : `${table}:${++this.sequence}`, _creationTime: 1000 };
@@ -28,6 +29,7 @@ export class MemoryTestDb {
   }
   query(table: string) {
     const filters: ((row: Row) => boolean)[] = []; let keys: string[] = [];
+    let indexName:string|undefined;
     let descending = false;
     let predicate: (row: Row) => boolean = () => true;
     const selected = () => { const rows = this.table(table).filter(row => filters.every(test => test(row)) && predicate(row)).sort((a, b) => {
@@ -35,11 +37,15 @@ export class MemoryTestDb {
     }); return descending ? rows.reverse() : rows; };
     const builder = {
       withIndex: (name: string, callback: (q: { eq(key: string, value: unknown): unknown; gt(key: string, value: string | number): unknown }) => unknown) => {
+        indexName=name;
         const q = { eq: (key: string, value: unknown) => { filters.push(row => field(row, key) === value); return q; },
           gt: (key: string, value: string | number) => { filters.push(row => (field(row, key) as typeof value) > value); return q; } };
-        keys = table === "runtimeGraphDependencies" && name === "by_upstream" ? ["dependentSourceId"]
+        keys = table === "runtimeMemoryFactEntities" || name === "by_runtime_source_fact" ? ["factId"] : table === "runtimeGraphDependencies" && name === "by_upstream" ? ["dependentSourceId"]
           : table === "runtimeGraphSources" ? name === "by_tenant_source" ? ["memorySpaceId"] : ["tenantId", "memorySpaceId", "sourceId"] : [];
         callback(q); return builder;
+      },
+      withSearchIndex:(name:string,callback:(q:{search(key:string,value:string):unknown;eq(key:string,value:unknown):unknown})=>unknown)=>{
+        indexName=name;const q={search:(key:string,value:string)=>{const words=value.toLowerCase().split(/\s+/);filters.push(row=>words.some(word=>String(field(row,key)).toLowerCase().includes(word)));return q;},eq:(key:string,value:unknown)=>{filters.push(row=>field(row,key)===value);return q;}};callback(q);return builder;
       },
       filter: (callback: (q: {
         field(name: string): string; eq(name: string, value: unknown): (row: Row) => boolean;
@@ -54,9 +60,9 @@ export class MemoryTestDb {
       },
       unique: async () => { const rows = selected(); if (rows.length > 1) throw new Error("Nonunique canonical index"); return rows[0] ?? null; },
       order: (direction: "asc" | "desc") => { descending = direction === "desc"; return builder; },
-      collect: async () => [...selected()], take: async (limit: number) => selected().slice(0, limit),
+      collect: async () => [...selected()], take: async (limit: number) => {this.reads.push({table,index:indexName,limit});return selected().slice(0, limit);},
       paginate: async (opts: { cursor: string | null; numItems: number }) => {
-        const rows = selected(); const offset = Number(opts.cursor ?? 0);
+        this.reads.push({table,index:indexName,limit:opts.numItems});const rows = selected(); const offset = Number(opts.cursor ?? 0);
         return { page: rows.slice(offset, offset + opts.numItems), isDone: offset + opts.numItems >= rows.length, continueCursor: String(offset + opts.numItems) };
       },
     };
@@ -69,6 +75,7 @@ export class MemoryTestDb {
     const row = await this.get(table, id); if (!row) throw new Error("Missing row");
     this.writes++; Object.assign(row, nativeClone(value));
   }
+  async delete(table:string,id:string):Promise<void>{const rows=this.table(table),index=rows.findIndex(row=>row._id===id);if(index>=0){rows.splice(index,1);this.writes++;}}
   async replace(table: string, id: string, value: Record<string, unknown>): Promise<void> {
     const rows = this.table(table); const index = rows.findIndex((row) => row._id === id);
     if (index < 0) throw new Error("Missing row"); this.writes++;

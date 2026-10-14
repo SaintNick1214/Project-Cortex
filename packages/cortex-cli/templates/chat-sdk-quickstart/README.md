@@ -15,3 +15,14 @@ HTTP consumers send `Authorization: Bearer <host JWT>` on every request. `POST /
 Previous app-side model factories, execution tools, unauthenticated SDK singleton and votes/share examples are retired. Retained editors and Auth.js examples do not grant Cortex authority. The canonical UI and HTTP generation routes are remote replacements.
 
 Run `pnpm test`, `pnpm exec tsc --noEmit`, `pnpm run build` and `pnpm run lint` for affected files. Offline checks do not attest provider availability or native OCC. Installed CLI/backend/browser evidence is separate; unavailable async video is not completed media.
+
+## Memory effort
+
+The labeled Memory effort selector starts at Normal and applies to the next send or
+memory search. Fast, Normal, High and Max request backend retrieval effort. Max removes
+preset hop and entry caps while administrator policy, input, work and deadlines remain.
+The selector is enabled only when the selected Agent advertises input selection version
+2 and effort policy version 1; legacy versions retain their original selection.
+The server status shows effective limits, reached depth, counts and stops independently
+of the local choice. Unavailable sources mean partial results. Selecting a mode does not
+prove a first-answer latency target, and reconnect never changes a pending request.

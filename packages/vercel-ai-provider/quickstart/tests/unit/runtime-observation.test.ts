@@ -2,12 +2,13 @@
 import React from "react";
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { UIMessage } from "ai";
-import type { RuntimeObservation, RuntimeRun, RuntimeRunHandle, RuntimeToolApproval } from "@cortexmemory/sdk/runtime";
+import type { RuntimeObservation, RuntimeRun, RuntimeRunHandle, RuntimeToolApproval, MemoryEffortTrace } from "@cortexmemory/sdk/runtime";
 import { RuntimeQuickstart } from "../../components/RuntimeQuickstart";
 
 type Lane = { finalOnly: boolean; active: boolean; update: (value: RuntimeObservation) => void;
   deny: (error: { code: string }) => void; close: jest.Mock };
 const mockLanes: Lane[] = [];
+const mockSendOptions:unknown[]=[];
 const mockScope = { tenantId: "tenant", memorySpaceId: "space" };
 const mockHandle: RuntimeRunHandle = { version: 1, ...mockScope, principalId: "owner", runId: "run:" + "1".repeat(64),
   conversationId: "conversation", agentId: "agent", agentVersion: 1, definitionHash: "definition" };
@@ -23,6 +24,7 @@ const mockClient = {
   getDefinition: jest.fn(async () => ({ agentId: "agent", version: 1, definitionHash: "definition", tools: [], memoryMode: "indexed-plus-pending" })),
   getEmbeddingProfile: jest.fn(async () => ({ profile: { profileId: "profile", modelId: "model", dimensions: 1536,
     normalization: "none", chunking: "chunks", indexName: "index" } })),
+  recall:jest.fn(async()=>({items:[],context:"",profileId:"profile"})),
   close: jest.fn(async () => {}),
   watchRun: jest.fn(() => jest.fn()),
   watchObservation: jest.fn((_handle: RuntimeRunHandle, update: Lane["update"], deny: Lane["deny"], options: { finalOnly?: boolean } = {}) => {
@@ -57,7 +59,8 @@ jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport, o
   transport.onError = onError;
   const hooks: typeof React = jest.requireMock("react");
   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
-  return { messages, setMessages, status: "ready", sendMessage: async () => {
+  return { messages, setMessages, status: "ready", sendMessage: async (_message:unknown,options?:unknown) => {
+    mockSendOptions.push(options);
     transport.start(); setMessages([{ id: "user", role: "user", parts: [{ type: "text", text: "fixture request" }] },
       { id: "assistant", role: "assistant", parts: [{ type: "text", text: "protected fixture reply" }] }]);
   }, resumeStream: async () => { transport.start(); } };
@@ -78,7 +81,7 @@ async function connectAndSubmit() {
   await waitFor(() => expect(mockLanes.filter(value => value.active)).toHaveLength(1));
   return view;
 }
-beforeEach(() => { mockLanes.length = 0; jest.clearAllMocks(); delete mockOptions.onAuthChange;
+beforeEach(() => { mockLanes.length = 0;mockSendOptions.length=0; jest.clearAllMocks(); delete mockOptions.onAuthChange;
   process.env.NEXT_PUBLIC_CONVEX_URL = "http://127.0.0.1:9"; process.env.NEXT_PUBLIC_CORTEX_AGENT_ID = "agent";
   process.env.NEXT_PUBLIC_CORTEX_AGENT_VERSION = "1"; delete process.env.NEXT_PUBLIC_CORTEX_LATENCY_TRACE;
 });
@@ -171,4 +174,20 @@ test("SDK authentication loss keeps the original owner teardown", async () => {
   await waitFor(() => expect(screen.queryByText("protected fixture reply")).toBeNull());
   expect(screen.getByRole("alert").textContent).toBe("UNAUTHENTICATED");
   expect(mockLanes.every(value => !value.active)).toBe(true); expect(mockClient.close).toHaveBeenCalledTimes(1);
+});
+
+
+test("effort-aware UI starts Normal, captures each send choice and displays the server trace separately",async()=>{
+ mockClient.getDefinition.mockResolvedValueOnce(Object.assign({agentId:"agent",version:1,definitionHash:"definition",tools:[],memoryMode:"indexed-plus-pending"},{inputSelectionVersion:2,memoryEffortPolicyVersion:1}));
+ const view=await connectAndSubmit();const select=screen.getByRole("combobox",{name:"Memory effort"}) as HTMLSelectElement;
+ expect(select.value).toBe("normal");expect(select.disabled).toBe(false);expect(mockSendOptions[0]).toEqual({body:{memory:{effort:"normal"}}});
+ fireEvent.change(select,{target:{value:"max"}});fireEvent.change(screen.getByLabelText("Message",{exact:true}),{target:{value:"next request"}});fireEvent.click(screen.getByRole("button",{name:"Send"}));
+ await waitFor(()=>expect(mockSendOptions).toHaveLength(2));expect(mockSendOptions[0]).toEqual({body:{memory:{effort:"normal"}}});expect(mockSendOptions[1]).toEqual({body:{memory:{effort:"max"}}});
+ const trace:MemoryEffortTrace={version:1,policyVersion:"memory-effort-v1",requestedEffort:"normal",effectiveEffort:"normal",maxDepth:4,maxEntries:8,maxContextTokens:4096,targetFirstAnswerMs:6000,reachedDepth:3,visited:5,expanded:3,selected:4,deduplicated:1,entriesByKind:{memory:2,fact:2,pending:0,history:0},selectedInputUnits:100,durationMs:12,stopReasons:["work"],unavailableStages:["external_graph"]};
+ emit(false,observation({memoryEffort:trace}));expect(screen.getByTestId("memory-effort-status").textContent).toContain("Server effort: normal");expect(screen.getByTestId("memory-effort-status").textContent).toContain("Reached depth 3");expect(select.value).toBe("max");
+ view.unmount();
+});
+test("legacy Agent selection remains readable without claiming an effort was applied",async()=>{
+ const view=await connectAndSubmit();expect((screen.getByRole("combobox",{name:"Memory effort"}) as HTMLSelectElement).disabled).toBe(true);
+ expect(screen.getByText(/This Agent version uses legacy memory selection/)).toBeDefined();expect(mockSendOptions[0]).toBeUndefined();view.unmount();
 });

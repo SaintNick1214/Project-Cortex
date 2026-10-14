@@ -1,4 +1,7 @@
 import type { RuntimeObservation, RuntimePublicPart, RuntimeRun, RuntimeScope, RuntimeSession, RuntimeStartResult, TextSubmitV1 } from "./types.js";
+import { normalizeMemoryEffortRequest } from "../domain/memory-effort.js";
+import type { MemoryEffortRequest, MemoryEffortTrace, MemoryEffortStopReason } from "../domain/memory-effort.js";
+import type { RuntimeRecallRequest, RuntimeRecallResult } from "./types.js";
 
 export class CortexRuntimeError extends Error {
   readonly version = 1;
@@ -46,8 +49,73 @@ function unicode(value: string) {
   }
 }
 export function natural(value: unknown): number { if (!Number.isSafeInteger(value) || (value as number) < 0) invalid(); return value as number; }
+/** Normalize only an explicitly supplied request; omission retains old bindings. */
+export function memoryEffortRequest(input: unknown): MemoryEffortRequest {
+  const value = object(input);
+  try { return normalizeMemoryEffortRequest(value as MemoryEffortRequest); } catch { return invalid(); }
+}
+export function recallRequest(input: unknown): RuntimeRecallRequest {
+  const value = object(input); exact(value, ["text", "requestId"], ["limit", "memory"]);
+  if (typeof value.text !== "string" || !value.text.trim() || new TextEncoder().encode(value.text).length > 120000) invalid();
+  unicode(value.text);
+  if (value.limit !== undefined && natural(value.limit) < 1) invalid();
+  return { text: value.text, requestId: identifier(value.requestId, 512),
+    ...(value.limit === undefined ? {} : { limit: value.limit as number }),
+    ...(value.memory === undefined ? {} : { memory: memoryEffortRequest(value.memory) }) };
+}
+function wireArray(input: unknown, maximum: number): unknown[] {
+  if (!Array.isArray(input) || Object.getPrototypeOf(input) !== Array.prototype || input.length > maximum) invalid("INVALID_RESPONSE");
+  const descriptors = Object.getOwnPropertyDescriptors(input);
+  if (Reflect.ownKeys(descriptors).length !== input.length + 1 || Reflect.ownKeys(descriptors).some(key => typeof key !== "string" || !("value" in descriptors[key]!))) invalid("INVALID_RESPONSE");
+  return input;
+}
+/** Bounded public scalar metadata only; never accepts evidence text or authority. */
+export function runtimeMemoryEffortTrace(input: unknown): MemoryEffortTrace {
+  try {
+    const row = object(input);
+    exact(row, ["version", "policyVersion", "requestedEffort", "effectiveEffort", "maxDepth", "maxEntries", "maxContextTokens", "targetFirstAnswerMs", "reachedDepth", "visited", "expanded", "selected", "deduplicated", "entriesByKind", "selectedInputUnits", "durationMs", "stopReasons", "unavailableStages"]);
+    if (row.version !== 1 || row.policyVersion !== "memory-effort-v1") invalid();
+    for (const field of ["requestedEffort", "effectiveEffort"]) if (typeof row[field] !== "string") invalid();
+    const requestedEffort = normalizeMemoryEffortRequest({effort:row.requestedEffort as MemoryEffortRequest["effort"]}).effort!;
+    const effectiveEffort = normalizeMemoryEffortRequest({effort:row.effectiveEffort as MemoryEffortRequest["effort"]}).effort!;
+    if (row.maxDepth !== null && natural(row.maxDepth) < 1 || row.maxEntries !== null && natural(row.maxEntries) < 0 || natural(row.maxContextTokens) < 1 || natural(row.targetFirstAnswerMs) < 1) invalid();
+    for (const field of ["reachedDepth", "visited", "expanded", "selected", "deduplicated", "selectedInputUnits"]) natural(row[field]);
+    if (typeof row.durationMs !== "number" || !Number.isFinite(row.durationMs) || row.durationMs < 0) invalid();
+    const kinds = object(row.entriesByKind); exact(kinds,["memory","fact","pending","history"]);
+    const reasons: MemoryEffortStopReason[] = ["exhausted","depth","relevance","entries","input","deadline","work","cancellation","unavailable"];
+    const stopReasons = wireArray(row.stopReasons, 16).map(reason => { if (!reasons.includes(reason as MemoryEffortStopReason)) invalid(); return reason as MemoryEffortStopReason; });
+    const unavailableStages = wireArray(row.unavailableStages,16).map(stage => identifier(stage,128));
+    return {version:1,policyVersion:"memory-effort-v1",requestedEffort,effectiveEffort,maxDepth:row.maxDepth as number|null,maxEntries:row.maxEntries as number|null,
+      maxContextTokens:row.maxContextTokens as number,targetFirstAnswerMs:row.targetFirstAnswerMs as number,reachedDepth:row.reachedDepth as number,
+      visited:row.visited as number,expanded:row.expanded as number,selected:row.selected as number,deduplicated:row.deduplicated as number,
+      entriesByKind:{memory:natural(kinds.memory),fact:natural(kinds.fact),pending:natural(kinds.pending),history:natural(kinds.history)},
+      selectedInputUnits:row.selectedInputUnits as number,durationMs:row.durationMs,stopReasons,unavailableStages};
+  } catch { return invalid("INVALID_RESPONSE"); }
+}
+export function recallResult(input: unknown): RuntimeRecallResult {
+  try {
+    const row=object(input);
+    if(typeof row.context!=="string" || typeof row.profileId!=="string") invalid();
+    const items=wireArray(row.items,Number.MAX_SAFE_INTEGER).map(inputItem=>{
+      const item=object(inputItem);
+      if(!["memory","fact"].includes(item.type as string) || typeof item.content!=="string" || typeof item.source!=="string" || typeof item.score!=="number" || !Number.isFinite(item.score)) invalid();
+      let retrieval: {depth:number;path:string[]} | undefined;
+      if(item.retrieval!==undefined) {const value=object(item.retrieval);exact(value,["depth","path"]);if(natural(value.depth)<1)invalid();
+        retrieval={depth:value.depth as number,path:wireArray(value.path,4096).map(key=>identifier(key,1024))};if(!retrieval.path.length)invalid();}
+      let graphContext: RuntimeRecallResult["items"][number]["graphContext"];
+      if(item.graphContext!==undefined) {const value=object(item.graphContext);exact(value,["connectedEntities"],["relationshipPath"]);
+        graphContext={connectedEntities:wireArray(value.connectedEntities,Number.MAX_SAFE_INTEGER).map(key=>identifier(key,1024)),
+          ...(value.relationshipPath===undefined?{}:{relationshipPath:identifier(value.relationshipPath,4096)})};}
+      return {type:item.type as "memory"|"fact",id:identifier(item.id,512),content:item.content,source:item.source,score:item.score,
+        ...(item.tenantId===undefined?{}:{tenantId:identifier(item.tenantId)}),...(item.userId===undefined?{}:{userId:identifier(item.userId)}),...(graphContext?{graphContext}:{}),
+        ...(item.memory===undefined?{}:{memory:object(item.memory)}),...(item.fact===undefined?{}:{fact:object(item.fact)}),...(retrieval?{retrieval}:{})};
+    });
+    return {items,context:row.context,profileId:identifier(row.profileId),...(row.deliveryExpiresAt===undefined?{}:{deliveryExpiresAt:deliveryDeadline(row.deliveryExpiresAt)}),
+      ...(row.memoryEffort===undefined?{}:{memoryEffort:runtimeMemoryEffortTrace(row.memoryEffort)})};
+  } catch {return invalid("INVALID_RESPONSE");}
+}
 export function textSubmit(input: unknown): TextSubmitV1 {
-  const value = object(input); exact(value, ["version", "agentId", "agentVersion", "clientRequestId", "parts"], ["conversationId"]);
+  const value = object(input); exact(value, ["version", "agentId", "agentVersion", "clientRequestId", "parts"], ["conversationId", "memory"]);
   if (value.version !== 1 || natural(value.agentVersion) < 1) invalid();
   const agentId = identifier(value.agentId), clientRequestId = identifier(value.clientRequestId, 512);
   if ([...clientRequestId].length > 128) invalid();
@@ -65,7 +133,8 @@ export function textSubmit(input: unknown): TextSubmitV1 {
   });
   if (!scalars || bytes > 120_000) invalid();
   return { version: 1, agentId, agentVersion: value.agentVersion as number, clientRequestId, parts,
-    ...(value.conversationId === undefined ? {} : { conversationId: identifier(value.conversationId) }) };
+    ...(value.conversationId === undefined ? {} : { conversationId: identifier(value.conversationId) }),
+    ...(value.memory === undefined ? {} : { memory: memoryEffortRequest(value.memory) }) };
 }
 export function sameScope(a: RuntimeScope, b: RuntimeScope): boolean { return a.tenantId === b.tenantId && a.memorySpaceId === b.memorySpaceId; }
 export function deliveryDeadline(value: unknown): number | undefined {
@@ -91,7 +160,8 @@ export function run(value: unknown): RuntimeRun {
     graphStatus: row.graphStatus as RuntimeRun["graphStatus"], attemptNumber: row.attemptNumber as number, cancellationRequested: row.cancellationRequested === true,
     inputMessageIds: row.inputMessageIds as string[], outputMessageIds: row.outputMessageIds as string[], failureCode: row.failureCode as string | null,
     contextCompleteness: row.contextCompleteness as RuntimeRun["contextCompleteness"], contextFailureCode: row.contextFailureCode as string | null,
-    createdAt: row.createdAt as number, updatedAt: row.updatedAt as number };
+    createdAt: row.createdAt as number, updatedAt: row.updatedAt as number,
+    ...(row.memoryEffort === undefined ? {} : {memoryEffort:runtimeMemoryEffortTrace(row.memoryEffort)}) };
 }
 export function startResult(input: unknown): RuntimeStartResult {
   const value = object(input);
@@ -105,7 +175,7 @@ export function admissionResult(input: unknown): { version: 1; run: RuntimeRun; 
   if (value.version !== 1) invalid("INVALID_RESPONSE");
   const metadata = object(value.run);
   exact(metadata, ["version", "runId", "conversationId", "agentId", "agentVersion", "scope", "definitionHash", "queueSequence", "responseStatus",
-    "memoryStatus", "graphStatus", "attemptNumber", "cancellationRequested", "inputMessageIds", "outputMessageIds", "failureCode", "contextCompleteness", "contextFailureCode", "createdAt", "updatedAt"]);
+    "memoryStatus", "graphStatus", "attemptNumber", "cancellationRequested", "inputMessageIds", "outputMessageIds", "failureCode", "contextCompleteness", "contextFailureCode", "createdAt", "updatedAt"], ["memoryEffort"]);
   exact(object(metadata.scope), ["tenantId", "memorySpaceId"]);
   if (typeof metadata.cancellationRequested !== "boolean" || natural(metadata.agentVersion) < 1
     || ![null, "complete", "incomplete"].includes(metadata.contextCompleteness as RuntimeRun["contextCompleteness"])

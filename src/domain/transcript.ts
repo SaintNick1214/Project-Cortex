@@ -1,9 +1,12 @@
+import { normalizeMemoryEffortRequest } from "./memory-effort.js";
+import type { MemoryEffortRequest, EffectiveMemoryEffortPolicy } from "./memory-effort.js";
 import { canonicalModelJson } from "./model-policy.js";
 import { semanticHash } from "./profile.js";
 
 /** Public v1 is deliberately text-only. Scope, model and execution authority are server-owned. */
 export interface TextSubmitV1 {
   version: 1; agentId: string; agentVersion: number; conversationId?: string;
+  memory?: MemoryEffortRequest;
   clientRequestId: string; parts: { type: "text"; text: string }[];
 }
 export interface NormalizedAdmissionV1 {
@@ -27,7 +30,7 @@ export interface CutoffV1 {
 /** Selected model-input coverage. The authoritative transcript is still complete and paginated. */
 export interface CutoffV8 extends Omit<CutoffV1, "version"> {
   version: 8;
-  inputSelection: { version: 1; policy: import("./model-input-selection.js").ModelInputSelectionPolicy;
+  inputSelection: { version: 1 | 2; recentStopReason?:"work"|"input"; effort?: EffectiveMemoryEffortPolicy; policy: import("./model-input-selection.js").ModelInputSelectionPolicy;
     policyHash: string; mandatoryMessageIds: string[]; coverage: "selected" };
 }
 export type ExecutionCutoff = CutoffV1 | CutoffV8;
@@ -65,7 +68,7 @@ export function normalizeTextSubmit(input: unknown): NormalizedAdmissionV1 {
   const detached: unknown = JSON.parse(canonical);
   if (!detached || typeof detached !== "object" || Array.isArray(detached)) invalid();
   const value = detached as Record<string, unknown>;
-  exactKeys(value, ["version", "agentId", "agentVersion", "clientRequestId", "parts"], ["conversationId"]);
+  exactKeys(value, ["version", "agentId", "agentVersion", "clientRequestId", "parts"], ["conversationId", "memory"]);
   if (value.version !== 1 || !Number.isSafeInteger(value.agentVersion) || (value.agentVersion as number) < 1) invalid();
   boundedIdentifier(value.agentId); clientRequestKey(value.clientRequestId);
   if (Object.prototype.hasOwnProperty.call(value, "conversationId")) boundedIdentifier(value.conversationId);
@@ -78,6 +81,7 @@ export function normalizeTextSubmit(input: unknown): NormalizedAdmissionV1 {
     assertUnicode(part.text); bytes += utf8Bytes(part.text); scalars += [...part.text].length;
   }
   if (!scalars || bytes > 120_000) invalid();
+  if(Object.hasOwn(value,"memory")) value.memory=normalizeMemoryEffortRequest(value.memory as MemoryEffortRequest);
   const publicRequest = value as unknown as TextSubmitV1;
   return { internalVersion: 1, publicRequest,
     conversationSelector: publicRequest.conversationId === undefined ? { kind: "create" }

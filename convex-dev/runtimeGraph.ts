@@ -1,3 +1,4 @@
+import { replaceFactEntityLinks } from "./runtimeMemoryTraversal";
 /** Durable external graph intent, trusted worker leases and current-authorized reads. */
 import { ConvexError, v } from "convex/values";
 import { makeFunctionReference } from "convex/server";
@@ -120,6 +121,8 @@ export async function enqueueSourceProjection(ctx: ProjectionCtx, reference: Run
       || fact.lineage?.sourceRevision !== source.lineage.sourceRevision || fact.lineage.sourceEventId !== source.lineage.sourceEventId
       || fact.ownerPrincipalId !== source.ownerPrincipalId || fact.lineage.role === "assistant") continue;
     if (await reader.hasTombstone({ ...s, resourceType: "fact", resourceId: fact.factId })) continue;
+    await replaceFactEntityLinks(ctx.db,{tenantId:s.tenantId,memorySpaceId:s.memorySpaceId,ownerPrincipalId:fact.ownerPrincipalId!,factId:fact.factId,version:fact.version,lineage:fact.lineage,
+      subject:fact.subject,object:fact.object,entities:fact.entities,relations:fact.relations});
     facts.push({ factId: fact.factId, revision: fact.version, text: fact.fact,
       entities: (fact.entities ?? []).map(({ name, type }) => ({ name, type })), relations: fact.relations ?? [] });
   }

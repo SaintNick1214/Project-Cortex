@@ -14,6 +14,7 @@ import { requireDataAuthority, dataAuthorityReference } from "./runtimeDataAuth"
 import { recheckAuthority, readDeploymentPolicyRows, readTenantPolicyRows, readExecutableDefinitionRows } from "./runtimeAuth";
 import { lookupDeploymentManifest } from "./runtimeModelPolicyBootstrap";
 import { NATIVE_TOOL_NAMES_V2 as NATIVE_TOOL_NAMES } from "../src/domain/agent-tools";
+import { validateMemoryEffortPolicy } from "../src/domain/memory-effort";
 import { modelInputPolicy } from "../src/domain/model-input-selection";
 
 export const EXECUTABLE_REGISTRY = Object.freeze({ version: 1,
@@ -27,6 +28,8 @@ export async function executableRegistryHashV2(): Promise<string> { return await
 export const EXECUTABLE_REGISTRY_V3 = Object.freeze({ version: 3, tools: EXECUTABLE_REGISTRY_V2.tools,
   contexts: Object.freeze({ ...EXECUTABLE_REGISTRY.contexts, "cortex.transcript.relevant": 1 }) });
 export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+export const EXECUTABLE_REGISTRY_V4 = Object.freeze({version:4,tools:EXECUTABLE_REGISTRY_V3.tools,contexts:Object.freeze({...EXECUTABLE_REGISTRY_V3.contexts,"cortex.transcript.relevant":2})});
+export async function executableRegistryHashV4():Promise<string>{return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V4));}
 function denied(code = "POLICY_DENIED"): never {
   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
 }
@@ -46,13 +49,15 @@ const policyInput = z.object({ policyId: text, version: positive, operationKey: 
 const selectionInput = z.object({ version: z.literal(1), recentMessages: z.number().int().min(1).max(16),
   relevantMemories: z.number().int().min(0).max(10), relevantFacts: z.number().int().min(0).max(10),
   pendingEntries: z.number().int().min(0).max(32), maxMessages: z.number().int().min(1).max(32) }).strict();
+const effortPolicyInput=z.object({version:z.literal(1),maxDepth:positive.optional(),maxEntries:count.optional(),maxContextTokens:positive.optional(),maxWork:positive.optional(),retrievalDeadlineMs:positive.optional()}).strict();
+const selectionInputV2=z.object({version:z.literal(2),effort:effortPolicyInput.optional(),recentMessages:positive.optional(),relevantMemories:count.optional(),relevantFacts:count.optional(),pendingEntries:count.optional(),maxMessages:positive.optional(),optionalEntries:count.nullable().optional()}).strict();
 const definitionInput = z.object({ instructions: z.object({ text: z.string().max(60_000).refine(unicode), promptVersion: text }).strict(),
   tools: z.array(z.object({ toolId: text, toolVersion: positive, registryHash: z.string().regex(/^[a-f0-9]{64}$/),
     requiredCapability: z.literal("tool"), approval: z.enum(["none", "explicit"]) }).strict()).max(32),
   context: z.object({ handlerId: text, handlerVersion: positive, registryHash: z.string().regex(/^[a-f0-9]{64}$/),
     memoryMode: z.enum(["indexed-plus-pending", "strict"]), requiredStages: z.array(z.enum(["facts", "vectors", "graph"])).max(3), maxContextTokens: positive,
     barrier: z.object({ deadlineMs: z.number().int().min(1).max(120_000), onFailure: z.enum(["fail", "incomplete"]) }).strict().optional(),
-    inputSelection: selectionInput.optional() }).strict(),
+    inputSelection: z.union([selectionInput,selectionInputV2]).optional() }).strict(),
   policies: z.array(policyInput).min(1).max(32),
 }).strict();
 export type ExecutableDefinitionV1 = Omit<z.infer<typeof definitionInput>, "policies"> & {
@@ -66,12 +71,18 @@ function decodeInput(input: unknown): z.infer<typeof definitionInput> {
   catch { return denied("INVALID_INPUT"); }
   const parsed = definitionInput.safeParse(detached);
   if (!parsed.success) denied("INVALID_INPUT");
+  if(parsed.data.context.handlerId==="cortex.transcript.relevant" && parsed.data.context.handlerVersion===2) {
+    const selected=parsed.data.context.inputSelection;
+    if(selected && selected.version!==2)denied("INVALID_INPUT");
+    const policy=modelInputPolicy({version:2,effort:validateMemoryEffortPolicy(selected && selected.version===2?selected.effort:undefined)} as Parameters<typeof modelInputPolicy>[0]);
+    parsed.data.context.inputSelection=policy;
+  }
   return parsed.data;
 }
 async function registry(input: z.infer<typeof definitionInput>): Promise<void> {
   const hash = input.context.registryHash;
   const catalog = hash === await executableRegistryHash() ? EXECUTABLE_REGISTRY : hash === await executableRegistryHashV2() ? EXECUTABLE_REGISTRY_V2
-    : hash === await executableRegistryHashV3() ? EXECUTABLE_REGISTRY_V3 : undefined;
+    : hash === await executableRegistryHashV3() ? EXECUTABLE_REGISTRY_V3 : hash === await executableRegistryHashV4() ? EXECUTABLE_REGISTRY_V4 : undefined;
   if (!catalog) denied();
   const seen = new Set<string>();
   for (const tool of input.tools) {
@@ -83,7 +94,7 @@ async function registry(input: z.infer<typeof definitionInput>): Promise<void> {
     || catalog.contexts[input.context.handlerId as keyof typeof catalog.contexts] !== input.context.handlerVersion
     || input.context.registryHash !== hash || new Set(input.context.requiredStages).size !== input.context.requiredStages.length) denied();
   if (input.context.handlerId === "cortex.transcript.relevant") {
-    try { modelInputPolicy(input.context.inputSelection); } catch { denied("INVALID_INPUT"); }
+    try { const policy=modelInputPolicy(input.context.inputSelection as Parameters<typeof modelInputPolicy>[0]); if(policy.version !== input.context.handlerVersion)denied("INVALID_INPUT"); } catch { denied("INVALID_INPUT"); }
   } else if (input.context.inputSelection !== undefined) denied("INVALID_INPUT");
   if (new Set(input.policies.map(p => p.operationKey ?? "*")).size !== input.policies.length
     || !input.policies.some(p => p.operationKey === undefined || p.operationKey === "agent.respond")) denied();
@@ -200,5 +211,5 @@ export const get = mutation({ args: { memorySpaceId: v.string(), tenantId: v.opt
   const actor = await requireDataAuthority(ctx, { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId }, "run");
   const current = await readCurrentExecutableDefinition(ctx, dataAuthorityReference(actor), { agentId: args.agentId, version: args.version }, { capability: "run" });
   return { agentId: args.agentId, version: args.version, definitionHash: current.definitionHash,
-    tools: current.definition.tools.map(tool => ({ toolId: tool.toolId, toolVersion: tool.toolVersion })), memoryMode: current.definition.context.memoryMode };
+    tools: current.definition.tools.map(tool => ({ toolId: tool.toolId, toolVersion: tool.toolVersion })), memoryMode: current.definition.context.memoryMode, ...(current.definition.context.handlerVersion===2 ? {inputSelectionVersion:2 as const,memoryEffortPolicyVersion:1 as const}: {}) };
 } });

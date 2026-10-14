@@ -20,7 +20,7 @@ function client(env, change) {
     const name = getFunctionName(ref); calls.push({ name, args });
     const result = name === "runtimeClient:session" ? { version: 1, tenantId: plan.tenantId, memorySpaceId: plan.memorySpaceId, userId: plan.identities.owner.metadataUserId }
       : name === "agentDefinitions:publishVersion" ? { agentId, version: 1, definitionHash }
-        : { agentId, version: 1, definitionHash, memoryMode: "indexed-plus-pending", tools: remoteAgentDefinition().tools.map(({ toolId, toolVersion }) => ({ toolId, toolVersion })) };
+        : { agentId, version: 1, definitionHash, memoryMode: "indexed-plus-pending", inputSelectionVersion:2,memoryEffortPolicyVersion:1,tools: remoteAgentDefinition().tools.map(({ toolId, toolVersion }) => ({ toolId, toolVersion })) };
     return change?.(name, result) ?? result;
   } } };
 }
@@ -38,7 +38,7 @@ test("remote Agent setup refuses wrong target, foreign claims and missing explic
   const value = remoteAgentConfiguration(env); assert.equal(value.plan.kind, "sdk");
 });
 
-test("unpaid setup verifies current owner, publishes one immutable observed V2 definition and exports only returned pins", async () => {
+test("unpaid setup verifies current owner, publishes one immutable current V4 definition and exports only returned pins", async () => {
   const env = environment(), fake = client(env);
   let signal;
   const result = await publishRemoteAgent(env, (url, current) => { assert.equal(url, env.CONVEX_URL); signal = current; return fake.value; });
@@ -47,7 +47,7 @@ test("unpaid setup verifies current owner, publishes one immutable observed V2 d
   const publication = fake.calls[1].args;
   assert.equal(publication.agentId, undefined); assert.equal(publication.expectedPreviousVersion, 0);
   assert.equal(publication.clientMutationId, "ci-remote-agent-123-1");
-  assert.equal(publication.definitionInput.context.registryHash, "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631");
+  assert.equal(publication.definitionInput.context.registryHash, "5152bd0c3f8e35907c2d57c0a3467e2450e8db0dfb5174c552024c954554a515");
   assert.equal(publication.definitionInput.policies[0].rules.pins.boundRevision, "agent-tools-v2-32768-256-shared3m-v1");
   assert.deepEqual(publication.definitionInput.tools.map(tool => tool.toolId),
     ["memory.remember", "memory.recall", "media.image.generate", "media.video.generate", "artifact.read"]);
@@ -66,4 +66,13 @@ test("current-authority and exact publication failures stop setup without retrie
   }
   const fake = client(env); fake.value.mutation = async () => { throw new Error("FORBIDDEN"); };
   await assert.rejects(publishRemoteAgent(env, () => fake.value), /FORBIDDEN/);
+});
+
+
+test("the canonical CI publisher selects the current effort-aware V8 handler and refuses legacy readback", async()=>{
+ const definition=remoteAgentDefinition();
+ assert.deepEqual(definition.context,{handlerId:"cortex.transcript.relevant",handlerVersion:2,registryHash:"5152bd0c3f8e35907c2d57c0a3467e2450e8db0dfb5174c552024c954554a515",memoryMode:"indexed-plus-pending",requiredStages:[],maxContextTokens:4096,inputSelection:{version:2}});
+ const env=environment(),fake=client(env,(name,result)=>name==="agentDefinitions:get"?{...result,inputSelectionVersion:undefined,memoryEffortPolicyVersion:undefined}:result);
+ await assert.rejects(publishRemoteAgent(env,()=>fake.value),/CURRENT_DEFINITION_MISMATCH/);
+ assert.equal(fake.calls.length,3);
 });

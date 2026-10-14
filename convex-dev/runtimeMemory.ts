@@ -1,3 +1,6 @@
+import { normalizeMemoryEffortRequest } from "../src/domain/memory-effort";
+import { memoryEffortRequest } from "./runtimeMemorySchema";
+import { publicRecallBudgetRequest } from "./runtimeMemoryServices";
 /** Registered modern memory endpoints. Only the two foreground actions are public. */
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
@@ -224,15 +227,19 @@ export const remember = action({ args: requestArgs, handler: async (ctx, args) =
   return await memoryOperation(async () => await rememberMemory({ repository,
     model: createGatewayMemoryModel(ctx, repository, budget), clock: { now: () => Date.now() } }, { text, lineage }));
 } });
-export const recall = action({ args: { ...requestArgs, limit: v.optional(v.number()) }, handler: async (ctx, args) => {
+export const recall = action({ args: { ...requestArgs, limit: v.optional(v.number()),memory:v.optional(memoryEffortRequest) }, handler: async (ctx, args) => {
   const { reference, repository } = await memoryForegroundControl(ctx, { capability: "read", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
   assertMemoryRequestId(args.requestId);
-  const text = normalizeSourceText(args.text); const limit = args.limit ?? 10;
+  const text = normalizeSourceText(args.text); const limit = args.limit ?? 100;
+  let requested: ReturnType<typeof normalizeMemoryEffortRequest>;
+  try { requested=normalizeMemoryEffortRequest(args.memory); }
+  catch { memoryError("INVALID_INPUT", "Invalid memory effort"); }
+  const memory={...requested,...(args.limit===undefined?{}:{maxEntries:Math.min(requested.maxEntries??Infinity,args.limit)})};
   if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) memoryError("INVALID_INPUT", "Limit must be between 1 and 100");
-  const budget = await memoryBudget(ctx, reference, "embedding.query", args.requestId, { purpose: "recall", text, limit });
+  const budget = await memoryBudget(ctx, reference, "embedding.query", args.requestId, publicRecallBudgetRequest(text,limit,memory));
   // This trusted metadata-only preflight precedes every model call. A later
   // readiness race remains a functional failure, whose dispatch is uncertain.
-  const input={text,requestId:args.requestId,limit};
+  const input={text,requestId:args.requestId,limit,memory};
   let proposal;
   try {proposal=await ctx.runQuery(publicRecallPreparation,{reference,runBudgetId:budget.runBudgetId,input});}
   catch(error){return foregroundControlFailure(error);}

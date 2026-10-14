@@ -1,3 +1,5 @@
+import type { MemoryEffortRequest, MemoryEffortTrace } from "../src/domain/memory-effort";
+import { normalizeMemoryEffortRequest } from "../src/domain/memory-effort";
 /** Modern memory operations share pure domain logic and required backend adapters. */
 import type { MemoryDomainAdapters, SourceLineage, TrustedMemoryScope, DerivedFact, VectorMatch } from "../src/domain/contracts";
 import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "../src/domain/profile";
@@ -7,6 +9,9 @@ import type { RecallItem } from "../src/types";
 import type { EmbeddingProfile } from "../src/domain/profile";
 import { canonicalMemoryValue, memoryError } from "./runtimeMemoryRepository";
 
+export function publicRecallBudgetRequest(text:string,limit:number,memory?:MemoryEffortRequest) {
+  return {purpose:"recall",text,limit,...(memory===undefined?{}:{memory:normalizeMemoryEffortRequest(memory),memoryEffortPolicyVersion:1})};
+}
 export function assertMemoryRequestId(requestId: string): void {
   if (!requestId.trim() || requestId.length > 128) memoryError("INVALID_INPUT", "A nonempty request ID of at most 128 characters is required");
 }
@@ -143,15 +148,22 @@ export function vectorRecallItems(vectors: readonly VectorMatch[]): RecallItem[]
 }
 /** Original rank/expiry/format tail after the current read predicate has executed. */
 export async function completeRecallDelivery(adapters: { clock: MemoryDomainAdapters["clock"]; finalDelivery?: MemoryDomainAdapters["repository"]["finalDelivery"] },
-  input: { limit: number }, profileId: string, vectorItems: RecallItem[], facts: readonly DerivedFact[]) {
+  input: { limit: number }, profileId: string, vectorItems: RecallItem[], facts: readonly DerivedFact[], effortResult?:{items:RecallItem[];memoryEffort:MemoryEffortTrace;retrievalDeadlineMs:number},effortStartedAt?:number) {
   const { clock } = adapters;
-  const items = rankResults(deduplicateResults([...vectorItems, ...facts.map((fact) => factToRecallItem(fact, "facts", 0.7))]), clock).slice(0, input.limit);
+  let items = effortResult?.items ?? rankResults(deduplicateResults([...vectorItems, ...facts.map((fact) => factToRecallItem(fact, "facts", 0.7))]), clock).slice(0, input.limit);
   const delivery = await adapters.finalDelivery?.();
   const expiresAt = delivery?.deliveryExpiresAt;
   // Actions have a real clock across RPC awaits. Never deliver a response whose
   // actual grant/consumed source deadline elapsed while its final RPC returned.
   if (expiresAt !== undefined && (!Number.isFinite(expiresAt) || clock.now() >= expiresAt)) memoryError("FORBIDDEN", "Recall delivery authority expired");
-  return { items, context: formatForLLM(items, clock), profileId, ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
+  if(effortResult&&effortStartedAt!==undefined) {
+    effortResult.memoryEffort.durationMs=Math.max(0,clock.now()-effortStartedAt);
+    if(effortResult.memoryEffort.durationMs>=effortResult.retrievalDeadlineMs){
+      items=[];effortResult.memoryEffort.selected=0;effortResult.memoryEffort.selectedInputUnits=0;effortResult.memoryEffort.entriesByKind={memory:0,fact:0,pending:0,history:0};
+      effortResult.memoryEffort.stopReasons=[...new Set([...effortResult.memoryEffort.stopReasons,"deadline" as const])];
+    }
+  }
+  return { items, context: formatForLLM(items, clock), profileId, ...(effortResult?{memoryEffort:effortResult.memoryEffort}:{}), ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
 }
 
 /** One current source, one new profile-specific generation. No history scan,

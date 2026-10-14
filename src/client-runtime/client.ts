@@ -1,12 +1,12 @@
 import { ConvexClient } from "convex/browser";
 import type { AuthTokenFetcher } from "convex/browser";
 import { getFunctionName, makeFunctionReference } from "convex/server";
-import type { RuntimeConversation, RuntimeDefinition, RuntimeEmbeddingProfile, RuntimeObservation, RuntimeRecallResult, RuntimeRun,
+import type { RuntimeConversation, RuntimeDefinition, RuntimeEmbeddingProfile, RuntimeObservation, RuntimeRecallResult, RuntimeRecallRequest, RuntimeRun,
   RuntimeRunHandle, RuntimeScope, RuntimeSession, RuntimeToolApproval, RuntimeTranscriptPage, RuntimeOutputCursor, RuntimeAdmissionResult, TextSubmitV1 } from "./types.js";
 import type { RuntimeAssetReference, RuntimeAssetVersion } from "./types.js";
 import { assetDigest, assetHttpBase, assetHttpError, assetMime, assetFilename, assetRequestId, assetReference, assetVersion, boundedAssetBody, RUNTIME_ASSET_MAX_BYTES } from "./assets.js";
 import type { RuntimeAssetIoOptions, RuntimeAssetUploadOptions, RuntimeAssetPreview } from "./assets.js";
-import { admissionResult, CortexRuntimeError, deliveryDeadline, identifier, invalid, natural, object, observation, run, runtimeError, sameScope, session, textSubmit } from "./validation.js";
+import { admissionResult, CortexRuntimeError, deliveryDeadline, identifier, invalid, natural, object, observation, run, runtimeError, sameScope, session, textSubmit, recallRequest, recallResult } from "./validation.js";
 import { embeddingProfileOptions, memoryReadiness, readinessOptions, runtimeArtifact, runtimeEmbeddingProfile } from "./extensions.js";
 import type { RuntimeMemoryReadiness, RuntimeMemoryReadinessOptions } from "./types.js";
 import type { RuntimeArtifact, RuntimeMediaJob, RuntimeMediaSubmit } from "./types.js";
@@ -200,7 +200,7 @@ export class CortexRuntimeClient {
   }
   private check() { if (this.closed) invalid("CLIENT_CLOSED"); }
   private abortCalls(error: CortexRuntimeError) { for (const fail of [...this.pendingCalls]) fail(new CortexRuntimeError(error.code, "uncertain")); }
-  private call<T>(invoke: () => Promise<T>): Promise<T> {
+  private call<T>(invoke: () => Promise<T>, defaultTimeoutMs=12000): Promise<T> {
     this.check();
     return new Promise<T>((resolve, reject) => {
       let finished = false;
@@ -209,7 +209,7 @@ export class CortexRuntimeClient {
         if (error !== undefined) reject(runtimeError(error)); else resolve(value!);
       };
       const fail = (error: CortexRuntimeError) => finish(undefined, error);
-      const timer = setTimeout(() => fail(new CortexRuntimeError("RPC_DEADLINE_EXCEEDED", "uncertain")), this.options.requestTimeoutMs ?? 12000);
+      const timer = setTimeout(() => fail(new CortexRuntimeError("RPC_DEADLINE_EXCEEDED", "uncertain")), this.options.requestTimeoutMs ?? defaultTimeoutMs);
       this.pendingCalls.add(fail);
       // Attach both outcomes to the original operation. Local timeout never redispatches or rolls it back.
       try { Promise.resolve(invoke()).then(value => finish(value), error => finish(undefined, error)); }
@@ -226,10 +226,10 @@ export class CortexRuntimeClient {
     if (!sameScope(handle, current) || handle.principalId !== current.principalId) invalid("SESSION_CHANGED");
     return { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, runId: identifier(handle.runId, 512) };
   }
-  private async inSession<T>(invoke: (current: RuntimeSession) => Promise<T>): Promise<{ current: RuntimeSession; result: T }> {
+  private async inSession<T>(invoke: (current: RuntimeSession) => Promise<T>, defaultTimeoutMs=12000): Promise<{ current: RuntimeSession; result: T }> {
     const epoch = this.generation, current = await this.session();
     if (epoch !== this.generation) invalid("SESSION_CHANGED");
-    const result = await this.call(() => invoke(current));
+    const result = await this.call(() => invoke(current),defaultTimeoutMs);
     // After I/O, suppress stale delivery without claiming the action/mutation never happened.
     try {
       if (epoch !== this.generation) invalid("SESSION_CHANGED");
@@ -457,10 +457,10 @@ export class CortexRuntimeClient {
       || JSON.stringify(value.strictStages) !== JSON.stringify(args.strictStages ?? [])) invalid("INVALID_RESPONSE");
     return value;
   }
-  async recall(input: { text: string; requestId: string; limit?: number }): Promise<RuntimeRecallResult> {
-    const { result } = await this.inSession(current => this.action(refs.recall, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId,
-      text: input.text, requestId: identifier(input.requestId, 512), ...(input.limit === undefined ? {} : { limit: input.limit }) }));
-    this.trackDelivery(deliveryDeadline(object(result).deliveryExpiresAt)); return result as RuntimeRecallResult;
+  async recall(input: RuntimeRecallRequest): Promise<RuntimeRecallResult> {
+    const normalized=recallRequest(input);
+    const { result } = await this.inSession(current => this.action(refs.recall, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...normalized }),normalized.memory?.effort==="max"?30000:12000);
+    const value=recallResult(result); this.trackDelivery(value.deliveryExpiresAt); return value;
   }
   /** One canonical capture receipt; pending indexing is not immediate facts/vectors. */
   async remember(input:RuntimeRememberInput):Promise<RuntimeRememberResult> {

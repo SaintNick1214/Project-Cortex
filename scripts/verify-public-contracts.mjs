@@ -29,6 +29,10 @@ try {
     assert.equal(typeof runtime.CortexRuntimeClient.prototype.submitAndStart, 'function');
     assert.equal(new runtime.CortexRuntimeError('FORBIDDEN').code, 'FORBIDDEN');
     assert.equal(runtime.RUNTIME_ASSET_MAX_BYTES, 20_000_000);
+    assert.deepEqual(runtime.normalizeMemoryEffortRequest({}), {effort:'normal'});
+    assert.equal(runtime.resolveMemoryEffortPolicy({effort:'max'}).maxDepth, null);
+    assert.throws(() => runtime.normalizeMemoryEffortRequest({effort:'instant'}));
+    assert.equal(typeof runtime.runtimeMemoryEffortTrace, 'function');
   }
   for (const graph of [await import(pathToFileURL(graphEntry)), requirePacked('@cortexmemory/sdk/runtime/graph')]) {
     assert.equal(typeof graph.CortexGraphWorker, 'function');
@@ -54,6 +58,7 @@ try {
     assert.equal(typeof sdk.Cortex, 'function');
     assert.equal(typeof sdk.getPresetForPlan, 'function');
     assert.equal(typeof sdk.MemoryValidationError, 'function');
+    assert.deepEqual(sdk.normalizeMemoryEffortRequest({effort:'high',maxEntries:2}), {effort:'high',maxEntries:2});
     for (const style of ['query','path']) {
       for (const id of ['literal%2Fvalue','percent%','space and + plus','café/雪?&=']) {
         assert.equal(sdk.extractShareId(sdk.buildShareUrl(id, {baseUrl:'https://example.com',style}), {style}), id);
@@ -62,7 +67,7 @@ try {
   }
   writeFileSync(join(temporary, 'consumer.mts'), `
     import {Cortex, MemoryValidationError, getPresetForPlan} from '@cortexmemory/sdk';
-    import {CortexRuntimeClient, type TextSubmitV1, type RuntimeObservation, type RuntimeAdmissionResult, type RuntimeLatencyEvent, type RuntimeRememberInput, type RuntimeRememberResult} from '@cortexmemory/sdk/runtime';
+    import {CortexRuntimeClient, type TextSubmitV1, type RuntimeObservation, type RuntimeAdmissionResult, type RuntimeLatencyEvent, type RuntimeRememberInput, type RuntimeRememberResult, type MemoryEffortRequest, type MemoryEffortTrace, type RuntimeRecallRequest} from '@cortexmemory/sdk/runtime';
     import {CortexGraphWorker, type CortexGraphWorkerOptions} from '@cortexmemory/sdk/runtime/graph';
     const cortex = new Cortex({convexUrl:'https://example.convex.cloud'});
     const preset = getPresetForPlan('free');
@@ -80,7 +85,8 @@ try {
       if (conditional && 'memory' in conditional) conditional.memory.content;
     }
     void preset; void error; void verify;
-    const request: TextSubmitV1 = {version:1,agentId:'agent',agentVersion:1,clientRequestId:'request',parts:[{type:'text',text:'hello'}]};
+    const memory: MemoryEffortRequest = {effort:'max',maxContextTokens:4096};
+    const request: TextSubmitV1 = {version:1,agentId:'agent',agentVersion:1,clientRequestId:'request',parts:[{type:'text',text:'hello'}],memory};
     async function runtimeContract(client: CortexRuntimeClient, render: (observation: RuntimeObservation) => void) {
       const exchange: RuntimeRememberInput = {conversationId:'external',requestId:'capture-1',userMessage:'I play cello.',agentResponse:'Noted.'};
       const captured: RuntimeRememberResult = await client.remember(exchange);
@@ -89,6 +95,13 @@ try {
       currentCapture.stages.facts[0]; currentCapture.profile.profileId;
       const combined: RuntimeAdmissionResult = await client.submitAndStart(request, {streaming:true});
       combined.handle.runId; combined.run.attemptNumber; combined.start.state;
+      const trace: MemoryEffortTrace | undefined = combined.run.memoryEffort;
+      trace?.effectiveEffort; trace?.stopReasons; trace?.maxDepth;
+      const recallRequest: RuntimeRecallRequest = {text:'facts',requestId:'effort-recall',memory};
+      const recall = await client.recall(recallRequest);
+      recall.memoryEffort?.entriesByKind; recall.items[0]?.retrieval?.path;
+      const definition = await client.getDefinition('agent',1);
+      definition.inputSelectionVersion; definition.memoryEffortPolicyVersion;
       const handle = await client.submit(request);
       const disconnect = client.watchObservation(handle, render);
       await client.start(handle, {streaming:true});
@@ -114,6 +127,7 @@ try {
   vm.runInContext(`
     if (typeof process !== 'undefined' || typeof require !== 'undefined') throw Error('Runtime needs Node globals');
     if (typeof CortexRuntime.CortexRuntimeClient !== 'function') throw Error('Runtime constructor missing');
+    if (CortexRuntime.normalizeMemoryEffortRequest({effort:'max'}).effort !== 'max') throw Error('Browser effort contract missing');
     if (typeof CortexRuntime.CortexRuntimeClient.prototype.submitAndStart !== 'function') throw Error('Combined admission missing');
     if (CortexRuntime.RUNTIME_ASSET_MAX_BYTES !== 20000000) throw Error('Private delivery cap changed');
     if (new CortexRuntime.CortexRuntimeError('FORBIDDEN').code !== 'FORBIDDEN') throw Error('Typed runtime error missing');
