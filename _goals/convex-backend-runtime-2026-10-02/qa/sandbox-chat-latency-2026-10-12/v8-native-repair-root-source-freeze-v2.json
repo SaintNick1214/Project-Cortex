@@ -1,0 +1,88 @@
+{
+  "at": "2026-10-14T12:52:18.949124+00:00",
+  "baseline": "03256989da22bde35dff78023c1c3962391a68c6",
+  "source": {
+    "convex-dev/runtimeGateway.ts": "051908cdbc9b7897d2e3695b8afbfbc1f30ff50176875b5b46f8e5220f05787d",
+    "convex-dev/runtimeLatencyTrace.ts": "b0e8b390bc5dd3f7facfc8ce0a6a572d15379bac8fd40a56b12f9d68f7ad8b07",
+    "convex-dev/runtimeClient.ts": "6389346a99fefbe5b8ded11f02457b0e68be12ce599e4143f96775b9ef444ca8",
+    "tests/unit/runtime/agent-request-preflight.test.ts": "79e18974f14f0183eb3309445084384125eeec0cb39014b9db0a507b70c597a1",
+    "tests/unit/runtime/latency-trace.test.ts": "5173a879e0caa9af5700a9c3769e882cf8e51cb2562c1f793d345e55915471de",
+    "tests/unit/client-runtime/observation-native.test.ts": "e3b786c8d418f1196c73668eba8ce60953da60f854d83f5f1fc2e85f6df32e65"
+  },
+  "checks": [
+    {
+      "file": "convex-dev/runtimeGateway.ts",
+      "name": "checkAgentModelInput",
+      "status": "UNCHANGED",
+      "sha256": "814a87711a20af2420229a7abcec427fb1d5ebecdd8bf8a9249fc08a0572fdab"
+    },
+    {
+      "file": "convex-dev/runtimeGateway.ts",
+      "name": "preflightAgentModelRequest",
+      "status": "UNCHANGED",
+      "sha256": "58904ed5d93d67eb7de4160fc674cccc9e81063ec6acbfb750bff3d3610dd80b"
+    },
+    {
+      "file": "convex-dev/runtimeGateway.ts",
+      "name": "projectAgentModelRequest",
+      "status": "UNCHANGED",
+      "sha256": "d91a3a20298d5669357ac1370f9b454773169b51d56cfc5cdd49eee40ccb590c"
+    },
+    {
+      "file": "convex-dev/runtimeGateway.ts",
+      "name": "languageParams",
+      "status": "UNCHANGED",
+      "sha256": "5e9b0c2eb264c3f8ef774a1c4f64e854250fe5e1f39b43e2f60c10f4d15e751e"
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "name": "submitAndStartHandler",
+      "status": "UNCHANGED",
+      "sha256": "d585f157eb2123e5ba97dcaa36deb005d0c94cb3834a4036c9c0348792f4866a"
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "name": "sessionHandler",
+      "status": "UNCHANGED",
+      "sha256": "fa79e58678b304dca78d136703b799274fc017fea86d31029a78662369ad6548"
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "name": "submitAndStartEnvelopeHandler",
+      "status": "UNCHANGED",
+      "sha256": "d512522b8ef2d059bcddb14c00689fc7125323c746145d31abe3b8dd53ad9cac"
+    },
+    {
+      "file": "convex-dev/runtimeClient.ts",
+      "name": "observeEnvelopeHandler",
+      "status": "UNCHANGED",
+      "sha256": "f80c40243caaa03053a2d45ba2cf87a0c92388592e2d31597f66d1dcd8f941e1"
+    },
+    {
+      "file": "convex-dev/runtimeLatencyTrace.ts",
+      "name": "traceRuntimeMutationSpan",
+      "status": "UNCHANGED",
+      "sha256": "a332af48e6442f7def6fe1ca4e57121a7260136fb058b2eadb54ef74ea9c2d0c"
+    }
+  ],
+  "focusedTests": [
+    "v8-assembled-input-tests-v3-qualified-plain.json",
+    "v8-selection-trace-tests-v1.json",
+    "v8-opaque-signal-tests-v1.json"
+  ],
+  "counts": [
+    29,
+    31,
+    37
+  ],
+  "lint": {
+    "exit": 0,
+    "errors": 0,
+    "warnings": 0,
+    "log": "v8-root-repair-eslint-v1.log"
+  },
+  "nativeQualified": false,
+  "previousFreeze": "v8-native-repair-root-source-freeze.json",
+  "typingCorrection": "Only observation fixture timestamp narrowing, assertions retained",
+  "typingTargetedReceipt": "v8-opaque-signal-types-v2-targeted.json"
+}

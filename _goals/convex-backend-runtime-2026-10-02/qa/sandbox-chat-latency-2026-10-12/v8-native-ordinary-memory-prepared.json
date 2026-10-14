@@ -1,0 +1,35 @@
+{
+  "status": "READY_TO_RUN_AFTER_FRESH_READY_PINS_AND_EXPLICIT_GO",
+  "nativeInvocations": 0,
+  "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+  "kit": "manual-sandbox-latency-bounded-v8-2026-10-14",
+  "pinsReady": false,
+  "setup": "Original internal provision creates one fresh owned same-tenant QA space for existing owner+reader; demo owner grant untouched. Existing administrator setPolicy explicitly unlocks manual deletion on this QA conversation only.",
+  "newCaptureIntents": 2,
+  "typedRemember": "Exact first-ID replay; no third paid capture",
+  "publicRecallSemanticCalls": 1,
+  "retries": 0,
+  "rpcMs": 12000,
+  "operationAndReadinessMs": 30000,
+  "nativeTableRows": 256,
+  "nativeTableMs": 30000,
+  "privacy": "No raw prompts/facts/vectors/JWT/errors retained. Only fixed metadata classes, opaque IDs/hashes, counts, booleans and timings.",
+  "checks": {
+    "syntaxExit": 0,
+    "helpExit": 0,
+    "serviceCalls": 0
+  },
+  "files": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-memory-pins.mjs",
+      "sha256": "34ddaa5c859cb6cfe1145e5be5ffbc0c1483be629849bafdd326005730cdd0a8",
+      "bytes": 857
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-ordinary-memory.mjs",
+      "sha256": "4412c690ad2dcb3f7fcffad9f2e98793ffa4160ccd9c448823bab6c725e211e1",
+      "bytes": 29403
+    }
+  ],
+  "preparationCorrection": "One Python edit command had a quoting SyntaxError before any edit; corrected using apply_patch. No native attempt or product change."
+}

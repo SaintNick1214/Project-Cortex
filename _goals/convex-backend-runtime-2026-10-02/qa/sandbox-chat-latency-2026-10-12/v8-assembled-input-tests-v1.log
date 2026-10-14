@@ -1,0 +1,196 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:69542) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/agent-request-preflight.test.ts
+  shared complete Agent request preflight
+    ✓ fits the exact original request at input/context boundaries without modifying limits (23 ms)
+    ✓ does not treat another denied dimension, budget, pin or tool as removable input (4 ms)
+    ✓ uses the original sixfold bound for whole tool-result groups and keeps unsupported shapes unsupported (2 ms)
+    ✓ matches actual installed AI SDK projection for text (2 ms)
+    ✓ matches actual installed AI SDK projection for tools (3 ms)
+    ✓ matches actual installed AI SDK projection for continuation (5 ms)
+    ✓ matches actual installed AI SDK projection for adjacent-tool (3 ms)
+    ✓ matches actual installed AI SDK projection for empty-parts (2 ms)
+    ✓ denies the complete over-cap continuation at the same original validator, before admission (2 ms)
+    ✓ leaves unsupported reasoning on the original path without a false preflight proof
+    ✓ leaves unsupported media on the original path without a false preflight proof (1 ms)
+    ✓ leaves unsupported approval on the original path without a false preflight proof
+    ✓ leaves unsupported provider on the original path without a false preflight proof
+    ✓ leaves unsupported legacy-result on the original path without a false preflight proof
+    ✓ leaves unsupported accessor on the original path without a false preflight proof
+    ✓ leaves SDK missing-tool-result and intervening-user error ordering on the original path (3 ms)
+    ✓ default-off diagnostics emit nothing, while enabled bounds omit private fields and hash arbitrary identity strings (4 ms)
+    ✓ process-absent diagnostics are inert and an enabled console failure retains its original exception (1 ms)
+  V8 complete official SDK input fitting
+    ✓ fits actual Agent serialized input+args tool history and preserves canonical storage (4 ms)
+    ✓ returns exact inputTokens overflow using the same native accounting (3 ms)
+    ✓ returns exact contextTokens overflow using the same native accounting (3 ms)
+    ✓ never classifies metadata refusal as removable numeric overflow (1 ms)
+    ✓ never classifies output refusal as removable numeric overflow (1 ms)
+    ✓ never classifies tool refusal as removable numeric overflow (2 ms)
+    ✓ never classifies missing-result refusal as removable numeric overflow (6 ms)
+    ✕ rejects accessors before SDK conversion without evaluating or downloading them (6 ms)
+    ✓ owns detached input across conversion awaits without stripping invalid tool JSON (3 ms)
+    ✕ rejects remote assets with zero network calls (1 ms)
+
+  ● V8 complete official SDK input fitting › rejects accessors before SDK conversion without evaluating or downloading them
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "INVALID_NATIVE_REQUEST"
+    Received message:   "Governed model call did not complete for delivery."
+
+          94 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+          95 | }
+        > 96 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+             |                                            ^
+          97 | const utf8 = (text: string): number => {
+          98 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+          99 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:96:44)
+      at visit (convex-dev/runtimeGateway.ts:467:92)
+                at Array.map (<anonymous>)
+      at visit (convex-dev/runtimeGateway.ts:461:57)
+      at detachedSdkPrompt (convex-dev/runtimeGateway.ts:475:10)
+      at checkAssembledAgentModelInput (convex-dev/runtimeGateway.ts:484:20)
+      at Object.<anonymous> (tests/unit/runtime/agent-request-preflight.test.ts:229:18)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/agent-request-preflight.test.ts:229:130)
+
+  ● V8 complete official SDK input fitting › rejects remote assets with zero network calls
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "CAPABILITY_UNAVAILABLE"
+    Received message:   "Governed model call did not complete for delivery."
+
+          94 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+          95 | }
+        > 96 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+             |                                            ^
+          97 | const utf8 = (text: string): number => {
+          98 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+          99 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:96:44)
+      at download (convex-dev/runtimeGateway.ts:496:54)
+      at downloadAssets (node_modules/ai/src/prompt/convert-to-language-model-prompt.ts:526:33)
+      at convertToLanguageModelPrompt (node_modules/ai/src/prompt/convert-to-language-model-prompt.ts:51:34)
+      at checkAssembledAgentModelInput (convex-dev/runtimeGateway.ts:495:24)
+      at Object.<anonymous> (tests/unit/runtime/agent-request-preflight.test.ts:247:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/agent-request-preflight.test.ts:248:170)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.4s | 26/28 passed | /tests/unit/runtime/agent-request-preflight.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.02s ( 0.5%) - shared complete Agent request preflight fits the exact original request at input/context boundaries without modifying limits
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.1%) - V8 complete official SDK input fitting never classifies missing-result refusal as removable numeric overflow
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.1%) - V8 complete official SDK input fitting rejects accessors before SDK conversion without evaluating or downloading them
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for continuation
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight does not treat another denied dimension, budget, pin or tool as removable input
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight default-off diagnostics emit nothing, while enabled bounds omit private fields and hash arbitrary identity strings
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting fits actual Agent serialized input+args tool history and preserves canonical storage
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for tools
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for adjacent-tool
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight leaves SDK missing-tool-result and intervening-user error ordering on the original path
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting returns exact inputTokens overflow using the same native accounting
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting returns exact contextTokens overflow using the same native accounting
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting owns detached input across conversion awaits without stripping invalid tool JSON
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight uses the original sixfold bound for whole tool-result groups and keeps unsupported shapes unsupported
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight matches actual installed AI SDK projection for text
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight matches actual installed AI SDK projection for empty-parts
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight denies the complete over-cap continuation at the same original validator, before admission
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - V8 complete official SDK input fitting never classifies tool refusal as removable numeric overflow
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight leaves unsupported media on the original path without a false preflight proof
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight process-absent diagnostics are inert and an enabled console failure retains its original exception
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.08s (1.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.49s
+  Test suites:        1
+  Individual tests:   23
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 26 passed, 28 total
+Snapshots:   0 total
+Time:        4.49 s
+Ran all test suites within paths "tests/unit/runtime/agent-request-preflight.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-tests-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

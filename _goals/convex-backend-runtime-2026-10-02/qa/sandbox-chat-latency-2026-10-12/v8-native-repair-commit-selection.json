@@ -1,0 +1,522 @@
+{
+  "at": "2026-10-14T13:05:29.933489+00:00",
+  "productAndTests": 18,
+  "selected": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-browser-pair-logs.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-client-pair-logs.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-first-browser-logs.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-first-client-logs.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-first-selector-failure.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-pair-outcome.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-tool-browser-logs.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-tool-client-logs.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-tool-failed-final.txt",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-tool-first-state.txt",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-tool-outcome.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k21-financial-metadata.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k21-run-chain.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k21-tool-chain.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/completion-notices.jsonl",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docker-before-bounded-v8.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k21-chronology-correction.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k21-outcomes-build-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k21-outcomes-receipt.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k21-outcomes-typecheck-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k21-render.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/execution-progress.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-auth-http-readonly-1791977130467.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-auth-http-readonly.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-auth-http-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-cleanup-final.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-cli-native-raw.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-cli-pure-timing.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-collector-pins.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-delay-chain-saved-analysis.py",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-financial-metadata-1791978762164.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-financial-metadata-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-launcher-dry-run-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-launcher-framing-v2.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-launcher-local-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-launcher-qualification-v2.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-launcher-quality-receipt.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-memory-native-v2-four-run-verification-1791977137881.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-native-memory-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-native-ready.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-provisioned-target-metadata.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-5d99aef64116-1791977208716.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-adbf43990b15-1791977198614.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-browser-first-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-browser-first-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-browser-warm-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-browser-warm-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-cli-first-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-cli-first-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-cli-warm-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-cli-warm-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-collector-exits.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-d1e1e5ca8ac4-1791977213710.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-run-chain-f8e28f17b947-1791977203761.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-service-log-snapshot-cli-post-pair-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-tool-continuation-leaf-diagnosis.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-tool-continuation-leaf-diagnosis.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-tool-failure-chain-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-tool-leaf-native-1791979356110.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-tool-leaf-native-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-tool-leaf-native-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-tool-leaf-native.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-tool-native-snapshot-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-tool-run-chain-666cc944a716-1791978689881.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-whole-path-delay-diagnosis.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-whole-path-delay-diagnosis.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/prepare-k21-native.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/procedure-approval-before-bounded-v8.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/procedure-bounded-v8-resealed.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-affected-v1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-affected-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-affected-v2.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-affected-v2.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-backend-types-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-backend-types-v2.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-check-invocations.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-equivalence.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-expiry-final.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-expiry-final.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-expiry-lint-final.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-focused-v1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-focused-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-focused-v2.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-focused-v2.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-focused-v3.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-focused-v3.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-freeze.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-gateway-isolated.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-gateway-isolated.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-lint-types-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-root-types-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-root-types-v2.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-scoped-lint-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-scoped-lint-v2.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-source-freeze.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-source-report.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/runner-before-bounded-v8.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/runtime-before-bounded-v8.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/seal-bounded-v8-kit.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k21-supplemental-post-run-1791978460097.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k21.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/status.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-affected-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-affected-v1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-affected-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-bounded-v2-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-bounded-v2.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-bounded-v2.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-bounded-v3-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-bounded-v3.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-bounded-v3.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-equivalence.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-equivalence.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-focused-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-focused-v1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-focused-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-root-receipt-v3.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-root-receipt.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-scoped-lint-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-scoped-lint-v1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-scoped-lint-v1.stderr.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-source-freeze-v2.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-source-freeze.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-source-report.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-tests-v1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-tests-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-tests-v2-failed-only.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-tests-v2-failed-only.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-tests-v3-qualified-plain.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-tests-v3-qualified-plain.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-capture-native-leaf-1791978081607.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-capture-native-leaf-readonly.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-commit-receipt.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-existing-capture-readonly-diagnosis-1791977602684.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-existing-capture-readonly-diagnosis.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-memory-pins.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-memory-ready-pins-receipt.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-ordinary-memory-plan.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-ordinary-memory-prepared.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-ordinary-memory.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-independent-review.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-independent-review.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-joint-quality-final-receipt.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-joint-quality-input-check-v2.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-joint-quality-input-check.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-joint-quality-inputs-v2.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-joint-quality-inputs.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-joint-quality.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-quality-successor.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-review-packet-v2.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-review-packet.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-root-source-freeze-v2.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-native-repair-root-source-freeze.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-opaque-signal-tests-v1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-opaque-signal-tests-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-opaque-signal-types-v2-targeted.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-opaque-signal-types-v2-targeted.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-ordinary-memory-failure-and-repair-scope.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-ordinary-memory-failure-summary.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-backend-types-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-backend-types-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-build-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-build-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-lint-types-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-lint-types-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-packed-contracts-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-packed-contracts-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-root-types-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-root-types-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-root-types-v2-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-root-types-v2-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-scoped-lint-v1-exit.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-repair-joint-scoped-lint-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-root-repair-eslint-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-selection-trace-tests-v1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-selection-trace-tests-v1.log",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k21-cleanup.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k21-four-run-memory-readonly.mjs",
+    "convex-dev/runtimeAgent.ts",
+    "convex-dev/runtimeAgentContext.ts",
+    "convex-dev/runtimeBeliefs.ts",
+    "convex-dev/runtimeClient.ts",
+    "convex-dev/runtimeGateway.ts",
+    "convex-dev/runtimeIngestion.ts",
+    "convex-dev/runtimeIngestionSchema.ts",
+    "convex-dev/runtimeLatencyTrace.ts",
+    "convex-dev/runtimeModelPolicy.ts",
+    "src/domain/model-input-selection.ts",
+    "tests/unit/client-runtime/observation-native.test.ts",
+    "tests/unit/runtime/agent-request-preflight.test.ts",
+    "tests/unit/runtime/latency-trace.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtimeAgent/bounded-context-v8.test.ts",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts",
+    "tests/unit/runtimeIngestion/fixture.ts",
+    "tests/unit/runtimeIngestion/repeat-capture.test.ts"
+  ],
+  "excluded": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k21-cli-post-pair-1791977411449.json",
+      "bytes": 1258010,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/artifact-receipt.json",
+      "bytes": 1750,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-packed-backend-export-closure.mjs",
+      "bytes": 12396,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/docker-build-exit.json",
+      "bytes": 967,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/packed-cli-version.log",
+      "bytes": 7,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/build-image-v1.log",
+      "bytes": 677,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-packed-backend-export-closure-exit-v2.json",
+      "bytes": 592,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/packed-cli-dependency-selection.json",
+      "bytes": 235,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/packaging-report.md",
+      "bytes": 2479,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/pack-provider.json",
+      "bytes": 2048,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/docker-image-inspect-full.json",
+      "bytes": 2627,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/run-consumers-v2.log",
+      "bytes": 236,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-packed-dependent-contracts-v2.log",
+      "bytes": 175,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/committed-input-preflight.json",
+      "bytes": 223,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/run-consumers-v1.log",
+      "bytes": 62,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-packed-backend-export-closure-v2.log",
+      "bytes": 119,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/packed-template-catalog.json",
+      "bytes": 1006,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-packed-template-catalog.mjs",
+      "bytes": 6281,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-actual-packed-public-contracts-exit-v2.json",
+      "bytes": 582,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-actual-packed-public-contracts-exit.json",
+      "bytes": 583,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/prepare-v1.log",
+      "bytes": 1887,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/docker-image-id.txt",
+      "bytes": 71,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-packed-dependent-contracts.mjs",
+      "bytes": 6775,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/run-consumers.mjs",
+      "bytes": 1192,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-packed-dependent-contracts-exit-v2.json",
+      "bytes": 589,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/pack-catalog.json",
+      "bytes": 219095,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/public-consumer-v1-correction.json",
+      "bytes": 462,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-actual-packed-public-contracts-v2.log",
+      "bytes": 141,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/packed-cli-help.log",
+      "bytes": 3768,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-actual-packed-public-contracts-v1.log",
+      "bytes": 562,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/pack-cli.json",
+      "bytes": 46861,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/packed-backend-export-closure.json",
+      "bytes": 43477,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/prepare-v1-exit.json",
+      "bytes": 402,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/docker-build-v1.log",
+      "bytes": 2827,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-actual-packed-public-contracts.mjs",
+      "bytes": 11475,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/build-provider.log",
+      "bytes": 1315,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/pack-sdk.json",
+      "bytes": 35665,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/build-image.mjs",
+      "bytes": 3810,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-packed-template-catalog-exit-v2.json",
+      "bytes": 585,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/packaging-final-receipt.json",
+      "bytes": 8923,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/verify-packed-template-catalog-v2.log",
+      "bytes": 914,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/final-source-artifact-verification.json",
+      "bytes": 740,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/preparation-receipt.json",
+      "bytes": 5690,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/build-sdk.log",
+      "bytes": 2722,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/build-cli.log",
+      "bytes": 91,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-v8/docker-image-identity.json",
+      "bytes": 783,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-backend-export-closure.mjs",
+      "bytes": 12383,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-template-catalog.mjs",
+      "bytes": 6268,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-dependent-contracts.mjs",
+      "bytes": 6762,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/run-consumers.mjs",
+      "bytes": 1192,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-actual-packed-public-contracts.mjs",
+      "bytes": 11470,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/build-image.mjs",
+      "bytes": 3780,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/helper-preparation-receipt.json",
+      "bytes": 1650,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/preparation-receipt.json",
+      "bytes": 1475,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-tool-failed-final.png",
+      "bytes": 46828,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-tool-before-approval.png",
+      "bytes": 46339,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/docs-k21-outcomes.png",
+      "bytes": 110742,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-pair-outcome.png",
+      "bytes": 43679,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k21-first-outcome.png",
+      "bytes": 39329,
+      "reason": "preserved unrelated, localonly raw/image, or future kit prep"
+    }
+  ],
+  "coreSourceHashes": {
+    "convex-dev/runtimeAgent.ts": "11edb927654b1047cef29a5092c4400d8824133c55710b288750ebe2f88700db",
+    "convex-dev/runtimeBeliefs.ts": "51caa9b7941727b833eada32e4ebd345c4ed2bd6664c3423e465b6eca6a55c5e",
+    "convex-dev/runtimeClient.ts": "6389346a99fefbe5b8ded11f02457b0e68be12ce599e4143f96775b9ef444ca8",
+    "convex-dev/runtimeGateway.ts": "051908cdbc9b7897d2e3695b8afbfbc1f30ff50176875b5b46f8e5220f05787d",
+    "convex-dev/runtimeIngestion.ts": "fd0b70938a47e9e39e8a0d74eb2f70defb543cdf4dd10fe1e483dccc54de29c8",
+    "convex-dev/runtimeIngestionSchema.ts": "3805a881dc722f65ba49dfa5f7298eea04407917220a7e562726a824615dbf4f",
+    "convex-dev/runtimeLatencyTrace.ts": "b0e8b390bc5dd3f7facfc8ce0a6a572d15379bac8fd40a56b12f9d68f7ad8b07",
+    "convex-dev/runtimeModelPolicy.ts": "fd93f28de862db6d9d0d60f661e847bad30ae50e23ca2a2292c658457abd8cc0",
+    "src/domain/model-input-selection.ts": "bdfe44adae91c7dc838b9abef1b06a0ef5d2607e601d50012444c7b09a9d0fa0",
+    "tests/unit/client-runtime/observation-native.test.ts": "e3b786c8d418f1196c73668eba8ce60953da60f854d83f5f1fc2e85f6df32e65",
+    "tests/unit/runtime/agent-request-preflight.test.ts": "79e18974f14f0183eb3309445084384125eeec0cb39014b9db0a507b70c597a1",
+    "tests/unit/runtime/latency-trace.test.ts": "5173a879e0caa9af5700a9c3769e882cf8e51cb2562c1f793d345e55915471de",
+    "tests/unit/runtime/model-policy-admission.test.ts": "1c93b8b7d2dda0e9f81abd846353f86950f27c5c2f561cf9ae0d4a12723b3ff9",
+    "tests/unit/runtimeAgent/bounded-context-v8.test.ts": "3c088242c19ff11c3d3c456f93212cfd3ec87b1648b79b3c7dc3e6d971d8dcca",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts": "aaa7281e3fbbf35ea8846b09196e4392d1ef44bfffcab3addda9c7591643dfa8",
+    "tests/unit/runtimeIngestion/fixture.ts": "0df6bf05f1488aee94a3225a42162d86dffae7b389391d7506696017f5559a1c",
+    "convex-dev/runtimeAgentContext.ts": "059d6e48931e399f0ab85ec0921d92f73073e54a7663f360d453fd5f64af2e07",
+    "tests/unit/runtimeIngestion/repeat-capture.test.ts": "b38d20ecd4f44eb04869addd6161d836131ce982ce87ef08b11867677a7b3616"
+  },
+  "websiteCommitted": false,
+  "gitHubAccess": false
+}

@@ -1,0 +1,245 @@
+{
+  "baseline": "03256989da22bde35dff78023c1c3962391a68c6",
+  "observedHead": "03256989da22bde35dff78023c1c3962391a68c6",
+  "node": "v24.15.0",
+  "files": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "fd93f28de862db6d9d0d60f661e847bad30ae50e23ca2a2292c658457abd8cc0",
+      "beforeSha256": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9"
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "sha256": "fd0b70938a47e9e39e8a0d74eb2f70defb543cdf4dd10fe1e483dccc54de29c8",
+      "beforeSha256": "f5f8aeea206f5bc5e4885eaacacecdb8710c042b1d30a08d0e456e17a145d7ad"
+    },
+    {
+      "path": "convex-dev/runtimeIngestionSchema.ts",
+      "sha256": "3805a881dc722f65ba49dfa5f7298eea04407917220a7e562726a824615dbf4f",
+      "beforeSha256": "d49c41df348dc670f519d06766656773c1c659ac6a8058b167710db4688cb711"
+    },
+    {
+      "path": "convex-dev/runtimeBeliefs.ts",
+      "sha256": "51caa9b7941727b833eada32e4ebd345c4ed2bd6664c3423e465b6eca6a55c5e",
+      "beforeSha256": "1f1a91ca49840b392fbc3abee4f04efc6739284bcf5453e1eb870192d660184b"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/fixture.ts",
+      "sha256": "0df6bf05f1488aee94a3225a42162d86dffae7b389391d7506696017f5559a1c",
+      "beforeSha256": "17612f157aba51308c0146322dc43c5730d5e5748f6f0b9bae8418b5850976f9"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+      "sha256": "b38d20ecd4f44eb04869addd6161d836131ce982ce87ef08b11867677a7b3616",
+      "beforeSha256": null
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "1c93b8b7d2dda0e9f81abd846353f86950f27c5c2f561cf9ae0d4a12723b3ff9",
+      "beforeSha256": "f7cfb8ed27a2ecb351291c68d7fb35174832e33b631546bb127759e7bf90004d"
+    }
+  ],
+  "checks": [
+    {
+      "name": "repeat-capture-focused-v1",
+      "exit": 1,
+      "tests": 21,
+      "passed": 8,
+      "failed": 13,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 2,
+      "passedSuites": 0,
+      "failedSuites": 2,
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts"
+      ],
+      "logSha256": "976567b870644cba95a1a0bf25f3f8f50c3fe8997111654139a62c89ded52bfe",
+      "jsonSha256": "ee94142edc8d6b233a78e8bfa89cb30e7e156531cff8bce99e39032c57923fc4"
+    },
+    {
+      "name": "repeat-capture-focused-v2",
+      "exit": 0,
+      "tests": 219,
+      "passed": 219,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 2,
+      "passedSuites": 2,
+      "failedSuites": 0,
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts"
+      ],
+      "logSha256": "6366dc0512d988a7521dbbdc8567355eb0d208b324d779ec4ef7557644404c2a",
+      "jsonSha256": "e1d4cedde1cb55766841867b512e6d7a679e18bfffa2958f2f4fe334513de148"
+    },
+    {
+      "name": "repeat-capture-focused-v3",
+      "exit": 0,
+      "tests": 263,
+      "passed": 263,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 4,
+      "passedSuites": 4,
+      "failedSuites": 0,
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-dispatch.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts"
+      ],
+      "logSha256": "cbf5dd155c43950aec7e0ec70f7b3fe3b5d9fe92f11b6ea6f1e10188a4572807",
+      "jsonSha256": "c2177cb5a8646bddace43f7191f16e18d4d6eef23eac0de394f75532e74ce29a"
+    },
+    {
+      "name": "repeat-capture-affected-v1",
+      "exit": 1,
+      "tests": 395,
+      "passed": 394,
+      "failed": 1,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 15,
+      "passedSuites": 13,
+      "failedSuites": 2,
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/native-gateway.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-model-drift.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/query-composition.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/progress-publication.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/worker.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeBeliefs/atomic.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/sequence-head.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/stages.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/shared-edit.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/capture.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts"
+      ],
+      "logSha256": "3e4895a4c23c0af19ba86793c5a5adbff93067392816cad733ad3075d9555301",
+      "jsonSha256": "c1893ecfebe56b9d5776b5842422ee8cd54238bdb1d30d673ad766bf3e73ea20"
+    },
+    {
+      "name": "repeat-capture-affected-v2",
+      "exit": 1,
+      "tests": 633,
+      "passed": 632,
+      "failed": 1,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 17,
+      "passedSuites": 16,
+      "failedSuites": 1,
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/capture.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-dispatch.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-model-drift.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/query-composition.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/worker.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/progress-publication.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeBeliefs/atomic.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/sequence-head.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/stages.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/shared-edit.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts"
+      ],
+      "logSha256": "f39dd8f9e1a627949a95461695eeaee085bcfbd8a9da1fe13eb4ef6ce9640d2e",
+      "jsonSha256": "d610536b1c1a20b695909c162cec03c18237f6655611d95d1fc8d9eb1d3b3317"
+    },
+    {
+      "name": "repeat-capture-expiry-final",
+      "exit": 0,
+      "tests": 51,
+      "passed": 51,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 3,
+      "passedSuites": 3,
+      "failedSuites": 0,
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/worker.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/stages.test.ts"
+      ],
+      "logSha256": "1dda514e17d27260d6ba794cab8ffe5a3258ce3aff25a67fbf3e61e54de4c662",
+      "jsonSha256": "67b46fcb9d405d99fb82962f93c8652714e0968e768b5448a560727c49b0387d"
+    },
+    {
+      "name": "repeat-capture-gateway-isolated",
+      "exit": 0,
+      "tests": 101,
+      "passed": 101,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 1,
+      "passedSuites": 1,
+      "failedSuites": 0,
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-dispatch.test.ts"
+      ],
+      "logSha256": "d411eb6174edb76461cbdbad2520a55a4d24a64272e50a6c841653658d35aa57",
+      "jsonSha256": "b2501fd1a9768548c2867ef0f2ab5a2b7ac7479772df084526b70e7a94d5d5aa"
+    }
+  ],
+  "typesLint": [
+    {
+      "name": "repeat-capture-backend-types-v1",
+      "exit": 2,
+      "logSha256": "e403484e212861ff75f0b876628a6d51ef0bf016a8b481bf90d8df296f7597f9"
+    },
+    {
+      "name": "repeat-capture-backend-types-v2",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "repeat-capture-root-types-v1",
+      "exit": 2,
+      "logSha256": "971285fd995fddb325d1edc35640e16cfa9eabe30886ffaab53943b32094c290"
+    },
+    {
+      "name": "repeat-capture-root-types-v2",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "repeat-capture-lint-types-v1",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "repeat-capture-scoped-lint-v1",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "repeat-capture-scoped-lint-v2",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "repeat-capture-expiry-lint-final",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "equivalenceSha256": "42665cea808988bb8848f20d34cab49472148d375d4d5cdd558b03b197492d0d",
+  "finalCombinedTypesBuildContracts": "Pending coordinator shared gate after A/B freezes; no SDK build/pack/service by this author.",
+  "outcome": "Source implementation frozen, original failures retained; no native/SLO acceptance."
+}

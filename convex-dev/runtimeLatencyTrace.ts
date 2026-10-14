@@ -1,7 +1,10 @@
 /** Opt-in timing only. Never pass prompts, provider options or output here. */
 import { createSha256 } from "../src/common/crypto";
 
-export type RuntimeLatencyMetadata = { runBudgetId?: string; semanticId?: string; operationKey?: string; durationMs?: number; bytes?: number; status?: number };
+export type RuntimeLatencyMetadata = { runBudgetId?: string; semanticId?: string; operationKey?: string; durationMs?: number; bytes?: number; status?: number;
+  selectedMessages?: number; selectedMemories?: number; selectedFacts?: number; selectedPending?: number; contextBytes?: number;
+  inputTokens?: number; inputLimit?: number };
+const selectionScalar = (value: unknown): number | undefined => Number.isSafeInteger(value) && (value as number) >= 0 ? value as number : undefined;
 function correlation(value: string, opaqueAllowed = true): string {
   return opaqueAllowed && /^(?:run:)?[a-f0-9]{64}$/.test(value) ? value : `sha256:${createSha256().update(value).digestHex()}`;
 }
@@ -11,7 +14,10 @@ export function traceRuntimePhase(runId: string, attemptNumber: number, phase: s
   // Copy only this fixed scalar allowlist, even if an untyped caller adds keys.
   const fields = { runBudgetId: metadata.runBudgetId === undefined ? undefined : correlation(metadata.runBudgetId),
     semanticId: metadata.semanticId === undefined ? undefined : correlation(metadata.semanticId, false), operationKey: metadata.operationKey,
-    durationMs: metadata.durationMs, bytes: metadata.bytes, status: metadata.status };
+    durationMs: metadata.durationMs, bytes: metadata.bytes, status: metadata.status,
+    selectedMessages: selectionScalar(metadata.selectedMessages), selectedMemories: selectionScalar(metadata.selectedMemories),
+    selectedFacts: selectionScalar(metadata.selectedFacts), selectedPending: selectionScalar(metadata.selectedPending),
+    contextBytes: selectionScalar(metadata.contextBytes), inputTokens: selectionScalar(metadata.inputTokens), inputLimit: selectionScalar(metadata.inputLimit) };
   console.log(JSON.stringify({ runId: correlation(runId), attemptNumber, phase, at: Date.now(), ...fields }));
 }
 

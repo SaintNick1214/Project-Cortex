@@ -1,0 +1,152 @@
+{
+  "observedAt": "2026-10-14T12:02:36.022Z",
+  "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+  "target": {
+    "sessionId": "2d6e9566-0948-4dd7-8df5-5d7626598a60",
+    "name": "next-turtle-281",
+    "id": 6164369
+  },
+  "runId": "run:666cc944a716d927af6103f027e850e16271ce7d25acba16c5f2dfe275b21def",
+  "readOnly": true,
+  "conversationIdSha256": "ee28fdcd45bf168260e5219b2149dc20e3c2fac4945c4d8d55a3ab6d9fc9e2ea",
+  "threadIdSha256": "4d95e6a95c0c009d157c7dd033a91852b378680fe6de6e40fb9f1e66816f989b",
+  "queryCount": 3,
+  "freshVerifications": 8,
+  "messages": [
+    {
+      "idSha256": "cddbd10b05a0d7e5a3969d91da921d4df72bffd35acfc734bb47aaab28ed9bff",
+      "creationTime": 1791978085074.318,
+      "order": 2,
+      "stepOrder": 3,
+      "status": "failed",
+      "role": "assistant",
+      "tool": false,
+      "partTypes": [],
+      "toolCallIdsSha256": [],
+      "error": {
+        "sha256": "4e0c6ab82aac20e0095f645c4439a446bd38fbf7c3485c7b1b46ec1dcfba52a1",
+        "bytes": 45,
+        "knownErrorNames": [],
+        "classifications": {
+          "missingToolResults": false,
+          "duplicateTool": false,
+          "toolOrder": false,
+          "invalidPrompt": false,
+          "streamState": false,
+          "serialization": false,
+          "genericAbort": false,
+          "policyDenied": true,
+          "budgetExceeded": false,
+          "timeout": false,
+          "contextLimit": false
+        },
+        "sourceLocations": []
+      }
+    },
+    {
+      "idSha256": "9c03e5580a788dec122e76c7a7cac98633f709da1bb4439f98bc249156d21bdb",
+      "creationTime": 1791978082276.3137,
+      "order": 2,
+      "stepOrder": 2,
+      "status": "success",
+      "role": "tool",
+      "tool": true,
+      "partTypes": [
+        "tool-result"
+      ],
+      "toolCallIdsSha256": [
+        "1bd65a602545e1772db850ffa3ddafaf199816ab417eb12b5f21268ae983c944"
+      ]
+    },
+    {
+      "idSha256": "95d69acf116fd8e1ab3a07a0ad8162c971c92ac903a307e85a36357e09a4f72d",
+      "creationTime": 1791977975877.991,
+      "order": 2,
+      "stepOrder": 1,
+      "status": "success",
+      "role": "assistant",
+      "tool": true,
+      "partTypes": [
+        "tool-call"
+      ],
+      "toolCallIdsSha256": [
+        "1bd65a602545e1772db850ffa3ddafaf199816ab417eb12b5f21268ae983c944"
+      ]
+    },
+    {
+      "idSha256": "f939f52c38842f4c18ea6db9f8aa32d67cd97fbe09e943cd43e1a6ed73826dba",
+      "creationTime": 1791977964172.2375,
+      "order": 2,
+      "stepOrder": 0,
+      "status": "success",
+      "role": "user",
+      "tool": false,
+      "partTypes": [
+        "text"
+      ],
+      "toolCallIdsSha256": []
+    },
+    {
+      "idSha256": "668a83e0c017fc0e06ec1e2799ee3e8401790ccfcd206fc89b1dcda5c19a9694",
+      "creationTime": 1791976993287.6558,
+      "order": 1,
+      "stepOrder": 1,
+      "status": "success",
+      "role": "assistant",
+      "tool": false,
+      "partTypes": [
+        "text"
+      ],
+      "toolCallIdsSha256": []
+    },
+    {
+      "idSha256": "4a09fc9c779193ade981caeb5bdc44ec0e4b5b932bcd2d6356cc5e1cd3a75380",
+      "creationTime": 1791976986672.1313,
+      "order": 1,
+      "stepOrder": 0,
+      "status": "success",
+      "role": "user",
+      "tool": false,
+      "partTypes": [
+        "text"
+      ],
+      "toolCallIdsSha256": []
+    },
+    {
+      "idSha256": "3aea4fe2f87772c284f35aca05a3bbbd4bf055b5274336b6c8adc2ab0e20c156",
+      "creationTime": 1791976958072.2239,
+      "order": 0,
+      "stepOrder": 1,
+      "status": "success",
+      "role": "assistant",
+      "tool": false,
+      "partTypes": [
+        "text"
+      ],
+      "toolCallIdsSha256": []
+    },
+    {
+      "idSha256": "7a7ca786487730d4a89ae98cfbc6f36bd7bf5276c93bc27bfbb94b613927fe70",
+      "creationTime": 1791976950287.484,
+      "order": 0,
+      "stepOrder": 0,
+      "status": "success",
+      "role": "user",
+      "tool": false,
+      "partTypes": [
+        "text"
+      ],
+      "toolCallIdsSha256": []
+    }
+  ],
+  "rawPrivatePayloadRetained": false,
+  "rawErrorTextRetained": false,
+  "byteCap": 16777216,
+  "pageCap": 256,
+  "deadlineMs": 30000,
+  "streamsRead": false,
+  "streamLimitation": "Official aborted stream cleanup is five minutes; no extra stream query issued",
+  "mutationCalls": 0,
+  "paidCalls": 0,
+  "clientsClosed": true
+}

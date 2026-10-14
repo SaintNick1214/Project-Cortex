@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "kind": "existing-capture-readonly-diagnosis",
+  "originalVerdict": "FAIL",
+  "originalScopeSha256": "bc670d72d1304c9f7f6894474d6b121e0083dd37b41fa2c7aa81b6c5369a20e6",
+  "mutations": 0,
+  "paidCalls": 0,
+  "newCaptures": 0,
+  "recallCalls": 0,
+  "freshVerifications": 33,
+  "tables": {
+    ":runtimeMemoryCaptures": 2,
+    ":runtimeIngestionEvents": 12,
+    ":runtimeIngestionStages": 36,
+    ":runtimeIngestionJobs": 12,
+    ":runtimeModelOperations": 32,
+    ":runtimeModelAttempts": 32,
+    ":runtimeBudgetAccounts": 26
+  },
+  "clientsClosed": true,
+  "events": [
+    {
+      "eventIdSha256": "85d091a56969cdf223f64e657963152d11e3f28b9941d65ef479bee58f32b0a9",
+      "sequence": 4,
+      "role": "assistant",
+      "factsState": "skipped",
+      "vectorsState": "failed",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "failed",
+          "attempt": 1,
+          "leaseVersion": 1,
+          "failureCode": "INDEXING_FAILED"
+        },
+        {
+          "stage": "facts",
+          "state": "skipped",
+          "attempt": 0,
+          "leaseVersion": 0,
+          "failureCode": null
+        },
+        {
+          "stage": "extract",
+          "state": "skipped",
+          "attempt": 0,
+          "leaseVersion": 0,
+          "failureCode": null
+        }
+      ],
+      "operations": [],
+      "attempts": []
+    },
+    {
+      "eventIdSha256": "f0e699df640af3ed7ac241a5b0f2385e2919534285fd3b903fbaddb9affe0846",
+      "sequence": 3,
+      "role": "user",
+      "factsState": "failed",
+      "vectorsState": "pending",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "pending",
+          "attempt": 0,
+          "leaseVersion": 0,
+          "failureCode": null
+        },
+        {
+          "stage": "facts",
+          "state": "failed",
+          "attempt": 1,
+          "leaseVersion": 1,
+          "failureCode": "INDEXING_FAILED"
+        },
+        {
+          "stage": "extract",
+          "state": "complete",
+          "attempt": 1,
+          "leaseVersion": 1,
+          "failureCode": null
+        }
+      ],
+      "operations": [
+        {
+          "operationKey": "memory.extract",
+          "sourceBound": true,
+          "cancelled": false
+        }
+      ],
+      "attempts": [
+        {
+          "state": "uncertain",
+          "attemptNumber": 1,
+          "measuredInputTokens": 4582,
+          "maximumOutputTokens": 512,
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "terminalOutcome": "confirmed",
+          "nativeInterface": "chat",
+          "privateResultBytes": 231
+        }
+      ]
+    },
+    {
+      "eventIdSha256": "ef6b53f55c29b7a4c516790e493d810d75eb758c01ea869f95a336bd7dfa88b1",
+      "sequence": 2,
+      "role": "assistant",
+      "factsState": "skipped",
+      "vectorsState": "complete",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "complete",
+          "attempt": 1,
+          "leaseVersion": 1,
+          "failureCode": null
+        },
+        {
+          "stage": "facts",
+          "state": "skipped",
+          "attempt": 0,
+          "leaseVersion": 0,
+          "failureCode": null
+        },
+        {
+          "stage": "extract",
+          "state": "skipped",
+          "attempt": 0,
+          "leaseVersion": 0,
+          "failureCode": null
+        }
+      ],
+      "operations": [
+        {
+          "operationKey": "embedding.memory",
+          "sourceBound": true,
+          "cancelled": false
+        }
+      ],
+      "attempts": [
+        {
+          "state": "uncertain",
+          "attemptNumber": 1,
+          "measuredInputTokens": 26,
+          "maximumOutputTokens": 0,
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "terminalOutcome": "confirmed",
+          "nativeInterface": "embedding",
+          "privateResultBytes": 29727
+        }
+      ]
+    },
+    {
+      "eventIdSha256": "aa9534d397878aee9bf04f5cfa1a2f1b7467adcf08d77d48d82d2b44d401d13a",
+      "sequence": 1,
+      "role": "user",
+      "factsState": "complete",
+      "vectorsState": "complete",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "complete",
+          "attempt": 1,
+          "leaseVersion": 1,
+          "failureCode": null
+        },
+        {
+          "stage": "facts",
+          "state": "complete",
+          "attempt": 1,
+          "leaseVersion": 1,
+          "failureCode": null
+        },
+        {
+          "stage": "extract",
+          "state": "complete",
+          "attempt": 1,
+          "leaseVersion": 1,
+          "failureCode": null
+        }
+      ],
+      "operations": [
+        {
+          "operationKey": "embedding.memory",
+          "sourceBound": true,
+          "cancelled": false
+        },
+        {
+          "operationKey": "memory.extract",
+          "sourceBound": true,
+          "cancelled": false
+        }
+      ],
+      "attempts": [
+        {
+          "state": "uncertain",
+          "attemptNumber": 1,
+          "measuredInputTokens": 27,
+          "maximumOutputTokens": 0,
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "terminalOutcome": "confirmed",
+          "nativeInterface": "embedding",
+          "privateResultBytes": 29663
+        },
+        {
+          "state": "uncertain",
+          "attemptNumber": 1,
+          "measuredInputTokens": 4582,
+          "maximumOutputTokens": 512,
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "terminalOutcome": "confirmed",
+          "nativeInterface": "chat",
+          "privateResultBytes": 232
+        }
+      ]
+    }
+  ],
+  "statuses": [
+    {
+      "receiptIdSha256": "439c889c0217fb8d4b1d0933e194e0570e62e4b661bbf4d39c43ca40668b4e21",
+      "memoryStatus": "failed",
+      "profileId": "cortex-text-small-1536-v1",
+      "stages": {
+        "facts": [
+          "failed",
+          "skipped"
+        ],
+        "vectors": [
+          "pending",
+          "failed"
+        ]
+      }
+    },
+    {
+      "receiptIdSha256": "0ffb8a879f16ae97e277b33f83c8dfd4be13a91a2643ab3b3653576ea1c9afba",
+      "memoryStatus": "complete",
+      "profileId": "cortex-text-small-1536-v1",
+      "stages": {
+        "facts": [
+          "complete",
+          "skipped"
+        ],
+        "vectors": [
+          "complete",
+          "complete"
+        ]
+      }
+    }
+  ],
+  "readiness": {
+    "version": 1,
+    "cutoff": 4,
+    "graphCutoff": 2,
+    "profile": {
+      "profileId": "cortex-text-small-1536-v1",
+      "modelId": "openai/text-embedding-3-small",
+      "dimensions": 1536,
+      "normalization": "text-nfc-lf-v1",
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "indexName": "by_default_embedding_v1"
+    },
+    "stages": {
+      "facts": {
+        "cutoff": 4,
+        "indexedThrough": 2,
+        "complete": false,
+        "hole": {
+          "sequence": 3,
+          "state": "failed"
+        }
+      },
+      "vectors": {
+        "cutoff": 4,
+        "indexedThrough": 2,
+        "complete": false,
+        "hole": {
+          "sequence": 3,
+          "state": "pending"
+        }
+      }
+    },
+    "strictStages": []
+  },
+  "verdict": "DIAGNOSIS_READ_SUCCESS"
+}

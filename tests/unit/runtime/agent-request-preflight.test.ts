@@ -2,13 +2,15 @@
  * All provider/ledger ports are controlled; no inference or native cap attribution. */
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { generateText, isStepCount } from "ai";
+import { serializeMessage } from "@convex-dev/agent";
 import type { ModelMessage } from "ai";
 import type { LanguageModelV4 } from "@ai-sdk/provider";
 import type { RuntimeAuthorityReference } from "../../../src/auth/verified";
 import { canonicalModelJson, resolveModelPolicy, checkModelRequestInputBounds, validateModelRequest } from "../../../src/domain/model-policy";
 import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
 import { serverTools } from "../../../convex-dev/runtimeAgentTools";
-import { createAgentGatewayCancellationBridge, governGatewayLanguageModel, preflightAgentModelRequest, checkAgentModelInput } from "../../../convex-dev/runtimeGateway";
+import { createAgentGatewayCancellationBridge, governGatewayLanguageModel, preflightAgentModelRequest, checkAgentModelInput, checkAssembledAgentModelInput } from "../../../convex-dev/runtimeGateway";
+import { privateModelMessage } from "../../../convex-dev/runtimeTranscript";
 import type { AgentRequestPreflightInput, GatewayBinding, GatewayComposition, GatewayResolution } from "../../../convex-dev/runtimeGateway";
 const reference = { tenantId: "t", tenantEpoch: 1, memorySpaceId: "s", memorySpaceEpoch: 1, principalId: "p", principalVersion: 1,
   membershipId: "m", membershipVersion: 1, grantId: "g", grantVersion: 1 } as RuntimeAuthorityReference;
@@ -172,5 +174,90 @@ describe("shared complete Agent request preflight", () => {
     process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
     const stop = Error("POLICY_DENIED: request exceeds bounded limits"); log.mockImplementation(() => { throw stop; });
     expect(() => preflightAgentModelRequest(base, r, binding)).toThrow(stop);
+  });
+});
+
+describe("V8 complete official SDK input fitting", () => {
+  it("preserves qualified plain text without requiring tool capability or a tool catalogue", async () => {
+    const r = resolution();
+    const { toolContract: _toolContract, ...proof } = r.dispatchEvidence;
+    const plain: GatewayResolution = { ...r, snapshot: { ...r.snapshot, capabilities: ["text"], allowedTools: [],
+      pins: { ...r.snapshot.pins, toolRegistryVersion: "plain-no-tools" } }, dispatchEvidence: { ...proof,
+      inputBound: { ...proof.inputBound, featureEnvelope: "plain-chat-v1", ruleId: "plain-chat-cookbook-utf8-v1" } } };
+    const checked = await checkAssembledAgentModelInput(base, plain, binding);
+    expect(checked).toMatchObject({ supported: true, withinBound: true });
+    if (!checked.supported || !checked.withinBound) throw Error("Expected qualified plain input");
+    expect((await originalRequest(base, plain)).canonical).toBe(checked.requestCanonical);
+    await expect(checkAssembledAgentModelInput({ ...base, tools: ["memory_remember"] }, plain, binding)).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+  });
+  async function storedToolInput() {
+    const noIo = new Proxy({}, { get() { throw Error("Unexpected component/storage I/O"); } });
+    const original: ModelMessage[] = [
+      { role: "assistant", content: [{ type: "tool-call", toolCallId: "stored-call", toolName: "memory_remember", input: { text: "I play cello." } }] },
+      { role: "tool", content: [{ type: "tool-result", toolCallId: "stored-call", toolName: "memory_remember", output: { type: "json", value: { receiptId: "stored-receipt", state: "complete" } } }] },
+    ];
+    const stored = await Promise.all(original.map(message => serializeMessage(noIo as Parameters<typeof serializeMessage>[0], noIo as Parameters<typeof serializeMessage>[1], message)));
+    // This fixture represents Convex persistence omitting optional undefined fields.
+    // It runs the actual installed serializer; it is not a native-service receipt.
+    const docs = stored.map(value => JSON.parse(JSON.stringify({ message: value.message })) as Parameters<typeof privateModelMessage>[0]);
+    return { docs, input: { ...base, tools: ["memory_remember"], messages: [...base.messages, ...docs.map(privateModelMessage)] } };
+  }
+  it("fits actual Agent serialized input+args tool history and preserves canonical storage", async () => {
+    const { docs, input } = await storedToolInput(), before = canonicalModelJson(docs), r = resolution();
+    expect(docs[0]!.message).toMatchObject({ content: [{ input: { text: "I play cello." }, args: { text: "I play cello." } }] });
+    expect(checkAgentModelInput(input, r, binding)).toEqual({ supported: false });
+    const checked = await checkAssembledAgentModelInput(input, r, binding);
+    expect(checked).toMatchObject({ supported: true, withinBound: true });
+    if (!checked.supported || !checked.withinBound) throw Error("Expected exact assembled input");
+    expect((await originalRequest(input, r)).canonical).toBe(checked.requestCanonical);
+    expect(checked.requestCanonical).not.toContain('"args"');
+    expect(canonicalModelJson(docs)).toBe(before);
+  });
+  it.each(["inputTokens", "contextTokens"] as const)("returns exact %s overflow using the same native accounting", async dimension => {
+    const { input } = await storedToolInput(), r = resolution();
+    const checked = await checkAssembledAgentModelInput(input, r, binding);
+    if (!checked.supported || !checked.withinBound) throw Error("Expected exact assembled input");
+    const request = JSON.parse(checked.requestCanonical) as { inputTokens: number; outputTokens: number };
+    const exact = dimension === "inputTokens" ? request.inputTokens : request.inputTokens + request.outputTokens;
+    const limited = { ...r, snapshot: { ...r.snapshot, limits: { ...r.snapshot.limits, [dimension]: exact - 1 } } };
+    const limits = canonicalModelJson(limited.snapshot.limits);
+    expect(await checkAssembledAgentModelInput(input, limited, binding)).toEqual({ supported: true, withinBound: false,
+      dimension, computedValue: exact, effectiveLimit: exact - 1 });
+    expect((await originalRequest(input, limited)).canonical).toBeUndefined();
+    expect(canonicalModelJson(limited.snapshot.limits)).toBe(limits);
+  });
+  it.each(["metadata", "output", "tool", "missing-result"])("never classifies %s refusal as removable numeric overflow", async kind => {
+    const { input } = await storedToolInput(); let r = resolution();
+    if (kind === "metadata") input.messages[0] = { role: "user", content: "private", providerOptions: { unqualified: { secret: "PRIVATE" } } };
+    if (kind === "output") input.maxOutputTokens = 257;
+    if (kind === "tool") r = { ...r, snapshot: { ...r.snapshot, allowedTools: [] } };
+    if (kind === "missing-result") input.messages.pop();
+    await expect(checkAssembledAgentModelInput(input, r, binding)).rejects.toThrow();
+    expect((await originalRequest(input, r)).canonical).toBeUndefined();
+  });
+  it("rejects accessors before SDK conversion without evaluating or downloading them", async () => {
+    let getters = 0;
+    const message = Object.defineProperty({ role: "user" }, "content", { enumerable: true, get() { getters++; return "private"; } });
+    await expect(checkAssembledAgentModelInput({ ...base, messages: [message as ModelMessage] }, resolution(), binding)).rejects.toMatchObject({ code: "INVALID_NATIVE_REQUEST" });
+    expect(getters).toBe(0);
+  });
+  it("owns detached input across conversion awaits without stripping invalid tool JSON", async () => {
+    const { input } = await storedToolInput();
+    const checked = checkAssembledAgentModelInput(input, resolution(), binding);
+    input.messages[0] = { role: "user", content: "MUTATED_AFTER_CHECK" };
+    const result = await checked;
+    if (!result.supported || !result.withinBound) throw Error("Expected assembled input");
+    expect(result.requestCanonical).not.toContain("MUTATED_AFTER_CHECK");
+    const malformed = await storedToolInput();
+    const part = (malformed.input.messages[1]!.content as unknown as { input: Record<string, unknown> }[])[0]!;
+    part.input.undefinedJsonValue = undefined;
+    await expect(checkAssembledAgentModelInput(malformed.input, resolution(), binding)).rejects.toThrow("noncanonical JSON");
+    expect((await originalRequest(malformed.input)).canonical).toBeUndefined();
+  });
+  it("rejects remote assets with zero network calls", async () => {
+    const network = jest.spyOn(globalThis, "fetch").mockImplementation(async () => { throw Error("Unexpected network"); });
+    await expect(checkAssembledAgentModelInput({ ...base,
+      messages: [{ role: "user", content: [{ type: "file", data: "https://example.invalid/private.txt", mediaType: "text/plain" }] }] }, resolution(), binding)).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+    expect(network).not.toHaveBeenCalled();
   });
 });

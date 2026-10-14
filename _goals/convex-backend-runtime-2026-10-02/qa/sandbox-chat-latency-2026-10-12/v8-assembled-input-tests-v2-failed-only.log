@@ -1,0 +1,93 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:69613) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/agent-request-preflight.test.ts
+  shared complete Agent request preflight
+    ○ skipped fits the exact original request at input/context boundaries without modifying limits
+    ○ skipped does not treat another denied dimension, budget, pin or tool as removable input
+    ○ skipped uses the original sixfold bound for whole tool-result groups and keeps unsupported shapes unsupported
+    ○ skipped matches actual installed AI SDK projection for text
+    ○ skipped matches actual installed AI SDK projection for tools
+    ○ skipped matches actual installed AI SDK projection for continuation
+    ○ skipped matches actual installed AI SDK projection for adjacent-tool
+    ○ skipped matches actual installed AI SDK projection for empty-parts
+    ○ skipped denies the complete over-cap continuation at the same original validator, before admission
+    ○ skipped leaves unsupported reasoning on the original path without a false preflight proof
+    ○ skipped leaves unsupported media on the original path without a false preflight proof
+    ○ skipped leaves unsupported approval on the original path without a false preflight proof
+    ○ skipped leaves unsupported provider on the original path without a false preflight proof
+    ○ skipped leaves unsupported legacy-result on the original path without a false preflight proof
+    ○ skipped leaves unsupported accessor on the original path without a false preflight proof
+    ○ skipped leaves SDK missing-tool-result and intervening-user error ordering on the original path
+    ○ skipped default-off diagnostics emit nothing, while enabled bounds omit private fields and hash arbitrary identity strings
+    ○ skipped process-absent diagnostics are inert and an enabled console failure retains its original exception
+  V8 complete official SDK input fitting
+    ✓ rejects accessors before SDK conversion without evaluating or downloading them (5 ms)
+    ✓ rejects remote assets with zero network calls (2 ms)
+    ○ skipped fits actual Agent serialized input+args tool history and preserves canonical storage
+    ○ skipped returns exact inputTokens overflow using the same native accounting
+    ○ skipped returns exact contextTokens overflow using the same native accounting
+    ○ skipped never classifies metadata refusal as removable numeric overflow
+    ○ skipped never classifies output refusal as removable numeric overflow
+    ○ skipped never classifies tool refusal as removable numeric overflow
+    ○ skipped never classifies missing-result refusal as removable numeric overflow
+    ○ skipped owns detached input across conversion awaits without stripping invalid tool JSON
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.4s | 2/2 passed | /tests/unit/runtime/agent-request-preflight.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.2%) - V8 complete official SDK input fitting rejects accessors before SDK conversion without evaluating or downloading them
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting rejects remote assets with zero network calls
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.01s (0.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.48s
+  Test suites:        1
+  Individual tests:   2
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       26 skipped, 2 passed, 28 total
+Snapshots:   0 total
+Time:        2.476 s, estimated 5 s
+Ran all test suites within paths "tests/unit/runtime/agent-request-preflight.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-tests-v2-failed-only.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

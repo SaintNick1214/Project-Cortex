@@ -1,0 +1,43 @@
+# Repeat-capture source repair
+
+Status: **COMPLETE for A's bounded source implementation (100%)**. Shared final quality, non-author review and a fresh installed native run remain pending. This does not change the original K21 ordinary-memory **FAIL**, establish its historical capacity branch, or satisfy the subsecond goal. No service, paid inference, SDK build/pack, deployment, Git write or Proofs change was performed by this author.
+
+Baseline is accepted product commit `03256989da22bde35dff78023c1c3962391a68c6`; later QA-only HEAD changes do not redefine it. All seven owned files and before/after SHA256 values are frozen in `repeat-capture-source-freeze.json` (SHA `df1f7e06ec60fcef57860ddec82648ce7163dd84bce2033219b8a308e2db8a0e`). B independently owns Agent/context/input-selection changes for the joint batch.
+
+## Resulting behavior
+
+`runtimeModelPolicy.ts` preserves the original capacity predicate order, numeric limits, error code/message and accounting. Only its **unreserved admission** boundary adds a fixed versioned classification: account state, window, money or concurrency. Foreground budget preflight, held checkpoints and fallback admission retain their original unclassified behavior. A reason envelope is never accepted as dispatch proof on its own.
+
+`runtimeIngestion.ts` waits only for a classified concurrency refusal whose exact stage-derived semantic identity has **no native model operation**. The native wait mutation freshly verifies the job/account binding, source/hash/revision, authority, lease, current qualification/policy pin and both accounts' permanent limits. Earlier dispatched chunks/resolvers, reservations, UNKNOWN, malformed/unclassified errors and permanent money/window/account refusals cannot enter this lane. Every wake retains the same stage attempt/provider semantic identity and the first lease deadline, tightened by the account windows and qualification expiry. Backoff is 250/500/1000/2000ms, bounded by that deadline and 64 wakes. No reservation, liability, funding, refund or concurrency counter changes during waiting. Fresh claim/admission guards execute again; capacity wake cancellation is checked before model construction. Pending work also has an exact-token durable expiry callback, so a lost wake cannot leave indefinite readiness. Existing running-lease expiry remains sticky UNKNOWN.
+
+`runtimeBeliefs.ts` leaves the original `commitBeliefPlan` body unchanged. On exact `FACT_VERSION_CONFLICT`, the Action invokes one fresh native no-inference replan from the **confirmed stored extraction** and current bounded fact readset. Exact semantic duplicate facts become `NONE`; unmatched candidates retain the original deterministic `ADD` rule. The original commit then checks all versions, recomputed plan, source order, source/profile/policy/lease/authority and atomically writes the receipt/history/outbox/stage. The stale plan is never applied and extraction is never purchased again. Changed conflicts requiring a new decision return `REPLAN_REQUIRED`, rather than rebinding a paid decision or automatically buying a resolver call. Older events still cannot overwrite a newer slot head, including the original order-denial behavior. This is deliberately not an unbounded contention/reordering repair.
+
+`runtimeIngestionSchema.ts` adds only an optional stage `capacityWait` marker and the private refusal validator; existing rows need no rewrite and table/index counts do not change. No public arguments, provider wire/prompt, model caps, historical Workflow bodies, SDK or canonical capture semantics change. Native registrations add only `runtimeIngestion:waitForCapacity` and `runtimeBeliefs:replan`.
+
+## Tests and source evidence
+
+The new actual-handler tests reproduce two confirmed equal extractions: an intervening original commit makes the second original CAS fail, then the fresh plan completes `NONE` with one unchanged fact, two histories/outboxes/receipts, both original extractions and contiguous facts/vectors through2. Another case covers equal input after the first commit with no resolver call. Changed conflicts and reversed source order preserve refusal. Replan grant/tombstone/edit/lease/policy denials retain extraction and roll back effects.
+
+Capacity tests reserve an actual native ledger slot, obtain an actual unreserved refusal, release it via the original native release handler, and wake the same attempt once. They cover duplicate and successive wakes, unchanged liability, original deadline, lost wake/obsolete expiry token, late money exhaustion, revocation/deletion/edit/profile/policy/cancellation, absent/UNKNOWN proof and a forged refusal after a real reservation. Original admission tests prove the four classifications cause no new reservation and held checkpoint errors carry no queue proof. Controlled model ports supply vectors; those values are not evidence of hosted inference or provider usage. The DB fixture's transactions establish handler rollback/order, **not native Convex OCC**.
+
+`repeat-capture-equivalence.json` (SHA `42665cea808988bb8848f20d34cab49472148d375d4d5cdd558b03b197492d0d`) verifies 24 original local guard/commit/registration bodies literally equal, plus an exact inverse comparison showing admission differs only at the classified capacity calls. Original comparison/failure assertions were not removed. The ingestion fixture only adds the two new real registration ports; policy tests are appended.
+
+| Check receipt | Observed result |
+|---|---|
+| `repeat-capture-focused-v2.{log,json,exit}` | PASS219/219,2 suites,0 skips/todos |
+| `repeat-capture-focused-v3.{log,json,exit}` | PASS263/263,4 suites,0 skips/todos |
+| `repeat-capture-affected-v2.{log,json,exit}` | Original **FAIL632/633**,16/17 suites,0 skips/todos; unchanged Gateway cleanup test did not complete within its100ms observation |
+| `repeat-capture-expiry-final.{log,json,exit}` | Final changed expiry/new worker/stage coverage PASS51/51,3 suites,0 skips/todos |
+| `repeat-capture-gateway-isolated.{log,json,exit}` | Original failed suite successor PASS101/101,1 suite,0 skips/todos, unchanged deadline/assertions; no check processes active, B/root heavy work settled |
+| `repeat-capture-backend-types-v2`, `repeat-capture-root-types-v2`, `repeat-capture-lint-types-v1` | Each exit0; final combined types remain coordinator's shared gate after the last expiry addition |
+| `repeat-capture-scoped-lint-v2`, `repeat-capture-expiry-lint-final` | Each exit0,0 warnings/errors |
+
+Commands used pinned Node24.15.0/npm12.2 tooling with offline `CONVEX_URL=http://127.0.0.1:9`, `--experimental-vm-modules`, Jest `--runInBand --runTestsByPath`; final runs explicitly disabled environment-file injection. `repeat-capture-check-invocations.json` records commands, absolute cwd and exact selected paths; discovery/raw receipt hashes are in the freeze. No skipped required service test is represented as PASS.
+
+Original red receipts remain: focused-v1 had8/21 plus a policy import-cycle discovery failure (fixed by placing the validator in the schema); backend-types-v1 recorded B's in-flight missing helper; root-types-v1 had new fixture generic typing errors; affected-v1 had394/395 and a mistaken nonexistent Gateway pathname. Strict request extra pins and a CAS fixture hook firing on vector writes were corrected without changing production assertions. The cancelled-wake failure led to a real fresh account fence. The broader Gateway timing failure remains FAIL, alongside its passing isolated successor; no unrelated Gateway source or timer was changed.
+
+## Frozen files and remaining boundary
+
+Production: `runtimeModelPolicy.ts` SHA `fd93f28de862db6d9d0d60f661e847bad30ae50e23ca2a2292c658457abd8cc0`; `runtimeIngestion.ts` SHA `fd0b70938a47e9e39e8a0d74eb2f70defb543cdf4dd10fe1e483dccc54de29c8`; `runtimeIngestionSchema.ts` SHA `3805a881dc722f65ba49dfa5f7298eea04407917220a7e562726a824615dbf4f`; `runtimeBeliefs.ts` SHA `51caa9b7941727b833eada32e4ebd345c4ed2bd6664c3423e465b6eca6a55c5e`.
+
+Tests: existing ingestion fixture and model-policy-admission suite, new `tests/unit/runtimeIngestion/repeat-capture.test.ts`; full hashes are in the freeze. Native K21 evidence still proves only `BUDGET_EXCEEDED` before reservation and `FACT_VERSION_CONFLICT` after extraction, not a historical concurrency cause. The new classification is prospective. A fresh reviewed/installed successor must demonstrate the ordinary two-capture/status/readiness scenario and the still-unrun public recall/dedicated-scope negatives; no such acceptance is claimed here. Shared root/B quality and one joint non-author source/test/docs gate follow this freeze.

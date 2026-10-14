@@ -1,0 +1,62 @@
+{
+  "observedAt": "2026-10-14T12:52:18.949124+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "baseline": "03256989da22bde35dff78023c1c3962391a68c6",
+  "head": "03256989da22bde35dff78023c1c3962391a68c6",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "sourceInputs": "v8-native-repair-joint-quality-inputs-v2.json",
+  "sourceCount": 18,
+  "sourceUnchanged": true,
+  "checks": [
+    {
+      "name": "backend-types",
+      "exit": 0,
+      "receipt": "v8-repair-joint-backend-types-v1-exit.json",
+      "log": "v8-repair-joint-backend-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-types",
+      "exit": 0,
+      "receipt": "v8-repair-joint-lint-types-v1-exit.json",
+      "log": "v8-repair-joint-lint-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "scoped-lint",
+      "exit": 0,
+      "receipt": "v8-repair-joint-scoped-lint-v1-exit.json",
+      "log": "v8-repair-joint-scoped-lint-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "root-types-v2",
+      "exit": 0,
+      "receipt": "v8-repair-joint-root-types-v2-v1-exit.json",
+      "log": "v8-repair-joint-root-types-v2-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "build",
+      "exit": 0,
+      "receipt": "v8-repair-joint-build-v1-exit.json",
+      "log": "v8-repair-joint-build-v1.log",
+      "logSha256": "758781376c55e927ae947c4b6d967f7dc52cd155febdd2f3d73a5ae36f6afc9b"
+    },
+    {
+      "name": "packed-contracts",
+      "exit": 0,
+      "receipt": "v8-repair-joint-packed-contracts-v1-exit.json",
+      "log": "v8-repair-joint-packed-contracts-v1.log",
+      "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+    }
+  ],
+  "all6Exit": 0,
+  "backendFiles": 169,
+  "tables": 77,
+  "components": 2,
+  "originalFailedRootTypes": "v8-repair-joint-root-types-v1.log",
+  "successor": "Only two test fixture typeguards changed; onlyfailed roottypes rerun, previouslyunexecuted build/contracts runonce",
+  "nativeQualified": false
+}

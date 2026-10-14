@@ -33,7 +33,8 @@ export async function ingestionFixture() {
     try { name = getFunctionName(ref); } catch { return await oldMutation(ref, args); }
     const registered = { "runtimeIngestion:claim": ingestion.claim, "runtimeIngestion:persistStage": ingestion.persistStage,
       "runtimeIngestion:persistDraft": ingestion.persistDraft, "runtimeIngestion:failUnclaimed": ingestion.failUnclaimed, "runtimeIngestion:expireStage": ingestion.expireStage,
-      "runtimeIngestion:commitVectors": ingestion.commitVectors, "runtimeIngestion:failStage": ingestion.failStage, "runtimeBeliefs:commit": beliefs.commit,
+      "runtimeIngestion:commitVectors": ingestion.commitVectors, "runtimeIngestion:failStage": ingestion.failStage,
+      "runtimeIngestion:waitForCapacity": ingestion.waitForCapacity, "runtimeBeliefs:commit": beliefs.commit, "runtimeBeliefs:replan": beliefs.replan,
       "runtimeIngestion:retireScopedSource": ingestion.retireScopedSource, "runtimeIngestion:registerCompletedDerived": ingestion.registerCompletedDerived };
     if (name in registered) return await f.transaction(async () => await invoke(registered[name as keyof typeof registered], f.ctx, args));
     return await oldMutation(ref, args);

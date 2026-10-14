@@ -2,6 +2,10 @@ import { defineTable } from "convex/server";
 import { v } from "convex/values";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { sourceLineage, embeddingProfile } from "./runtimeMemorySchema";
+import { modelOperationKey } from "./runtimePolicySchema";
+export const unreservedCapacityRefusal = v.object({ version: v.literal(1), origin: v.literal("unreserved-admission"),
+  reason: v.union(v.literal("account"), v.literal("window"), v.literal("money"), v.literal("concurrency")),
+  operationKey: modelOperationKey, runBudgetId: v.string(), semanticId: v.string(), ordinal: v.number() });
 export const ingestionStage = v.union(v.literal("extract"), v.literal("facts"), v.literal("vectors"));
 export const ingestionEligibility = v.union(v.literal("eligible"), v.literal("awaiting_approval"), v.literal("awaiting_tool"),
   v.literal("ineligible"), v.literal("superseded"), v.literal("tombstoned"));
@@ -34,6 +38,7 @@ export const runtimeIngestionTables = {
   runtimeIngestionStages: defineTable({ ...scope, eventId: v.string(), stage: ingestionStage, state: ingestionStageState,
     attempt: v.number(), leaseVersion: v.number(), leaseExpiresAt: v.optional(v.number()),
     policyCanonical: v.optional(v.string()), receiptId: v.optional(v.string()), payloadCanonical: v.optional(v.string()),
+    capacityWait: v.optional(v.object({ deadline: v.number(), notBefore: v.number(), wakes: v.number() })),
     failureCode: v.optional(v.string()), updatedAt: v.number() })
     .index("by_event_stage", ["tenantId", "memorySpaceId", "eventId", "stage"]),
   runtimeIngestionJobs: defineTable({ ...scope, eventId: v.string(), runBudgetId: v.string(),

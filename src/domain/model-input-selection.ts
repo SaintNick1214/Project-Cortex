@@ -56,9 +56,12 @@ export function assertCompleteToolGroups(messages: readonly ModelMessage[]): voi
 export function renderModelInputEntries(entries: readonly ModelInputEntry[]): string {
   return entries.map(entry => entry.text).join("\n\n");
 }
-/** The callback must distinguish qualified numeric overflow from every other refusal. */
-export function fitModelInput(input: { messages: readonly ModelInputMessage[]; entries: readonly ModelInputEntry[];
-  policy: ModelInputSelectionPolicy; check(messages: ModelMessage[], context: string): ModelInputBoundResult }) {
+type ModelInputFitSource = { messages: readonly ModelInputMessage[]; entries: readonly ModelInputEntry[]; policy: ModelInputSelectionPolicy };
+type ModelInputFitCandidate = { messages: ModelMessage[]; context: string };
+export type ModelInputFitResult = ModelInputFitCandidate & { messageIds: string[]; entryKeys: string[]; omitted: boolean; supported: boolean };
+/** Shared selection state. A yielded candidate is only a request proposal, never
+ * authorization or a dispatch permit; the original guards remain external. */
+function* modelInputFitSteps(input: ModelInputFitSource): Generator<ModelInputFitCandidate, ModelInputFitResult, ModelInputBoundResult> {
   const policy = modelInputPolicy(input.policy), ids = new Set<string>();
   const messages = input.messages.map(value => {
     if (!value.id || ids.has(value.id)) throw new ModelInputSelectionError("CONTEXT_INCOMPLETE"); ids.add(value.id); return value;
@@ -86,11 +89,32 @@ export function fitModelInput(input: { messages: readonly ModelInputMessage[]; e
   while (messages.length + entries.length + 1 > policy.maxMessages) remove();
   for (;;) {
     const context = renderModelInputEntries(entries), selected = messages.map(value => value.message);
-    const result = input.check(selected, context);
+    const result = yield { messages: selected, context };
     if (!result.supported || result.withinBound) return { messages: selected, context, messageIds: messages.map(value => value.id),
       entryKeys: entries.map(value => value.key), omitted, supported: result.supported };
     remove();
   }
+}
+
+/** The callback must distinguish qualified numeric overflow from every other refusal. */
+export function fitModelInput(input: ModelInputFitSource & {
+  check(messages: ModelMessage[], context: string): ModelInputBoundResult;
+}): ModelInputFitResult {
+  const steps = modelInputFitSteps(input);
+  let step = steps.next();
+  while (!step.done) step = steps.next(input.check(step.value.messages, step.value.context));
+  return step.value;
+}
+
+/** Same whole-entry ordering with an async, pure SDK conversion check. The caller
+ * supplies fresh policy proposals; no outcome is shared across invocations. */
+export async function fitModelInputAsync(input: ModelInputFitSource & {
+  check(messages: ModelMessage[], context: string): Promise<ModelInputBoundResult>;
+}): Promise<ModelInputFitResult> {
+  const steps = modelInputFitSteps(input);
+  let step = steps.next();
+  while (!step.done) step = steps.next(await input.check(step.value.messages, step.value.context));
+  return step.value;
 }
 
 /** Reuses the current query's source scores; no fact or source is newly embedded. */

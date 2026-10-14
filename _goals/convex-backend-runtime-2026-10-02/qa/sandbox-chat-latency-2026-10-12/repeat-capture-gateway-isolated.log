@@ -1,0 +1,232 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:71494) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/gateway-dispatch.test.ts
+  separately qualified JSON-object extraction lane (offline)
+    ✓ dispatches the exact official closed wire body, retains format identity and full UNKNOWN ceiling (42 ms)
+    ✓ denies absent before admission/native effects (7 ms)
+    ✓ denies text before admission/native effects (1 ms)
+    ✓ denies schema before admission/native effects (1 ms)
+    ✓ denies name before admission/native effects (1 ms)
+    ✓ denies options before admission/native effects (1 ms)
+    ✓ denies role before admission/native effects (2 ms)
+    ✓ denies stream before admission/native effects (2 ms)
+    ✓ denies old-proof before admission/native effects (1 ms)
+    ✓ withholds input usage, captures once and never retries UNKNOWN (5 ms)
+    ✓ withholds output usage, captures once and never retries UNKNOWN (6 ms)
+    ✓ withholds invalid usage, captures once and never retries UNKNOWN (5 ms)
+    ✓ withholds over-input usage, captures once and never retries UNKNOWN (6 ms)
+    ✓ withholds over-output usage, captures once and never retries UNKNOWN (5 ms)
+  Agent-only combined admission envelope
+    ✓ uses one composed port and retains native once, capture and attachment ordering (2 ms)
+    ✓ uncertain never calls checkpoint/native or generic ports (1 ms)
+    ✓ inflight never calls checkpoint/native or generic ports (1 ms)
+    ✓ replay never calls checkpoint/native or generic ports (1 ms)
+    ✓ strict missing-permit envelope cannot enable inference or fall back (1 ms)
+    ✓ strict extra-field envelope cannot enable inference or fall back (1 ms)
+    ✓ strict permit-getter envelope cannot enable inference or fall back (1 ms)
+    ✓ strict admission-mismatch envelope cannot enable inference or fall back (2 ms)
+    ✓ strict permit-mismatch envelope cannot enable inference or fall back (1 ms)
+    ✓ strict no-permit envelope cannot enable inference or fall back (2 ms)
+    ✓ strict nonreserved-permit envelope cannot enable inference or fall back (4 ms)
+    ✓ lost committed permit response preserves the same uncertain identity and cannot repeat native dispatch (1 ms)
+    ✓ cancel while an issued composition completes keeps the committed permit from reaching native (2 ms)
+  bounded governed Gateway middleware
+    ✓ requires a durable server sink before model construction/resolution
+    ✓ denies actual official Gateway quota before private token lookup (1 ms)
+    ✓ dispatches detached normalized values after exact admission+checkpoint; sanitizes reasoning (3 ms)
+    ✓ uncertain disposition makes zero native/token calls
+    ✓ inflight disposition makes zero native/token calls
+    ✓ replay disposition makes zero native/token calls (1 ms)
+    ✓ same wrapper invocation after ambiguous first failure cannot create a fresh ordinal/permit (2 ms)
+    ✓ admit tampering denies the native closure (1 ms)
+    ✓ checkpoint tampering denies the native closure (1 ms)
+    ✓ denies defined headers
+    ✓ denies defined providerOptions
+    ✓ denies defined tools (1 ms)
+    ✓ denies defined toolChoice
+    ✓ denies defined reasoning (1 ms)
+    ✓ denies defined topK
+    ✓ denies defined presencePenalty (1 ms)
+    ✓ denies defined frequencyPenalty
+    ✓ denies defined includeRawChunks (1 ms)
+    ✓ descriptor/native getter denial has no side effects
+    ✓ descriptor/native symbol denial has no side effects (1 ms)
+    ✓ descriptor/native nonenumerable denial has no side effects
+    ✓ descriptor/native sparse denial has no side effects (1 ms)
+    ✓ descriptor/native iterator denial has no side effects
+    ✓ descriptor/native surrogate denial has no side effects
+    ✓ descriptor/native partOptions denial has no side effects
+    ✓ descriptor/native schema denial has no side effects
+    ✓ descriptor/native multipart denial has no side effects (1 ms)
+    ✓ accepts SDK optional undefined fields but denies unknown own __proto__ before projection (2 ms)
+    ✓ supports allowed scalar settings while rejecting output/context bounds (3 ms)
+    ✓ unsupported Responses evidence, wrong profile, expired proof and alternate provider deny before closure (1 ms)
+    ✓ captures known charge durably before revocation withholds current attachment (2 ms)
+    ✓ missing durable capture withholds output, retains checkpoint and never assumes admin recovery (2 ms)
+    ✓ unqualified cost undefined is unavailable, never zero (2 ms)
+    ✓ unqualified cost -1 is unavailable, never zero (2 ms)
+    ✓ unqualified cost Infinity is unavailable, never zero (1 ms)
+    ✓ unqualified cost not-money is unavailable, never zero (2 ms)
+    ✓ root currency/aggregate rule unavailable retains cost even with a numeric field (2 ms)
+    ✓ decimal/outward IEEE conversion cannot underestimate or accept exponent/NaN
+    ✓ single owned stream drains raw terminal and strips raw/reasoning, visibility precedes delivery (2 ms)
+    ✓ synthetic finish/EOF without raw provider terminal never records a receipt (2 ms)
+    ✓ observer unsubscribe still drains and durably captures once (2 ms)
+    ✓ delivery revocation still drains to a known terminal and preserves charge (2 ms)
+    ✓ owner cancellation before call denies native dispatch (1 ms)
+    ✓ owned cancellation after connection has honest unknown liability without fake terminal (2 ms)
+    ✓ single embedding value preserves profile/range and rejects batch/options/dimensions before dispatch (8 ms)
+    ✓ official compatible provider injected-fetch fixture preserves admitted body and output limit (3 ms)
+    ✓ official Responses injected-fetch fixture documents separate store:false/output mapping without governed readiness (5 ms)
+    ✓ official compatible SSE terminal=true distinguishes genuine raw terminal from EOF flush (5 ms)
+    ✓ official compatible SSE terminal=false distinguishes genuine raw terminal from EOF flush (2 ms)
+    ✓ official compatible embedding transforms a single normalized default-profile child (8 ms)
+    ✓ stream terminal capture failure remains pending and cannot trigger another native invocation (2 ms)
+    ✓ native model qualification overrun preserves complete charge and withholds result (2 ms)
+    ✓ native input qualification overrun preserves complete charge and withholds result (2 ms)
+    ✓ native output qualification overrun preserves complete charge and withholds result (2 ms)
+    ✓ owner retries retained sanitized terminal persistence without inference or unauthorized settlement (2 ms)
+    ✓ owned stream deadline covers initial connection, not just reader draining (1006 ms)
+  C2 owned cancellation and finite RPC lifetime
+    ✓ cancel during paused visibility suppresses every subsequent part while buffered terminal charge is captured (7 ms)
+    ✓ deadline bounds an unreleased authority RPC; late completion cannot reopen the observer (8 ms)
+  C2 finite terminal persistence and retained RPC outcomes
+    ✓ slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference (51 ms)
+    ✓ late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence (28 ms)
+    ✓ slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated (50 ms)
+    ✓ late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection (26 ms)
+    ✓ cancel during capture retains full charge and never issues private attachment (2 ms)
+    ✓ cancel while settlement is paused fences final output even when the issued current-authority RPC later succeeds (2 ms)
+    ✓ observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite (105 ms)
+    ✓ late authority rejection after its deadline remains handled and cannot reopen stream delivery (126 ms)
+    ✓ server timing cannot create an unbounded observation, persistence or cleanup phase (1 ms)
+  C2 initial native hook ownership
+    ✓ complete joins a native connection that ignores abort through its finite observation window (68 ms)
+    ✓ complete joins a drain added after an already-owned native connection resolves (9 ms)
+  C2 terminal visibility shares the finite persistence budget
+    ✓ a delayed issued private attachment cannot restart persistence or reopen client delivery (2 ms)
+  C2 replay and final stream output eligibility
+    ✓ local cancellation cannot revive a stored replay disposition (1 ms)
+    ✓ cancel during replay current-authority resolution suppresses late payload return (2 ms)
+    ✓ deadline during replay current-authority resolution suppresses late payload return (24 ms)
+    ✓ cancel during final settlement preserves earlier eligible text but suppresses text-end and finish (2 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.5s | 101/101 passed | /tests/unit/runtime/gateway-dispatch.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.01s (26.7%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 2. [32m✓[0m    0.13s ( 3.3%) - C2 finite terminal persistence and retained RPC outcomes late authority rejection after its deadline remains handled and cannot reopen stream delivery
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 3. [32m✓[0m    0.10s ( 2.8%) - C2 finite terminal persistence and retained RPC outcomes observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 4. [32m✓[0m    0.07s ( 1.8%) - C2 initial native hook ownership complete joins a native connection that ignores abort through its finite observation window
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 5. [32m✓[0m    0.05s ( 1.4%) - C2 finite terminal persistence and retained RPC outcomes slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 6. [32m✓[0m    0.05s ( 1.3%) - C2 finite terminal persistence and retained RPC outcomes slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 7. [32m✓[0m    0.04s ( 1.1%) - separately qualified JSON-object extraction lane (offline) dispatches the exact official closed wire body, retains format identity and full UNKNOWN ceiling
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.7%) - C2 finite terminal persistence and retained RPC outcomes late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.7%) - C2 finite terminal persistence and retained RPC outcomes late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+10. [32m✓[0m    0.02s ( 0.6%) - C2 replay and final stream output eligibility deadline during replay current-authority resolution suppresses late payload return
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - C2 initial native hook ownership complete joins a drain added after an already-owned native connection resolves
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - bounded governed Gateway middleware single embedding value preserves profile/range and rejects batch/options/dimensions before dispatch
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - bounded governed Gateway middleware official compatible embedding transforms a single normalized default-profile child
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - C2 owned cancellation and finite RPC lifetime deadline bounds an unreleased authority RPC; late completion cannot reopen the observer
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - separately qualified JSON-object extraction lane (offline) denies absent before admission/native effects
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - C2 owned cancellation and finite RPC lifetime cancel during paused visibility suppresses every subsequent part while buffered terminal charge is captured
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - separately qualified JSON-object extraction lane (offline) withholds output usage, captures once and never retries UNKNOWN
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - separately qualified JSON-object extraction lane (offline) withholds over-input usage, captures once and never retries UNKNOWN
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - separately qualified JSON-object extraction lane (offline) withholds input usage, captures once and never retries UNKNOWN
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - separately qualified JSON-object extraction lane (offline) withholds invalid usage, captures once and never retries UNKNOWN
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.59s (42.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.77s
+  Test suites:        1
+  Individual tests:   86
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       101 passed, 101 total
+Snapshots:   0 total
+Time:        3.772 s
+Ran all test suites within paths "tests/unit/runtime/gateway-dispatch.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-gateway-isolated.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

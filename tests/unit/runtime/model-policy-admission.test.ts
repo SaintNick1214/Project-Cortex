@@ -1386,3 +1386,27 @@ it("compact root loops hash compiled provenance once per install/active-root inv
   expect(await f.invoke("resolve", { reference: f.reference, operationKey: "agent.respond", runBudgetId: b.runBudgetId })).toMatchObject({ snapshot: { limits: { outputTokens: 500 } } });
   expect(hashes).toBe(1);
 });
+
+describe("unreserved native capacity classifications", () => {
+  it.each(["concurrency", "money", "window", "account"] as const)("classifies %s only before a new reservation and preserves the old code/caps", async reason => {
+    const f = fixture(); await f.install(); const b = await f.bind();
+    const tenant = f.account("tenant");
+    if (reason === "concurrency") await f.db.patch("runtimeBudgetAccounts", tenant._id, { activeConcurrency: tenant.concurrencyLimit });
+    if (reason === "money") await f.db.patch("runtimeBudgetAccounts", tenant._id, { settledUnits: tenant.limitUnits });
+    if (reason === "window") await f.db.patch("runtimeBudgetAccounts", tenant._id, { windowEnd: clock });
+    if (reason === "account") await f.db.patch("runtimeBudgetAccounts", tenant._id, { overrun: true });
+    const before = canonicalModelJson(f.db.table("runtimeBudgetAccounts"));
+    await expect(f.admit(b)).rejects.toMatchObject({ data: { code: "BUDGET_EXCEEDED", outcome: "not_dispatched", retryable: false,
+      capacity: { version: 1, origin: "unreserved-admission", reason, operationKey: "agent.respond", runBudgetId: b.runBudgetId, semanticId: "semantic", ordinal: 0 } } });
+    expect(canonicalModelJson(f.db.table("runtimeBudgetAccounts"))).toBe(before);
+    expect(f.db.table("runtimeModelOperations")).toHaveLength(0); expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+  });
+  it("an already held checkpoint refusal carries no unreserved-capacity proof", async () => {
+    const { f, a } = await admitted(); const tenant = f.account("tenant");
+    await f.db.patch("runtimeBudgetAccounts", tenant._id, { settledUnits: tenant.limitUnits });
+    let error: unknown; try { await f.checkpoint(a); } catch (caught) { error = caught; }
+    expect(error).toMatchObject({ data: { code: "BUDGET_EXCEEDED" } });
+    expect((error as { data: Record<string, unknown> }).data).not.toHaveProperty("capacity");
+    expect(f.attempt(a.attemptId).state).toBe("reserved"); expect(f.account("run").activeConcurrency).toBe(1);
+  });
+});

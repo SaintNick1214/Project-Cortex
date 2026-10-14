@@ -1,0 +1,5 @@
+import assert from 'node:assert/strict';
+export const V8_MEMORY_PINS=Object.freeze({"ready":true,"sessionId":"2d6e9566-0948-4dd7-8df5-5d7626598a60","name":"next-turtle-281","id":6164369,"expiresAt":1792581314460,"sourceCommit":"03256989da22bde35dff78023c1c3962391a68c6","imageId":"sha256:1f28446423b5da71e8e8a22a32c6ad874acae565710c0cb6fa4c187984952c8b","manifestSha256":"302a0a3fd901f958d023a32c5755a9d159064cf0354eda8a858bee70e3504eb5","backendManifestSha256":"7bf7822e7163f229b89258fee80213252954083e01e876af5c83a1fb54f1e5ce","sdkArchiveSha256":"3bf70d90c0681e61fb384761c7a6946da9ff2057db560fc381c0860d7ba0d45d"});
+export function requireV8MemoryPins(options){assert.equal(V8_MEMORY_PINS.ready,true,'UNREADY_V8: accepted fresh READY pins and root GO required');
+ for(const k of ['sessionId','name','id','expiresAt','sourceCommit','imageId','manifestSha256','sdkArchiveSha256'])assert.equal(options[k],V8_MEMORY_PINS[k],'Exact fresh accepted target/artifact required');
+ assert.match(V8_MEMORY_PINS.backendManifestSha256,/^[a-f0-9]{64}$/);return V8_MEMORY_PINS;}

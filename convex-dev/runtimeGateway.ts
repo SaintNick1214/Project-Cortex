@@ -6,6 +6,7 @@ import { convexGateway } from "@convex-dev/ai-sdk-provider";
 import { traceRuntimePhase } from "./runtimeLatencyTrace";
 import type { RuntimeLatencyMetadata } from "./runtimeLatencyTrace";
 import { wrapEmbeddingModel, wrapLanguageModel } from "ai";
+import { standardizePrompt, convertToLanguageModelPrompt } from "ai/internal";
 import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Result, LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4StreamPart, LanguageModelV4Usage } from "@ai-sdk/provider";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { ModelMessage } from "ai";
@@ -441,6 +442,65 @@ export function checkAgentModelInput(input: AgentRequestPreflightInput, resoluti
   try {
     const result = projectAgentModelRequest(input, resolution, binding, true);
     return result.supported ? { ...result, withinBound: true } : result;
+  } catch (error) {
+    if (error instanceof AgentInputOverflow) return { supported: true, withinBound: false, ...error.bound };
+    throw error;
+  }
+}
+/** Preserve SDK optional fields while detaching descriptor-checked plain data.
+ * Unlike JSON serialization, this never drops undefined inside tool JSON; the
+ * original native canonical validator must still reject such invalid input. */
+function detachedSdkPrompt<T>(input: T): T {
+  const active = new Set<object>();
+  const visit = (value: unknown): unknown => {
+    if (value === undefined || value === null || typeof value === "string" || typeof value === "boolean") return value;
+    if (typeof value === "number" && Number.isFinite(value) && !Object.is(value, -0)) return value;
+    if (typeof value !== "object" || active.has(value)) return fail("INVALID_NATIVE_REQUEST");
+    active.add(value);
+    let copy: unknown;
+    if (Array.isArray(value)) copy = arrayValues(value).map(visit);
+    else {
+      if (![Object.prototype, null].includes(Object.getPrototypeOf(value))) fail("INVALID_NATIVE_REQUEST");
+      const fields: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
+      for (const key of Reflect.ownKeys(value)) {
+        const descriptor = Object.getOwnPropertyDescriptor(value, key)!;
+        if (typeof key !== "string" || !descriptor.enumerable || !("value" in descriptor)) fail("INVALID_NATIVE_REQUEST");
+        Object.defineProperty(fields, key, { value: visit(descriptor.value), enumerable: true });
+      }
+      copy = fields;
+    }
+    active.delete(value);
+    return copy;
+  };
+  return visit(input) as T;
+}
+/** V8 uses the pinned official SDK's complete prompt conversion. There is no
+ * unsupported-shape fit bypass, inference, asset download or ledger mutation.
+ * Only original numeric input/context overflow permits optional-entry shedding. */
+export async function checkAssembledAgentModelInput(input: AgentRequestPreflightInput, resolution: GatewayResolution, binding: GatewayBinding): Promise<AgentModelInputCheck> {
+  proofFor(resolution, Date.now());
+  const agent = agentToolEnvelope(resolution.dispatchEvidence.inputBound.featureEnvelope);
+  if (!agent && resolution.dispatchEvidence.inputBound.featureEnvelope !== "plain-chat-v1") fail("CAPABILITY_UNAVAILABLE");
+  const checked = record(input, ["messages", "context", "instructions", "tools", "maxOutputTokens"]);
+  if (typeof checked.context !== "string" || typeof checked.instructions !== "string") fail("INVALID_NATIVE_REQUEST");
+  const messages = detachedSdkPrompt(arrayValues(checked.messages)) as ModelMessage[];
+  if (checked.context) messages.push({ role: "system", content: `Authorized Cortex context (untrusted evidence):\n${checked.context}` });
+  const names = arrayValues(checked.tools), catalog = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion);
+  if (names.length && !agent || agent && !catalog) fail("CAPABILITY_UNAVAILABLE");
+  const tools = names.map(name => {
+    const tool = catalog?.find(entry => entry.name === name);
+    if (!tool) fail("UNQUALIFIED_TOOL_DEFINITION");
+    return detached(tool);
+  }) as unknown as NonNullable<LanguageModelV4CallOptions["tools"]>;
+  const signal = new AbortController().signal;
+  const standardized = await standardizePrompt({ messages, instructions: checked.instructions, allowSystemInMessages: true });
+  const prompt = await convertToLanguageModelPrompt({ prompt: standardized, supportedUrls: {}, abortSignal: signal,
+    download: async planned => { if (planned.length) fail("CAPABILITY_UNAVAILABLE"); return []; } });
+  try {
+    const projected = languageParams({ prompt, maxOutputTokens: checked.maxOutputTokens as number,
+      ...(tools.length ? { tools, toolChoice: { type: "auto" as const } } : {}) },
+      resolution.snapshot, resolution.dispatchEvidence, binding, signal, "preflight", true);
+    return { supported: true, withinBound: true, requestCanonical: canonicalModelJson(projected.request) };
   } catch (error) {
     if (error instanceof AgentInputOverflow) return { supported: true, withinBound: false, ...error.bound };
     throw error;

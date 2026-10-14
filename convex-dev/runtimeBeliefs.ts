@@ -11,7 +11,7 @@ import { BELIEF_POLICY_VERSION } from "../src/domain/ingestion";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { ingestionStage } from "./runtimeIngestionSchema";
 import { ConvexMemoryRepository } from "./runtimeMemoryRepository";
-import { finishBeliefStage, requireStageCommit, ingestionDenied } from "./runtimeIngestion";
+import { finishBeliefStage, requireStageCommit, ingestionDenied, identicalBelief } from "./runtimeIngestion";
 import type { StageLease } from "./runtimeIngestion";
 import { enqueueFactProjection } from "./runtimeGraph";
 
@@ -76,3 +76,31 @@ export async function commitBeliefPlan(ctx: MutationCtx, args: StageLease & { pl
 }
 export const commit = internalMutation({ args: { reference: runtimeAuthorityReference, eventId: v.string(), stage: ingestionStage,
   attempt: v.number(), leaseVersion: v.number(), planCanonical: v.string() }, handler: async (ctx, args) => await commitBeliefPlan(ctx, args) });
+
+/** Recompute a refused CAS from confirmed extraction and the fresh native
+ * read-set. No model call, stale write, or automatic paid decision is possible. */
+export const replan = internalMutation({ args: { reference: runtimeAuthorityReference, eventId: v.string(), stage: ingestionStage,
+  attempt: v.number(), leaseVersion: v.number(), planCanonical: v.string() }, handler: async (ctx, args) => {
+  const current = await requireStageCommit(ctx, args);
+  if (args.stage !== "facts" || current.source.lineage.role === "assistant" || new TextEncoder().encode(args.planCanonical).length > 1_000_000) ingestionDenied("INVALID_INPUT");
+  const prior = JSON.parse(args.planCanonical) as BeliefPlanV1;
+  if (canonicalModelJson(prior) !== args.planCanonical || prior.version !== 1 || prior.eventId !== current.event.eventId
+    || prior.sequence !== current.event.sequence || prior.sourceHash !== current.source.contentHash
+    || current.stage.payloadCanonical !== args.planCanonical) ingestionDenied("INVALID_BELIEF_PLAN");
+  const extraction = await ctx.db.query("runtimeIngestionStages").withIndex("by_event_stage", q => q.eq("tenantId", current.event.tenantId)
+    .eq("memorySpaceId", current.event.memorySpaceId).eq("eventId", current.event.eventId).eq("stage", "extract")).unique();
+  if (!extraction || extraction.state !== "complete" || !extraction.payloadCanonical) ingestionDenied("INVALID_STATE");
+  const candidates = JSON.parse(extraction.payloadCanonical) as AttributedFact[];
+  const existing = await new ConvexMemoryRepository(ctx, args.reference, "write", ctx.db).listFacts({ limit: 100 });
+  if (existing.length === 100) ingestionDenied("BELIEF_SCOPE_TOO_BROAD");
+  // No historical paid decision is rebound to a different read-set. Equal
+  // assertions are deterministic NONE; other conflicts require disposition.
+  const plan = await planBeliefs({ eventId: current.event.eventId, sequence: current.event.sequence, source: current.source, candidates, existing,
+    resolve: async (candidate, matching) => {
+      const duplicate = identicalBelief(candidate, matching); if (duplicate) return duplicate;
+      return ingestionDenied("REPLAN_REQUIRED");
+    } });
+  // The original native commit repeats every policy/lease/source/read-version
+  // and order fence, with all effects in this same mutation snapshot.
+  return await commitBeliefPlan(ctx, { ...args, planCanonical: canonicalModelJson(plan) });
+} });

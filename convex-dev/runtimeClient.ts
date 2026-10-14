@@ -107,7 +107,9 @@ export const signal = query({
       .eq("memorySpaceId", value.run.scope.memorySpaceId).eq("runId", value.run.runId).eq("attemptNumber", value.run.attemptNumber)).unique();
     const marker = await semanticHash(canonicalModelJson({ attempt: value.run.attemptNumber,
       updatedAt: value.run.updatedAt, memoryStatus: value.run.memoryStatus, state: value.state, cursor: value.cursor,
-      outputRevision: execution?.nextOutputSequence ?? 0, executionRevision: execution?.updatedAt ?? 0 }));
+      // Execution bookkeeping alone has no delivered change. Source/authority
+      // dependencies above still re-evaluate and deny stale observers.
+      outputRevision: execution?.nextOutputSequence ?? 0 }));
     return { version: 1 as const, marker,
       ...(value.deliveryExpiresAt === undefined ? {} : { deliveryExpiresAt: value.deliveryExpiresAt }) };
   },

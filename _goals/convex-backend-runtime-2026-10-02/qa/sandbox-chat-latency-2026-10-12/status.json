@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K20 all4ordinarySLOFAIL; publicrecallfunctionPASS/speedFAIL; supplementalpreflightboundFAIL; canonicalremembergapconfirmed; cleanupnext",
+  "phase": "K21 allfour ordinary replies COMPLETE, SLO0/4; native memory/auth proofs and delay diagnosis running",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T09:34:46.554674+00:00",
+  "updatedAt": "2026-10-14T13:05:29.933489+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,70 +58,63 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "generation": "K20",
-    "sessionId": "eaef43cc-1e21-4c97-9885-1796e48d7d30",
-    "state": "CLEANED",
-    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
-    "imageId": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d",
+    "generation": "K21",
+    "sessionId": "2d6e9566-0948-4dd7-8df5-5d7626598a60",
+    "state": "READY",
+    "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+    "imageId": "sha256:1f28446423b5da71e8e8a22a32c6ad874acae565710c0cb6fa4c187984952c8b",
+    "launcherSession": 85056,
+    "nativeSLOQualified": false,
+    "fixedStartupCeilingUnits": 2700000,
     "target": {
-      "name": "trustworthy-cricket-487",
-      "id": 6161421,
+      "id": 6164369,
+      "name": "next-turtle-281",
+      "kind": "cloud",
       "teamId": 325340,
       "projectId": 3200658,
-      "reference": "dev/cortex-sandbox-eaef43cc-1e21-4c97-9885-1796e48d7d30",
+      "reference": "dev/cortex-sandbox-2d6e9566-0948-4dd7-8df5-5d7626598a60",
+      "deploymentType": "dev",
       "isDefault": false,
-      "expiresAt": 1792572558247
+      "expiresAt": 1792581314460,
+      "deploymentUrl": "https://next-turtle-281.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
     },
     "ports": {
-      "web": 3322,
-      "basic": 3323
+      "web": 3218,
+      "basic": 3219
     },
-    "launcherSession": 83597,
-    "nativeSLOQualified": false,
     "startupFixedQualification": "8/8 actualnativePASS",
     "traceEnabledBeforeChat": true,
-    "cleanupReceipt": "k20-cleanup-final.json",
-    "launcherExit": 130,
+    "browserTab37": "signedout/closed",
+    "cliExecSession": 77828,
+    "cliExit": 0,
     "clientsClosed": true
   },
   "actualSamples": {
-    "generation": "K11",
-    "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
-    "browserFirstAfterPaintMs": 10364.399999976158,
-    "browserWarmAfterPaintMs": 11082.699999928474,
-    "browserLatencyMeasured": true,
-    "browserResponses": "COMPLETE",
-    "browserNativeMemory": "4/4 positive facts/vectors/currentauthority/nativeusage/provenance PASS",
-    "cliFirstStdoutAcknowledgedMs": null,
-    "cliFirstOutcome": "REQUEST_DEADLINE_EXCEEDED at original30000ms; no firstprinted event",
-    "cliWarmFirstStdoutAcknowledgedMs": 22490.07196900001,
-    "cliWarmOutcome": "COMPLETE under original30000ms",
-    "cliRecovery": "Same-run /observe after originaldeadline; no paidretry; COMPLETE and native positive memory",
-    "cliNativeMemory": "8/8 facts/vector contiguous through8/8 PASS",
-    "originalDeadlineMs": 30000,
-    "auth": {
-      "invalidSignature": "UNAUTHENTICATED1568.996ms PASS",
-      "expiredSigned": "AUTHENTICATION_TIMEOUT4002.111ms FAIL; zero protectedpayload/RPC; native reject reason unavailable"
-    },
-    "readiness": {
-      "factsThrough": 8,
-      "vectorsThrough": 8,
-      "graphRequired": false
-    },
+    "generation": "K21",
+    "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+    "browserFirstAfterPaintMs": 3781.100000023842,
+    "browserWarmAfterPaintMs": 7182.600000023842,
+    "cliFirstStdoutAcknowledgedMs": 10605.955964000004,
+    "cliWarmFirstStdoutAcknowledgedMs": 10822.097005000003,
+    "responses": "COMPLETE4/4",
+    "sloPass": 0,
+    "sloTotal": 4,
     "subsecondAccepted": false,
+    "nativeMemoryAcceptance": "PASS4/4positive userfacts +8/8canonical sourcevectors/profile/nativeusage/currentauthority; contiguousthrough8",
+    "authHTTPComparison": "PASS officialHTTPvalid200, expired/invalid401, absentUNAUTHENTICATED; originalWS timeoutfailures unchanged",
+    "browserSelectorFailures": 2,
+    "resubmissions": 0,
+    "originalDeadlineMs": 30000,
     "requiredIntegrationAccepted": false,
-    "receipts": [
-      "cloud-k11-delay-chain.md",
-      "k11-auth-diagnostic-outcomes.md",
-      "k11-cli-memory-native-v2-first-warm-verification-1791920063160.json",
-      "k11-financial-metadata-1791920083120.json",
-      "browser/k11-readiness-observation.json",
-      "k11-cleanup-final.json"
-    ]
+    "nativeMemoryReceipt": "k21-memory-native-v2-four-run-verification-1791977137881.json",
+    "ordinaryRemember": "FAIL second equal-content canonicalcapture asynchronousINDEXING_FAILED; firstpaircomplete secondfailed; replay/distinctcapturessucceeded; no publicrecall or negatives run",
+    "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
   },
   "pendingRepairs": [
-    "Coherent measured ordinary startup/recall/delivery repair preserving current authority/accounting/source/replay gates",
-    "ExpiredJWT timeout failure remains unresolved",
+    "Fresh V8 installed hosted/browser/CLI/public memory and tool qualification",
+    "Expired/invalid JWT WebSocket timeout failures remain unresolved",
     "Hosted under1000ms and independent final audit incomplete"
   ],
   "refinements": [
@@ -250,6 +243,14 @@
         "skips": 0
       },
       "liveIntegration": "Pending fresh immutable hosted candidate; no timing/OCC success inferred"
+    },
+    {
+      "name": "V8 bounded whole context, canonical ordinary exchanges, native public recall composition and separate memory progress",
+      "sourceGate": "PASS3.8",
+      "sourcePercent": 100,
+      "review": "v8-coherent-joint-review.json",
+      "commit": "03256989da22bde35dff78023c1c3962391a68c6",
+      "liveIntegration": "PENDING; no current native SLO or functional acceptance"
     }
   ],
   "priorEnvironmentCleanup": "k3-cleanup-final.json",
@@ -450,6 +451,33 @@
       "backendTraceVerified": true,
       "financialSnapshot": "k10-financial-metadata-1791915701228.json",
       "cleanup": "k10-cleanup-final.json"
+    },
+    {
+      "generation": "K20",
+      "sessionId": "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+      "state": "CLEANED",
+      "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+      "imageId": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d",
+      "target": {
+        "name": "trustworthy-cricket-487",
+        "id": 6161421,
+        "teamId": 325340,
+        "projectId": 3200658,
+        "reference": "dev/cortex-sandbox-eaef43cc-1e21-4c97-9885-1796e48d7d30",
+        "isDefault": false,
+        "expiresAt": 1792572558247
+      },
+      "ports": {
+        "web": 3322,
+        "basic": 3323
+      },
+      "launcherSession": 83597,
+      "nativeSLOQualified": false,
+      "startupFixedQualification": "8/8 actualnativePASS",
+      "traceEnabledBeforeChat": true,
+      "cleanupReceipt": "k20-cleanup-final.json",
+      "launcherExit": 130,
+      "clientsClosed": true
     }
   ],
   "nextCandidate": {
@@ -1227,7 +1255,7 @@
     "authorized": true,
     "artifact": "bounded-model-input-user-decision-2026-10-14.json",
     "scope": "fewrelevantentries+recenthistory; fullper-messagecanonicalstore retained; samecaps",
-    "state": "implementation in progress; exact fit helper focused18/18PASS"
+    "state": "Source committed and fixed-size selection exercised; native tool continuation exposed unsupported-shape numeric-fit gap; repair underway"
   },
   "canonicalRememberGap": {
     "report": "memory-remember-canonical-compatibility-current.md",
@@ -1331,5 +1359,92 @@
     },
     "sourceAcceptancePercent": 100,
     "goalComplete": false
+  },
+  "toolTest": {
+    "runId": "run:666cc944a716d927af6103f027e850e16271ce7d25acba16c5f2dfe275b21def",
+    "state": "FAILED/INTERRUPTED_REQUIRES_RECONCILIATION; successful memory tool effect retained",
+    "observerDisconnectReconnect": "same durable pendingrequest observed",
+    "approvalCalls": 1,
+    "finalNativeAcceptance": false,
+    "browserTab": 38,
+    "toolEffect": "SUCCEEDED",
+    "finalResponse": "FAILED",
+    "numericInput": 41870,
+    "configuredInputLimit": 32768,
+    "leafReport": "k21-tool-continuation-leaf-diagnosis.md",
+    "browserSignedOutClosed": true,
+    "noRetry": true
+  },
+  "k21ActualSamples": {
+    "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+    "browserFirstMs": 3781.100000023842,
+    "browserWarmMs": 7182.600000023842,
+    "cliFirstMs": 10605.955964000004,
+    "cliWarmMs": 10822.097005000003,
+    "responses": "4/4COMPLETE",
+    "sloPasses": 0,
+    "sloFailures": 4,
+    "paidRetries": 0,
+    "fourForegroundMemoryProof": {
+      "status": "PASS",
+      "freshChecks": 45,
+      "positiveUserFacts": "4/4",
+      "sourceVectors": "8/8",
+      "contiguousThrough": 8,
+      "receipt": "k21-memory-native-v2-four-run-verification-1791977137881.json"
+    },
+    "ordinaryRemember": {
+      "status": "FAIL",
+      "leafFailures": [
+        "FACT_VERSION_CONFLICT",
+        "BUDGET_EXCEEDED"
+      ],
+      "budgetSubpredicate": "UNAVAILABLE",
+      "report": "v8-ordinary-memory-failure-and-repair-scope.md",
+      "nativePublicRecallAndNegativeHalf": "NOT_EXECUTED"
+    },
+    "httpAuth": "4/4PASS; prior WS failures unchanged",
+    "finance": {
+      "attempts": 39,
+      "activeSlots": 0,
+      "allReleased": true,
+      "reservationCeilingUnits": 5800000,
+      "actualCharges": "UNKNOWN",
+      "receipt": "k21-financial-metadata-1791978762164.json"
+    },
+    "delayReport": "k21-whole-path-delay-diagnosis.md",
+    "cleanup": {
+      "status": "ABSENT",
+      "launcherExit": 130,
+      "freshVerificationExit": 0,
+      "receipt": "k21-cleanup-final.json",
+      "allReadersClosed": true
+    }
+  },
+  "currentRepairBatch": {
+    "state": "Independent PASS3.8 source/test/docsONLY; ready for incremental commit and fresh packaging/native qualification",
+    "sourceBaseline": "03256989da22bde35dff78023c1c3962391a68c6",
+    "owners": {
+      "actualWholePromptFitAndContextFanout": "cloud_checkpoint_composition",
+      "repeatCaptureCASAndPredispatchCapacity": "latency_backend_repair"
+    },
+    "nativeQualified": false,
+    "goalPercent": 50,
+    "rootAssembledInputAndDiagnostics": {
+      "implementationPercent": 100,
+      "focusedChecksPercent": 100,
+      "tests": "60/60/2suites/0skip",
+      "receipt": "v8-assembled-input-root-receipt-v3.json",
+      "nativeQualified": false,
+      "observationTests": "37/37/2suites/0skip; two fixturetypeguards successor pending"
+    },
+    "implementationPercent": 100,
+    "independentReviewPercent": 100,
+    "sharedQualityPercent": 100,
+    "qualityReceipt": "v8-native-repair-joint-quality-final-receipt.json",
+    "reviewPacket": "v8-native-repair-review-packet-v2.json",
+    "verdict": "PASS3.8 source/test/docsONLY",
+    "breakingFindings": 0,
+    "review": "v8-native-repair-independent-review.md"
   }
 }

@@ -127,4 +127,36 @@ describe("private observation transaction composition", () => {
     expect(Object.keys(signal).sort()).toEqual(["marker", "version"]); expect(signal.marker).toMatch(/^[a-f0-9]{64}$/);
     expect(JSON.stringify(signal)).not.toMatch(/PRIVATE|runId|parts|approvals/);
   });
+  it("execution bookkeeping without a visible change keeps the same opaque invalidation value", async () => {
+    const f = await fixture(), first = await f.call(client.signal, { runId: f.handle.runId });
+    const owned = f.db.table("runtimeAgentExecutions")[0];
+    if (typeof owned.updatedAt !== "number") throw Error("Expected native fixture timestamp");
+    owned.updatedAt += 1;
+    expect(await f.call(client.signal, { runId: f.handle.runId })).toEqual(first);
+    expect((await f.observe()).observation.parts).toEqual([{ sequence: 1, part: { type: "text-delta", text: "PRIVATE_CURRENT_TEXT", id: "text" } }]);
+  });
+  it("new durable output changes the marker even with fixed timestamps and an unchanged first-page cursor", async () => {
+    const f = await fixture(), first = await f.call<{ marker: string }>(client.signal, { runId: f.handle.runId });
+    const owned = f.db.table("runtimeAgentExecutions")[0], time = owned.updatedAt;
+    if (typeof time !== "number") throw Error("Expected native fixture timestamp");
+    jest.spyOn(Date, "now").mockReturnValue(time);
+    await f.call(runtime.recordOutput, { reference: f.reference, runId: f.handle.runId, attemptNumber: 1,
+      leaseVersion: owned.leaseVersion, parts: [{ type: "text-delta", text: "PRIVATE_NEXT_TEXT", id: "text" }] });
+    expect((await f.call<{ marker: string }>(client.signal, { runId: f.handle.runId })).marker).not.toBe(first.marker);
+    expect((await f.observe()).observation.parts.map(value => value.sequence)).toEqual([1, 2]);
+  });
+  it.each(["state", "memory"])("visible %s changes still invalidate with an unchanged update timestamp", async kind => {
+    const f = await fixture(), first = await f.call<{ marker: string }>(client.signal, { runId: f.handle.runId });
+    if (kind === "state") f.db.table("runtimeAgentExecutions")[0].state = "waiting_approval";
+    else f.db.table("runtimeRuns")[0].memoryStatus = "complete";
+    expect((await f.call<{ marker: string }>(client.signal, { runId: f.handle.runId })).marker).not.toBe(first.marker);
+  });
+  it("shortened authority expiry is projected even when the opaque marker is unchanged; revocation still denies", async () => {
+    const f = await fixture(), first = await f.call<{ marker: string; deliveryExpiresAt?: number }>(client.signal, { runId: f.handle.runId });
+    const expiresAt = Date.now() + 60000; f.grant.expiresAt = expiresAt;
+    const next = await f.call<{ marker: string; deliveryExpiresAt?: number }>(client.signal, { runId: f.handle.runId });
+    expect(next.marker).toBe(first.marker); expect(next.deliveryExpiresAt).toBe(expiresAt);
+    f.grant.revokedAt = Date.now();
+    await expect(f.call(client.signal, { runId: f.handle.runId })).rejects.toThrow("FORBIDDEN");
+  });
 });

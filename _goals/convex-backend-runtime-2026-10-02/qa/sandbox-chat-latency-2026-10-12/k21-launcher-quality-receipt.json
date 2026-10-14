@@ -1,0 +1,46 @@
+{
+  "observedAt": "2026-10-14T11:15:14.218921+00:00",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "results": [
+    {
+      "log": "k21-launcher-local-v1.log",
+      "sha256": "3f20ecd9bb55ccff35ba5e2a9b5482719784a47ab588cdda81d8eda7a958c3ac",
+      "exitCode": 1,
+      "tests": 73,
+      "pass": 70,
+      "fail": 3,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "log": "k21-launcher-framing-v2.log",
+      "sha256": "0712b2554f96770df3ef3409f93be832f5cdb21550d5b5146aee1b09a07ff1f7",
+      "exitCode": 0,
+      "tests": 38,
+      "pass": 38,
+      "fail": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "log": "k21-launcher-qualification-v2.log",
+      "sha256": "7e46fe6f489e507913366b65d03bbe014acd71c3947b779409ca4c8f85142ea6",
+      "exitCode": 0,
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "log": "k21-launcher-dry-run-v1.log",
+      "sha256": "a6e7ae1015085ed94177717292ac477c36a2156612a1f7b374899865244cf918",
+      "exitCode": 0
+    }
+  ],
+  "failure": "Initial command omitted existing tsx loader for direct-source TypeScript fixtures;3fail/70pass preserved. Successors use actual tsx loader in NODE_OPTIONS inherited by child processes; assertions/product unchanged",
+  "passed": true,
+  "paidCalls": 0,
+  "nativeQualified": false
+}

@@ -47,6 +47,28 @@ it("hashes nonopaque run/account correlation synchronously and keeps determinist
     expect(output.mock.calls[0][0]).not.toContain(value);
   }
 });
+it("projects only checked scalar selection counts and bounds with no context or tool payload", () => {
+  process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
+  const output = jest.spyOn(console, "log").mockImplementation(() => {});
+  traceRuntimePhase(`run:${"a".repeat(64)}`, 1, "context.selection.fitted", {
+    selectedMessages: 4, selectedMemories: 3, selectedFacts: 2, selectedPending: 0, contextBytes: 512,
+    inputTokens: 12000, inputLimit: 32768, context: "PRIVATE_CONTEXT", toolResult: { text: "PRIVATE_TOOL" },
+  } as RuntimeLatencyMetadata);
+  expect(JSON.parse(output.mock.calls[0][0] as string)).toEqual({ runId: `run:${"a".repeat(64)}`, attemptNumber: 1,
+    phase: "context.selection.fitted", at: expect.any(Number), selectedMessages: 4, selectedMemories: 3, selectedFacts: 2,
+    selectedPending: 0, contextBytes: 512, inputTokens: 12000, inputLimit: 32768 });
+  expect(output.mock.calls[0][0]).not.toMatch(/PRIVATE_CONTEXT|PRIVATE_TOOL/);
+});
+it.each([-1, 0.25, Number.NaN, Infinity, Number.MAX_SAFE_INTEGER + 1, "PRIVATE", { body: "PRIVATE" }])("omits invalid selection diagnostic values %j", value => {
+  process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
+  const output = jest.spyOn(console, "log").mockImplementation(() => {});
+  traceRuntimePhase(`run:${"a".repeat(64)}`, 1, "context.selection.fitted", {
+    selectedMessages: value, selectedMemories: value, selectedFacts: value, selectedPending: value,
+    contextBytes: value, inputTokens: value, inputLimit: value,
+  } as unknown as RuntimeLatencyMetadata);
+  expect(JSON.parse(output.mock.calls[0][0] as string)).toEqual({ runId: `run:${"a".repeat(64)}`, attemptNumber: 1,
+    phase: "context.selection.fitted", at: expect.any(Number) });
+});
 it("defaults tracing off in the actual Workflow0.4.8 deterministic environment and reaches the next product step", () => {
   process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
   const output = jest.spyOn(console, "log").mockImplementation(() => {});

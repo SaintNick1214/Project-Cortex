@@ -1,0 +1,206 @@
+(node:69994) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/bounded-context-v8.test.ts (5.392 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● later exact-bound continuation keeps the complete 1300 byte tool result or refuses without truncation
+
+    INVALID_INPUT: noncanonical JSON
+
+      259 |     if (value === null || typeof value === "boolean" || typeof value === "string") return JSON.stringify(value);
+      260 |     if (typeof value === "number" && Number.isFinite(value) && !Object.is(value, -0)) return JSON.stringify(value);
+    > 261 |     if (typeof value !== "object" || active.has(value)) throw new Error("INVALID_INPUT: noncanonical JSON");
+          |                                                               ^
+      262 |     active.add(value);
+      263 |     let result: string;
+      264 |     if (Array.isArray(value)) {
+
+      at visit (src/domain/model-policy.ts:261:63)
+      at src/domain/model-policy.ts:279:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:279:47)
+      at visit (src/domain/model-policy.ts:272:22)
+      at src/domain/model-policy.ts:279:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:279:47)
+      at visit (src/domain/model-policy.ts:272:22)
+      at canonicalModelJson (src/domain/model-policy.ts:284:10)
+      at tests/unit/runtimeAgent/bounded-context-v8.test.ts:80:24
+
+  ● later exact-bound continuation keeps the complete 7000 byte tool result or refuses without truncation
+
+    INVALID_INPUT: noncanonical JSON
+
+      259 |     if (value === null || typeof value === "boolean" || typeof value === "string") return JSON.stringify(value);
+      260 |     if (typeof value === "number" && Number.isFinite(value) && !Object.is(value, -0)) return JSON.stringify(value);
+    > 261 |     if (typeof value !== "object" || active.has(value)) throw new Error("INVALID_INPUT: noncanonical JSON");
+          |                                                               ^
+      262 |     active.add(value);
+      263 |     let result: string;
+      264 |     if (Array.isArray(value)) {
+
+      at visit (src/domain/model-policy.ts:261:63)
+      at src/domain/model-policy.ts:279:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:279:47)
+      at visit (src/domain/model-policy.ts:272:22)
+      at src/domain/model-policy.ts:279:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:279:47)
+      at visit (src/domain/model-policy.ts:272:22)
+      at canonicalModelJson (src/domain/model-policy.ts:284:10)
+      at tests/unit/runtimeAgent/bounded-context-v8.test.ts:80:24
+
+PASS tests/unit/runtimeAgent/request-preflight.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/model-input-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.4s | 11/13 passed | /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ✅     1.7s | 17/17 passed | /tests/unit/runtimeAgent/request-preflight.test.ts
+  ✅     0.3s | 13/13 passed | /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.70s ( 9.2%) - long retained history selects recent four without full-history reads or byte-cap rejection
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 2. [32m✓[0m    0.08s ( 1.1%) - exact-bound omitted recent source remains eligible before recall, with no second embedding
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 3. [32m✓[0m    0.05s ( 0.7%) - new candidate retains all original prepared values and final DB effects, adding no activation RPC
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 4. [32m✓[0m    0.05s ( 0.6%) - known five pending sources retain four current whole sources and explicit withheld incompleteness
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.6%) - new definition actually selects V8 direct scheduling; old definitions stay on V6
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.6%) - real exact-bound candidate drops optional whole entries and retains current input
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.6%) - known later-turn bounds refusal retains completed model/approved tool/history and original durable failure disposition
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.4%) - mandatory overflow refuses before begin/start and save survives refused child rollback
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.4%) - revocation still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+10. [32m✓[0m    0.03s ( 0.3%) - strict V8 retains native Workflow and original stage barrier
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+11. [32m✓[0m    0.03s ( 0.3%) - a durable started operation is never restarted or preflight-readmitted
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+12. [32m✓[0m    0.03s ( 0.3%) - complete over-cap context is refused before operation start and rolls back all preparation effects
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+13. [32m✓[0m    0.03s ( 0.3%) - a durable unknown operation is never restarted or preflight-readmitted
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+14. [32m✓[0m    0.03s ( 0.3%) - completed operation reconciliation returns original saved result before any new preparation effect
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+15. [32m✓[0m    0.02s ( 0.3%) - snapshot-policy still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+16. [32m✓[0m    0.02s ( 0.3%) - compound save commits the original context while refused child preparation rolls back every new operation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+17. [32m✓[0m    0.02s ( 0.3%) - installed Agent start invokes the actual product fresh context hook before one pending save
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+18. [32m✓[0m    0.02s ( 0.3%) - original qualification refusal and rollback remain identical to the legacy preparation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+19. [32m✓[0m    0.02s ( 0.3%) - installed Agent fresh hook denies bound-growth before pending storage and before any provider/admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+20. [31m✗[0m    0.02s ( 0.3%) - later exact-bound continuation keeps the complete 1300 byte tool result or refuses without truncation
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.34s (17.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.56s
+  Test suites:        3
+  Individual tests:   37
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       2 failed, 41 passed, 43 total
+Snapshots:   0 total
+Time:        7.562 s
+Ran all test suites within paths "tests/unit/runtimeAgent/model-input-selection.test.ts", "tests/unit/runtimeAgent/bounded-context-v8.test.ts", "tests/unit/runtimeAgent/request-preflight.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-focused-v1.json

@@ -17,10 +17,12 @@ import type { ModelOperationKey, ModelPolicySnapshotV1 } from "../src/domain/mod
 import { buildConflictResolutionPrompt } from "../src/domain/conflicts";
 import { planBeliefs, beliefSlot } from "../src/domain/belief-plan";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { ingestionStage } from "./runtimeIngestionSchema";
+import { ingestionStage, unreservedCapacityRefusal } from "./runtimeIngestionSchema";
 import { ConvexMemoryRepository, createActionMemoryRepository } from "./runtimeMemoryRepository";
 import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth";
-import { bindTrustedBudget } from "./runtimeModelPolicy";
+import { bindTrustedBudget, assertUnreservedIngestionCapacity } from "./runtimeModelPolicy";
+import type { UnreservedCapacityRefusal } from "./runtimeModelPolicy";
+import type { ConflictDecision } from "../src/domain/conflicts";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 
 type ReadCtx = Pick<QueryCtx, "db">;
@@ -265,6 +267,17 @@ export const claim = internalMutation({ args: stageArgs, handler: async (ctx, ar
     await readiness(ctx, current.event); return null;
   }
   if (row.state !== "pending") return null;
+  // Capacity wakes are the SAME never-dispatched stage intent, not a new paid
+  // retry. Keep the first lease deadline and operation identity across wakes.
+  if (row.capacityWait) {
+    if (![row.capacityWait.deadline, row.capacityWait.notBefore, row.capacityWait.wakes, row.attempt].every(Number.isSafeInteger)
+      || row.capacityWait.wakes < 1 || row.attempt < 1 || row.capacityWait.notBefore >= row.capacityWait.deadline) ingestionDenied("INGESTION_CONFLICT");
+    if (Date.now() >= row.capacityWait.deadline || row.capacityWait.wakes > 64) {
+      await writeStage(ctx, current.event, row, { state: "failed", failureCode: "CAPACITY_WAIT_EXPIRED", updatedAt: Date.now() });
+      await readiness(ctx, current.event); return null;
+    }
+    if (Date.now() < row.capacityWait.notBefore) return null;
+  }
   if (args.stage !== "extract" && current.source.lineage.role !== "assistant") {
     const dependency = await stageRow(ctx, current.event, args.stage === "facts" ? "extract" : "facts");
     if (dependency.state !== "complete" && dependency.state !== "skipped") return null;
@@ -276,8 +289,16 @@ export const claim = internalMutation({ args: stageArgs, handler: async (ctx, ar
     const id = await ctx.db.insert("runtimeIngestionJobs", { tenantId: current.event.tenantId, memorySpaceId: current.event.memorySpaceId,
       eventId: args.eventId, ...budget, requestCanonical, createdAt: Date.now() }); job = (await ctx.db.get("runtimeIngestionJobs", id))!;
   }
-  await writeStage(ctx, current.event, row, { state: "running", attempt: row.attempt + 1, leaseVersion: row.leaseVersion + 1,
-    leaseExpiresAt: Date.now() + INGESTION_LEASE_MS, updatedAt: Date.now() });
+  if (row.capacityWait) {
+    const account = await ctx.db.get("runtimeBudgetAccounts", job.runAccountId);
+    if (!account || !account.reference || account.kind !== "run" || account.runBudgetId !== job.runBudgetId
+      || canonicalModelJson(account.reference) !== canonicalModelJson(args.reference)) ingestionDenied("POLICY_DENIED");
+    if (!account.current || account.cancelled || account.overrun || Date.now() < account.windowStart || Date.now() >= account.windowEnd) ingestionDenied("BUDGET_EXCEEDED");
+  }
+  const attempt = row.capacityWait ? row.attempt : row.attempt + 1;
+  const leaseExpiresAt = row.capacityWait?.deadline ?? Date.now() + INGESTION_LEASE_MS;
+  await writeStage(ctx, current.event, row, { state: "running", attempt, leaseVersion: row.leaseVersion + 1,
+    leaseExpiresAt, updatedAt: Date.now() });
   const parentOperationId = args.stage === "extract" ? undefined : await extractionParent(ctx, current.event, job);
   const resolution = await ctx.runQuery(ref<"query", { reference: RuntimeAuthorityReference; operationKey: ModelOperationKey; runBudgetId: string;
     source: { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string }; parentOperationId?: Id<"runtimeModelOperations"> }, { snapshot: ModelPolicySnapshotV1 }>("query", "runtimeModelPolicy:resolve"),
@@ -295,12 +316,48 @@ export const claim = internalMutation({ args: stageArgs, handler: async (ctx, ar
     }
   }
   await ctx.db.patch("runtimeIngestionStages", row._id, { policyCanonical });
-  await ctx.scheduler.runAfter(INGESTION_LEASE_MS + 1, ref<"mutation", StageLease, null>("mutation", "runtimeIngestion:expireStage"),
-    { reference: args.reference, eventId: args.eventId, stage: args.stage, attempt: row.attempt + 1, leaseVersion: row.leaseVersion + 1 });
-  return { reference: args.reference, eventId: args.eventId, stage: args.stage, attempt: row.attempt + 1, leaseVersion: row.leaseVersion + 1, runBudgetId: job.runBudgetId,
+  await ctx.scheduler.runAfter(leaseExpiresAt - Date.now() + 1, ref<"mutation", StageLease, null>("mutation", "runtimeIngestion:expireStage"),
+    { reference: args.reference, eventId: args.eventId, stage: args.stage, attempt, leaseVersion: row.leaseVersion + 1 });
+  return { reference: args.reference, eventId: args.eventId, stage: args.stage, attempt, leaseVersion: row.leaseVersion + 1, runBudgetId: job.runBudgetId,
     ...(parentOperationId ? { parentOperationId } : {}) };
 } });
 const leaseArgs = { ...stageArgs, attempt: v.number(), leaseVersion: v.number() };
+/** Known, fresh, never-reserved capacity waits use Scheduler's original action
+ * ownership. A failed/late child rolls back; the original Action records failure. */
+export const waitForCapacity = internalMutation({ args: { ...leaseArgs, refusal: unreservedCapacityRefusal }, handler: async (ctx, args) => {
+  const current = await requireStageCommit(ctx, args);
+  const job = await ctx.db.query("runtimeIngestionJobs").withIndex("by_event", q => q.eq("tenantId", current.event.tenantId)
+    .eq("memorySpaceId", current.event.memorySpaceId).eq("eventId", args.eventId)).unique();
+  if (!job || args.refusal.runBudgetId !== job.runBudgetId || args.refusal.operationKey !== stageOperation[args.stage]) ingestionDenied("RETRY_NOT_SAFE");
+  const operationId = `${args.eventId}:${args.stage}:${args.attempt}`;
+  const policy = args.stage === "extract" ? current.event.extractionVersion : args.stage === "facts" ? current.event.beliefVersion : current.event.profile.profileId;
+  const identities = await Promise.all(Array.from({ length: args.stage === "facts" ? 100 : 1 }, (_, ordinal) => semanticHash(canonicalModelJson([
+    stageOperation[args.stage], args.stage === "facts" ? `${operationId}:${ordinal}` : operationId, policy]))));
+  if (!identities.includes(args.refusal.semanticId)) ingestionDenied("RETRY_NOT_SAFE");
+  // No previous candidate/chunk may have dispatched under this stage intent.
+  // A later capacity refusal cannot replay an earlier paid batch/resolver.
+  for (const semanticId of identities) {
+    const operations = await ctx.db.query("runtimeModelOperations").withIndex("by_identity", q => q.eq("tenantId", args.reference.tenantId)
+      .eq("memorySpaceId", args.reference.memorySpaceId!).eq("principalId", args.reference.principalId).eq("semanticId", semanticId)
+      .eq("operationKey", stageOperation[args.stage])).take(1);
+    if (operations.length) ingestionDenied("RETRY_NOT_SAFE", true);
+  }
+  const parent = args.stage === "extract" ? undefined : await extractionParent(ctx, current.event, job);
+  const bound = await assertUnreservedIngestionCapacity(ctx, args.reference, args.refusal, {
+    sourceId: current.source.lineage.sourceId, sourceEventId: current.source.lineage.sourceEventId,
+    sourceRevision: current.source.lineage.sourceRevision, contentHash: current.source.contentHash }, parent);
+  const deadline = Math.min(current.stage.capacityWait?.deadline ?? current.stage.leaseExpiresAt!, bound);
+  const wakes = (current.stage.capacityWait?.wakes ?? 0) + 1;
+  const delay = Math.min(2000, 250 * 2 ** Math.min(wakes - 1, 3));
+  if (wakes > 64 || Date.now() + delay >= deadline) ingestionDenied("CAPACITY_WAIT_EXPIRED");
+  await writeStage(ctx, current.event, current.stage, { state: "pending", leaseExpiresAt: deadline,
+    capacityWait: { deadline, notBefore: Date.now() + delay, wakes }, updatedAt: Date.now() });
+  await readiness(ctx, current.event);
+  await ctx.scheduler.runAfter(delay, processRef, { reference: args.reference, eventId: args.eventId, stage: args.stage });
+  await ctx.scheduler.runAfter(deadline - Date.now() + 1, ref<"mutation", StageLease, null>("mutation", "runtimeIngestion:expireStage"),
+    { reference: args.reference, eventId: args.eventId, stage: args.stage, attempt: args.attempt, leaseVersion: args.leaseVersion });
+  return null;
+} });
 export const hydrate = internalQuery({ args: leaseArgs, handler: async (ctx, args) => await requireStageLease(ctx, args) });
 export const persistStage = internalMutation({ args: { ...leaseArgs, payloadCanonical: v.string() }, handler: async (ctx, args) => {
   const current = await requireStageCommit(ctx, args); if (new TextEncoder().encode(args.payloadCanonical).length > 1_000_000 || canonicalModelJson(JSON.parse(args.payloadCanonical)) !== args.payloadCanonical) ingestionDenied("INVALID_INPUT");
@@ -325,6 +382,11 @@ export const failStage = internalMutation({ args: { ...leaseArgs, uncertain: v.b
 export const expireStage = internalMutation({ args: leaseArgs, handler: async (ctx, args) => {
   const event = await eventById(ctx, args.reference, args.eventId); if (!event || canonicalModelJson(event.authorityReference) !== canonicalModelJson(args.reference)) return null;
   const stage = await stageRow(ctx, event, args.stage);
+  if (stage.state === "pending" && stage.capacityWait && stage.attempt === args.attempt && stage.leaseVersion === args.leaseVersion
+    && stage.capacityWait.deadline <= Date.now()) {
+    await writeStage(ctx, event, stage, { state: "failed", failureCode: "CAPACITY_WAIT_EXPIRED", updatedAt: Date.now() });
+    await readiness(ctx, event); return null;
+  }
   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) > Date.now()) return null;
   await writeStage(ctx, event, stage, { state: "unknown", failureCode: "INTERRUPTED_REQUIRES_RECONCILIATION", updatedAt: Date.now() });
   await readiness(ctx, event); return null;
@@ -333,7 +395,7 @@ export const expireStage = internalMutation({ args: leaseArgs, handler: async (c
 export const failUnclaimed = internalMutation({ args: stageArgs, handler: async (ctx, args) => {
   const event = await eventById(ctx, args.reference, args.eventId); if (!event || canonicalModelJson(event.authorityReference) !== canonicalModelJson(args.reference)) return null;
   const stage = await stageRow(ctx, event, args.stage); if (stage.state !== "pending" || skipsIngestion(event.eligibility)) return null;
-  const attempt = stage.attempt + 1;
+  const attempt = stage.capacityWait ? stage.attempt : stage.attempt + 1;
   await writeStage(ctx, event, stage, { state: attempt >= MAX_INGESTION_ATTEMPTS ? "dead_letter" : "failed", attempt,
     failureCode: "INDEXING_ADMISSION_FAILED", updatedAt: Date.now() }); await readiness(ctx, event); return null;
 } });
@@ -415,6 +477,34 @@ function predispatch(error: unknown): boolean {
   if (!data || !("value" in data) || data.value === null || typeof data.value !== "object") return false;
   return Object.getOwnPropertyDescriptor(data.value, "outcome")?.value === "not_dispatched";
 }
+function controlCode(error: unknown): unknown {
+  if (!(error instanceof ConvexError)) return undefined;
+  const data = Object.getOwnPropertyDescriptor(error, "data")?.value;
+  return data && typeof data === "object" ? Object.getOwnPropertyDescriptor(data, "code")?.value : undefined;
+}
+function capacityRefusal(error: unknown): UnreservedCapacityRefusal | undefined {
+  if (controlCode(error) !== "BUDGET_EXCEEDED" || !predispatch(error)) return undefined;
+  const data = Object.getOwnPropertyDescriptor(error, "data")?.value;
+  const capacity = Object.getOwnPropertyDescriptor(data, "capacity")?.value;
+  if (!capacity || typeof capacity !== "object" || Array.isArray(capacity)) return undefined;
+  const read = (key: string) => Object.getOwnPropertyDescriptor(capacity, key)?.value;
+  if (Object.keys(capacity).sort().join(",") !== "operationKey,ordinal,origin,reason,runBudgetId,semanticId,version"
+    || read("version") !== 1 || read("origin") !== "unreserved-admission" || read("reason") !== "concurrency"
+    || read("ordinal") !== 0 || typeof read("runBudgetId") !== "string" || typeof read("semanticId") !== "string"
+    || !["memory.extract", "facts.resolve", "embedding.memory"].includes(read("operationKey"))) return undefined;
+  return capacity as UnreservedCapacityRefusal;
+}
+/** Only exact semantic equality can avoid a new conflict decision; attribution
+ * remains on both source events and the original belief is retained unchanged. */
+export function identicalBelief(candidate: AttributedFact, existing: readonly DerivedFact[]): ConflictDecision | undefined {
+  if (existing.length !== 1) return undefined;
+  const shape = (fact: AttributedFact | DerivedFact, confidence: number) => ({ fact: fact.fact, factType: fact.factType,
+    subject: fact.subject ?? null, predicate: fact.predicate ?? null, object: fact.object ?? null, confidence,
+    tags: fact.tags ?? [], entities: fact.entities ?? [], relations: fact.relations ?? [] });
+  const fact = existing[0]!;
+  if (canonicalModelJson(shape(candidate, candidate.confidence * 100)) !== canonicalModelJson(shape(fact, fact.confidence))) return undefined;
+  return { action: "NONE", targetFactId: fact.factId, mergedFact: null, reason: "Identical current belief" };
+}
 export async function processStageHandler(ctx: ActionCtx, args: { reference: RuntimeAuthorityReference; eventId: string; stage: IngestionStage },
   modelFactory: typeof createGatewayMemoryModel = createGatewayMemoryModel): Promise<null> {
   let owned: (StageLease & { runBudgetId: string; parentOperationId?: Id<"runtimeModelOperations"> }) | null;
@@ -445,13 +535,21 @@ export async function processStageHandler(ctx: ActionCtx, args: { reference: Run
         && Object.entries(oldPlan.expectedVersions).every(([id, version]) => version === 0 || input.existing.some(fact => fact.factId === id && fact.version === version));
       const plan = unchanged ? oldPlan : await planBeliefs({ eventId: args.eventId, sequence: input.event.sequence, source: input.source, candidates, existing: input.existing,
         resolve: async (candidate, existing, ordinal) => {
+          const duplicate = identicalBelief(candidate, existing); if (duplicate) return duplicate;
           await repository.recheckAuthority(); dispatched = true;
           const prompt = buildConflictResolutionPrompt(candidate, [...existing], { maxExistingFacts: 100 }, { now: () => input.source.createdAt });
           return await model.resolve({ purpose: "facts.resolve", operationId: `${operationId}:${ordinal}`, policyVersion: input.event.beliefVersion,
             attempt: 1, source: input.source.lineage, system: prompt.system, prompt: prompt.user, candidate });
         } });
       await ctx.runMutation(ref<"mutation", StageLease & { payloadCanonical: string }, null>("mutation", "runtimeIngestion:persistDraft"), { ...lease, payloadCanonical: canonicalModelJson(plan) });
-      await ctx.runMutation(ref<"mutation", StageLease & { planCanonical: string }, unknown>("mutation", "runtimeBeliefs:commit"), { ...lease, planCanonical: canonicalModelJson(plan) });
+      try {
+        await ctx.runMutation(ref<"mutation", StageLease & { planCanonical: string }, unknown>("mutation", "runtimeBeliefs:commit"), { ...lease, planCanonical: canonicalModelJson(plan) });
+      } catch (error) {
+        if (controlCode(error) !== "FACT_VERSION_CONFLICT") throw error;
+        // One fresh atomic no-inference replan. Changed conflict inputs require
+        // explicit disposition; the stored extraction is never called again.
+        await ctx.runMutation(ref<"mutation", StageLease & { planCanonical: string }, unknown>("mutation", "runtimeBeliefs:replan"), { ...lease, planCanonical: canonicalModelJson(plan) });
+      }
     } else {
       if (input.stage.payloadCanonical) {
         await ctx.runMutation(ref<"mutation", StageLease & { payloadCanonical: string }, unknown>("mutation", "runtimeIngestion:commitVectors"), { ...lease, payloadCanonical: input.stage.payloadCanonical });
@@ -476,9 +574,17 @@ export async function processStageHandler(ctx: ActionCtx, args: { reference: Run
       await ctx.runMutation(ref<"mutation", StageLease & { payloadCanonical: string }, unknown>("mutation", "runtimeIngestion:commitVectors"), { ...lease, payloadCanonical });
     }
   } catch (error) {
+    const refusal = capacityRefusal(error);
+    if (refusal) {
+      try {
+        await ctx.runMutation(ref<"mutation", StageLease & { refusal: UnreservedCapacityRefusal }, null>("mutation", "runtimeIngestion:waitForCapacity"), { ...lease, refusal });
+        return null;
+      } catch (waitError) { error = waitError; }
+    }
     const safe = !dispatched || predispatch(error);
     await ctx.runMutation(ref<"mutation", StageLease & { uncertain: boolean; failureCode: string }, null>("mutation", "runtimeIngestion:failStage"),
-      { ...lease, uncertain: !safe, failureCode: safe ? "INDEXING_FAILED" : "INDEXING_OUTCOME_UNKNOWN" });
+      { ...lease, uncertain: !safe, failureCode: controlCode(error) === "REPLAN_REQUIRED" ? "REPLAN_REQUIRED"
+        : controlCode(error) === "CAPACITY_WAIT_EXPIRED" ? "CAPACITY_WAIT_EXPIRED" : safe ? "INDEXING_FAILED" : "INDEXING_OUTCOME_UNKNOWN" });
   }
   return null;
 }

@@ -1,0 +1,48 @@
+{
+  "observedAt": "2026-10-14T11:13:44.065Z",
+  "scope": "NORMAL_REVIEWED_SOURCE_AND_ARTIFACT_PIN_INTEGRATION",
+  "digest": "137ccf8fe463fcf3c5e218207f0969e5b2d75521405a96b4c078d0b547da00a7",
+  "artifacts": {
+    "imageId": "sha256:1f28446423b5da71e8e8a22a32c6ad874acae565710c0cb6fa4c187984952c8b",
+    "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+    "packages": [
+      "sdk",
+      "cli",
+      "provider",
+      "catalog"
+    ]
+  },
+  "image": {
+    "imageId": "sha256:1f28446423b5da71e8e8a22a32c6ad874acae565710c0cb6fa4c187984952c8b",
+    "tag": "cortex-sandbox-bounded-v8:20261014",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "08c0eb09-8193-43c6-b75b-6409e408f1b4",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "08c0eb09-8193-43c6-b75b-6409e408f1b4",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-bounded-v8-2026-10-14",
+      "dev.cortex.manual-sandbox.source": "03256989da22bde35dff78023c1c3962391a68c6"
+    },
+    "size": 823382144,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false
+  },
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "priorApprovalSha256": "c52fd80e7fea06d52735d4f9f40fde04a7057f4a6050d7303e9a2ded71c90adf",
+  "oldImageExactCleanupRetained": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d",
+  "sourceSelection": "Registry3 relevant handler;4recent/4memories/4facts/4pending/16entries; canonical permessage storage retained; incompletepending notice; original qualified caps/auth/accounting/locks/strictbarriers retained",
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "nativeQualified": false
+}

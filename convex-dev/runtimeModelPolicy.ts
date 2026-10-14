@@ -30,6 +30,7 @@ import { guardAgentRunBudget } from "./runtimeAgentFence";
 import type { CompletedAgentTitle } from "./runtimeAgentFence";
 import { currentControlRun } from "./runs";
 import { assertIngestionPolicyPin, guardIngestionRunBudget } from "./runtimeIngestion";
+import { unreservedCapacityRefusal } from "./runtimeIngestionSchema";
 
 type ReadCtx = Pick<QueryCtx, "db" | "runQuery">;
 type WriteCtx = Pick<MutationCtx, "db" | "runQuery">;
@@ -343,11 +344,21 @@ function balanced(account: Account): void {
   [account.limitUnits, account.reservedUnits, account.settledUnits, account.uncertainUnits, account.activeConcurrency, account.concurrencyLimit, account.version].forEach((value) => integer(value));
   add(account.reservedUnits, account.settledUnits, account.uncertainUnits);
 }
-function capacity(account: Account, ceiling: number, limit = account.limitUnits, concurrency = account.concurrencyLimit): void {
+export type UnreservedCapacityRefusal = Infer<typeof unreservedCapacityRefusal>;
+function capacityReason(account: Account, ceiling: number, limit: number, concurrency: number): UnreservedCapacityRefusal["reason"] | undefined {
   balanced(account);
-  if (!account.current || account.cancelled || account.overrun || Date.now() < account.windowStart || Date.now() >= account.windowEnd
-    || add(account.reservedUnits, account.settledUnits, account.uncertainUnits, ceiling) > Math.min(account.limitUnits, integer(limit, 1))
-    || account.activeConcurrency >= Math.min(account.concurrencyLimit, integer(concurrency, 1))) fail("BUDGET_EXCEEDED");
+  if (!account.current || account.cancelled || account.overrun) return "account";
+  if (Date.now() < account.windowStart || Date.now() >= account.windowEnd) return "window";
+  if (add(account.reservedUnits, account.settledUnits, account.uncertainUnits, ceiling) > Math.min(account.limitUnits, integer(limit, 1))) return "money";
+  if (account.activeConcurrency >= Math.min(account.concurrencyLimit, integer(concurrency, 1))) return "concurrency";
+}
+function capacity(account: Account, ceiling: number, limit = account.limitUnits, concurrency = account.concurrencyLimit,
+  admission?: Omit<UnreservedCapacityRefusal, "reason">): void {
+  const reason = capacityReason(account, ceiling, limit, concurrency);
+  if (!reason) return;
+  if (!admission) fail("BUDGET_EXCEEDED");
+  throw new ConvexError({ version: 1, code: "BUDGET_EXCEEDED", message: "Model operation control failed.", retryable: false,
+    outcome: "not_dispatched", capacity: { ...admission, reason } });
 }
 /** Permit-boundary capacity: the reservation and active slot are already counted. */
 function heldCapacity(account: Account, limit: number, concurrency: number): void {
@@ -693,8 +704,10 @@ export async function admitHandler(ctx: MutationCtx, args: Infer<typeof _admissi
   const tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) => q.eq("scopeKey", canonical(["tenant", args.reference.tenantId])).eq("current", true)).take(2));
   if (!tenant || tenant.windowId !== run.windowId || !(await sameRoot(tenant.root, root))) fail("BUDGET_EXCEEDED");
   const ceiling = snapshot.costBound.maximumCostUnits;
-  capacity(tenant, ceiling, effectiveSnapshot.limits.tenantBudgetUnits, effectiveSnapshot.limits.concurrency);
-  capacity(run, ceiling, effectiveSnapshot.limits.runBudgetUnits, effectiveSnapshot.limits.concurrency);
+  const admission = { version: 1 as const, origin: "unreserved-admission" as const, operationKey: args.operationKey,
+    runBudgetId: args.runBudgetId, semanticId: args.semanticId, ordinal: args.ordinal };
+  capacity(tenant, ceiling, effectiveSnapshot.limits.tenantBudgetUnits, effectiveSnapshot.limits.concurrency, admission);
+  capacity(run, ceiling, effectiveSnapshot.limits.runBudgetUnits, effectiveSnapshot.limits.concurrency, admission);
   if (operation && (operation.overrun || operation.cancelled || add(operation.reservedUnits, operation.settledUnits, operation.uncertainUnits, ceiling) > Math.min(snapshot.limits.operationBudgetUnits, effectiveSnapshot.limits.operationBudgetUnits))) fail("BUDGET_EXCEEDED");
   await finalActor(ctx, args.reference, args.operationKey);
   if (proof.checkedAt > Date.now() || Date.now() >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
@@ -716,6 +729,33 @@ export async function admitHandler(ctx: MutationCtx, args: Infer<typeof _admissi
   return { status: "reserved" as const, operationId: operation._id, attemptId, snapshot, requestCanonical: canonical(validated.request) };
 }
 export const admit = internalMutation({ args: admitArgs, handler: (ctx, args) => admitHandler(createAuthorityReadScope(ctx), args) });
+
+/** A scheduler may wait ONLY for a never-reserved identity. An error envelope alone
+ * is not proof: re-read the exact job/source/account/policy and the native ledger.
+ * This helper neither reserves a slot nor changes a liability or authorization. */
+export async function assertUnreservedIngestionCapacity(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  refusal: UnreservedCapacityRefusal, source: Source, parentOperationId?: Id<"runtimeModelOperations">): Promise<number> {
+  if (refusal.origin !== "unreserved-admission" || refusal.reason !== "concurrency" || refusal.ordinal !== 0) fail("RETRY_NOT_SAFE");
+  await currentAuthority(ctx, reference, refusal.operationKey);
+  await checkSource(ctx, reference, refusal.operationKey, source);
+  const run = await runAccount(ctx, reference, refusal.runBudgetId);
+  await guardIngestionRunBudget(ctx, reference, run._id);
+  const existing = single(await ctx.db.query("runtimeModelOperations").withIndex("by_identity", q => q.eq("tenantId", reference.tenantId)
+    .eq("memorySpaceId", reference.memorySpaceId!).eq("principalId", reference.principalId).eq("semanticId", refusal.semanticId)
+    .eq("operationKey", refusal.operationKey)).take(2));
+  // Includes reserved, held, cancelled, confirmed and UNKNOWN operations.
+  if (existing) fail("RETRY_NOT_SAFE");
+  const resolved = await resolveCurrent(ctx, reference, refusal.operationKey, refusal.runBudgetId, source, parentOperationId);
+  await assertIngestionPolicyPin(ctx, run._id, refusal.operationKey, resolved.snapshot, false, true);
+  const tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", q => q.eq("scopeKey", canonical(["tenant", reference.tenantId])).eq("current", true)).take(2));
+  if (!tenant || tenant.windowId !== run.windowId || !(await sameRoot(tenant.root, resolved.root))) fail("BUDGET_EXCEEDED");
+  for (const [account, limit] of [[tenant, resolved.snapshot.limits.tenantBudgetUnits], [run, resolved.snapshot.limits.runBudgetUnits]] as const) {
+    const reason = capacityReason(account, resolved.snapshot.costBound.maximumCostUnits, limit, resolved.snapshot.limits.concurrency);
+    if (reason && reason !== "concurrency") fail("BUDGET_EXCEEDED");
+  }
+  await finalActor(ctx, reference, refusal.operationKey);
+  return Math.min(run.windowEnd, tenant.windowEnd, evidence(resolved.manifest, resolved.snapshot).expiresAt);
+}
 
 function attemptSnapshot(attempt: Attempt, operation: Operation, manifest: DeploymentPolicyManifest): ModelPolicySnapshotV1 {
   const base = snapshotOf(operation);

@@ -1,0 +1,116 @@
+{
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+  "pathPrefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+  "npmToolchain": "12.2.0",
+  "offline": "http://127.0.0.1:9",
+  "tests": [
+    {
+      "receipt": "repeat-capture-focused-v1",
+      "paths": [
+        "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts"
+      ],
+      "explicitEnvironment": false
+    },
+    {
+      "receipt": "repeat-capture-focused-v2",
+      "paths": [
+        "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts"
+      ],
+      "explicitEnvironment": false
+    },
+    {
+      "receipt": "repeat-capture-focused-v3",
+      "paths": [
+        "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/gateway-backend.test.ts",
+        "tests/unit/runtime/gateway-dispatch.test.ts"
+      ],
+      "explicitEnvironment": true
+    },
+    {
+      "receipt": "repeat-capture-affected-v1",
+      "paths": [
+        "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtimeBeliefs/atomic.test.ts",
+        "tests/unit/runtimeIngestion/worker.test.ts",
+        "tests/unit/runtimeIngestion/stages.test.ts",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeIngestion/shared-edit.test.ts",
+        "tests/unit/runtimeIngestion/sequence-head.test.ts",
+        "tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts",
+        "tests/unit/runtimeMemory/capture.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtime/native-gateway.test.ts"
+      ],
+      "explicitEnvironment": false
+    },
+    {
+      "receipt": "repeat-capture-affected-v2",
+      "paths": [
+        "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtimeBeliefs/atomic.test.ts",
+        "tests/unit/runtimeIngestion/worker.test.ts",
+        "tests/unit/runtimeIngestion/stages.test.ts",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeIngestion/shared-edit.test.ts",
+        "tests/unit/runtimeIngestion/sequence-head.test.ts",
+        "tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts",
+        "tests/unit/runtimeMemory/capture.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/gateway-backend.test.ts",
+        "tests/unit/runtime/gateway-dispatch.test.ts"
+      ],
+      "explicitEnvironment": true
+    },
+    {
+      "receipt": "repeat-capture-expiry-final",
+      "paths": [
+        "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "tests/unit/runtimeIngestion/worker.test.ts",
+        "tests/unit/runtimeIngestion/stages.test.ts"
+      ],
+      "explicitEnvironment": true
+    },
+    {
+      "receipt": "repeat-capture-gateway-isolated",
+      "paths": [
+        "tests/unit/runtime/gateway-dispatch.test.ts"
+      ],
+      "explicitEnvironment": true
+    }
+  ],
+  "testCommand": "<pinned-node> --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath <paths> --json --outputFile=<absolute Q/receipt.json>; stdout+stderr retained as receipt.log, actual status as receipt.exit",
+  "types": [
+    "--project convex-dev/tsconfig.json --noEmit",
+    "--noEmit",
+    "--project tsconfig.lint.json --noEmit"
+  ],
+  "typeCommand": "<pinned-node> node_modules/typescript/bin/tsc <typeArgs>",
+  "lintCommand": "<pinned-node> node_modules/eslint/bin/eslint.js <owned paths> --report-unused-disable-directives",
+  "lintPaths": [
+    "convex-dev/runtimeModelPolicy.ts",
+    "convex-dev/runtimeIngestion.ts",
+    "convex-dev/runtimeIngestionSchema.ts",
+    "convex-dev/runtimeBeliefs.ts",
+    "tests/unit/runtimeIngestion/fixture.ts",
+    "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts"
+  ],
+  "finalExpiryLintPaths": [
+    "convex-dev/runtimeIngestion.ts",
+    "tests/unit/runtimeIngestion/repeat-capture.test.ts"
+  ]
+}

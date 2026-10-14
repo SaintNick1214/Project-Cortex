@@ -1,0 +1,31 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {spawn,execFileSync} from 'node:child_process';
+const root=process.cwd(),qa=path.join(root,'_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12');
+const npm='/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js';
+const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+const git=args=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
+if(process.version!=='v24.15.0'||execFileSync(process.execPath,[npm,'--version'],{encoding:'utf8'}).trim()!=='12.2.0')throw Error('Declared pinned toolchain required');
+const files=[...new Set([...git(['diff','--name-only','HEAD']),...git(['ls-files','--others','--exclude-standard'])])]
+  .filter(name=>(name==='README.md'||/^(convex-dev|src|tests|scripts|packages)\//.test(name))&&fs.statSync(path.join(root,name)).isFile());
+const hashes=Object.fromEntries(files.map(name=>[name,hash(fs.readFileSync(path.join(root,name)))]));
+const original=JSON.parse(fs.readFileSync(path.join(qa,'v8-native-repair-joint-quality-inputs.json'),'utf8'));
+const changed=Object.entries(hashes).filter(([name,digest])=>original.hashes[name]!==digest).map(([name])=>name).sort();
+if(JSON.stringify(changed)!==JSON.stringify(['tests/unit/client-runtime/observation-native.test.ts','tests/unit/runtimeAgent/bounded-context-v8.test.ts']))throw Error('Unexpected source change before failed-types successor');
+fs.writeFileSync(path.join(qa,'v8-native-repair-joint-quality-inputs-v2.json'),JSON.stringify({baseline:'03256989da22bde35dff78023c1c3962391a68c6',head:git(['rev-parse','HEAD'])[0],node:process.version,npm:'12.2.0',hashes,changed,repair:'Only two fixture typing guards; production unchanged; early backend/linttypes/scopedlint retain original actual0 receipts'},null,2)+'\n');
+async function check(name,args){
+  const log=path.join(qa,`v8-repair-joint-${name}-v1.log`),fd=fs.openSync(log,'w');
+  const result=await new Promise(resolve=>{const child=spawn(process.execPath,args,{cwd:root,env:process.env,stdio:['ignore',fd,fd]});
+    child.on('error',error=>resolve({exitCode:null,error:error.message}));child.on('close',(exitCode,signal)=>resolve({exitCode,signal}));});
+  fs.closeSync(fd);fs.writeFileSync(path.join(qa,`v8-repair-joint-${name}-v1-exit.json`),JSON.stringify(result,null,2)+'\n');
+  console.log(JSON.stringify({check:name,...result}));return result;
+}
+const tsc=path.join(root,'node_modules/typescript/bin/tsc'),eslint=path.join(root,'node_modules/eslint/bin/eslint.js');
+const types=await check('root-types-v2',[tsc,'--noEmit','-p','tsconfig.json']);
+if(types.exitCode!==0)process.exitCode=1;
+else if((await check('build',[npm,'run','build'])).exitCode!==0)process.exitCode=1;
+else if((await check('packed-contracts',[path.join(root,'scripts/verify-public-contracts.mjs')])).exitCode!==0)process.exitCode=1;
+const unchanged=Object.entries(hashes).every(([name,digest])=>hash(fs.readFileSync(path.join(root,name)))===digest);
+fs.writeFileSync(path.join(qa,'v8-native-repair-joint-quality-input-check-v2.json'),JSON.stringify({unchanged,count:files.length},null,2)+'\n');
+if(!unchanged)process.exitCode=1;

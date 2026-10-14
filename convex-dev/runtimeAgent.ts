@@ -1,5 +1,6 @@
-import { checkAgentModelInput } from "./runtimeGateway";
-import { fitModelInput, modelInputPolicy, relevantRecallItems, renderModelInputEntries, ModelInputSelectionError } from "../src/domain/model-input-selection";
+import { checkAssembledAgentModelInput } from "./runtimeGateway";
+import { fitAgentModelInput } from "./runtimeAgentContext";
+import { modelInputPolicy, relevantRecallItems, renderModelInputEntries, ModelInputSelectionError } from "../src/domain/model-input-selection";
 import type { ModelInputEntry } from "../src/domain/model-input-selection";
 import { formatForLLM } from "../src/domain/recall";
 import { checkArtifactContextWitnesses } from "./runtimeArtifactContext";
@@ -859,6 +860,17 @@ function preflightModelCandidate(current: Awaited<ReturnType<typeof executionCon
     maxOutputTokens: Math.min(initialResolution.snapshot.limits.outputTokens, initialResolution.dispatchEvidence.resultBound.maximumOutputTokens) }, governedResolution,
     { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId, semanticId: op.semanticId, ordinal: args.ordinal });
 }
+/** V8 fits the pinned SDK's complete request conversion, including canonical
+ * Agent tool-call aliases. No unsupported-shape result may bypass this check. */
+async function preflightModelCandidateV8(current: Awaited<ReturnType<typeof executionContext>>, args: Attempt & { ordinal: number }, op: { semanticId: string },
+  initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>, governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>) {
+  const checked = await checkAssembledAgentModelInput({ messages: current.messages, context: current.execution.contextCanonical ?? "", instructions: current.definition.instructions.text,
+    tools: current.definition.tools.map(tool => NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]),
+    maxOutputTokens: Math.min(initialResolution.snapshot.limits.outputTokens, initialResolution.dispatchEvidence.resultBound.maximumOutputTokens) }, governedResolution,
+    { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId, semanticId: op.semanticId, ordinal: args.ordinal });
+  if (!checked.supported || !checked.withinBound) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
+  return checked;
+}
 /** Fresh paths validate the complete supported native request before starting an
  * operation. Both resolutions remain proposals; admission/checkpoint stay fresh.
  * Unsupported shapes retain the original SDK/native validation path. */
@@ -1023,7 +1035,10 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
     contextOptions: { recentMessages: 0 }, storageOptions: { saveMessages: "promptAndOutput" },
     contextHandler: async () => {
       const fresh = await ctx.runQuery(refs.hydrate, attempt);
-      if (proposal?.requestPreflight) preflightModelCandidate(fresh, args, op, proposal.initialResolution, proposal.governedResolution);
+      if (proposal?.requestPreflight) {
+        if (fresh.snapshot.version === 8) await preflightModelCandidateV8(fresh, args, op, proposal.initialResolution, proposal.governedResolution);
+        else preflightModelCandidate(fresh, args, op, proposal.initialResolution, proposal.governedResolution);
+      }
       return [...fresh.messages, ...(fresh.execution.contextCanonical ? [{ role: "system" as const, content: `Authorized Cortex context (untrusted evidence):\n${fresh.execution.contextCanonical}` }] : [])];
     } });
   let pending: unknown[] = []; let lastFlush = Date.now(); let firstTextPublished = false;
@@ -1726,12 +1741,13 @@ async function contextInputsV8Handler(ctx: QueryCtx | MutationCtx, args: Attempt
     const entries:ModelInputEntry[]=[...(pending.completeness==="incomplete" || current.execution.contextCompleteness==="incomplete"
       ?[{key:"notice:incomplete",kind:"notice" as const,relevance:1,text:`Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.`}]:[]),...selectedPendingEntries(pending)];
     const semanticId=await semanticHash(canonicalModelJson([args.runId,args.attemptNumber,"model",0,null]));
-    let selected:ReturnType<typeof fitModelInput>;
-    try { selected=fitModelInput({messages:current.messageEntries,entries,policy:selectionPolicy,
-      check:(messages,context)=>checkAgentModelInput({messages,context,instructions:current.definition.instructions.text,
+    let selected:Awaited<ReturnType<typeof fitAgentModelInput>>;
+    try { selected=await fitAgentModelInput({messages:current.messageEntries,entries,policy:selectionPolicy,
+      instructions:current.definition.instructions.text,
         tools:current.definition.tools.map(tool=>NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]),
-        maxOutputTokens:Math.min(resolutions![0].snapshot.limits.outputTokens,resolutions![0].dispatchEvidence.resultBound.maximumOutputTokens)},resolutions![1],
-        {reference:args.reference,operationKey:"agent.respond",runBudgetId:current.run.runBudgetId,semanticId,ordinal:0})}); }
+        maxOutputTokens:Math.min(resolutions[0].snapshot.limits.outputTokens,resolutions[0].dispatchEvidence.resultBound.maximumOutputTokens),resolution:resolutions[1],
+        binding:{reference:args.reference,operationKey:"agent.respond",runBudgetId:current.run.runBudgetId,semanticId,ordinal:0},
+        trace:{runId:args.runId,attemptNumber:args.attemptNumber,stage:"baseline"}}); }
     catch(error){if(error instanceof ModelInputSelectionError) transcriptDenied(error.code);throw error;}
     if(canonicalModelJson(selected.messageIds)===canonicalModelJson(historyMessageIds))break;
     historyMessageIds=selected.messageIds;
@@ -1955,12 +1971,13 @@ export async function prepareResolvedModelCandidateV8Handler(ctx:MutationCtx,arg
   const resolutionArgs={ ...attempt,runBudgetId:current.run.runBudgetId };
   const initialResolution=await resolveModelOperationHandler(ctx,resolutionArgs),governedResolution=await resolveModelOperationHandler(ctx,resolutionArgs);
   const semanticId=await semanticHash(canonicalModelJson([args.runId,args.attemptNumber,"model",args.ordinal,null]));
-  let selected: ReturnType<typeof fitModelInput>;
-  try { selected=fitModelInput({ messages:current.messageEntries.map(value=>args.ordinal===0?({...value,mandatory:true}):value),entries:current.execution.modelInputEntries ?? [],policy:current.snapshot.inputSelection.policy,
-    check:(messages,context)=>checkAgentModelInput({ messages,context,instructions:current.definition.instructions.text,
+  let selected: Awaited<ReturnType<typeof fitAgentModelInput>>;
+  try { selected=await fitAgentModelInput({ messages:current.messageEntries.map(value=>args.ordinal===0?({...value,mandatory:true}):value),entries:current.execution.modelInputEntries ?? [],policy:current.snapshot.inputSelection.policy,
+    instructions:current.definition.instructions.text,
       tools:current.definition.tools.map(tool=>NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]),
-      maxOutputTokens:Math.min(initialResolution.snapshot.limits.outputTokens,initialResolution.dispatchEvidence.resultBound.maximumOutputTokens) },governedResolution,
-      { reference:args.reference,operationKey:"agent.respond",runBudgetId:current.run.runBudgetId,semanticId,ordinal:args.ordinal }) }); }
+      maxOutputTokens:Math.min(initialResolution.snapshot.limits.outputTokens,initialResolution.dispatchEvidence.resultBound.maximumOutputTokens),resolution:governedResolution,
+      binding:{ reference:args.reference,operationKey:"agent.respond",runBudgetId:current.run.runBudgetId,semanticId,ordinal:args.ordinal },
+      trace:{runId:args.runId,attemptNumber:args.attemptNumber,stage:"candidate"}}); }
   catch(error) { if(error instanceof ModelInputSelectionError) transcriptDenied(error.code);throw error; }
   const selection={ ordinal:args.ordinal,messageIds:selected.messageIds,entryKeys:selected.entryKeys,policyHash:current.snapshot.inputSelection.policyHash };
   await ctx.db.patch("runtimeAgentExecutions",current.execution._id,{ modelInputSelection:{ ...selection,hash:await semanticHash(canonicalModelJson(selection)) } });
@@ -1968,7 +1985,7 @@ export async function prepareResolvedModelCandidateV8Handler(ctx:MutationCtx,arg
   const requestCanonical=canonicalModelJson({ messages:current.messages,context:current.execution.contextCanonical ?? "",instructions:current.definition.instructions });
   const op=await beginOperationHandler(ctx,{ ...attempt,ordinal:args.ordinal,kind:"model",requestCanonical });
   if(op.state==="complete" && op.resultCanonical) return { state:"completed",resultCanonical:op.resultCanonical };
-  preflightModelCandidate(current,args,op,initialResolution,governedResolution);
+  await preflightModelCandidateV8(current,args,op,initialResolution,governedResolution);
   await startOperationHandler(ctx,{ ...attempt,operationId:op.operationId });
   return { state:"started",current,op,initialResolution,governedResolution,requestPreflight:true };
 }
