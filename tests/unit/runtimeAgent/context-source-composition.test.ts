@@ -29,6 +29,12 @@ const context = await import("../../../convex-dev/runtimeMemoryContext");
 const runs = await import("../../../convex-dev/runs");
 type AgentApi = ApiFromModules<{ runtimeAgent: typeof runtime }>;
 type SourceArgs = FunctionArgs<AgentApi["runtimeAgent"]["contextSource"]>;
+type BatchArgs = FunctionArgs<AgentApi["runtimeAgent"]["contextSourceBatch"]>;
+function sourceInputs(calls: { name: string; args: unknown }[]): SourceArgs[] {
+  return calls.filter(c => c.name === "runtimeAgent:contextSourceBatch").flatMap(c => {
+    const args = c.args as BatchArgs; return args.items.map(item => ({ reference: args.reference, ...item, excludedSourceKeys: args.excludedSourceKeys, cutoff: args.cutoff, boundary: args.boundary }));
+  });
+}
 beforeEach(() => { installIngestionMockRoot(); embed.mockClear(); });
 afterEach(() => { jest.restoreAllMocks(); });
 async function fixture() {
@@ -181,11 +187,12 @@ describe("actual original source and indexed-cutoff handler composition", () => 
   });
 });
 describe("actual Agent recall wiring and fresh completion fences", () => {
-  it("selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings", async () => {
+  it("selects the same ordered vector/fact evidence with one ordered query per nonempty branch and unchanged final-delivery bindings", async () => {
     const f = await fixture(), first = await f.indexed("first-prior"), second = await f.indexed("second-prior"); const { attempt, current } = await f.start(); f.calls.length = 0;
     await invoke(runtime.prepareContext, f.ctx, attempt);
-    const pairs = f.calls.filter(c => c.name === "runtimeAgent:contextSource"); expect(pairs).toHaveLength(4);
-    const inputs = pairs.map(c => c.args as SourceArgs);
+    const pairs = f.calls.filter(c => c.name === "runtimeAgent:contextSourceBatch"); expect(pairs).toHaveLength(2);
+    expect(f.calls.filter(c => c.name === "runtimeAgent:contextSource")).toHaveLength(0);
+    const inputs = sourceInputs(f.calls); expect(inputs).toHaveLength(4);
     expect(inputs.map(a => a.sourceId)).toEqual([first.source.lineage.sourceId, second.source.lineage.sourceId, first.source.lineage.sourceId, second.source.lineage.sourceId]);
     for (const input of inputs) {
       expect(input).toMatchObject({ reference: f.reference, cutoff: current.current.snapshot.ingestionCutoff.sequence, boundary: current.boundary,
@@ -205,12 +212,23 @@ describe("actual Agent recall wiring and fresh completion fences", () => {
     expect(f.calls.findIndex(c => c.name === "runtimeMemory:finalDelivery")).toBeLessThan(f.calls.findIndex(c => c.name === "runtimeAgent:saveContext"));
     expect(embed).toHaveBeenCalledTimes(1); expect(embed.mock.calls[0]![0]).toMatchObject({ purpose: "embedding.query", attempt: 1, profile: DEFAULT_EMBEDDING_PROFILE });
   });
+  it.each(["none", "vector", "fact"])("issues only one query per nonempty branch (%s)", async branch => {
+    const f = await fixture(); await f.indexed(); const { attempt } = await f.start();
+    if (branch !== "vector") f.db.rows.set("runtimeMemoryVectors", []);
+    if (branch !== "fact") f.db.rows.set("facts", []);
+    f.calls.length = 0; await invoke(runtime.prepareContext, f.ctx, attempt);
+    const batches = f.calls.filter(c => c.name === "runtimeAgent:contextSourceBatch");
+    expect(batches).toHaveLength(branch === "none" ? 0 : 1);
+    if (branch !== "none") expect((batches[0]!.args as BatchArgs).permission).toBe(branch === "vector" ? "canViewMemories" : "canViewFacts");
+    expect(f.calls.filter(c => c.name === "runtimeAgent:contextSource")).toHaveLength(0);
+    expect(f.db.table("runtimeAgentExecutions")[0].contextState).toBe("complete"); expect(embed).toHaveBeenCalledTimes(1);
+  });
   it.each(["revision", "hash", "revocation", "owner", "tombstone", "profile"])("fresh finalDelivery rejects post-composition %s before context is saved", async kind => {
     const f = await fixture(), { source } = await f.indexed(), { attempt } = await f.start(); const mutation = f.ctx.runMutation.bind(f.ctx); let reached = false;
     f.ctx.runMutation = (async (ref, args) => {
       let name = ""; try { name = getFunctionName(ref); } catch { return mutation(ref, args); }
       if (name === "runtimeMemory:finalDelivery") {
-        reached = f.calls.some(c => c.name === "runtimeAgent:contextSource");
+        reached = f.calls.some(c => c.name === "runtimeAgent:contextSourceBatch");
         const row = f.db.table("runtimeMemorySources").find(r => (r.lineage as SourceContent["lineage"]).sourceId === source.lineage.sourceId)!;
         if (kind === "revision") row.lineage = { ...source.lineage, sourceRevision: 2 };
         if (kind === "hash") row.contentHash = "0".repeat(64);
@@ -245,7 +263,7 @@ describe("actual Agent recall wiring and fresh completion fences", () => {
     const f = await fixture(); await f.indexed(); const { attempt } = await f.start(), query = f.db.query.bind(f.db); let afterInputs = false;
     const rpc = f.ctx.runQuery.bind(f.ctx); f.ctx.runQuery = (async (ref, args) => {
       let name = ""; try { name = getFunctionName(ref); } catch { return rpc(ref, args); }
-      if (name === "runtimeAgent:contextSource") afterInputs = true; return rpc(ref, args);
+      if (name === "runtimeAgent:contextSourceBatch") afterInputs = true; return rpc(ref, args);
     }) as MutationCtx["runQuery"];
     jest.spyOn(f.db, "query").mockImplementation(table => { if (afterInputs && table === "runtimeIngestionEvents") throw new Error("SOURCE_CUTOFF_PORT_FAILED"); return query(table); });
     await expect(invoke(runtime.prepareContext, f.ctx, attempt)).rejects.toThrow("SOURCE_CUTOFF_PORT_FAILED");
@@ -275,7 +293,7 @@ describe("actual Agent recall wiring and fresh completion fences", () => {
     (order === "vector-first" ? vectorRelease : factRelease).resolve(); await (order === "vector-first" ? vectorRead : factRead).promise;
     (order === "vector-first" ? factRelease : vectorRelease).resolve(); await pending;
     expect(completed).toEqual(order === "vector-first" ? ["vector", "fact"] : ["fact", "vector"]);
-    expect(f.calls.filter(c => c.name === "runtimeAgent:contextSource").map(c => (c.args as SourceArgs).sourceId)).toEqual(["shared", "vector-only", "fact-only", "shared"]);
+    expect(sourceInputs(f.calls).map(a => a.sourceId)).toEqual(["shared", "vector-only", "fact-only", "shared"]);
     const owned = f.db.table("runtimeAgentExecutions")[0];
     expect(owned.sourceWitnesses).toEqual([
       { ...shared.source.lineage, contentHash: shared.source.contentHash, permissions: ["canViewFacts", "canViewMemories"] },
@@ -297,8 +315,8 @@ describe("actual Agent recall wiring and fresh completion fences", () => {
     const vectorError = Error("VECTOR_SOURCE_GUARD_FAILED"), factError = Error("FACT_SOURCE_GUARD_FAILED");
     f.ctx.runQuery = (async (ref, args) => {
       let name = ""; try { name = getFunctionName(ref); } catch { return query(ref, args); }
-      if (name === "runtimeAgent:contextSource") {
-        const branch = (args as SourceArgs).expected.contentHash === undefined ? "fact" : "vector"; guards.push(branch);
+      if (name === "runtimeAgent:contextSourceBatch") {
+        const branch = (args as BatchArgs).permission === "canViewFacts" ? "fact" : "vector"; guards.push(branch);
         if (failed === branch || failed === "both") throw branch === "vector" ? vectorError : factError;
       }
       return query(ref, args);
@@ -311,18 +329,28 @@ describe("actual Agent recall wiring and fresh completion fences", () => {
   it.each(["revision", "hash"])("rejects a shared-source %s witness conflict before a later fact guard fault", async conflict => {
     const f = await fixture(); await f.indexed("shared"); await f.indexed("later"); const { attempt } = await f.start(); f.calls.length = 0;
     const query = f.ctx.runQuery.bind(f.ctx), factGuards: string[] = [];
+    const original = ConvexMemoryRepository.prototype.getSource; let factBranch = false;
     f.ctx.runQuery = (async (ref, args) => {
-      const value = await query(ref, args);
-      let name = ""; try { name = getFunctionName(ref); } catch { return value; }
-      if (name !== "runtimeAgent:contextSource" || (args as SourceArgs).expected.contentHash !== undefined) return value;
-      const input = args as SourceArgs; factGuards.push(input.sourceId);
-      if (input.sourceId === "later") throw Error("LATER_FACT_GUARD_FAILED");
-      // Only transport output is varied to isolate the witness merger. Current
-      // source/cutoff handler refusals are exercised separately above.
-      const source = value as SourceContent;
-      return conflict === "hash" ? { ...source, contentHash: "0".repeat(64) }
-        : { ...source, lineage: { ...source.lineage, sourceRevision: source.lineage.sourceRevision + 1 } };
+      let name = ""; try { name = getFunctionName(ref); } catch { return query(ref, args); }
+      if (name === "runtimeAgent:contextSourceBatch" && (args as BatchArgs).permission === "canViewFacts") {
+        factBranch = true; if (conflict === "revision") (args as BatchArgs).items[0]!.expected.sourceRevision++;
+      }
+      return query(ref, args);
     }) as MutationCtx["runQuery"];
+    jest.spyOn(ConvexMemoryRepository.prototype, "getSource").mockImplementation(async function (this: InstanceType<typeof ConvexMemoryRepository>, ...args) {
+      const source = await original.apply(this, args);
+      if (!factBranch || !source) return source;
+      if (args[0] === "later") throw Error("LATER_FACT_GUARD_FAILED");
+      if (!factGuards.includes(args[0])) factGuards.push(args[0]);
+      // Vary both real source getter results for the shared item. Adjust the
+      // matching event so original cutoff checks pass and the witness merger
+      // remains the first failing predicate, ahead of the later source fault.
+      const changed = conflict === "hash" ? { ...source, contentHash: "0".repeat(64) }
+        : { ...source, lineage: { ...source.lineage, sourceRevision: source.lineage.sourceRevision + 1 } };
+      const event = f.db.table("runtimeIngestionEvents").find(row => (row.lineage as SourceContent["lineage"]).sourceId === args[0])!;
+      event.contentHash = changed.contentHash; event.lineage = changed.lineage;
+      return changed;
+    });
     await expect(invoke(runtime.prepareContext, f.ctx, attempt)).rejects.toThrow("STALE_CONTEXT");
     expect(factGuards).toEqual(["shared"]);
     expect(f.calls.some(c => c.name === "runtimeMemory:finalDelivery" || c.name === "runtimeAgent:saveContext")).toBe(false);

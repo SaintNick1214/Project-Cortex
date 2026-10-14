@@ -85,7 +85,8 @@ async function readiness(ctx: MutationCtx, event: Event) {
     }
   }
   // Response finality is independent. A current source edit deliberately resets indexing readiness.
-  await ctx.db.patch("runtimeRuns", run._id, { memoryStatus: failed ? "failed" : pending ? "pending" : "complete", updatedAt: Date.now() });
+  const memoryStatus = failed ? "failed" : pending ? "pending" : "complete";
+  if (run.memoryStatus !== memoryStatus) await ctx.db.patch("runtimeRuns", run._id, { memoryStatus, updatedAt: Date.now() });
 }
 export interface IngestionOrigin { conversationId?: string; conversationSequence?: number; conversationEpoch?: number; nativeMessageId?: string;
   runId?: string; toolOperationId?: string; eligibility?: IngestionEligibility }
@@ -151,10 +152,18 @@ export const retireScopedSource = internalMutation({ args: { tenantId: v.string(
 async function writeStage(ctx: MutationCtx, event: Event, row: Doc<"runtimeIngestionStages">,
   patch: Partial<Omit<Doc<"runtimeIngestionStages">, "_id" | "_creationTime">>) {
   await ctx.db.patch("runtimeIngestionStages", row._id, patch);
-  if (patch.state) {
+  // Lease/running activity lives on the stage. Event summaries publish readiness,
+  // whose pending/running states are equivalent for every foreground consumer.
+  if (patch.state && patch.state !== "running") {
     const summary = row.stage === "vectors" ? { vectorsState: patch.state } : row.stage === "facts" ? { factsState: patch.state }
       : ["failed", "unknown", "dead_letter"].includes(patch.state) ? { factsState: patch.state } : { factsState: "pending" as const };
-    await ctx.db.patch("runtimeIngestionEvents", event._id, { ...summary, updatedAt: Date.now() });
+    // A multi-stage receipt import can call this helper with the same old event.
+    // Compare the current transaction row, including earlier helper writes.
+    const current = await ctx.db.get("runtimeIngestionEvents", event._id);
+    if (!current) ingestionDenied("INGESTION_CONFLICT");
+    if ("vectorsState" in summary ? current.vectorsState !== summary.vectorsState : current.factsState !== summary.factsState) {
+      await ctx.db.patch("runtimeIngestionEvents", event._id, { ...summary, updatedAt: Date.now() });
+    }
   }
 }
 async function stageRow(ctx: ReadCtx, event: Event, stage: IngestionStage) {
@@ -247,7 +256,9 @@ export const claim = internalMutation({ args: stageArgs, handler: async (ctx, ar
     if (!resolution.snapshot.semanticProfile) ingestionDenied("PROFILE_NOT_READY");
     assertSupportedEmbeddingProfile(resolution.snapshot.semanticProfile);
     if (row.policyCanonical !== undefined) assertProfileMatches(current.event.profile, resolution.snapshot.semanticProfile);
-    else await ctx.db.patch("runtimeIngestionEvents", current.event._id, { profile: resolution.snapshot.semanticProfile });
+    else if (canonicalModelJson(current.event.profile) !== canonicalModelJson(resolution.snapshot.semanticProfile)) {
+      await ctx.db.patch("runtimeIngestionEvents", current.event._id, { profile: resolution.snapshot.semanticProfile });
+    }
   }
   await ctx.db.patch("runtimeIngestionStages", row._id, { policyCanonical });
   await ctx.scheduler.runAfter(INGESTION_LEASE_MS + 1, ref<"mutation", StageLease, null>("mutation", "runtimeIngestion:expireStage"),
@@ -460,7 +471,9 @@ export async function registerCompletedDerivedSource(ctx: MutationCtx, reference
   const event = (await eventById(ctx, reference, admitted.eventId))!;
   if (skipsIngestion(event.eligibility)) ingestionDenied("STALE_SOURCE");
   if (!event.vectorProfilesComplete?.includes(profile.profileId)) {
-    await ctx.db.patch("runtimeIngestionEvents", event._id, { ...(event.vectorsState === "pending" && !(event.vectorProfilesComplete?.length) ? { profile } : {}),
+    const canPinProfile = event.vectorsState === "pending" && !(event.vectorProfilesComplete?.length)
+      && (await stageRow(ctx, event, "vectors")).state === "pending";
+    await ctx.db.patch("runtimeIngestionEvents", event._id, { ...(canPinProfile ? { profile } : {}),
       vectorProfilesComplete: [...new Set([...(event.vectorProfilesComplete ?? []), profile.profileId])] });
   }
   for (const stage of await readEventStages(ctx, event)) {

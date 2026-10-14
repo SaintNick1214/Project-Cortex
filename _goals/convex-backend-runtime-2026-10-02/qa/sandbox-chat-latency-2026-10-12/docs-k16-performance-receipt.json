@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "status": "DOCS_SOURCE_AND_SINGLE_BUILD_COMPLETE",
+  "documentationMilestonePercent": 100,
+  "repository": "SaintNick1214/cortexmemory.dev",
+  "head": "66661d7fbe2b21a1a02ef79070363ccc962f1daf",
+  "sourceCandidate": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+  "updatedFile": "docs-site/docs/architecture/performance.mdx",
+  "beforeSha256": "8d1568cbd7815687b93d7d0b222dad8143c27d42d82cc2ce8738a85506b4c155",
+  "afterSha256": "0ae7561d597d7cb5285fe6a8b3952f784becf534d7d4a4ca24b48c6ec53c5499",
+  "diagnosisSha256": "1032adc67e21d8ace667156b99ba5e8af401850c701574be1737b1224cc0f9e5",
+  "otherSixPendingMdxFilesUnchanged": [
+    {
+      "path": "docs-site/docs/api-reference/runtime-client.mdx",
+      "sha256": "a97b001914b4a0edef368ef532d8a93c051463cd9e6e0e08420c11e2b49769a5"
+    },
+    {
+      "path": "docs-site/docs/architecture/model-policy.mdx",
+      "sha256": "7cf8acb413cceb96c5d8c6674debbf8ae1fe36b2547cbf54fd0a5d86e85d1f9f"
+    },
+    {
+      "path": "docs-site/docs/getting-started/backend-runtime.mdx",
+      "sha256": "6246cf77d233d2efb726a3063139cd3b54a1d73eaf911623c58043f4cd3445cd"
+    },
+    {
+      "path": "docs-site/docs/getting-started/five-minute-quickstart.mdx",
+      "sha256": "ce0e2d2eb082e019cbdc8a9f01a2cba86ab740ce77f495082e425d38d86053db"
+    },
+    {
+      "path": "docs-site/docs/getting-started/installation.mdx",
+      "sha256": "2b5a235a74544a83ce14fe5d778b246a069bcc58874b4912bd8d734140a655b2"
+    },
+    {
+      "path": "docs-site/docs/tools/cli-reference.mdx",
+      "sha256": "2e222740350cfa5551d37725c291df8755a761d3d7168fcbae7c3f06192e49ec"
+    }
+  ],
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "startedAt": "2026-10-14T01:26:14.270954+00:00",
+    "completedAt": "2026-10-14T01:26:18.634410+00:00",
+    "exitCode": 0,
+    "buildAttempts": 1
+  },
+  "rawBuildLogSha256": "832322546420c1f827426a11580258064030d5482fa208aa9fbefe55e2c8aec1",
+  "observedBuildNotices": [
+    "Docusaurus update available 3.9.2 to 3.10.2",
+    "Browserslist caniuse-lite data 11 months old"
+  ],
+  "compiledPage": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/build/architecture/performance/index.html",
+  "compiledPageSha256": "1ba346d7077d995f522bee451ca74cf6b2fef777b31ef6a0a20e68ab2b6db01e",
+  "compiledTextAssertions": [
+    "Scoped raw transcript reads",
+    "5.20 seconds",
+    "11.37 seconds",
+    "14.70 seconds",
+    "zero passes, three measured failures and one unavailable",
+    "3.59/4.47 seconds",
+    "0.33/0.44 seconds",
+    "background ingestion claims",
+    "7.84 seconds",
+    "8.93 seconds",
+    "7.50 seconds",
+    "6.98 seconds",
+    "unreleased 0.39",
+    "0.37",
+    "Asynchronous video generation remains deferred"
+  ],
+  "actualBrowserCheck": "Pending root-owned IAB render; static HTML is not a browser observation",
+  "latencyOutcomes": {
+    "targetMs": 1000,
+    "pass": 0,
+    "fail": 3,
+    "unavailable": 1,
+    "browserFirstMs": null,
+    "browserWarmMs": 5197.200000047684,
+    "cliFirstMs": 11371.979422,
+    "cliWarmMs": 14704.853548
+  },
+  "functionalOutcomes": {
+    "repliesPassed": 4,
+    "strictMemoryEventsPassed": 8,
+    "databaseAndContainer": "Fresh ABSENT in authoritative diagnosis"
+  },
+  "priorK14AndK15FailuresPreserved": true,
+  "published037AndUnreleased039AndVideoDeferralRetained": true,
+  "newSpeedOrCausalComparisonClaim": false,
+  "sourceGitProofsCredentialServiceInferencePublishWrites": false,
+  "completedAt": "2026-10-14T01:27:15.740473+00:00"
+}

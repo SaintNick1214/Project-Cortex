@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K16 CLEANED; exact native bottleneck diagnosis in progress; latency remains failed",
+  "phase": "Combined ingestion/context source/test/docs review PASS4.0;committing for K17 packaging",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T01:12:22.791558+00:00",
+  "updatedAt": "2026-10-14T01:57:35.962283+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -861,5 +861,21 @@
     "subsecondPassed": 0,
     "subsecondFailed": 3,
     "subsecondUnavailable": 1
+  },
+  "nextRepairBatch": {
+    "scope": "ingestion progress publication and ordered context source-witness query batching",
+    "ingestionSourcePercent": 100,
+    "ingestionChecks": {
+      "passed": 1054,
+      "suites": 35,
+      "failed": 0,
+      "skipped": 0
+    },
+    "sourceBatchPercent": 100,
+    "combinedIndependentReviewPercent": 100,
+    "nativeQualificationPercent": 0,
+    "docsSourceBuildRenderPercent": 100,
+    "review": "ingestion-context-source-joint-review.md",
+    "verdict": "SOURCE ONLY PASS4.0 no breaking findings"
   }
 }

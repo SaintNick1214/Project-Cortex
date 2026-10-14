@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "frozenAt": "2026-10-14T01:52:12.275397+00:00",
+  "status": "SOURCE_CHECKS_COMPLETE_AWAITING_COMBINED_INDEPENDENT_REVIEW",
+  "sourceBaseline": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+  "currentQaHead": "3a5c697becd61eddd227ae7ad673682743e019ef",
+  "implementationMilestonePercent": 100,
+  "ownedFiles": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "1951ca05914bc4f275d4dc9c8f00f26160046c199bb66f1e65cdab06ac95aed0",
+      "bytes": 125860
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-source-batch.test.ts",
+      "sha256": "9f3f4ce30d7859b6e29c55a4cb91c5c6a7509c3745c69e90900e3b03a3cea3da",
+      "bytes": 10476
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-source-composition.test.ts",
+      "sha256": "fbe3961f62cd3c80c89bec00156e5eed44575eaea96bf4afa0e83622327ba1d7",
+      "bytes": 31724
+    }
+  ],
+  "testGate": {
+    "passedTests": 1247,
+    "totalTests": 1247,
+    "passedSuites": 44,
+    "totalSuites": 44,
+    "pending": 0,
+    "todo": 0,
+    "rawReceipt": "cloud-context-source-batch-affected-v2-jest.json",
+    "sha256": "ff735c24759c20d5fd4ee5fe5c428da27987ff60ccbd6496c6a7512c5206a281",
+    "focusedFiles": [
+      {
+        "file": "tests/unit/runtimeAgent/context-source-composition.test.ts",
+        "passed": 56,
+        "failed": 0
+      },
+      {
+        "file": "tests/unit/runtimeAgent/context-source-batch.test.ts",
+        "passed": 25,
+        "failed": 0
+      }
+    ]
+  },
+  "checks": [
+    {
+      "receipt": "cloud-context-source-batch-affected-v2-exit.json",
+      "sha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+      "exitCode": 0
+    },
+    {
+      "receipt": "cloud-context-source-batch-root-types-v2.json",
+      "sha256": "663ec2a2c40ba775dd59ac9f82c631794014be858e7010c4a9b340d3db4dc2c8",
+      "exitCode": 0
+    },
+    {
+      "receipt": "cloud-context-source-batch-backend-types-v1.json",
+      "sha256": "c55f50eb28d2e223ff6824a1e1f50dd5dce89ab288f1c189440ef8bfcedf8ba9",
+      "exitCode": 0
+    },
+    {
+      "receipt": "cloud-context-source-batch-scoped-eslint-v1.json",
+      "sha256": "58dcd026376e734020fb027897f5673d18729276a9282da46ae3a485e3593c6e",
+      "exitCode": 0
+    },
+    {
+      "receipt": "cloud-context-source-batch-root-lint-v2.json",
+      "sha256": "d9f51c5d8a0249109d57b83e0b9837ecadefd042029abea089c2fa1df923186c",
+      "exitCode": 0
+    },
+    {
+      "receipt": "cloud-context-source-batch-build-v2.json",
+      "sha256": "560e4177b93e8e51968d47f89113a0da6760057f9a7da6ac92cdfc17059d761d",
+      "exitCode": 0
+    },
+    {
+      "receipt": "cloud-context-source-batch-contracts-v2.json",
+      "sha256": "5283a87e2f55d20f10e5da695da6153793786d65e1d75d5a10b7288f8952e8d1",
+      "exitCode": 0
+    }
+  ],
+  "equivalenceReceipt": "cloud-context-source-batch-equivalence.json",
+  "equivalenceSha256": "7e6a4ca23f3bb135f6909f62565dc1488d0a8869ec260877085895f8ab419171",
+  "preservedFailures": [
+    {
+      "receipt": "cloud-context-source-batch-focused-v1-exit.json",
+      "exitCode": 1,
+      "reason": "New old-endpoint-zero assertion accidentally used the batch name; retained original failed 77/78 outcome, corrected only that physical endpoint expectation"
+    },
+    {
+      "receipt": "cloud-context-source-batch-root-types-v1.json",
+      "exitCode": 2,
+      "reason": "New test afterEach callback returned Jest; corrected to void without changing assertions"
+    }
+  ],
+  "rootLintWarnings": 237,
+  "scopedLintWarnings": 0,
+  "sourcePredicatesWorkflowJournalAndSaveBodiesByteExact": true,
+  "sourceBatchLimits": {
+    "items": 100,
+    "existingWitnesses": 200,
+    "priorVectorWitnesses": 100,
+    "finalContextWitnessOverflow": 32,
+    "finalContextOverflowCheckUnchanged": true
+  },
+  "actualCloudLatencyOrQualification": false,
+  "productWritesOnlyOwnedAgentFile": true,
+  "gitProofsWebsiteServicesInferenceWrites": false
+}

@@ -1,0 +1,49 @@
+{
+  "baselineProductCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+  "qaOnlyHead": "3a5c697becd61eddd227ae7ad673682743e019ef",
+  "beforeSha256": "a0175402e2785b79a15b470c588530308101fcbd69f663d86dadd2ac0cbf1bab",
+  "afterSha256": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+  "changedOriginalDeclarations": [
+    "readiness",
+    "writeStage",
+    "claim",
+    "registerCompletedDerivedSource"
+  ],
+  "unchangedOriginalDeclarations": 44,
+  "noNewRegistrationOrDeclaration": true,
+  "byteExactOriginalGuardsAndRegistrations": [
+    "readEventCurrent",
+    "requireStageLease",
+    "requireStageCommit",
+    "guardIngestionRunBudget",
+    "assertIngestionPolicyPin",
+    "extractionParent",
+    "persistStage",
+    "failStage",
+    "expireStage",
+    "failUnclaimed",
+    "retry",
+    "reconcile",
+    "status",
+    "stageInput",
+    "persistDraft",
+    "commitVectors",
+    "processStageHandler",
+    "finishBeliefStage",
+    "retireScopedSourceEvents",
+    "enqueueSourceEvent",
+    "registerCompletedToolSource"
+  ],
+  "relatedByteExact": {
+    "convex-dev/runtimeAgent.ts": "0abf300d9a6431c4b3525e10a1f89d645511f30c97844ab2a7dd775be7881e7e",
+    "convex-dev/runtimeTranscript.ts": "3685b510a76589246d0ff8ccdc2d2e90a9f2470b2857f35b0cb65d1ff8533765",
+    "convex-dev/runtimeAuth.ts": "a69c9089b017b82fb0307df8fffac7fab9766a1715959fa0de0e3c10ba8f7817",
+    "convex-dev/runtimeMemoryContext.ts": "6c3ecab80b4953e0e4f3c94ca4396217ab5a51738da1ab3bb29163450deaa070",
+    "convex-dev/runtimeIngestionSchema.ts": "cec8c9ab488c42bed1fb6b853ab4d01ce52669bde993dec08a4068500da93499"
+  },
+  "publicProjection": "ingestion.status still reads stages with original exact running/attempt/failure/receipt fields; event running readiness is normalized pending only internally.",
+  "semanticNormalization": "Event summary no longer mirrors running lease activity; supported historical running summary remains incomplete. Only real summary changes publish updatedAt.",
+  "newFence": "Foreground profile assignment also requires actual vectors stage pending; running-stage repinning cannot follow normalized event pending.",
+  "freshSummaryRead": "Original same event argument can be stale after earlier stage writes; compare freshly read transaction event with same id.",
+  "pass": true
+}

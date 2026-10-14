@@ -1,0 +1,43 @@
+{
+  "sourceBaseline": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+  "productFile": "convex-dev/runtimeAgent.ts",
+  "retainedByteExactDeclarations": [
+    "contextSourceHandler",
+    "contextSource",
+    "executeTurn",
+    "executeTurnV2",
+    "executeTurnV3",
+    "executeTurnV4",
+    "executeTurnV5",
+    "onWorkflowComplete",
+    "onInitialWorkflowComplete",
+    "saveContextHandler",
+    "prepareEmptyContextHandler",
+    "prepareRoutedContextHandler",
+    "prepareTurnModelHandler",
+    "admitPreparedModelOperationHandler"
+  ],
+  "changedDeclarations": [
+    "refs",
+    "prepareContextHandler"
+  ],
+  "newDeclarations": [
+    "ContextSourceBatchArgs",
+    "contextSourceBatchHandler",
+    "contextSourceBatch"
+  ],
+  "protectedIngestionOwnerFrozenHashes": [
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "sha256": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/progress-publication.test.ts",
+      "sha256": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+    }
+  ],
+  "noSourcePredicateOrJournalBodyChanges": true,
+  "newInternalEndpoint": "contextSourceBatch",
+  "newQuerySnapshotScope": "One ordered branch only; no authority/source/result cache",
+  "nativeSpeedProven": false
+}

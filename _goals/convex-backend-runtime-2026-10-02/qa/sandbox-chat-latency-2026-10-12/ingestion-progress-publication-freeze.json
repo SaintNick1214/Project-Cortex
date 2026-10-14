@@ -1,0 +1,184 @@
+{
+  "status": "FROZEN_SOURCE_TEST_COMPLETE_NATIVE_LATENCY_PENDING",
+  "productBaseline": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+  "qaOnlyHead": "3a5c697becd61eddd227ae7ad673682743e019ef",
+  "files": [
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "sha256": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+      "bytes": 52627
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/progress-publication.test.ts",
+      "sha256": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9",
+      "bytes": 16303
+    }
+  ],
+  "tests": {
+    "discoveredSuites": 35,
+    "passedSuites": 35,
+    "passedTests": 1054,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "newTests": 14
+  },
+  "allFinalChecksPass": true,
+  "scopedLintWarnings": 0,
+  "rootLintWarnings": 237,
+  "buildSources": 157,
+  "changedOriginalDeclarations": [
+    "readiness",
+    "writeStage",
+    "claim",
+    "registerCompletedDerivedSource"
+  ],
+  "originalUnchangedDeclarations": 44,
+  "noSourceExpansion": true,
+  "nativeCalls": 0,
+  "paidCalls": 0,
+  "nativeSpeedClaim": false,
+  "laterDisjointBatchNotCoveredByThisStage": true,
+  "receipts": [
+    {
+      "path": "ingestion-progress-publication-source-report.md",
+      "sha256": "05d7c71acc950ac3c50ecc34aa9019fd5cb4db4d465cd41d5caf92213689580d",
+      "bytes": 5877
+    },
+    {
+      "path": "ingestion-progress-publication-equivalence.json",
+      "sha256": "82dcc63a8794abdef18bb7c8297f5b054b99ee466474908fb0d3c0d9da731215",
+      "bytes": 2300
+    },
+    {
+      "path": "ingestion-progress-publication-selected-paths.json",
+      "sha256": "c43c8fb6f6e8fd6018e12cc6978373401f9a61d13aee2ecf1f6eb0bba780b55d",
+      "bytes": 1869
+    },
+    {
+      "path": "ingestion-progress-publication-final-checks.json",
+      "sha256": "123db0ef60cf9c91a53382263d2bed5f4d78ddac2b466e625fab008c929f8010",
+      "bytes": 4615
+    },
+    {
+      "path": "ingestion-progress-publication-final-checks-v2.json",
+      "sha256": "a61d41daa3031a01c6aec1e06efd300fe7c39621511659b9aefa3c85f330e6b7",
+      "bytes": 14455
+    },
+    {
+      "path": "ingestion-progress-publication-affected-final-jest.json",
+      "sha256": "7b54a438a5573ce4108b1d532d4383b2ce0411bc4ca04911540fcd30d54d27e2",
+      "bytes": 514542
+    },
+    {
+      "path": "ingestion-progress-publication-focused-v1-jest.json",
+      "sha256": "663756aca2a248a3614eab1d8fc789b1dbde0ed3c21b6d4277ed31645f3ac915",
+      "bytes": 21961
+    },
+    {
+      "path": "ingestion-progress-publication-focused-v1.log",
+      "sha256": "fbc8d0ba14ef6da5472b0789890268b4a9c51a061034f59cb36c50dc12bdfe77",
+      "bytes": 9742
+    },
+    {
+      "path": "ingestion-progress-publication-focused-v2-jest.json",
+      "sha256": "66593cd4d23010d4161c4151f123a8bbfb8ecf5194c7ef34b5c3dfb14c42c2bf",
+      "bytes": 7906
+    },
+    {
+      "path": "ingestion-progress-publication-focused-v2.log",
+      "sha256": "af62c255007ed32ba168fd050a51fcb7a735162f28228cf116cfa1a1c937ca14",
+      "bytes": 7908
+    },
+    {
+      "path": "ingestion-progress-publication-root-types-final.log",
+      "sha256": "879ba0e19d57b6d6b0d98eb772925da7d109d7be719ad6a9cadcc7d187763063",
+      "bytes": 111
+    },
+    {
+      "path": "docs-k16-performance-render-receipt.json",
+      "sha256": "910070259e7d5ef09a9ed69775e5e85a8ffb9bfd59eef9cd2f652dd3ddd41997",
+      "bytes": 1055
+    },
+    {
+      "path": "ingestion-progress-publication-discovery-final.json",
+      "sha256": "dc881033e14c4d1470fd50d649b416d2d21232a4e9eafbf554547b7eff8b35ed",
+      "bytes": 3143
+    },
+    {
+      "path": "ingestion-progress-publication-discovery-final.log",
+      "sha256": "1fb0c9a046a32d92612a5d683d72fd7a255a6283c6153212158b87da41a70dae",
+      "bytes": 4248
+    },
+    {
+      "path": "ingestion-progress-publication-root-types-v2-final.json",
+      "sha256": "3f4152a006dcdb5aadb5132411f9e2a3e4870eee48e6a2b7645cbd0886adc677",
+      "bytes": 1083
+    },
+    {
+      "path": "ingestion-progress-publication-root-types-v2-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "ingestion-progress-publication-backend-types-final.json",
+      "sha256": "16649f57bc28253c10f2aa814a05f35448bf21c45d2bcde3522d0e51fef568e8",
+      "bytes": 1131
+    },
+    {
+      "path": "ingestion-progress-publication-backend-types-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "ingestion-progress-publication-scoped-eslint-final.json",
+      "sha256": "a72630d519aca892d7a3f63bef5dc0c29aabfea877f2be47198acdd9d3e330c7",
+      "bytes": 1212
+    },
+    {
+      "path": "ingestion-progress-publication-scoped-eslint-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "ingestion-progress-publication-affected-final.json",
+      "sha256": "91f0becdcff6b80ad8b5a611f70806ebc4eb267bb31422337d9eee350d4486f1",
+      "bytes": 3352
+    },
+    {
+      "path": "ingestion-progress-publication-affected-final.log",
+      "sha256": "f46c9757eaecde5cfd895dd5480ff18647bfbf7fa7ddaa20cf16d8ad09332261",
+      "bytes": 27689
+    },
+    {
+      "path": "ingestion-progress-publication-root-lint-final.json",
+      "sha256": "6451753617ad6f257c5520248abfd76fbc1e985c8824013f4dbc8ca859bb42c5",
+      "bytes": 1143
+    },
+    {
+      "path": "ingestion-progress-publication-root-lint-final.log",
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d",
+      "bytes": 39764
+    },
+    {
+      "path": "ingestion-progress-publication-build-final.json",
+      "sha256": "691369ba81e551d8c6989f64fb96c4355f301c29985ba9fbc49058f1f62ba76a",
+      "bytes": 1137
+    },
+    {
+      "path": "ingestion-progress-publication-build-final.log",
+      "sha256": "a068eb3e7a7e75d9297efb31673b60444b8d66045f1cc3e442b34ed9914812cf",
+      "bytes": 2722
+    },
+    {
+      "path": "ingestion-progress-publication-contracts-final.json",
+      "sha256": "0426827a73ae31b320dc585f115c20e72aa66aa2313b1bc38daaa8b4ce5c6c53",
+      "bytes": 1153
+    },
+    {
+      "path": "ingestion-progress-publication-contracts-final.log",
+      "sha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf",
+      "bytes": 252
+    }
+  ]
+}

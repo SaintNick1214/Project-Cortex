@@ -39,6 +39,7 @@ import { createAgentGatewayCancellationBridge, createGovernedGatewayModel, asser
 import { createActionMemoryRepository } from "./runtimeMemoryRepository";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sourceContent, commitDerivedInput } from "./runtimeMemorySchema";
+import { contextSourcePermission } from "./runtimeContextWitnessSchema";
 import { registerCompletedToolSource } from "./runtimeIngestion";
 import { contextBoundary, readIndexedContextAvailability, readIndexedSourceAtCutoff, readPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
 import type { ContextBoundary } from "./runtimeMemoryContext";
@@ -56,6 +57,10 @@ type WorkflowCompletion = { workflowId: string; context: Attempt; result: { kind
 type Witness = ContextSourceWitness;
 type ContextSourceArgs = { reference: RuntimeAuthorityReference; sourceId: string;
   expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }; excludedSourceKeys: string[]; cutoff: number; boundary: ContextBoundary };
+type ContextSourceBatchArgs = Omit<ContextSourceArgs, "sourceId" | "expected"> & {
+  items: Pick<ContextSourceArgs, "sourceId" | "expected">[]; permission: ContextSourcePermission;
+  witnesses: Witness[]; priorWitnesses: Witness[];
+};
 function attemptArgs(args: Attempt): Attempt { return { reference: args.reference, runId: args.runId, attemptNumber: args.attemptNumber, leaseVersion: args.leaseVersion }; }
 export type AgentPublicPart = RuntimePublicOutputPart | { type: "status"; state: Doc<"runtimeAgentExecutions">["state"] }
   | { type: "artifact"; artifactId: string; kind: "memory-receipt" } | { type: "media-job"; version: 1; jobId: string; artifactId: string; kind: "image" | "video" };
@@ -79,6 +84,7 @@ const refs = {
   turn: ref<"action", Attempt & { ordinal: number }, StepResult>("action", "runtimeAgent:turnStepV5"),
   contextInputs: ref<"query", Attempt, Awaited<ReturnType<typeof contextInputsHandler>>>("query", "runtimeAgent:contextInputs"),
   contextSource: ref<"query", ContextSourceArgs, Awaited<ReturnType<typeof contextSourceHandler>>>("query", "runtimeAgent:contextSource"),
+  contextSourceBatch: ref<"query", ContextSourceBatchArgs, Awaited<ReturnType<typeof contextSourceBatchHandler>>>("query", "runtimeAgent:contextSourceBatch"),
   prepareContext: ref<"action", Attempt, null>("action", "runtimeAgent:prepareContext"),
   context: ref<"mutation", Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string }, null>("mutation", "runtimeAgent:saveContext"),
   begin: ref<"mutation", Attempt & { kind: "model" | "tool"; ordinal: number; requestCanonical: string; toolCallId?: string; toolName?: string },
@@ -522,9 +528,34 @@ export const contextSource = internalQuery({ args: { reference: runtimeAuthority
   expected: v.object({ sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.optional(v.string()) }),
   excludedSourceKeys: v.array(v.string()), cutoff: v.number(), boundary: contextBoundary }, handler: contextSourceHandler });
 
+/** One branch, original ordered guards and immediate witness merge. Retained
+ * witnesses are conflict bookkeeping only; they cannot authorize a source. */
+async function contextSourceBatchHandler(ctx: QueryCtx, args: ContextSourceBatchArgs) {
+  if (args.items.length > 100 || args.witnesses.length > 200 || args.priorWitnesses.length > 100) transcriptDenied("INVALID_INPUT");
+  const witnesses = new Map(args.witnesses.map(witness => [witness.sourceId, witness]));
+  const priorWitnesses = new Map(args.priorWitnesses.map(witness => [witness.sourceId, witness]));
+  const provenance = new Map<string, import("../src/domain/contracts").SourceLineage>();
+  const scope = memoryScope(args.reference), selectedIndexes: number[] = [];
+  for (const [index, item] of args.items.entries()) {
+    const source = await contextSourceHandler(ctx, { reference: args.reference, ...item,
+      excludedSourceKeys: args.excludedSourceKeys, cutoff: args.cutoff, boundary: args.boundary });
+    if (!source) continue;
+    const key = contextSourceKey(scope, source.lineage);
+    const witness = mergeContextWitness(witnesses.get(item.sourceId) ?? priorWitnesses.get(item.sourceId), { sourceId: item.sourceId, sourceEventId: source.lineage.sourceEventId,
+      sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, permissions: [args.permission] });
+    if (!witness) transcriptDenied("STALE_CONTEXT");
+    witnesses.set(item.sourceId, witness); provenance.set(key, source.lineage); selectedIndexes.push(index);
+  }
+  return { selectedIndexes, witnesses: [...witnesses.values()], provenance: [...provenance.entries()] };
+}
+export const contextSourceBatch = internalQuery({ args: { reference: runtimeAuthorityReference,
+  items: v.array(v.object({ sourceId: v.string(), expected: v.object({ sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.optional(v.string()) }) })),
+  permission: contextSourcePermission, witnesses: v.array(sourceWitness), priorWitnesses: v.array(sourceWitness),
+  excludedSourceKeys: v.array(v.string()), cutoff: v.number(), boundary: contextBoundary }, handler: contextSourceBatchHandler });
+
 export async function prepareContextHandler(ctx: ActionCtx, args: Attempt): Promise<null> {
   const inputs = await ctx.runQuery(refs.contextInputs, args);
-  const { current, scope, boundary, represented, pending } = inputs;
+  const { current, boundary, represented, pending } = inputs;
   const cutoff = current.snapshot.ingestionCutoff.sequence;
   let completeness: "complete" | "incomplete" = current.execution.contextCompleteness ?? "complete"; let failureCode = current.execution.contextFailureCode;
   async function fail(code: "CAPABILITY_UNAVAILABLE" | "MEMORY_STAGE_FAILED" | "MEMORY_BARRIER_TIMEOUT" | "CONTEXT_OVERFLOW"): Promise<never> {
@@ -541,26 +572,28 @@ export async function prepareContextHandler(ctx: ActionCtx, args: Attempt): Prom
   type RecallContext = { witnesses: typeof witnesses; provenance: typeof provenance };
   type RecallReads = Pick<typeof repository, "listFacts" | "searchVectors">;
   const retained = { witnesses, provenance };
-  async function remember(state: RecallContext, sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }, permission: ContextSourcePermission, priorWitnesses?: typeof witnesses) {
-    const source = await ctx.runQuery(refs.contextSource, { reference: args.reference, sourceId,
-      expected: { sourceEventId: expected.sourceEventId, sourceRevision: expected.sourceRevision, ...(expected.contentHash !== undefined ? { contentHash: expected.contentHash } : {}) },
+  async function selectSources(state: RecallContext, items: ContextSourceBatchArgs["items"], permission: ContextSourcePermission, priorWitnesses?: typeof witnesses) {
+    if (!items.length) return [];
+    const selected = await ctx.runQuery(refs.contextSourceBatch, { reference: args.reference, items, permission,
+      witnesses: [...state.witnesses.values()], priorWitnesses: [...(priorWitnesses?.values() ?? [])],
       excludedSourceKeys: [...excluded], cutoff, boundary });
-    if (!source) return false;
-    const key = contextSourceKey(scope, source.lineage);
-    const witness = mergeContextWitness(state.witnesses.get(sourceId) ?? priorWitnesses?.get(sourceId), { sourceId, sourceEventId: source.lineage.sourceEventId,
-      sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, permissions: [permission] });
-    if (!witness) transcriptDenied("STALE_CONTEXT");
-    state.witnesses.set(sourceId, witness); state.provenance.set(key, source.lineage); return true;
+    for (const witness of selected.witnesses) state.witnesses.set(witness.sourceId, witness);
+    for (const [key, lineage] of selected.provenance) state.provenance.set(key, lineage);
+    return selected.selectedIndexes;
   }
   async function selectFacts(reads: RecallReads, state: RecallContext, query: Parameters<typeof repository.listFacts>[0], vectorSettled?: Promise<void>, priorWitnesses?: typeof witnesses) {
-    const facts = await reads.listFacts(query); const selected = [];
+    const facts = await reads.listFacts(query);
     // Native reads overlap; keep the original vector-first source guard RPCs.
     await vectorSettled;
-    for (const fact of facts) if (await remember(state, fact.lineage.sourceId, fact.lineage, "canViewFacts", priorWitnesses)) selected.push(fact); return selected;
+    const selected = await selectSources(state, facts.map(fact => ({ sourceId: fact.lineage.sourceId,
+      expected: { sourceEventId: fact.lineage.sourceEventId, sourceRevision: fact.lineage.sourceRevision } })), "canViewFacts", priorWitnesses);
+    return selected.map(index => facts[index]!);
   }
   async function selectVectors(reads: RecallReads, state: RecallContext, query: Parameters<typeof repository.searchVectors>) {
-    const matches = await reads.searchVectors(...query); const selected = [];
-    for (const match of matches) if (await remember(state, match.source.lineage.sourceId, { ...match.source.lineage, contentHash: match.source.contentHash }, "canViewMemories")) selected.push(match); return selected;
+    const matches = await reads.searchVectors(...query);
+    const selected = await selectSources(state, matches.map(match => ({ sourceId: match.source.lineage.sourceId,
+      expected: { sourceEventId: match.source.lineage.sourceEventId, sourceRevision: match.source.lineage.sourceRevision, contentHash: match.source.contentHash } })), "canViewMemories");
+    return selected.map(index => matches[index]!);
   }
   const scoped = { ...repository,
     listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => await selectFacts(repository, retained, query),

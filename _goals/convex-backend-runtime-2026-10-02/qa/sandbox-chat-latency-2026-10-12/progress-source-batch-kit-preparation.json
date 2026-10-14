@@ -1,0 +1,70 @@
+{
+  "status": "PREPARED_ONLY_NO_BUILD_PACK_IMAGE",
+  "preparedAtUtc": "2026-10-14T01:47:54.253236+00:00",
+  "newKit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-progress-source-batch-2026-10-13",
+  "fromKit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-transcript-reader-2026-10-13",
+  "onlyControlsCopied": [
+    "prepare.mjs",
+    "image/Dockerfile",
+    "image/install-candidates.mjs",
+    "image/entrypoint.mjs"
+  ],
+  "onlyContentChange": {
+    "file": "prepare.mjs",
+    "oldQa": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-transcript-reader",
+    "newQa": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-progress-source-batch"
+  },
+  "oldControlSha256": {
+    "prepare.mjs": "b1fe159620eea58141a0ac7896e2d6f3343c4274d284b2d21603d45980e1c015",
+    "image/Dockerfile": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f",
+    "image/install-candidates.mjs": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f",
+    "image/entrypoint.mjs": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+  },
+  "newControlSha256": {
+    "prepare.mjs": "2b87e112106d8e89a17fd7030332d317c08558b01475311ef8a7f0b9caa813a8",
+    "image/Dockerfile": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f",
+    "image/install-candidates.mjs": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f",
+    "image/entrypoint.mjs": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+  },
+  "originalArchiveManifestSha256": "05cd5f983707d80c35c4d4afc542f5b8af29fa6a28300cacaad24c5568577350",
+  "originalPackagesVerifiedAndUnchanged": [
+    {
+      "role": "sdk",
+      "filename": "cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "9ac8a26120ab12209ae34f2fbdd0ee292942ed5d23ebfc2f6ca4a50afd6876b3",
+      "bytes": 1598240
+    },
+    {
+      "role": "cli",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "bytes": 538578
+    },
+    {
+      "role": "provider",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+      "bytes": 77673
+    },
+    {
+      "role": "catalog",
+      "filename": "cortexmemory-templates-1.3.1.tgz",
+      "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970",
+      "bytes": 1708644
+    }
+  ],
+  "newArchivesEmpty": true,
+  "stagingDependenciesIdentitiesEvidenceTreesCopied": false,
+  "buildExecuted": false,
+  "packExecuted": false,
+  "imageExecuted": false,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "committedSourceGo": "PENDING_COMBINED_REVIEW_PASS_AND_EXACT_SOURCE",
+  "prospectiveExpected": {
+    "backendFiles": 157,
+    "tables": 72,
+    "components": 2
+  },
+  "futurePurposefulPackedRoots": "Retain prior8root validation; replace runtimeMemoryServices with runtimeIngestion so Agent and Ingestion are both checked. Apply only after frozen endpoint name/exports and committed-source GO; no assumed endpoint here."
+}
