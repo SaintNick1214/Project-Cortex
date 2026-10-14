@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "V5 structural source independently accepted; fresh packaging next",
+  "phase": "K15 native8/8 proof/accounting/cleanup PASS; four cloud latency samples FAIL; measured next repair pending",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-13T23:36:16.963903+00:00",
+  "updatedAt": "2026-10-13T23:56:04.824472+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,19 +58,19 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "sessionId": "e07fd8cd-4f0b-4ceb-833c-15b167bda97f",
-    "generation": "K14",
+    "sessionId": "513d91a6-6cc5-425f-b997-306a6261b868",
+    "generation": "K15",
     "state": "ABSENT",
-    "database": "mild-eagle-107",
-    "deploymentId": 6150945,
-    "expiresAt": 1792536059586,
-    "webPort": 3296,
+    "database": "formal-newt-698",
+    "deploymentId": 6152307,
+    "expiresAt": 1792539988680,
+    "webPort": 3316,
     "nativeSLOQualified": false,
     "backendTraceEnabled": true,
     "startupQualificationMethodsPassed": 8,
-    "cliProcessExit": 0,
     "browserSignedOutAndClosedBeforeCLI": true,
-    "cleanupReceipt": "k14-cleanup-final.json"
+    "cliProcessExit": 0,
+    "cleanupReceipt": "k15-cleanup-final.json"
   },
   "actualSamples": {
     "generation": "K11",
@@ -783,5 +783,43 @@
     "sampledWarningErrors": 0,
     "review": "v5-structural-source-review.md",
     "published": false
+  },
+  "packagingK15": {
+    "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+    "percent": 20,
+    "kit": "manual-sandbox-latency-turn-consolidation-2026-10-13",
+    "actualCommittedInputs": 2140,
+    "nativeQualified": false
+  },
+  "candidateMilestone": {
+    "generation": "K15",
+    "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+    "sourcePercent": 100,
+    "packagingPercent": 100,
+    "launcherTests": {
+      "passed": 104,
+      "failed": 0,
+      "skipped": 0
+    },
+    "nativePercent": 0,
+    "nativeSLOQualified": false,
+    "nativeSamplesMeasured": 4,
+    "nativeSLOPassed": 0
+  },
+  "k15ActualSamples": {
+    "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+    "browserFirstAfterPaintMs": 7499,
+    "browserWarmAfterPaintMs": 6980.100000023842,
+    "cliFirstStdoutAcknowledgedMs": 12836.417632,
+    "cliWarmFirstStdoutAcknowledgedMs": 14649.508340999997,
+    "response": "all-fourCOMPLETE",
+    "sloPassed": 0,
+    "sloTotal": 4,
+    "nativeMemoryProof": "8/8PASS",
+    "originalCliDeadlineMs": 30000,
+    "paidRetry": false,
+    "browserClosedBeforeCLI": true,
+    "activeSlots": 0,
+    "cleanup": "freshABSENT"
   }
 }

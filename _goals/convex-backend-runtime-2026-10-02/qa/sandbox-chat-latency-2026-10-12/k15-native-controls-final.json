@@ -1,0 +1,168 @@
+{
+  "observedAtMs": 1791935789521,
+  "status": "COMPLETE_NATIVE_CONTROLS_FUNCTIONAL_PASS_CLEANUP_ABSENT_SLO_FAIL",
+  "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+  "target": {
+    "sessionId": "513d91a6-6cc5-425f-b997-306a6261b868",
+    "name": "formal-newt-698",
+    "id": 6152307,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-513d91a6-6cc5-425f-b997-306a6261b868"
+  },
+  "nativeMemory": {
+    "passed": true,
+    "runs": 4,
+    "canonicalEvents": 8,
+    "attributedPositiveUserFacts": 4,
+    "matchingNativeVectors": 8,
+    "freshExactTargetVerifications": 43,
+    "factsThrough": 8,
+    "selectedProfileVectorsThrough": 8,
+    "profileId": "cortex-text-small-1536-v1",
+    "originalAssertionsUnchanged": true
+  },
+  "finance": {
+    "nativeAttempts": 31,
+    "activeSlots": 0,
+    "reservationCeilingsUnits": 5000000,
+    "allSlotsReleased": true,
+    "chargesUnknown": true,
+    "manualCallsNotRetried": true
+  },
+  "snapshotPlan": {
+    "browser": {
+      "phases": 190,
+      "executions": 640,
+      "capReached": false
+    },
+    "cli": {
+      "phases": 428,
+      "executions": 1000,
+      "capReached": true
+    },
+    "nativeExecutionCap": 1000,
+    "missingCappedRecords": "unavailable, not zero",
+    "oldBrowserSnapshotPreserved": true
+  },
+  "collectors": {
+    "browserSnapshotInvocations": 1,
+    "cliSnapshotInvocations": 1,
+    "allFourMemoryProofInvocations": 1,
+    "financeInvocations": 1,
+    "joinedChainInvocations": 4,
+    "allExitCodes": 0,
+    "allClientsClosed": true,
+    "nativeMutations": 0,
+    "inferenceCalls": 0,
+    "retries": 0,
+    "authDiagnosticInvoked": false
+  },
+  "receipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k15-browser-post-pair-1791935499629.json",
+      "bytes": 727539,
+      "sha256": "7c45dbf0a811cee4acbb77f8a97e0f16484e0733915ab318021ea2502ef41242"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k15-cli-post-pair-1791935584659.json",
+      "bytes": 1204571,
+      "sha256": "40c663da8bb454bd3ba0268ff3efe4eae882b5888cf1017357a652619edb39fd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-memory-native-v2-four-run-verification-1791935620079.json",
+      "bytes": 89272,
+      "sha256": "079898e5b229337e39660b8bf8a9c9dda5d0420b53f04c11f73f71eafe656896"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-financial-metadata-1791935653748.json",
+      "bytes": 39345,
+      "sha256": "6f4c29161a1075ea3710e6ed259aafa7af90976877906bf0fc8b5204a3e9a66f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-run-chain-b3eb8df008a0-1791935658507.json",
+      "bytes": 8483,
+      "sha256": "11b0926b40ff983803a21b0ff3139246903e1be6e75fd3a968ae1cfb9ba61694"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-run-chain-9aecac68c779-1791935663323.json",
+      "bytes": 7827,
+      "sha256": "0e87d9171cb227c05dd3735af3fbdeabe94c2add22a36cbaab952eb1cec98af5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-run-chain-bdbae74e4f42-1791935668418.json",
+      "bytes": 9081,
+      "sha256": "b87a40d0cc6f81c22a0e41c157971907fc5334cf5eb6a9697b5758bb459c8a71"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-run-chain-d10d42ae8207-1791935673486.json",
+      "bytes": 8425,
+      "sha256": "bd7f254cae375f9ed239271cb825aa746b8604ec0ce902307755b3a28a04390f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-cleanup-final.json",
+      "bytes": 817,
+      "sha256": "50fe3188c337918d2a1ec733947d0d273ea4004ab084997696800acf61fab4dc"
+    }
+  ],
+  "cleanup": {
+    "status": "ABSENT",
+    "database": "ABSENT",
+    "container": "ABSENT",
+    "credentialsRemoved": true,
+    "verification": {
+      "freshApprovedProjectGet": true,
+      "freshDeploymentInventoryNoExactIdentity": true,
+      "exactDockerInspectNegative": true,
+      "launcherExit": 130
+    },
+    "receipt": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-cleanup-final.json",
+      "bytes": 817,
+      "sha256": "50fe3188c337918d2a1ec733947d0d273ea4004ab084997696800acf61fab4dc"
+    }
+  },
+  "subsecondAcceptance": false,
+  "slo": {
+    "targetFirstVisibleMs": 1000,
+    "passed": 0,
+    "failed": 4,
+    "source": "Root genuine canonical browser/CLI observations; not remeasured by this collector",
+    "samples": [
+      {
+        "client": "browser",
+        "condition": "first clean ordinary scope",
+        "boundary": "visible after paint",
+        "milliseconds": 7499,
+        "passed": false
+      },
+      {
+        "client": "browser",
+        "condition": "warm same conversation",
+        "boundary": "visible after paint",
+        "milliseconds": 6980.100000023842,
+        "passed": false
+      },
+      {
+        "client": "cli",
+        "condition": "first after indexed browser turns",
+        "boundary": "first stdout acknowledgement",
+        "milliseconds": 12836.417632,
+        "passed": false
+      },
+      {
+        "client": "cli",
+        "condition": "warm same CLI conversation",
+        "boundary": "first stdout acknowledgement",
+        "milliseconds": 14649.508340999997,
+        "passed": false
+      }
+    ],
+    "originalDeadlineMs": 30000,
+    "allResponsesComplete": true,
+    "clockBoundariesSeparate": true,
+    "noCausalCrossClientClaim": true
+  },
+  "finiteCollectionCompleted": true,
+  "savedChainAnalysisPerformed": false
+}

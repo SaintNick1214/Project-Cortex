@@ -1,0 +1,57 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+const p='/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs',q=path.dirname(new URL(import.meta.url).pathname),base=p+'/sandbox-env';
+const kit=p+'/manual-sandbox-latency-turn-consolidation-2026-10-13';
+const sha=x=>createHash('sha256').update(x).digest('hex');
+const manifest=JSON.parse(await fs.readFile(kit+'/image/archives/manifest.json','utf8'));
+const identity=JSON.parse(await fs.readFile(q+'/kit-checks-turn-consolidation/docker-image-identity.json','utf8'));
+assert.equal(manifest.sourceCommit,'2c8689fac3aca2acf1fb1f46d8b10a87388e95cd');
+assert.equal(manifest.backend.files,157);assert.equal(manifest.backend.allSourceOutputHashesMatch,true);
+assert.equal(identity.os,'linux');assert.equal(identity.architecture,'arm64');assert.equal(identity.user,'sandbox');
+assert.equal(identity.labels['dev.cortex.manual-sandbox.source'],manifest.sourceCommit);
+assert.equal(identity.labels['dev.cortex.manual-sandbox.path'],kit);
+assert.equal(identity.labels['dev.cortex.manual-sandbox'],identity.kitIdentity.id);
+const actual=JSON.parse((await promisify(execFile)('/Applications/Docker.app/Contents/Resources/bin/docker',['image','inspect',identity.imageId],{maxBuffer:100000})).stdout)[0];
+assert.equal(actual.Id,identity.imageId);assert.equal(actual.Os,'linux');assert.equal(actual.Architecture,'arm64');assert.equal(actual.Config.User,'sandbox');
+for(const [key,value]of Object.entries(identity.labels))assert.equal(actual.Config.Labels[key],value);
+const reviewPath=q+'/v5-structural-source-review.md',review=await fs.readFile(reviewPath);
+assert.equal(sha(review),'82098d07ef27c6c14c30c8c2c0bc3d9771d2b575ab7670479c2839468987ba30');assert.ok(/PASS/.test(review.toString()));
+const approvalPath=base+'/procedure-approval.json',originalApproval=await fs.readFile(approvalPath);
+const approval=JSON.parse(originalApproval);
+assert.equal(approval.maximumPaidRequests,8);assert.equal(approval.maximumUnknownLiabilityUnits,2700000);assert.equal(approval.perRunHumanReview,false);
+await fs.writeFile(q+'/procedure-approval-before-turn-consolidation.json',originalApproval,{flag:'wx'});
+let docker=await fs.readFile(base+'/docker.mjs','utf8');
+await fs.writeFile(q+'/docker-before-turn-consolidation.mjs',docker,{flag:'wx'});
+const oldImage=/export const IMAGE_ID = '([^']+)'/.exec(docker)[1];
+assert.equal(oldImage,'sha256:f1b4bb13bf023ed2851f0bca5c9da2a18eca1e7010daee7eeaef730978d56406');
+assert.ok(!docker.includes('PRIOR_PARALLEL_POLICY_IMAGE_ID'));
+for(const [name,value]of Object.entries({IMAGE_ID:identity.imageId,SOURCE_COMMIT:manifest.sourceCommit,BACKEND_MANIFEST_SHA256:manifest.backend.manifestSha256})){
+ const pattern=new RegExp("export const "+name+" = '[^']+'");assert.ok(pattern.test(docker));docker=docker.replace(pattern,"export const "+name+" = '"+value+"'");
+}
+docker=docker.replace('export const LABEL =',"export const PRIOR_PARALLEL_POLICY_IMAGE_ID = '"+oldImage+"';\nexport const LABEL =");
+const oldList='PRIOR_COMPACT_VECTOR_IMAGE_ID, PRIOR_CONTEXT_TRANSACTION_IMAGE_ID, PRIOR_QUERY_COMPOSITION_IMAGE_ID, PRIOR_AUTHORITY_ROUTING_IMAGE_ID, PRIOR_IMMEDIATE_START_IMAGE_ID]';assert.equal(docker.split(oldList).length,2);
+docker=docker.replace(oldList,'PRIOR_COMPACT_VECTOR_IMAGE_ID, PRIOR_CONTEXT_TRANSACTION_IMAGE_ID, PRIOR_QUERY_COMPOSITION_IMAGE_ID, PRIOR_AUTHORITY_ROUTING_IMAGE_ID, PRIOR_IMMEDIATE_START_IMAGE_ID, PRIOR_PARALLEL_POLICY_IMAGE_ID]');
+for(const entry of manifest.packages){
+ assert.equal(sha(await fs.readFile(kit+'/image/archives/'+entry.filename)),entry.sha256);
+ const pattern=new RegExp("("+entry.role+": \\{[^\\n]+sha256: ')[^']+");assert.ok(pattern.test(docker));docker=docker.replace(pattern,(_,prefix)=>prefix+entry.sha256);
+}
+await fs.writeFile(base+'/docker.mjs',docker);
+let runner=await fs.readFile(base+'/runner.mjs','utf8');await fs.writeFile(q+'/runner-before-turn-consolidation.mjs',runner,{flag:'wx'});
+const oldKit="const KIT_NAME = 'manual-sandbox-latency-parallel-policy-2026-10-13';";assert.equal(runner.split(oldKit).length,2);
+runner=runner.replace(oldKit,"const KIT_NAME = 'manual-sandbox-latency-turn-consolidation-2026-10-13';");await fs.writeFile(base+'/runner.mjs',runner);
+approval.procedureHistory.push({approvalSha256:sha(originalApproval),reviewSha256:approval.reviewSha256,sourceCommit:approval.candidateSourceCommit,methods:8,unknownLiabilityUnits:2700000});
+approval.reviewPath=reviewPath;approval.reviewSha256=sha(review);approval.candidateSourceCommit=manifest.sourceCommit;
+for(const row of approval.files)row.sha256=sha(await fs.readFile(path.resolve(base,row.path)));
+const priorReviews=approval.sourceAcceptance?.reviewHashes??{};
+approval.sourceAcceptance={kind:'NORMAL_REVIEWED_SOURCE_PIN_INTEGRATION',sourceCommit:manifest.sourceCommit,kit,imageId:identity.imageId,artifactReceiptSha256:sha(await fs.readFile(kit+'/image/archives/manifest.json')),reviewHashes:{...priorReviews,'v5-structural-source-review.md':sha(review)}};
+approval.priorManualObservations.push({sessionId:'e07fd8cd-4f0b-4ceb-833c-15b167bda97f',firstCliMs:12840.381797000002,warmCliMs:15010.613840000005,firstBrowserAfterPaintMs:7836.100000023842,warmBrowserAfterPaintMs:8928.600000023842,environment:'CLEANED',cleanupReceipt:q+'/k14-cleanup-final.json',financialReceipt:q+'/k14-financial-metadata-1791931761731.json',allFourSubsecondOutcomes:'FAIL',allFourNativeMemory:'PASS through8/8',originalFailuresPreserved:true});
+await fs.writeFile(approvalPath,JSON.stringify(approval,null,2)+'\n');
+const {verifyProcedure}=await import(base+'/qualification.mjs');const procedure=await verifyProcedure();
+const {verifyArtifacts}=await import(base+'/docker.mjs');const artifacts=await verifyArtifacts(kit);
+const receipt={observedAt:new Date().toISOString(),scope:'NORMAL_REVIEWED_SOURCE_AND_ARTIFACT_PIN_INTEGRATION',digest:procedure.digest,artifacts,image:identity,maximumPaidRequests:8,maximumUnknownLiabilityUnits:2700000,priorApprovalSha256:sha(originalApproval),oldImageExactCleanupRetained:oldImage,sourceSubstitution:'Reviewed V5 ordinary turn and native parent consolidation; historical V1-V4, original guards, strict barriers, approvals, fresh billable admission, deadlines, accounting and no-retry controls retained',serviceCalls:0,paidCalls:0};
+await fs.writeFile(q+'/procedure-turn-consolidation-resealed.json',JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({digest:procedure.digest,image:identity.imageId,sourceCommit:manifest.sourceCommit,maximumPaidRequests:8}));

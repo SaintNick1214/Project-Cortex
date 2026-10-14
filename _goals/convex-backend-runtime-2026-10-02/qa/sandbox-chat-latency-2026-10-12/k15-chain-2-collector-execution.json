@@ -1,0 +1,64 @@
+{
+  "label": "chain-2",
+  "exitCode": 0,
+  "elapsedMs": 5115.512292017229,
+  "output": {
+    "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-run-chain-bdbae74e4f42-1791935668418.json",
+    "run": {
+      "runId": "run:bdbae74e4f42f739c9a521593a137eaa2fc785de207602bd33029ffd6f6a639f",
+      "responseStatus": "COMPLETE",
+      "attemptNumber": 1,
+      "createdAt": 1791935515253,
+      "updatedAt": 1791935531368,
+      "outputMessageCount": 1
+    },
+    "execution": {
+      "state": "COMPLETE",
+      "contextState": "COMPLETE",
+      "workflowId": "jd72n2pm2n3rjstxt2jppwc4158g6h7f"
+    },
+    "counts": {
+      "agentOperations": 1,
+      "modelOperations": 3,
+      "modelAttempts": 3
+    },
+    "firstDurableText": 1791935526180,
+    "finalCanonicalText": 1791935528273,
+    "titleJobs": [
+      {
+        "jobId": "content:2bb43636c09f4d3b237fb4f405495396d9b8e32975e8ad1a0867247b88833d96",
+        "intent": "title",
+        "state": "ready",
+        "createdAt": 1791935528660,
+        "updatedAt": 1791935539983
+      }
+    ],
+    "ingestion": [
+      {
+        "eventId": "ingestion:3e4838de1bc598b1bec0a4afdf10f3a7e494a650fe63b7c7aa12cba75a0fa071",
+        "sequence": 6,
+        "eligibility": "eligible",
+        "factsState": "skipped",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791935528273,
+        "updatedAt": 1791935531368
+      },
+      {
+        "eventId": "ingestion:b6c7d25918f875b002a0549be1687467157e4b63b8b16be7944c64e2e70b8b53",
+        "sequence": 5,
+        "eligibility": "eligible",
+        "factsState": "complete",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791935515253,
+        "updatedAt": 1791935526811
+      }
+    ]
+  },
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrBytes": 0,
+  "noPaidCalls": true,
+  "noRetries": true,
+  "nativeClientClosed": true
+}

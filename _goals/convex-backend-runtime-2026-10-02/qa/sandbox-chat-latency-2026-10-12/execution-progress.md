@@ -26,3 +26,9 @@
 2026-10-13T23:00:42.227592+00:00 — K14 saved delay-chain analysis100%; modelentry+3.896/5.395s browser,+7.659/9.873sCLI. Retained answeracquisition0.519/0.509/0.506s; firstbrowserearlyphases unavailable due1000cap. Stage-only source batching insufficient for1s; bounded V5 orchestration/native-parent repair started, original strictbarriers/approval/replay/auth/budgets retained. Overall2/4=50%.
 
 2026-10-13T23:36:16.963903+00:00 — V5 structural source/docs milestone100%, independentPASS4.0/no breaking findings;1902/44/0skip, types/lint/build/contracts0; v11 docs build/render0warnings sampled. Nativeperformanceunmeasured, overall2/4=50%.
+
+K15 V5 packaging and launcher integration completed: 104/104 local launcher tests, zero failed/skipped, dry run exit0. Reviewed source2c868 and image78149117 pins sealed; fresh hosted validation launched. Source/packaging100%, actual native validation0%, latency followup50%. No new speed claim.
+
+K15 original cloud measurement set completed: browser7499/6980.100000023842ms after-paint; canonicalCLI12836.417632/14649.508340999997ms firststdout. Allfour responsesCOMPLETE; originalCLI30000ms deadlines retained; no paidretry. Browser signedout/visiblycleared/tab21closed beforeCLI; CLIexit0. SLO0/4FAIL. Strict nativeproof/accounting/cleanup pending. Samplecollection100%, latencyfollowup50%; V5source/packaging successdoesnotestablishperformanceacceptance.
+
+K15 strict allfour native memory proofPASS:8/8events, attributableuserfacts/currentmatchingvectors/grants/sourcehash/profileprovenance/completeusage/contiguouswatermarks;43fresh exacttarget verifications. Finance31attempts/zeroactiveslots/allreleased,5,000,000microUSDUNKNOWNreservationceilings(notcharges). IAB/Basic/nativeclientsclosed;launcherCtrlCexit130;fresh exactDB/Docker/privateowneddirsABSENTreceiptk15-cleanup-final.json. Functionalproof100%;SLO0/4FAIL;latencyfollowup50%,notcomplete. Two metadata snapshots preserve earlybrowserseparatelyfromcappedCLI.

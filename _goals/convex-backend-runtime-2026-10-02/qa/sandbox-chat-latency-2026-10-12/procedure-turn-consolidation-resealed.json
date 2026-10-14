@@ -1,0 +1,47 @@
+{
+  "observedAt": "2026-10-13T23:45:59.603Z",
+  "scope": "NORMAL_REVIEWED_SOURCE_AND_ARTIFACT_PIN_INTEGRATION",
+  "digest": "04a5c0cac12d51b1f513692afad6751c4aff8fd6b4e76129a451e1f937f1c232",
+  "artifacts": {
+    "imageId": "sha256:78149117c6ef5a0f6a8484d2d4c6dfa121afbe95632b649bed80e0f245162780",
+    "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+    "packages": [
+      "sdk",
+      "cli",
+      "provider",
+      "catalog"
+    ]
+  },
+  "image": {
+    "imageId": "sha256:78149117c6ef5a0f6a8484d2d4c6dfa121afbe95632b649bed80e0f245162780",
+    "tag": "cortex-sandbox-turn-consolidation:20261013",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "bd42a77d-e63f-49ce-be20-4bd8e36d2af7",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "bd42a77d-e63f-49ce-be20-4bd8e36d2af7",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-turn-consolidation-2026-10-13",
+      "dev.cortex.manual-sandbox.source": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd"
+    },
+    "size": 821449753,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false
+  },
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "priorApprovalSha256": "1b925e94a87b0a2b9de26ca3f0041611357f39b1feb9dbc6e202e7919a7c34b7",
+  "oldImageExactCleanupRetained": "sha256:f1b4bb13bf023ed2851f0bca5c9da2a18eca1e7010daee7eeaef730978d56406",
+  "sourceSubstitution": "Reviewed V5 ordinary turn and native parent consolidation; historical V1-V4, original guards, strict barriers, approvals, fresh billable admission, deadlines, accounting and no-retry controls retained",
+  "serviceCalls": 0,
+  "paidCalls": 0
+}

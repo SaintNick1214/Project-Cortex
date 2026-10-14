@@ -20,3 +20,12 @@ The current response path is overbuilt before inference. Source validation batch
 All four K14 replies completed; all four failed the1,000ms target. One native proof passed attributed facts, matching vectors, complete usage, current authority/source/profile provenance and contiguous indexing through8/8. All accounting slots were released, and fresh cleanup verified the disposable cloud database and Docker container absent. Overall latency follow-up remains2/4=50%; final acceptance remains incomplete.
 
 Detailed evidence: [K14 delay chain](cloud-k14-delay-chain.md), [installed outcomes](k14-outcomes.md), [published-version comparison and historical limits](version-regression-measured-k12-supplement.md). Local QA commitc47c1fd3e preserves the current results and failures; GitHub push/PR delivery is unavailable.
+
+
+## K15 measured V5 continuation
+
+The independently accepted V5 consolidation was packaged and installed at source `2c8689fac3`. It still failed all four latency samples: browser 7.499/6.9801 seconds, CLI 12.8364/14.6495 seconds. All four replies completed, the bounded native facts/vector/current-authority/provenance/usage proof passed 8/8 events, slots were released, and fresh cleanup verified ABSENT. Source acceptance is separate from SLO acceptance.
+
+The early browser snapshot retains the empty/represented route: neither browser turn performed indexed recall or query embedding. Run creation to dispatch took 5.449/5.010 seconds, before 488/593 ms first-text acquisition. Preparation took 2.288/2.246 seconds; admission/checkpoint took 1.033/1.039 seconds. Each included one OCC retry; the exact conflicting rows are unavailable. In source, one private hydration reads identical official Agent message IDs twice without a writer between reads; empty preparation repeats nine hydrations. The next bounded batch reduces those raw reads within one native snapshot, invalidates them on all writes and reruns every original predicate. It has no acceptance or speed claim yet.
+
+CLI context recall spans were 5.367/6.417 seconds. The detailed model, ledger, provenance and delivery breakdown is being completed from saved receipts. The published-version comparison and the reported near-instant historical workload remain separate evidence. Latency follow-up remains 50%; full completion is unapproved.

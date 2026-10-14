@@ -1,0 +1,130 @@
+{
+  "status": "PREPARED_UNREADY_NO_SERVICE_CALLS",
+  "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+  "pinsFile": "k15-collector-pins.mjs",
+  "originalPreservedSha256": {
+    "verify-k14-four-run-memory-readonly.mjs": "f7721fe1d05db7a5ccff3381a788d973e2c11625f40bfa6967d66a2e99d7b848",
+    "capture-k14-financial-metadata.mjs": "e256d0fb514d93057f0ba8c51a62cdf69e5bc16ce14b698016188650138fd6ee",
+    "verify-k14-cleanup.mjs": "f2a7d05aafbde7acd0887b16dda630e1852fe539fa562cddb145560858f633ed",
+    "capture-k14-run-chain.mjs": "69a412f7a3efd417fdf92a72c5d7ebbd67042121a8892a2e4c2a32b118fafcc0",
+    "service-log-snapshot-k14.mjs": "433c576b6b2513bb445477c22135ee4506396e6332fcb55890a38e4d8c7a7bb7",
+    "k11-auth-close-diagnostic-readonly.mjs": "ecc859263830cfc077641995fc4dc2f2a8e57ac70c81bbcb38d73fb23d6e2b03"
+  },
+  "preparedSha256": {
+    "verify-k15-four-run-memory-readonly.mjs": "a9180e3ef48d9238d7907de9725eb71249fce606c5ea7cb0e32925f4f066333c",
+    "capture-k15-financial-metadata.mjs": "f008ea3bc2be0501c2fdc214926dc0a171e482b70a093fc6a38a01ea81fad0c2",
+    "verify-k15-cleanup.mjs": "e9d46c3d3cece299a9e7bfec7319f65248c2730db214e7c680e528589a84800b",
+    "capture-k15-run-chain.mjs": "61728a1b6596c9af869d0524af01cb9fc6aa03af7f51e537dbe1e9b4e058b5a6",
+    "service-log-snapshot-k15.mjs": "635aa5e8373aa1397b666353960cf4ccfb66a057f1638a883394f680135030c6",
+    "k15-auth-close-diagnostic-readonly.mjs": "96e8db3a85b5a32780274a0d91844bf8adabdcfc2b5c76481f95ad04203dbe7d",
+    "k15-collector-pins.mjs": "08b109aaebd44761b58e4d060b07464a8915617311c8d75bd96ef719a07cb14e"
+  },
+  "syntaxChecks": [
+    {
+      "file": "verify-k15-four-run-memory-readonly.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k15-four-run-memory-readonly.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "capture-k15-financial-metadata.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k15-financial-metadata.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "verify-k15-cleanup.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k15-cleanup.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "capture-k15-run-chain.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k15-run-chain.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "service-log-snapshot-k15.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k15.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "k15-auth-close-diagnostic-readonly.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-auth-close-diagnostic-readonly.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "k15-collector-pins.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-collector-pins.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    }
+  ],
+  "nativeServiceCalls": 0,
+  "inferenceCalls": 0,
+  "capturePlan": [
+    "browser first+warm COMPLETE/explicit GO: one browser-post-pair native log snapshot",
+    "browser signed out/closed; CLI first+warm COMPLETE/explicit GO: one cli-post-pair native log snapshot",
+    "all-four COMPLETE/GO: one strict all-four native memory proof, one finance, four bounded joined run chains",
+    "root cleanup/CLEANED/GO: one fresh ABSENT verification"
+  ],
+  "unchangedBounds": {
+    "nativeExecutionCap": 1000,
+    "nativeLogPayloadBytes": 16777216,
+    "tablePageItems": 256,
+    "tableMustBeComplete": true,
+    "nativeTimeoutMs": 30000,
+    "authTimeoutMs": 4000,
+    "expectedRejectedAuthCode": "UNAUTHENTICATED"
+  },
+  "newJournalProjection": "V5 ordinary Action names and hashed official Workflow handles; no old journal stage assertion",
+  "unreadyRefusesBeforeSessionOrNetwork": true,
+  "offlineUnreadyCheck": {
+    "exitCode": 0,
+    "stdout": {
+      "unreadyRefusals": 2,
+      "serviceCalls": 0,
+      "pass": true
+    },
+    "moduleOnly": true
+  },
+  "financeFreshFence": "Every bounded table read verifies exact session/target/team/project/reference/expiry/image/current source before and after."
+}

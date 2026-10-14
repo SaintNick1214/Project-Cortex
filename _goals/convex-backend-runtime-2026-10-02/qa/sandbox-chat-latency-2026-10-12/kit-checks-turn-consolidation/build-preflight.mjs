@@ -1,0 +1,38 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+const source='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion';
+const qa=path.dirname(new URL(import.meta.url).pathname), baseQa=path.dirname(qa);
+const commit='2c8689fac3aca2acf1fb1f46d8b10a87388e95cd';
+const git=args=>execFileSync('git',args,{cwd:source,encoding:'utf8',maxBuffer:20*1024*1024});
+const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
+assert.equal(git(['rev-parse','HEAD']).trim(),commit);
+assert.equal(git(['status','--porcelain','--','src','convex-dev','tests','packages','.github']).trim(),'');
+assert.equal(process.version,'v24.15.0');
+const npm=execFileSync('npm',['--version'],{encoding:'utf8'}).trim();assert.equal(npm,'12.2.0');
+const baseline=JSON.parse(fs.readFileSync(path.join(qa,'controls-prepared.json')));
+assert.deepEqual(fs.readdirSync(baseline.kit).sort(),['image','prepare.mjs']);
+assert.deepEqual(fs.readdirSync(path.join(baseline.kit,'image')).sort(),['Dockerfile','archives','entrypoint.mjs','install-candidates.mjs']);
+assert.deepEqual(fs.readdirSync(path.join(baseline.kit,'image/archives')),[]);
+for(const row of baseline.controls){assert.equal(digest(fs.readFileSync(path.join(baseline.oldKit,row.path))),row.oldSha256);assert.equal(digest(fs.readFileSync(path.join(baseline.kit,row.path))),row.newSha256);}
+for(const row of baseline.priorArchives)assert.equal(digest(fs.readFileSync(row.path)),row.sha256);
+const specs=['src','convex-dev','package.json','package-lock.json','README.md','LICENSE.md','tsconfig.json','scripts/backend/build-distribution.mjs','packages/cortex-cli/src','packages/cortex-cli/scripts','packages/cortex-cli/package.json','packages/cortex-cli/README.md','packages/cortex-cli/tsconfig.json','packages/vercel-ai-provider/src','packages/vercel-ai-provider/react','packages/vercel-ai-provider/package.json','packages/vercel-ai-provider/README.md','packages/vercel-ai-provider/LICENSE.md','packages/vercel-ai-provider/tsconfig.json','packages/cortex-templates/package.json','packages/cortex-templates/catalog.json','packages/cortex-templates/payloads','packages/cortex-templates/README.md'];
+const inputs=git(['ls-files','-z','--',...specs]).split('\0').filter(Boolean);
+const tree=git(['ls-tree','-r','-z','--full-tree',commit,'--',...specs]).split('\0').filter(Boolean).map(row=>{const [meta,name]=row.split('\t');const [mode,type,id]=meta.split(' ');assert.equal(type,'blob');return {mode,path:name,id};});
+assert.deepEqual(inputs,tree.map(row=>row.path));
+const blobs=execFileSync('git',['cat-file','--batch'],{cwd:source,input:tree.map(row=>row.id).join('\n')+'\n',maxBuffer:128*1024*1024});
+let offset=0;
+for(const row of tree){const nl=blobs.indexOf(10,offset);assert(nl>offset);const [id,type,sizeText]=blobs.subarray(offset,nl).toString().split(' ');assert.equal(id,row.id);assert.equal(type,'blob');const size=Number(sizeText),bytes=blobs.subarray(nl+1,nl+1+size);assert(fs.lstatSync(path.join(source,row.path)).isFile());assert.equal(digest(fs.readFileSync(path.join(source,row.path))),digest(bytes),row.path);offset=nl+1+size+1;}
+assert.equal(offset,blobs.length);
+const priorCommit='8917f3250fc50aa7f30f5cd727aaf279709a2ef2';
+const oldInputs=JSON.parse(fs.readFileSync(path.join(baseline.oldKit,'artifacts',priorCommit,'build-inputs.json'))).map(row=>row.path);
+const addedInputs=inputs.filter(name=>!oldInputs.includes(name)),removedInputs=oldInputs.filter(name=>!inputs.includes(name));
+const review=fs.readFileSync(path.join(baseQa,'v5-structural-source-review.md'));
+assert.match(review.toString(),/PASS/);assert.equal(digest(review),'82098d07ef27c6c14c30c8c2c0bc3d9771d2b575ab7670479c2839468987ba30');assert.equal(digest(fs.readFileSync(path.join(baseQa,'v5-structural-source-review.json'))),'c7c5770a6fade8c4e8df76495b150cb8558269eb018a30cf5bf1113656b014e9');assert.equal(digest(fs.readFileSync(path.join(source,'convex-dev/runtimeAgent.ts'))),'2e556248236cd2cd70a162d5479f505530e44bd07931c1af0a5b99f2e2d9161f');
+const dockerContext=execFileSync('docker',['context','show'],{encoding:'utf8'}).trim();assert.equal(dockerContext,'desktop-linux');
+const inspected=JSON.parse(execFileSync('docker',['context','inspect',dockerContext],{encoding:'utf8'}))[0];assert.equal(inspected.Endpoints.docker.Host,'unix:///Users/SaintNick/.docker/run/docker.sock');
+const receipt={observedAt:new Date().toISOString(),sourceRoot:source,sourceCommit:commit,node:process.versions.node,npm,selectedTrackedInputs:inputs.length,allMatchCommittedBytes:true,addedSelectedInputPaths:addedInputs,removedSelectedInputPaths:removedInputs,freshFourControlKit:true,archivesDirectoryEmpty:true,controls:baseline.controls,priorArchives:baseline.priorArchives,sourceReviewSha256:digest(review),sourceReviewJsonSha256:digest(fs.readFileSync(path.join(baseQa,'v5-structural-source-review.json'))),dockerContext,dockerEndpoint:inspected.Endpoints.docker,archivesOrStagingCopiedFromOldKit:0,serviceCalls:0};
+fs.writeFileSync(path.join(qa,'build-preflight.json'),JSON.stringify(receipt,null,2)+'\n');
+console.log(JSON.stringify({sourceCommit:commit,inputCount:inputs.length,addedInputs,removedInputs,sourceReviewSha256:receipt.sourceReviewSha256,freshKit:true}));

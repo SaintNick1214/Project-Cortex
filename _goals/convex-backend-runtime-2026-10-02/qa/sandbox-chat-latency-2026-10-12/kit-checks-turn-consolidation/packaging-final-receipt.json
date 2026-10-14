@@ -1,0 +1,443 @@
+{
+  "version": 1,
+  "status": "LOCAL_IMMUTABLE_PACKAGING_COMPLETE",
+  "packagingMilestonePercent": 100,
+  "createdAt": "2026-10-13T23:40:57.982Z",
+  "sourceRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+  "sourceReviewPath": "v5-structural-source-review.md",
+  "sourceReviewSha256": "82098d07ef27c6c14c30c8c2c0bc3d9771d2b575ab7670479c2839468987ba30",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-turn-consolidation-2026-10-13",
+  "kitIdentity": {
+    "version": 1,
+    "id": "bd42a77d-e63f-49ce-be20-4bd8e36d2af7",
+    "ownerUid": 501,
+    "ownerGid": 20
+  },
+  "imageId": "sha256:78149117c6ef5a0f6a8484d2d4c6dfa121afbe95632b649bed80e0f245162780",
+  "imageTag": "cortex-sandbox-turn-consolidation:20261013",
+  "imagePlatform": "linux/arm64",
+  "imageUser": "sandbox",
+  "imageSizeBytes": 821449753,
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "inputCount": 2140,
+  "inputManifestSha256": "b4eb4a43cbcc29657420ac5e184301908e2fe1d39e49ebbb26f06a6e4bf35a75",
+  "backend": {
+    "distributionId": "cortex-backend-v1-sdk-0.39.0",
+    "files": 157,
+    "allSourceOutputHashesMatch": true,
+    "manifestSha256": "3e508699163ccf254b2a8d3aad93760ca36ff4dae7730ac37e82b6e5006a4465"
+  },
+  "actualChangedBackendSourcePaths": [
+    "convex-dev/runtimeAgent.ts"
+  ],
+  "packages": [
+    {
+      "role": "sdk",
+      "name": "@cortexmemory/sdk",
+      "version": "0.39.0",
+      "filename": "cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "06d82ae7844d87a95c6d4fe0a434fc34118a64ad337a8c18e814a682f47d4e51",
+      "bytes": 1596478,
+      "files": 317
+    },
+    {
+      "role": "cli",
+      "name": "@cortexmemory/cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "bytes": 538578,
+      "files": 451
+    },
+    {
+      "role": "provider",
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+      "bytes": 77673,
+      "files": 18
+    },
+    {
+      "role": "catalog",
+      "name": "@cortexmemory/templates",
+      "version": "1.3.1",
+      "filename": "cortexmemory-templates-1.3.1.tgz",
+      "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970",
+      "bytes": 1708644,
+      "files": 1727
+    }
+  ],
+  "archives": [
+    {
+      "role": "sdk",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-turn-consolidation-2026-10-13/image/archives/cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "06d82ae7844d87a95c6d4fe0a434fc34118a64ad337a8c18e814a682f47d4e51",
+      "matchesReceipt": true
+    },
+    {
+      "role": "cli",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-turn-consolidation-2026-10-13/image/archives/cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "matchesReceipt": true
+    },
+    {
+      "role": "provider",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-turn-consolidation-2026-10-13/image/archives/cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+      "matchesReceipt": true
+    },
+    {
+      "role": "catalog",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-turn-consolidation-2026-10-13/image/archives/cortexmemory-templates-1.3.1.tgz",
+      "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970",
+      "matchesReceipt": true
+    }
+  ],
+  "app141Versions": {
+    "packages/cortex-templates/payloads/basic/1.4.1/package.json": "1.4.1",
+    "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/package.json": "1.4.1"
+  },
+  "controls": [
+    {
+      "path": "prepare.mjs",
+      "oldSha256": "80b01da0d27ea8453716a5f0ff859d25e866a104f27a8c5c7450ff4eed8ee207",
+      "newSha256": "9633dda976c60c802b8cc2375e0cb51e082d97b43ea76ae531cd691c151d9c77",
+      "change": "QA output path only"
+    },
+    {
+      "path": "image/Dockerfile",
+      "oldSha256": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f",
+      "newSha256": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f",
+      "change": "byte-identical"
+    },
+    {
+      "path": "image/install-candidates.mjs",
+      "oldSha256": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f",
+      "newSha256": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f",
+      "change": "byte-identical"
+    },
+    {
+      "path": "image/entrypoint.mjs",
+      "oldSha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+      "newSha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+      "change": "byte-identical"
+    }
+  ],
+  "checks": [
+    {
+      "name": "committed source/controls/toolchain preflight",
+      "exitCode": 0,
+      "receipt": "build-preflight.json"
+    },
+    {
+      "name": "three isolated package builds and four packs (prepack disabled)",
+      "exitCode": 0,
+      "receipt": "prepare-v1.log",
+      "receipts": [
+        "build-sdk.log",
+        "build-cli.log",
+        "build-provider.log",
+        "pack-sdk.json",
+        "pack-cli.json",
+        "pack-provider.json",
+        "pack-catalog.json"
+      ]
+    },
+    {
+      "name": "actual SDK root/runtime/graph ESM+CJS/dts/backend/browser contracts",
+      "exitCode": 0,
+      "receipt": "packed-public-contracts-v1.log"
+    },
+    {
+      "name": "actual provider core/react/remote ESM+CJS/dts/browser + CLI Commander15 help/version",
+      "exitCode": 0,
+      "receipt": "packed-dependent-contracts-v1.log"
+    },
+    {
+      "name": "Linux arm64 immutable image build and installed candidate version/hash verification",
+      "exitCode": 0,
+      "receipt": "docker-build-exit.json"
+    },
+    {
+      "name": "actual fresh packed eight backend export roots / V1-V5 and all new native parents/turn action / authority factory",
+      "exitCode": 0,
+      "receipt": "packed-backend-export-closure.json"
+    },
+    {
+      "name": "actual packed catalog full1.4.1 payload/QA dev pins/two UI owners",
+      "exitCode": 0,
+      "receipt": "packed-template-catalog.json"
+    },
+    {
+      "name": "exact image inspection",
+      "exitCode": 0,
+      "receipt": "docker-image-identity.json"
+    },
+    {
+      "name": "final input/backend/path closure/one distribution-source change/controls/old archives/HEAD/scratch consistency",
+      "exitCode": 0,
+      "receipt": "distribution-closure-comparison.json"
+    }
+  ],
+  "logs": [
+    {
+      "path": "adapted-check-helpers.json",
+      "bytes": 2661,
+      "sha256": "ae597e45deda3b58ce305aed92b898c0c6a3f3e98cdb93074d803f4eeb611dc8"
+    },
+    {
+      "path": "artifact-receipt.json",
+      "bytes": 1750,
+      "sha256": "14c76c5724b83c94d50567ab5e24488ca72d9bd9147ff0f67bd958fdedc1ebd3"
+    },
+    {
+      "path": "build-cli.log",
+      "bytes": 91,
+      "sha256": "c4d2cb92a2d91b91b538a808ef0eb977534255d7785d908c24e2edf4bf6c715f"
+    },
+    {
+      "path": "build-image.mjs",
+      "bytes": 3700,
+      "sha256": "10322082bd5e070dd5464fa0dd04a4b265bac5f8834e633fdf3e77a15c1eef30"
+    },
+    {
+      "path": "build-preflight-v1.log",
+      "bytes": 218,
+      "sha256": "8fba99d229fdcb33056cc634e4192f9076db1b890b7d673ddf60078f42687b0a"
+    },
+    {
+      "path": "build-preflight.json",
+      "bytes": 2988,
+      "sha256": "8df9abbb79c79f706e365df65f6bfbe09b016a8a0097e214b508f46ee00bacfa"
+    },
+    {
+      "path": "build-preflight.mjs",
+      "bytes": 5338,
+      "sha256": "a6152e3e0810c5db55a96357cd51607a3080b4c93dbb2c4ba5368414f0a17d20"
+    },
+    {
+      "path": "build-provider.log",
+      "bytes": 1315,
+      "sha256": "64951f8dcee56089d06f17fc5788ee880f323c990df77a26196d27a7c43e65c0"
+    },
+    {
+      "path": "build-sdk.log",
+      "bytes": 2722,
+      "sha256": "add80267e9143ed9b8740319211e0031986cabd9f6eb08bd3c448898586ab2df"
+    },
+    {
+      "path": "controls-prepared.json",
+      "bytes": 2484,
+      "sha256": "98cb0b2ac3acff02f4a458a027755b7b8716b0acbe8487cdb7948e2acdc35e3d"
+    },
+    {
+      "path": "distribution-closure-comparison.json",
+      "bytes": 1078,
+      "sha256": "c6c2834e3c59a351a6b9948ce393cfef3030e4497218d0d31cf4419c88afde9f"
+    },
+    {
+      "path": "docker-build-exit.json",
+      "bytes": 999,
+      "sha256": "c084f2b87154d201556330dcd5580f055ca636f6fe5cca384dcc60684f6725e2"
+    },
+    {
+      "path": "docker-build-v1.log",
+      "bytes": 2846,
+      "sha256": "8b9a72392e5d2995bf849ff19b92f294c692244f50d1732aa6da3e40a62cf8e1"
+    },
+    {
+      "path": "docker-image-identity.json",
+      "bytes": 799,
+      "sha256": "f42e2afd9655e9dea2d911bfa582601cd21e8b46e80aa1183a01967fe1bd5e0b"
+    },
+    {
+      "path": "docker-image-inspect-full.json",
+      "bytes": 2651,
+      "sha256": "9be55bf9bb2d8ca05292442d9b07635397b2e74426b51f591c0639cb4513803d"
+    },
+    {
+      "path": "finalize-packaging.mjs",
+      "bytes": 14794,
+      "sha256": "f8914e9f6c24db9b8459943ab61cd7578e11f68e80a302e86e3a77a0c73b786b"
+    },
+    {
+      "path": "image-check-exit.json",
+      "bytes": 61,
+      "sha256": "3e98d3d04332a4c25bcc0fce92c86305f71c23b55d45a737dcbd9cc57a11fd22"
+    },
+    {
+      "path": "image-check-v1.log",
+      "bytes": 693,
+      "sha256": "41845a306be91eefadcb4d2e5e2d99fc858035f6f6c1157a3b18f4b84ad85479"
+    },
+    {
+      "path": "pack-catalog.json",
+      "bytes": 209480,
+      "sha256": "b3394ded3a8c76f3e8b9ce20152878e9fe0a6e5b541e1250ed83776f4977ea1a"
+    },
+    {
+      "path": "pack-cli.json",
+      "bytes": 46861,
+      "sha256": "09cb4a38bebbe836773f53c9b32e3988574a34b6e402b9abb6a13248babe8167"
+    },
+    {
+      "path": "pack-provider.json",
+      "bytes": 2048,
+      "sha256": "64e8fbe7077f9714ee9a47cd116f6ac39c2258381a927e28ebab7b1201a6a755"
+    },
+    {
+      "path": "pack-sdk.json",
+      "bytes": 33839,
+      "sha256": "c7170c57671e26ed085e0ff18a0c5e0e618c38cc91c9b47612607dbeea6d1850"
+    },
+    {
+      "path": "packed-backend-export-closure-exit.json",
+      "bytes": 363,
+      "sha256": "001ff7752d58fb63a8c929c04aaa4b9eae0abf6c1bdf2e0229b2e1f5f3ec7b01"
+    },
+    {
+      "path": "packed-backend-export-closure-v1.log",
+      "bytes": 118,
+      "sha256": "1602409db12caf5c154ccdf737ddf1619c38812fda77f9ebcc7b72151845b5a1"
+    },
+    {
+      "path": "packed-backend-export-closure.json",
+      "bytes": 7666,
+      "sha256": "c5053a8d8485108eadba8df82628716c1cb36be0fb455a806e1421f75a724812"
+    },
+    {
+      "path": "packed-cli-dependency-selection.json",
+      "bytes": 235,
+      "sha256": "dccd77d48f2a6c7c154d25b008b2e112beaadf4a15d0cc92566ff43a0965ff53"
+    },
+    {
+      "path": "packed-cli-help.log",
+      "bytes": 3768,
+      "sha256": "48d57e4a9961fce570bedc7b84c5d1a792021ebf89657bdbaebc8f878dc7e33d"
+    },
+    {
+      "path": "packed-cli-version.log",
+      "bytes": 7,
+      "sha256": "f7ada3982d4e3ce9f5b135992938383496e4dbfda2468d51dd676d1dd86f24a0"
+    },
+    {
+      "path": "packed-dependent-contracts-exit.json",
+      "bytes": 360,
+      "sha256": "323df204b4db2cf743cb5364b58e601ef45009e4f060d7e6a3686bc621363eb6"
+    },
+    {
+      "path": "packed-dependent-contracts-v1.log",
+      "bytes": 175,
+      "sha256": "67a70755186f8f7063e958c6ada40dde7c29e386d1a28446a4f77fa0bf8c114b"
+    },
+    {
+      "path": "packed-public-contracts-exit.json",
+      "bytes": 364,
+      "sha256": "2bf635db763fd3c684592b13a24e166c122526092ca210b1acbda7eed9cd9452"
+    },
+    {
+      "path": "packed-public-contracts-v1.log",
+      "bytes": 141,
+      "sha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+    },
+    {
+      "path": "packed-template-catalog-exit.json",
+      "bytes": 357,
+      "sha256": "122c3c683805919e0c1487a5527d5832e22c3044150715b56edbe123415d9925"
+    },
+    {
+      "path": "packed-template-catalog-v1.log",
+      "bytes": 878,
+      "sha256": "748b828fa7067501e82b668282b8b4ccb0253c74c7a9e73f4f835fee839bd398"
+    },
+    {
+      "path": "packed-template-catalog.json",
+      "bytes": 966,
+      "sha256": "5453e7dbc4b2aa25ab97dcbc8f1210b0259046d1746ba97d7ab91302c3c729fb"
+    },
+    {
+      "path": "prepare-exit.json",
+      "bytes": 115,
+      "sha256": "c48d549e9e4dfb525acd5d5b046aa04981517ed170675341cc53a158929f2188"
+    },
+    {
+      "path": "prepare-v1.log",
+      "bytes": 1887,
+      "sha256": "cd75ad029a16ebaf3a043a916b5d5b6330929d177458daca5f37d13dab3f3380"
+    },
+    {
+      "path": "resources-preflight.json",
+      "bytes": 1380,
+      "sha256": "05cae56c8f99925394ca57d644c6c90d6c011cefcc8b1c9d4f486f5b9ca3bb00"
+    },
+    {
+      "path": "verify-actual-packed-public-contracts.mjs",
+      "bytes": 9249,
+      "sha256": "638be916bfdefe52892e2cc9fcebce173f9a7df6d969f51be631ef4cbdefb3a7"
+    },
+    {
+      "path": "verify-packed-backend-export-closure.mjs",
+      "bytes": 3537,
+      "sha256": "40c1318b65708854ceea775deb21cce8a578cacd6efd7f56a45ae777d5de5753"
+    },
+    {
+      "path": "verify-packed-dependent-contracts.mjs",
+      "bytes": 6559,
+      "sha256": "0570f68f12e73166c9f9396690e24a483d62929b2e09c9e16ceb406459acf717"
+    },
+    {
+      "path": "verify-packed-template-catalog.mjs",
+      "bytes": 5052,
+      "sha256": "f2a10ca13b0118ba248c1c74b77e08b366afe5b242c4394d4345206e5d6c8674"
+    }
+  ],
+  "actualPackedTemplateCatalog": {
+    "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+    "actualFreshCatalogArchiveSha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970",
+    "catalogSha256": "f79cc11523a0515218371d4444d8af160c526cc32a5fde1b4893932a5cacd113",
+    "templateId": "vercel-ai-quickstart",
+    "templateVersion": "1.4.1",
+    "selectedPayloadFiles": 74,
+    "payloadHash": "235c967cc8d054aaa3639c6f48de6ae366d87f48f6998df4ac0d7480ab818909",
+    "allSelectedPayloadBytesMatchCatalog": true,
+    "exactQaDevPins": {
+      "@testing-library/react": "16.3.3",
+      "jest-environment-jsdom": "30.5.2"
+    },
+    "actualCommittedUiAndNewFixtureBytes": true,
+    "retainedUiFinalObserverCalls": 1,
+    "removedUiWatchRunCalls": 0,
+    "finalOnlyOptionAndStatusCallbackPresent": true,
+    "transportSeparateOwnerPreservedByCommittedComponentIdentity": true,
+    "browserRenderOrFreshDependencyInstallProven": false,
+    "servicesStarted": 0,
+    "inferenceCalls": 0,
+    "ownedScratchRemoved": true
+  },
+  "preservedFailures": [],
+  "buildFailures": 0,
+  "packFailures": 0,
+  "contractFailures": 0,
+  "headUnchangedAfterChecks": true,
+  "copiedArchivesOrStagingFromOldKit": 0,
+  "ownedFreshArtifactCopiesToImage": 4,
+  "createdIdentityCount": 1,
+  "scratchConsumerDirectoriesRemaining": [],
+  "runtimeContainersStarted": 0,
+  "liveQualification": false,
+  "paidCalls": 0,
+  "serviceCalls": 0,
+  "servicesCreated": 0,
+  "sourceOrLauncherWrites": false,
+  "pinsOrProcedureWrites": false,
+  "gitOrGitHubWrites": false,
+  "cleanup": "Both owned packed-consumer scratch directories removed in finally and absence verified. New kit/image/staging/artifacts/cache intentionally retained; no runtime container or cloud target created.",
+  "coverageLimits": [
+    "Browser VM checks use blocked network ports and absent Node globals; no actual UI/service qualification.",
+    "No hosted latency/OCC/SLO success. Earlier service and authentication expected-code failures remain unchanged.",
+    "Scoped retained previous controls/four archive hashes verified; no historical custody/source-recovery assertion."
+  ]
+}

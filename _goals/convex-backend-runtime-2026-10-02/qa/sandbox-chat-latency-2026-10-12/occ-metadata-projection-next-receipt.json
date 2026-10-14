@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-14T00:09:23.457275+00:00",
+  "scope": "Prospective conflict metadata projection only; no native calls or historical recovery",
+  "protocol": "Installed Convex1.46 OccInfoJson lines63-69",
+  "fields": [
+    "bounded tableName",
+    "bounded componentPath",
+    "hashed documentId",
+    "bounded recognized writeSource function or hash",
+    "original retryCount"
+  ],
+  "offlineTests": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0
+  },
+  "nativeValidated": false,
+  "historicalK15Fields": "unavailable because original projection discarded them and raw payload was not retained",
+  "originalExecutionCap": 1000,
+  "originalLogByteCap": 16777216,
+  "receipts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/occ-metadata-projection-next.mjs",
+      "bytes": 1165,
+      "sha256": "9e6779c54c6760fd25c7b2c44f0176f6e4d8a293f04685900ae05551937756de"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/occ-metadata-projection-next.test.mjs",
+      "bytes": 1776,
+      "sha256": "c35c24703fccae107cc449865d7ef89b0138fd44aa6f20f38d3a058572488b0e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/occ-metadata-projection-next-tests.log",
+      "bytes": 405,
+      "sha256": "c692c6a4c6f2f1386d62734feb93eb470d22b6fd152ece040154079be14c9123"
+    },
+    {
+      "path": "node_modules/convex/src/cli/lib/generatedFunctionLogsApi.ts",
+      "bytes": 5609,
+      "sha256": "eb162fdac30c89bb0d4642ecc152bfd12a1a9ff7f5d3f90c2bf2c8c9a0b26a77"
+    }
+  ]
+}
