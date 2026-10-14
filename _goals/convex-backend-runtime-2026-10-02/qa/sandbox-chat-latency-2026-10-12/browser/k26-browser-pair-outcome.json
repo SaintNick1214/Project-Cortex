@@ -1,0 +1,43 @@
+{
+  "samples": [
+    {
+      "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+      "firstAfterPaint": {
+        "type": "cortex-browser-latency",
+        "phase": "first-text.after-paint",
+        "elapsedMs": 6544.799999952316,
+        "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+        "visibility": "visible"
+      },
+      "complete": {
+        "type": "cortex-browser-latency",
+        "phase": "answer.complete.dom-commit",
+        "elapsedMs": 8345,
+        "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7"
+      }
+    },
+    {
+      "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+      "firstAfterPaint": {
+        "type": "cortex-browser-latency",
+        "phase": "first-text.after-paint",
+        "elapsedMs": 7045.399999976158,
+        "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+        "visibility": "visible"
+      },
+      "complete": {
+        "type": "cortex-browser-latency",
+        "phase": "answer.complete.dom-commit",
+        "elapsedMs": 9122.700000047684,
+        "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9"
+      }
+    }
+  ],
+  "responses": "COMPLETE2/2",
+  "memory": "complete before warm and after warm",
+  "resubmissions": 0,
+  "originalDeadlineMs": 30000,
+  "contextCondition": "after earlier successful tool prefix; first ordinary uses nonempty memory and warmed SDK; not matched empty K25 baseline",
+  "sloPass": 0,
+  "sloTotal": 2
+}

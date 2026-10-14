@@ -28,11 +28,11 @@ assert.equal(identity.labels['dev.cortex.manual-sandbox'], identity.kitIdentity.
 assert.equal(packaging.status, 'PACKAGING_COMPLETE');
 assert.equal(packaging.sourceCommit, sourceCommit);
 assert.equal(packaging.kit, kit);
-assert.equal(packaging.executionCounts.isolatedBuilds, 3);
-assert.equal(packaging.executionCounts.packs, 4);
-assert.equal(packaging.executionCounts.imageBuilds, 1);
-assert.equal(packaging.consumerChecks.length, 4);
-assert.ok(packaging.consumerChecks.every(result => result.exitCode === 0));
+assert.equal(packaging.counts.isolatedBuilds, 3);
+assert.equal(packaging.counts.packs, 4);
+assert.equal(packaging.counts.imageBuilds, 1);
+assert.equal(packaging.consumers.length, 4);
+assert.ok(packaging.consumers.every(result => result.exitCode === 0));
 const actual = JSON.parse((await promisify(execFile)('/Applications/Docker.app/Contents/Resources/bin/docker', ['image', 'inspect', identity.imageId], { maxBuffer: 100000 })).stdout)[0];
 assert.equal(actual.Id, identity.imageId);
 assert.equal(actual.Os, 'linux');

@@ -1,0 +1,790 @@
+{
+  "status": "BROWSER_SAVED_ANALYSIS_COMPLETE; SLO_FAIL_2_OF_2",
+  "sourceCommit": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+  "target": {
+    "sessionId": "56705bb5-13d4-47a1-aeab-5ba46c8b6398",
+    "name": "aromatic-penguin-118",
+    "id": 6174441,
+    "reference": "dev/cortex-sandbox-56705bb5-13d4-47a1-aeab-5ba46c8b6398"
+  },
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k26-browser-post-pair-1792003599165.json",
+      "sha256": "49369a0f23a80fc15a33e88738fa4f9e893c933e1faec7fae2590f8a0e90e35d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k26-browser-pair-outcome.json",
+      "sha256": "ac711142a1f8ebdf4bd3cb7fe757da81bc1e0ee8123dcfef97f95ec19dea7c80"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k26-browser-pair-logs.json",
+      "sha256": "250a68272fc776c90448a39fee19987915c6da9073a5a8ce4f06db95f74f154b"
+    }
+  ],
+  "contextCondition": "after earlier successful tool prefix; first ordinary uses nonempty memory and warmed SDK; not matched empty K25 baseline",
+  "earlyToolRun": "run:cb3079f1a04af444e5cc4b8731bfae703db6905b6231eff7d89d10d44bba1298",
+  "earlyToolNotOrdinarySlo": true,
+  "snapshotCapReached": true,
+  "executions": 1000,
+  "phases": 433,
+  "unidentifiedExecutions": 1,
+  "originalBounds": {
+    "bytes": 16777216,
+    "executions": 1000,
+    "rowPage": 256,
+    "deadlineMs": 30000
+  },
+  "requestCursor": 0,
+  "newCursor": 1792003598782.1555,
+  "runs": [
+    {
+      "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+      "actionExecutionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1",
+      "actionRequestId": "614ee5d9d73ff19f",
+      "response": "COMPLETE",
+      "slo": "FAIL",
+      "paintMs": 6544.799999952316,
+      "nativeCheckpointsMs": {
+        "admissionEpoch": 1792003398009,
+        "directBegin": 1792003398702,
+        "directEnd": 1792003398925,
+        "recallBegin": 1792003399271,
+        "embeddingBegin": 1792003399935,
+        "embeddingReady": 1792003400293,
+        "recallEnd": 1792003401599,
+        "prepared": 1792003402070,
+        "mainAdmitBegin": 1792003402420,
+        "mainDispatch": 1792003402751,
+        "firstText": 1792003403328,
+        "visible": 1792003403548,
+        "durable": 1792003403806.2012
+      },
+      "disjointIntervals": [
+        {
+          "from": "admissionEpoch",
+          "to": "directBegin",
+          "ms": 693
+        },
+        {
+          "from": "directBegin",
+          "to": "directEnd",
+          "ms": 223
+        },
+        {
+          "from": "directEnd",
+          "to": "recallBegin",
+          "ms": 346
+        },
+        {
+          "from": "recallBegin",
+          "to": "recallEnd",
+          "ms": 2328
+        },
+        {
+          "from": "recallEnd",
+          "to": "prepared",
+          "ms": 471
+        },
+        {
+          "from": "prepared",
+          "to": "mainAdmitBegin",
+          "ms": 350
+        },
+        {
+          "from": "mainAdmitBegin",
+          "to": "mainDispatch",
+          "ms": 331
+        },
+        {
+          "from": "mainDispatch",
+          "to": "firstText",
+          "ms": 577
+        },
+        {
+          "from": "firstText",
+          "to": "visible",
+          "ms": 220
+        }
+      ],
+      "predispatchMs": 4742,
+      "recallMs": 2328,
+      "embeddingAcquisitionMs": 358,
+      "embeddingReadyToRecallReturnMs": 1306,
+      "recallReturnToPreparedMs": 471,
+      "mainModelToProcessedFirstTextMs": 577,
+      "firstTextToDurableMs": 478.201171875,
+      "finalSelection": {
+        "selectedMessages": 1,
+        "selectedMemories": 3,
+        "selectedFacts": 1,
+        "selectedPending": 0,
+        "contextBytes": 2282,
+        "inputTokens": 28416,
+        "inputLimit": 32768
+      },
+      "nativeCompletions": [
+        {
+          "function": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0",
+          "startMs": 1792003398009.0,
+          "endMs": 1792003398615.8208,
+          "engineMs": 590.923816,
+          "userExecutionMs": 194.782026,
+          "readDocuments": 190,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "a3ae01ab-fe95-419c-9771-ed255a1f6852",
+          "startMs": 1792003398704.0,
+          "endMs": 1792003398924.6572,
+          "engineMs": 216.007388,
+          "userExecutionMs": 150.172111,
+          "readDocuments": 54,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "c5d28554-83f7-4500-93be-2bd328464296",
+          "startMs": 1792003398927.0,
+          "endMs": 1792003399269.2566,
+          "engineMs": 342.54899700000004,
+          "userExecutionMs": 235.664549,
+          "readDocuments": 171,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admitV8",
+          "executionId": "121ac2a3-eef4-4cca-9d63-ccee6a63702f",
+          "startMs": 1792003399283.0,
+          "endMs": 1792003399929.643,
+          "engineMs": 637.103024,
+          "userExecutionMs": 109.90991199999999,
+          "readDocuments": 112,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "093a31e0-9633-4416-bc58-5f2103d6fdf8",
+          "startMs": 1792003400304.0,
+          "endMs": 1792003400704.3206,
+          "engineMs": 389.54630899999995,
+          "userExecutionMs": 154.06792099999998,
+          "readDocuments": 46,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "63820b81-e65b-425e-a1d6-6e952fbcddb6",
+          "startMs": 1792003400710.0,
+          "endMs": 1792003401004.5605,
+          "engineMs": 287.28182699999996,
+          "userExecutionMs": 126.475539,
+          "readDocuments": 38,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "cf09d9bc-0c6d-4fa8-bd64-b254e0e60a19",
+          "startMs": 1792003401009.0,
+          "endMs": 1792003401265.8574,
+          "engineMs": 257.95803099999995,
+          "userExecutionMs": 118.560971,
+          "readDocuments": 86,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "f68c5b45-3f7d-40e9-b3d1-a60995f98739",
+          "startMs": 1792003401271.0,
+          "endMs": 1792003401598.1362,
+          "engineMs": 327.986479,
+          "userExecutionMs": 164.28684299999998,
+          "readDocuments": 295,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "98646baa-1022-4c6d-b8be-e9fcd49be450",
+          "startMs": 1792003401602.0,
+          "endMs": 1792003402069.1802,
+          "engineMs": 455.912072,
+          "userExecutionMs": 81.96653900000001,
+          "readDocuments": 217,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "502073c0-236d-4013-b445-6180292a671a",
+          "startMs": 1792003402076.0,
+          "endMs": 1792003402302.1716,
+          "engineMs": 226.404807,
+          "userExecutionMs": 90.85105300000001,
+          "readDocuments": 39,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "eb6b7843-1d53-4a35-a544-697a9d240863",
+          "startMs": 1792003402423.0,
+          "endMs": 1792003402746.7063,
+          "engineMs": 311.778554,
+          "userExecutionMs": 169.09364499999998,
+          "readDocuments": 161,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "d65c1405-7337-4bee-a4d6-901e95531a8c",
+          "startMs": 1792003403330.0,
+          "endMs": 1792003403547.1174,
+          "engineMs": 209.088474,
+          "userExecutionMs": 92.476993,
+          "readDocuments": 54,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "f362febf-fded-430d-ad22-70cddee342c7",
+          "startMs": 1792003403554.0,
+          "endMs": 1792003403806.2012,
+          "engineMs": 246.069904,
+          "userExecutionMs": 123.10230899999999,
+          "readDocuments": 40,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "8ff9a845-12fe-4b5f-b6b9-d3d284fac760",
+          "startMs": 1792003403553.0,
+          "endMs": 1792003403902.235,
+          "engineMs": 350.43602000000004,
+          "userExecutionMs": 126.849345,
+          "readDocuments": 53,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "fb8a3511-d267-46e1-8b0f-897df0f5b6a4",
+          "startMs": 1792003403908.0,
+          "endMs": 1792003404108.6655,
+          "engineMs": 192.293893,
+          "userExecutionMs": 106.121114,
+          "readDocuments": 57,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "1a75d51a-49de-454c-8796-4b21d4e9dc26",
+          "startMs": 1792003404111.0,
+          "endMs": 1792003404428.2378,
+          "engineMs": 317.919856,
+          "userExecutionMs": 87.722945,
+          "readDocuments": 39,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "1c57d655-873a-496d-83ab-906438c1104e",
+          "startMs": 1792003404430.0,
+          "endMs": 1792003404633.5454,
+          "engineMs": 197.469965,
+          "userExecutionMs": 97.199972,
+          "readDocuments": 49,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "cddb8f1f-0042-4c92-b59b-26b797f732e9",
+          "startMs": 1792003404637.0,
+          "endMs": 1792003404836.3984,
+          "engineMs": 190.464791,
+          "userExecutionMs": 89.85388900000001,
+          "readDocuments": 40,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finalize",
+          "executionId": "a4f3c197-a3e7-44ef-b6a8-20e2d64c3e08",
+          "startMs": 1792003405193.0,
+          "endMs": 1792003405565.8135,
+          "engineMs": 349.868466,
+          "userExecutionMs": 123.568705,
+          "readDocuments": 189,
+          "willRetry": false,
+          "occInfo": null
+        }
+      ],
+      "nativeFunctionCounts": {
+        "runtimeAgent:prepareDirectTurnV8": 1,
+        "runtimeAgent:contextInputsAndEmbeddingV8": 1,
+        "runtimeAgentQueryEmbedding:admitV8": 1,
+        "runtimeModelPolicy:captureTerminalEvidenceV8": 2,
+        "runtimeModelPolicy:attachTerminalResultV8": 2,
+        "runtimeAgentRecall:prepareReadsV8": 1,
+        "runtimeAgentRecall:readMatchesAndDeliveryV8": 1,
+        "runtimeAgent:saveAndPrepareContextV8": 1,
+        "runtimeAgent:hydrateExecution": 2,
+        "messages:addMessages": 2,
+        "streams:create": 1,
+        "streams:addDelta": 6,
+        "runtimeAgent:admitPreparedModelOperationV8": 1,
+        "runtimeModelPolicy:markVisible": 2,
+        "runtimeAgent:recordOutput": 2,
+        "runtimeAgent:finishOperation": 1,
+        "runtimeAgent:finalize": 1,
+        "runtimeContentJobs:enqueueParentTitle": 1,
+        "runtimeAgent:executeDirectV8": 1
+      },
+      "missingRequiredCheckpoints": [],
+      "mutationPerformanceSpans": [
+        {
+          "runId": "sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376",
+          "attemptNumber": 0,
+          "phase": "admission.submit.end",
+          "at": 1792003398009,
+          "durationMs": 258.20000000001164,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 0,
+          "phase": "start.claimNext.end",
+          "at": 1792003398009,
+          "durationMs": 150.09999999997672,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 0,
+          "phase": "admission.start.end",
+          "at": 1792003398009,
+          "durationMs": 176.89999999996508,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "admission.get.end",
+          "at": 1792003398009,
+          "durationMs": 4.900000000023283,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0"
+        }
+      ]
+    },
+    {
+      "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+      "actionExecutionId": "42b333b0-a303-4459-82c3-2b6ce0e11373",
+      "actionRequestId": "bebd1263276dd6a4",
+      "response": "COMPLETE",
+      "slo": "FAIL",
+      "paintMs": 7045.399999976158,
+      "nativeCheckpointsMs": {
+        "admissionEpoch": 1792003473585,
+        "directBegin": 1792003474515,
+        "directEnd": 1792003474804,
+        "recallBegin": 1792003475220,
+        "embeddingBegin": 1792003475628,
+        "embeddingReady": 1792003475990,
+        "recallEnd": 1792003477887,
+        "prepared": 1792003478392,
+        "mainAdmitBegin": 1792003478648,
+        "mainDispatch": 1792003479012,
+        "firstText": 1792003479561,
+        "visible": 1792003479754,
+        "durable": 1792003479936.55
+      },
+      "disjointIntervals": [
+        {
+          "from": "admissionEpoch",
+          "to": "directBegin",
+          "ms": 930
+        },
+        {
+          "from": "directBegin",
+          "to": "directEnd",
+          "ms": 289
+        },
+        {
+          "from": "directEnd",
+          "to": "recallBegin",
+          "ms": 416
+        },
+        {
+          "from": "recallBegin",
+          "to": "recallEnd",
+          "ms": 2667
+        },
+        {
+          "from": "recallEnd",
+          "to": "prepared",
+          "ms": 505
+        },
+        {
+          "from": "prepared",
+          "to": "mainAdmitBegin",
+          "ms": 256
+        },
+        {
+          "from": "mainAdmitBegin",
+          "to": "mainDispatch",
+          "ms": 364
+        },
+        {
+          "from": "mainDispatch",
+          "to": "firstText",
+          "ms": 549
+        },
+        {
+          "from": "firstText",
+          "to": "visible",
+          "ms": 193
+        }
+      ],
+      "predispatchMs": 5427,
+      "recallMs": 2667,
+      "embeddingAcquisitionMs": 362,
+      "embeddingReadyToRecallReturnMs": 1897,
+      "recallReturnToPreparedMs": 505,
+      "mainModelToProcessedFirstTextMs": 549,
+      "firstTextToDurableMs": 375.550048828125,
+      "finalSelection": {
+        "selectedMessages": 3,
+        "selectedMemories": 3,
+        "selectedFacts": 1,
+        "selectedPending": 0,
+        "contextBytes": 2282,
+        "inputTokens": 29558,
+        "inputLimit": 32768
+      },
+      "nativeCompletions": [
+        {
+          "function": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f",
+          "startMs": 1792003473585.0,
+          "endMs": 1792003474361.2808,
+          "engineMs": 768.705455,
+          "userExecutionMs": 265.585912,
+          "readDocuments": 188,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "43a0f22c-b15c-445f-afbb-6cfbc77993dd",
+          "startMs": 1792003474518.0,
+          "endMs": 1792003474804.0044,
+          "engineMs": 276.741201,
+          "userExecutionMs": 138.815883,
+          "readDocuments": 146,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "f7357d68-1253-42f3-8329-2d4effd94ed0",
+          "startMs": 1792003474806.0,
+          "endMs": 1792003475218.2412,
+          "engineMs": 412.348599,
+          "userExecutionMs": 280.248134,
+          "readDocuments": 427,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admitV8",
+          "executionId": "68840037-afc2-4b05-940a-5f2f8bf6060b",
+          "startMs": 1792003475231.0,
+          "endMs": 1792003475625.4036,
+          "engineMs": 387.29116600000003,
+          "userExecutionMs": 138.410367,
+          "readDocuments": 266,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "6e413fa4-bc48-4da9-8410-6d22f6176bea",
+          "startMs": 1792003475998.0,
+          "endMs": 1792003476197.3347,
+          "engineMs": 191.847173,
+          "userExecutionMs": 107.27121100000001,
+          "readDocuments": 71,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "760ab24c-a99f-44cd-a502-6534bc0f17fc",
+          "startMs": 1792003476203.0,
+          "endMs": 1792003476825.361,
+          "engineMs": 615.2229540000001,
+          "userExecutionMs": 135.429098,
+          "readDocuments": 63,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "b6053efa-c84f-4ffe-8479-68f6a06d5aa8",
+          "startMs": 1792003476831.0,
+          "endMs": 1792003477501.525,
+          "engineMs": 670.796263,
+          "userExecutionMs": 171.427232,
+          "readDocuments": 153,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "024a2bde-a0ae-4675-a37f-d59449350277",
+          "startMs": 1792003477508.0,
+          "endMs": 1792003477876.3481,
+          "engineMs": 369.117568,
+          "userExecutionMs": 199.956614,
+          "readDocuments": 514,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "8a169144-b9e9-444d-b977-c95a6bb00988",
+          "startMs": 1792003477891.0,
+          "endMs": 1792003478391.7273,
+          "engineMs": 488.965736,
+          "userExecutionMs": 108.626457,
+          "readDocuments": 411,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "682a041f-644d-4041-8cad-430d10e2f78e",
+          "startMs": 1792003478398.0,
+          "endMs": 1792003478572.744,
+          "engineMs": 175.32146500000002,
+          "userExecutionMs": 103.569543,
+          "readDocuments": 78,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "5aeec479-af67-4a50-9f05-9d1b96ce687e",
+          "startMs": 1792003478650.0,
+          "endMs": 1792003479007.8193,
+          "engineMs": 343.755081,
+          "userExecutionMs": 210.710148,
+          "readDocuments": 279,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "40fbff12-206d-4a90-b3ee-de4cc3dd9dab",
+          "startMs": 1792003479562.0,
+          "endMs": 1792003479753.9045,
+          "engineMs": 183.312595,
+          "userExecutionMs": 95.828262,
+          "readDocuments": 93,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "2f74ef15-4f08-42de-af94-12494c4f96b0",
+          "startMs": 1792003479759.0,
+          "endMs": 1792003479936.55,
+          "engineMs": 170.06404799999999,
+          "userExecutionMs": 89.969813,
+          "readDocuments": 79,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "c29c9a7d-58e5-4069-89b4-fd463e3a19c8",
+          "startMs": 1792003479758.0,
+          "endMs": 1792003479946.0469,
+          "engineMs": 188.350444,
+          "userExecutionMs": 95.26991699999999,
+          "readDocuments": 92,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "1e6248fb-4d39-473c-b1f9-052711dd1414",
+          "startMs": 1792003479948.0,
+          "endMs": 1792003480145.462,
+          "engineMs": 197.203814,
+          "userExecutionMs": 98.359009,
+          "readDocuments": 92,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "28ecc2f6-7493-4bc6-8e44-c520ccaae67e",
+          "startMs": 1792003480151.0,
+          "endMs": 1792003480390.1536,
+          "engineMs": 228.62331899999998,
+          "userExecutionMs": 102.185352,
+          "readDocuments": 78,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "0a49564c-f26e-499a-8d5e-f3d2eef6d625",
+          "startMs": 1792003480392.0,
+          "endMs": 1792003480639.2234,
+          "engineMs": 247.53084,
+          "userExecutionMs": 92.636573,
+          "readDocuments": 78,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "1bc9aa75-f1a8-43a1-9c85-720b59bea9f9",
+          "startMs": 1792003480641.0,
+          "endMs": 1792003480860.9119,
+          "engineMs": 201.188129,
+          "userExecutionMs": 101.649091,
+          "readDocuments": 70,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeBudgetAccounts",
+            "documentIdSha256": "87afc543bf305f813b1685485004c5ca0b38a6834c4755651b28dfcd93794ccb",
+            "writeSource": "runtimeModelPolicy.js:captureTerminalEvidence"
+          }
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "7dcab67f-289d-412d-955d-cc177a5a2a7a",
+          "startMs": 1792003480861.0,
+          "endMs": 1792003481067.641,
+          "engineMs": 198.879596,
+          "userExecutionMs": 99.985893,
+          "readDocuments": 70,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "20666f4a-163c-4e2e-b335-08b5fb0d946d",
+          "startMs": 1792003481071.0,
+          "endMs": 1792003481284.0122,
+          "engineMs": 202.165807,
+          "userExecutionMs": 103.7137,
+          "readDocuments": 79,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finalize",
+          "executionId": "f4ee47bf-60fb-41ba-a250-d98d4b748a80",
+          "startMs": 1792003481652.0,
+          "endMs": 1792003482067.6462,
+          "engineMs": 353.250244,
+          "userExecutionMs": 153.830151,
+          "readDocuments": 425,
+          "willRetry": false,
+          "occInfo": null
+        }
+      ],
+      "nativeFunctionCounts": {
+        "runtimeAgent:prepareDirectTurnV8": 1,
+        "runtimeAgent:contextInputsAndEmbeddingV8": 1,
+        "runtimeAgentQueryEmbedding:admitV8": 1,
+        "runtimeModelPolicy:captureTerminalEvidenceV8": 2,
+        "runtimeModelPolicy:attachTerminalResultV8": 3,
+        "runtimeAgentRecall:prepareReadsV8": 1,
+        "runtimeAgentRecall:readMatchesAndDeliveryV8": 1,
+        "runtimeAgent:saveAndPrepareContextV8": 1,
+        "runtimeAgent:hydrateExecution": 2,
+        "messages:addMessages": 2,
+        "streams:create": 1,
+        "streams:addDelta": 6,
+        "runtimeAgent:admitPreparedModelOperationV8": 1,
+        "runtimeModelPolicy:markVisible": 3,
+        "runtimeAgent:recordOutput": 2,
+        "runtimeAgent:finishOperation": 1,
+        "runtimeAgent:finalize": 1,
+        "runtimeContentJobs:enqueueParentTitle": 1,
+        "runtimeAgent:executeDirectV8": 1
+      },
+      "missingRequiredCheckpoints": [],
+      "mutationPerformanceSpans": [
+        {
+          "runId": "sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376",
+          "attemptNumber": 0,
+          "phase": "admission.submit.end",
+          "at": 1792003473585,
+          "durationMs": 212.20000000001164,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 0,
+          "phase": "start.claimNext.end",
+          "at": 1792003473585,
+          "durationMs": 161.5,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 0,
+          "phase": "admission.start.end",
+          "at": 1792003473585,
+          "durationMs": 193.60000000003492,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "admission.get.end",
+          "at": 1792003473585,
+          "durationMs": 5.5,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "1000executioncap reached; global early/bootstrap/tool records may be truncated. Required ordinary checkpoints found individually are retained, not zero-filled.",
+    "No per-table predicate read counts/cache-hit counts or causal engine-minus-user attribution retained.",
+    "Browser monotonic paint clock is separate from native timestamps; enclosing durations overlap children.",
+    "Changed firstsample condition: early successful tool/populatedmemory/warmedSDK; no matched K25 empty-first causal comparison.",
+    "Main provider/Gateway/network subclocks are opaque; stream-begin\u2192processed-first-text is combined acquisition."
+  ],
+  "serviceCallsAfterAuthorizedSnapshot": 0
+}

@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+const qa=path.dirname(fileURLToPath(import.meta.url));
+const proofs='/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs';
+const pinned='/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin';
+assert.equal(process.version,'v24.15.0');
+assert.equal(process.env.CORTEX_K26_LAUNCH_GO,'1','Explicit new sandbox launch GO required');
+const fd=fs.openSync(path.join(qa,'k26-launcher-v1.log'),'wx',0o600);
+const startedAt=new Date().toISOString();
+const child=spawn('/bin/bash',[path.join(proofs,'start-sandbox.sh'),'--no-copy'],{cwd:proofs,env:{...process.env,PATH:pinned+path.delimiter+process.env.PATH,CORTEX_RUNTIME_LATENCY_TRACE:'1'},stdio:['ignore',fd,fd]});
+fs.writeFileSync(path.join(qa,'k26-launcher-start-v1.json'),JSON.stringify({startedAt,wrapperPid:process.pid,launcherPid:child.pid,command:'start-sandbox.sh --no-copy',clipboardCopied:false,sourceCommit:'9fb9687536af0b7abfcb7280e0aa26ef450051ea'},null,2)+'\n',{flag:'wx'});
+child.once('error',error=>{fs.closeSync(fd);fs.writeFileSync(path.join(qa,'k26-launcher-spawn-error-v1.json'),JSON.stringify({errorCode:error.code??null},null,2)+'\n',{flag:'wx'});process.exitCode=1;});
+child.once('close',(exitCode,signal)=>{try{fs.closeSync(fd);}catch{}fs.writeFileSync(path.join(qa,'k26-launcher-child-exit-v1.json'),JSON.stringify({startedAt,endedAt:new Date().toISOString(),launcherPid:child.pid,exitCode,signal,source:'direct child close event; no pipeline or tee'},null,2)+'\n',{flag:'wx'});process.exitCode=exitCode??1;});

@@ -1,0 +1,38 @@
+{
+  "observedAt": "2026-10-14T18:59:33.988Z",
+  "status": "ABSENT",
+  "sessionId": "56705bb5-13d4-47a1-aeab-5ba46c8b6398",
+  "target": {
+    "name": "aromatic-penguin-118",
+    "id": 6174441,
+    "reference": "dev/cortex-sandbox-56705bb5-13d4-47a1-aeab-5ba46c8b6398",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "expiresAt": 1792607785703,
+    "deploymentType": "dev",
+    "isDefault": false
+  },
+  "sourceCommit": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+  "imageId": "sha256:5d261e62082b2fb04434eac7661f3f3903cd9a755e3eb7ff989525a711043105",
+  "database": "ABSENT",
+  "container": "ABSENT",
+  "credentialsRemoved": true,
+  "removed": {
+    "issuerDir": true,
+    "secretsDir": true,
+    "workspace": true,
+    "backendDir": true
+  },
+  "verification": {
+    "freshApprovedProjectGet": true,
+    "freshDeploymentInventoryNoExactIdentity": true,
+    "exactDockerInspectNegative": true,
+    "launcherExit": 130,
+    "launcherExitStatus": "OBSERVED_DIRECT_CHILD_EXIT_130",
+    "launcherExitReceipt": "k26-launcher-child-exit-v1.json",
+    "launcherExitReceiptSha256": "d9395697788c87b5afade226ec1fc40736ead109e3da16df87b87741dd5afe43",
+    "launcherExitProvenance": "direct child close event; no pipeline or tee",
+    "launcherPid": 46956
+  },
+  "retained": "Public session journal and original redacted financial/test/failure receipts; no historical uncertainty refunded"
+}

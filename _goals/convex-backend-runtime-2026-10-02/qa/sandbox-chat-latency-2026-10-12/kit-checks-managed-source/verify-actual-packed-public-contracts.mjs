@@ -8,7 +8,7 @@ import vm from 'node:vm';
 import { build } from 'esbuild';
 import { createHash } from 'node:crypto';
 
-const expectedSource='SOURCE_COMMIT_UNREADY';
+const expectedSource='9fb9687536af0b7abfcb7280e0aa26ef450051ea';
 assert.match(expectedSource,/^[a-f0-9]{40}$/,'Root accepted commit GO required');
 // Extract the npm tarball: source imports cannot validate the package export map.
 const temporary = mkdtempSync("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/packed-contract-");

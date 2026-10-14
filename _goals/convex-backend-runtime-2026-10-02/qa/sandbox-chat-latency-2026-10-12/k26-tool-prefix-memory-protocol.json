@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "status": "PREPARED_ONLY_NOT_INVOKED",
+  "original": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-four-run-memory-readonly.mjs",
+    "sha256": "4cb8033c435671bf1b2ee70c6e61d66608988f839270b1edc2cf341335ee8e4f",
+    "unchanged": true
+  },
+  "successor": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-four-run-memory-tool-prefix-readonly.mjs",
+    "sha256": "e0c5e3f0e13de3b6ead74f0c7a1d5355659434bf2542604bce1a2d37f5c6bd5f",
+    "syntaxExitCode": 0
+  },
+  "protocol": {
+    "kind": "four-ordinary-pairs-after-three-event-tool-prefix",
+    "prefixRunId": "run:cb3079f1a04af444e5cc4b8731bfae703db6905b6231eff7d89d10d44bba1298",
+    "prefixEvents": 3,
+    "originalFloors": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "selectedEventSequences": [
+      [
+        4,
+        5
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        10,
+        11
+      ]
+    ],
+    "actualFrontiers": [
+      5,
+      7,
+      9,
+      11
+    ],
+    "ordinaryRunIdsExcludeTool": true,
+    "emptyBaseline": false
+  },
+  "changes": [
+    "Original exact sequence expectation changes only by the declared three-event protocol offset; the zero-prefix original helper remains byte-exact.",
+    "Original2/4/6/8 expectedThrough/facts/vectors/noMissing/profile checks retained, plus stronger actualMaxSelectedEventSequence and all-events-through-actual-frontier checks.",
+    "Prefix events must all bind exact earlier current completed tool run within same scope; no tool run is an ordinary SLO sample.",
+    "All event source/profile/usage/authority/candidate binding/positive-fact assertions and original45freshchecks/256row/30s bounds unchanged; no additional queries."
+  ],
+  "sourceEdits": 0,
+  "serviceCalls": 0,
+  "inference": 0,
+  "executionRequires": "Exact4ordinary run IDs from B-owned pins + Root explicit four-proof GO; original turn-complete env interlock.",
+  "ordinaryInterlockCompatibility": "Receipt filename/mode and original fields remain compatible with k26-ordinary-memory-pins.mjs; protocol explicitly identifies prefixed conditions."
+}

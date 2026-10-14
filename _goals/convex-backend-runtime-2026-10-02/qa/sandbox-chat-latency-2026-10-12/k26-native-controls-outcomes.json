@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "status": "AUTHORIZED_NATIVE_CONTROLS_COMPLETE",
+  "sourceCommit": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+  "target": {
+    "sessionId": "56705bb5-13d4-47a1-aeab-5ba46c8b6398",
+    "name": "aromatic-penguin-118",
+    "id": 6174441,
+    "expiresAt": 1792607785703
+  },
+  "imageId": "sha256:5d261e62082b2fb04434eac7661f3f3903cd9a755e3eb7ff989525a711043105",
+  "backendManifestSha256": "777745142e57fe60e615e87c55b4383bab425012a78a8ea3d757074075ef0f01",
+  "archiveManifestSha256": "3d92ab62f12be795fd1355a43c1f9275c01fb53823d191aa9404c9c9477aefc7",
+  "sdkArchiveSha256": "d569c1eec83c1455fb7578b82fda64171a10dddc1499a7168fefec41a37f8864",
+  "receipts": {
+    "fourProof": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-memory-native-v2-four-run-verification-1792003941888.json",
+      "sha256": "90b0a1e223c1e65ada6b553ce8ad28bd2f2b650e2103b2ae3b82673b162d60eb"
+    },
+    "fourLog": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-four-run-memory-prefixed-invocation-v1.log",
+      "sha256": "bc44bf330c917cc3e53de979a914d88f350692e1f7ca87c613d02ba2fcaaa15e"
+    },
+    "fourExit": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-four-run-memory-prefixed-invocation-v1-exit.json",
+      "sha256": "19d5cbdce55f141dd56ee1c4f4be4f11048c04a0acf6cd7c45b34a994da2856f",
+      "exitCode": 0
+    },
+    "ordinary": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-native-ordinary-memory-v2-1792003966407-b86a061a-cfd3-484c-99c6-2b6ea8537feb.json",
+      "sha256": "99fc33f7a1359bddb1475b9498672d45a71a8b83b032b21b093cda071c5e777d"
+    },
+    "ordinaryLog": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-ordinary-memory-invocation-v1.log",
+      "sha256": "286e535ace9dd1c723804043d3f0c3c22a7e1fae63c21d99d21b8f0eec26dbfb"
+    },
+    "ordinaryExit": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-ordinary-memory-invocation-v1-exit.json",
+      "sha256": "4a53d8c024d7b8f7bfd766d9f0730d76564a2182b5c3286de1c1f3e6bc670a1f",
+      "exitCode": 0
+    }
+  },
+  "helperHashes": {
+    "k26-four-run-memory-readonly.mjs": "4cb8033c435671bf1b2ee70c6e61d66608988f839270b1edc2cf341335ee8e4f",
+    "k26-four-run-memory-tool-prefix-readonly.mjs": "e0c5e3f0e13de3b6ead74f0c7a1d5355659434bf2542604bce1a2d37f5c6bd5f",
+    "k26-native-ordinary-memory.mjs": "9bb786166d8469d483c106c2673192081163f92cd4b7e49ef7dc7a45dacee9ab",
+    "k26-ordinary-memory-pins.mjs": "537c6b0dae49639e1212c5fd72470c98601c04a0b947bf199448a8bdaf07b4f9"
+  },
+  "fourProof": {
+    "passed": true,
+    "freshVerifications": 45,
+    "protocol": {
+      "version": 1,
+      "kind": "four-ordinary-pairs-after-three-event-tool-prefix",
+      "prefixEvents": 3,
+      "prefixRunId": "run:cb3079f1a04af444e5cc4b8731bfae703db6905b6231eff7d89d10d44bba1298",
+      "originalFloors": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "expectedActualFrontiers": [
+        5,
+        7,
+        9,
+        11
+      ],
+      "emptyBaseline": false
+    },
+    "responseCompleteCount": 4,
+    "memoryCompleteCount": 4,
+    "selectedEvents": 8,
+    "selectedPositiveUserFacts": 4,
+    "selectedVectors": 8,
+    "actualFrontiers": [
+      5,
+      7,
+      9,
+      11
+    ],
+    "scopeFactsThrough": 11,
+    "scopeSelectedProfileVectorsThrough": 11,
+    "allSourceAndCandidateChecksPass": true,
+    "allOriginalAndActualFrontierChecksPass": true,
+    "scopeCondition": "Actual3-event earlier approved tool prefix, followed by4ordinary pairs in another conversation; initial ordinary context already indexed/nonempty; not matchedemptyK25baseline"
+  },
+  "ordinary": {
+    "verdict": "PASS",
+    "clientsClosed": true,
+    "retries": 0,
+    "freshVerifications": 84,
+    "newCaptureIntents": 2,
+    "recallCalls": 1,
+    "native": {
+      "captureCount": 2,
+      "traceRows": 4,
+      "nativeMessageRows": 4,
+      "eventCount": 4,
+      "sourceRefsSha256": "583061bf6f676218923d696a8bb079e7f62c098f07d281e984e502fb566155da",
+      "positiveCoralFact": true,
+      "assistantExternal": true,
+      "metadataMatches": true,
+      "currentGrant": true,
+      "nativeUsageAttempts": 6
+    },
+    "assertions": {
+      "freshEqualContentCreatesTwo": true,
+      "exactReplayNoNewCapture": true,
+      "changed_same_id": {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "protectedPayloadReturned": false
+      },
+      "contiguousReadinessThrough4": true,
+      "reader.capture": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "outsider.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "locked.new": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "locked.replay": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "lockedStatusReadAllowed": true,
+      "explicitAdminManualUnlockForDelete": true,
+      "deleted.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "revoked.new": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "demoOwnerGrantUntouched": true
+    },
+    "firstApiMs": 1321.397375,
+    "secondApiMs": 1055.0989170000003,
+    "profileApiMs": 687.5832499999997,
+    "recallApiMs": 3224.733791999999,
+    "publicRecall": {
+      "itemCount": 6,
+      "contextBytes": 352,
+      "currentProfile": true,
+      "scopedPositivePreference": true,
+      "requestIdSha256": "b71a6efb126d8619d9475f614fa1cb4329afe327b1c914cd3791a0bcd910fe40"
+    },
+    "recallRpc": [
+      {
+        "kind": "mutation",
+        "method": "runtimeClient:session",
+        "phase": "public.recall",
+        "durationMs": 311.0195829999975,
+        "failed": false
+      },
+      {
+        "kind": "action",
+        "method": "runtimeMemory:recall",
+        "phase": "public.recall",
+        "durationMs": 2730.3547089999993,
+        "failed": false
+      },
+      {
+        "kind": "mutation",
+        "method": "runtimeClient:session",
+        "phase": "public.recall",
+        "durationMs": 182.37604199999987,
+        "failed": false
+      }
+    ],
+    "rawPayloadRetained": false
+  },
+  "clientsClosed": true,
+  "newNarrowDiagnosis": false,
+  "supplementalUnequalCapture": false,
+  "serviceAccessStopped": true,
+  "responseSemanticCoverage": {
+    "completeResponses": 4,
+    "knownMarkerMismatchCount": 1,
+    "mismatch": {
+      "label": "cli-first",
+      "expected": "CLI46",
+      "actual": "READY46",
+      "source": "Root canonical confirmation"
+    },
+    "fourOfFourSemanticPass": false,
+    "otherMarkers": "Root-owned; not separately rechecked by this native-memory proof"
+  },
+  "slo": {
+    "targetMs": 1000,
+    "measuredByRoot": true,
+    "allFourFailed": true,
+    "browserAfterPaintMs": [
+      6544.8,
+      7045.4
+    ],
+    "cliFirstStdoutMs": [
+      6934.2,
+      12684.2
+    ]
+  },
+  "outstandingJobLimits": [
+    "All8 selected chat-source stages and4 ordinary capture-source stages completed/skipped at proof time; all checked native attempts released slots and no reserved liability in checked accounts.",
+    "The final public recall returned successfully under unchanged native caps; this helper did not perform a second tenant-wide job/financial inventory afterward.",
+    "Original isolated-case negative cleanup locked/deleted only its dedicated QA conversation and revoked only its dedicated owner grant.",
+    "Other legitimate Root/B work can change inventory; no global unchanged-inventory or all-background-jobs-idle claim is made. Root owns final finance/service cleanup."
+  ]
+}
