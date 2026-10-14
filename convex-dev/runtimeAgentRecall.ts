@@ -5,6 +5,7 @@ import { v } from "convex/values";
 import type { ActionCtx, QueryCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import type { DerivedFact, SourceLineage } from "../src/domain/contracts";
+import { contextSourceKey } from "../src/domain/memory-context";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
 import { mergeContextWitness } from "../src/domain/context-witness";
 import type { DomainClock } from "../src/domain/clock";
@@ -29,7 +30,7 @@ import { completeRecallDelivery, vectorRecallItems } from "./runtimeMemoryServic
 
 type Input = { text: string; requestId: string; limit: number };
 type Selection = { cutoff: number; boundary: ContextBoundary; excludedSourceKeys: string[] };
-export type AgentRecallSelection = Selection & { onSelected(value: { witnesses: ContextSourceWitness[]; provenance: [string, SourceLineage][] }): void };
+export type AgentRecallSelection = Selection & { onSelected(value: { witnesses: ContextSourceWitness[]; provenance: [string, SourceLineage][]; sourceScores?: [string, number][]; itemLineages?: [string, SourceLineage][] }): void };
 type Args = AgentQueryEmbeddingAttempt & { input: Input; profile: EmbeddingProfile; selection: Selection };
 type FactPlan = { kind: "ready"; facts: DerivedFact[]; bindings: MemoryDeliveryBindings } | { kind: "refused"; refusalCanonical: string };
 const emptyBindings = (): MemoryDeliveryBindings => ({ sources: [], facts: [], vectors: [] });
@@ -101,7 +102,9 @@ export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hit
   for (const fact of factBindings.facts) if (!bindings.facts.some(value => value.factId === fact.factId && value.payloadHash === fact.payloadHash)) bindings.facts.push(fact);
   await new ConvexMemoryRepository(nativeCtx, args.reference, "read").recheckAuthority();
   return { vectorItems: vectorRecallItems(selectedVectors.selectedIndexes.map(index => matches[index]!)),
-    facts: selectedFacts.selectedIndexes.map(index => facts[index]!), bindings, witnesses: [...witnesses.values()], provenance: [...provenance.entries()] };
+    facts: selectedFacts.selectedIndexes.map(index => facts[index]!), bindings, witnesses: [...witnesses.values()], provenance: [...provenance.entries()],
+    itemLineages: [...selectedVectors.selectedIndexes.map(index => [`memory:${matches[index]!.chunk.chunkId}`, matches[index]!.source.lineage] as [string, SourceLineage]), ...selectedFacts.selectedIndexes.map(index => [`fact:${facts[index]!.factId}`, facts[index]!.lineage] as [string, SourceLineage])],
+    sourceScores: selectedVectors.selectedIndexes.map(index => [contextSourceKey({ tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! }, matches[index]!.source.lineage), matches[index]!.score] as [string, number]) };
 }
 export const readMatches = internalQuery({ args: { ...nativeArgs, hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })), factPlan: factPlanArgs }, handler: readMatchesHandler });
 const prepareRef = makeFunctionReference("runtimeAgentRecall:prepareReads") as unknown as FunctionReference<"query", "internal", Args, Awaited<ReturnType<typeof prepareReadsHandler>>>;
@@ -121,7 +124,7 @@ export async function finishAgentRecall(ctx: ActionCtx, attempt: AgentQueryEmbed
       : q.eq("scopeProfileKey", vectorScopeKey(attempt.reference.tenantId, attempt.reference.memorySpaceId!, profile.profileId)),
   });
   const read = await ctx.runQuery(matchesRef, { ...args, factPlan: plan.factPlan, hits: hits.map(hit => ({ id: hit._id, score: hit._score })) });
-  onSelected({ witnesses: read.witnesses, provenance: read.provenance });
+  onSelected({ witnesses: read.witnesses, provenance: read.provenance, sourceScores: read.sourceScores, itemLineages: read.itemLineages });
   return await completeRecallDelivery({ clock, finalDelivery: async () => await ctx.runMutation(memoryReferences.finalDelivery,
     { reference: attempt.reference, bindings: read.bindings }) }, input, profile.profileId, read.vectorItems, read.facts);
 }

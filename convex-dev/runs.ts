@@ -14,10 +14,11 @@ import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth"
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { bindTrustedBudget } from "./runtimeModelPolicy";
 import { readCurrentExecutableDefinition } from "./agentDefinitions";
-import { agentComponent, approveRegisteredMessage, bridgeFor, captureCutoff, checkConversation, conversationById, createManagedConversation, executionRevision,
+import { agentComponent, approveRegisteredMessage, bridgeFor, captureCutoff, captureSelectedCutoff, checkConversation, conversationById, createManagedConversation, executionRevision,
   hydrateCutoff, registerMessages, requireConversation, singleTranscript, transcriptDenied } from "./runtimeTranscript";
 import { recheckAuthority } from "./runtimeAuth";
 import { stageStatus } from "./runtimeTranscriptSchema";
+import { readRunMemoryPublication } from "./runtimeIngestion";
 
 function internalMutationRef<Args extends Record<string, unknown>, Result>(name: string) {
   return makeFunctionReference<"mutation", Args, Result>(name) as unknown as FunctionReference<"mutation", "internal", Args, Result>;
@@ -58,6 +59,12 @@ export function publicRun(row: Doc<"runtimeRuns">) {
     contextCompleteness: row.contextCompleteness ?? null, contextFailureCode: row.contextFailureCode ?? null,
     createdAt: row.createdAt, updatedAt: row.updatedAt };
 }
+/** Status publication is a public projection dependency, never an execution guard dependency. */
+export async function publicRunCurrent(ctx: Pick<QueryCtx, "db" | "runQuery">, row: Doc<"runtimeRuns">) {
+  const progress = await readRunMemoryPublication(ctx, row);
+  return publicRun({ ...row, memoryStatus: progress.memoryStatus, updatedAt: progress.updatedAt });
+}
+
 /** Exported pure handler for meaningful native rollback fixtures, not a public fault-injection flag. */
 export async function submitHandler(ctx: MutationCtx, args: { request: unknown; tenantId?: string; memorySpaceId?: string }) {
   const actor = await requireDataAuthority(ctx, args, "run");
@@ -97,6 +104,7 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown; 
     runId, conversationId: conversation.conversationId, conversationEpoch: conversation.epoch,
     requestIdentityCanonical: binding.identityCanonical, requestIdentityHash: binding.identityHash, requestCanonical: binding.requestCanonical,
     agentId: definition.agent.agentId, agentVersion: definition.agent.version, definitionHash: definition.definitionHash, authorityReference: reference,
+    ...(definition.definition.context.handlerId === "cortex.transcript.relevant" ? { modelInputVersion: 8 as const } : {}),
     inputMessageIds: saved.messages.map(message => message._id), queueSequence: sequence, historyRevision: conversation.historyRevision + 1,
     runBudgetId: budget.runBudgetId, runAccountId: budget.runAccountId,
     responseStatus: conversation.requireApproval ? "waiting_approval" : "queued",
@@ -113,7 +121,7 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown; 
 export const submit = mutation({ args: { request: v.any(), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) }, handler: submitHandler });
 const runSelector = { runId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()) };
 export async function getHandler(ctx: MutationCtx, args: { runId: string; memorySpaceId?: string; tenantId?: string }) {
-  const actor = await requireDataAuthority(ctx, args, "read"); return publicRun((await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read")).row);
+  const actor = await requireDataAuthority(ctx, args, "read"); return await publicRunCurrent(ctx, (await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read")).row);
 }
 export const get = mutation({ args: runSelector, handler: getHandler });
 export const list = mutation({ args: { conversationId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()),
@@ -123,7 +131,7 @@ export const list = mutation({ args: { conversationId: v.string(), memorySpaceId
   const rows = await ctx.db.query("runtimeRuns").withIndex("by_conversation_queue", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!).eq("conversationId", args.conversationId).gt("queueSequence", args.afterSequence ?? 0)).take(limit);
   const result = [];
-  for (const row of rows) { if (row.tombstonedAt !== undefined) continue; await currentControlRun(ctx, reference, row.runId, "read"); result.push(publicRun(row)); }
+  for (const row of rows) { if (row.tombstonedAt !== undefined) continue; await currentControlRun(ctx, reference, row.runId, "read"); result.push(await publicRunCurrent(ctx, row)); }
   return result;
 } });
 export const cancel = mutation({ args: runSelector, handler: async (ctx, args) => {
@@ -227,6 +235,31 @@ export const claimNext = internalMutation({ args: { reference: runtimeAuthorityR
   if (canonicalModelJson(args.reference) !== canonicalModelJson(row.authorityReference)) transcriptDenied();
   const { definition } = await currentRun(ctx, args.reference, row.runId, "run");
   const snapshot = await captureCutoff(ctx, conversation, row, definition.definition.context.requiredStages, definition.definition.context.maxContextTokens);
+  if (snapshot.completeness !== "complete") {
+    await ctx.runMutation(cancelBudgetRef, { reference: row.authorityReference, runBudgetId: row.runBudgetId });
+    await retireWork(ctx, row, "failed", "CONTEXT_LIMIT_EXCEEDED", Date.now());
+    await ctx.scheduler.runAfter(0, recoverRef, { reference: row.authorityReference, conversationId: row.conversationId });
+    return { runId: row.runId, failureCode: "CONTEXT_LIMIT_EXCEEDED" as const };
+  }
+  const leaseMs = args.leaseMs ?? 60_000; if (!Number.isSafeInteger(leaseMs) || leaseMs < 1000 || leaseMs > 300_000) transcriptDenied("INVALID_INPUT");
+  const outbox = await outboxFor(ctx, row); if (outbox.state !== "pending" && outbox.state !== "ready") transcriptDenied("INVALID_STATE");
+  const attempt = row.attemptNumber + 1; const leaseVersion = outbox.leaseVersion + 1; const now = Date.now();
+  await ctx.db.patch("runtimeRuns", row._id, { responseStatus: "running", attemptNumber: attempt, snapshotCanonical: canonicalModelJson(snapshot), historyRevision: executionRevision(conversation), updatedAt: now });
+  await ctx.db.patch("runtimeRunOutbox", outbox._id, { state: "claimed", leaseVersion, leaseExpiresAt: now + leaseMs, updatedAt: now });
+  await ctx.db.insert("runtimeRunAttempts", { tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, runId: row.runId,
+    attemptNumber: attempt, leaseVersion, historyRevision: executionRevision(conversation), status: "running", startedAt: now });
+  return { runId: row.runId, attemptNumber: attempt, leaseVersion, runBudgetId: row.runBudgetId, snapshot };
+} });
+/** Fresh selected-input claim; the original claim registration/journals remain unchanged. */
+export const claimNextV8 = internalMutation({ args: { reference: runtimeAuthorityReference, conversationId: v.string(), leaseMs: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const conversation = await conversationById(ctx, args.reference, args.conversationId); if (!conversation) transcriptDenied();
+  await checkConversation(ctx, args.reference, conversation, "run");
+  const row = await queueHead(ctx, conversation);
+  if (!row || row.responseStatus !== "queued") return null;
+  if (canonicalModelJson(args.reference) !== canonicalModelJson(row.authorityReference)) transcriptDenied();
+  const { definition } = await currentRun(ctx, args.reference, row.runId, "run");
+  if (row.modelInputVersion !== 8 || definition.definition.context.handlerId !== "cortex.transcript.relevant") transcriptDenied("POLICY_DENIED");
+  const snapshot = await captureSelectedCutoff(ctx, conversation, row, definition.definition.context.requiredStages, definition.definition.context.inputSelection);
   if (snapshot.completeness !== "complete") {
     await ctx.runMutation(cancelBudgetRef, { reference: row.authorityReference, runBudgetId: row.runBudgetId });
     await retireWork(ctx, row, "failed", "CONTEXT_LIMIT_EXCEEDED", Date.now());

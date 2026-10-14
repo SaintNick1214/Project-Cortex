@@ -1,0 +1,132 @@
+{
+  "sourceBaseline": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+  "productFiles": 13,
+  "testFiles": 6,
+  "files": [
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "sha256": "228d03e879af431c68ec54bb75dc1aeb4a32600be852346a2f03e09967505051",
+      "bytes": 16722
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "8f709ce143026616646d97349d731a9a2db6565df4bdd9ef355778047d0ad812",
+      "bytes": 40665
+    },
+    {
+      "path": "convex-dev/runtimeMemorySchema.ts",
+      "sha256": "9bc28e332f596c59ef6d945fc278cbbadd4ccf140543a9619b82b316f664322d",
+      "bytes": 8198
+    },
+    {
+      "path": "convex-dev/runtimeMemoryCapture.ts",
+      "sha256": "35531915c84a4e63178fdad13d0d96669e75fc97d025c50c832c3b6a85a00d6c",
+      "bytes": 11532
+    },
+    {
+      "path": "convex-dev/runtimeMemoryQuery.ts",
+      "sha256": "3aefa0d62301f909b2ec5d2417037a0562ff713f727941ad0e1945c41d0ee6ce",
+      "bytes": 8909
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRefusal.ts",
+      "sha256": "c0b2cbe56ebbf46f22368c8b97d599b5bcec92966f85b663ebd6841043cdb082",
+      "bytes": 2995
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "sha256": "ca5c9557e46b740b21904708d18e0f308748d4cf3cc375d8ada974ee03fcf9cd",
+      "bytes": 50025
+    },
+    {
+      "path": "src/client-runtime/types.ts",
+      "sha256": "2f2e2fa7b5fe03db30dd838501339419842e9be3da2b2c8a8ba130f364331ae3",
+      "bytes": 8850
+    },
+    {
+      "path": "src/client-runtime/validation.ts",
+      "sha256": "0a5a7596c37151c6f08aed132707f5dfbbf8a07d594a246f8ec9078ed8eb4306",
+      "bytes": 11497
+    },
+    {
+      "path": "src/client-runtime/remember.ts",
+      "sha256": "68d01d6d3f4e23ae8ef91808357ddc0bd3e9d1055d9b8f4d9cc487fcc41ca21c",
+      "bytes": 4304
+    },
+    {
+      "path": "src/memory/index.ts",
+      "sha256": "921ce0244b2f63519bda85a730978ad331f3a3c19aef9b4b936276bb486b899d",
+      "bytes": 146166
+    },
+    {
+      "path": "src/memory/managedRemember.ts",
+      "sha256": "cc0b65bdd4e864c23188255f26c6475e4eae9d9a84a4e011476fe704fc773e40",
+      "bytes": 4327
+    },
+    {
+      "path": "src/types/index.ts",
+      "sha256": "bfcdcda38bd22ecaaca5aa894ef69180de7f8fde6c02881f0e77915d98c076ff",
+      "bytes": 124869
+    },
+    {
+      "path": "tests/unit/runtimeMemory/capture.test.ts",
+      "sha256": "6ff8ee6b48e97dee9583ddb99b7678777f44530d57ec8ff8c4d3ac0eb8fea660",
+      "bytes": 15238
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "sha256": "650ee000be22b8ec977f8684ab8b40f7b069eed54cb15b32235c7e41c5d9c5db",
+      "bytes": 10775
+    },
+    {
+      "path": "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+      "sha256": "e23d7fdd2c675f66b8c219c7e789e1ab28b0c16927763fab20c56e716753ef92",
+      "bytes": 23035
+    },
+    {
+      "path": "tests/unit/runtimeMemory/fixture.ts",
+      "sha256": "ab498551869a00f1068d2575849fad2d634849324ede0d28083c1a5f20c53dd1",
+      "bytes": 10625
+    },
+    {
+      "path": "tests/unit/runtimeMemory/public-functional.test.ts",
+      "sha256": "33ca6428cc63734b0cf4109bb87cd90d7f0b150f9de561442bd66584100139e1",
+      "bytes": 18807
+    },
+    {
+      "path": "tests/unit/runtimeMemory/remember-deadline.test.ts",
+      "sha256": "5093663ed5f095bf24204e2c18fc4bf37e6ffb11f427dfdc9c4117d5094d2e86",
+      "bytes": 5848
+    }
+  ],
+  "scope": "ordinary canonical remember + public recall native composition + scoped read loop/unscoped final grant fence",
+  "serviceCalls": 0,
+  "nativeSpeedClaim": false,
+  "affected": {
+    "paths": 22,
+    "passed": 1003,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exit": 0
+  },
+  "scopedLint": {
+    "exit": 0,
+    "errors": 0,
+    "warnings": 25
+  },
+  "sharedQualityPending": true,
+  "priorFreezeSha256": "c062618a9e7732a43dd87679191c1f684a5d24d7f5da195c01fd6cd4048e5e58",
+  "boundaryAmendment": "12,000ms observed ordinary remember RPCs; no capture cancellation/retry; pre-session not_dispatched and issued capture/post-session uncertain with requestId",
+  "deadlineSuccessor": {
+    "paths": 2,
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exit": 0,
+    "log": "ordinary-memory-deadline-v2.log",
+    "json": "ordinary-memory-deadline-v2.json"
+  },
+  "postFreezeTestCorrection": "Explicit controlled mutation port typing; beforeEach returns void. Original shared root-types-v1 failure retained; production bytes unchanged."
+}

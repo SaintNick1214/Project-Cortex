@@ -12,6 +12,8 @@ import type { RuntimeMemoryReadiness, RuntimeMemoryReadinessOptions } from "./ty
 import type { RuntimeArtifact, RuntimeMediaJob, RuntimeMediaSubmit } from "./types.js";
 import { mediaJob, mediaJobList, mediaListOptions, mediaSubmit } from "./media.js";
 import { contentJob, contentJobList, contentListOptions, contentSubmit, contentSuggestionInput } from "./content.js";
+import {rememberInput,rememberResult} from './remember.js';
+import type {RuntimeRememberInput,RuntimeRememberResult} from './types.js';
 import type { ContentSubmitV1, RuntimeContentJobV1 } from "../domain/content.js";
 
 export type RuntimeClientPort = Pick<ConvexClient, "setAuth" | "query" | "mutation" | "action" | "onUpdate" | "close">;
@@ -45,6 +47,7 @@ const refs = { session: mutation("runtimeClient:session"), signal: query("runtim
   observe: mutation("runtimeClient:observeEnvelope"), cancel: mutation("runtimeAgent:cancel"), approve: mutation("runs:approve"), tool: mutation("runtimeAgent:approveTool"),
   definition: mutation("agentDefinitions:get"), messages: mutation("runtimeTranscript:messages"), conversations: mutation("runtimeTranscript:list"),
   profile: mutation("runtimeMemory:defaultProfile"), recall: action("runtimeMemory:recall"), asset: mutation("runtimeAssets:get"),
+  remember:mutation('runtimeMemoryCapture:rememberExchange'),rememberStatus:mutation('runtimeMemoryCapture:rememberStatus'),
   embeddingProfile: mutation("runtimeClientExtensions:embeddingProfile"), readiness: mutation("runtimeClientExtensions:memoryReadiness"),
   mediaSubmit: mutation("runtimeMediaJobs:submit"), mediaGet: mutation("runtimeMediaJobs:get"), mediaList: mutation("runtimeMediaJobs:list"),
   mediaCancel: mutation("runtimeMediaJobs:cancel"), mediaReconcile: mutation("runtimeMediaJobs:reconcile"), artifact: mutation("artifacts:get"),
@@ -414,6 +417,24 @@ export class CortexRuntimeClient {
     const { result } = await this.inSession(current => this.action(refs.recall, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId,
       text: input.text, requestId: identifier(input.requestId, 512), ...(input.limit === undefined ? {} : { limit: input.limit }) }));
     this.trackDelivery(deliveryDeadline(object(result).deliveryExpiresAt)); return result as RuntimeRecallResult;
+  }
+  /** One canonical capture receipt; pending indexing is not immediate facts/vectors. */
+  async remember(input:RuntimeRememberInput):Promise<RuntimeRememberResult> {
+    const normalized=rememberInput(input);
+    const {current,result}=await this.inSession(actor=>this.mutation(refs.remember,{tenantId:actor.tenantId,memorySpaceId:actor.memorySpaceId,input:normalized}));
+    try {
+      const captured=rememberResult(result);
+      if(!sameScope(current,captured.scope)||current.principalId!==captured.principalId||captured.requestId!==normalized.requestId)invalid('INVALID_RESPONSE');
+      this.trackDelivery(captured.deliveryExpiresAt);return captured;
+    }catch(error){throw new CortexRuntimeError(runtimeError(error).code,'uncertain');}
+  }
+  /** Fresh receipt/source/profile/readiness, without starting inference. */
+  async rememberStatus(receiptId:string):Promise<RuntimeRememberResult> {
+    const id=identifier(receiptId,512);
+    const {current,result}=await this.inSession(actor=>this.mutation(refs.rememberStatus,{tenantId:actor.tenantId,memorySpaceId:actor.memorySpaceId,receiptId:id}));
+    const captured=rememberResult(result);
+    if(!sameScope(current,captured.scope)||current.principalId!==captured.principalId||captured.receiptId!==id)invalid('INVALID_RESPONSE');
+    this.trackDelivery(captured.deliveryExpiresAt);return captured;
   }
   /** Admit one backend-owned job and pending artifact. The backend chooses its qualified model and options. */
   async submitMediaJob(input: RuntimeMediaSubmit): Promise<RuntimeMediaJob> {

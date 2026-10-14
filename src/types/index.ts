@@ -774,6 +774,10 @@ export type SkippableLayer =
   | "graph";
 
 export interface RememberParams {
+  /** Managed capture dedupe identity. Omission creates a new intent each call. Supply for recovery/replay. */
+  requestId?: string;
+  /** Optimistic canonical transcript revision for a new exchange. */
+  expectedRevision?: number;
   /**
    * Memory space for isolation. If not provided, defaults to 'default'
    * with a warning. Auto-registers the memory space if it doesn't exist.
@@ -913,6 +917,8 @@ export interface RememberParams {
 }
 
 export interface RememberResult {
+  /** Ordinary backend capture returns durable indexing status; facts/memories stay empty until indexed. */
+  durable?: import('../client-runtime/types').RuntimeRememberResult;
   conversation: {
     messageIds: string[];
     conversationId: string;

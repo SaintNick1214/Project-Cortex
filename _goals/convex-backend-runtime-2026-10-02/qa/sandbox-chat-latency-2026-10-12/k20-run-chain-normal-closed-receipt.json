@@ -1,0 +1,108 @@
+{
+  "observedAt": "2026-10-14T09:25:22.735908+00:00",
+  "purpose": "Exactly four authorized read-only existing-run collectors once; diagnosis only",
+  "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+  "sessionId": "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+  "target": "trustworthy-cricket-487",
+  "targetId": 6161421,
+  "nodePath": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+  "nodeVersion": "24.15.0",
+  "script": "capture-k20-run-chain.mjs",
+  "scriptSha256": "e6f18913f746e96625008d312286ae82e73e73067ebf8ddf08fe638bb4772d6e",
+  "originalPerQueryTimeoutMs": 30000,
+  "originalPageBound": 256,
+  "serviceSnapshotCalls": 0,
+  "paidCalls": 0,
+  "mutationCalls": 0,
+  "collectorRetries": 0,
+  "ownedTargetRetirement": "Root-owned; this collector does not close the target/launcher",
+  "collectors": [
+    {
+      "ordinal": 1,
+      "runId": "run:9e7023287e022789474a0639380ceaa5b82bbb22ee27f749395eb7c3ac44e04a",
+      "argv": [
+        "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+        "run:9e7023287e022789474a0639380ceaa5b82bbb22ee27f749395eb7c3ac44e04a",
+        "trustworthy-cricket-487",
+        "6161421"
+      ],
+      "invocations": 1,
+      "exitCode": 0,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k20-run-chain-9e7023287e02-1791969832717.json",
+      "sha256": "8b5ec4d516366bb7132f226dfeb8097d4a2804dfb2615c5ac66dc6cce988ffd7",
+      "stdoutLog": "k20-run-chain-collector-1-stdout.log",
+      "stdoutSha256": "bbfdee67ab5f08f8c75844d4d848d3a4f99bb672b230e14a6af06bd4268fe9ab",
+      "stderrLog": "k20-run-chain-collector-1-stderr.log",
+      "stderrBytes": 0,
+      "normalClientClose": "finally awaited client.close; process exited normally0",
+      "firstDurableText": 1791968170931,
+      "createdAt": 1791968167217
+    },
+    {
+      "ordinal": 2,
+      "runId": "run:e4a7fe509b26e001aaa3c2b5045baf08318b882d83d0f58d6a0a7f1ead3db802",
+      "argv": [
+        "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+        "run:e4a7fe509b26e001aaa3c2b5045baf08318b882d83d0f58d6a0a7f1ead3db802",
+        "trustworthy-cricket-487",
+        "6161421"
+      ],
+      "invocations": 1,
+      "exitCode": 0,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k20-run-chain-e4a7fe509b26-1791969832705.json",
+      "sha256": "a105ef4d964cdaae7f7e7bd1558d15d3662ba4912d2a679675862f8af3e935a5",
+      "stdoutLog": "k20-run-chain-collector-2-stdout.log",
+      "stdoutSha256": "8067c7492caf0c734f8edfcdfbe20590ba306e870b1f11e7bafc97d74d6614fe",
+      "stderrLog": "k20-run-chain-collector-2-stderr.log",
+      "stderrBytes": 0,
+      "normalClientClose": "finally awaited client.close; process exited normally0",
+      "firstDurableText": 1791968265436,
+      "createdAt": 1791968262082
+    },
+    {
+      "ordinal": 3,
+      "runId": "run:4ecca5d1368c0bbe1e988003f7df4aa9bd03ba8ad1b2102457b0f26691860ca0",
+      "argv": [
+        "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+        "run:4ecca5d1368c0bbe1e988003f7df4aa9bd03ba8ad1b2102457b0f26691860ca0",
+        "trustworthy-cricket-487",
+        "6161421"
+      ],
+      "invocations": 1,
+      "exitCode": 0,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k20-run-chain-4ecca5d1368c-1791969832653.json",
+      "sha256": "381698f3da0d4d309f6f17800bfcdd1045b585e472322aa7ca6d36c4c20f9790",
+      "stdoutLog": "k20-run-chain-collector-3-stdout.log",
+      "stdoutSha256": "2953a8c49313cff32d62183b85740a9777d0f9fa8ed6c5a1030a432df534ea3a",
+      "stderrLog": "k20-run-chain-collector-3-stderr.log",
+      "stderrBytes": 0,
+      "normalClientClose": "finally awaited client.close; process exited normally0",
+      "firstDurableText": 1791968674379,
+      "createdAt": 1791968667351
+    },
+    {
+      "ordinal": 4,
+      "runId": "run:21a14bc53979a58cef776579357af981901b848abed6b98097cae8ac34d6da1b",
+      "argv": [
+        "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+        "run:21a14bc53979a58cef776579357af981901b848abed6b98097cae8ac34d6da1b",
+        "trustworthy-cricket-487",
+        "6161421"
+      ],
+      "invocations": 1,
+      "exitCode": 0,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k20-run-chain-21a14bc53979-1791969833029.json",
+      "sha256": "6e7d78d0c0e9a2dd3d07e75481b0d822fc020d56896b5019d42b08f0486efd04",
+      "stdoutLog": "k20-run-chain-collector-4-stdout.log",
+      "stdoutSha256": "a73c069b53cba044b825daa1f6827ef798a9330ff861c579459447ef5814ec5e",
+      "stderrLog": "k20-run-chain-collector-4-stderr.log",
+      "stderrBytes": 0,
+      "normalClientClose": "finally awaited client.close; process exited normally0",
+      "firstDurableText": 1791968755961,
+      "createdAt": 1791968743413
+    }
+  ],
+  "allNormalExit0": true,
+  "privateJournalWrites": false,
+  "rawPromptOutputRetained": false
+}

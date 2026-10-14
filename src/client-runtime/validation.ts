@@ -2,6 +2,8 @@ import type { RuntimeObservation, RuntimePublicPart, RuntimeRun, RuntimeScope, R
 
 export class CortexRuntimeError extends Error {
   readonly version = 1;
+  /** Generated ordinary remember intent, when capture outcome needs reconciliation. */
+  declare readonly requestId?: string;
   constructor(readonly code: string, readonly outcome: "not_dispatched" | "uncertain" = "not_dispatched", readonly retryable = false) {
     super(`Cortex runtime: ${code}`); this.name = "CortexRuntimeError";
   }

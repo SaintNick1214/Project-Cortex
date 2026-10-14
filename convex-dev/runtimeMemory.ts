@@ -8,7 +8,7 @@ import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequi
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { commitDerivedInput, sourceContent, memoryDeliveryBindings } from "./runtimeMemorySchema";
 import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope, memoryReferences } from "./runtimeMemoryRepository";
-import { assertMemoryRequestId, explicitSourceLineage, recallMemory, rememberMemory } from "./runtimeMemoryServices";
+import { assertMemoryRequestId, explicitSourceLineage, rememberMemory } from "./runtimeMemoryServices";
 import { normalizeSourceText } from "../src/domain/profile";
 import { embeddingProfile } from "./runtimeMemorySchema";
 import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth";
@@ -16,6 +16,7 @@ import { canonicalModelJson } from "../src/domain/model-policy";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
 import { createAuthorityReadScope } from "./runtimeAuth";
+import {publicRecallPreparation,recallPublicMemory} from './runtimeMemoryQuery';
 
 /** Describes the fresh managed index. Retrieval still requires its qualified, governed query call. */
 export const defaultProfile = mutation({
@@ -50,7 +51,9 @@ export const readVectorMatches = internalQuery({ args: { ...scopedArgs, profile:
 /** Final action delivery always runs in a fresh transaction after all cached reads and model awaits. */
 export const finalDelivery = internalMutation({ args: { reference: runtimeAuthorityReference, bindings: memoryDeliveryBindings },
   handler: async (ctx, args) => {
-    return await new ConvexMemoryRepository(ctx, args.reference, "read").checkDelivery(args.bindings);
+    // Read-only raw reuse is confined to this native snapshot. The final grant
+    // recheck remains unscoped, including revocation after the last source/hash.
+    return await new ConvexMemoryRepository(createAuthorityReadScope(ctx), args.reference, "read").checkDelivery(args.bindings, ctx);
   } });
 
 const authorize = makeFunctionReference<"query", { requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>("runtimeAuth:authorize") as unknown as
@@ -216,11 +219,9 @@ export const recall = action({ args: { ...requestArgs, limit: v.optional(v.numbe
   const budget = await memoryBudget(ctx, reference, "embedding.query", args.requestId, { purpose: "recall", text, limit });
   // This trusted metadata-only preflight precedes every model call. A later
   // readiness race remains a functional failure, whose dispatch is uncertain.
-  try {
-    const profile = await ctx.runQuery(memoryReferences.profile, { reference, operationKey: "embedding.query", runBudgetId: budget.runBudgetId });
-    await repository.assertProfileReady?.(profile, budget.runBudgetId);
-  } catch (error) { return foregroundControlFailure(error); }
-  return await memoryOperation(async () => await recallMemory({ repository,
-    model: createGatewayMemoryModel(ctx, repository, budget), clock: { now: () => Date.now() } },
-  { text, requestId: args.requestId, limit }));
+  const input={text,requestId:args.requestId,limit};
+  let proposal;
+  try {proposal=await ctx.runQuery(publicRecallPreparation,{reference,runBudgetId:budget.runBudgetId,input});}
+  catch(error){return foregroundControlFailure(error);}
+  return await memoryOperation(async()=>await recallPublicMemory(ctx,reference,repository,budget.runBudgetId,input,proposal));
 } });

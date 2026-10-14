@@ -1,0 +1,188 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:53320) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/public-functional.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● functional public memory wiring with an offline model › ready policy cannot bypass missing capability
+
+    Expected public rejection
+
+      71 | }
+      72 | async function rejection(call: () => Promise<unknown>): Promise<unknown> {
+    > 73 |   try { await call(); throw new Error("Expected public rejection"); }
+         |                             ^
+      74 |   catch (error) { if (error instanceof ConvexError) return error.data; throw error; }
+      75 | }
+      76 | function noDerived(f: ReturnType<typeof memoryFixture>) {
+
+      at rejection (tests/unit/runtimeMemory/public-functional.test.ts:73:29)
+      at tests/unit/runtimeMemory/public-functional.test.ts:151:12
+
+  ● functional public memory wiring with an offline model › late revocation after preflight denies source persistence with the functional uncertain envelope
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "FORBIDDEN",
+    +   "message": "Access denied",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      163 |   it("late revocation after preflight denies source persistence with the functional uncertain envelope", async () => {
+      164 |     const f = setup(); f.setBudgetHook(() => { f.grant.revokedAt = 1; });
+    > 165 |     expect(await rejection(async () => await remember(f))).toEqual(failed);
+          |                                                            ^
+      166 |     expect(f.policyRequests).toHaveLength(1); expect(f.operations).toEqual([]); expect(f.db.writes).toBe(0); noDerived(f);
+      167 |   });
+      168 |   it("revocation after extraction prevents embedding and derived commit without a false no-dispatch claim", async () => {
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:165:60)
+
+PASS tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.8s | 25/27 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     1.2s | 11/11 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.07s ( 1.7%) - actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 2. [32m✓[0m    0.04s ( 1.0%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.9%) - combined query reruns original read/profile/readiness/two-resolution predicates and proposes identical inputs without effects
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.5%) - functional public memory wiring with an offline model post-query-model failure does not return a partial recall or leak provider diagnostics
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.5%) - fresh checkpoint known refusal retains reservation and rolls back only the failed child
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.4%) - fresh checkpoint partial_child refusal retains reservation and rolls back only the failed child
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.4%) - functional public memory wiring with an offline model rejects changed recall input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.4%) - functional public memory wiring with an offline model binds recall limit in the exact request before model dispatch
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.3%) - functional public memory wiring with an offline model a readiness-shaped failure after model invocation remains opaque and uncertain
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+10. [32m✓[0m    0.01s ( 0.3%) - functional public memory wiring with an offline model rejects changed remember input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model reuses normalized request account and derived receipt without duplicate persistent data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model reports trusted cold-profile readiness before model construction, search, or persistent effects
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - fresh native preparation rejects changed_text before dispatch or ledger writes
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - fresh native preparation rejects changed_limit before dispatch or ledger writes
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+15. [31m✗[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model ready policy cannot bypass missing capability
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - fresh native preparation rejects revoked before dispatch or ledger writes
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - fresh native preparation rejects expired before dispatch or ledger writes
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - fresh native preparation rejects wrong_budget before dispatch or ledger writes
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - fresh native preparation rejects duplicate_grant before dispatch or ledger writes
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model revocation after extraction prevents embedding and derived commit without a false no-dispatch claim
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.36s (8.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.23s
+  Test suites:        2
+  Individual tests:   37
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       2 failed, 36 passed, 38 total
+Snapshots:   0 total
+Time:        4.233 s, estimated 5 s
+Ran all test suites within paths "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/query-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ordinary-memory-focused-v3.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

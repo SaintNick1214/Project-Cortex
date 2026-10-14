@@ -1,20 +1,20 @@
 /** Offline public wiring through actual auth, domain services and internal persistence.
  * Only policy admission and the Gateway model port are controlled; no paid service is contacted. */
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, afterEach, describe, expect, it, jest } from "@jest/globals";
 import { getFunctionName } from "convex/server";
 import { ConvexError } from "convex/values";
-import type { Id } from "../../../convex-dev/_generated/dataModel";
 import type { BackendGatewayBudget, BackendGatewayBudgetArgs } from "../../../convex-dev/runtimeGatewayBackend";
 import type { MemoryModel } from "../../../src/domain/contracts";
 import type { rememberMemory, recallMemory } from "../../../convex-dev/runtimeMemoryServices";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import { prepareSourceContent } from "../../../src/domain/sources";
-import { explicitSourceLineage } from "../../../convex-dev/runtimeMemoryServices";
-import { memoryScope } from "../../../convex-dev/runtimeMemoryRepository";
 
 const factory = jest.fn<typeof import("../../../convex-dev/runtimeMemoryGateway").createGatewayMemoryModel>();
 jest.unstable_mockModule("../../../convex-dev/runtimeMemoryGateway", () => ({ createGatewayMemoryModel: factory }));
+const {installIngestionMockRoot,currentMockRootSelection,ledger}=await import('../runtimeTranscript/fixture');
+const {explicitSourceLineage}=await import('../../../convex-dev/runtimeMemoryServices');
+const {memoryScope}=await import('../../../convex-dev/runtimeMemoryRepository');
 const memory = await import("../../../convex-dev/runtimeMemory");
 const { memoryFixture, registeredHandler } = await import("./fixture");
 
@@ -27,9 +27,12 @@ const failed = { version: 1, code: "MEMORY_OPERATION_FAILED", message: "Memory o
 const vector = () => Array.from({ length: DEFAULT_EMBEDDING_PROFILE.dimensions }, (_, i) => i === 0 ? 1 : 0);
 
 function setup(profile = DEFAULT_EMBEDDING_PROFILE) {
+  installIngestionMockRoot({large:profile.profileId===LARGE_EMBEDDING_PROFILE.profileId});
   const accounts = new Map<string, { canonical: string; budget: BackendGatewayBudget }>();
   let budgetHook: ((args: BackendGatewayBudgetArgs) => void) | undefined;
+  let afterBudgetHook: ((args: BackendGatewayBudgetArgs) => void) | undefined;
   const f = memoryFixture({ profile: () => profile, budget: async (args) => {
+    await ready;
     budgetHook?.(args);
     // Controlled exact-request account identity only; native monetary/admission tests live elsewhere.
     const key = canonicalModelJson([args.reference, args.operationKey, args.requestId]);
@@ -39,10 +42,17 @@ function setup(profile = DEFAULT_EMBEDDING_PROFILE) {
         message: "PRIVATE_POLICY_DETAIL", retryable: false, outcome: "not_dispatched" });
       return previous.budget;
     }
-    const budget = { runBudgetId: `offline-run-${accounts.size + 1}`, runAccountId: `runtimeBudgetAccounts:${accounts.size + 1}` as Id<"runtimeBudgetAccounts"> };
+    const budget=await registeredHandler<typeof args,BackendGatewayBudget>(ledger.ensureBudget)(f.ctx,args);
+    afterBudgetHook?.(args);
     accounts.set(key, { canonical: args.requestCanonical, budget });
     return budget;
   } });
+  const ready=(async()=>{
+    // Actual policy installation/budget/preparation handlers replace the obsolete
+    // offline-run IDs. Only the Gateway model remains controlled in this suite.
+    await registeredHandler<unknown,unknown>(ledger.installDeploymentPolicy)(f.ctx,currentMockRootSelection());
+    f.db.writes=0;
+  })();
   const operations: { purpose: string; operationId: string }[] = [];
   const model: MemoryModel = {
     extract: async (request) => { operations.push(request); return structuredClone(facts); },
@@ -50,12 +60,14 @@ function setup(profile = DEFAULT_EMBEDDING_PROFILE) {
     embed: async (request) => { operations.push(request); return { profile: DEFAULT_EMBEDDING_PROFILE, vectors: request.texts.map(vector) }; },
   };
   factory.mockImplementation(() => model);
-  return { ...f, model, operations, accounts, setBudgetHook: (hook: typeof budgetHook) => { budgetHook = hook; } };
+  return { ...f, ready, model, operations, accounts, setBudgetHook: (hook: typeof budgetHook) => { budgetHook = hook; },setAfterBudgetHook:(hook:typeof afterBudgetHook)=>{afterBudgetHook=hook;} };
 }
-async function remember(f: ReturnType<typeof memoryFixture>, args: Input = input) {
+async function remember(f: ReturnType<typeof memoryFixture>&{ready?:Promise<void>}, args: Input = input) {
+  await f.ready;
   return await registeredHandler<Input, Awaited<ReturnType<typeof rememberMemory>>>(memory.remember)(f.actionCtx as never, args);
 }
-async function recall(f: ReturnType<typeof memoryFixture>, args: Input = { ...input, text: " preferences ", requestId: "public-recall" }) {
+async function recall(f: ReturnType<typeof memoryFixture>&{ready?:Promise<void>}, args: Input = { ...input, text: " preferences ", requestId: "public-recall" }) {
+  await f.ready;
   return await registeredHandler<Input, Awaited<ReturnType<typeof recallMemory>>>(memory.recall)(f.actionCtx as never, args);
 }
 async function rejection(call: () => Promise<unknown>): Promise<unknown> {
@@ -65,7 +77,10 @@ async function rejection(call: () => Promise<unknown>): Promise<unknown> {
 function noDerived(f: ReturnType<typeof memoryFixture>) {
   for (const table of ["facts", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts"]) expect(f.db.table(table)).toEqual([]);
 }
-beforeEach(() => { factory.mockReset(); });
+function protectedRows(f:ReturnType<typeof memoryFixture>) {
+  return structuredClone(Object.fromEntries(['runtimeMemorySources','facts','runtimeMemoryChunks','runtimeMemoryVectors','runtimeMemoryReceipts'].map(t=>[t,f.db.table(t)])));
+}
+beforeEach(() => { factory.mockReset(); });afterEach(()=>{jest.restoreAllMocks();});
 
 describe("functional public memory wiring with an offline model", () => {
   it("preflights exact trusted request before writing, then remembers and recalls real scoped data", async () => {
@@ -85,7 +100,7 @@ describe("functional public memory wiring with an offline model", () => {
     expect(Object.keys(budget.reference).sort()).toEqual(Object.keys(f.reference).sort());
     expect(JSON.parse(budget.requestCanonical)).toEqual({ purpose: "remember", text: source.content, lineage: source.lineage });
     expect(factory.mock.calls[0]![1].scope).toMatchObject(f.reference);
-    expect(factory.mock.calls[0]![2]).toEqual({ runBudgetId: "offline-run-1", runAccountId: "runtimeBudgetAccounts:1" });
+    expect(factory.mock.calls[0]![2]).toEqual(f.accounts.values().next().value!.budget);
     // A same-tenant foreign owner's fact cannot enter the actual scoped query.
     f.db.seed("facts", { ...f.db.table("facts")[0], _id: "facts:foreign", factId: "foreign", ownerPrincipalId: "foreign",
       fact: "PRIVATE_FOREIGN_SENTINEL" });
@@ -147,9 +162,12 @@ describe("functional public memory wiring with an offline model", () => {
     expect(f.policyRequests).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
   });
   it("late revocation after preflight denies source persistence with the functional uncertain envelope", async () => {
-    const f = setup(); f.setBudgetHook(() => { f.grant.revokedAt = 1; });
+    const f = setup(); f.setAfterBudgetHook(() => { f.grant.revokedAt = 1; });
     expect(await rejection(async () => await remember(f))).toEqual(failed);
-    expect(f.policyRequests).toHaveLength(1); expect(f.operations).toEqual([]); expect(f.db.writes).toBe(0); noDerived(f);
+    expect(f.policyRequests).toHaveLength(1); expect(f.operations).toEqual([]);
+    // The original native budget admission commits two account rows before this late fence.
+    expect(f.db.writes).toBe(2);expect(f.db.table("runtimeBudgetAccounts").filter(r=>r.kind==="run")).toHaveLength(1);
+    expect(f.db.table("runtimeModelAttempts")).toEqual([]);expect(f.db.table("runtimeMemorySources")).toEqual([]);noDerived(f);
   });
   it("revocation after extraction prevents embedding and derived commit without a false no-dispatch claim", async () => {
     const f = setup(); const extract = f.model.extract;
@@ -184,14 +202,16 @@ describe("functional public memory wiring with an offline model", () => {
     expect(f.operations.map((op) => op.purpose)).toEqual(["memory.extract", "embedding.memory"]); noDerived(f);
   });
   it("post-query-model failure does not return a partial recall or leak provider diagnostics", async () => {
-    const f = setup(); await remember(f); const snapshot = structuredClone(f.db.rows); const writes = f.db.writes;
+    const f = setup(); await remember(f); const snapshot = protectedRows(f);
     f.model.embed = async (request) => { f.operations.push(request); throw new Error("PRIVATE_QUERY_SENTINEL"); };
     expect(await rejection(async () => await recall(f))).toEqual(failed);
     expect(f.operations.at(-1)!.purpose).toBe("embedding.query"); expect(f.searches).toEqual([]);
-    expect(f.db.writes).toBe(writes); expect(f.db.rows).toEqual(snapshot);
+    expect(protectedRows(f)).toEqual(snapshot);expect(f.db.table('runtimeModelAttempts')).toEqual([]);
+    expect(f.db.table('runtimeBudgetAccounts').filter(r=>r.kind==='run')).toHaveLength(2);
   });
   it("reports trusted cold-profile readiness before model construction, search, or persistent effects", async () => {
     const f = setup(LARGE_EMBEDDING_PROFILE);
+    await f.ready;
     const { source } = await prepareSourceContent(memoryScope(f.reference), explicitSourceLineage(memoryScope(f.reference), "prior-small"),
       "current small-profile source", { now: () => 1000 });
     f.db.seed("runtimeMemorySources", source as unknown as Record<string, unknown>);
@@ -200,11 +220,12 @@ describe("functional public memory wiring with an offline model", () => {
       sourceEventId: source.lineage.sourceEventId, sourceRevision: source.lineage.sourceRevision,
       contentHash: source.contentHash, profile: DEFAULT_EMBEDDING_PROFILE, receiptId: "existing-small-receipt" });
     f.db.table("runtimeAuthTombstones"); // The controlled DB materializes empty tables on read.
-    const before = structuredClone(f.db.rows); const writes = f.db.writes;
+    const before = protectedRows(f);
     expect(await rejection(async () => await recall(f))).toEqual({ version: 1, code: "PROFILE_NOT_READY",
       message: "Current sources have no compatible vector generation for the selected profile", retryable: false, outcome: "not_dispatched" });
     expect(f.operations).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
-    expect(f.db.rows).toEqual(before); expect(f.db.writes).toBe(writes);
+    expect(protectedRows(f)).toEqual(before);expect(f.db.table('runtimeModelAttempts')).toEqual([]);
+    expect(f.db.table('runtimeBudgetAccounts').filter(r=>r.kind==='run')).toHaveLength(1);
   });
   it("a readiness-shaped failure after model invocation remains opaque and uncertain", async () => {
     const f = setup();

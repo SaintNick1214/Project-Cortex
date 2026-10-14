@@ -1,0 +1,179 @@
+(node:51165) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/agent-request-preflight.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/request-preflight.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeDelivery/client-signal.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/request-preflight-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.2s | 18/18 passed | /tests/unit/runtime/agent-request-preflight.test.ts
+  ✅     1.8s | 17/17 passed | /tests/unit/runtimeAgent/request-preflight.test.ts
+  ✅     0.9s | 4/4 passed | /tests/unit/runtimeDelivery/client-signal.test.ts
+  ✅     0.4s | 2/2 passed | /tests/unit/runtimeAgent/request-preflight-workflow.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.0%) - new candidate retains all original prepared values and final DB effects, adding no activation RPC
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.8%) - known later-turn bounds refusal retains completed model/approved tool/history and original durable failure disposition
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.5%) - a durable started operation is never restarted or preflight-readmitted
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.5%) - complete over-cap context is refused before operation start and rolls back all preparation effects
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.5%) - a durable unknown operation is never restarted or preflight-readmitted
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.5%) - completed operation reconciliation returns original saved result before any new preparation effect
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.4%) - shared complete Agent request preflight fits the exact original request at input/context boundaries without modifying limits
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.4%) - installed Agent start invokes the actual product fresh context hook before one pending save
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.4%) - installed Agent fresh hook denies grant before pending storage and before any provider/admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+10. [32m✓[0m    0.02s ( 0.4%) - compound save commits the original context while refused child preparation rolls back every new operation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+11. [32m✓[0m    0.02s ( 0.4%) - original qualification refusal and rollback remain identical to the legacy preparation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+12. [32m✓[0m    0.02s ( 0.4%) - installed Agent fresh hook denies transcript before pending storage and before any provider/admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+13. [32m✓[0m    0.02s ( 0.4%) - installed Agent fresh hook denies bound-growth before pending storage and before any provider/admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - original grant refusal and rollback remain identical to the legacy preparation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - original transcript refusal and rollback remain identical to the legacy preparation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - original lease refusal and rollback remain identical to the legacy preparation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - original principal refusal and rollback remain identical to the legacy preparation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - original cancel refusal and rollback remain identical to the legacy preparation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - private session is a fresh mutation and returns only its actual server grant deadline
+    /tests/unit/runtimeDelivery/client-signal.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - the only subscription DTO is opaque metadata and changes for output beyond the first page
+    /tests/unit/runtimeDelivery/client-signal.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.42s (7.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.41s
+  Test suites:        4
+  Individual tests:   37
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 passed, 4 total
+Tests:       41 passed, 41 total
+Snapshots:   0 total
+Time:        5.415 s, estimated 7 s
+Ran all test suites within paths "tests/unit/runtimeDelivery/client-signal.test.ts", "tests/unit/runtime/agent-request-preflight.test.ts", "tests/unit/runtimeAgent/request-preflight.test.ts", "tests/unit/runtimeAgent/request-preflight-workflow.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-root-affected-tests-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

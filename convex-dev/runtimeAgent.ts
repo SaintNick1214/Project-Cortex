@@ -1,3 +1,7 @@
+import { checkAgentModelInput } from "./runtimeGateway";
+import { fitModelInput, modelInputPolicy, relevantRecallItems, renderModelInputEntries, ModelInputSelectionError } from "../src/domain/model-input-selection";
+import type { ModelInputEntry } from "../src/domain/model-input-selection";
+import { formatForLLM } from "../src/domain/recall";
 import { checkArtifactContextWitnesses } from "./runtimeArtifactContext";
 import { artifactContextWitness } from "./runtimeArtifactContextSchema";
 import type { ArtifactContextWitness } from "../src/domain/artifact-context";
@@ -13,7 +17,7 @@ import { ConvexError, v } from "convex/values";
 import { isStepCount } from "ai";
 import type { ModelMessage } from "ai";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
-import type { CutoffV1 } from "../src/domain/transcript";
+import type { ExecutionCutoff, CutoffV1 } from "../src/domain/transcript";
 import type { ContextSourcePermission, ContextSourceWitness } from "../src/domain/context-witness";
 import { mergeContextWitness } from "../src/domain/context-witness";
 import { canonicalModelJson } from "../src/domain/model-policy";
@@ -27,8 +31,8 @@ import { components } from "./_generated/api";
 import { agentAttempt, sourceWitness } from "./runtimeAgentSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { currentRun, currentControlRun, activeAttempt, publicRun } from "./runs";
-import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
+import { currentRun, currentControlRun, activeAttempt, publicRunCurrent } from "./runs";
+import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, hydrateSelectedCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
 import { recheckAuthority, createAuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads } from "./runtimeAuth";
@@ -156,8 +160,10 @@ export async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, a
   const { row, conversation, definition } = current; const owned = await execution(ctx, args);
   if (row.attemptNumber !== args.attemptNumber || row.cancellationRequestedAt !== undefined || row.responseStatus === "cancelled"
     || (!reconcile && ["failed", "cancelled", "unknown"].includes(owned.state)) || !row.snapshotCanonical) transcriptDenied("INVALID_STATE");
-  const snapshot = JSON.parse(row.snapshotCanonical) as CutoffV1;
-  const messages = await hydratePrivateCutoff(ctx, conversation, row, snapshot);
+  const snapshot = JSON.parse(row.snapshotCanonical) as ExecutionCutoff;
+  if (snapshot.version === 8 && (!snapshot.inputSelection || row.modelInputVersion !== 8 || definition.definition.context.handlerId !== "cortex.transcript.relevant"
+    || canonicalModelJson(snapshot.inputSelection.policy) !== canonicalModelJson(modelInputPolicy(definition.definition.context.inputSelection)))) transcriptDenied("STALE_TRANSCRIPT");
+  const messages = snapshot.version === 8 ? await hydrateSelectedCutoff(ctx, conversation, row, snapshot) : await hydratePrivateCutoff(ctx, conversation, row, snapshot);
   await checkWitnesses(ctx, args, owned.sourceWitnesses);
   await checkArtifactContextWitnesses(ctx, args.reference, owned.artifactContextWitnesses ?? []);
   const currentMessages: ModelMessage[] = [];
@@ -173,8 +179,32 @@ export async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, a
       currentMessages.push(privateModelMessage(message));
     }
   }
-  return { run: row, threadId: conversation.threadId, snapshot, definition: definition.definition, execution: owned,
-    messages: [...messages, ...currentMessages] };
+  let messageEntries = [...messages.map((message, index) => ({ id: snapshot.messages[index]!.nativeMessageId, message,
+    mandatory: row.inputMessageIds.includes(snapshot.messages[index]!.nativeMessageId) })), ...currentMessages.map((message, index) => ({ id: owned.savedMessageIds[index]!, message, mandatory: true }))];
+  if (snapshot.version === 8 && owned.modelInputHistoryIds !== undefined) {
+    const history = owned.modelInputHistoryIds;
+    if (new Set(history).size !== history.length || history.length > snapshot.inputSelection.policy.recentMessages
+      || row.inputMessageIds.some(id => !history.includes(id)) || history.some(id => !snapshot.messages.some(pin => pin.nativeMessageId === id))
+      || canonicalModelJson(snapshot.messages.filter(pin => history.includes(pin.nativeMessageId)).map(pin => pin.nativeMessageId)) !== canonicalModelJson(history)) transcriptDenied("STALE_CONTEXT");
+    messageEntries = messageEntries.filter(value => value.mandatory || history.includes(value.id));
+  }
+  let selectedMessages = messageEntries, projectedExecution = owned;
+  if (snapshot.version === 8 && owned.modelInputSelection?.ordinal === owned.nextModelStep) {
+    const selection = owned.modelInputSelection;
+    if (selection.policyHash !== snapshot.inputSelection.policyHash || selection.hash !== await semanticHash(canonicalModelJson({ ordinal: selection.ordinal,
+      messageIds: selection.messageIds, entryKeys: selection.entryKeys, policyHash: selection.policyHash }))
+      || new Set(selection.messageIds).size !== selection.messageIds.length || new Set(selection.entryKeys).size !== selection.entryKeys.length
+      || messageEntries.some(value => value.mandatory && !selection.messageIds.includes(value.id))
+      || selection.messageIds.some(id => !messageEntries.some(value => value.id === id))) transcriptDenied("STALE_CONTEXT");
+    selectedMessages = messageEntries.filter(value => selection.messageIds.includes(value.id));
+    if (canonicalModelJson(selectedMessages.map(value => value.id)) !== canonicalModelJson(selection.messageIds)) transcriptDenied("STALE_CONTEXT");
+    const entries = owned.modelInputEntries ?? [];
+    if (selection.entryKeys.some(key => !entries.some(value => value.key === key))
+      || entries.some(value => ["pending", "notice"].includes(value.kind) && !selection.entryKeys.includes(value.key))) transcriptDenied("STALE_CONTEXT");
+    projectedExecution = { ...owned, contextCanonical: renderModelInputEntries(entries.filter(value => selection.entryKeys.includes(value.key))) };
+  }
+  return { run: row, threadId: conversation.threadId, snapshot, definition: definition.definition, execution: projectedExecution,
+    messages: selectedMessages.map(value => value.message), messageEntries: selectedMessages };
 }
 export const hydrateExecution = internalQuery({ args: agentAttempt, handler: async (ctx, args) => await executionContext(createAuthorityReadScope(ctx, { nativeTranscript: true }), args) });
 /** Agent hydration precedes the unchanged policy body in one fresh native read snapshot. */
@@ -223,6 +253,7 @@ export async function startHandler(ctx: MutationCtx, args: { runId: string; memo
 }
 export const start = mutation({ args: { ...selector, streaming: v.optional(v.boolean()) }, handler: startHandler });
 async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityReference, row: Doc<"runtimeRuns">, streaming: boolean) {
+  if (row.modelInputVersion === 8) return await startExecutionV8(ctx, reference, row, streaming);
   const old = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!).eq("runId", row.runId).eq("attemptNumber", row.attemptNumber)).take(2));
   if (old) return { runId: row.runId, attemptNumber: old.attemptNumber, state: old.state };
@@ -1468,16 +1499,16 @@ export const reconcile = mutation({ args: selector, handler: async (ctx, args) =
   const actor = await requireDataAuthority(ctx, args, "run"); const current = await currentRun(ctx, dataAuthorityReference(actor), args.runId, "run");
   let owned = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", current.row.tenantId).eq("memorySpaceId", current.row.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", current.row.attemptNumber)).take(2));
   if (!owned) transcriptDenied("INVALID_STATE");
-  if (owned.executionMode === "direct-v6" && owned.scheduledActionId && !owned.workflowId && owned.directState !== "continuation_pending" && ["ready", "running"].includes(owned.state)) {
+  if (["direct-v6", "direct-v8"].includes(owned.executionMode ?? "") && owned.scheduledActionId && !owned.workflowId && owned.directState !== "continuation_pending" && ["ready", "running"].includes(owned.state)) {
     const scheduled = await ctx.db.system.get("_scheduled_functions", owned.scheduledActionId);
     if (scheduled?.state.kind === "failed") {
-      await interruptDirectHandler(ctx, { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion });
+      await (owned.executionMode === "direct-v8" ? interruptDirectV8Handler : interruptDirectHandler)(ctx, { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion });
       const updated = await ctx.db.get("runtimeAgentExecutions", owned._id); if (!updated) transcriptDenied("INVALID_STATE"); owned = updated;
     }
   }
   const attempt = { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion };
-  if (owned.executionMode === "direct-v6" && owned.directState === "continuation_pending") {
-    return { workflowId: await attachDirectContinuationHandler(ctx, attempt) };
+  if (["direct-v6", "direct-v8"].includes(owned.executionMode ?? "") && owned.directState === "continuation_pending") {
+    return { workflowId: await (owned.executionMode === "direct-v8" ? attachDirectContinuationV8Handler : attachDirectContinuationHandler)(ctx, attempt) };
   }
   if (owned.state === "complete" && owned.ingestionReceiptId) return { receiptId: owned.ingestionReceiptId };
   const fenced = await executionContext(ctx, attempt, true);
@@ -1587,7 +1618,7 @@ export async function observeHandler(ctx: QueryCtx, args: { runId: string; tenan
   }
   const visibleApprovals = await Promise.all(approvals.filter(op => op.state === "waiting_approval").map(async op => ({ operationId: op.operationId, toolName: op.toolName, requestHash: await semanticHash(op.requestCanonical) })));
   const expiresAt = await deliveryExpiresAt(ctx, reference, deadlines);
-  return { run: publicRun(current.row), state, parts,
+  return { run: await publicRunCurrent(ctx, current.row), state, parts,
     cursor: rows[rows.length - 1]?.sequence ?? after, approvals: visibleApprovals,
     ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
 }
@@ -1607,4 +1638,525 @@ export const cancel = mutation({ args: selector, handler: async (ctx, args) => {
     await ctx.runMutation(refs.end, { reference: owned.reference, runId: owned.runId, attemptNumber: owned.attemptNumber, leaseVersion: owned.leaseVersion, cancelled: true });
   }
   return { cancelled: true as const };
+} });
+
+/** Version 8 is selected only by the new immutable relevant-context definition. */
+
+const claimV8=ref<"mutation",{ reference:RuntimeAuthorityReference;conversationId:string;leaseMs:number },{ runId:string;attemptNumber:number;leaseVersion:number }|{ runId:string;failureCode:string }|null>("mutation","runs:claimNextV8");
+const freshWorkflowV8=ref<"mutation",{ args:Attempt },string>("mutation","runtimeAgent:executeTurnV8");
+const directActionV8=ref<"action",Attempt,null>("action","runtimeAgent:executeDirectV8");
+const directRetirementV8=ref<"mutation",Attempt,null>("mutation","runtimeAgent:retireDirectV8");
+const toolContinuationV8=ref<"mutation",{ args:Attempt },string>("mutation","runtimeAgent:executeToolsV8");
+const preflightTurnV8Ref=ref<"action",Attempt & { ordinal:number },StepResult>("action","runtimeAgent:turnStepV8");
+const contextInputsV8Ref=ref<"query",Attempt,Awaited<ReturnType<typeof contextInputsV8Handler>>>("query","runtimeAgent:contextInputsV8");
+const prepareDirectTurnV8Ref=ref<"mutation",Attempt,Awaited<ReturnType<typeof prepareDirectTurnV8Handler>>>("mutation","runtimeAgent:prepareDirectTurnV8");
+const attachDirectContinuationV8Ref=ref<"mutation",Attempt,string>("mutation","runtimeAgent:attachDirectContinuationV8");
+const interruptDirectV8Ref=ref<"mutation",Attempt,null>("mutation","runtimeAgent:interruptDirectV8");
+async function startExecutionV8(ctx: MutationCtx, reference: RuntimeAuthorityReference, row: Doc<"runtimeRuns">, streaming: boolean) {
+  const old = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", reference.tenantId)
+    .eq("memorySpaceId", reference.memorySpaceId!).eq("runId", row.runId).eq("attemptNumber", row.attemptNumber)).take(2));
+  if (old) return { runId: row.runId, attemptNumber: old.attemptNumber, state: old.state };
+  traceRuntimePhase(row.runId, row.attemptNumber, "claim.begin");
+  const claimed = await traceRuntimeMutationSpan(row.runId, row.attemptNumber, "start.claimNext",
+    async () => await ctx.runMutation(claimV8, { reference, conversationId: row.conversationId, leaseMs: 300_000 }));
+  traceRuntimePhase(row.runId, claimed && "attemptNumber" in claimed ? claimed.attemptNumber : row.attemptNumber, "claim.end");
+  if (!claimed) return { runId: row.runId, attemptNumber: row.attemptNumber, state: "queued" as const };
+  // claimNext checks the indexed head. A future request must never start another run under its identity.
+  if (claimed.runId !== row.runId) transcriptDenied("QUEUE_NOT_READY");
+  // claimNext durably retires an undispatchable oversized prefix. Do not throw
+  // from this parent and roll that supported terminal disposition back.
+  if ("failureCode" in claimed) return { runId: row.runId, attemptNumber: row.attemptNumber, state: "failed" as const, failureCode: claimed.failureCode };
+  if (!claimed.attemptNumber) transcriptDenied("QUEUE_NOT_READY");
+  const attempt = { reference, runId: row.runId, attemptNumber: claimed.attemptNumber, leaseVersion: claimed.leaseVersion };
+  const now = Date.now();
+  const id = await ctx.db.insert("runtimeAgentExecutions", { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, ...attempt,
+    state: "ready", streaming, nextOutputSequence: 0, nextModelStep: 0, toolCount: 0,
+    sourceWitnesses: [], mediaJobReferences: [], savedMessageIds: [], savedMessagePins: [], createdAt: now, updatedAt: now });
+  // Strict definitions keep the registered Workflow's original waiting layout.
+  // Ordinary turns schedule one at-most-once Action atomically with the claim.
+  const admitted = await activeAttempt(ctx, attempt);
+  if (admitted.definition.definition.context.memoryMode !== "strict") {
+    const scheduledActionId = await ctx.scheduler.runAfter(0, directActionV8, attempt);
+    await ctx.db.patch("runtimeAgentExecutions", id, { executionMode: "direct-v8", directState: "scheduled", scheduledActionId });
+    await ctx.scheduler.runAfter(300_000, directRetirementV8, attempt);
+    return { runId: row.runId, attemptNumber: claimed.attemptNumber, state: "ready" as const };
+  }
+  const workflowId = await traceRuntimeMutationSpan(row.runId, claimed.attemptNumber, "start.workflow",
+    async () => await workflow.start(ctx, freshWorkflowV8, attempt,
+      { startAsync: false, onComplete: freshWorkflowComplete, context: attempt }));
+  const started = await ctx.db.get("runtimeAgentExecutions", id);
+  if (!started || started.workflowId !== undefined && started.workflowId !== workflowId) transcriptDenied();
+  await ctx.db.patch("runtimeAgentExecutions", id, { workflowId });
+  return { runId: row.runId, attemptNumber: claimed.attemptNumber, state: started.state };
+}
+
+async function contextInputsV8Handler(ctx: QueryCtx | MutationCtx, args: Attempt, stableEmpty = false) {
+  let current = await executionContext(ctx, args);
+  if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
+  const scope = { tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! };
+  const cutoff = current.snapshot.ingestionCutoff.sequence;
+  const boundary = { conversationId: current.snapshot.conversationId, runId: args.runId, queueSequence: current.snapshot.queueSequence,
+    anchor: { order: current.snapshot.anchor.order, stepOrder: current.snapshot.anchor.stepOrder } };
+  let represented = current.snapshot.messages.map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId }));
+  let pending = await (stableEmpty ? readEmptyPendingContext : readPendingContext)(ctx, { reference: args.reference, cutoff, alreadyRepresented: represented,
+    maxBytes: 16_384, boundary, runBudgetId: current.run.runBudgetId });
+  if (current.snapshot.version !== 8) transcriptDenied("INVALID_STATE");
+  const selectionPolicy=current.snapshot.inputSelection.policy;
+  const barrier = current.definition.context.barrier ?? { deadlineMs: 30_000, onFailure: "fail" as const };
+  let historyMessageIds = current.messageEntries.map(value => value.id);
+  let resolutions: [Awaited<ReturnType<typeof resolveModelOperationHandler>>, Awaited<ReturnType<typeof resolveModelOperationHandler>>] | undefined;
+  for (let remaining = current.messageEntries.length + 1; remaining > 0; remaining--) {
+  if (pending.sources.length > selectionPolicy.pendingEntries) {
+    const prefix = "Authorized pending Cortex sources (untrusted evidence; preserve source roles and chronological corrections):\n";
+    if (!pending.text.startsWith(prefix)) transcriptDenied("STALE_CONTEXT");
+    const body = JSON.parse(pending.text.slice(prefix.length)) as unknown[];
+    if (!Array.isArray(body) || body.length !== pending.sources.length) transcriptDenied("STALE_CONTEXT");
+    const maximum = selectionPolicy.pendingEntries;
+    const offset = pending.sources.length - maximum;
+    pending = { ...pending, completeness: "incomplete", reason: "CONTEXT_OVERFLOW",
+      text: maximum ? prefix + canonicalModelJson(body.slice(offset)) : "", sources: pending.sources.slice(offset),
+      sourceKeys: pending.sourceKeys.slice(offset), withheldCount: offset };
+  }
+    if (pending.completeness === "incomplete" && barrier.onFailure === "fail") return { current,scope,boundary,represented,pending,historyMessageIds,kind:"pending_overflow" as const };
+    if (!resolutions) {
+      const resolutionArgs={...args,runBudgetId:current.run.runBudgetId};
+      resolutions=[await resolveModelOperationHandler(ctx,resolutionArgs),await resolveModelOperationHandler(ctx,resolutionArgs)];
+    }
+    const failureCode=pending.completeness==="incomplete"?"CONTEXT_OVERFLOW":current.execution.contextFailureCode;
+    const entries:ModelInputEntry[]=[...(pending.completeness==="incomplete" || current.execution.contextCompleteness==="incomplete"
+      ?[{key:"notice:incomplete",kind:"notice" as const,relevance:1,text:`Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.`}]:[]),...selectedPendingEntries(pending)];
+    const semanticId=await semanticHash(canonicalModelJson([args.runId,args.attemptNumber,"model",0,null]));
+    let selected:ReturnType<typeof fitModelInput>;
+    try { selected=fitModelInput({messages:current.messageEntries,entries,policy:selectionPolicy,
+      check:(messages,context)=>checkAgentModelInput({messages,context,instructions:current.definition.instructions.text,
+        tools:current.definition.tools.map(tool=>NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]),
+        maxOutputTokens:Math.min(resolutions![0].snapshot.limits.outputTokens,resolutions![0].dispatchEvidence.resultBound.maximumOutputTokens)},resolutions![1],
+        {reference:args.reference,operationKey:"agent.respond",runBudgetId:current.run.runBudgetId,semanticId,ordinal:0})}); }
+    catch(error){if(error instanceof ModelInputSelectionError) transcriptDenied(error.code);throw error;}
+    if(canonicalModelJson(selected.messageIds)===canonicalModelJson(historyMessageIds))break;
+    historyMessageIds=selected.messageIds;
+    const ids=new Set(historyMessageIds),messageEntries=current.messageEntries.filter(value=>ids.has(value.id));
+    current={...current,messages:messageEntries.map(value=>value.message),messageEntries};
+    represented=current.snapshot.messages.filter(pin=>ids.has(pin.nativeMessageId)).map(pin=>contextSourceKey(scope,{...pin,sourceId:pin.sourceEventId}));
+    pending=await readPendingContext(ctx,{reference:args.reference,cutoff,alreadyRepresented:represented,maxBytes:16_384,boundary,runBudgetId:current.run.runBudgetId});
+  }
+  const inputs = { current, scope, boundary, represented, pending, historyMessageIds };
+  // Keep the action's durable failContext mutation before any availability/profile error.
+  if (pending.completeness === "incomplete" && barrier.onFailure === "fail") return { ...inputs, kind: "pending_overflow" as const };
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.begin");
+  const availability = await readIndexedContextAvailability(ctx, { reference: args.reference, cutoff,
+    excludedSourceKeys: [...new Set([...represented, ...pending.sourceKeys])], boundary, runBudgetId: current.run.runBudgetId });
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.end");
+  return { ...inputs, kind: "ready" as const, availability };
+}
+export const contextInputsV8 = internalQuery({ args: agentAttempt, handler: (ctx,args) => contextInputsV8Handler(createAuthorityReadScope(ctx,{nativeTranscript:true,policyMetadata:true}), args) });
+
+export async function saveContextV8Handler(ctx: MutationCtx, args: Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string; entries: ModelInputEntry[]; historyMessageIds?: string[] }) {
+  const current = await executionContext(ctx, args); if (current.execution.contextCanonical !== undefined) transcriptDenied("INVALID_STATE");
+  if (utf8Bytes(args.context) > 16_384 || args.witnesses.length > 32) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
+  if (current.snapshot.version !== 8 || args.entries.length > 53 || new Set(args.entries.map(entry => entry.key)).size !== args.entries.length
+    || args.entries.some(entry => !entry.key || !Number.isFinite(entry.relevance)) || renderModelInputEntries(args.entries) !== args.context) transcriptDenied("INVALID_INPUT");
+  const historyMessageIds=args.historyMessageIds ?? current.snapshot.messages.map(pin=>pin.nativeMessageId);
+  if(new Set(historyMessageIds).size!==historyMessageIds.length || historyMessageIds.length>current.snapshot.inputSelection.policy.recentMessages
+    || current.run.inputMessageIds.some(id=>!historyMessageIds.includes(id)) || historyMessageIds.some(id=>!current.snapshot.messages.some(pin=>pin.nativeMessageId===id))
+    || canonicalModelJson(current.snapshot.messages.filter(pin=>historyMessageIds.includes(pin.nativeMessageId)).map(pin=>pin.nativeMessageId))!==canonicalModelJson(historyMessageIds)) transcriptDenied("STALE_CONTEXT");
+  await checkWitnesses(ctx, args, args.witnesses);
+  if (args.emptyIndexedProfileId !== undefined) {
+    const scope = { tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! };
+    const availability = await readIndexedContextAvailability(ctx, { reference: args.reference, cutoff: current.snapshot.ingestionCutoff.sequence,
+      excludedSourceKeys: [...current.snapshot.messages.filter(pin=>historyMessageIds.includes(pin.nativeMessageId)).map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId })), ...args.witnesses.map(witness => contextSourceKey(scope, witness))],
+      boundary: { conversationId: current.snapshot.conversationId, runId: args.runId, queueSequence: current.snapshot.queueSequence, anchor: current.snapshot.anchor }, runBudgetId: current.run.runBudgetId });
+    if (!availability.empty || availability.profileId !== args.emptyIndexedProfileId) transcriptDenied("STALE_CONTEXT");
+  }
+  if (args.completeness === "complete" && args.failureCode !== undefined || args.completeness === "incomplete" && !args.failureCode) transcriptDenied("INVALID_INPUT");
+  await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextCanonical: args.context, modelInputEntries: args.entries, modelInputHistoryIds:historyMessageIds, contextState: "complete", sourceWitnesses: args.witnesses,
+    contextCompleteness: args.completeness, contextFailureCode: args.failureCode, state: "running", updatedAt: Date.now() });
+  await ctx.db.patch("runtimeRuns", current.run._id, { contextCompleteness: args.completeness, contextFailureCode: args.failureCode, updatedAt: Date.now() }); return null;
+}
+
+const modelInputEntryArgs = v.object({ key: v.string(), kind: v.union(v.literal("memory"),v.literal("fact"),v.literal("pending"),v.literal("notice")), text:v.string(),relevance:v.number() });
+const selectedContextArgs = { ...agentAttempt, historyMessageIds:v.optional(v.array(v.string())),context:v.string(),entries:v.array(modelInputEntryArgs),witnesses:v.array(sourceWitness),
+  completeness:v.union(v.literal("complete"),v.literal("incomplete")),failureCode:v.optional(v.string()),emptyIndexedProfileId:v.optional(v.string()) };
+export const saveContextV8 = internalMutation({ args:selectedContextArgs,handler:saveContextV8Handler });
+export async function saveAndPrepareContextV8Handler(ctx: MutationCtx,args:Parameters<typeof saveContextV8Handler>[1]) {
+  await saveContextV8Handler(ctx,args);
+  try { const prepared = await ctx.runMutation(ref<"mutation",Attempt & { ordinal:number },PreparedModelCandidate>("mutation","runtimeAgent:prepareResolvedModelCandidateV8"),{ ...attemptArgs(args),ordinal:0 });
+    return { kind:"prepared" as const,prepared }; }
+  catch(error) { return { kind:"refused" as const,refusal:boundedRefusal(error) }; }
+}
+export const saveAndPrepareContextV8 = internalMutation({ args:selectedContextArgs,handler:saveAndPrepareContextV8Handler });
+function selectedPendingEntries(pending: Awaited<ReturnType<typeof contextInputsV8Handler>>["pending"]): ModelInputEntry[] {
+  if (!pending.text) return [];
+  const prefix = "Authorized pending Cortex sources (untrusted evidence; preserve source roles and chronological corrections):\n";
+  if (!pending.text.startsWith(prefix)) transcriptDenied("STALE_CONTEXT");
+  const body = JSON.parse(pending.text.slice(prefix.length)) as { sequence:number;lineage:import("../src/domain/contracts").SourceLineage;contentHash:string;text:string }[];
+  if (!Array.isArray(body) || body.length !== pending.sources.length) transcriptDenied("STALE_CONTEXT");
+  return body.map((value,index) => {
+    const source = pending.sources[index]!;
+    if (value.lineage.sourceId !== source.sourceId || value.lineage.sourceEventId !== source.sourceEventId || value.lineage.sourceRevision !== source.sourceRevision || value.contentHash !== source.contentHash) transcriptDenied("STALE_CONTEXT");
+    return { key:`pending:${pending.sourceKeys[index]}`,kind:"pending" as const,relevance:1,text:prefix+canonicalModelJson([value]) };
+  });
+}
+
+export async function prepareContextV8Handler(ctx: ActionCtx, args: Attempt, recall?: (repository: Parameters<typeof recallAgentMemory>[2], input: Parameters<typeof recallAgentMemory>[4], selection?: AgentRecallSelection) => ReturnType<typeof recallAgentMemory>, privateComposition = false): Promise<null | PreparedModelCandidate> {
+  const inputs = await ctx.runQuery(contextInputsV8Ref, args);
+  const { current, boundary, represented, pending, historyMessageIds } = inputs;
+  const cutoff = current.snapshot.ingestionCutoff.sequence;
+  let completeness: "complete" | "incomplete" = current.execution.contextCompleteness ?? "complete"; let failureCode = current.execution.contextFailureCode;
+  async function fail(code: "CAPABILITY_UNAVAILABLE" | "MEMORY_STAGE_FAILED" | "MEMORY_BARRIER_TIMEOUT" | "CONTEXT_OVERFLOW"): Promise<never> {
+    await ctx.runMutation(ref<"mutation", Attempt & { failureCode: typeof code }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: code });
+    return transcriptDenied(code);
+  }
+  if (inputs.kind === "pending_overflow") return await fail("CONTEXT_OVERFLOW");
+  if (pending.completeness === "incomplete") {
+    completeness = "incomplete"; failureCode = "CONTEXT_OVERFLOW";
+  }
+  const repository = createActionMemoryRepository(ctx, args.reference, "read"); const witnesses = new Map<string, Witness>();
+  const excluded = new Set([...represented, ...pending.sourceKeys]);
+  let sourceScores: [string, number][] = []; let itemLineages: [string, import("../src/domain/contracts").SourceLineage][] = [];
+  const provenance = new Map<string, import("../src/domain/contracts").SourceLineage>();
+  type RecallContext = { witnesses: typeof witnesses; provenance: typeof provenance };
+  type RecallReads = Pick<typeof repository, "listFacts" | "searchVectors">;
+  const retained = { witnesses, provenance };
+  async function selectSources(state: RecallContext, items: ContextSourceBatchArgs["items"], permission: ContextSourcePermission, priorWitnesses?: typeof witnesses) {
+    if (!items.length) return [];
+    const selected = await ctx.runQuery(refs.contextSourceBatch, { reference: args.reference, items, permission,
+      witnesses: [...state.witnesses.values()], priorWitnesses: [...(priorWitnesses?.values() ?? [])],
+      excludedSourceKeys: [...excluded], cutoff, boundary });
+    for (const witness of selected.witnesses) state.witnesses.set(witness.sourceId, witness);
+    for (const [key, lineage] of selected.provenance) state.provenance.set(key, lineage);
+    return selected.selectedIndexes;
+  }
+  async function selectFacts(reads: RecallReads, state: RecallContext, query: Parameters<typeof repository.listFacts>[0], vectorSettled?: Promise<void>, priorWitnesses?: typeof witnesses) {
+    const facts = await reads.listFacts(query);
+    // Native reads overlap; keep the original vector-first source guard RPCs.
+    await vectorSettled;
+    const selected = await selectSources(state, facts.map(fact => ({ sourceId: fact.lineage.sourceId,
+      expected: { sourceEventId: fact.lineage.sourceEventId, sourceRevision: fact.lineage.sourceRevision } })), "canViewFacts", priorWitnesses);
+    return selected.map(index => facts[index]!);
+  }
+  async function selectVectors(reads: RecallReads, state: RecallContext, query: Parameters<typeof repository.searchVectors>) {
+    const matches = await reads.searchVectors(...query);
+    const selected = await selectSources(state, matches.map(match => ({ sourceId: match.source.lineage.sourceId,
+      expected: { sourceEventId: match.source.lineage.sourceEventId, sourceRevision: match.source.lineage.sourceRevision, contentHash: match.source.contentHash } })), "canViewMemories");
+    return selected.map(index => matches[index]!);
+  }
+  const scoped = { ...repository,
+    listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => await selectFacts(repository, retained, query),
+    searchVectors: async (...query: Parameters<typeof repository.searchVectors>) => await selectVectors(repository, retained, query),
+    stageRecallReads: () => {
+      const reads = repository.stageRecallReads();
+      const vectorContext: RecallContext = { witnesses: new Map(), provenance: new Map() };
+      const factContext: RecallContext = { witnesses: new Map(), provenance: new Map() };
+      let releaseVector!: () => void;
+      const vectorSettled = new Promise<void>(resolve => { releaseVector = resolve; });
+      return {
+        searchVectors: async (...query: Parameters<typeof repository.searchVectors>) => {
+          try { return await selectVectors(reads, vectorContext, query); }
+          finally { releaseVector(); }
+        },
+        listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => await selectFacts(reads, factContext, query, vectorSettled, vectorContext.witnesses),
+        commit: () => {
+          for (const branch of [vectorContext, factContext]) {
+            for (const [sourceId, next] of branch.witnesses) {
+              const witness = mergeContextWitness(witnesses.get(sourceId), next);
+              if (!witness) transcriptDenied("STALE_CONTEXT"); witnesses.set(sourceId, witness);
+            }
+            for (const [key, lineage] of branch.provenance) provenance.set(key, lineage);
+          }
+          reads.commit();
+        },
+      };
+    },
+  };
+  const text = current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
+    : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
+  const availability = inputs.availability;
+  traceRuntimePhase(args.runId, args.attemptNumber, availability.empty ? "context.indexed.empty" : "context.recall.begin");
+  const result = availability.empty ? { context: "" } : recall ? await recall(privateComposition ? repository : scoped,
+    { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 }, privateComposition ? { cutoff, boundary, excludedSourceKeys: [...excluded],
+      onSelected: selected => { sourceScores = selected.sourceScores ?? []; itemLineages = selected.itemLineages ?? []; for (const witness of selected.witnesses) witnesses.set(witness.sourceId, witness);
+        for (const [key, lineage] of selected.provenance) provenance.set(key, lineage); } } : undefined) : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
+    { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 });
+  traceRuntimePhase(args.runId, args.attemptNumber, "context.recall.end");
+  for (const source of pending.sources) {
+    const witness = mergeContextWitness(witnesses.get(source.sourceId), { ...source, permissions: ["canViewMemories"] });
+    if (!witness) transcriptDenied("STALE_CONTEXT"); witnesses.set(source.sourceId, witness);
+  }
+  if (current.snapshot.version !== 8) transcriptDenied("INVALID_STATE");
+  const selected = relevantRecallItems("items" in result ? result.items : [], text, current.snapshot.inputSelection.policy,
+    { tenantId:args.reference.tenantId,memorySpaceId:args.reference.memorySpaceId! },sourceScores);
+  const entries: ModelInputEntry[] = [
+    ...(completeness === "incomplete" ? [{ key:"notice:incomplete",kind:"notice" as const,relevance:1,text:`Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.` }] : []),
+    ...selected.map(({item,relevance}) => ({ key:`${item.type}:${item.id}`,kind:item.type,relevance,
+      text:`Indexed Cortex memory (untrusted evidence):\n${formatForLLM([item], { now:()=>Date.now() })}\nSource roles and trust: ${canonicalModelJson(itemLineages.filter(([key]) => key === `${item.type}:${item.id}`).map(([,lineage]) => lineage))}` })),
+    ...selectedPendingEntries(pending),
+  ];
+  const context = renderModelInputEntries(entries);
+  if (utf8Bytes(context) > 16_384 || witnesses.size > 32) return await fail("CONTEXT_OVERFLOW");
+  const save = { ...args, context, entries, historyMessageIds, witnesses: [...witnesses.values()], completeness, ...(failureCode ? { failureCode } : {}), ...(availability.empty ? { emptyIndexedProfileId: availability.profileId } : {}) };
+  if (privateComposition) {
+    const result = await ctx.runMutation(ref<"mutation", typeof save, Awaited<ReturnType<typeof saveAndPrepareContextV8Handler>>>("mutation", "runtimeAgent:saveAndPrepareContextV8"), save);
+    if (result.kind === "refused") throwRefusal(result.refusal);
+    return result.prepared;
+  }
+  await ctx.runMutation(ref<"mutation",typeof save,null>("mutation","runtimeAgent:saveContextV8"), save); return null;
+}
+
+async function prepareEmptyContextV8Handler(ctx: MutationCtx, args: Attempt, stableEmpty = false): Promise<EmptyContextResult> {
+  const inputs = await contextInputsV8Handler(ctx, args, stableEmpty);
+  if (inputs.kind === "pending_overflow") return { state: "FAILED", failureCode: "CONTEXT_OVERFLOW" };
+  if (!inputs.availability.empty) return { state: "NEEDS_ACTION" };
+  const { current, pending, availability, historyMessageIds } = inputs;
+  const completeness = pending.completeness === "incomplete" ? "incomplete" : current.execution.contextCompleteness ?? "complete";
+  const failureCode = pending.completeness === "incomplete" ? "CONTEXT_OVERFLOW" : current.execution.contextFailureCode;
+  const witnesses = new Map<string, Witness>();
+  for (const source of pending.sources) {
+    const witness = mergeContextWitness(witnesses.get(source.sourceId), { ...source, permissions: ["canViewMemories"] });
+    if (!witness) transcriptDenied("STALE_CONTEXT"); witnesses.set(source.sourceId, witness);
+  }
+  const entries: ModelInputEntry[] = [...(completeness === "incomplete" ? [{ key:"notice:incomplete",kind:"notice" as const,relevance:1,
+    text:`Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.` }] : []),...selectedPendingEntries(pending)];
+  const context = renderModelInputEntries(entries);
+  if (utf8Bytes(context) > 16_384 || witnesses.size > 32) return { state: "FAILED", failureCode: "CONTEXT_OVERFLOW" };
+  // Repeat the complete original save fence in this transaction, including its
+  // source/witness checks and fresh empty/profile re-probe. No external I/O.
+  await saveContextV8Handler(freshNativeTranscriptReads(freshPolicyMetadataReads(ctx)), { ...args, context, entries, historyMessageIds,witnesses: [...witnesses.values()], completeness,
+    ...(failureCode ? { failureCode } : {}), emptyIndexedProfileId: availability.profileId });
+  return { state: "COMPLETE" };
+}
+
+async function prepareRoutedContextV8Handler(ctx: MutationCtx, args: Attempt, stableEmpty = false): Promise<EmptyContextResult> {
+  ctx = createAuthorityReadScope(ctx, { policyMetadata: true });
+  const current = await executionContext(ctx, args);
+  if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
+  const repository = new ConvexMemoryRepository(ctx, args.reference, "read"), authority = await repository.authority();
+  const scope = { tenantId: authority.tenantId, memorySpaceId: args.reference.memorySpaceId! };
+  const represented = new Set(current.snapshot.messages.map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId })));
+  const selected = authority.resourceAccess === "own"
+    ? ctx.db.query("runtimeIngestionEvents").withIndex("by_owner_sequence", q => q.eq("tenantId", scope.tenantId).eq("memorySpaceId", scope.memorySpaceId)
+      .eq("ownerPrincipalId", authority.principalId).lte("sequence", current.snapshot.ingestionCutoff.sequence))
+    : ctx.db.query("runtimeIngestionEvents").withIndex("by_scope_sequence", q => q.eq("tenantId", scope.tenantId).eq("memorySpaceId", scope.memorySpaceId)
+      .lte("sequence", current.snapshot.ingestionCutoff.sequence));
+  const events = await selected.take(1025);
+  // Pending, boundary-ineligible or resource-denied candidates may be false
+  // positives. Only the original Action determines current eligible context.
+  if (events.length > 1024 || events.some(event => event.eligibility === "eligible" && !represented.has(contextSourceKey(scope, event.lineage)))) {
+    return { state: "NEEDS_ACTION" };
+  }
+  return await prepareEmptyContextV8Handler(ctx, args, stableEmpty);
+}
+
+export async function prepareResolvedModelCandidateV8Handler(ctx:MutationCtx,args:Attempt & { ordinal:number }):Promise<PreparedModelCandidate> {
+  const attempt=attemptArgs(args);let current=await executionContext(ctx,attempt);
+  if(current.snapshot.version!==8) transcriptDenied("INVALID_STATE");
+  const completed=await completedModelStepHandler(ctx,{ ...attempt,ordinal:args.ordinal });
+  if(completed!==null) return { state:"completed",resultCanonical:completed };
+  const resolutionArgs={ ...attempt,runBudgetId:current.run.runBudgetId };
+  const initialResolution=await resolveModelOperationHandler(ctx,resolutionArgs),governedResolution=await resolveModelOperationHandler(ctx,resolutionArgs);
+  const semanticId=await semanticHash(canonicalModelJson([args.runId,args.attemptNumber,"model",args.ordinal,null]));
+  let selected: ReturnType<typeof fitModelInput>;
+  try { selected=fitModelInput({ messages:current.messageEntries.map(value=>args.ordinal===0?({...value,mandatory:true}):value),entries:current.execution.modelInputEntries ?? [],policy:current.snapshot.inputSelection.policy,
+    check:(messages,context)=>checkAgentModelInput({ messages,context,instructions:current.definition.instructions.text,
+      tools:current.definition.tools.map(tool=>NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]),
+      maxOutputTokens:Math.min(initialResolution.snapshot.limits.outputTokens,initialResolution.dispatchEvidence.resultBound.maximumOutputTokens) },governedResolution,
+      { reference:args.reference,operationKey:"agent.respond",runBudgetId:current.run.runBudgetId,semanticId,ordinal:args.ordinal }) }); }
+  catch(error) { if(error instanceof ModelInputSelectionError) transcriptDenied(error.code);throw error; }
+  const selection={ ordinal:args.ordinal,messageIds:selected.messageIds,entryKeys:selected.entryKeys,policyHash:current.snapshot.inputSelection.policyHash };
+  await ctx.db.patch("runtimeAgentExecutions",current.execution._id,{ modelInputSelection:{ ...selection,hash:await semanticHash(canonicalModelJson(selection)) } });
+  current=await executionContext(ctx,attempt);
+  const requestCanonical=canonicalModelJson({ messages:current.messages,context:current.execution.contextCanonical ?? "",instructions:current.definition.instructions });
+  const op=await beginOperationHandler(ctx,{ ...attempt,ordinal:args.ordinal,kind:"model",requestCanonical });
+  if(op.state==="complete" && op.resultCanonical) return { state:"completed",resultCanonical:op.resultCanonical };
+  preflightModelCandidate(current,args,op,initialResolution,governedResolution);
+  await startOperationHandler(ctx,{ ...attempt,operationId:op.operationId });
+  return { state:"started",current,op,initialResolution,governedResolution,requestPreflight:true };
+}
+export const prepareResolvedModelCandidateV8=internalMutation({ args:{ ...agentAttempt,ordinal:v.number() },
+  handler:(ctx,args)=>prepareResolvedModelCandidateV8Handler(createAuthorityReadScope(ctx,{ nativeTranscript:true,policyMetadata:true }),args) });
+
+async function finishTurnV8(ctx: ActionCtx, args: Attempt & { ordinal: number }, prepared: Exclude<Awaited<ReturnType<typeof prepareDirectTurnV8Handler>>, { state: "duplicate" }>): Promise<StepResult> {
+  const attempt = attemptArgs(args);
+  if (prepared.state === "failed_context") {
+    await ctx.runMutation(ref<"mutation", Attempt & { failureCode: "CONTEXT_OVERFLOW" }, null>("mutation", "runtimeAgent:failContext"), { ...attempt, failureCode: prepared.failureCode });
+    transcriptDenied(prepared.failureCode);
+  }
+  if (prepared.state === "needs_context") {
+    const candidate = await prepareContextV8Handler(ctx, attempt, (repository, input, selection) => recallAgentMemory(ctx, attempt, repository, { now: () => Date.now() }, input, selection), true);
+    if (!candidate) transcriptDenied("INVALID_STATE");
+    prepared = candidate;
+  }
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.prepare.end");
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.model.begin");
+  const result = await executePreparedModelStep(ctx, args, prepared, prepared.state === "started" ? prepared : undefined);
+  traceRuntimePhase(args.runId, args.attemptNumber, "turn.model.end");
+  if (result.final) {
+    await ctx.runMutation(refs.finalize, { ...attempt, finalMessageIds: result.savedMessageIds });
+    try {
+      traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.begin");
+      await ctx.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runId: string }, string | null>("mutation", "runtimeContentJobs:enqueueParentTitle"), { reference: args.reference, runId: args.runId });
+    } catch { /* Optional title failure cannot roll back the canonical answer. */ }
+    finally { traceRuntimePhase(args.runId, args.attemptNumber, "title.enqueue.end"); }
+  }
+  return result;
+}
+
+export const turnStepV8=internalAction({ args:{ ...agentAttempt,ordinal:v.number() },handler:async(ctx,args):Promise<StepResult>=> {
+  traceRuntimePhase(args.runId,args.attemptNumber,"turn.prepare.begin");
+  const prepared=args.ordinal===0 ? await ctx.runMutation(ref<"mutation",Attempt,Awaited<ReturnType<typeof prepareTurnModelV8Handler>>>("mutation","runtimeAgent:prepareTurnModelV8"),attemptArgs(args))
+    : await ctx.runMutation(ref<"mutation",Attempt & { ordinal:number },PreparedModelCandidate>("mutation","runtimeAgent:prepareResolvedModelCandidateV8"),{ ...attemptArgs(args),ordinal:args.ordinal });
+  return await finishTurnV8(ctx,args,prepared);
+} });
+async function prepareTurnModelV8Handler(ctx:MutationCtx,args:Attempt) {
+  const context=await prepareRoutedContextV8Handler(ctx,args,true);
+  if(context.state==="FAILED") return { state:"failed_context" as const,failureCode:context.failureCode };
+  if(context.state==="NEEDS_ACTION") return { state:"needs_context" as const };
+  return await prepareResolvedModelCandidateV8Handler(ctx,{ ...args,ordinal:0 });
+}
+export const prepareTurnModelV8=internalMutation({ args:agentAttempt,handler:(ctx,args)=>prepareTurnModelV8Handler(createAuthorityReadScope(ctx,{ nativeTranscript:true,policyMetadata:true }),args) });
+
+async function prepareDirectTurnV8Handler(nativeCtx: MutationCtx, args: Attempt) {
+  const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
+  const owned = await execution(ctx, args);
+  if (owned.executionMode !== "direct-v8" || !owned.scheduledActionId) transcriptDenied("INVALID_STATE");
+  if (owned.directState !== "scheduled") {
+    await currentRun(ctx, args.reference, args.runId, "run");
+    return { state: "duplicate" as const };
+  }
+  const current = await executionContext(ctx, args);
+  if (current.definition.context.memoryMode === "strict") transcriptDenied("INVALID_STATE");
+  await startContextHandler(ctx, args);
+  const barrier = await contextBarrierHandler(ctx, args);
+  if (barrier.state !== "ready") transcriptDenied("INVALID_STATE");
+  await ctx.db.patch("runtimeAgentExecutions", owned._id, { directState: "started" });
+  const context = await prepareRoutedContextV8Handler(ctx, args, true);
+  if (context.state === "FAILED") return { state: "failed_context" as const, failureCode: context.failureCode };
+  if (context.state === "NEEDS_ACTION") return { state: "needs_context" as const };
+  return await prepareResolvedModelCandidateV8Handler(ctx, { ...args, ordinal: 0 });
+}
+export const prepareDirectTurnV8=internalMutation({ args:agentAttempt,handler:prepareDirectTurnV8Handler });
+
+async function attachDirectContinuationV8Handler(ctx: MutationCtx, args: Attempt) {
+  const current = await executionContext(ctx, args);
+  const owned = current.execution;
+  if (owned.executionMode !== "direct-v8" || !["started", "continuation_pending", "continuation"].includes(owned.directState ?? "")) transcriptDenied("INVALID_STATE");
+  if (owned.workflowId) {
+    if (owned.directState !== "continuation") transcriptDenied("INVALID_STATE");
+    return owned.workflowId;
+  }
+  const canonical = await completedModelStepHandler(ctx, { ...args, ordinal: 0 });
+  if (!canonical) transcriptDenied("RECONCILIATION_INCOMPLETE");
+  const result = JSON.parse(canonical) as StepResult;
+  if (result.final || !Array.isArray(result.calls) || !result.calls.length || result.calls.length > 32) transcriptDenied("INVALID_MODEL_OUTPUT");
+  const workflowId = await workflow.start(ctx, toolContinuationV8, args, { startAsync: true,
+    onComplete: ref<"mutation", WorkflowCompletion, null>("mutation", "runtimeAgent:onWorkflowComplete"), context: args });
+  await ctx.db.patch("runtimeAgentExecutions", owned._id, { workflowId, directState: "continuation" });
+  return workflowId;
+}
+export const attachDirectContinuationV8=internalMutation({ args:agentAttempt,handler:attachDirectContinuationV8Handler });
+
+async function interruptDirectV8Handler(ctx: MutationCtx, args: Attempt) {
+  const owned = await execution(ctx, args);
+  if (owned.executionMode !== "direct-v8") transcriptDenied("INVALID_STATE");
+  if (owned.state === "complete" || owned.workflowId || owned.state === "cancelled") return null;
+  try {
+    const completed = await completedModelStepHandler(ctx, { ...args, ordinal: 0 });
+    if (completed && !(JSON.parse(completed) as StepResult).final) {
+      await ctx.db.patch("runtimeAgentExecutions", owned._id, { directState: "continuation_pending" });
+      return null;
+    }
+  } catch (error) {
+    // Original currentness failures must retire work, never enable handoff.
+    if (!(error instanceof ConvexError)) throw error;
+  }
+  return await endInterruptedHandler(ctx, { ...args, cancelled: false });
+}
+export const interruptDirectV8=internalMutation({ args:agentAttempt,handler:interruptDirectV8Handler });
+
+export const executeDirectV8 = internalAction({ args: agentAttempt, handler: async (ctx, args) => {
+  try {
+    traceRuntimePhase(args.runId, args.attemptNumber, "direct.prepare.begin");
+    const prepared = await ctx.runMutation(prepareDirectTurnV8Ref, args);
+    traceRuntimePhase(args.runId, args.attemptNumber, "direct.prepare.end");
+    if (prepared.state === "duplicate") return null;
+    const result = await finishTurnV8(ctx, { ...args, ordinal: 0 }, prepared);
+    if (!result.final) await ctx.runMutation(attachDirectContinuationV8Ref, args);
+    return null;
+  } catch (error) {
+    await ctx.runMutation(interruptDirectV8Ref, args);
+    throw error;
+  }
+} });
+
+
+export const retireDirectV8 = internalMutation({ args: agentAttempt, handler: async (ctx, args) => {
+  const owned = await execution(ctx, args);
+  if (owned.executionMode !== "direct-v8" || owned.workflowId || ["complete", "failed", "unknown", "cancelled"].includes(owned.state)) return null;
+  const outbox = singleTranscript(await ctx.db.query("runtimeRunOutbox").withIndex("by_run", q => q.eq("tenantId", owned.tenantId)
+    .eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId)).take(2));
+  if (!outbox || outbox.leaseVersion !== args.leaseVersion || outbox.leaseExpiresAt === undefined) transcriptDenied("INVALID_STATE");
+  if (Date.now() < outbox.leaseExpiresAt) { await ctx.scheduler.runAfter(outbox.leaseExpiresAt - Date.now(), directRetirementV8, args); return null; }
+  const row = singleTranscript(await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", owned.tenantId)
+    .eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId)).take(2));
+  if (!row || row.attemptNumber !== args.attemptNumber) transcriptDenied("INVALID_STATE");
+  try { await ctx.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runBudgetId: string }, unknown>("mutation", "runtimeModelPolicy:cancelBudget"),
+    { reference: owned.reference, runBudgetId: row.runBudgetId }); }
+  catch (error) {
+    if (!(error instanceof ConvexError) || !["FORBIDDEN", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE"].includes(error.data.code as string)) throw error;
+  }
+  await endInterruptedHandler(ctx, { ...args, cancelled: false });
+  return null;
+} });
+
+
+export const executeToolsV8 = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
+  const canonical = await step.runQuery(ref<"query", Attempt & { ordinal: number }, string | null>("query", "runtimeAgent:completedModelStep"), { ...args, ordinal: 0 });
+  if (!canonical) throw new Error("RECONCILIATION_INCOMPLETE");
+  for (let ordinal = 0; ordinal < 33; ordinal++) {
+    const result = ordinal === 0 ? JSON.parse(canonical) as StepResult : await step.runAction(preflightTurnV8Ref, { ...args, ordinal }, { name: `context and model turn ${ordinal}`, retry: false });
+    if (result.final) { if (ordinal === 0) throw new Error("INVALID_MODEL_OUTPUT"); return null; }
+    if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
+    for (const call of result.calls) {
+      const op = await step.runMutation(refs.begin, { ...args, kind: "tool", ordinal,
+        requestCanonical: call.inputCanonical, toolCallId: call.toolCallId, toolName: call.toolName });
+      if (op.state === "waiting_approval") {
+        await step.runMutation(refs.waiting, { ...args, operationId: op.operationId });
+        await step.awaitEvent({ name: op.operationId, validator: v.literal("approved") });
+      }
+      await step.runAction(refs.tool, { ...args, ordinal, call }, { retry: false, name: `server tool ${call.toolName}` });
+    }
+  }
+  throw new Error("TOOL_STEP_LIMIT");
+} });
+
+export const executeTurnV8 = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.begin");
+  await step.runMutation(ref<"mutation", Attempt, null>("mutation", "runtimeAgent:startContext"), args, { inline: true });
+  for (;;) {
+    const decision = await step.runMutation(ref<"mutation", Attempt, ReturnType<typeof evaluateMemoryBarrier>>("mutation", "runtimeAgent:contextBarrier"), args, { inline: true });
+    if (decision.state === "failed") {
+      await step.runMutation(ref<"mutation", Attempt & { failureCode: string }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: decision.failureCode! });
+      throw new Error(decision.failureCode);
+    }
+    if (decision.state !== "waiting") break;
+    await step.sleep(Math.min(1000, decision.remainingMs), { name: "memory stage barrier" });
+  }
+  traceRuntimePhase(args.runId, args.attemptNumber, "barrier.end");
+  for (let ordinal = 0; ordinal < 33; ordinal++) {
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.begin`);
+    const result = await step.runAction(preflightTurnV8Ref, { ...args, ordinal }, { retry: false, name: `context and model turn ${ordinal}` });
+    traceRuntimePhase(args.runId, args.attemptNumber, `model.${ordinal}.end`);
+    if (result.final) return null;
+    if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
+    for (const call of result.calls) {
+      const prepared = await step.runMutation(refs.begin, { ...args, kind: "tool", ordinal,
+        requestCanonical: call.inputCanonical, toolCallId: call.toolCallId, toolName: call.toolName });
+      if (prepared.state === "waiting_approval") {
+        await step.runMutation(refs.waiting, { ...args, operationId: prepared.operationId });
+        await step.awaitEvent({ name: prepared.operationId, validator: v.literal("approved") });
+      }
+      await step.runAction(refs.tool, { ...args, ordinal, call }, { retry: false, name: `server tool ${call.toolName}` });
+    }
+  }
+  throw new Error("TOOL_STEP_LIMIT");
 } });

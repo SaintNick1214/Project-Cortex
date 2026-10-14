@@ -24,6 +24,8 @@ try {
   const graphEntry = join(destination, 'dist/graph-runtime/index.js');
   for (const runtime of [await import(pathToFileURL(runtimeEntry)), requirePacked('@cortexmemory/sdk/runtime')]) {
     assert.equal(typeof runtime.CortexRuntimeClient, 'function');
+    assert.equal(typeof runtime.CortexRuntimeClient.prototype.remember, 'function');
+    assert.equal(typeof runtime.CortexRuntimeClient.prototype.rememberStatus, 'function');
     assert.equal(typeof runtime.CortexRuntimeClient.prototype.submitAndStart, 'function');
     assert.equal(new runtime.CortexRuntimeError('FORBIDDEN').code, 'FORBIDDEN');
     assert.equal(runtime.RUNTIME_ASSET_MAX_BYTES, 20_000_000);
@@ -45,7 +47,7 @@ try {
     const bytes = readFileSync(join(destination, 'dist/backend/v1', file.path));
     assert.equal(createHash('sha256').update(bytes).digest('hex'), file.sha256, `Packaged backend digest: ${file.path}`);
   }
-  for (const required of ['runs.ts', 'runtimeAgent.ts', 'runtimeMemory.ts', 'runtimeAssetsHttp.ts', 'cliOperator/admin.ts', 'cliOperator/facts.ts', '_cortex/schema.ts', '_cortex/components.config.ts', '_cortex/http.ts']) {
+  for (const required of ['runs.ts', 'runtimeAgent.ts', 'runtimeMemory.ts', 'runtimeMemoryCapture.ts', 'runtimeAssetsHttp.ts', 'cliOperator/admin.ts', 'cliOperator/facts.ts', '_cortex/schema.ts', '_cortex/components.config.ts', '_cortex/http.ts']) {
     assert.ok(paths.has(required), `Missing installed runtime contract: ${required}`);
   }
   for (const sdk of [esm,cjs]) {
@@ -60,7 +62,7 @@ try {
   }
   writeFileSync(join(temporary, 'consumer.mts'), `
     import {Cortex, MemoryValidationError, getPresetForPlan} from '@cortexmemory/sdk';
-    import {CortexRuntimeClient, type TextSubmitV1, type RuntimeObservation, type RuntimeAdmissionResult, type RuntimeLatencyEvent} from '@cortexmemory/sdk/runtime';
+    import {CortexRuntimeClient, type TextSubmitV1, type RuntimeObservation, type RuntimeAdmissionResult, type RuntimeLatencyEvent, type RuntimeRememberInput, type RuntimeRememberResult} from '@cortexmemory/sdk/runtime';
     import {CortexGraphWorker, type CortexGraphWorkerOptions} from '@cortexmemory/sdk/runtime/graph';
     const cortex = new Cortex({convexUrl:'https://example.convex.cloud'});
     const preset = getPresetForPlan('free');
@@ -80,6 +82,11 @@ try {
     void preset; void error; void verify;
     const request: TextSubmitV1 = {version:1,agentId:'agent',agentVersion:1,clientRequestId:'request',parts:[{type:'text',text:'hello'}]};
     async function runtimeContract(client: CortexRuntimeClient, render: (observation: RuntimeObservation) => void) {
+      const exchange: RuntimeRememberInput = {conversationId:'external',requestId:'capture-1',userMessage:'I play cello.',agentResponse:'Noted.'};
+      const captured: RuntimeRememberResult = await client.remember(exchange);
+      captured.messageIds[0]; captured.sourceEventIds[1]; captured.memoryStatus;
+      const currentCapture: RuntimeRememberResult = await client.rememberStatus(captured.receiptId);
+      currentCapture.stages.facts[0]; currentCapture.profile.profileId;
       const combined: RuntimeAdmissionResult = await client.submitAndStart(request, {streaming:true});
       combined.handle.runId; combined.run.attemptNumber; combined.start.state;
       const handle = await client.submit(request);

@@ -10,8 +10,8 @@ import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Res
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { ModelMessage } from "ai";
 import { createSha256 } from "../src/common/crypto";
-import { canonicalModelJson, validateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "../src/domain/model-policy";
-import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1 } from "../src/domain/model-policy";
+import { canonicalModelJson, validateModelRequest, checkModelRequestInputBounds, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "../src/domain/model-policy";
+import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1, ModelRequestInputOverflow } from "../src/domain/model-policy";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
 import type { QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
 import { qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
@@ -328,7 +328,7 @@ function traceModelBounds(binding: GatewayBinding, snapshot: ModelPolicySnapshot
     limits: Object.fromEntries(fields.filter(key => count(snapshot.limits[key])).map(key => [key, snapshot.limits[key]])),
     exceeded: fields.filter(key => dimensions[key] > snapshot.limits[key]) }));
 }
-function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal, stage: "native" | "preflight" = "native"): { params: NativeLanguageParams; request: ModelCallRequest } {
+function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal, stage: "native" | "preflight" = "native", diagnoseInput = false): { params: NativeLanguageParams; request: ModelCallRequest } {
   const native = record(input, standardKeys);
   const agent = agentToolEnvelope(p.inputBound.featureEnvelope);
   const jsonObject = p.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope;
@@ -411,7 +411,13 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
   for (const key of ["temperature", "topP", "seed", "stopSequences"] as const) if (native[key] !== undefined) Object.assign(request.options, { [key]: detached(native[key]) });
   traceModelBounds(binding, s, request, stage);
   let checked: Readonly<ModelCallRequest>;
-  try { checked = validateModelRequest(s, request).request; }
+  try {
+    if (diagnoseInput) {
+      const fit = checkModelRequestInputBounds(s, request);
+      if (!fit.withinBound) throw new AgentInputOverflow(fit.bound);
+      checked = fit.validated.request;
+    } else checked = validateModelRequest(s, request).request;
+  }
   catch (error) {
     // A known pre-dispatch bounds refusal is typed on this new path only.
     // Other validation/product exceptions retain their original identity.
@@ -423,6 +429,23 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
 /** Only the installed AI SDK's closed text/tool shapes are projected early.
  * Unrecognized shapes retain the original Agent/SDK/native validation path. */
 export type AgentRequestPreflightInput = { messages: readonly ModelMessage[]; context: string; instructions: string; tools: readonly string[]; maxOutputTokens: number };
+class AgentInputOverflow extends Error {
+  constructor(readonly bound: ModelRequestInputOverflow) { super("Agent input exceeds qualified limits"); }
+}
+export type AgentModelInputCheck = { supported: false }
+  | { supported: true; withinBound: true; requestCanonical: string }
+  | ({ supported: true; withinBound: false } & ModelRequestInputOverflow);
+/** Pure fitting seam: numeric overflow alone permits removing optional entries.
+ * It grants no authority, reservation or dispatch permit. Native guards still run. */
+export function checkAgentModelInput(input: AgentRequestPreflightInput, resolution: GatewayResolution, binding: GatewayBinding): AgentModelInputCheck {
+  try {
+    const result = projectAgentModelRequest(input, resolution, binding, true);
+    return result.supported ? { ...result, withinBound: true } : result;
+  } catch (error) {
+    if (error instanceof AgentInputOverflow) return { supported: true, withinBound: false, ...error.bound };
+    throw error;
+  }
+}
 function plainProjection(value: unknown, keys: readonly string[]): Record<string, unknown> | undefined {
   if (!value || typeof value !== "object" || Array.isArray(value) || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) return undefined;
   const result: Record<string, unknown> = {};
@@ -445,6 +468,9 @@ function plainArray(value: unknown): unknown[] | undefined {
   return result;
 }
 export function preflightAgentModelRequest(input: AgentRequestPreflightInput, resolution: GatewayResolution, binding: GatewayBinding): { supported: false } | { supported: true; requestCanonical: string } {
+  return projectAgentModelRequest(input, resolution, binding, false);
+}
+function projectAgentModelRequest(input: AgentRequestPreflightInput, resolution: GatewayResolution, binding: GatewayBinding, diagnoseInput: boolean): { supported: false } | { supported: true; requestCanonical: string } {
   if (!agentToolEnvelope(resolution.dispatchEvidence.inputBound.featureEnvelope)) return { supported: false };
   const source = plainArray(input.messages); if (!source) return { supported: false };
   const prompt: LanguageModelV4CallOptions["prompt"] = [{ role: "system", content: input.instructions }];
@@ -500,7 +526,7 @@ export function preflightAgentModelRequest(input: AgentRequestPreflightInput, re
   const tools = input.tools.map(name => detached(catalog.find(tool => tool.name === name)!)) as unknown as NonNullable<LanguageModelV4CallOptions["tools"]>;
   const signal = new AbortController().signal;
   const projected = languageParams({ prompt, maxOutputTokens: input.maxOutputTokens, ...(tools.length ? { tools, toolChoice: { type: "auto" as const } } : {}) },
-    resolution.snapshot, resolution.dispatchEvidence, binding, signal, "preflight");
+    resolution.snapshot, resolution.dispatchEvidence, binding, signal, "preflight", diagnoseInput);
   return { supported: true, requestCanonical: canonicalModelJson(projected.request) };
 }
 function nativeLanguage(request: Readonly<ModelCallRequest>, signal: AbortSignal): NativeLanguageParams {

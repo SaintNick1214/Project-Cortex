@@ -45,6 +45,7 @@ import type { Id } from "../../convex-dev/_generated/dataModel";
 
 import { resolveTenantId } from "../auth/tenant";
 import { isDeploymentOperatorClient } from "../common/deploymentOperator";
+import {managedRemember} from './managedRemember';
 import type { ConvexClient } from "convex/browser";
 import { api } from "../common/backendApi";
 import { ConversationsAPI } from "../conversations";
@@ -916,6 +917,7 @@ export class MemoryAPI {
     params: RememberParams,
     options?: RememberOptions,
   ): Promise<RememberResult> {
+    if(!isDeploymentOperatorClient(this.client))return managedRemember(this.client,params,options,resolveTenantId(this.authContext?.tenantId,params.tenantId));
     this.assertOperatorOrchestration("remember");
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // ORCHESTRATION OBSERVER SETUP

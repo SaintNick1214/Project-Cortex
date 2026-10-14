@@ -1,0 +1,67 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtimeMemory/capture.test.ts
+  ● Test suite failed to run
+
+    SyntaxError: Identifier 'input' has already been declared
+
+      17 | jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () => ({ ...bootstrap,
+      18 |   lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (value: DeploymentPolicyManifest) => value === root }));
+    > 19 | export const definitions = await import("../../../convex-dev/agentDefinitions");
+         |                            ^
+      20 | export const transcript = await import("../../../convex-dev/runtimeTranscript");
+      21 | export const runs = await import("../../../convex-dev/runs");
+      22 | export const ledger = await import("../../../convex-dev/runtimeModelPolicy");
+
+      at EsmLoader.buildSyncSourceEntry (node_modules/jest-runtime/build/index.js:1731:20)
+      at tests/unit/runtimeTranscript/fixture.ts:19:28
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     0.0s | 0/0 passed | /tests/unit/runtimeMemory/capture.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.89s
+  Test suites:        1
+  Individual tests:   0
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        6.887 s
+Ran all test suites within paths "tests/unit/runtimeMemory/capture.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ordinary-remember-tests-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

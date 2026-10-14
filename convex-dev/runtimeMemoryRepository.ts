@@ -341,7 +341,7 @@ export class ConvexMemoryRepository {
     return facts;
   }
   /** Bounded exact consumed-row checks; this method is registered only as an internal mutation. */
-  async checkDelivery(bindings: MemoryDeliveryBindings): Promise<{ version: 1; deliveryExpiresAt?: number }> {
+  async checkDelivery(bindings: MemoryDeliveryBindings, finalAuthorityCtx: Pick<QueryCtx, "db"> = this.ctx): Promise<{ version: 1; deliveryExpiresAt?: number }> {
     // Recall admits 100 facts and 100 vectors, plus its one-fact preflight.
     if (bindings.sources.length > 201 || bindings.facts.length > 101 || bindings.vectors.length > 100
       || new TextEncoder().encode(canonicalMemoryValue(bindings)).byteLength > 262144) memoryError("INVALID_INPUT", "Recall delivery bindings exceed the bounded envelope");
@@ -389,7 +389,7 @@ export class ConvexMemoryRepository {
         || await semanticHash(canonicalMemoryValue(match.chunk)) !== expected.chunkHash) memoryError("STALE_SOURCE", "Consumed recall vector changed before delivery");
     }
     // Retain consumed share/source deadlines through the final authority awaits.
-    const expiresAt = await deliveryExpiresAt(this.ctx, this.reference, deadlines);
+    const expiresAt = await deliveryExpiresAt(finalAuthorityCtx, this.reference, deadlines);
     return { version: 1, ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
   }
   async hydrateVectors(hits: { id: Id<"runtimeMemoryVectors">; score: number }[], profile: EmbeddingProfile = DEFAULT_EMBEDDING_PROFILE, runBudgetId?: string, deadlines?: number[]): Promise<VectorMatch[]> {

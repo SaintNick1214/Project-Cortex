@@ -9,6 +9,9 @@ export const ingestionStageState = v.union(v.literal("pending"), v.literal("runn
   v.literal("failed"), v.literal("unknown"), v.literal("dead_letter"), v.literal("skipped"));
 const scope = { tenantId: v.string(), memorySpaceId: v.string() };
 export const runtimeIngestionTables = {
+  runtimeRunMemoryProgress: defineTable({ ...scope, runId: v.string(), runDocId: v.id("runtimeRuns"), version: v.number(),
+    memoryStatus: v.union(v.literal("pending"), v.literal("complete"), v.literal("failed"), v.literal("not_requested")), updatedAt: v.number() })
+    .index("by_run", ["tenantId", "memorySpaceId", "runId"]),
   // Created only with a new scope. Progress writers never touch this sequence head.
   runtimeIngestionSequenceHeads: defineTable({ ...scope, version: v.literal(1), sequence: v.number() })
     .index("by_scope", ["tenantId", "memorySpaceId"]),

@@ -5,10 +5,10 @@ import { generateText, isStepCount } from "ai";
 import type { ModelMessage } from "ai";
 import type { LanguageModelV4 } from "@ai-sdk/provider";
 import type { RuntimeAuthorityReference } from "../../../src/auth/verified";
-import { canonicalModelJson, resolveModelPolicy } from "../../../src/domain/model-policy";
+import { canonicalModelJson, resolveModelPolicy, checkModelRequestInputBounds, validateModelRequest } from "../../../src/domain/model-policy";
 import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
 import { serverTools } from "../../../convex-dev/runtimeAgentTools";
-import { createAgentGatewayCancellationBridge, governGatewayLanguageModel, preflightAgentModelRequest } from "../../../convex-dev/runtimeGateway";
+import { createAgentGatewayCancellationBridge, governGatewayLanguageModel, preflightAgentModelRequest, checkAgentModelInput } from "../../../convex-dev/runtimeGateway";
 import type { AgentRequestPreflightInput, GatewayBinding, GatewayComposition, GatewayResolution } from "../../../convex-dev/runtimeGateway";
 const reference = { tenantId: "t", tenantEpoch: 1, memorySpaceId: "s", memorySpaceEpoch: 1, principalId: "p", principalVersion: 1,
   membershipId: "m", membershipVersion: 1, grantId: "g", grantVersion: 1 } as RuntimeAuthorityReference;
@@ -53,6 +53,64 @@ async function originalRequest(input: AgentRequestPreflightInput, r = resolution
 }
 const base: AgentRequestPreflightInput = { messages: [{ role: "user", content: "ordinary query" }], context: "private evidence", instructions: "original instructions", tools: [], maxOutputTokens: 256 };
 describe("shared complete Agent request preflight", () => {
+  it("fits the exact original request at input/context boundaries without modifying limits", async () => {
+    const r = resolution(), checked = checkAgentModelInput(base, r, binding);
+    expect(checked).toMatchObject({ supported: true, withinBound: true });
+    if (!checked.supported || !checked.withinBound) throw Error("Expected bounded input");
+    const request = JSON.parse(checked.requestCanonical) as { inputTokens: number; outputTokens: number };
+    const boundary = { ...r, snapshot: { ...r.snapshot, limits: { ...r.snapshot.limits,
+      inputTokens: request.inputTokens, contextTokens: request.inputTokens + request.outputTokens } } };
+    const frozenLimits = canonicalModelJson(boundary.snapshot.limits);
+    const fit = checkAgentModelInput(base, boundary, binding);
+    expect(fit).toEqual(checked);
+    expect((await originalRequest(base, boundary)).canonical).toBe(checked.requestCanonical);
+    expect(canonicalModelJson(boundary.snapshot.limits)).toBe(frozenLimits);
+    for (const dimension of ["inputTokens", "contextTokens"] as const) {
+      const limited = { ...boundary, snapshot: { ...boundary.snapshot, limits: { ...boundary.snapshot.limits,
+        [dimension]: boundary.snapshot.limits[dimension] - 1 } } };
+      const overflow = checkAgentModelInput(base, limited, binding);
+      expect(overflow).toEqual({ supported: true, withinBound: false, dimension,
+        effectiveLimit: limited.snapshot.limits[dimension], computedValue: boundary.snapshot.limits[dimension] });
+      expect(Object.keys(overflow).sort()).toEqual(["computedValue", "dimension", "effectiveLimit", "supported", "withinBound"].sort());
+      expect(() => preflightAgentModelRequest(base, limited, binding)).toThrow();
+      expect((await originalRequest(base, limited)).canonical).toBeUndefined();
+    }
+  });
+  it("does not treat another denied dimension, budget, pin or tool as removable input", () => {
+    const r = resolution(), checked = checkAgentModelInput(base, r, binding);
+    if (!checked.supported || !checked.withinBound) throw Error("Expected bounded input");
+    const request = JSON.parse(checked.requestCanonical) as Record<string, unknown>;
+    const low = { ...r.snapshot, limits: { ...r.snapshot.limits, inputTokens: 1 } };
+    expect(checkModelRequestInputBounds(low, request)).toMatchObject({ withinBound: false, bound: { dimension: "inputTokens" } });
+    expect(() => validateModelRequest(low, request)).toThrow("request exceeds bounded limits");
+    for (const changed of [
+      { ...request, outputTokens: r.snapshot.limits.outputTokens + 1 },
+      { ...request, toolSteps: r.snapshot.limits.toolSteps + 1 },
+      { ...request, timeoutMs: r.snapshot.limits.timeoutMs + 1 },
+      { ...request, reservationUnits: r.snapshot.limits.operationBudgetUnits + 1 },
+      { ...request, reservationUnits: r.snapshot.costBound.maximumCostUnits - 1 },
+      { ...request, promptVersion: "wrong" },
+      { ...request, outputSchema: { type: "object" } },
+      { ...request, texts: ["mismatched text"] },
+      { ...request, options: { maxRetries: 0, temperature: 0.5 } },
+    ]) expect(() => checkModelRequestInputBounds(low, changed)).toThrow();
+    expect(() => checkAgentModelInput({ ...base, tools: ["memory_remember"] },
+      { ...r, snapshot: { ...low, allowedTools: [] } }, binding)).toThrow();
+    expect(() => checkAgentModelInput({ ...base, maxOutputTokens: 257 }, { ...r, snapshot: low }, binding)).toThrow();
+  });
+  it("uses the original sixfold bound for whole tool-result groups and keeps unsupported shapes unsupported", () => {
+    const input = { ...base, tools: ["memory_remember"], messages: [
+      ...base.messages,
+      { role: "assistant" as const, content: [{ type: "tool-call" as const, toolCallId: "c", toolName: "memory_remember", input: { text: "fact" } }] },
+      { role: "tool" as const, content: [{ type: "tool-result" as const, toolCallId: "c", toolName: "memory_remember", output: { type: "json" as const, value: { receiptId: "r", text: "private".repeat(800) } } }] },
+    ] };
+    expect(checkAgentModelInput(input, resolution(4000), binding)).toMatchObject({ supported: true, withinBound: false, dimension: "inputTokens" });
+    expect(checkAgentModelInput({ ...base, messages: input.messages.slice(0, -1) }, resolution(), binding)).toEqual({ supported: false });
+    let getterCalls = 0;
+    const accessor = Object.defineProperty({ role: "user" }, "content", { enumerable: true, get: () => { getterCalls++; return "private"; } });
+    expect(checkAgentModelInput({ ...base, messages: [accessor as ModelMessage] }, resolution(), binding)).toEqual({ supported: false });
+    expect(getterCalls).toBe(0);
+  });
   it.each(["text", "tools", "continuation", "adjacent-tool", "empty-parts"])("matches actual installed AI SDK projection for %s", async shape => {
     let messages: ModelMessage[] = [...base.messages];
     if (shape === "continuation" || shape === "adjacent-tool") messages = [

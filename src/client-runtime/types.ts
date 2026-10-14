@@ -65,6 +65,20 @@ export interface RuntimeRecallItem {
   memory?: Readonly<Record<string, unknown>>; fact?: Readonly<Record<string, unknown>>;
 }
 export interface RuntimeRecallResult { items: RuntimeRecallItem[]; context: string; profileId: string; deliveryExpiresAt?: number }
+/** Capture supplied text once; indexing runs asynchronously under backend policy. */
+export interface RuntimeRememberInput {
+  conversationId: string; requestId: string; userMessage: string; agentResponse: string;
+  userId?: string; agentId?: string; participantId?: string; userName?: string;
+  expectedRevision?: number; metadata?: Readonly<Record<string, unknown>>;
+}
+export interface RuntimeRememberResult {
+  readonly version: 1; readonly receiptId: string; readonly requestId: string; readonly conversationId: string;
+  readonly scope: RuntimeScope; readonly principalId: string; readonly messageIds: readonly [string, string];
+  readonly sourceEventIds: readonly [string, string]; readonly historyRevision: number; readonly created: boolean;
+  readonly memoryStatus: "pending" | "complete" | "failed"; readonly profile: RuntimeEmbeddingProfile;
+  readonly stages: Readonly<{facts: readonly [string, string]; vectors: readonly [string, string]}>;
+  readonly deliveryExpiresAt?: number;
+}
 export interface RuntimeTranscriptMessage {
   id: string; role: "user" | "assistant" | "tool";
   parts: Extract<RuntimePublicPart, { type: "text" | "tool" | "artifact" | "media-job" }>[];

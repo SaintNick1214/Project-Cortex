@@ -1,0 +1,1100 @@
+{
+  "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+  "files": [
+    {
+      "sourcePath": "convex-dev/runtimeTranscript.ts",
+      "outputPath": "runtimeTranscript.ts",
+      "sourceSha256": "fa4883c1c1578c56213da41d407ef0dbba301024d5e3d8cd1acc11dc155255b2",
+      "packedOutputSha256": "2bbf36a20df33bcf3d8c6baef2f2edd2caa945beb1387f61247307651776e854",
+      "exportNames": [
+        "agentComponent",
+        "ManagedConversation",
+        "executionRevision",
+        "transcriptDenied",
+        "singleTranscript",
+        "conversationById",
+        "checkConversation",
+        "requireConversation",
+        "createManagedConversation",
+        "bridgeFor",
+        "canonicalMessageHash",
+        "privateModelMessage",
+        "verifyMessage",
+        "registerMessages",
+        "checkNativeMediaReferences",
+        "approveRegisteredMessage",
+        "readTranscriptPage",
+        "captureCutoff",
+        "hydrateCutoff",
+        "hydratePrivateCutoff",
+        "create",
+        "get",
+        "list",
+        "messages",
+        "setPolicy",
+        "manualAppend",
+        "append",
+        "reviseMessage",
+        "edit",
+        "removeMessage",
+        "deleteManagedConversation",
+        "cleanupDeleted",
+        "remove",
+        "exportPage",
+        "stats",
+        "fork",
+        "rebuild"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "create",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "get",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "list",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "messages",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "setPolicy",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "append",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "edit",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "removeMessage",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "cleanupDeleted",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "remove",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "exportPage",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "stats",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "fork",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "rebuild",
+          "registeredAs": "internalMutation"
+        }
+      ],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeAgent.ts",
+      "outputPath": "runtimeAgent.ts",
+      "sourceSha256": "cfb6accd23baf0d1a24a0606f68e65fe90d53a708c368b85bda2824b48abb81f",
+      "packedOutputSha256": "adf0938b8f5bdecbfe0ea9293d7accec63b5cc88bb5e12402bfb9436ba61b697",
+      "exportNames": [
+        "AgentPublicPart",
+        "executionContext",
+        "hydrateExecution",
+        "resolveModelOperation",
+        "contextInputs",
+        "checkToolAuthority",
+        "startHandler",
+        "start",
+        "dispatchReady",
+        "executeTurn",
+        "executeTurnV2",
+        "executeTurnV3",
+        "executeTurnV4",
+        "executeTurnV5",
+        "saveContextHandler",
+        "saveContext",
+        "saveAndPrepareContextHandler",
+        "saveAndPrepareContext",
+        "startContext",
+        "contextBarrier",
+        "failContext",
+        "contextSource",
+        "contextSourceBatchHandler",
+        "contextSourceBatch",
+        "prepareContextHandler",
+        "prepareContext",
+        "prepareEmptyContext",
+        "prepareRoutedContext",
+        "beginOperation",
+        "completedModelStep",
+        "startOperation",
+        "prepareModelOperation",
+        "prepareResolvedModelOperation",
+        "PreparedModelCandidate",
+        "prepareResolvedModelCandidateHandler",
+        "prepareResolvedModelCandidate",
+        "prepareTurnModel",
+        "finishOperation",
+        "bindNativeOperation",
+        "admitModelOperation",
+        "admitPreparedModelOperation",
+        "recordOutput",
+        "modelStepHandler",
+        "modelStep",
+        "turnStepV5Handler",
+        "turnStepV5",
+        "turnStepV7",
+        "prepareDirectTurn",
+        "attachDirectContinuation",
+        "interruptDirect",
+        "executeDirectV6",
+        "retireDirectV6",
+        "executeToolsV6",
+        "executeToolsV7",
+        "toolStepHandler",
+        "toolStep",
+        "checkActiveTool",
+        "writeToolSource",
+        "writeToolDerived",
+        "rememberToolSources",
+        "toolParent",
+        "waitForApproval",
+        "expireApproval",
+        "approveTool",
+        "finalizeExecution",
+        "finalize",
+        "reconcile",
+        "endInterrupted",
+        "onWorkflowComplete",
+        "onInitialWorkflowComplete",
+        "observeHandler",
+        "observe",
+        "cancel"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "hydrateExecution",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "resolveModelOperation",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "contextInputs",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "checkToolAuthority",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "start",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "dispatchReady",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "executeTurn",
+          "registeredAs": "workflow.define"
+        },
+        {
+          "name": "executeTurnV2",
+          "registeredAs": "workflow.define"
+        },
+        {
+          "name": "executeTurnV3",
+          "registeredAs": "workflow.define"
+        },
+        {
+          "name": "executeTurnV4",
+          "registeredAs": "workflow.define"
+        },
+        {
+          "name": "executeTurnV5",
+          "registeredAs": "workflow.define"
+        },
+        {
+          "name": "saveContext",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "saveAndPrepareContext",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "startContext",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "contextBarrier",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "failContext",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "contextSource",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "contextSourceBatch",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "prepareContext",
+          "registeredAs": "internalAction"
+        },
+        {
+          "name": "prepareEmptyContext",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "prepareRoutedContext",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "beginOperation",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "completedModelStep",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "startOperation",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "prepareModelOperation",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "prepareResolvedModelOperation",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "prepareResolvedModelCandidate",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "prepareTurnModel",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "finishOperation",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "bindNativeOperation",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "admitModelOperation",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "admitPreparedModelOperation",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "recordOutput",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "modelStep",
+          "registeredAs": "internalAction"
+        },
+        {
+          "name": "turnStepV5",
+          "registeredAs": "internalAction"
+        },
+        {
+          "name": "turnStepV7",
+          "registeredAs": "internalAction"
+        },
+        {
+          "name": "prepareDirectTurn",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "attachDirectContinuation",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "interruptDirect",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "executeDirectV6",
+          "registeredAs": "internalAction"
+        },
+        {
+          "name": "retireDirectV6",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "executeToolsV6",
+          "registeredAs": "workflow.define"
+        },
+        {
+          "name": "executeToolsV7",
+          "registeredAs": "workflow.define"
+        },
+        {
+          "name": "toolStep",
+          "registeredAs": "internalAction"
+        },
+        {
+          "name": "checkActiveTool",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "writeToolSource",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "writeToolDerived",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "rememberToolSources",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "toolParent",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "waitForApproval",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "expireApproval",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "approveTool",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "finalize",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "reconcile",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "endInterrupted",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "onWorkflowComplete",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "onInitialWorkflowComplete",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "observe",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "cancel",
+          "registeredAs": "mutation"
+        }
+      ],
+      "registeredEndpointDelta": [
+        {
+          "name": "saveAndPrepareContext",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "prepareResolvedModelCandidate",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "turnStepV7",
+          "registeredAs": "internalAction"
+        },
+        {
+          "name": "executeToolsV7",
+          "registeredAs": "workflow.define"
+        }
+      ]
+    },
+    {
+      "sourcePath": "convex-dev/runtimeAuth.ts",
+      "outputPath": "runtimeAuth.ts",
+      "sourceSha256": "a69c9089b017b82fb0307df8fffac7fab9766a1715959fa0de0e3c10ba8f7817",
+      "packedOutputSha256": "e0dfab3141d0040d65d73ce2ebed407ddc0a165cd264dfc5cb06d5e632446492",
+      "exportNames": [
+        "PrincipalRecord",
+        "MembershipRecord",
+        "GrantRecord",
+        "ScopeRecord",
+        "TombstoneKey",
+        "AuthorityReader",
+        "NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES",
+        "NATIVE_TRANSCRIPT_READ_SCOPE_MAX_BYTES",
+        "readNativeTranscriptMessages",
+        "freshNativeTranscriptReads",
+        "AUTHORITY_READ_SCOPE_MAX_ENTRIES",
+        "POLICY_METADATA_READ_SCOPE_MAX_ENTRIES",
+        "readDeploymentPolicyRows",
+        "readQualificationRows",
+        "freshPolicyMetadataReads",
+        "createAuthorityReadScope",
+        "assertResourceScope",
+        "resolveAuthority",
+        "resolveAuthorityReference",
+        "createAuthorityReader",
+        "requireAuthority",
+        "recheckAuthority",
+        "authorize",
+        "recheck",
+        "provision",
+        "revokeGrant",
+        "revokeMembership",
+        "deletePrincipal",
+        "deleteScope",
+        "tombstoneResource"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "authorize",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "recheck",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "provision",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "revokeGrant",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "revokeMembership",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "deletePrincipal",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "deleteScope",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "tombstoneResource",
+          "registeredAs": "internalMutation"
+        }
+      ],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeMemoryRepository.ts",
+      "outputPath": "runtimeMemoryRepository.ts",
+      "sourceSha256": "80f84c56890bd07d7943601238e7ae90d7b0db19d618c9504011f2997a2a4551",
+      "packedOutputSha256": "69e5a1e59343c9c1c8b9718a6eaf9889b66c598a893802035d8d75de7003a4ae",
+      "exportNames": [
+        "DerivedCommit",
+        "FactQuery",
+        "MemoryDeliveryBindings",
+        "memoryReferences",
+        "memoryError",
+        "isMemoryResourceDenied",
+        "memoryScope",
+        "canonicalMemoryValue",
+        "vectorScopeKey",
+        "vectorOwnerScopeKey",
+        "ConvexMemoryRepository",
+        "captureRecallSource",
+        "captureRecallFact",
+        "captureRecallVectors",
+        "createActionMemoryRepository"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeLatencyTrace.ts",
+      "outputPath": "runtimeLatencyTrace.ts",
+      "sourceSha256": "8fee2317e14653d54da71dd914a0d2befc42629af9e554f9cfc652119c60ac49",
+      "packedOutputSha256": "b76c4f6c4ab7053ade34d5e48778ae01edf32a3add5b83a06c23aeaa3d4a9979",
+      "exportNames": [
+        "RuntimeLatencyMetadata",
+        "traceRuntimePhase",
+        "traceRuntimeMutationSpan"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeModelPolicy.ts",
+      "outputPath": "runtimeModelPolicy.ts",
+      "sourceSha256": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+      "packedOutputSha256": "6496cbc7b48d2f9abd7fc8c446d38f3f4808fd7c68b1b53e28558c62bb3fa75a",
+      "exportNames": [
+        "MODEL_LEDGER_STORAGE_LIMITS",
+        "TrustedAgentPolicyVersion",
+        "readTrustedAgentPolicyVersion",
+        "BindBudgetArgs",
+        "bindTrustedBudget",
+        "ensureBudget",
+        "installDeploymentPolicy",
+        "provisionTenantPolicy",
+        "readCurrentEmbeddingProfile",
+        "embeddingProfile",
+        "resolveHandler",
+        "resolve",
+        "deriveQualifiedInputBound",
+        "AdmitModelArgs",
+        "admitHandler",
+        "admit",
+        "checkpointHandler",
+        "checkpoint",
+        "markVisible",
+        "costMicroUnits",
+        "mediaResultPublicationAllowed",
+        "captureTerminalEvidence",
+        "attachTerminalResult",
+        "reconcileDeploymentLiability",
+        "settle",
+        "recover",
+        "releaseNotDispatched",
+        "cancelBudget",
+        "cancelAgentBudget",
+        "admitFallback",
+        "checkFallback"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "ensureBudget",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "installDeploymentPolicy",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "provisionTenantPolicy",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "embeddingProfile",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "resolve",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "admit",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "checkpoint",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "markVisible",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "captureTerminalEvidence",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "attachTerminalResult",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "reconcileDeploymentLiability",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "settle",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "recover",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "releaseNotDispatched",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "cancelBudget",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "cancelAgentBudget",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "admitFallback",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "checkFallback",
+          "registeredAs": "internalQuery"
+        }
+      ],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeClient.ts",
+      "outputPath": "runtimeClient.ts",
+      "sourceSha256": "375534f93a758cb9fe6fcafd3fd04f73075419c9793901e6b35bb53fe85cb21b",
+      "packedOutputSha256": "b36b3416bf7f98c8c0c80fb3a71d6f5b542429f56af2f89780105a7116d710e0",
+      "exportNames": [
+        "submitAndStartHandler",
+        "submitAndStart",
+        "sessionHandler",
+        "session",
+        "submitAndStartEnvelopeHandler",
+        "submitAndStartEnvelope",
+        "observeEnvelopeHandler",
+        "observeEnvelope",
+        "signal"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "submitAndStart",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "session",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "submitAndStartEnvelope",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "observeEnvelope",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "signal",
+          "registeredAs": "query"
+        }
+      ],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeMemory.ts",
+      "outputPath": "runtimeMemory.ts",
+      "sourceSha256": "0a2ebeca8c5d54793d232f5831f7842867ee11aa610be4e269a338f5efcf8e45",
+      "packedOutputSha256": "9d7b2658a866df91f3af222bfe4c965e0714a437239ba43522f8600d839e71d6",
+      "exportNames": [
+        "defaultProfile",
+        "checkAuthority",
+        "readSource",
+        "writeSource",
+        "writeDerived",
+        "readFacts",
+        "checkProfileReady",
+        "readVectorMatches",
+        "finalDelivery",
+        "remember",
+        "recall"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "defaultProfile",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "checkAuthority",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "readSource",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "writeSource",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "writeDerived",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "readFacts",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "checkProfileReady",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "readVectorMatches",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "finalDelivery",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "remember",
+          "registeredAs": "action"
+        },
+        {
+          "name": "recall",
+          "registeredAs": "action"
+        }
+      ],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "outputPath": "runtimeAgentQueryEmbedding.ts",
+      "sourceSha256": "9c603cd8e1c81c306bccbae03f9ac60325f6b7a1e623cdf5962af395ea0bd257",
+      "packedOutputSha256": "bfc27cdc5eb4f52efd1dc0c36050ca68219b7fb34372ba2ae533278704fdbb40",
+      "exportNames": [
+        "AgentQueryEmbeddingAttempt",
+        "currentQuery",
+        "prepareAgentQueryEmbeddingHandler",
+        "prepare",
+        "Refusal",
+        "boundedRefusal",
+        "throwRefusal",
+        "admitAgentQueryEmbeddingHandler",
+        "admit",
+        "recallAgentMemory"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "prepare",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "admit",
+          "registeredAs": "internalMutation"
+        }
+      ],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeMemoryGateway.ts",
+      "outputPath": "runtimeMemoryGateway.ts",
+      "sourceSha256": "5088a8e6cf8804cf1ff07207f0598a35b45737412b2c9748e52297cf9b68d711",
+      "packedOutputSha256": "c8580e87620f13c083211fdba6ea0f49e61c4de1b09af68aab8a1cc762039a38",
+      "exportNames": [
+        "MemoryGatewayRun",
+        "buildSourceExtractionFramingV4",
+        "createGatewayMemoryModel"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeMemoryServices.ts",
+      "outputPath": "runtimeMemoryServices.ts",
+      "sourceSha256": "9105049420be09c65f27edfc6944e4218176e5e72970f95ab5090f50b137c128",
+      "packedOutputSha256": "bfe781eee936a48cbd0d21db21f709bfdfc5702e1f4a311059077f3886f62120",
+      "exportNames": [
+        "assertMemoryRequestId",
+        "explicitSourceLineage",
+        "unconfiguredMemoryModel",
+        "rememberMemory",
+        "recallMemory",
+        "finishRecallFromEmbedding",
+        "vectorRecallItems",
+        "completeRecallDelivery",
+        "deriveSourceVectors"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeGateway.ts",
+      "outputPath": "runtimeGateway.ts",
+      "sourceSha256": "b78ff53464a59ac98589f2083c07946ef679450fe4616900b6a557bd2135ebf8",
+      "packedOutputSha256": "7fdd8938e3006947860b904088e49cb91fdd8707b39ad9004f78f3b8b1e718c7",
+      "exportNames": [
+        "GatewayBinding",
+        "GatewayResolution",
+        "GatewayAdmission",
+        "GatewayCheckpoint",
+        "GatewayAdmissionCheckpoint",
+        "GatewayLedgerPort",
+        "TerminalAttachmentAcknowledgment",
+        "TerminalCaptureAcknowledgment",
+        "DurableTerminalEvidenceSink",
+        "GatewayOwnedTiming",
+        "DEFAULT_GATEWAY_OWNED_TIMING",
+        "GatewayComposition",
+        "GatewayDispatchError",
+        "GatewayLifecycle",
+        "assertGatewayReservedRequest",
+        "conservativeUsdDecimal",
+        "createAgentGatewayCancellationBridge",
+        "AgentRequestPreflightInput",
+        "preflightAgentModelRequest",
+        "createGovernedGatewayModel",
+        "governGatewayLanguageModel",
+        "governGatewayEmbeddingModel"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeIngestion.ts",
+      "outputPath": "runtimeIngestion.ts",
+      "sourceSha256": "ac6067bcb8cfb87cf91002a077ca56c9e92b94deec721dfe328d6a02e901011c",
+      "packedOutputSha256": "2d0714df9469493418fa3953c9dd04b09e5f11d555d214f92f900a5352b61308",
+      "exportNames": [
+        "StageLease",
+        "ingestionDenied",
+        "readScopeCutoff",
+        "readScopeSequence",
+        "eventById",
+        "readEventStages",
+        "readEventCurrent",
+        "readScopeEvents",
+        "IngestionOrigin",
+        "enqueueSourceEvent",
+        "retireSourceEvents",
+        "retireScopedSourceEvents",
+        "retireScopedSource",
+        "requireStageLease",
+        "requireStageCommit",
+        "guardIngestionRunBudget",
+        "assertIngestionPolicyPin",
+        "claim",
+        "hydrate",
+        "persistStage",
+        "failStage",
+        "expireStage",
+        "failUnclaimed",
+        "retry",
+        "reconcile",
+        "status",
+        "stageInput",
+        "persistDraft",
+        "commitVectors",
+        "processStageHandler",
+        "processStage",
+        "finishBeliefStage",
+        "registerCompletedDerivedSource",
+        "registerCompletedDerived",
+        "registerCompletedToolSource"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "retireScopedSource",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "claim",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "hydrate",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "persistStage",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "failStage",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "expireStage",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "failUnclaimed",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "retry",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "reconcile",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "status",
+          "registeredAs": "mutation"
+        },
+        {
+          "name": "stageInput",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "persistDraft",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "commitVectors",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "processStage",
+          "registeredAs": "internalAction"
+        },
+        {
+          "name": "registerCompletedDerived",
+          "registeredAs": "internalMutation"
+        }
+      ],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeIngestionSchema.ts",
+      "outputPath": "runtimeIngestionSchema.ts",
+      "sourceSha256": "f0045ef74e98ae9ccab93e5f7cb0858c62ce147998d936605a52e9a5bea4b62d",
+      "packedOutputSha256": "f0045ef74e98ae9ccab93e5f7cb0858c62ce147998d936605a52e9a5bea4b62d",
+      "exportNames": [
+        "ingestionStage",
+        "ingestionEligibility",
+        "ingestionStageState",
+        "runtimeIngestionTables"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeMemoryContext.ts",
+      "outputPath": "runtimeMemoryContext.ts",
+      "sourceSha256": "13aa8d349be8887fe31800c8e9d8e5a77e647a861f79a4bd86c57ff3f372b0d2",
+      "packedOutputSha256": "f9518a779ade8b49eab638dd9a7f8473d49864d06c75cc6ea7485214797e18e5",
+      "exportNames": [
+        "ContextBoundary",
+        "contextBoundary",
+        "readStageProgress",
+        "refreshScopeWatermarks",
+        "refreshWatermarks",
+        "stageProgress",
+        "readIndexedSourceAtCutoff",
+        "indexedSourceAtCutoff",
+        "readIndexedContextAvailability",
+        "indexedContextAvailability",
+        "readPendingContext",
+        "readEmptyPendingContext",
+        "pendingContext",
+        "status"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "refreshWatermarks",
+          "registeredAs": "internalMutation"
+        },
+        {
+          "name": "stageProgress",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "indexedSourceAtCutoff",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "indexedContextAvailability",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "pendingContext",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "status",
+          "registeredAs": "mutation"
+        }
+      ],
+      "registeredEndpointDelta": []
+    },
+    {
+      "sourcePath": "convex-dev/runtimeAgentRecall.ts",
+      "outputPath": "runtimeAgentRecall.ts",
+      "sourceSha256": "6be5a64396bc101036a9bb2dfd44f993c82652739479b1a64dd3d969b4695def",
+      "packedOutputSha256": "3cbeb30e148a5833fe9f400bed2acfcefc824e12e0707f49528976ee86bd4390",
+      "exportNames": [
+        "AgentRecallSelection",
+        "prepareReadsHandler",
+        "prepareReads",
+        "readMatchesHandler",
+        "readMatches",
+        "finishAgentRecall"
+      ],
+      "exactCommittedExportsPreserved": true,
+      "registeredEndpoints": [
+        {
+          "name": "prepareReads",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "readMatches",
+          "registeredAs": "internalQuery"
+        }
+      ],
+      "registeredEndpointDelta": [
+        {
+          "name": "prepareReads",
+          "registeredAs": "internalQuery"
+        },
+        {
+          "name": "readMatches",
+          "registeredAs": "internalQuery"
+        }
+      ]
+    }
+  ],
+  "rawAuthorityFactoryExportPresent": true,
+  "allHistoricalAndNewAgentParentsPresent": true,
+  "actualV5ParentAndTurnExportsPresent": true,
+  "actualFreshSdkArchive": true,
+  "actualTranscriptReaderExportsAndPrivateFactoryPresent": true,
+  "transcriptReaderBounds": {
+    "entries": 16,
+    "bytes": 250000
+  },
+  "registeredEndpointAdditions": "Four additive V7/preflight/context Agent endpoints and two private recall query endpoints; every126231 historical endpoint preserved",
+  "serviceCalls": 0
+}

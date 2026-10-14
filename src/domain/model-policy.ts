@@ -345,6 +345,23 @@ export interface ValidatedModelRequest {
   readonly request: Readonly<ModelCallRequest>;
   readonly canonical: string;
 }
+export interface ModelRequestInputOverflow {
+  readonly dimension: "inputTokens" | "contextTokens";
+  readonly effectiveLimit: number;
+  readonly computedValue: number;
+}
+class InputOverflow extends Error {
+  constructor(readonly bound: ModelRequestInputOverflow) { super("POLICY_DENIED: request exceeds input limits"); }
+}
+/** Selection-only diagnosis. Every non-input guard still runs; this is no admission. */
+export function checkModelRequestInputBounds(snapshot: ModelPolicySnapshotV1, input: unknown):
+  { withinBound: true; validated: ValidatedModelRequest } | { withinBound: false; bound: ModelRequestInputOverflow } {
+  try { return { withinBound: true, validated: validateRequest(snapshot, input, true) }; }
+  catch (error) {
+    if (error instanceof InputOverflow) return { withinBound: false, bound: error.bound };
+    throw error;
+  }
+}
 /**
  * Ledger identity binds complete ordered role/part/tool-call IDs, not a lossy text projection.
  * The final Gateway adapter must dispatch these normalized messages exactly and reject
@@ -352,6 +369,9 @@ export interface ValidatedModelRequest {
  * by that adapter; this helper does not prove a caller's token estimate or authenticate it.
  */
 export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unknown): ValidatedModelRequest {
+  return validateRequest(snapshot, input, false);
+}
+function validateRequest(snapshot: ModelPolicySnapshotV1, input: unknown, diagnoseInput: boolean): ValidatedModelRequest {
   // Descriptor-safe canonicalization rejects accessors before parsing. Parsing its
   // JSON bytes detaches every nested unknown leaf, so freezing cannot mutate callers.
   const detached: unknown = JSON.parse(canonicalModelJson(input));
@@ -375,10 +395,17 @@ export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unk
     if (request.inputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumInputTokens
       || request.inputTokens + request.outputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumContextTokens) deny("JSON-object request exceeds bounded limits");
   }
+  let inputOverflow: ModelRequestInputOverflow | undefined;
   for (const key of ["inputTokens", "outputTokens", "toolSteps", "timeoutMs"] as const) {
+    if (diagnoseInput && key === "inputTokens" && request[key] > snapshot.limits[key]) {
+      inputOverflow = { dimension: key, effectiveLimit: snapshot.limits[key], computedValue: request[key] }; continue;
+    }
     if (request[key] > snapshot.limits[key]) deny("request exceeds bounded limits");
   }
-  if (request.inputTokens + request.outputTokens > snapshot.limits.contextTokens ||
+  if (diagnoseInput && request.inputTokens + request.outputTokens > snapshot.limits.contextTokens) {
+    inputOverflow ??= { dimension: "contextTokens", effectiveLimit: snapshot.limits.contextTokens, computedValue: request.inputTokens + request.outputTokens };
+  }
+  if ((!diagnoseInput && request.inputTokens + request.outputTokens > snapshot.limits.contextTokens) ||
     request.reservationUnits > snapshot.limits.operationBudgetUnits || request.reservationUnits < snapshot.costBound.maximumCostUnits) deny("request exceeds context or operation budget");
   if (request.tools.some((tool) => !snapshot.allowedTools.includes(tool.name)) || new Set(request.tools.map((t) => t.name)).size !== request.tools.length ||
     (request.tools.length > 0 && (!snapshot.capabilities.includes("tools") || request.toolSteps === 0))) deny("tools are not allowed");
@@ -419,6 +446,7 @@ export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unk
   }
   const normalized = { ...request, texts, ...(messages ? { messages } : {}) };
   const canonical = canonicalModelJson({ snapshot, request: normalized });
+  if (inputOverflow) throw new InputOverflow(inputOverflow);
   return freeze({ request: normalized, canonical });
 }
 export interface ModelRequestIdentity { readonly canonical: string; readonly hash: string }

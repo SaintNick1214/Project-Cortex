@@ -1,0 +1,612 @@
+{
+  "schemaVersion": 1,
+  "kind": "Native diagnosis only; no new source gate or verifier acceptance",
+  "observedAt": "2026-10-14T09:37:47.389993+00:00",
+  "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+  "target": {
+    "sessionId": "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+    "name": "trustworthy-cricket-487",
+    "id": 6161421
+  },
+  "samples": [
+    {
+      "label": "browser-first",
+      "runId": "run:9e7023287e022789474a0639380ceaa5b82bbb22ee27f749395eb7c3ac44e04a",
+      "callerBoundary": "foreground browser after-paint",
+      "submissionToVisibleMs": 4465.2,
+      "under1000Ms": false,
+      "createdToAnswerDispatchMs": 2760,
+      "nativeDispatchToProcessedTextMs": 683,
+      "firstVisibilityMs": 265,
+      "createdToStoredTextMutationStampMs": 3714,
+      "directPrepareActionSpanMs": 757,
+      "nativeRequestId": "005b54a513b75ccf",
+      "rawCollectorReceipt": "k20-run-chain-9e7023287e02-1791969832717.json",
+      "rawCollectorSha256": "8b5ec4d516366bb7132f226dfeb8097d4a2804dfb2615c5ac66dc6cce988ffd7",
+      "mainInputTokens": 13286,
+      "inputLimit": 32768,
+      "exceededBounds": [],
+      "retries": [
+        {
+          "function": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "fd4c44c2-c153-46d9-b1a9-9e15f6cae19f",
+          "executionTimeMs": 283.935068,
+          "table": "runtimeBudgetAccounts",
+          "writer": "runtimeModelPolicy.js:admit"
+        }
+      ]
+    },
+    {
+      "label": "browser-warm",
+      "runId": "run:e4a7fe509b26e001aaa3c2b5045baf08318b882d83d0f58d6a0a7f1ead3db802",
+      "callerBoundary": "foreground browser after-paint",
+      "submissionToVisibleMs": 4332.8,
+      "under1000Ms": false,
+      "createdToAnswerDispatchMs": 2720,
+      "nativeDispatchToProcessedTextMs": 457,
+      "firstVisibilityMs": 172,
+      "createdToStoredTextMutationStampMs": 3354,
+      "directPrepareActionSpanMs": 773,
+      "nativeRequestId": "8b7a5cb7e49e9a9e",
+      "rawCollectorReceipt": "k20-run-chain-e4a7fe509b26-1791969832705.json",
+      "rawCollectorSha256": "a105ef4d964cdaae7f7e7bd1558d15d3662ba4912d2a679675862f8af3e935a5",
+      "mainInputTokens": 14464,
+      "inputLimit": 32768,
+      "exceededBounds": [],
+      "retries": [
+        {
+          "function": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "4ed9e035-bfb9-4021-92cd-469dc6462180",
+          "executionTimeMs": 355.551834,
+          "table": "runtimeBudgetAccounts",
+          "writer": "runtimeModelPolicy.js:admit"
+        }
+      ]
+    },
+    {
+      "label": "cli-first",
+      "runId": "run:4ecca5d1368c0bbe1e988003f7df4aa9bd03ba8ad1b2102457b0f26691860ca0",
+      "callerBoundary": "Basic CLI stdout acknowledgement",
+      "submissionToVisibleMs": 9946.162629,
+      "under1000Ms": false,
+      "createdToAnswerDispatchMs": 6298,
+      "nativeDispatchToProcessedTextMs": 513,
+      "firstVisibilityMs": 210,
+      "createdToStoredTextMutationStampMs": 7028,
+      "directPrepareActionSpanMs": 374,
+      "nativeRequestId": "5101750c487dbb2a",
+      "rawCollectorReceipt": "k20-run-chain-4ecca5d1368c-1791969832653.json",
+      "rawCollectorSha256": "381698f3da0d4d309f6f17800bfcdd1045b585e472322aa7ca6d36c4c20f9790",
+      "mainInputTokens": 24906,
+      "inputLimit": 32768,
+      "exceededBounds": [],
+      "retries": [
+        {
+          "function": "runtimeAgentQueryEmbedding:admit",
+          "executionId": "d54e776e-9d1d-45fb-ae2f-8f017a724bcc",
+          "executionTimeMs": 346.378335,
+          "table": "runtimeBudgetAccounts",
+          "writer": "runtimeModelPolicy.js:admit"
+        },
+        {
+          "function": "runtimeAgent:finalize",
+          "executionId": "c9fc9e43-0152-403f-a94a-38037b329c19",
+          "executionTimeMs": 392.88697,
+          "table": "runtimeIngestionScopes",
+          "writer": "runtimeMemoryContext.js:refreshWatermarks"
+        }
+      ],
+      "privateRecallPhasePartitionsMs": {
+        "beforeEmbedding": 1169,
+        "nativeEmbeddingAtDifference": 309,
+        "resultReadyToAttached": 477,
+        "remainingReadAndDelivery": 1169,
+        "total": 3124,
+        "saveAndPrepare": 487
+      },
+      "nativeReadParents": [
+        {
+          "function": "runtimeAgentQueryEmbedding:prepare",
+          "executionTimeMs": 474.69986,
+          "readDocuments": 82,
+          "readBytes": 162598,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admit",
+          "executionTimeMs": 346.378335,
+          "readDocuments": 112,
+          "readBytes": 243291,
+          "willRetry": true
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admit",
+          "executionTimeMs": 298.01567,
+          "readDocuments": 112,
+          "readBytes": 243291,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeAgentRecall:prepareReads",
+          "executionTimeMs": 286.468403,
+          "readDocuments": 76,
+          "readBytes": 102944,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeAgentRecall:readMatches",
+          "executionTimeMs": 419.984856,
+          "readDocuments": 304,
+          "readBytes": 464371,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeMemory:finalDelivery",
+          "executionTimeMs": 348.336946,
+          "readDocuments": 370,
+          "readBytes": 508144,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContext",
+          "executionTimeMs": 474.962922,
+          "readDocuments": 462,
+          "readBytes": 697859,
+          "willRetry": false
+        }
+      ]
+    },
+    {
+      "label": "cli-warm",
+      "runId": "run:21a14bc53979a58cef776579357af981901b848abed6b98097cae8ac34d6da1b",
+      "callerBoundary": "Basic CLI stdout acknowledgement",
+      "submissionToVisibleMs": 14619.113674,
+      "under1000Ms": false,
+      "createdToAnswerDispatchMs": 11208,
+      "nativeDispatchToProcessedTextMs": 477,
+      "firstVisibilityMs": 856,
+      "createdToStoredTextMutationStampMs": 12548,
+      "directPrepareActionSpanMs": 434,
+      "nativeRequestId": "5dc66f2d023f6602",
+      "rawCollectorReceipt": "k20-run-chain-21a14bc53979-1791969833029.json",
+      "rawCollectorSha256": "6e7d78d0c0e9a2dd3d07e75481b0d822fc020d56896b5019d42b08f0486efd04",
+      "mainInputTokens": 26066,
+      "inputLimit": 32768,
+      "exceededBounds": [],
+      "retries": [
+        {
+          "function": "runtimeAgentQueryEmbedding:admit",
+          "executionId": "44649610-79ac-4817-ba3c-a338056b5006",
+          "executionTimeMs": 1134.948817,
+          "table": "runtimeBudgetAccounts",
+          "writer": "runtimeModelPolicy.js:captureTerminalEvidence"
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContext",
+          "executionId": "d07415ab-15c8-40e8-bd6d-9531c69739c6",
+          "executionTimeMs": 1927.798354,
+          "table": "runtimeRuns",
+          "writer": "runtimeIngestion.js:commitVectors"
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "6f5c0720-1d8d-46f1-9464-104ac95dbba7",
+          "executionTimeMs": 431.048439,
+          "table": "runtimeAgentExecutions",
+          "writer": "runtimeAgent.js:recordOutput"
+        }
+      ],
+      "privateRecallPhasePartitionsMs": {
+        "beforeEmbedding": 3703,
+        "nativeEmbeddingAtDifference": 273,
+        "resultReadyToAttached": 685,
+        "remainingReadAndDelivery": 1400,
+        "total": 6061,
+        "saveAndPrepare": 2594
+      },
+      "nativeReadParents": [
+        {
+          "function": "runtimeAgentQueryEmbedding:prepare",
+          "executionTimeMs": 1183.324793,
+          "readDocuments": 311,
+          "readBytes": 678632,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admit",
+          "executionTimeMs": 1134.948817,
+          "readDocuments": 298,
+          "readBytes": 656938,
+          "willRetry": true
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admit",
+          "executionTimeMs": 1274.47852,
+          "readDocuments": 298,
+          "readBytes": 656938,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeAgentRecall:prepareReads",
+          "executionTimeMs": 218.099908,
+          "readDocuments": 170,
+          "readBytes": 310389,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeAgentRecall:readMatches",
+          "executionTimeMs": 389.880081,
+          "readDocuments": 578,
+          "readBytes": 931058,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeMemory:finalDelivery",
+          "executionTimeMs": 779.173663,
+          "readDocuments": 747,
+          "readBytes": 953047,
+          "willRetry": false
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContext",
+          "executionTimeMs": 1927.798354,
+          "readDocuments": 1115,
+          "readBytes": 1700931,
+          "willRetry": true
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContext",
+          "executionTimeMs": 644.284144,
+          "readDocuments": 1115,
+          "readBytes": 1700943,
+          "willRetry": false
+        }
+      ]
+    }
+  ],
+  "originalNativeSlo": {
+    "passed": 0,
+    "total": 4,
+    "verdict": "FAIL"
+  },
+  "publicRecall": {
+    "functionalVerdict": "PASS",
+    "publicRecallAttempts": 1,
+    "apiMs": 4791.468458,
+    "actionPortMs": 4447.695959,
+    "preSessionPortMs": 165.7928750000001,
+    "postSessionPortMs": 176.6278339999999,
+    "nativeActionExecutionMs": 4356.863374,
+    "nativeEmbeddingMs": 320,
+    "finalDeliveryNativeMs": 2206.60387,
+    "finalDeliveryReadDocuments": 998,
+    "finalDeliveryReadBytes": 1145271,
+    "sourceIssuedCallsFormula": "23+F registered endpoints plus ANN;15 serial endpoints before embedding; excludes external SDK session pair",
+    "observedActionChildCompletionRecords": 24,
+    "observedCachedQueryRecords": 9,
+    "resultChecks": {
+      "itemCount": 9,
+      "factCount": 1,
+      "memoryCount": 8,
+      "expectedPreference": true,
+      "allItemsScoped": true,
+      "currentOwner": true,
+      "profileId": "cortex-text-small-1536-v1",
+      "deliveryDeadlineValid": true
+    },
+    "clientsClosed": true,
+    "earlierZeroServiceGuardFailurePreserved": true,
+    "privateAgentImprovementAttribution": false
+  },
+  "originalMemoryVerifier": {
+    "verdict": "FAIL",
+    "passedField": false,
+    "freshVerifications": 43,
+    "userDurableFactPasses": 1,
+    "runs": [
+      {
+        "label": "browser-first",
+        "originalRunVerdict": "PASS",
+        "userDurableFact": true,
+        "progressChecks": {
+          "exactEventSequences": true,
+          "noMissingScopeEvents": true,
+          "factsContiguous": true,
+          "vectorsContiguous": true,
+          "profileConsistent": true
+        },
+        "events": [
+          {
+            "sequence": 1,
+            "role": "user",
+            "allOriginalEventChecks": true,
+            "checkCount": 20,
+            "finalFactCount": 1,
+            "extractedFacts": [
+              1
+            ],
+            "operationKeys": [
+              "embedding.memory",
+              "memory.extract"
+            ]
+          },
+          {
+            "sequence": 2,
+            "role": "assistant",
+            "allOriginalEventChecks": true,
+            "checkCount": 20,
+            "finalFactCount": 0,
+            "extractedFacts": [],
+            "operationKeys": [
+              "embedding.memory"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "browser-warm",
+        "originalRunVerdict": "FAIL",
+        "userDurableFact": false,
+        "progressChecks": {
+          "exactEventSequences": true,
+          "noMissingScopeEvents": true,
+          "factsContiguous": true,
+          "vectorsContiguous": true,
+          "profileConsistent": true
+        },
+        "events": [
+          {
+            "sequence": 3,
+            "role": "user",
+            "allOriginalEventChecks": true,
+            "checkCount": 20,
+            "finalFactCount": 0,
+            "extractedFacts": [
+              0
+            ],
+            "operationKeys": [
+              "embedding.memory",
+              "memory.extract"
+            ]
+          },
+          {
+            "sequence": 4,
+            "role": "assistant",
+            "allOriginalEventChecks": true,
+            "checkCount": 20,
+            "finalFactCount": 0,
+            "extractedFacts": [],
+            "operationKeys": [
+              "embedding.memory"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "cli-first",
+        "originalRunVerdict": "FAIL",
+        "userDurableFact": false,
+        "progressChecks": {
+          "exactEventSequences": true,
+          "noMissingScopeEvents": true,
+          "factsContiguous": true,
+          "vectorsContiguous": true,
+          "profileConsistent": true
+        },
+        "events": [
+          {
+            "sequence": 5,
+            "role": "user",
+            "allOriginalEventChecks": true,
+            "checkCount": 20,
+            "finalFactCount": 0,
+            "extractedFacts": [
+              1
+            ],
+            "operationKeys": [
+              "embedding.memory",
+              "facts.resolve",
+              "memory.extract"
+            ]
+          },
+          {
+            "sequence": 6,
+            "role": "assistant",
+            "allOriginalEventChecks": true,
+            "checkCount": 20,
+            "finalFactCount": 0,
+            "extractedFacts": [],
+            "operationKeys": [
+              "embedding.memory"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "cli-warm",
+        "originalRunVerdict": "FAIL",
+        "userDurableFact": false,
+        "progressChecks": {
+          "exactEventSequences": true,
+          "noMissingScopeEvents": true,
+          "factsContiguous": true,
+          "vectorsContiguous": true,
+          "profileConsistent": true
+        },
+        "events": [
+          {
+            "sequence": 7,
+            "role": "user",
+            "allOriginalEventChecks": true,
+            "checkCount": 20,
+            "finalFactCount": 0,
+            "extractedFacts": [
+              0
+            ],
+            "operationKeys": [
+              "embedding.memory",
+              "memory.extract"
+            ]
+          },
+          {
+            "sequence": 8,
+            "role": "assistant",
+            "allOriginalEventChecks": true,
+            "checkCount": 20,
+            "finalFactCount": 0,
+            "extractedFacts": [],
+            "operationKeys": [
+              "embedding.memory"
+            ]
+          }
+        ]
+      }
+    ],
+    "failureApplicability": "Two warm prompts are questions, not fresh positive declarations. CLI-first repeated coral declaration extracted1 and ran facts.resolve but has0 final facts attributed to that event; specific resolution/dedup cause unavailable. Original per-user fresh-positive criterion remains unmet; no waiver or rerun."
+  },
+  "authDiagnostic": {
+    "verdict": "FAIL",
+    "dataAndFinanceUnchanged": true,
+    "cases": [
+      {
+        "name": "valid owner metadata control",
+        "verdict": "PASS",
+        "expectedCode": null,
+        "observedCode": null,
+        "operationElapsedMs": 2621.2366249999995,
+        "protectedPayloadCount": 1,
+        "rpcMethods": [
+          "runtimeClient:session",
+          "runtimeClient:session",
+          "runtimeMemory:defaultProfile",
+          "runtimeClient:session"
+        ],
+        "nativeAuthErrorObserved": false,
+        "ownership": {
+          "sdkClosed": true,
+          "suppliedOfficialConvexClientClosed": true
+        }
+      },
+      {
+        "name": "expired valid signature",
+        "verdict": "FAIL",
+        "expectedCode": "UNAUTHENTICATED",
+        "observedCode": "AUTHENTICATION_TIMEOUT",
+        "operationElapsedMs": 4002.515124999998,
+        "protectedPayloadCount": 0,
+        "rpcMethods": [],
+        "nativeAuthErrorObserved": false,
+        "ownership": {
+          "sdkClosed": true,
+          "suppliedOfficialConvexClientClosed": true
+        }
+      },
+      {
+        "name": "invalid signature",
+        "verdict": "FAIL",
+        "expectedCode": "UNAUTHENTICATED",
+        "observedCode": "AUTHENTICATION_TIMEOUT",
+        "operationElapsedMs": 4001.722166000003,
+        "protectedPayloadCount": 0,
+        "rpcMethods": [],
+        "nativeAuthErrorObserved": false,
+        "ownership": {
+          "sdkClosed": true,
+          "suppliedOfficialConvexClientClosed": true
+        }
+      }
+    ]
+  },
+  "concreteStructuralBoundary": {
+    "observedConflict": "CLI-warm saveAndPrepareContext retried on runtimeRuns written by runtimeIngestion.js:commitVectors",
+    "writer": "runtimeIngestion.ts:80\u201398 readiness, called by commitVectors:394",
+    "fieldsPatched": [
+      "memoryStatus",
+      "updatedAt"
+    ],
+    "foreground": "Original current-run/execution/transcript/cancel/lease/account fences consume the run record, but model preparation does not predicate on these memory-progress fields.",
+    "candidate": "Consider public memory-status derivation/publication from existing event/stage records rather than patching the foreground control row. Preserve public status/monotonic setStages semantics, strict barriers, source provenance/currentness and every execution fence. Diagnosis only; no implementation authorization or equivalence verdict.",
+    "budgetCaveat": "Shared runtimeBudgetAccounts conflicts are genuine atomic accounting/concurrency coupling. Do not remove financial guards or move billable admission after dispatch."
+  },
+  "supplementalRootReportedOnly": {
+    "toolIntent": "Separate one intent failed ordinal0 preflight34938>32768 before approval/tool/answer-provider; background memory continued. Not one of four original samples; this diagnosis did not obtain a new snapshot.",
+    "ordinaryRemember": "Root reports ordinary remember disabled/operator configuration plus isolated SDK zero-call audit. No canonical remember effect claimed from ordinary samples."
+  },
+  "clockLimits": [
+    "Caller submission/paint/stdout clocks are separate from server run creation and phase clocks; no subtraction of their absolute timestamps.",
+    "Stored text createdAt is a mutation transaction-start stamp, preceding successful durable commit/public display; not an exact visible-text measurement.",
+    "Native inclusive parent durations/read counts overlap child work; phase partitions only added within the same Action clock.",
+    "Gateway stream acquisition/processed text includes opaque routing/network/provider work; internal queue/token/network subdivisions unavailable.",
+    "Saved snapshots558/920/953 are cumulative retained execution inventories, not foreground RPC counts.",
+    "Read-only collectors use bounded per-table snapshots, not one cross-table transaction; owned completed original runs only."
+  ],
+  "collection": {
+    "exactFourOnce": true,
+    "allExit0": true,
+    "awaitedClientClose": true,
+    "stderrBytes": 0,
+    "newLogSnapshots": 0,
+    "paidCalls": 0,
+    "productEdits": 0,
+    "proofsJournalWrites": 0,
+    "additionalServicesAfterFour": 0,
+    "targetCleanup": "Root-owned separate operation; no retirement claim by this diagnosis"
+  },
+  "inputs": [
+    {
+      "path": "k20-collector-pins.mjs",
+      "sha256": "d27a758ec1469f35b3c94cf9b4831b48f72a8a9b8c311fb6e2f2fba961d19986"
+    },
+    {
+      "path": "capture-k20-run-chain.mjs",
+      "sha256": "e6f18913f746e96625008d312286ae82e73e73067ebf8ddf08fe638bb4772d6e"
+    },
+    {
+      "path": "k20-run-chain-normal-closed-receipt.json",
+      "sha256": "6ed80d84ed8cb326d6bb269c3e6fd7dc45eb74834bc2171f27c503fe57857c8e"
+    },
+    {
+      "path": "service-log-snapshot-k20-browser-post-pair-1791968545879.json",
+      "sha256": "08fe467f3f51719345f94c6ce26af96161114d05799c31a1912bf5bbc8826792"
+    },
+    {
+      "path": "service-log-snapshot-k20-cli-post-pair-1791969023639.json",
+      "sha256": "4f0267b15bbe1c562f44d880785c4f5443730d5f4b3c20882be76380fc14e707"
+    },
+    {
+      "path": "service-log-snapshot-k20-public-post-run-1791969549122.json",
+      "sha256": "6078971173439c6c26d23c57b125db5f99b10a37599612e3b4990d4b6129dc8c"
+    },
+    {
+      "path": "k20-memory-native-v2-four-run-verification-1791969126427.json",
+      "sha256": "99ad67c63622b6d171b55d670d2a70d30e56c7afc043c8ca46b52320205d2fc9"
+    },
+    {
+      "path": "k20-cli-pure-timing.json",
+      "sha256": "a3b432ef3fe5bc12880ce6b6e6700180bbdf64f368f2f7d1735c4fe6347c78de"
+    },
+    {
+      "path": "browser/k20-browser-pair-outcome.json",
+      "sha256": "dacfdd529bd98d6c03e15533b7211d3b51c68e86c9e0ab6c0d3184de18099f3d"
+    },
+    {
+      "path": "k20-public-recall-probe-1791969270805-63b4c517-831e-48d3-8fc4-69ca145e46f8.json",
+      "sha256": "85cd5d6bbbaa7f01d84f2c9859769ac05dd1a0e30b7de72e6883b39a09665336"
+    },
+    {
+      "path": "k20-public-recall-probe-1791969423987-dcafcafc-2493-48ff-967e-e67ab4fc72c7.json",
+      "sha256": "acd5f30c70b8120f48547cca30f918dc1df20da22e288b43c874caa5ae96db56"
+    },
+    {
+      "path": "k20-auth-close-diagnostic-readonly-1791969549190-f1b9d65d-a800-4236-8fdc-912bdd9f6436.json",
+      "sha256": "a0f7ead55000d686b4448606aca0222bc5ec249ccf53568d14f42997f9182801"
+    },
+    {
+      "path": "public-recall-vs-legacy-call-chain.json",
+      "sha256": "80f50bb05e6e7e9dc61bacc51b47c7c3c9f36ce0bd1eca32c68689691926cf04"
+    }
+  ],
+  "goalPercent": 50,
+  "nativeSLOAccepted": false,
+  "fullGoalAccepted": false
+}

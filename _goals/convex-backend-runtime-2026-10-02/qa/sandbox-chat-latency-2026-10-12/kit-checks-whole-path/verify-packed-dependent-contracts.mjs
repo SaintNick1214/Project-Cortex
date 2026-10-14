@@ -9,7 +9,7 @@ import vm from "node:vm";
 import { build } from "esbuild";
 const q = path.dirname(new URL(import.meta.url).pathname);
 const kit = "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-whole-path-2026-10-14";
-const sha = "SOURCE_COMMIT_UNREADY";
+const sha = "53421e78165fb12a16a11faa19db9372fa8ddfd4";
 assert.match(sha, /^[a-f0-9]{40}$/, 'Root accepted commit GO required');
 const receipt = JSON.parse(fs.readFileSync(path.join(kit, "image/archives/manifest.json"), "utf8"));
 assert.equal(receipt.sourceCommit, sha);

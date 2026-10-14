@@ -61,7 +61,7 @@ export const runtimeTranscriptTables = {
     agentId: v.string(), agentVersion: v.number(), definitionHash: v.string(), authorityReference: runtimeAuthorityReference,
     inputMessageIds: v.array(v.string()), queueSequence: v.number(), historyRevision: v.number(),
     runBudgetId: v.string(), runAccountId: v.id("runtimeBudgetAccounts"), responseStatus,
-    memoryStatus: stageStatus, graphStatus: stageStatus, attemptNumber: v.number(),
+    memoryStatus: stageStatus, graphStatus: stageStatus, attemptNumber: v.number(), modelInputVersion: v.optional(v.literal(8)),
     outputMessageIds: v.array(v.string()), approvedAt: v.optional(v.number()), approvalActor: v.optional(runtimeAuthorityReference),
     cancellationRequestedAt: v.optional(v.number()), cancelledAt: v.optional(v.number()),
     failureCode: v.optional(v.string()), snapshotCanonical: v.optional(v.string()), executionRequested: v.optional(v.boolean()), streamingRequested: v.optional(v.boolean()),

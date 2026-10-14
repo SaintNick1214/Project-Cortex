@@ -106,7 +106,7 @@ export const signal = query({
     const execution = await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", value.run.scope.tenantId)
       .eq("memorySpaceId", value.run.scope.memorySpaceId).eq("runId", value.run.runId).eq("attemptNumber", value.run.attemptNumber)).unique();
     const marker = await semanticHash(canonicalModelJson({ attempt: value.run.attemptNumber,
-      updatedAt: value.run.updatedAt, state: value.state, cursor: value.cursor,
+      updatedAt: value.run.updatedAt, memoryStatus: value.run.memoryStatus, state: value.state, cursor: value.cursor,
       outputRevision: execution?.nextOutputSequence ?? 0, executionRevision: execution?.updatedAt ?? 0 }));
     return { version: 1 as const, marker,
       ...(value.deliveryExpiresAt === undefined ? {} : { deliveryExpiresAt: value.deliveryExpiresAt }) };

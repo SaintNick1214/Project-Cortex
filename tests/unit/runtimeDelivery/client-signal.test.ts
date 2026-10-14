@@ -36,3 +36,19 @@ it("a signal shares fresh observer permissions and reports retention without pri
   jest.spyOn(Date, "now").mockReturnValue(clock + 21);
   await expect(f.call(client.signal, { runId: run.runId })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
 });
+
+it("fresh memory publication invalidates the opaque signal without modifying its foreground run", async () => {
+  const f = await transcriptFixture(), run = await f.run(), row = f.db.table("runtimeRuns")[0];
+  row.modelInputVersion = 8;
+  const progress = f.db.seed("runtimeRunMemoryProgress", { tenantId: row.tenantId, memorySpaceId: row.memorySpaceId,
+    runId: row.runId, runDocId: row._id, version: 1, memoryStatus: "pending", updatedAt: clock });
+  const before = JSON.stringify(row), writes = f.db.writes;
+  const first = await f.call<{ version: 1; marker: string }>(client.signal, { runId: run.runId });
+  progress.memoryStatus = "complete"; progress.version = 2;
+  const completed = await f.call<{ version: 1; marker: string }>(client.signal, { runId: run.runId });
+  expect(completed.marker).not.toBe(first.marker);
+  expect(Object.keys(completed).sort()).toEqual(["marker", "version"]);
+  expect(JSON.stringify(row)).toBe(before); expect(f.db.writes).toBe(writes);
+  f.grant.revokedAt = clock;
+  await expect(f.call(client.signal, { runId: run.runId })).rejects.toThrow("FORBIDDEN");
+});

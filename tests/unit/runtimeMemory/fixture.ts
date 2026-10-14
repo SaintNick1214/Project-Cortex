@@ -102,6 +102,10 @@ export function memoryFixture(options: { profile?: () => EmbeddingProfile; budge
         await registeredHandler<unknown, unknown>(memory.checkAuthority)(ctx, { reference: (args as { reference: unknown }).reference, capability: (args as { operationKey: string }).operationKey === "embedding.query" ? "read" : "write" });
         return options.profile?.() ?? DEFAULT_EMBEDDING_PROFILE;
       }
+      if(module==='runtimeMemoryQuery') {
+        const query=await import('../../../convex-dev/runtimeMemoryQuery');
+        return registeredHandler<unknown,unknown>((query as unknown as Record<string,unknown>)[key!]!)(ctx,args);
+      }
       const registration = (module === "runtimeAuth" ? auth : memory) as unknown as Record<string, unknown>;
       return await registeredHandler<unknown, unknown>(registration[key!]!)(ctx, args);
     },

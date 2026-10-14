@@ -1,0 +1,145 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:57784) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/remember-deadline.test.ts (5.753 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeMemory/capture.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.8s | 13/13 passed | /tests/unit/runtimeMemory/remember-deadline.test.ts
+  ✅     2.2s | 23/23 passed | /tests/unit/runtimeMemory/capture.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 0.4%) - ordinary canonical backend remember actual SDK captures two canonical messages and trace rows once, then appends a second exchange under its capture policy
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.2%) - ordinary canonical backend remember admin capture lock denies new exchange and exact replay; it never unlocks manual writes
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.2%) - ordinary canonical backend remember no missing identity, read-only writer, expired grant, duplicate grant, or foreign scope can capture
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.2%) - ordinary canonical backend remember actual ordinary MemoryAPI standard exchange routes to backend only, with empty derived arrays and a durable receipt
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.2%) - ordinary canonical backend remember fresh receipt and exact replay reject edit
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember read-only status reports actual asynchronous stage transitions and retains source/profile fences
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember cannot convert a managed Agent conversation or bypass its manual lock
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember scheduler failure after native completion rolls back both messages, metadata and capture; same request recovers once
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember ordinary generated intent is retained on a lost capture reply, with one-copy recovery using its explicit ID
+    /tests/unit/runtimeMemory/capture.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember fresh receipt and exact replay reject revocation
+    /tests/unit/runtimeMemory/capture.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember SDK projects only allowed reply fields and rejects an accessor tuple without reading it after a committed capture
+    /tests/unit/runtimeMemory/capture.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember changed request reuse and stale revision refuse without second message/source/job
+    /tests/unit/runtimeMemory/capture.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember fresh receipt and exact replay reject deletion
+    /tests/unit/runtimeMemory/capture.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember late grant revocation after profile read rolls back capture and async registration
+    /tests/unit/runtimeMemory/capture.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - ordinary remember bounded observation pre hanging RPC stops at the original 12s bound with honest disposition and no retry
+    /tests/unit/runtimeMemory/remember-deadline.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - ordinary canonical backend remember refuses caller option extractFacts before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - ordinary canonical backend remember refuses caller option extractContent before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - ordinary canonical backend remember refuses caller option observer before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - ordinary canonical backend remember refuses caller option skipLayers before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - ordinary canonical backend remember refuses caller option autoEmbed before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.22s (2.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.12s
+  Test suites:        2
+  Individual tests:   29
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        8.121 s
+Ran all test suites within paths "tests/unit/runtimeMemory/remember-deadline.test.ts", "tests/unit/runtimeMemory/capture.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ordinary-memory-deadline-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

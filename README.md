@@ -147,6 +147,24 @@ full response completion and asynchronous memory each have distinct timing bound
 
 ## Memory, tools and model governance
 
+Canonical history stores individual message rows with conversation, order, actor and
+revision metadata. The new `cortex.transcript.relevant` context handler selects a bounded
+request: by default four recent messages, four relevant memories and four relevant facts,
+with separate pending-context coverage. Counts remain subject to the published input,
+context and cost limits. Required current input and complete tool-call/result groups stay
+together; optional whole entries can be omitted without deleting canonical history.
+
+For an independently supplied exchange, the authenticated runtime client's
+`remember({ conversationId, requestId, userMessage, agentResponse, metadata? })` performs
+one backend-owned capture and returns two canonical message IDs, source identities and
+an asynchronous indexing receipt. `rememberStatus(receiptId)` checks its current status.
+Do not capture an answer already stored by a remote Cortex run. Ordinary
+`cortex.memory.remember(params)` uses this backend capture too; it returns `durable`
+status with initially empty `memories`/`facts` arrays, and refuses local inference
+callbacks. A supplied request ID preserves exact replay; separate default invocations
+create separate intents. Manual transcript locks and explicit capture-append locks are
+administrator controlled. These additions are local candidates awaiting hosted qualification.
+
 - Registered backend tools run through Convex Agent and Workflow/Workpool. Clients have
   no second tool loop or memory writer.
 - Memory uses canonical sources, chunks and vectors with matching embedding profile and

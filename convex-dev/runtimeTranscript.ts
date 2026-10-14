@@ -17,7 +17,7 @@ import type { RuntimeAuthorityReference, RuntimeCapability } from "../src/auth/v
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { boundedIdentifier, clientRequestKey, comparePosition, normalizeTextSubmit, publicTextParts, utf8Bytes } from "../src/domain/transcript";
-import type { CutoffV1, MessagePin, PublicTranscriptMessage } from "../src/domain/transcript";
+import type { CutoffV1, CutoffV8, ExecutionCutoff, MessagePin, PublicTranscriptMessage } from "../src/domain/transcript";
 import { dataAuthorityReference, managedConversationAccess, requireDataAuthority, recheckDataAuthority } from "./runtimeDataAuth";
 import type { ScopedDataAuthority } from "./runtimeDataAuth";
 import { readNativeTranscriptMessages, recheckAuthority } from "./runtimeAuth";
@@ -25,6 +25,9 @@ import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
 import { enqueueSourceEvent, retireSourceEvents, readScopeSequence } from "./runtimeIngestion";
+
+import { modelInputPolicy, MODEL_INPUT_RECENT_SCAN_LIMIT, textOnlyModelMessage } from "../src/domain/model-input-selection";
+import type { ModelInputSelectionPolicy } from "../src/domain/model-input-selection";
 
 // Official generated component projection; this does not expose component functions publicly.
 export const agentComponent = (components as unknown as { agent: AgentComponent }).agent;
@@ -349,7 +352,73 @@ export async function captureCutoff(ctx: ReadCtx, conversation: ManagedConversat
   if (utf8Bytes(canonicalModelJson(snapshot)) > 180_000) transcriptDenied("CONTEXT_INCOMPLETE");
   return snapshot;
 }
-export async function hydrateCutoff(ctx: ReadCtx, conversation: ManagedConversation, run: Doc<"runtimeRuns">, snapshot: CutoffV1) {
+/** Fresh V8 selection reads bounded metadata, then verifies official native content. */
+export async function captureSelectedCutoff(ctx: ReadCtx, conversation: ManagedConversation, run: Doc<"runtimeRuns">,
+  requiredStages: ("facts" | "vectors" | "graph")[], policyInput?: ModelInputSelectionPolicy): Promise<CutoffV8> {
+  const policy = modelInputPolicy(policyInput);
+  await checkConversation(ctx, run.authorityReference, conversation, "run");
+  if (run.conversationEpoch !== conversation.epoch || !run.inputMessageIds.length) transcriptDenied("STALE_TRANSCRIPT");
+  const input = await nativeById(ctx, run.inputMessageIds);
+  const inputPins: MessagePin[] = [];
+  for (let i = 0; i < input.length; i++) {
+    const bridge = await bridgeFor(ctx, conversation, run.inputMessageIds[i]);
+    if (!bridge || bridge.runId !== run.runId || bridge.role !== "user" || !bridge.approved) transcriptDenied("STALE_TRANSCRIPT");
+    const native = await verifyMessage(ctx, conversation, bridge, input[i]);
+    if (native.status !== "success") transcriptDenied("STALE_TRANSCRIPT");
+    inputPins.push({ nativeMessageId: native._id, order: native.order, stepOrder: native.stepOrder,
+      sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash,
+      canonicalContentHash: await canonicalMessageHash(native) });
+  }
+  inputPins.sort(comparePosition); const anchor = inputPins[inputPins.length - 1]!;
+  const pins: MessagePin[] = [...inputPins], ids = new Set(inputPins.map(pin => pin.nativeMessageId));
+  const positions = new Set(inputPins.map(pin => canonicalModelJson([pin.order, pin.stepOrder])));
+  if (positions.size !== pins.length) transcriptDenied("TRANSCRIPT_CONFLICT");
+  const candidates = await ctx.db.query("runtimeTranscriptMessages").withIndex("by_conversation_position", q => q.eq("tenantId", conversation.tenantId)
+    .eq("memorySpaceId", conversation.memorySpaceId).eq("conversationId", conversation.conversationId).lte("order", anchor.order))
+    .order("desc").take(MODEL_INPUT_RECENT_SCAN_LIMIT);
+  for (let offset = 0; offset < candidates.length && pins.length < policy.recentMessages; offset += 4) {
+    const batch = candidates.slice(offset, offset + 4).filter(bridge => !ids.has(bridge.nativeMessageId) && bridge.approved
+      && bridge.tombstonedAt === undefined && bridge.role !== "tool" && comparePosition(bridge, anchor) <= 0);
+    const natives = await nativeById(ctx, batch.map(bridge => bridge.nativeMessageId));
+    for (let i = 0; i < batch.length && pins.length < policy.recentMessages; i++) {
+      const bridge = batch[i]!;
+      if (bridge.runId && bridge.runId !== run.runId) {
+        const previous = singleTranscript(await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", conversation.tenantId)
+          .eq("memorySpaceId", conversation.memorySpaceId).eq("runId", bridge.runId!)).take(2));
+        if (!previous || previous.responseStatus !== "complete" || previous.queueSequence >= run.queueSequence || previous.tombstonedAt !== undefined) continue;
+      }
+      const native = await verifyMessage(ctx, conversation, bridge, natives[i]);
+      if (native.status !== "success" || !textOnlyModelMessage(privateModelMessage(native))) continue;
+      const position = canonicalModelJson([native.order, native.stepOrder]); if (positions.has(position)) transcriptDenied("TRANSCRIPT_CONFLICT");
+      positions.add(position); ids.add(native._id);
+      pins.push({ nativeMessageId: native._id, order: native.order, stepOrder: native.stepOrder, sourceEventId: bridge.sourceEventId,
+        sourceRevision: bridge.revision, contentHash: bridge.contentHash, canonicalContentHash: await canonicalMessageHash(native) });
+    }
+  }
+  const ingestion = await readScopeSequence(ctx, run.authorityReference);
+  const graph = await ctx.db.query("runtimeGraphScopes").withIndex("by_scope", q => q.eq("tenantId", conversation.tenantId).eq("memorySpaceId", conversation.memorySpaceId)).unique();
+  const snapshot: CutoffV8 = { version: 8, conversationId: conversation.conversationId, threadId: conversation.threadId,
+    conversationEpoch: conversation.epoch, historyRevision: executionRevision(conversation), queueSequence: run.queueSequence,
+    runDocId: run._id, attemptNumber: run.attemptNumber + 1, definitionVersion: run.agentVersion, definitionHash: run.definitionHash,
+    anchor, messages: pins.sort(comparePosition), ingestionCutoff: { scopeIdentity: canonicalModelJson([conversation.tenantId, conversation.memorySpaceId]),
+      sequence: ingestion.sequence, graphSequence: graph?.sequence ?? 0, requiredStages }, capturedAuthorityReference: run.authorityReference,
+    completeness: pins.length > policy.maxMessages ? "incomplete" : "complete",
+    inputSelection: { version: 1, policy, policyHash: await semanticHash(canonicalModelJson(policy)),
+      mandatoryMessageIds: [...run.inputMessageIds], coverage: "selected" } };
+  if (utf8Bytes(canonicalModelJson(snapshot)) > 180_000) transcriptDenied("CONTEXT_INCOMPLETE");
+  return snapshot;
+}
+/** Same original selected-row validators; V8 keeps explicit selected coverage and policy identity. */
+export async function hydrateSelectedCutoff(ctx: ReadCtx, conversation: ManagedConversation, run: Doc<"runtimeRuns">, snapshot: CutoffV8) {
+  if (snapshot.version !== 8 || !snapshot.inputSelection) transcriptDenied("STALE_TRANSCRIPT");
+  const policy = modelInputPolicy(snapshot.inputSelection.policy);
+  if (snapshot.version !== 8 || snapshot.inputSelection.version !== 1 || snapshot.inputSelection.coverage !== "selected"
+    || snapshot.inputSelection.policyHash !== await semanticHash(canonicalModelJson(policy)) || snapshot.messages.length > policy.maxMessages
+    || canonicalModelJson(snapshot.inputSelection.mandatoryMessageIds) !== canonicalModelJson(run.inputMessageIds)
+    || !snapshot.inputSelection.mandatoryMessageIds.every(id => snapshot.messages.some(pin => pin.nativeMessageId === id))) transcriptDenied("STALE_TRANSCRIPT");
+  return await hydratePrivateCutoff(ctx, conversation, run, snapshot);
+}
+export async function hydrateCutoff(ctx: ReadCtx, conversation: ManagedConversation, run: Doc<"runtimeRuns">, snapshot: ExecutionCutoff) {
   await checkConversation(ctx, run.authorityReference, conversation, "run");
   if (snapshot.completeness !== "complete" || snapshot.conversationId !== conversation.conversationId || snapshot.threadId !== conversation.threadId
     || snapshot.conversationEpoch !== conversation.epoch || snapshot.historyRevision !== executionRevision(conversation)
@@ -374,7 +443,7 @@ export async function hydrateCutoff(ctx: ReadCtx, conversation: ManagedConversat
   return result;
 }
 /** Same complete cutoff fence, with full private tool calls/results retained for model input. */
-export async function hydratePrivateCutoff(ctx: ReadCtx, conversation: ManagedConversation, run: Doc<"runtimeRuns">, snapshot: CutoffV1): Promise<ModelMessage[]> {
+export async function hydratePrivateCutoff(ctx: ReadCtx, conversation: ManagedConversation, run: Doc<"runtimeRuns">, snapshot: ExecutionCutoff): Promise<ModelMessage[]> {
   await hydrateCutoff(ctx, conversation, run, snapshot);
   const result: ModelMessage[] = []; const checkedAttempts = new Set<string>();
   for (let offset = 0; offset < snapshot.messages.length; offset += 100) {

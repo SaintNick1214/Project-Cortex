@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "V7 independent source/test/docs PASS4.0; local commit and fresh immutable packaging next; hosted unqualified",
+  "phase": "K20 all4ordinarySLOFAIL; publicrecallfunctionPASS/speedFAIL; supplementalpreflightboundFAIL; canonicalremembergapconfirmed; cleanupnext",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T08:37:59.125823+00:00",
+  "updatedAt": "2026-10-14T09:34:46.554674+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,13 +58,31 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "generation": "K19",
-    "sessionId": "03af6882-d97e-4c45-a965-fbbe951597b7",
+    "generation": "K20",
+    "sessionId": "eaef43cc-1e21-4c97-9885-1796e48d7d30",
     "state": "CLEANED",
-    "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
-    "imageId": "sha256:910746b1165ef87f6ef10da25a391b7b9889f9804a625c2af0f1af90c16038ac",
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "imageId": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d",
+    "target": {
+      "name": "trustworthy-cricket-487",
+      "id": 6161421,
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-eaef43cc-1e21-4c97-9885-1796e48d7d30",
+      "isDefault": false,
+      "expiresAt": 1792572558247
+    },
+    "ports": {
+      "web": 3322,
+      "basic": 3323
+    },
+    "launcherSession": 83597,
     "nativeSLOQualified": false,
-    "cleanupReceipt": "k19-cleanup-final.json"
+    "startupFixedQualification": "8/8 actualnativePASS",
+    "traceEnabledBeforeChat": true,
+    "cleanupReceipt": "k20-cleanup-final.json",
+    "launcherExit": 130,
+    "clientsClosed": true
   },
   "actualSamples": {
     "generation": "K11",
@@ -1124,6 +1142,194 @@
       "report": "public-recall-vs-legacy-call-chain.md",
       "measuredOnK20": false,
       "privateChangesApply": false
+    },
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "packaging": {
+      "state": "Running once on fresh kit after accepted committed source",
+      "kit": "manual-sandbox-latency-whole-path-2026-10-14",
+      "nativeQualified": false,
+      "percent": 100,
+      "metric": "threeisolatedbuilds;fourpacks;fouractualconsumerchecks;Dockerimage",
+      "complete": 4,
+      "total": 4,
+      "builds": 3,
+      "packs": 4,
+      "packedConsumerGroupsPassed": 4,
+      "imageState": "PASS actualLinuxarm64nonroot",
+      "backendFiles": 159,
+      "tables": 73,
+      "components": 2
+    },
+    "launcher": {
+      "percent": 100,
+      "tests": "108/108/0skip",
+      "dryRunExit": 0,
+      "receipt": "proofs-whole-path-integration-receipt.json"
     }
+  },
+  "k20ActualSamples": {
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "browserFirstMs": 4465.200000047684,
+    "browserWarmMs": 4332.799999952316,
+    "cliFirstMs": 9946.162628999999,
+    "cliWarmMs": 14619.113673999993,
+    "responses": "4/4COMPLETE",
+    "sloPasses": 0,
+    "sloFailures": 4,
+    "paidRetries": 0,
+    "nativeMemoryOriginalVerifier": "FAIL userDurableFact1/4; all8individualeventchecks/lineage/usage/vectorsPASS;43freshchecks/contiguous8/8; do notrelabelfullproofPASS",
+    "publicRecall": {
+      "functional": "PASS ONEactualcurrentprofile/owner/scope/coral/lineage9items",
+      "publicApiElapsedMs": 4791.468458,
+      "actionMs": 4447.695959,
+      "clientsClosed": true,
+      "speed": "FAIL",
+      "initialPreDispatchGuardFailurePreserved": true
+    },
+    "supplemental": {
+      "runId": "run:4ef51b39bfa493f8e0a81b9bbf2d3595578b5be5963f3a2103781e8d77e50de9",
+      "oneIntent": true,
+      "approved": false,
+      "toolEffect": "NOT_EXECUTED",
+      "finalResponse": "FAILED/EXECUTION_FAILED",
+      "exactBoundField": "inputTokens",
+      "conservativeComputed": 34938,
+      "configuredLimit": 32768,
+      "nativeProviderTokenCount": "UNAVAILABLE; noanswermodelcall",
+      "firstModelOrdinal": 0,
+      "automationWaitRequestedMs": 30000,
+      "automationWaitReturnedSeconds": 3.049,
+      "noRetry": true,
+      "browserSignedOutClosed": true
+    },
+    "auth": "OwnerPASS;expired+invalidsignatureAUTHENTICATION_TIMEOUT4002/4001msFAIL;zeroRPC/privatepayload;paid0",
+    "finance": {
+      "nativeAttempts": 33,
+      "activeSlots": 0,
+      "allSlotsReleased": true,
+      "reservationCeilingsUnits": 5200000,
+      "chargesUnknown": true,
+      "receipt": "k20-financial-metadata-1791970026630.json"
+    },
+    "cleanup": {
+      "freshVerificationExit": 0,
+      "status": "ABSENT",
+      "receipt": "k20-cleanup-final.json",
+      "browserTabsClosed": [
+        "34",
+        "35"
+      ],
+      "CLIExit": 0,
+      "launcherExit": 130
+    }
+  },
+  "boundedModelInputDecision": {
+    "authorized": true,
+    "artifact": "bounded-model-input-user-decision-2026-10-14.json",
+    "scope": "fewrelevantentries+recenthistory; fullper-messagecanonicalstore retained; samecaps",
+    "state": "implementation in progress; exact fit helper focused18/18PASS"
+  },
+  "canonicalRememberGap": {
+    "report": "memory-remember-canonical-compatibility-current.md",
+    "ordinaryRemember": "CAPABILITY_UNAVAILABLE",
+    "operatorRemember": "legacyarray",
+    "requiredRepair": "oneauthenticatedbackend-ownedcanonicalexchange/sourcecapture",
+    "status": "SOURCE_REPAIR_FROZEN; service qualification pending",
+    "historicalVerdictsPreserved": true
+  },
+  "v8CoherentBatch": {
+    "gatewayInputFit": {
+      "observedAt": "2026-10-14T09:54:16.171441+00:00",
+      "repository": "SaintNick1214/Project-Cortex",
+      "scope": "Exact input-fit seam; selection only, not model admission",
+      "implementationPercent": 100,
+      "focusedTestsPercent": 100,
+      "exit": 0,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "v8-gateway-input-fit-tests-v2.json",
+      "receiptSha256": "36ad18a5a8ca8238a99c41a3aeb54ec88358ab715cd68bfc3af54cf8a411a57b",
+      "source": {
+        "convex-dev/runtimeGateway.ts": "3d2aebf282b3775b354f4a3356e57affb908fb0a5bf74f61da0e012b5cb684c9",
+        "src/domain/model-policy.ts": "f06a0b20ce86831431af58ef5fb0e2d3bfb2fab0987af07b6c3c73c84dddf80f",
+        "tests/unit/runtime/agent-request-preflight.test.ts": "cb0e71d3ff688520745e2416f6dcb8febe3a00c738c5674f3c4edf3663ef76b5"
+      },
+      "preservedFailure": "v8-gateway-input-fit-tests.json (0 discovery, in-flight duplicate identifier)",
+      "nativeQualified": false,
+      "goalComplete": false
+    },
+    "rootAffectedChecks": {
+      "percent": 100,
+      "tests": "41/41/4suites/0skip",
+      "receipt": "v8-root-affected-tests-v1.json",
+      "nativeQualified": false
+    },
+    "rootPolicyRegression": {
+      "original": "479/480 FAIL; one exact additive schema inventory mismatch",
+      "originalReceipt": "v8-root-policy-regressions-v1.json",
+      "successor": "193/193 PASS in original failed suite after explicit4table/index inventory update",
+      "successorReceipt": "v8-root-policy-schema-v2.json",
+      "otherOriginalSuitesPassed": 4,
+      "historicalFailurePreserved": true
+    },
+    "docs": {
+      "percent": 100,
+      "typecheckExit": 0,
+      "buildExit": 0,
+      "renderedPages": 3,
+      "boundedWarningsErrors": 0,
+      "receipt": "docs-v8-coherent-receipt.json",
+      "repository": "SaintNick1214/cortexmemory.dev",
+      "published": false,
+      "independentReviewPending": true,
+      "state": "Source/types/build/render complete; operator clarification repaired preserving originalanchor; joint review pending"
+    },
+    "ordinaryMemory": {
+      "implementationPercent": 100,
+      "affectedChecksPercent": 100,
+      "tests": "1003/1003/22suites/0skip",
+      "freeze": "ordinary-memory-source-freeze.json",
+      "scopedLint": "exit0/0errors/25warnings",
+      "sharedQualityPending": true,
+      "independentReviewPending": true,
+      "nativeQualified": false,
+      "deadlineFollowup": "36/36 successor +2filelint0/0; finalfreeze-v3 verified; sharedgatePASS"
+    },
+    "boundedExecution": {
+      "implementationPercent": 100,
+      "focusedChecksPercent": 100,
+      "freeze": "v8-bounded-source-freeze.json",
+      "sourceHashesMatch": true,
+      "sourceFiles": 17,
+      "representationGate": "54/54/5suites",
+      "laterContinuation": "13/13",
+      "scopedLint": "0errors/0warnings",
+      "originalBodyComparisons": 31,
+      "sharedQualityPending": true,
+      "independentReviewPending": true,
+      "nativeQualified": false
+    },
+    "sharedQuality": {
+      "percent": 100,
+      "all6ChecksExit": 0,
+      "backendFiles": 168,
+      "tables": 77,
+      "components": 2,
+      "sourceUnchanged": true,
+      "receipt": "v8-coherent-joint-quality-final-receipt.json",
+      "originalTypeFailurePreserved": true
+    },
+    "reviewPacket": "v8-coherent-joint-review-packet.json",
+    "independentReview": {
+      "percent": 100,
+      "verdict": "PASS source/test/docsONLY",
+      "average": 3.8,
+      "breakingFindings": 0,
+      "report": "v8-coherent-joint-review.md",
+      "nativeQualified": false
+    },
+    "sourceAcceptancePercent": 100,
+    "goalComplete": false
   }
 }

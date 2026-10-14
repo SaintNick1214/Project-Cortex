@@ -1,0 +1,12 @@
+{
+  "observedAt": "2026-10-14T09:17:03.852743+00:00",
+  "originalPublicProbeVerdict": "FAIL",
+  "publicRecallAttempts": 0,
+  "failedGuardFile": "k20-auth-close-diagnostic-readonly.mjs:173",
+  "code": "ENOENT",
+  "cause": "New image helper recorded actual identity receipt but did not write kit image-id.txt marker required by existing read-only guard.",
+  "correction": "Write fresh marker from independently verified actual imageId/source/kit/user; no archives or product rebuilt, no guards removed.",
+  "imageId": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d",
+  "actualDockerInspect": true,
+  "inferenceRetries": 0
+}

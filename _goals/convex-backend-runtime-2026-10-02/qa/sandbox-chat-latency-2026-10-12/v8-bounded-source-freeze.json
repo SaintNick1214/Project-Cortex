@@ -1,0 +1,201 @@
+{
+  "kind": "bounded-v8-source-freeze",
+  "repository": "SaintNick1214/Project-Cortex",
+  "checkout": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baselineHead": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+  "sourceFrozen": true,
+  "sourceAcceptance": "pending independent joint review",
+  "hostedLatencyAcceptance": false,
+  "goalFollowupPercent": 50,
+  "boundedImplementationPercent": 100,
+  "product": [
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "sha256": "869591409f390bcf54acd59252e387562657c371405115a46a0d72af51437987"
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "sha256": "485354c2d7e7d1ed82f7c40b779e4ac3a592814204b257b094a92dae2d72de10"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "d8d44bb30d83963e24f2f05f7b28e8bc19edff9a001e7db93c7d826a39a42b3c"
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "a31a30440472f8bef17e5573f24733274db0c83a4e33d972af61b4ab1b6adb29"
+    },
+    {
+      "path": "convex-dev/runtimeAgentSchema.ts",
+      "sha256": "fc850ca47eb69f1be717e6e864ce0e7f3d49ff7eb97bacde69b09a5ef5b034ea"
+    },
+    {
+      "path": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "sha256": "1ba81ea77d751b365f7803cd45346bbceeef4499070bba85573ffb37db2c7bb6"
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "sha256": "f5f8aeea206f5bc5e4885eaacacecdb8710c042b1d30a08d0e456e17a145d7ad"
+    },
+    {
+      "path": "convex-dev/runtimeIngestionSchema.ts",
+      "sha256": "d49c41df348dc670f519d06766656773c1c659ac6a8058b167710db4688cb711"
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "sha256": "f2769ba7e48b235d844ded7810e82c7ccd39ae93a4022b901db2938c5373f5c2"
+    },
+    {
+      "path": "convex-dev/runtimeTranscriptSchema.ts",
+      "sha256": "7b6244003eede068e0b5bb8c11ce4884b467a2124cbd243d0061b9bff0b1d105"
+    },
+    {
+      "path": "src/domain/model-input-selection.ts",
+      "sha256": "13a5ba2126b54e7cd764237f11ecddad94667d9ca42ef640cd210e0ef2fde9df"
+    },
+    {
+      "path": "src/domain/transcript.ts",
+      "sha256": "01ce546f2d54fca8f227176b4006df86683c0a8d01e44df463748a9c60d8b849"
+    }
+  ],
+  "tests": [
+    {
+      "path": "tests/unit/runtimeAgent/model-input-selection.test.ts",
+      "sha256": "5cdde0cf84088d8495efa766b65cfef3df808c6e5f1a1a01de3b7511a6a368eb"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/bounded-context-v8.test.ts",
+      "sha256": "4944b42f06e64cda2fb6fc5e88f08509a20d94cafa9c42891856846ee0e163bf"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts",
+      "sha256": "85c5392f932f57c5fe87343d4bae1dca79524036a962a5eddbe4d0350c794a23"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/direct-action.test.ts",
+      "sha256": "e62d10ae8a01797bce5d62291ce3813c584881e8a22b4eb99cc58dea6b3ceaed"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts",
+      "sha256": "91bc29a58a7d9836c3dcf791b2580bb81391a2719453d1167ed4cf23e67ac634"
+    }
+  ],
+  "testReceipts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-bounded-focused-v1.json",
+      "sha256": "ea36579895115dbac8f8ffbeff90baf53983d99f98524121b57a341b82a7c4a6",
+      "passed": 15,
+      "failed": 3,
+      "skipped": 0,
+      "suites": 2,
+      "success": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-bounded-focused-v2.json",
+      "sha256": "12ca79ee122258b64ef04bc7897b209a65cc086ef5f1089356f1cbfeaf043f06",
+      "passed": 17,
+      "failed": 1,
+      "skipped": 0,
+      "suites": 2,
+      "success": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-bounded-focused-v3.json",
+      "sha256": "7c603e9d4e34e445cba53609213e1f913515cfe2a748e6c6e7cb4e8fe0050315",
+      "passed": 23,
+      "failed": 1,
+      "skipped": 0,
+      "suites": 4,
+      "success": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-bounded-affected-v1.json",
+      "sha256": "9ce2e1e8d63335c71e8e5319e293f7fa7cf7c8907516d727c51117d36faa9888",
+      "passed": 127,
+      "failed": 20,
+      "skipped": 0,
+      "suites": 10,
+      "success": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-bounded-repair-v1.json",
+      "sha256": "dc0cafbdf3b6ea85c3876e9fcc6d8aefbfddcdcc50f2a8bb46a031076f746541",
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 3,
+      "success": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-bounded-direct-v1.json",
+      "sha256": "6378e0a3ca4aa8fe3bb928ac0a858350ca6ceff320c7bf84f9e6300226e298ef",
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 1,
+      "success": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-refusal-seam-v1.json",
+      "sha256": "a67e37d5eb939ce7ac6bedfae9b5e07500e0cd0b9d454c4b67b21721d5936692",
+      "passed": 46,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 2,
+      "success": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-represented-focused-v1.json",
+      "sha256": "6d29ca4806b126777d96e76c381aa00f95edf618e511b762cb9f9d06aaf429b8",
+      "passed": 54,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 5,
+      "success": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-continuation-selection-v1.json",
+      "sha256": "5efaebc1cad3f902eb88991008a186443c82f36f1702f52f60cafac014f5f9ba",
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 2,
+      "success": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-continuation-selection-v2.json",
+      "sha256": "98dc41d26e14ee01cf90e39fe4b4f76132ef037af8f98ca40b1a9f7b28669c9d",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 1,
+      "success": true
+    }
+  ],
+  "checks": [
+    {
+      "path": "v8-represented-backend-types-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0
+    },
+    {
+      "path": "v8-bounded-final-scoped-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0
+    },
+    {
+      "path": "v8-bounded-equivalence.json",
+      "sha256": "251cae41276f191bd2c701d9f872674d42cf1423df0c043afbfa068ef5e2b964",
+      "exit": 0
+    },
+    {
+      "path": "v8-refusal-extraction-equivalence.json",
+      "sha256": "011674145401b4a07f626a6643f6390ddfb53ab3d1997a25103b4455768317ad",
+      "exit": 0
+    }
+  ],
+  "reportSha256": "d1a124875f43fc71dfb3f3ca8e287f8af9150b4a1b598c462073026a7554af83",
+  "noServiceCalls": true,
+  "noBuildOrImage": true,
+  "noGitWrites": true
+}

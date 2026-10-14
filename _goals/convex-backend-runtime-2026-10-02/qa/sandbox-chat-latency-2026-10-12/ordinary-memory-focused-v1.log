@@ -1,0 +1,341 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:51587) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/capture.test.ts (9.244 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"facts","acceptedEntryScope":true,"unscopedAuthReads":50,"scopedAuthReads":20,"nonAuthReadWriteOrderEntries":4}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:98:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"vectors","acceptedEntryScope":true,"unscopedAuthReads":52,"scopedAuthReads":22,"nonAuthReadWriteOrderEntries":22}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:98:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"delivery","acceptedEntryScope":true,"unscopedAuthReads":223,"scopedAuthReads":37,"nonAuthReadWriteOrderEntries":34}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:98:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"profile","acceptedEntryScope":true,"unscopedAuthReads":28,"scopedAuthReads":18,"nonAuthReadWriteOrderEntries":9}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:98:11
+
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/runtimeMemory/public-functional.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● functional public memory wiring with an offline model › preflights exact trusted request before writing, then remembers and recalls real scoped data
+
+    ConvexError: {"version":1,"code":"INTERNAL_FAILURE","message":"Memory control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      47 |
+      48 | export function memoryError(code: string, message: string): never {
+    > 49 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      50 | }
+      51 | /** Only a native resource denial is eligible for read-list exclusion. */
+      52 | export function isMemoryResourceDenied(error: unknown): boolean {
+
+      at memoryError (convex-dev/runtimeMemoryRepository.ts:49:9)
+      at foregroundControlFailure (convex-dev/runtimeMemory.ts:159:10)
+      at handler (convex-dev/runtimeMemory.ts:225:23)
+      at recall (tests/unit/runtimeMemory/public-functional.test.ts:59:10)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:92:19)
+
+  ● functional public memory wiring with an offline model › rejects changed recall input before persistence or a second model invocation
+
+    ConvexError: {"version":1,"code":"INTERNAL_FAILURE","message":"Memory control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      47 |
+      48 | export function memoryError(code: string, message: string): never {
+    > 49 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      50 | }
+      51 | /** Only a native resource denial is eligible for read-list exclusion. */
+      52 | export function isMemoryResourceDenied(error: unknown): boolean {
+
+      at memoryError (convex-dev/runtimeMemoryRepository.ts:49:9)
+      at foregroundControlFailure (convex-dev/runtimeMemory.ts:159:10)
+      at handler (convex-dev/runtimeMemory.ts:225:23)
+      at recall (tests/unit/runtimeMemory/public-functional.test.ts:59:10)
+      at tests/unit/runtimeMemory/public-functional.test.ts:113:5
+
+  ● functional public memory wiring with an offline model › binds recall limit in the exact request before model dispatch
+
+    ConvexError: {"version":1,"code":"INTERNAL_FAILURE","message":"Memory control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      47 |
+      48 | export function memoryError(code: string, message: string): never {
+    > 49 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      50 | }
+      51 | /** Only a native resource denial is eligible for read-list exclusion. */
+      52 | export function isMemoryResourceDenied(error: unknown): boolean {
+
+      at memoryError (convex-dev/runtimeMemoryRepository.ts:49:9)
+      at foregroundControlFailure (convex-dev/runtimeMemory.ts:159:10)
+      at handler (convex-dev/runtimeMemory.ts:225:23)
+      at recall (tests/unit/runtimeMemory/public-functional.test.ts:59:10)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:121:24)
+
+  ● functional public memory wiring with an offline model › post-query-model failure does not return a partial recall or leak provider diagnostics
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "INTERNAL_FAILURE",
+    +   "message": "Memory control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      187 |     const f = setup(); await remember(f); const snapshot = structuredClone(f.db.rows); const writes = f.db.writes;
+      188 |     f.model.embed = async (request) => { f.operations.push(request); throw new Error("PRIVATE_QUERY_SENTINEL"); };
+    > 189 |     expect(await rejection(async () => await recall(f))).toEqual(failed);
+          |                                                          ^
+      190 |     expect(f.operations.at(-1)!.purpose).toBe("embedding.query"); expect(f.searches).toEqual([]);
+      191 |     expect(f.db.writes).toBe(writes); expect(f.db.rows).toEqual(snapshot);
+      192 |   });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:189:58)
+
+  ● functional public memory wiring with an offline model › reports trusted cold-profile readiness before model construction, search, or persistent effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "code": "PROFILE_NOT_READY",
+    -   "message": "Current sources have no compatible vector generation for the selected profile",
+    +   "code": "INTERNAL_FAILURE",
+    +   "message": "Memory control failed.",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      202 |     f.db.table("runtimeAuthTombstones"); // The controlled DB materializes empty tables on read.
+      203 |     const before = structuredClone(f.db.rows); const writes = f.db.writes;
+    > 204 |     expect(await rejection(async () => await recall(f))).toEqual({ version: 1, code: "PROFILE_NOT_READY",
+          |                                                          ^
+      205 |       message: "Current sources have no compatible vector generation for the selected profile", retryable: false, outcome: "not_dispatched" });
+      206 |     expect(f.operations).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
+      207 |     expect(f.db.rows).toEqual(before); expect(f.db.writes).toBe(writes);
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:204:58)
+
+  ● functional public memory wiring with an offline model › a readiness-shaped failure after model invocation remains opaque and uncertain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "INTERNAL_FAILURE",
+    +   "message": "Memory control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      211 |     f.model.embed = async request => { f.operations.push(request); throw new ConvexError({ version: 1, code: "PROFILE_NOT_READY",
+      212 |       message: "Current sources have no compatible vector generation for the selected profile", retryable: false, outcome: "not_dispatched" }); };
+    > 213 |     expect(await rejection(async () => await recall(f))).toEqual(failed);
+          |                                                          ^
+      214 |     expect(f.operations).toHaveLength(1); expect(f.searches).toEqual([]);
+      215 |   });
+      216 | });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:213:58)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     9.2s | 18/18 passed | /tests/unit/runtimeMemory/capture.test.ts
+  ✅     2.1s | 33/33 passed | /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ✅     1.1s | 176/176 passed | /tests/unit/runtimeMemory/public-boundary.test.ts
+  ❌     0.9s | 21/27 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 0.4%) - registered facts preserves exact result/order with its explicitly accepted scope activation
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.4%) - standalone checkpoint preserves no-paid-retry transition and all non-auth operations
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.3%) - standalone admission retains writes, reservation, replay identity and write-epoch authority rechecks
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.3%) - registered delivery preserves exact result/order with its explicitly accepted scope activation
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.3%) - registered vectors preserves exact result/order with its explicitly accepted scope activation
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.3%) - ordinary canonical backend remember actual SDK captures two canonical messages and trace rows once, then appends a second exchange under its capture policy
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.3%) - current delivery vector_payload fails with identical scoped/unscoped error and no writes
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.2%) - a fresh standalone checkpoint invocation cannot reuse a previous authorized grant
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.2%) - deferred finalDelivery retains its original uncached final revocation guard after the actual last vector/chunk hash
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+10. [32m✓[0m    0.03s ( 0.2%) - standalone policy embeddingProfile retains its original current profile/account/source predicates
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+11. [32m✓[0m    0.03s ( 0.2%) - standalone policy resolve retains its original current profile/account/source predicates
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+12. [32m✓[0m    0.03s ( 0.2%) - registered profile preserves exact result/order with its explicitly accepted scope activation
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+13. [32m✓[0m    0.03s ( 0.2%) - a fresh standalone embeddingProfile invocation cannot reuse a previous authorized grant
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+14. [32m✓[0m    0.03s ( 0.2%) - combined admission passes the scoped writer through original helpers and preserves exact non-auth effect ordering
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+15. [32m✓[0m    0.03s ( 0.2%) - current delivery source_hash fails with identical scoped/unscoped error and no writes
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+16. [32m✓[0m    0.03s ( 0.2%) - current delivery fact_tombstone fails with identical scoped/unscoped error and no writes
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+17. [32m✓[0m    0.03s ( 0.2%) - current delivery wrong_owner fails with identical scoped/unscoped error and no writes
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+18. [32m✓[0m    0.03s ( 0.2%) - a fresh standalone resolve invocation cannot reuse a previous authorized grant
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+19. [32m✓[0m    0.03s ( 0.2%) - new vectors invocation freshly denies grant revocation rather than using a prior scope
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+20. [32m✓[0m    0.03s ( 0.2%) - new delivery invocation freshly denies grant revocation rather than using a prior scope
+    /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.70s (5.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      13.43s
+  Test suites:        4
+  Individual tests:   132
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       6 failed, 248 passed, 254 total
+Snapshots:   0 total
+Time:        13.428 s, estimated 16 s
+Ran all test suites within paths "tests/unit/runtimeMemory/capture.test.ts", "tests/unit/runtimeMemory/authority-scope-entries.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts", "tests/unit/runtimeMemory/public-functional.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ordinary-memory-focused-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

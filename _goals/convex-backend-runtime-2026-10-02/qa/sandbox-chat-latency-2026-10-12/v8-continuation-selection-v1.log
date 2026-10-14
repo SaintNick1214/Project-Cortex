@@ -1,0 +1,129 @@
+(node:57328) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/bounded-context-v8.test.ts (5.295 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/model-input-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.3s | 12/12 passed | /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ✅     0.1s | 9/9 passed | /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.72s (12.9%) - long retained history selects recent four without full-history reads or byte-cap rejection
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 2. [32m✓[0m    0.08s ( 1.4%) - exact-bound omitted recent source remains eligible before recall, with no second embedding
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.8%) - new definition actually selects V8 direct scheduling; old definitions stay on V6
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.8%) - later exact-bound continuation drops optional old history while retaining the current complete tool group
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.8%) - known five pending sources retain four current whole sources and explicit withheld incompleteness
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.8%) - real exact-bound candidate drops optional whole entries and retains current input
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.6%) - mandatory overflow refuses before begin/start and save survives refused child rollback
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.5%) - strict V8 retains native Workflow and original stage barrier
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.5%) - revocation still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+10. [32m✓[0m    0.02s ( 0.4%) - payload still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+11. [32m✓[0m    0.02s ( 0.4%) - snapshot-policy still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+12. [32m✓[0m    0.02s ( 0.3%) - mandatory-pin still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection defaults and immutable policy preserve few entries
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection combined message/evidence entry cap includes instructions
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection pending and explicit incompleteness notice are never optional
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection no non-input validation refusal becomes selection
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection ranks facts by matched source score or query overlap instead of static fact score
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.13s (20.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.57s
+  Test suites:        2
+  Individual tests:   17
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       21 passed, 21 total
+Snapshots:   0 total
+Time:        5.567 s
+Ran all test suites within paths "tests/unit/runtimeAgent/bounded-context-v8.test.ts", "tests/unit/runtimeAgent/model-input-selection.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-continuation-selection-v1.json

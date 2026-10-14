@@ -3,6 +3,7 @@ import { artifactContextWitness } from "./runtimeArtifactContextSchema";
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
 import { contextSourceWitness } from "./runtimeContextWitnessSchema";
+import {runtimeAuthorityReference} from './runtimeAuthSchema';
 
 export const sourceReference = { sourceId: v.string(), sourceEventId: v.string(), sourceRevision: v.number() };
 export const sourceLineage = v.union(
@@ -67,6 +68,21 @@ export const memoryDeliveryBindings = v.object({
 });
 
 export const runtimeMemoryTables = {
+  /** Backend-owned ingress; never converts a pre-existing Agent conversation. */
+  runtimeMemoryCaptureConversations: defineTable({tenantId:v.string(),memorySpaceId:v.string(),ownerPrincipalId:v.string(),
+    conversationId:v.string(),conversationEpoch:v.number(),ingressKind:v.literal('remember-exchange-v1'),captureAppendLocked:v.boolean()})
+    .index('by_conversation',['tenantId','memorySpaceId','conversationId']),
+  runtimeMemoryCaptures: defineTable({tenantId:v.string(),memorySpaceId:v.string(),ownerPrincipalId:v.string(),receiptId:v.string(),
+    requestId:v.string(),requestCanonical:v.string(),conversationId:v.string(),conversationEpoch:v.number(),historyRevision:v.number(),
+    messageIds:v.array(v.string()),sourceEventIds:v.array(v.string()),profile:embeddingProfile,authorityReference:runtimeAuthorityReference,createdAt:v.number()})
+    .index('by_request',['tenantId','memorySpaceId','ownerPrincipalId','requestId'])
+    .index('by_receipt',['tenantId','memorySpaceId','receiptId']),
+  /** One trace row per canonical Agent message; content remains on Agent. */
+  runtimeMemoryCaptureMessages: defineTable({tenantId:v.string(),memorySpaceId:v.string(),ownerPrincipalId:v.string(),receiptId:v.string(),
+    conversationId:v.string(),nativeMessageId:v.string(),sourceEventId:v.string(),sourceRevision:v.number(),contentHash:v.string(),
+    role:v.union(v.literal('user'),v.literal('assistant')),attribution:v.literal('external_capture'),metadataCanonical:v.string(),createdAt:v.number()})
+    .index('by_receipt',['tenantId','memorySpaceId','receiptId'])
+    .index('by_message',['tenantId','memorySpaceId','nativeMessageId']),
   runtimeMemorySources: defineTable(sourceContent.fields)
     .index("by_scope_source", ["tenantId", "memorySpaceId", "lineage.sourceId"])
     .index("by_scope_event", ["tenantId", "memorySpaceId", "lineage.sourceEventId"]),

@@ -95,7 +95,24 @@ async function readiness(ctx: MutationCtx, event: Event) {
   }
   // Response finality is independent. A current source edit deliberately resets indexing readiness.
   const memoryStatus = failed ? "failed" : pending ? "pending" : "complete";
-  if (run.memoryStatus !== memoryStatus) await ctx.db.patch("runtimeRuns", run._id, { memoryStatus, updatedAt: Date.now() });
+  if (run.modelInputVersion === 8) {
+    const progress = await ctx.db.query("runtimeRunMemoryProgress").withIndex("by_run", q => q.eq("tenantId", run.tenantId)
+      .eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId)).unique();
+    if (progress && progress.runDocId !== run._id) ingestionDenied("INGESTION_CONFLICT");
+    if (!progress) await ctx.db.insert("runtimeRunMemoryProgress", { tenantId: run.tenantId, memorySpaceId: run.memorySpaceId,
+      runId: run.runId, runDocId: run._id, memoryStatus, version: 1, updatedAt: Date.now() });
+    else if (progress.memoryStatus !== memoryStatus) await ctx.db.patch("runtimeRunMemoryProgress", progress._id,
+      { memoryStatus, version: progress.version + 1, updatedAt: Date.now() });
+  } else if (run.memoryStatus !== memoryStatus) await ctx.db.patch("runtimeRuns", run._id, { memoryStatus, updatedAt: Date.now() });
+}
+/** Public projection only, after its caller's current run/authority checks. Never used by execution guards. */
+export async function readRunMemoryPublication(ctx: ReadCtx, run: Doc<"runtimeRuns">) {
+  if (run.modelInputVersion !== 8) return { memoryStatus: run.memoryStatus, updatedAt: run.updatedAt, version: 0 };
+  const progress = await ctx.db.query("runtimeRunMemoryProgress").withIndex("by_run", q => q.eq("tenantId", run.tenantId)
+    .eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId)).unique();
+  if (!progress) return { memoryStatus: run.memoryStatus, updatedAt: run.updatedAt, version: 0 };
+  if (progress.runDocId !== run._id || !Number.isSafeInteger(progress.version) || progress.version < 1) ingestionDenied("INGESTION_CONFLICT");
+  return { memoryStatus: progress.memoryStatus, updatedAt: Math.max(run.updatedAt, progress.updatedAt), version: progress.version };
 }
 export interface IngestionOrigin { conversationId?: string; conversationSequence?: number; conversationEpoch?: number; nativeMessageId?: string;
   runId?: string; toolOperationId?: string; eligibility?: IngestionEligibility }

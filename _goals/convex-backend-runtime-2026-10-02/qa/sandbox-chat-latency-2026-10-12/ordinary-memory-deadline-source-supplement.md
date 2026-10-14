@@ -1,0 +1,14 @@
+# Ordinary remember RPC deadline correction
+
+The coordinator found a concrete post-freeze normal-use hang: the three plain `ConvexClient.mutation` awaits in `managedRemember` had no finite observation deadline. This successor changes only that adapter and adds one bounded test suite. Prior [source report](ordinary-memory-source-report.md), [freeze](ordinary-memory-source-freeze.json), raw failures and the 1,003-test gate remain intact as intermediate evidence.
+
+Each pre-session, capture and post-session RPC now uses the modern client's original default **12,000ms per-RPC observation bound**. Both outcomes remain attached to the original issued promise. Timeout clears the adapter's timer and stops its local continuation; it does not cancel a backend capture, close a borrowed client, roll anything back, repeat an RPC or fabricate a successful result. A pre-session failure is `not_dispatched`; any failure after issuing capture, including post-session and reply validation, is `uncertain`. All such errors retain the explicit or generated request ID. Even an undefined rejection is observed as a failure, rather than being mistaken for a resolved undefined value.
+
+The actual ordinary API adapter was tested under fake timers for hanging pre/capture/post ports, the exact 11,999/12,000ms boundary, late success, late rejection, immediate opaque/undefined rejection, generated identity retention, no resumed follow-up RPC, one capture at most and zero remaining owned timers. The original issued rejection observer is asserted. The original canonical capture suite was rerun unchanged to retain storage/idempotency/current-authority/output/source outcomes. The successor passes **36/36 tests across two suites, zero skips/todo**, exit0; the new deadline suite contains13 cases and the existing capture suite23. Two-file scoped ESLint exits0 with zero errors/warnings. No unaffected 1,003-test broad rerun, build, package, service or inference was performed.
+
+The final [freeze-v2](ordinary-memory-source-freeze-v2.json) lists 13 production and six test/fixture files; only `managedRemember.ts` changed from the prior production freeze. The eleven source comparisons use unchanged inputs; [equivalence-v2](ordinary-memory-equivalence-v2.json) rehashes the exact final packet without reinterpreting the old receipt. Shared final types/build/contracts remain the coordinator's one combined-source gate. Native qualification and latency acceptance remain pending.
+
+- Adapter SHA256: `cc0b65bdd4e864c23188255f26c6475e4eae9d9a84a4e011476fe704fc773e40`.
+- New test SHA256: `8ea320f36d000f54935a726cbae05c0579ee5993fc07a91e3a0114f5c98282ae`.
+- Freeze-v2 SHA256: `c062618a9e7732a43dd87679191c1f684a5d24d7f5da195c01fd6cd4048e5e58`.
+- Raw successor: [log](ordinary-memory-deadline-v1.log), [JSON](ordinary-memory-deadline-v1.json), [lint](ordinary-memory-deadline-lint-v1.log).

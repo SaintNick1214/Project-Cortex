@@ -24,6 +24,13 @@ export interface CutoffV1 {
   capturedAuthorityReference: import("../auth/verified.js").RuntimeAuthorityReference;
   completeness: "complete" | "incomplete";
 }
+/** Selected model-input coverage. The authoritative transcript is still complete and paginated. */
+export interface CutoffV8 extends Omit<CutoffV1, "version"> {
+  version: 8;
+  inputSelection: { version: 1; policy: import("./model-input-selection.js").ModelInputSelectionPolicy;
+    policyHash: string; mandatoryMessageIds: string[]; coverage: "selected" };
+}
+export type ExecutionCutoff = CutoffV1 | CutoffV8;
 export interface PublicTranscriptMessage extends TranscriptPosition {
   id: string; role: "user" | "assistant" | "tool"; parts: ({ type: "text"; text: string } | { type: "media-job"; version: 1; jobId: string; artifactId: string; kind: "image" | "video" })[];
   status: "pending" | "success" | "failed"; revision: number; assets?: import("./assets.js").RuntimeAssetVersion[];

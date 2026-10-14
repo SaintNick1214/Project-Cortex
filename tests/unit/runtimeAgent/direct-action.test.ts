@@ -47,20 +47,21 @@ jest.unstable_mockModule("@convex-dev/agent", () => ({ ...agentModule, Agent: cl
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(input: { handler: unknown }) { return { _handler: input.handler }; } async start(_ctx: unknown, ref: unknown, args: unknown, options: unknown) { if (workflowFailure) throw Error("CONTROLLED_HANDOFF_FAILURE"); workflows.push({ name: getFunctionName(ref as never), args, options }); return "workflow:direct-tools"; }
 } }));
-const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
-const { clone, ledger, clock } = await import("../runtimeTranscript/fixture");
-const { qualifiedTerminalModelId } = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
 const gatewayModule = await import("../../../convex-dev/runtimeGateway");
 jest.unstable_mockModule("../../../convex-dev/runtimeGateway", () => ({ ...gatewayModule, createGovernedGatewayModel: async (next: GatewayComposition, nextBinding: GatewayBinding) => {
   composition = next; binding = nextBinding; resolution = await next.ledger.resolve(nextBinding);
   return { model: { specificationVersion: "v4", provider: "controlled", modelId: "controlled/model", doStream: async () => {}, doGenerate: async () => {} },
     lifecycle: { complete: async () => { completionCalls++; }, signal: new AbortController().signal } };
 } }));
+const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
+const { clone, ledger, clock } = await import("../runtimeTranscript/fixture");
+const { qualifiedTerminalModelId } = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
+
 const runtime = await import("../../../convex-dev/runtimeAgent"), runs = await import("../../../convex-dev/runs"), memory = await import("../../../convex-dev/runtimeMemory");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 const queryEmbedding = await import("../../../convex-dev/runtimeAgentQueryEmbedding");
 beforeEach(() => { installIngestionMockRoot(); providerCalls = completionCalls = 0; mode = "final"; beforeDispatch = undefined; assembledPrompts.length = 0; workflows.length = 0; workflowFailure = false; }); afterEach(() => { jest.restoreAllMocks(); });
-async function fixture(tool = false) {
+async function fixture(tool = false, bounded = false) {
   const f = await ingestionFixture(), query = f.ctx.runQuery.bind(f.ctx), mutation = f.ctx.runMutation.bind(f.ctx), calls: string[] = []; let titleAfterCanonical = false;
   f.ctx.runQuery = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return query(ref, input); } calls.push(name);
     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name.startsWith("runtimeMemory:") ? memory[name.split(":")[1] as keyof typeof memory] : name === "runtimeModelPolicy:resolve" ? ledger.resolve : undefined;
@@ -72,6 +73,9 @@ async function fixture(tool = false) {
     if (reg) { assertNativeArgs(reg, input); return f.call(reg, input); } return mutation(ref, input);
   }) as MutationCtx["runMutation"];
   async function start(streaming = true) { let request = f.request();
+    if (bounded && !tool) { const published = await f.call<{ agentId:string;version:number }>(definitions.publishVersion,{memorySpaceId:"space-a",clientMutationId:"bounded-direct",expectedPreviousVersion:0,
+      definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:await definitions.executableRegistryHashV3()}}});
+      request={...request,agentId:published.agentId,agentVersion:published.version}; }
     if (tool) { f.grant.capabilities = [...f.grant.capabilities as string[], "tool"]; const published = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, { memorySpaceId: "space-a", clientMutationId: "turn-tools", expectedPreviousVersion: 0,
       definitionInput: { ...f.definitionInput, tools: [{ toolId: "memory.recall", toolVersion: 1, registryHash: await definitions.executableRegistryHash(), requiredCapability: "tool", approval: "explicit" }], policies: [{ policyId: "turn-tools", version: 1, rules: { limits: { toolSteps: 4 } } }] } }); request = { ...request, agentId: published.agentId, agentVersion: published.version }; }
     const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request }); await f.call(runtime.start, { runId: run.runId, streaming }); const owned = f.db.table("runtimeAgentExecutions")[0];
@@ -203,4 +207,17 @@ it("V6 populated indexed fallback invokes the actual private preparation parent 
   await expect(direct(f, args)).rejects.toThrow("CONTROLLED_AFTER_ACTUAL_QUERY_PREFLIGHT"); expect(reached).toBe(1);
   expect(nativeInput).toEqual({ ...args, input: { text: "Hello \nworld!", requestId: `context:${await (await import("../../../src/domain/profile")).semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 } });
   expect(providerCalls).toBe(0); expect(f.db.table("runtimeModelAttempts")).toEqual([]); expect(f.db.table("runtimeAgentIngestion")).toEqual([]);
+});
+
+it("fresh V8 executes the governed original terminal/finalization path once and duplicate cannot dispatch",async()=>{
+ const f=await fixture(false,true),args=await f.start();expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({executionMode:"direct-v8",directState:"scheduled"});
+ await invoke(runtime.executeDirectV8,f.ctx,args);expect(providerCalls).toBe(1);expect(completionCalls).toBe(1);
+ expect(f.db.table("runtimeRuns")[0].responseStatus).toBe("complete");expect(f.db.table("runtimeAgentIngestion")).toHaveLength(1);expect(f.titleAfterCanonical).toBe(true);
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);expect(f.calls).toContain("runtimeAgent:prepareDirectTurnV8");
+ const before=state(f);await invoke(runtime.executeDirectV8,f.ctx,args);expect(state(f)).toEqual(before);expect(providerCalls).toBe(1);
+});
+it("fresh V8 selection cannot authorize a grant revoked before its original dispatch admission",async()=>{
+ const f=await fixture(false,true),args=await f.start();beforeDispatch=()=>{f.grant.revokedAt=clock;};
+ await expect(invoke(runtime.executeDirectV8,f.ctx,args)).rejects.toBeInstanceOf(ConvexError);expect(providerCalls).toBe(0);
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);expect(f.db.table("runtimeAgentIngestion")).toHaveLength(0);
 });

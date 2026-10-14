@@ -94,9 +94,8 @@ it.each(["facts", "vectors", "delivery", "profile"])("registered %s preserves ex
   const registration = kind === "facts" ? memory.readFacts : kind === "vectors" ? memory.readVectorMatches : kind === "delivery" ? memory.finalDelivery : memory.checkProfileReady;
   const args = kind === "facts" ? { ...common, query: { limit: 10 } } : kind === "vectors" ? { ...common, profile, hits: f.hits }
     : kind === "delivery" ? { reference: f.reference, bindings: f.bindings } : { ...common, profile };
-  const counts = await differential(f, registration, args, kind !== "delivery");
-  if (kind === "delivery") expect(counts.scopedAuthReads).toBe(counts.unscopedAuthReads);
-  console.info(JSON.stringify({ type: "authority-entry-fixture-count", entry: kind, acceptedEntryScope: kind !== "delivery", ...counts }));
+  const counts = await differential(f, registration, args);
+  console.info(JSON.stringify({ type: "authority-entry-fixture-count", entry: kind, acceptedEntryScope: true, ...counts }));
   expect(f.db.table("runtimeModelAttempts")).toEqual([]);
 });
 it.each(["embeddingProfile", "resolve"] as const)("standalone policy %s retains its original current profile/account/source predicates", async kind => {

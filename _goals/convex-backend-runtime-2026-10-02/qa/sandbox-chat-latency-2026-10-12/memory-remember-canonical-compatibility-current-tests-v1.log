@@ -1,0 +1,38 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:46732) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-remember-canonical-compatibility-current.test.ts (13.884 s)
+  saved-source canonical compatibility audit (offline ports)
+    ✓ ordinary remember refuses before conversation/model/storage dispatch (2 ms)
+    ✕ actual operator remember routes its unchanged metadata to the separate legacy port
+    ✓ actual managed handler rejects forwarded remember-shaped metadata before append (17 ms)
+    ✓ actual managed plain append writes canonical per-message rows but wrapper returns empty messages (7 ms)
+
+  ● saved-source canonical compatibility audit (offline ports) › actual operator remember routes its unchanged metadata to the separate legacy port
+
+    MemoryValidationError: userName is required when userId is provided
+
+      684 |       (!params.userName || params.userName.trim().length === 0)
+      685 |     ) {
+    > 686 |       throw new MemoryValidationError(
+          |             ^
+      687 |         "userName is required when userId is provided",
+      688 |         "MISSING_REQUIRED_FIELD",
+      689 |         "userName",
+
+      at MemoryAPI.validateAndNormalizeParams (src/memory/index.ts:686:13)
+      at MemoryAPI.remember (src/memory/index.ts:932:12)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-remember-canonical-compatibility-current.test.ts:30:33)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 3 passed, 4 total
+Snapshots:   0 total
+Time:        13.998 s
+Ran all test suites within paths "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-remember-canonical-compatibility-current.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-remember-canonical-compatibility-current-tests-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

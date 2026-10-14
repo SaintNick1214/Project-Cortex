@@ -1,0 +1,94 @@
+{
+  "repository": "SaintNick1214/Project-Cortex",
+  "status": "AUTHORIZED SOURCE SCOPE; implementation waits for root GO after K20 cleanup",
+  "sourceHashes": {
+    "convex-dev/runtimeTranscript.ts": "fa4883c1c1578c56213da41d407ef0dbba301024d5e3d8cd1acc11dc155255b2",
+    "convex-dev/runtimeAgent.ts": "cfb6accd23baf0d1a24a0606f68e65fe90d53a708c368b85bda2824b48abb81f",
+    "convex-dev/agentDefinitions.ts": "17b42ce25e941d16d61fe91673a056d39a35f6792f27ffdb65d68eda5415eb61",
+    "src/domain/transcript.ts": "0273f5984e634affbdd77a7980399fd7f2d8ebc96f8b460d4d059c67b3266d13",
+    "src/domain/agent-tools.ts": "8fd2c39370d93acb0a22b671bb074c3599ed3de2d01061bf19c2919d2dfbcdd3",
+    "convex-dev/runtimeAgentQueryEmbedding.ts": "9c603cd8e1c81c306bccbae03f9ac60325f6b7a1e623cdf5962af395ea0bd257",
+    "convex-dev/runtimeAgentRecall.ts": "6be5a64396bc101036a9bb2dfd44f993c82652739479b1a64dd3d969b4695def",
+    "convex-dev/runtimeMemoryServices.ts": "9105049420be09c65f27edfc6944e4218176e5e72970f95ab5090f50b137c128",
+    "convex-dev/runtimeMemoryRepository.ts": "80f84c56890bd07d7943601238e7ae90d7b0db19d618c9504011f2997a2a4551",
+    "convex-dev/runtimeGateway.ts": "b78ff53464a59ac98589f2083c07946ef679450fe4616900b6a557bd2135ebf8"
+  },
+  "authorization": "User now explicitly requires a bounded assembled model request with a few relevant recent messages/history/facts, while full canonical transcript remains retrievable. No further selection preference question required.",
+  "originalTasks": [
+    "05-transcripts-runs.md",
+    "08-memory-pipeline.md",
+    "09-text-client-slice.md"
+  ],
+  "decisions": [
+    "decision-gates.md:37 tracked unlock/revision",
+    "decision-gates.md:38 bounded indexed-plus-pending/explicit incomplete",
+    "decision-gates.md:39 queued runs and stale revision rejection",
+    "decision-gates.md:54 scoped stage completeness"
+  ],
+  "currentReferences": {
+    "capture": "convex-dev/runtimeTranscript.ts:300",
+    "ascendingScan": "convex-dev/runtimeTranscript.ts:319",
+    "bytesAnd1000": "convex-dev/runtimeTranscript.ts:333",
+    "snapshotFences": "convex-dev/runtimeTranscript.ts:344",
+    "hydrate": "convex-dev/runtimeTranscript.ts:352",
+    "privateHydrate": "convex-dev/runtimeTranscript.ts:377",
+    "currentAttemptAppend": "convex-dev/runtimeAgent.ts:164",
+    "excludedSet": "convex-dev/runtimeAgent.ts:194",
+    "modelContextHandler": "convex-dev/runtimeAgent.ts:992",
+    "toolResultSave": "convex-dev/runtimeAgent.ts:1284",
+    "definitionContext": "convex-dev/agentDefinitions.ts:45",
+    "exactRequestPreflight": "convex-dev/runtimeGateway.ts:447",
+    "sixTimesRule": "src/domain/agent-tools.ts:33",
+    "officialDescendingReader": "node_modules/@convex-dev/agent/dist/component/messages.js:542"
+  },
+  "proposedVersionedDefaults": {
+    "handlerId": "cortex.transcript.relevant",
+    "handlerVersion": 1,
+    "selectionVersion": 1,
+    "newRegistryVersion": 3,
+    "recentMessageRows": 4,
+    "relevantMemoryEntries": 4,
+    "relevantFacts": 4,
+    "pendingModelEntries": 4,
+    "candidateRecallLimit": 10,
+    "maxAssembledNativeMessageRows": 16,
+    "recentScanMaxRows": 128,
+    "byteOrTokenBudget": "Derived by exact existing normalized request/preflight under current effective qualified snapshot, including instructions, system evidence, tool definitions, mandatory input and tool group; no cap or6x rule increase",
+    "oldDefinitionBehavior": "Immutable old definition/snapshot/journal selection remains old behavior; no historical row rewrite or transcript migration"
+  },
+  "requiredSelectionRules": [
+    "Current run input is mandatory; recent approved successful messages at/before its exact anchor, within queue and owner fences",
+    "Official DESC bounded page, current run input fetch by IDs; never start at oldest history or keep paging through all history",
+    "Selection snapshot explicitly distinguishes selected coverage from full storage/history; retains global executionRevision, epoch, definitionHash, anchor, full ingestion/graph cutoff and selected content/revision hashes",
+    "Represented/excluded source keys only from actually selected transcript rows/current selected pending; older stored unselected sources are eligible for existing semantic recall",
+    "Reuse one existing query embedding and ten-candidate ANN source ranking; dedupe by original source/event/revision/chunk identity; no new paid model",
+    "Facts are not currently semantically ranked: rank existing bounded fact candidates by matching authorized vector source score, then deterministic lexical relevance to query, then stable ID; no claim nearest-facts proven by current listFacts",
+    "Select <=4 memory entries and <=4 facts after original guards; whole entries only, preserve lineage/trust/witnesses; do not drop errors to get a smaller result",
+    "Pending candidate scanner/barrier bounds stay original; at most4 model pending entries; required/unknown extra pending coverage becomes existing explicit CONTEXT_OVERFLOW/incomplete or strict wait/fail, not false freshness",
+    "Mandatory current-attempt tool-call/result groups remain complete and exact; historical optional group selected whole or omitted whole; never split array parts/tool JSON",
+    "Fit optional entries using exact qualified preflight: drop lowest relevance facts/memory first, then oldest optional recent whole group; mandatory input/instructions/required tool pair overflow fails before model pending/reservation",
+    "Selection decisions/hash bind model operation identity; fresh Agent context handler and native admission/checkpoint rederive/recheck selected rows, live authority/lease/revisions/policy/witnesses",
+    "Canonical storage/public pagination/edit lock/export remain unchanged; one native Agent message plus Cortex metadata/source rows, not new messages arrays or second memory writer"
+  ],
+  "remainingLatencyScope": {
+    "measuredK20Browser": "4465.2/4332.8ms bothFAIL; ordinary direct path, private recall not observed in browser pair",
+    "nativeGap": "Zero separate logged read-parent/query-embedding/candidate/save-parent outer completions does not prove missing exports or that inline children did not execute; packed159 closure already verified",
+    "selectionEffect": "Bounds long-history repeated hydration/serialization/payload growth; no claim it removes short-empty first-turn4s or fixesSLO",
+    "sourceProvenPublicResidual": "Fresh public recall has15 serial registered calls before embedding and23+F total plusANN;3clientRPCs; publicK20 measurement not yet supplied",
+    "coherentExtensionConditional": "If K20 public timing exposes that residual, share original read/binding helpers between public guarded parents and Agent wrappers; public parents must rederive public authority/exact request/budget and keep all original predicates/error semantics, no Agent-proof bypass. Compose complete public preflight/admit/read sequence as one owned batch rather than one metadata RPC removal. Root final assignment waits on actual measurement.",
+    "durability": "Preserve checkpoint child rollback/reservation survival, independent charge-only capture/attachment, finalDelivery real Action clock before save, save-child preparation failure commit semantics, visibility/output independence"
+  },
+  "minimalVerificationObligations": [
+    "Thousands of canonical stored rows remain retrievable; selection reads bounded last rows and older semantic source becomes eligible",
+    "Current/queued/future/unapproved/deleted/edited/revoked source selection refusals match original fences",
+    "Whole tool groups appear once and exactrequest still refuses mandatory oversized JSON under same6x caps",
+    "Optional trimming deterministic and whole-entry only; pending overflow/current stage hole stays explicit",
+    "Fresh context hook/native admission cannot reuse selected data as authorization PASS",
+    "Actual installed short/long/history/one tool and public recall timings measured separately after coherent source gate"
+  ],
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "testsRun": 0,
+  "productEdits": 0,
+  "goalCompletionPercent": 50
+}
