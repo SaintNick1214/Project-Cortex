@@ -13,6 +13,14 @@ export function beliefSlot(fact: Pick<AttributedFact, "subject" | "predicate" | 
   return JSON.stringify(fact.subject && fact.predicate ? [fact.subject.trim().toLowerCase(), fact.predicate.trim().toLowerCase()]
     : ["text", fact.fact.trim().toLowerCase()]);
 }
+/** One source may repeat an assertion. Only exact value, wording and truth
+ * metadata equality can share a write; slot normalization never normalizes a
+ * value or drops a qualifier. The raw extraction remains the durable evidence. */
+function sameCandidate(left: AttributedFact, right: AttributedFact): boolean {
+  const shape = (fact: AttributedFact) => ({ ...fact,
+    subject: fact.subject?.trim().toLowerCase(), predicate: fact.predicate?.trim().toLowerCase() });
+  return canonicalModelJson(shape(left)) === canonicalModelJson(shape(right));
+}
 export async function planBeliefs(input: { eventId: string; sequence: number; source: SourceContent;
   candidates: readonly AttributedFact[]; existing: readonly DerivedFact[];
   resolve(candidate: AttributedFact, existing: readonly DerivedFact[], ordinal: number): Promise<ConflictDecision> }): Promise<BeliefPlanV1> {
@@ -20,12 +28,19 @@ export async function planBeliefs(input: { eventId: string; sequence: number; so
     || input.existing.length > MAX_INGESTION_FACTS || input.source.lineage.role === "assistant") throw new Error("INVALID_BELIEF_PLAN");
   const expectedVersions = Object.fromEntries(input.existing.map(fact => [fact.factId, fact.version]));
   const entries: BeliefPlanEntry[] = []; const virtual = new Map(input.existing.map(fact => [fact.factId, fact]));
-  const used = new Set<string>();
-  for (const [ordinal, candidate] of input.candidates.entries()) {
+  const used = new Map<string, AttributedFact>();
+  for (const candidate of input.candidates) {
     if (canonicalModelJson(candidate.lineage) !== canonicalModelJson(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
     const slotKey = canonicalModelJson([input.source.ownerPrincipalId, beliefSlot(candidate)]);
-    // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
-    if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+    const prior = used.get(slotKey);
+    if (prior) {
+      if (sameCandidate(prior, candidate)) continue;
+      throw new Error("AMBIGUOUS_EXTRACTION_SLOT");
+    }
+    used.set(slotKey, candidate);
+    // Dense retained ordinals also let the native commit consume each original
+    // decision exactly once after a duplicate was consolidated.
+    const ordinal = entries.length;
     const matching = [...virtual.values()].filter(fact => fact.ownerPrincipalId === input.source.ownerPrincipalId && beliefSlot(fact) === beliefSlot(candidate) && !fact.supersededBy);
     const decision = matching.length ? await input.resolve(candidate, matching, ordinal)
       : { action: "ADD" as const, targetFactId: null, mergedFact: null, reason: "No current matching belief" };

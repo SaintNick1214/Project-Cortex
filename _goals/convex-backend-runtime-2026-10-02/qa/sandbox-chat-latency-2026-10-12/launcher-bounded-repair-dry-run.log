@@ -1,0 +1,19 @@
+Usage: ./start-sandbox.sh [--no-copy | --smoke | --dry-run | --help]
+       ./start-sandbox.sh cleanup SESSION_UUID
+       ./start-sandbox.sh refresh-tokens SESSION_UUID
+       ./start-sandbox.sh copy-token SESSION_UUID [owner|reader|outsider]
+
+Each normal run creates a NEW isolated Docker container and NEW nondefault dev
+Convex DB in the approved Cortex sandbox project; eight fixed setup calls have at most
+$2.70 unknown-cost liability. Manual calls retain $3/run and $10/tenant caps.
+The demo stays foreground. Normal exit, errors and Ctrl-C remove only these new
+resources. --smoke checks fresh readiness/demo health then cleans up; --no-copy
+avoids the optional owner-token clipboard. No token is printed.
+SIGKILL/power loss cannot run traps: recover with cleanup SESSION_UUID. Retained
+private receipts preserve uncertain costs. The server DB expires within7days.
+See SANDBOX.md for testing, finite expiry, authentication and recovery details.
+
+Dry run: UUID private session → verified local image/archives → NEW approved Cortex dev DB → eight actual bounded qualifications → NEW Docker + installed canonical Basic/Vercel scaffolds → foreground demo → owned cleanup.
+No resource, file, deployment or inference is created by this command.
+Candidate kit: manual-sandbox-latency-bounded-repair-2026-10-14
+Pinned image: sha256:9a908ac4f03f92125053836df15f786b2f00cd5a03ddfc59bf5801f8e4be7322

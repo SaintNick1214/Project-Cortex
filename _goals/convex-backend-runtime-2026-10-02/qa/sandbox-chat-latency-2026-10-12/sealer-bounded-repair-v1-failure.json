@@ -1,0 +1,11 @@
+{
+  "exitCode": 1,
+  "scope": "Local packaging receipt integration only",
+  "failure": "Expected PACKAGING_COMPLETE but actual formal receipt status is LOCAL_PACKAGING_COMPLETE",
+  "location": "seal-bounded-repair-kit.mjs:26",
+  "occurredBeforeProofsMutation": true,
+  "sourceOrArtifactChanged": false,
+  "correction": "Use actual receipt status, sourceCommit, counts and checks fields; retain all numeric, identity, hash and successful-check assertions",
+  "serviceCalls": 0,
+  "inferenceCalls": 0
+}

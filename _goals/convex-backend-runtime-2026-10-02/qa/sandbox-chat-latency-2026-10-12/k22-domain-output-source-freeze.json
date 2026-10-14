@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "kind": "A-K22-domain-output-source-freeze",
+  "baselineProductCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "observedHead": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "status": "SOURCE_COMPLETE; shared-root-types pending root-owned client correction",
+  "sourceFrozen": true,
+  "productFiles": [
+    "src/domain/belief-plan.ts",
+    "convex-dev/runtimeMemoryGateway.ts",
+    "convex-dev/runtimeIngestion.ts"
+  ],
+  "testFiles": [
+    "tests/unit/runtimeBeliefs/duplicate-candidates.test.ts",
+    "tests/unit/runtimeIngestion/framing-invalid-output.test.ts"
+  ],
+  "files": {
+    "src/domain/belief-plan.ts": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b",
+    "convex-dev/runtimeMemoryGateway.ts": "40aa189dcc9760abf5e7ae75648bd807d6e999d37135860acdc50869a514c3e6",
+    "convex-dev/runtimeIngestion.ts": "b0ae259e39d9c27595dcf879910ad28a7073fb591e0acfe64ee449e29ab86bde",
+    "tests/unit/runtimeBeliefs/duplicate-candidates.test.ts": "8497c23fbb24b00724e9e6ab47a4bf806133cdeb49091e85bd38a38500684adf",
+    "tests/unit/runtimeIngestion/framing-invalid-output.test.ts": "f708238f95e83c000adf1ff4b060b8e9dffafded16ad12f7469f62cf9be0f791"
+  },
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "noNativeCalls": true,
+  "noFinancialMutationChange": true,
+  "unchangedStrictParserAndSchema": true,
+  "performanceAcceptance": false,
+  "checks": {
+    "focused-v1": {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-focused-v1.json",
+      "sha256": "7f7d73f934da7ab729780cd7ccd0e7e0271b1c1175bcf2dbabab0a1a22a598cf",
+      "exit": 0,
+      "tests": 134,
+      "passed": 134,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 4
+    },
+    "affected-v1": {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-affected-v1.json",
+      "sha256": "9d48f7872240596da51e2c20643f7656a830b0451452b70d9f8f7b0536f53b58",
+      "exit": 1,
+      "tests": 672,
+      "passed": 671,
+      "failed": 1,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 14
+    },
+    "confirmed-v2": {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-confirmed-v2.json",
+      "sha256": "3a048f5df6a83dc3d61eab6e86a345df0b254bfb74908e576c8f726c0d2f62b2",
+      "exit": 0,
+      "tests": 22,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 1
+    },
+    "backend-types-v1": {
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0
+    },
+    "root-types-v1": {
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-root-types-v1.log",
+      "sha256": "cdb2a800f782e8d0dbfcce0c26f0652774254263d27140048782a9b0cd8e0d82",
+      "exit": 2
+    },
+    "lint-types-v1": {
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-lint-types-v1.log",
+      "sha256": "cdb2a800f782e8d0dbfcce0c26f0652774254263d27140048782a9b0cd8e0d82",
+      "exit": 2
+    },
+    "scoped-lint-v1": {
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-scoped-lint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0
+    },
+    "equivalence": {
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-equivalence.log",
+      "sha256": "b8e8d4e6144239e0aa6af4eba6fae61137955ea64084fb5269b4bacee2abaeb2",
+      "exit": 0
+    }
+  },
+  "failureAndCorrection": "Affected v1 671/672 retained FAIL. Native ambiguity proof initially fed parser-only undefined optional fields to planner; it now consumes exact validated persisted JSON, matching the worker. Failed suite22/22 successor PASS; other13 suites had passed on otherwise identical code. No original FAIL relabeled.",
+  "combinedTypeFailure": "root/lint types fail only src/client-runtime/client.ts:150:103 (root-owned in-flight string|undefined); backend types and scoped lint pass; no A-path diagnostics.",
+  "semanticChanges": [
+    "dense unique belief-plan ordinals after exact same-source candidate consolidation; raw extraction untouched",
+    "required tags/string-array + nine-field framing reinforcement; no native response format/schema/cap change",
+    "confirmed attached invalid domain output becomes existing terminal dead_letter with fixed failure code; retries remain refused, accounting unchanged"
+  ],
+  "limits": [
+    "K22 ambiguity receipt did not retain candidate equivalence detail: source change cannot claim historical candidates were exactly equivalent",
+    "prompt reinforcement cannot guarantee valid future provider output; strict invalid values remain refused",
+    "no native speed/functional requalification performed after this source change",
+    "future current pipeline errors from ambiguous conflicting values remain failed; no repair/re-extraction/paid retry"
+  ]
+}

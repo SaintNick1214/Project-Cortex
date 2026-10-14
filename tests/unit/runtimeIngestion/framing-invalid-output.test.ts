@@ -9,11 +9,13 @@ import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "../../../src/domain/profile";
 
 let nativeText = '{"facts":[]}';
+let nativeThrows = false;
 const nativeCalls: LanguageModelV4CallOptions[] = [];
 const language = jest.fn<(modelId: string) => LanguageModelV4>(modelId => ({
   specificationVersion: "v4", provider: "convexGateway.chat", modelId, supportedUrls: {},
   doGenerate: async input => {
     nativeCalls.push(input);
+    if (nativeThrows) throw new Error("Controlled native transport failure");
     return { content: [{ type: "text", text: nativeText }], finishReason: { unified: "stop", raw: "stop" }, warnings: [],
       usage: { inputTokens: { total: 2, noCache: 2, cacheRead: 0, cacheWrite: undefined }, outputTokens: { total: 1, text: 1, reasoning: 0 } },
       response: { body: { id: "offline-framing", model: modelId, choices: [{ finish_reason: "stop" }], usage: { prompt_tokens: 2, completion_tokens: 1 } } } };
@@ -89,7 +91,7 @@ async function fixture(revision = 17) {
 }
 
 describe("v4 framing through registered ingestion and charge-only terminal capture", () => {
-  beforeEach(() => { jest.spyOn(Date, "now").mockReturnValue(now); nativeCalls.length = 0; language.mockClear(); embeddings.mockClear(); nativeText = '{"facts":[]}'; });
+  beforeEach(() => { jest.spyOn(Date, "now").mockReturnValue(now); nativeCalls.length = 0; language.mockClear(); embeddings.mockClear(); nativeText = '{"facts":[]}'; nativeThrows = false; });
   afterEach(() => { jest.restoreAllMocks(); });
 
   it.each(["empty", "attributed"])("commits a valid %s instance with the measured v4 roles and original source witness", async kind => {
@@ -125,13 +127,16 @@ describe("v4 framing through registered ingestion and charge-only terminal captu
     ["malformed fact", JSON.stringify({ facts: [{ fact: "claimed fact" }] })],
     ["extra nested field", JSON.stringify({ facts: [{ ...valid.facts[0], entities: [{ name: "tea", type: "product", override: true }] }] })],
     ["malformed relation", JSON.stringify({ facts: [{ ...valid.facts[0], relations: [{ subject: "User", predicate: "likes" }] }] })],
+    ["missing tags", JSON.stringify({ facts: [{ ...valid.facts[0], tags: undefined }] })],
+    ["string tags", JSON.stringify({ facts: [{ ...valid.facts[0], tags: "tea" }] })],
+    ["non-string tag", JSON.stringify({ facts: [{ ...valid.facts[0], tags: [1] }] })],
   ])("refuses %s without repair, extra operation, commit or uncertain-liability release", async (_name, text) => {
     const f = await fixture(), event = await f.enqueue(await f.source()); nativeText = text;
     await f.worker(event.eventId);
     const stage = f.db.table("runtimeIngestionStages").find(row => row.stage === "extract")!;
-    expect(stage).toMatchObject({ state: "unknown", failureCode: "INDEXING_OUTCOME_UNKNOWN", attempt: 1 });
+    expect(stage).toMatchObject({ state: "dead_letter", failureCode: "INVALID_CONFIRMED_MODEL_OUTPUT", attempt: 1 });
     expect(stage.payloadCanonical).toBeUndefined();
-    expect(f.db.table("runtimeIngestionEvents")[0]).toMatchObject({ factsState: "unknown", vectorsState: "pending" });
+    expect(f.db.table("runtimeIngestionEvents")[0]).toMatchObject({ factsState: "dead_letter", vectorsState: "pending" });
     expect(f.db.table("facts")).toEqual([]); expect(f.db.table("runtimeMemoryVectors")).toEqual([]); expect(f.db.table("runtimeBeliefOutbox")).toEqual([]);
     expect(f.db.table("runtimeModelOperations")).toHaveLength(1); expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
     const operation = f.db.table("runtimeModelOperations")[0]!;
@@ -150,6 +155,11 @@ describe("v4 framing through registered ingestion and charge-only terminal captu
   it("does not reinterpret the retained v3 invalid result or its UNKNOWN event after installing v4", async () => {
     const f = await fixture(16), event = await f.enqueue(await f.source()); nativeText = '{"facts":[}';
     await f.worker(event.eventId);
+    // Explicit historical stored state. New failures are classified, but no
+    // install/replay migrates a previously published UNKNOWN event.
+    f.db.table("runtimeIngestionStages").find(row => row.stage === "extract")!.state = "unknown";
+    f.db.table("runtimeIngestionStages").find(row => row.stage === "extract")!.failureCode = "INDEXING_OUTCOME_UNKNOWN";
+    f.db.table("runtimeIngestionEvents")[0]!.factsState = "unknown";
     const before = canonicalModelJson({ accounts: f.db.table("runtimeBudgetAccounts"), operations: f.db.table("runtimeModelOperations"),
       attempts: f.db.table("runtimeModelAttempts"), events: f.db.table("runtimeIngestionEvents"), stages: f.db.table("runtimeIngestionStages") });
     expect(JSON.parse(f.db.table("runtimeModelOperations")[0]!.snapshotCanonical as string).pins.promptVersion).toBe("memory-extraction-instance-prompt-v3");
@@ -158,5 +168,63 @@ describe("v4 framing through registered ingestion and charge-only terminal captu
       attempts: f.db.table("runtimeModelAttempts"), events: f.db.table("runtimeIngestionEvents"), stages: f.db.table("runtimeIngestionStages") })).toBe(before);
     expect(nativeCalls).toHaveLength(1);
     expect(nativeCalls[0]!.prompt[1]).toMatchObject({ role: "user", content: [{ type: "text", text: expect.stringContaining("Return the facts JSON schema") }] });
+  });
+
+  it("true native failure remains UNKNOWN, with no invented retained result or retry", async () => {
+    const f = await fixture(), event = await f.enqueue(await f.source()); nativeThrows = true;
+    await f.worker(event.eventId);
+    expect(f.db.table("runtimeIngestionStages").find(row => row.stage === "extract")).toMatchObject({ state: "unknown", failureCode: "INDEXING_OUTCOME_UNKNOWN" });
+    expect(f.db.table("runtimeModelAttempts")[0]!.privateResultCanonical).toBeUndefined();
+    await expect(f.call(ingestion.retry, { eventId: event.eventId, stage: "extract" })).rejects.toMatchObject({ data: { code: "RETRY_NOT_SAFE" } });
+    expect(nativeCalls).toHaveLength(1); expect(f.db.table("facts")).toHaveLength(0);
+  });
+  it("retains a confirmed duplicate extraction unchanged and commits one belief through the original native planner fence", async () => {
+    const f = await fixture(), event = await f.enqueue(await f.source());
+    nativeText = JSON.stringify({ facts: [valid.facts[0], structuredClone(valid.facts[0])] });
+    await f.worker(event.eventId);
+    const extract = f.db.table("runtimeIngestionStages").find(s => s.stage === "extract")!;
+    expect(JSON.parse(extract.payloadCanonical as string)).toHaveLength(2);
+    const before = canonicalModelJson(extract);
+    await f.worker(event.eventId, "facts");
+    expect(canonicalModelJson(extract)).toBe(before);
+    expect(f.db.table("facts")).toHaveLength(1); expect(f.db.table("runtimeBeliefHistory")).toHaveLength(1);
+    expect(f.db.table("runtimeBeliefOutbox")).toHaveLength(1); expect(nativeCalls).toHaveLength(1);
+    const attempt = f.db.table("runtimeModelAttempts")[0]!;
+    expect(JSON.parse(attempt.privateResultCanonical as string)).toEqual({ text: nativeText });
+    expect(JSON.parse(attempt.terminalEvidenceCanonical as string).outcome).toBe("confirmed");
+    expect(f.db.table("runtimeIngestionEvents")[0]).toMatchObject({ factsState: "complete", vectorsState: "pending" });
+  });
+  it("confirmed conflicting values are a known non-retryable ambiguity, without rewriting extraction or funding another call", async () => {
+    const f = await fixture(), event = await f.enqueue(await f.source("User likes jasmine tea and lavender tea"));
+    nativeText = JSON.stringify({ facts: [valid.facts[0], { ...valid.facts[0], fact: "User likes lavender tea", object: "lavender tea" }] });
+    await f.worker(event.eventId); const extract = f.db.table("runtimeIngestionStages").find(s => s.stage === "extract")!;
+    const before = canonicalModelJson({ extract, accounts: f.db.table("runtimeBudgetAccounts"), attempts: f.db.table("runtimeModelAttempts") });
+    await f.worker(event.eventId, "facts");
+    expect(f.db.table("runtimeIngestionStages").find(s => s.stage === "facts")).toMatchObject({ state: "dead_letter", failureCode: "AMBIGUOUS_EXTRACTION_SLOT" });
+    expect(canonicalModelJson({ extract, accounts: f.db.table("runtimeBudgetAccounts"), attempts: f.db.table("runtimeModelAttempts") })).toBe(before);
+    expect(f.db.table("facts")).toHaveLength(0); expect(f.db.table("runtimeBeliefOutbox")).toHaveLength(0); expect(nativeCalls).toHaveLength(1);
+    await expect(f.call(ingestion.retry, { eventId: event.eventId, stage: "facts" })).rejects.toMatchObject({ data: { code: "RETRY_NOT_SAFE" } });
+    await f.worker(event.eventId, "facts"); expect(nativeCalls).toHaveLength(1);
+  });
+  it.each(["hash", "attachment", "withheld", "terminal", "source"])("%s mismatch cannot promote uncertain work to a known invalid-output disposition", async kind => {
+    const f = await fixture(), event = await f.enqueue(await f.source()); nativeText = JSON.stringify({ facts: [{ ...valid.facts[0], tags: null }] });
+    const runMutation = f.ctx.runMutation.bind(f.ctx);
+    f.ctx.runMutation = (async (reference, args) => {
+      if (getFunctionName(reference) === "runtimeIngestion:failStage") {
+        const attempt = f.db.table("runtimeModelAttempts")[0]!;
+        if (kind === "hash") attempt.terminalEvidenceHash = "a".repeat(64);
+        if (kind === "attachment") attempt.resultAttachmentState = "pending";
+        if (kind === "withheld") attempt.resultWithheld = true;
+        if (kind === "terminal") { const terminal = JSON.parse(attempt.terminalEvidenceCanonical as string); terminal.outcome = "uncertain";
+          attempt.terminalEvidenceCanonical = canonicalModelJson(terminal); attempt.terminalEvidenceHash = await semanticHash(attempt.terminalEvidenceCanonical as string); }
+        if (kind === "source") f.db.table("runtimeMemorySources")[0]!.contentHash = "a".repeat(64);
+      }
+      return runMutation(reference, args);
+    }) as MutationCtx["runMutation"];
+    await f.worker(event.eventId);
+    expect(f.db.table("runtimeIngestionStages").find(row => row.stage === "extract")).toMatchObject({ state: "unknown", failureCode: "INDEXING_OUTCOME_UNKNOWN" });
+    expect(nativeCalls).toHaveLength(1); expect(f.db.table("facts")).toHaveLength(0);
+    expect(f.db.table("runtimeMemoryVectors")).toHaveLength(0);
+    for (const account of f.db.table("runtimeBudgetAccounts")) expect(account).toMatchObject({ reservedUnits: 0, activeConcurrency: 0, uncertainUnits: 100000 });
   });
 });

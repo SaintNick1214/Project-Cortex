@@ -132,10 +132,10 @@ export const indexedSourceAtCutoff = internalQuery({ args: { reference: runtimeA
 /** No eligible unrepresented event means recall's own cutoff filter cannot
  * yield indexed context. Overflow/any candidate conservatively uses recall. */
 export async function readIndexedContextAvailability(ctx: ReadCtx, args: { reference: RuntimeAuthorityReference; cutoff: number;
-  excludedSourceKeys: string[]; runBudgetId: string; boundary: ContextBoundary }) {
+  excludedSourceKeys: string[]; runBudgetId: string; boundary: ContextBoundary }, profileReader?: ConstructorParameters<typeof ConvexMemoryRepository>[5]) {
   boundedCutoff(args.cutoff);
   if (args.excludedSourceKeys.length > 1032) ingestionDenied("INVALID_INPUT");
-  const repository = new ConvexMemoryRepository(ctx, args.reference, "read"), authority = await repository.authority();
+  const repository = new ConvexMemoryRepository(ctx, args.reference, "read", undefined, { now: () => Date.now() }, profileReader), authority = await repository.authority();
   const scope = await readScopeSequence(ctx, args.reference); if (args.cutoff > scope.sequence) ingestionDenied("INVALID_INPUT");
   const profile = await readCurrentEmbeddingProfile(ctx, args.reference, "embedding.query", args.runBudgetId);
   // Preserve existing profile readiness semantics even when no inference runs.

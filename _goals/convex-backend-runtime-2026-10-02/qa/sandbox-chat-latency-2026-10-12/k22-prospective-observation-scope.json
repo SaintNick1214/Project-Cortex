@@ -1,0 +1,34 @@
+{
+  "ordinaryRuns": [
+    "run:0297688c5141af8e763e6b1fea6da5a6b11417d0092992bbe1b549c373d97d13",
+    "run:8b6820ea7fe224646cefcc61e24fd717e63d7e751cef9871ddd3356f7dd71aca",
+    "run:1351af06c7c92d2979c37f951e663d33c2a71c6dca51d59bd960e268c0cfabf3",
+    "run:69fef8733edfbdb02924250e7acdbb5499117b7f9fa3d140da0268f7287c9c26"
+  ],
+  "precedingScopeEvents": {
+    "count": 3,
+    "runId": "run:8db2d16e0c1b06262e59c0531b482d207d2a5b422227c2b45705ab60f4016bab",
+    "reason": "Explicit Remember prompt selected a tool and is a separately accepted functional flow, not an ordinary SLO sample"
+  },
+  "expectedOrdinarySequences": [
+    [
+      4,
+      5
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      10,
+      11
+    ]
+  ],
+  "watermarkRequirement": "No missing1..11; complete current facts/vectors and per-profile contiguous prefix; original positive vector/fact/auth/usage assertions retained",
+  "nativeResultsNotAssumed": true,
+  "nativeLogCursor": "Incremental snapshots retain original1000execution cap,16MiBresponse bound and exactprevioussource/target receipts"
+}

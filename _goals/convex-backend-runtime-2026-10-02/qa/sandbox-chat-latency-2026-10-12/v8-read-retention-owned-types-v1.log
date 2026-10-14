@@ -1,0 +1,6 @@
+[96mtests/unit/runtimeAgent/v8-preparation-read-retention.test.ts[0m:[93m42[0m:[93m110[0m - [91merror[0m[90m TS2345: [0mArgument of type 'unknown' is not assignable to parameter of type 'object'.
+
+[7m42[0m    builder.withIndex=(index,callback)=>{record.index=index;return withIndex(index,q=>{const traced=new Proxy(q,{get(target,key){const value:unknown=Reflect.get(target,key,target);if(typeof value!=="function")return value;return(...args:unknown[])=>{record.keys.push([String(key),...args]);const result:unknown=Reflect.apply(value,target,args);return result===target?traced:result;};}});return callback(traced);});};return builder;
+[7m  [0m [91m                                                                                                             ~[0m
+
+{"scope":"owned files and actual transitive dependencies","node":"v24.15.0","roots":8,"errors":1}

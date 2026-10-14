@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "kind": "exact-k22-cli-confirmed-extraction-parser",
+  "rawPayloadRetained": false,
+  "paidCalls": 0,
+  "mutations": 0,
+  "freshVerifications": 15,
+  "tables": {
+    ":runtimeRuns": 5,
+    ":runtimeIngestionEvents": 15,
+    ":runtimeIngestionStages": 45,
+    ":runtimeIngestionJobs": 14,
+    ":runtimeModelOperations": 44,
+    ":runtimeModelAttempts": 44,
+    ":runtimeMemorySources": 16
+  },
+  "clientsClosed": true,
+  "target": {
+    "sessionId": "c1017228-182f-43f7-8663-132b976f4fa3",
+    "name": "effervescent-llama-943",
+    "id": 6166959,
+    "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde"
+  },
+  "runId": "run:1351af06c7c92d2979c37f951e663d33c2a71c6dca51d59bd960e268c0cfabf3",
+  "eventId": "ingestion:56fb0c308bbb390f4d3aa7243f2fbff000cac046e9ae97ae56b79e639e42fb83",
+  "sequence": 8,
+  "stages": [
+    {
+      "stage": "vectors",
+      "state": "pending",
+      "attempt": 0,
+      "payloadPresent": false
+    },
+    {
+      "stage": "facts",
+      "state": "pending",
+      "attempt": 0,
+      "payloadPresent": false
+    },
+    {
+      "stage": "extract",
+      "state": "unknown",
+      "failureCode": "INDEXING_OUTCOME_UNKNOWN",
+      "attempt": 1,
+      "payloadPresent": false
+    }
+  ],
+  "native": {
+    "terminalOutcome": "confirmed",
+    "attached": true,
+    "withheld": false,
+    "slotReleased": true,
+    "completeUsage": true,
+    "promptVersion": "memory-extraction-json-object-prompt-v5",
+    "outputBytes": 191,
+    "outputSha256": "d0d04eb6520d6f7b02a9d1d20b3c7e870d741299d3995a7f45d9002abaa04586"
+  },
+  "jsonAccepted": true,
+  "shape": {
+    "topLevelRecord": true,
+    "factsArray": true,
+    "factCount": 1,
+    "unknownTopLevelCount": 0
+  },
+  "structuralViolationCounts": {
+    "TAGS_INVALID": 1
+  },
+  "strictParserAccepted": false,
+  "parserClass": "MALFORMED_STRUCTURED_FACT",
+  "errorBytes": 40,
+  "errorSha256": "2d21ff40602f1a5350079c6521ad7a0e4e84f0450fb18f7e9972126c98097a84",
+  "verdict": "CLASSIFIED"
+}

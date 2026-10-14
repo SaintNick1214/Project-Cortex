@@ -1,0 +1,100 @@
+{
+  "observedAt": "2026-10-14T13:49:22.866672+00:00",
+  "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "rows": [
+    {
+      "scenario": "browser-first",
+      "runId": "run:0297688c5141af8e763e6b1fea6da5a6b11417d0092992bbe1b549c373d97d13",
+      "uiOrCliFirstTextMs": 7761.399999976158,
+      "createdToProviderDispatchMs": 5505,
+      "providerDispatchToProcessedFirstTextMs": 596,
+      "privateRecallMs": 2336,
+      "directPrepareEngineMs": 8730.956818999999,
+      "directPrepareUserMs": 8705.999457,
+      "directPrepareDocuments": 0,
+      "selection": {
+        "selectedMessages": 1,
+        "selectedMemories": 2,
+        "selectedFacts": 2,
+        "selectedPending": 0,
+        "contextBytes": 2553,
+        "inputTokens": 30360,
+        "inputLimit": 32768
+      }
+    },
+    {
+      "scenario": "browser-warm",
+      "runId": "run:8b6820ea7fe224646cefcc61e24fd717e63d7e751cef9871ddd3356f7dd71aca",
+      "uiOrCliFirstTextMs": 9213.100000023842,
+      "createdToProviderDispatchMs": 7218,
+      "providerDispatchToProcessedFirstTextMs": 711,
+      "privateRecallMs": 3346,
+      "directPrepareEngineMs": 11624.449231,
+      "directPrepareUserMs": 11610.11109,
+      "directPrepareDocuments": 0,
+      "selection": {
+        "selectedMessages": 3,
+        "selectedMemories": 3,
+        "selectedFacts": 1,
+        "selectedPending": 0,
+        "contextBytes": 2263,
+        "inputTokens": 29666,
+        "inputLimit": 32768
+      }
+    },
+    {
+      "scenario": "cli-first",
+      "runId": "run:1351af06c7c92d2979c37f951e663d33c2a71c6dca51d59bd960e268c0cfabf3",
+      "uiOrCliFirstTextMs": 12071.307421999983,
+      "createdToProviderDispatchMs": 7192,
+      "providerDispatchToProcessedFirstTextMs": 567,
+      "privateRecallMs": 3886,
+      "directPrepareEngineMs": 13776.444925,
+      "directPrepareUserMs": 13745.133349,
+      "directPrepareDocuments": 0,
+      "selection": {
+        "selectedMessages": 1,
+        "selectedMemories": 3,
+        "selectedFacts": 1,
+        "selectedPending": 1,
+        "contextBytes": 2958,
+        "inputTokens": 32730,
+        "inputLimit": 32768
+      }
+    },
+    {
+      "scenario": "cli-warm",
+      "runId": "run:69fef8733edfbdb02924250e7acdbb5499117b7f9fa3d140da0268f7287c9c26",
+      "uiOrCliFirstTextMs": 11735.123296999955,
+      "createdToProviderDispatchMs": 8984,
+      "providerDispatchToProcessedFirstTextMs": 642,
+      "privateRecallMs": 4566,
+      "directPrepareEngineMs": 13107.297161,
+      "directPrepareUserMs": 13093.346234,
+      "directPrepareDocuments": 0,
+      "selection": {
+        "selectedMessages": 3,
+        "selectedMemories": 4,
+        "selectedFacts": 0,
+        "selectedPending": 1,
+        "contextBytes": 2644,
+        "inputTokens": 31904,
+        "inputLimit": 32768
+      }
+    }
+  ],
+  "scope": "Saved actualofficial metadata only; no new service calls",
+  "sourceReceipts": [
+    "service-log-snapshot-k22-browser-post-pair-1791984750443.json",
+    "service-log-snapshot-k22-cli-post-pair-1791985219911.json"
+  ],
+  "cautions": [
+    "Gateway/provider internalrouting not separately observed",
+    "UI/CLI monotonic clock separate from native wallclock; intervals not additive",
+    "Initialtoolflow excluded from ordinary samples",
+    "Original1000execution/16MiBbound retained through exactcursor incremental snapshots"
+  ],
+  "sloPass": 0,
+  "sloTotal": 4,
+  "nativeQualified": false
+}

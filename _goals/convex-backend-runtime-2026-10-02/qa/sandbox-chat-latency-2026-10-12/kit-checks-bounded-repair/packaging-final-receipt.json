@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "status": "LOCAL_PACKAGING_COMPLETE",
+  "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-bounded-repair-2026-10-14",
+  "id": "sha256:9a908ac4f03f92125053836df15f786b2f00cd5a03ddfc59bf5801f8e4be7322",
+  "identity": {
+    "version": 1,
+    "id": "c46240b0-c02b-4fb5-813d-f9c93dddbb60",
+    "ownerUid": 501,
+    "ownerGid": 20
+  },
+  "readyImage": {
+    "imageId": "sha256:9a908ac4f03f92125053836df15f786b2f00cd5a03ddfc59bf5801f8e4be7322",
+    "tag": "cortex-sandbox-bounded-repair:20261014",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "c46240b0-c02b-4fb5-813d-f9c93dddbb60",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "c46240b0-c02b-4fb5-813d-f9c93dddbb60",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-bounded-repair-2026-10-14",
+      "dev.cortex.manual-sandbox.source": "3e55e7b9b45093f547699619c572fdbe09c1efde"
+    },
+    "size": 823466412,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false
+  },
+  "backend": {
+    "distributionId": "cortex-backend-v1-sdk-0.39.0",
+    "files": 169,
+    "allSourceOutputHashesMatch": true,
+    "manifestSha256": "33301c789a1b7f946d9eea5b14cfdd9798014e012759872817e21a1ddc12346e",
+    "tables": 77,
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "all169SourceOutputHashesReverified": true
+  },
+  "packages": [
+    {
+      "role": "sdk",
+      "name": "@cortexmemory/sdk",
+      "version": "0.39.0",
+      "filename": "cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "22dc22ab70687f16d59a36b8b0412cdf95d5177ef563d392a1764bb48be5686b",
+      "bytes": 1683994,
+      "files": 335
+    },
+    {
+      "role": "cli",
+      "name": "@cortexmemory/cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "bytes": 538578,
+      "files": 451
+    },
+    {
+      "role": "provider",
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+      "bytes": 77673,
+      "files": 18
+    },
+    {
+      "role": "catalog",
+      "name": "@cortexmemory/templates",
+      "version": "1.3.2",
+      "filename": "cortexmemory-templates-1.3.2.tgz",
+      "sha256": "f34185052f71305fc9c308b67bcb36ea600002d036293d1b2091dc72c0407c97",
+      "bytes": 1714863,
+      "files": 1801
+    }
+  ],
+  "artifactManifestSha256": "411f98029939e6876f86bee0ee0769f609f423195ade4cd461a18dbf38222169",
+  "candidateCompositeSha256": "bb7279aeef8e6eed827f06bfe764566742c4466f8fb7335b6ba78ffbc8544a8a",
+  "committedBuildInputs": {
+    "count": 2223,
+    "inputManifestSha256": "bbb4bf51014117ffeb350b1a30435efd8ae5ec5d701d9fa77747b6ec4f86722f",
+    "allStagedInputHashesMatchCommittedGitBlobs": true
+  },
+  "checks": [
+    {
+      "name": "verify-actual-packed-public-contracts",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-actual-packed-public-contracts.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 874.615334,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+    },
+    {
+      "name": "verify-packed-dependent-contracts",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-dependent-contracts.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1661.3676659999999,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "logSha256": "67a70755186f8f7063e958c6ada40dde7c29e386d1a28446a4f77fa0bf8c114b"
+    },
+    {
+      "name": "verify-packed-backend-export-closure",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-backend-export-closure.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 965.0412500000002,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "logSha256": "4bfe0e9e116dbd76cd001871dd1b4489a6c83853102b99104dfbe92b6da2d724"
+    },
+    {
+      "name": "verify-packed-template-catalog",
+      "version": "v2",
+      "exitCode": 0,
+      "logSha256": "1daeb5c98fa325c8ce79521f6d8bf4d2e3bff57ff6b586d160e63114cd6624ce"
+    }
+  ],
+  "counts": {
+    "isolatedBuilds": 3,
+    "tarballPacks": 4,
+    "consumerGroups": 4,
+    "dockerBuilds": 1,
+    "runtimeContainersStarted": 0,
+    "serviceCalls": 0,
+    "inferenceCalls": 0
+  },
+  "catalog": {
+    "version": "1.3.2",
+    "basic": "1.4.1",
+    "vercel": "1.4.2",
+    "historicalDescriptors": 13,
+    "currentDescriptorsByteExactToK21": 14,
+    "selectedVercelFiles": 74
+  },
+  "ownedConsumerScratchRemoved": true,
+  "leftoverScratch": [],
+  "controls": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-bounded-repair-2026-10-14/prepare.mjs",
+      "sha256": "4cf0421f7c31e3ebcfb807f4099eb68372b064bff6787327938dc7a63a206187"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-bounded-repair-2026-10-14/image/Dockerfile",
+      "sha256": "dc29f122ff1818e2cfe7907be628d9f92b2c3767d8499a4a0176a1acaf8c1806"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-bounded-repair-2026-10-14/image/install-candidates.mjs",
+      "sha256": "27b266edb64b67eb533673866f0029735c84ae1e3e4f6fcaa1b0ffbcb3d67db7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-bounded-repair-2026-10-14/image/entrypoint.mjs",
+      "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+    }
+  ],
+  "qaHelpers": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/run-consumers.mjs",
+      "sha256": "a66649f9ce944cec637efe7c641a7ee3db13c08d072769744c782cdbcd932e08"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/build-image.mjs",
+      "sha256": "3cd8e34d9a02047b8f0e9be9d4954133d19f8d8f286fc737e755ce69341ac57b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-actual-packed-public-contracts.mjs",
+      "sha256": "5e453d5681217c97234a1e3bdd662b7f0882ad3be96ac94bd05afa041b94f7fc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-dependent-contracts.mjs",
+      "sha256": "1b978c057954b4c944147ce5bcb48638d9f0572e38e90cadfd1513f5869dd7d0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-backend-export-closure.mjs",
+      "sha256": "fee6f03bfef4c292bdbec7fe44f018b6c9bb24c504043a7cfa585f7894df60fd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-template-catalog.mjs",
+      "sha256": "c952f53f07bf1a3ba1322d0cc265681505f0d6f3b727163f386ae121e2830840"
+    }
+  ],
+  "preservedFailure": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-template-catalog-v1.log",
+    "logSha256": "1786143c90fae2fe2d7c90c01152fc93f8f168cee8016c77fb23f46fe498bf43",
+    "exitCode": 1,
+    "classification": "QA count assertion: K21 has14 current descriptors, consisting of13 historical plus Vercel1.4.2. Byte equality had already passed. Only failed catalog helper rerun; builds/packs/passing consumers unchanged."
+  },
+  "noNativeQualificationOrLatencyClaim": true
+}

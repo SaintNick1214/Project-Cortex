@@ -1,0 +1,85 @@
+{
+  "observedAt": "2026-10-14T13:34:30.115Z",
+  "transport": "official ConvexHttpClient",
+  "target": {
+    "sessionId": "c1017228-182f-43f7-8663-132b976f4fa3",
+    "name": "effervescent-llama-943",
+    "id": 6166959,
+    "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde"
+  },
+  "cases": [
+    {
+      "name": "valid-owner",
+      "expected": "ACCEPT",
+      "observed": "ACCEPT",
+      "passed": true,
+      "elapsedMs": 374.88650000000007,
+      "httpStatuses": [
+        200
+      ],
+      "protectedPayloads": 1
+    },
+    {
+      "name": "expired-signed",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "passed": true,
+      "elapsedMs": 99.96829200000002,
+      "httpStatuses": [
+        401
+      ],
+      "protectedPayloads": 0,
+      "errorMetadata": {
+        "code": null,
+        "name": "Error",
+        "messageSha256": "6974b287dc91878f7e1935036fbe6b98e116b4c5fb5a1053f56fb8ab52308f58",
+        "messageBytes": 97,
+        "mentionsAuthentication": true,
+        "timeout": false
+      }
+    },
+    {
+      "name": "invalid-signature",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "passed": true,
+      "elapsedMs": 88.53525000000013,
+      "httpStatuses": [
+        401
+      ],
+      "protectedPayloads": 0,
+      "errorMetadata": {
+        "code": null,
+        "name": "Error",
+        "messageSha256": "818198d581ca3fd7592d339437992c881ed1a76e851eca16345ea6821c076454",
+        "messageBytes": 199,
+        "mentionsAuthentication": true,
+        "timeout": false
+      }
+    },
+    {
+      "name": "no-token",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "passed": true,
+      "elapsedMs": 205.64599999999996,
+      "httpStatuses": [
+        200
+      ],
+      "protectedPayloads": 0,
+      "errorMetadata": {
+        "code": "UNAUTHENTICATED",
+        "name": "ConvexError",
+        "messageSha256": "a6446f5b1f31c462980b1520d05ffecf4ef78e1cbcbda5804bc463909854d18c",
+        "messageBytes": 495,
+        "mentionsAuthentication": true,
+        "timeout": false
+      }
+    }
+  ],
+  "paidCalls": 0,
+  "productMutations": 0,
+  "rawTokenOrRemoteMessagesRetained": false,
+  "websocketFailureReclassified": false,
+  "passed": true
+}

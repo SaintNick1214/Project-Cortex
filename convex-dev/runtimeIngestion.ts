@@ -372,11 +372,75 @@ export const persistStage = internalMutation({ args: { ...leaseArgs, payloadCano
   const next = args.stage === "extract" ? "facts" : args.stage === "facts" ? "vectors" : undefined;
   if (next) await ctx.scheduler.runAfter(0, processRef, { reference: args.reference, eventId: args.eventId, stage: next }); return { receiptId };
 } });
-export const failStage = internalMutation({ args: { ...leaseArgs, uncertain: v.boolean(), failureCode: v.string() }, handler: async (ctx, args) => {
+const domainFailure = v.union(v.literal("invalid_output"), v.literal("ambiguous_extraction"));
+const outputErrors = new Set(["INVALID_INPUT: extraction output must contain a facts array", "INVALID_INPUT: malformed structured fact",
+  "INVALID_INPUT: malformed extracted entity", "INVALID_INPUT: malformed extracted relation", "INVALID_INPUT: unknown extraction output fields",
+  "INVALID_INPUT: invalid extraction output"]);
+function outputError(error: unknown): boolean {
+  return error instanceof SyntaxError || error instanceof Error && outputErrors.has(error.message);
+}
+/** Classification only, never replay/serving/accounting authority. Positively
+ * retained terminal output and a known invalid domain value are separate from
+ * an interrupted dispatch. A partial/mismatched receipt stays UNKNOWN. */
+async function confirmedDomainFailure(ctx: MutationCtx, event: Event, stage: Doc<"runtimeIngestionStages">,
+  failure: "invalid_output" | "ambiguous_extraction"): Promise<boolean> {
+  if (failure === "invalid_output" ? stage.stage !== "extract" : stage.stage !== "facts") return false;
+  const extract = stage.stage === "extract" ? stage : await stageRow(ctx, event, "extract");
+  if (failure === "ambiguous_extraction" && (extract.state !== "complete" || !extract.payloadCanonical)) return false;
+  const job = await ctx.db.query("runtimeIngestionJobs").withIndex("by_event", q => q.eq("tenantId", event.tenantId)
+    .eq("memorySpaceId", event.memorySpaceId).eq("eventId", event.eventId)).unique();
+  if (!job) return false;
+  const semanticId = await semanticHash(canonicalModelJson(["memory.extract", `${event.eventId}:extract:${extract.attempt}`, event.extractionVersion]));
+  const operation = exactOne(await ctx.db.query("runtimeModelOperations").withIndex("by_identity", q => q.eq("tenantId", event.tenantId)
+    .eq("memorySpaceId", event.memorySpaceId).eq("principalId", event.authorityReference.principalId)
+    .eq("semanticId", semanticId).eq("operationKey", "memory.extract")).take(2));
+  if (!operation || !operation.source || operation.runAccountId !== job.runAccountId || operation.snapshotCanonical !== extract.policyCanonical
+    || canonicalModelJson(operation.reference) !== canonicalModelJson(event.authorityReference)
+    || canonicalModelJson(operation.source) !== canonicalModelJson({ sourceId: event.lineage.sourceId, sourceEventId: event.lineage.sourceEventId,
+      sourceRevision: event.lineage.sourceRevision, contentHash: event.contentHash })) return false;
+  const attempt = exactOne(await ctx.db.query("runtimeModelAttempts").withIndex("by_operation", q => q.eq("operationDocumentId", operation._id)).take(2));
+  if (!attempt || !["settled", "uncertain"].includes(attempt.state) || !attempt.slotReleased || attempt.resultWithheld
+    || attempt.resultAttachmentState !== "attached" || !attempt.privateResultCanonical || !attempt.terminalEvidenceCanonical
+    || attempt.snapshotCanonical !== operation.snapshotCanonical || attempt.runAccountId !== job.runAccountId
+    || attempt.ordinal !== 0 || attempt.attemptNumber !== 1
+    || await semanticHash(attempt.terminalEvidenceCanonical) !== attempt.terminalEvidenceHash) return false;
+  const source = exactOne(await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", event.tenantId)
+    .eq("memorySpaceId", event.memorySpaceId).eq("lineage.sourceId", event.lineage.sourceId)).take(2));
+  if (!source || source.tombstonedAt !== undefined || source.ownerPrincipalId !== event.ownerPrincipalId || source.contentHash !== event.contentHash
+    || canonicalModelJson(source.lineage) !== canonicalModelJson(event.lineage)) return false;
+  let terminal: unknown, result: unknown, snapshot: unknown;
+  try { terminal = JSON.parse(attempt.terminalEvidenceCanonical); result = JSON.parse(attempt.privateResultCanonical); snapshot = JSON.parse(attempt.snapshotCanonical); }
+  catch { return false; }
+  const record = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value);
+  if (!record(terminal) || !record(result) || !record(snapshot) || snapshot.operationKey !== "memory.extract" || snapshot.nativeInterface !== "chat"
+    || terminal.outcome !== "confirmed"
+    || terminal.dispatchIdentity !== attempt.dispatchIdentity || terminal.modelId !== snapshot.modelId || terminal.nativeInterface !== "chat"
+    || !record(terminal.usage) || ![terminal.usage.inputTokens, terminal.usage.outputTokens].every(value => Number.isSafeInteger(value) && Number(value) >= 0)
+    || Number(terminal.usage.inputTokens) > attempt.measuredInputTokens || Number(terminal.usage.outputTokens) > attempt.maximumOutputTokens
+    || typeof result.text !== "string") return false;
+  try {
+    const candidates = parseSourceFactsResponse(result.text, source);
+    if (failure === "invalid_output") return false;
+    if (canonicalModelJson(JSON.parse(JSON.stringify(candidates))) !== extract.payloadCanonical) return false;
+    // Match the worker's persisted JSON values. Parser-only undefined optional
+    // properties are not Convex wire values and cannot change this proof.
+    const persisted = JSON.parse(extract.payloadCanonical!) as AttributedFact[];
+    await planBeliefs({ eventId: event.eventId, sequence: event.sequence, source, candidates: persisted, existing: [], resolve: async () => {
+      throw new Error("Unexpected empty-read-set conflict");
+    } });
+    return false;
+  } catch (error) {
+    return failure === "invalid_output" ? outputError(error) : error instanceof Error && error.message === "AMBIGUOUS_EXTRACTION_SLOT";
+  }
+}
+export const failStage = internalMutation({ args: { ...leaseArgs, uncertain: v.boolean(), failureCode: v.string(), domainFailure: v.optional(domainFailure) }, handler: async (ctx, args) => {
   const event = await eventById(ctx, args.reference, args.eventId); if (!event) return null; const row = await stageRow(ctx, event, args.stage);
   if (row.state !== "running" || row.attempt !== args.attempt || row.leaseVersion !== args.leaseVersion) return null;
-  await writeStage(ctx, event, row, { state: args.uncertain ? "unknown" : row.attempt >= MAX_INGESTION_ATTEMPTS ? "dead_letter" : "failed",
-    failureCode: args.failureCode, updatedAt: Date.now() }); await readiness(ctx, event); return null;
+  const confirmed = args.domainFailure !== undefined && canonicalModelJson(args.reference) === canonicalModelJson(event.authorityReference)
+    && await confirmedDomainFailure(ctx, event, row, args.domainFailure);
+  await writeStage(ctx, event, row, { state: confirmed ? "dead_letter" : args.uncertain ? "unknown" : row.attempt >= MAX_INGESTION_ATTEMPTS ? "dead_letter" : "failed",
+    failureCode: confirmed ? args.domainFailure === "invalid_output" ? "INVALID_CONFIRMED_MODEL_OUTPUT" : "AMBIGUOUS_EXTRACTION_SLOT" : args.failureCode,
+    updatedAt: Date.now() }); await readiness(ctx, event); return null;
 } });
 /** No grant/model lookup is needed to retire an already expired captured job. */
 export const expireStage = internalMutation({ args: leaseArgs, handler: async (ctx, args) => {
@@ -514,7 +578,7 @@ export async function processStageHandler(ctx: ActionCtx, args: { reference: Run
   }
   if (!owned) return null;
   const lease: StageLease = { reference: owned.reference, eventId: owned.eventId, stage: owned.stage, attempt: owned.attempt, leaseVersion: owned.leaseVersion };
-  let dispatched = false;
+  let dispatched = false; let extractionReturned = false;
   try {
     const input = await ctx.runQuery(ref<"query", StageLease, Awaited<ReturnType<typeof requireStageLease>> & { extraction: string; existing: DerivedFact[] }>("query", "runtimeIngestion:stageInput"), lease);
     const base = createActionMemoryRepository(ctx, args.reference, "write");
@@ -525,7 +589,9 @@ export async function processStageHandler(ctx: ActionCtx, args: { reference: Run
     const operationId = `${args.eventId}:${args.stage}:${owned.attempt}`;
     if (args.stage === "extract") {
       dispatched = true;
-      const facts = await extractSourceFacts(input.source, model, { operationId, policyVersion: input.event.extractionVersion, attempt: 1, source: input.source.lineage });
+      const facts = await extractSourceFacts(input.source, { extract: async request => {
+        const result = await model.extract(request); extractionReturned = true; return result;
+      } }, { operationId, policyVersion: input.event.extractionVersion, attempt: 1, source: input.source.lineage });
       await ctx.runMutation(ref<"mutation", StageLease & { payloadCanonical: string }, unknown>("mutation", "runtimeIngestion:persistStage"),
         { ...lease, payloadCanonical: canonicalModelJson(JSON.parse(JSON.stringify(facts))) });
     } else if (args.stage === "facts") {
@@ -582,9 +648,13 @@ export async function processStageHandler(ctx: ActionCtx, args: { reference: Run
       } catch (waitError) { error = waitError; }
     }
     const safe = !dispatched || predispatch(error);
-    await ctx.runMutation(ref<"mutation", StageLease & { uncertain: boolean; failureCode: string }, null>("mutation", "runtimeIngestion:failStage"),
+    const knownFailure = args.stage === "extract" && (extractionReturned && outputError(error) || controlCode(error) === "INVALID_MODEL_OUTPUT")
+      ? "invalid_output" as const : args.stage === "facts" && error instanceof Error && error.message === "AMBIGUOUS_EXTRACTION_SLOT"
+        ? "ambiguous_extraction" as const : undefined;
+    await ctx.runMutation(ref<"mutation", StageLease & { uncertain: boolean; failureCode: string; domainFailure?: typeof knownFailure }, null>("mutation", "runtimeIngestion:failStage"),
       { ...lease, uncertain: !safe, failureCode: controlCode(error) === "REPLAN_REQUIRED" ? "REPLAN_REQUIRED"
-        : controlCode(error) === "CAPACITY_WAIT_EXPIRED" ? "CAPACITY_WAIT_EXPIRED" : safe ? "INDEXING_FAILED" : "INDEXING_OUTCOME_UNKNOWN" });
+        : controlCode(error) === "CAPACITY_WAIT_EXPIRED" ? "CAPACITY_WAIT_EXPIRED" : safe ? "INDEXING_FAILED" : "INDEXING_OUTCOME_UNKNOWN",
+      ...(knownFailure ? { domainFailure: knownFailure } : {}) });
   }
   return null;
 }

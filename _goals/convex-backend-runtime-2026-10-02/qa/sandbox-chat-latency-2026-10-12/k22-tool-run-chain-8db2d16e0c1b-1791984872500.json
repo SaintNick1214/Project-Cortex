@@ -1,0 +1,513 @@
+{
+  "observedAt": "2026-10-14T13:34:32.499Z",
+  "target": {
+    "sessionId": "c1017228-182f-43f7-8663-132b976f4fa3",
+    "name": "effervescent-llama-943",
+    "id": 6166959,
+    "reference": "dev/cortex-sandbox-c1017228-182f-43f7-8663-132b976f4fa3"
+  },
+  "freshVerifications": 27,
+  "run": {
+    "runId": "run:8db2d16e0c1b06262e59c0531b482d207d2a5b422227c2b45705ab60f4016bab",
+    "responseStatus": "COMPLETE",
+    "attemptNumber": 1,
+    "createdAt": 1791984557015,
+    "updatedAt": 1791984641132,
+    "outputMessageCount": 1
+  },
+  "execution": {
+    "state": "COMPLETE",
+    "contextState": "COMPLETE",
+    "executionMode": "direct-v8",
+    "directState": "continuation",
+    "scheduledActionId": "kc23x9dv2fgv46mk1ddn8g4v7d8g9d8q",
+    "workflowId": "jd7eme6940mm7zang8sb9kzf0h8g8aen"
+  },
+  "workflows": [
+    {
+      "id": "jd7eme6940mm7zang8sb9kzf0h8g8aen",
+      "generationNumber": 0,
+      "workflowHandleSha256": "260b4690ddc36a95723b81c0986a47ee44fdae2e4406ca101fef5d85874a1242",
+      "resultKind": "success"
+    }
+  ],
+  "stages": {
+    "durable": [
+      {
+        "sequence": 1,
+        "final": false,
+        "createdAt": 1791984561674,
+        "type": "tool",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791984567177,
+        "type": "tool",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 3,
+        "final": false,
+        "createdAt": 1791984573596,
+        "type": "tool",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 4,
+        "final": false,
+        "createdAt": 1791984575927,
+        "type": "status",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 5,
+        "final": false,
+        "createdAt": 1791984625541,
+        "type": "tool",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 6,
+        "final": false,
+        "createdAt": 1791984625541,
+        "type": "status",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 7,
+        "final": false,
+        "createdAt": 1791984627234,
+        "type": "tool",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 8,
+        "final": false,
+        "createdAt": 1791984636208,
+        "type": "tool",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 9,
+        "final": false,
+        "createdAt": 1791984636208,
+        "type": "artifact",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 10,
+        "final": false,
+        "createdAt": 1791984639454,
+        "type": "text-start",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 11,
+        "final": false,
+        "createdAt": 1791984639454,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 5
+      },
+      {
+        "sequence": 12,
+        "final": false,
+        "createdAt": 1791984640533,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 2
+      },
+      {
+        "sequence": 13,
+        "final": false,
+        "createdAt": 1791984640533,
+        "type": "text-end",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 14,
+        "final": true,
+        "createdAt": 1791984641132,
+        "type": "text",
+        "nonemptyText": true,
+        "textBytes": 7
+      },
+      {
+        "sequence": 15,
+        "final": true,
+        "createdAt": 1791984641132,
+        "type": "status",
+        "nonemptyText": false,
+        "textBytes": 0
+      }
+    ],
+    "agentOperations": [
+      {
+        "kind": "model",
+        "ordinal": 1,
+        "state": "complete",
+        "createdAt": 1791984637594,
+        "startedAt": 1791984637594,
+        "endedAt": 1791984640831
+      },
+      {
+        "kind": "tool",
+        "ordinal": 0,
+        "state": "complete",
+        "createdAt": 1791984573596,
+        "startedAt": 1791984627234,
+        "endedAt": 1791984636208
+      },
+      {
+        "kind": "model",
+        "ordinal": 0,
+        "state": "complete",
+        "createdAt": 1791984557854,
+        "startedAt": 1791984557854,
+        "endedAt": 1791984567469
+      }
+    ],
+    "modelOperations": [
+      {
+        "_id": "th79npz8tw5xsv42jyc27p6q2x8g860s",
+        "operationKey": "conversation.title",
+        "createdAt": 1791984646451,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "th734tmgbvpmjvwh1nfmctrced8g9mxb",
+        "operationKey": "agent.respond",
+        "createdAt": 1791984638309,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "th79ant2k8c4cx0e1smg7sv5n58g93he",
+        "operationKey": "embedding.memory",
+        "createdAt": 1791984633710,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "th71zaq6a77q7w79yb01g4c1qh8g9akp",
+        "operationKey": "memory.extract",
+        "createdAt": 1791984629455,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "th727bc3tgf93n5276919ynx098g8pxm",
+        "operationKey": "agent.respond",
+        "createdAt": 1791984559973,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      }
+    ],
+    "modelAttempts": [
+      {
+        "operationDocumentId": "th79npz8tw5xsv42jyc27p6q2x8g860s",
+        "state": "uncertain",
+        "createdAt": 1791984646451,
+        "checkpointAt": 1791984647818,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "th734tmgbvpmjvwh1nfmctrced8g9mxb",
+        "state": "uncertain",
+        "createdAt": 1791984638309,
+        "checkpointAt": 1791984638309,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "th79ant2k8c4cx0e1smg7sv5n58g93he",
+        "state": "uncertain",
+        "createdAt": 1791984633710,
+        "checkpointAt": 1791984634063,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "th71zaq6a77q7w79yb01g4c1qh8g9akp",
+        "state": "uncertain",
+        "createdAt": 1791984629455,
+        "checkpointAt": 1791984629863,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "th727bc3tgf93n5276919ynx098g8pxm",
+        "state": "uncertain",
+        "createdAt": 1791984559973,
+        "checkpointAt": 1791984559973,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      }
+    ],
+    "ingestionEvents": [
+      {
+        "eventId": "ingestion:3a253de8527f2e24df52c730db0e132b068b375c44ea02b52ca99052c5a6d885",
+        "sequence": 3,
+        "eligibility": "eligible",
+        "factsState": "skipped",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791984641132,
+        "updatedAt": 1791984643848
+      },
+      {
+        "eventId": "ingestion:c8f296322b9fc1d46030868e6c72fbe55552b683159b2a397f3d570611c806a1",
+        "sequence": 2,
+        "eligibility": "eligible",
+        "factsState": "complete",
+        "vectorsState": "complete",
+        "createdAt": 1791984636208,
+        "updatedAt": 1791984636208
+      },
+      {
+        "eventId": "ingestion:eab1b87d8cc84fa3fad33da4da8144180d71c2e9edfc69d4eeb6979d68e2fa0a",
+        "sequence": 1,
+        "eligibility": "eligible",
+        "factsState": "complete",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791984557015,
+        "updatedAt": 1791984567894
+      }
+    ],
+    "ingestionStages": [
+      {
+        "eventId": "ingestion:3a253de8527f2e24df52c730db0e132b068b375c44ea02b52ca99052c5a6d885",
+        "stage": "vectors",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791984643848
+      },
+      {
+        "eventId": "ingestion:3a253de8527f2e24df52c730db0e132b068b375c44ea02b52ca99052c5a6d885",
+        "stage": "facts",
+        "state": "skipped",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791984641132
+      },
+      {
+        "eventId": "ingestion:3a253de8527f2e24df52c730db0e132b068b375c44ea02b52ca99052c5a6d885",
+        "stage": "extract",
+        "state": "skipped",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791984641132
+      },
+      {
+        "eventId": "ingestion:c8f296322b9fc1d46030868e6c72fbe55552b683159b2a397f3d570611c806a1",
+        "stage": "vectors",
+        "state": "complete",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791984636208
+      },
+      {
+        "eventId": "ingestion:c8f296322b9fc1d46030868e6c72fbe55552b683159b2a397f3d570611c806a1",
+        "stage": "facts",
+        "state": "complete",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791984636208
+      },
+      {
+        "eventId": "ingestion:c8f296322b9fc1d46030868e6c72fbe55552b683159b2a397f3d570611c806a1",
+        "stage": "extract",
+        "state": "skipped",
+        "attempt": 0,
+        "leaseVersion": 0,
+        "updatedAt": 1791984636208
+      },
+      {
+        "eventId": "ingestion:eab1b87d8cc84fa3fad33da4da8144180d71c2e9edfc69d4eeb6979d68e2fa0a",
+        "stage": "vectors",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791984567894
+      },
+      {
+        "eventId": "ingestion:eab1b87d8cc84fa3fad33da4da8144180d71c2e9edfc69d4eeb6979d68e2fa0a",
+        "stage": "facts",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791984564073
+      },
+      {
+        "eventId": "ingestion:eab1b87d8cc84fa3fad33da4da8144180d71c2e9edfc69d4eeb6979d68e2fa0a",
+        "stage": "extract",
+        "state": "complete",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "updatedAt": 1791984562071
+      }
+    ],
+    "ingestionJobs": [
+      {
+        "eventId": "ingestion:3a253de8527f2e24df52c730db0e132b068b375c44ea02b52ca99052c5a6d885",
+        "runBudgetId": "e601e387b6df6a30c247ee4ab255cd5908fe2b13e89abaa4d2c24e63176f24ca",
+        "runAccountId": "ps775mg88wfasswckw0jsstmzh8g8b55",
+        "createdAt": 1791984641643
+      },
+      {
+        "eventId": "ingestion:eab1b87d8cc84fa3fad33da4da8144180d71c2e9edfc69d4eeb6979d68e2fa0a",
+        "runBudgetId": "dfdfb8e50f5269b67c9a1602fe68ece4059aa530b5853ab809aec1044adf4dba",
+        "runAccountId": "ps76tkjkxjsfhfgqhknnwmw5nn8g8b3y",
+        "createdAt": 1791984557800
+      }
+    ],
+    "titleJobs": [
+      {
+        "jobId": "content:d8b79261d0e7cbe2c86608751859c76b43fb53e4cb257c4f9763f697d6fc1730",
+        "intent": "title",
+        "state": "ready",
+        "createdAt": 1791984641505,
+        "updatedAt": 1791984654117
+      }
+    ]
+  },
+  "runBudgetId": "82dccab5db750cdfdb0e11d7bde00d8c6084cd3906af1f25f7f296573be3d932",
+  "steps": [
+    {
+      "stepNumber": 5,
+      "name": "context and model turn 1",
+      "functionType": "action",
+      "kind": "function",
+      "functionHandleSha256": "ca4d48a7b3d81997748e96901ef10e706650ade115504c5faca229dbbe91d087",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791984636988,
+      "completedAt": 1791984642038
+    },
+    {
+      "stepNumber": 4,
+      "name": "server tool memory_remember",
+      "functionType": "action",
+      "kind": "function",
+      "functionHandleSha256": "86ccc994abe1cdb3a2013c5ede820a1cc4a3455bc124e7f87f8027d01db48ad2",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791984626145,
+      "completedAt": 1791984636557
+    },
+    {
+      "stepNumber": 3,
+      "name": "agent-op:9de61395c5cf57914d043d973dcabc121429bfc0d53affd2cfe1f7de8a365aca",
+      "kind": "event",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791984576745,
+      "completedAt": 1791984625541
+    },
+    {
+      "stepNumber": 2,
+      "name": "runtimeAgent:waitForApproval",
+      "functionType": "mutation",
+      "kind": "function",
+      "functionHandleSha256": "325de95cec683fb695254677cb338017b0df6b2fff2510c934049b29a85df6b4",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791984575123,
+      "completedAt": 1791984576401
+    },
+    {
+      "stepNumber": 1,
+      "name": "runtimeAgent:beginOperation",
+      "functionType": "mutation",
+      "kind": "function",
+      "functionHandleSha256": "99eb0a5f111ba5f1959c2a90a1a44c3141909ad62de9d5cea1644bf6bc20740c",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791984572973,
+      "completedAt": 1791984574350
+    },
+    {
+      "stepNumber": 0,
+      "name": "runtimeAgent:completedModelStep",
+      "functionType": "query",
+      "kind": "function",
+      "functionHandleSha256": "6e8fdf8b53e043732dc295fef157920752c6541c48b9d1a5e13a68bed2456716",
+      "inProgress": false,
+      "resultKind": "success",
+      "startedAt": 1791984570070,
+      "completedAt": 1791984572420
+    }
+  ],
+  "orchestration": {
+    "expectedFreshOrdinaryAction": "executeDirectV8",
+    "nativeNames": [
+      "runtimeAgent:executeDirectV8",
+      "runtimeAgent:prepareDirectTurnV8",
+      "runtimeAgent:prepareTurnModelV8",
+      "runtimeAgent:prepareResolvedModelCandidateV8",
+      "runtimeAgent:saveAndPrepareContextV8",
+      "runtimeAgent:admitPreparedModelOperationV8",
+      "runtimeAgent:prepareDirectTurn",
+      "runtimeAgent:prepareTurnModel",
+      "runtimeAgent:prepareResolvedModelOperation",
+      "runtimeAgent:prepareResolvedModelCandidate",
+      "runtimeAgent:saveAndPrepareContext",
+      "runtimeAgentRecall:prepareReads",
+      "runtimeAgentRecall:readMatches",
+      "runtimeAgent:admitPreparedModelOperation",
+      "runtimeAgent:contextSourceBatch",
+      "runtimeAgent:contextSource",
+      "runtimeAgentQueryEmbedding:prepare",
+      "runtimeAgentQueryEmbedding:admit",
+      "runtimeClient:submitAndStartEnvelope"
+    ],
+    "ordinaryTurnJournalCount": 1,
+    "note": "Observed journal metadata only; no old context/model/finalize step is required. Nested native parents are joined from saved native execution/request metadata."
+  },
+  "counts": {
+    "agentOperations": 3,
+    "modelOperations": 5,
+    "modelAttempts": 5
+  },
+  "errors": [],
+  "phases": [],
+  "logLineStructures": [],
+  "rawPayloadRetained": false
+}

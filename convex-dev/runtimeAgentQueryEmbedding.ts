@@ -14,14 +14,14 @@ import type { MemoryModel, MemoryRepository } from "../src/domain/contracts";
 import { normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { createAuthorityReadScope } from "./runtimeAuth";
+import { createAuthorityReadScope, createV8AuthorityReadScope } from "./runtimeAuth";
 import { executionContext } from "./runtimeAgent";
 import { ConvexMemoryRepository, memoryError } from "./runtimeMemoryRepository";
 import { admitHandler, readCurrentEmbeddingProfile, resolveHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
 import { assertGatewayReservedRequest, GatewayDispatchError } from "./runtimeGateway";
 import type { GatewayAdmissionCheckpoint, GatewayBinding, GatewayCheckpoint, GatewayResolution } from "./runtimeGateway";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
-import { finishAgentRecall } from "./runtimeAgentRecall";
+import { finishAgentRecall, finishAgentRecallV8 } from "./runtimeAgentRecall";
 import type { AgentRecallSelection } from "./runtimeAgentRecall";
 import { assertMemoryRequestId, finishRecallFromEmbedding } from "./runtimeMemoryServices";
 
@@ -61,8 +61,9 @@ function gatewayResolution(value: Awaited<ReturnType<typeof resolveHandler>>): G
 }
 
 /** Every original preflight predicate executes here, in original memory order. */
-export async function prepareAgentQueryEmbeddingHandler(ctx: QueryCtx, args: NativeArgs) {
+export async function prepareAgentQueryEmbeddingHandler(ctx: QueryCtx, args: NativeArgs, expectedVersion?: 8) {
   const { current, text } = await currentQuery(ctx, args);
+  if (expectedVersion === 8 && current.snapshot.version !== 8) memoryError("INVALID_STATE", "V8 recall required");
   const repository = new ConvexMemoryRepository(ctx, args.reference, "read", undefined, { now: () => Date.now() },
     (key, runBudgetId) => readCurrentEmbeddingProfile(ctx, args.reference, key, runBudgetId));
   await repository.recheckAuthority();
@@ -86,8 +87,10 @@ const checkpointRef = makeFunctionReference("runtimeModelPolicy:checkpoint") as 
   { reference: RuntimeAuthorityReference; attemptId: Parameters<typeof assertGatewayReservedRequest>[0]["attemptId"]; requestCanonical: string }, GatewayCheckpoint>;
 
 /** Reservation commits even if validation/checkpoint refuses. Child checkpoint writes roll back separately. */
-export async function admitAgentQueryEmbeddingHandler(ctx: MutationCtx, args: AdmitArgs): Promise<AdmissionResult> {
-  const { current, text } = await currentQuery(ctx, args), selected = await queryBinding(ctx, args, text, current.run.runBudgetId);
+export async function admitAgentQueryEmbeddingHandler(ctx: MutationCtx, args: AdmitArgs, expectedVersion?: 8): Promise<AdmissionResult> {
+  const { current, text } = await currentQuery(ctx, args);
+  if (expectedVersion === 8 && current.snapshot.version !== 8) memoryError("INVALID_STATE", "V8 recall required");
+  const selected = await queryBinding(ctx, args, text, current.run.runBudgetId);
   if (args.bindingCanonical !== canonicalModelJson(selected.binding)) memoryError("POLICY_DENIED", "Agent query embedding binding changed");
   let request: Record<string, unknown>;
   try { request = JSON.parse(args.requestCanonical) as Record<string, unknown>; }
@@ -126,6 +129,34 @@ export async function recallAgentMemory(ctx: ActionCtx, attempt: AgentQueryEmbed
     } });
   const result = await model.embed(proposal.request);
   if (selection) return await finishAgentRecall(ctx, attempt, clock, input, proposal.profile, result, selection);
+  return await finishRecallFromEmbedding({ repository, clock }, { text: normalizeSourceText(input.text), limit: input.limit },
+    { profile: proposal.profile, runBudgetId: proposal.binding.runBudgetId }, result);
+}
+
+/** Explicit V8 registrations; legacy/private and public recall keep their original lanes. */
+export const prepareV8 = internalQuery({ args: { ...attemptArgs, input: inputArgs },
+  handler: (ctx, args) => prepareAgentQueryEmbeddingHandler(createV8AuthorityReadScope(ctx), args, 8) });
+export const admitV8 = internalMutation({ args: { ...attemptArgs, input: inputArgs, bindingCanonical: v.string(), requestCanonical: v.string(), snapshotCanonical: v.string() },
+  handler: (ctx, args) => admitAgentQueryEmbeddingHandler(createV8AuthorityReadScope(ctx), args, 8) });
+const prepareV8Ref = makeFunctionReference("runtimeAgentQueryEmbedding:prepareV8") as unknown as typeof prepareRef;
+const admitV8Ref = makeFunctionReference("runtimeAgentQueryEmbedding:admitV8") as unknown as typeof admitRef;
+
+export async function recallAgentMemoryV8(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, repository: MemoryRepository, clock: DomainClock, input: Input, selection?: AgentRecallSelection) {
+  const proposal = await ctx.runQuery(prepareV8Ref, { ...attempt, input });
+  const model = createGatewayMemoryModel(ctx, repository, { runBudgetId: proposal.binding.runBudgetId,
+    queryEmbedding: { binding: proposal.binding, requestCanonical: canonicalModelJson(proposal.request), resolutions: proposal.resolutions,
+      refresh: async () => (await ctx.runQuery(prepareV8Ref, { ...attempt, input })).resolutions[1],
+      admitAndCheckpoint: async request => {
+        const result = await ctx.runMutation(admitV8Ref, { ...attempt, input, requestCanonical: request.requestCanonical,
+          snapshotCanonical: request.snapshotCanonical, bindingCanonical: canonicalModelJson({ reference: request.reference,
+            operationKey: request.operationKey, runBudgetId: request.runBudgetId, semanticId: request.semanticId, ordinal: request.ordinal,
+            ...(request.source !== undefined ? { source: request.source } : {}), ...(request.parentOperationId !== undefined ? { parentOperationId: request.parentOperationId } : {}) }) });
+        if ("refusal" in result) return throwRefusal(result.refusal);
+        return result.result;
+      },
+    } });
+  const result = await model.embed(proposal.request);
+  if (selection) return await finishAgentRecallV8(ctx, attempt, clock, input, proposal.profile, result, selection);
   return await finishRecallFromEmbedding({ repository, clock }, { text: normalizeSourceText(input.text), limit: input.limit },
     { profile: proposal.profile, runBudgetId: proposal.binding.runBudgetId }, result);
 }

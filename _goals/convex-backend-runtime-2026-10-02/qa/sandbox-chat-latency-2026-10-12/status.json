@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K21 allfour ordinary replies COMPLETE, SLO0/4; native memory/auth proofs and delay diagnosis running",
+  "phase": "K23 source independently accepted; packaging fresh installed candidate",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T13:05:29.933489+00:00",
+  "updatedAt": "2026-10-14T15:05:51.673394+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,38 +58,30 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "generation": "K21",
-    "sessionId": "2d6e9566-0948-4dd7-8df5-5d7626598a60",
-    "state": "READY",
-    "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
-    "imageId": "sha256:1f28446423b5da71e8e8a22a32c6ad874acae565710c0cb6fa4c187984952c8b",
-    "launcherSession": 85056,
+    "generation": "K22",
+    "sessionId": "c1017228-182f-43f7-8663-132b976f4fa3",
+    "state": "CLEANED",
+    "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+    "launcherSession": 68539,
     "nativeSLOQualified": false,
     "fixedStartupCeilingUnits": 2700000,
     "target": {
-      "id": 6164369,
-      "name": "next-turtle-281",
-      "kind": "cloud",
+      "id": 6166959,
+      "name": "effervescent-llama-943",
       "teamId": 325340,
       "projectId": 3200658,
-      "reference": "dev/cortex-sandbox-2d6e9566-0948-4dd7-8df5-5d7626598a60",
-      "deploymentType": "dev",
       "isDefault": false,
-      "expiresAt": 1792581314460,
-      "deploymentUrl": "https://next-turtle-281.convex.cloud",
-      "disposable": true,
-      "serverExpiryVerified": true
+      "deploymentType": "dev"
     },
     "ports": {
-      "web": 3218,
-      "basic": 3219
+      "web": 3140,
+      "basic": 3141
     },
-    "startupFixedQualification": "8/8 actualnativePASS",
-    "traceEnabledBeforeChat": true,
-    "browserTab37": "signedout/closed",
-    "cliExecSession": 77828,
-    "cliExit": 0,
-    "clientsClosed": true
+    "startupFixedQualification": "8/8PASS",
+    "cleanupReceipt": "k22-cleanup-final.json",
+    "launcherExit": 130,
+    "freshCleanupVerificationExit": 0,
+    "allClientsClosed": true
   },
   "actualSamples": {
     "generation": "K21",
@@ -113,9 +105,9 @@
     "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
   },
   "pendingRepairs": [
-    "Fresh V8 installed hosted/browser/CLI/public memory and tool qualification",
-    "Expired/invalid JWT WebSocket timeout failures remain unresolved",
-    "Hosted under1000ms and independent final audit incomplete"
+    "Fresh hosted K23 browser/CLI/public-memory/tool/auth qualification",
+    "Hosted under1000ms",
+    "Independent final audit"
   ],
   "refinements": [
     {
@@ -870,20 +862,11 @@
     "cleanup": "freshABSENT"
   },
   "nextSourceBatch": {
-    "name": "Scoped native transcript raw reader",
-    "implementationPercent": 100,
-    "qualityPercent": 100,
-    "review": "PASS4.0",
-    "internalMilestonesComplete": 3,
-    "internalMilestonesTotal": 3,
-    "internalPercent": 100,
-    "testsPassed": 1924,
-    "testSuitesPassed": 46,
-    "testsSkipped": 0,
-    "testsTodo": 0,
-    "inMemoryInstalledComponentChecksPassed": 5,
-    "cloudQualificationPercent": 0,
-    "cloudSpeedClaim": false
+    "packet": "k23-repair-review-packet.json",
+    "sharedQuality": "6/6exit0",
+    "sourceReview": "PASS",
+    "nativeQualified": false,
+    "reviewReceipt": "k23-repair-independent-review.json"
   },
   "actualK16Samples": {
     "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
@@ -902,20 +885,25 @@
     "subsecondUnavailable": 1
   },
   "nextRepairBatch": {
-    "scope": "ingestion progress publication and ordered context source-witness query batching",
-    "ingestionSourcePercent": 100,
-    "ingestionChecks": {
-      "passed": 1054,
-      "suites": 35,
-      "failed": 0,
-      "skipped": 0
+    "state": "IMPLEMENTING",
+    "sourceBaseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+    "owners": {
+      "nativeV8ReadAndRecallCosts": "cloud_checkpoint_composition",
+      "exactDuplicateExtractionAndMalformedOutputBoundaries": "latency_backend_repair",
+      "authoritativeHttpDenialDuringSilentWsAuth": "root"
     },
-    "sourceBatchPercent": 100,
-    "combinedIndependentReviewPercent": 100,
-    "nativeQualificationPercent": 0,
-    "docsSourceBuildRenderPercent": 100,
-    "review": "ingestion-context-source-joint-review.md",
-    "verdict": "SOURCE ONLY PASS4.0 no breaking findings"
+    "goalPercent": 50,
+    "nativeQualified": false,
+    "independentReview": "PENDING onejointbatch",
+    "authoritativeHttpDenial": {
+      "implementationPercent": 100,
+      "controlledChecksPercent": 100,
+      "tests": "279/279/9files/0skip",
+      "equivalentOriginalMethodBodies": 62,
+      "sharedQuality": "PENDING",
+      "independentReview": "PENDING",
+      "nativeQualified": false
+    }
   },
   "k17ObservedSamples": {
     "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
@@ -1422,7 +1410,7 @@
     }
   },
   "currentRepairBatch": {
-    "state": "Independent PASS3.8 source/test/docsONLY; ready for incremental commit and fresh packaging/native qualification",
+    "state": "Source/review/packaging/launcher complete; fresh native qualification starting",
     "sourceBaseline": "03256989da22bde35dff78023c1c3962391a68c6",
     "owners": {
       "actualWholePromptFitAndContextFanout": "cloud_checkpoint_composition",
@@ -1445,6 +1433,88 @@
     "reviewPacket": "v8-native-repair-review-packet-v2.json",
     "verdict": "PASS3.8 source/test/docsONLY",
     "breakingFindings": 0,
-    "review": "v8-native-repair-independent-review.md"
+    "review": "v8-native-repair-independent-review.md",
+    "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+    "packagingPercent": 100,
+    "launcherPercent": 100,
+    "launcherTests": "111/111/0skip",
+    "launcherDryRunExit": 0
+  },
+  "k22ActualSamples": {
+    "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+    "toolResponse": "COMPLETE",
+    "toolEffect": "SUCCEEDED",
+    "toolApprovalCalls": 1,
+    "toolSloValid": false,
+    "httpAuth": "4/4PASS",
+    "browserFirstMs": 7761.399999976158,
+    "browserWarmMs": 9213.100000023842,
+    "cliFirstMs": 12071.307421999983,
+    "sloPasses": 0,
+    "sloFailures": 4,
+    "browserFirstMemory": "FAILED factsUNKNOWN",
+    "browserWarmMemory": "COMPLETE",
+    "cliFirstMemory": "FAILED",
+    "cliWarm": "COMPLETE",
+    "requiredIntegrationAccepted": false,
+    "paidRetries": 0,
+    "cliWarmMs": 11735.123296999955,
+    "fourRunNativeMemory": {
+      "passed": false,
+      "freshChecks": 45,
+      "factsThrough": 3,
+      "vectorsThrough": 3,
+      "scopeThrough": 11,
+      "unknownUserSequences": [
+        4,
+        8
+      ],
+      "positiveUserSequences": [
+        6,
+        10
+      ],
+      "receipt": "k22-memory-native-v2-four-run-verification-1791985310404.json"
+    },
+    "ordinaryRemember": {
+      "boundedScenario": "PASS",
+      "nativeProof": "221/221",
+      "captureReplayChangedBody": "PASS",
+      "factsVectorsContiguousThrough": 4,
+      "publicRecallMs": 2789.729,
+      "recallItems": 6,
+      "negativeHalf": "PASS reader/outsider/lock/deletion/revocation",
+      "originalHarnessFailuresPreserved": true,
+      "report": "k22-ordinary-memory-native-outcomes.md",
+      "noForcedNativeCapacityCASBranchClaim": true,
+      "paidRetries": 0
+    },
+    "finance": {
+      "attempts": 45,
+      "activeSlots": 0,
+      "allReleased": true,
+      "reservationCeilingsUnits": 6400000,
+      "actualCharges": "UNKNOWN"
+    },
+    "delay": {
+      "createdToModelDispatchMs": [
+        5505,
+        7218,
+        7192,
+        8984
+      ],
+      "modelProcessedFirstTextMs": [
+        596,
+        711,
+        567,
+        642
+      ],
+      "privateRecallMs": [
+        2336,
+        3346,
+        3886,
+        4566
+      ],
+      "report": "k22-whole-path-delay-diagnosis.json"
+    }
   }
 }

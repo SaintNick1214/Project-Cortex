@@ -36,10 +36,10 @@ import { currentRun, currentControlRun, activeAttempt, publicRunCurrent } from "
 import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, hydrateSelectedCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
-import { recheckAuthority, createAuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads } from "./runtimeAuth";
+import { recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads } from "./runtimeAuth";
 import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
 import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
-import { admitHandler, checkpointHandler, resolveHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
+import { admitHandler, checkpointHandler, resolveHandler, readCurrentEmbeddingProfile, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
 import { createAgentGatewayCancellationBridge, createGovernedGatewayModel, assertGatewayReservedRequest, GatewayDispatchError, preflightAgentModelRequest } from "./runtimeGateway";
 import { createActionMemoryRepository } from "./runtimeMemoryRepository";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
@@ -53,7 +53,7 @@ import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { recallMemory } from "./runtimeMemoryServices";
 import type { AgentRecallSelection } from "./runtimeAgentRecall";
 import { boundedRefusal, throwRefusal } from "./runtimeAgentQueryEmbedding";
-import { recallAgentMemory } from "./runtimeAgentQueryEmbedding";
+import { recallAgentMemory, recallAgentMemoryV8 } from "./runtimeAgentQueryEmbedding";
 import { executeServerTool, NATIVE_TOOL_NAMES, semanticToolName, serverTools, serverToolSourceLineage, validateToolInput } from "./runtimeAgentTools";
 import { projectNativeOutputParts } from "./runtimeOutputProjection";
 import type { RuntimePublicOutputPart } from "./runtimeOutputProjection";
@@ -962,8 +962,9 @@ export const admitModelOperation = internalMutation({ args: { ...agentAttempt, o
  * atomic admit/bind/checkpoint parent. Caller input cannot select another lane. */
 async function admitPreparedModelOperationHandler(ctx: MutationCtx, args: Attempt & {
   operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string; bindingCanonical: string;
-}): Promise<GatewayAdmissionCheckpoint> {
+}, expectedVersion?: 8): Promise<GatewayAdmissionCheckpoint> {
   const current = await executionContext(ctx, attemptArgs(args));
+  if (expectedVersion === 8 && current.snapshot.version !== 8) transcriptDenied("INVALID_STATE");
   const semanticId = await semanticHash(canonicalModelJson([args.runId, args.attemptNumber, "model", args.ordinal, null]));
   if (args.bindingCanonical !== canonicalModelJson({ reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId,
     semanticId, ordinal: args.ordinal })) transcriptDenied("POLICY_DENIED");
@@ -972,6 +973,12 @@ async function admitPreparedModelOperationHandler(ctx: MutationCtx, args: Attemp
 export const admitPreparedModelOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string(), ordinal: v.number(),
   requestCanonical: v.string(), snapshotCanonical: v.string(), bindingCanonical: v.string() },
   handler: (ctx, args) => admitPreparedModelOperationHandler(createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }), args) });
+
+/** Private V8 lane; the original binding/ledger/checkpoint predicates are shared. */
+export const admitPreparedModelOperationV8 = internalMutation({ args: { ...agentAttempt, operationId: v.string(), ordinal: v.number(),
+  requestCanonical: v.string(), snapshotCanonical: v.string(), bindingCanonical: v.string() },
+  handler: (ctx, args) => admitPreparedModelOperationHandler(createV8AuthorityReadScope(ctx), args, 8) });
+const admitPreparedModelOperationV8Ref = ref<"mutation", Parameters<typeof admitPreparedModelOperationHandler>[1], GatewayAdmissionCheckpoint>("mutation", "runtimeAgent:admitPreparedModelOperationV8");
 
 export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v.array(v.any()) }, handler: async (nativeCtx, args) => {
   const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true });
@@ -999,7 +1006,7 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
     if (!proposal && (canonicalModelJson(request.reference) !== canonicalModelJson(args.reference) || request.operationKey !== "agent.respond"
       || request.runBudgetId !== current.run.runBudgetId || request.semanticId !== op.semanticId || request.ordinal !== args.ordinal
       || request.source !== undefined || request.parentOperationId !== undefined)) transcriptDenied("POLICY_DENIED");
-    if (proposal) return await ctx.runMutation(refs.admitPreparedModelOperation, { ...attempt, operationId: op.operationId, ordinal: args.ordinal,
+    if (proposal) return await ctx.runMutation(current.snapshot.version === 8 ? admitPreparedModelOperationV8Ref : refs.admitPreparedModelOperation, { ...attempt, operationId: op.operationId, ordinal: args.ordinal,
       requestCanonical: request.requestCanonical, snapshotCanonical: request.snapshotCanonical,
       bindingCanonical: canonicalModelJson({ reference: request.reference, operationKey: request.operationKey, runBudgetId: request.runBudgetId,
         semanticId: request.semanticId, ordinal: request.ordinal, ...(request.source !== undefined ? { source: request.source } : {}),
@@ -1705,6 +1712,12 @@ async function startExecutionV8(ctx: MutationCtx, reference: RuntimeAuthorityRef
   return { runId: row.runId, attemptNumber: claimed.attemptNumber, state: started.state };
 }
 
+/** Original availability predicates and both profile reads share this native snapshot. */
+async function readIndexedContextAvailabilityV8(ctx: QueryCtx | MutationCtx, args: Parameters<typeof readIndexedContextAvailability>[1]) {
+  return await readIndexedContextAvailability(ctx, args,
+    (key, runBudgetId) => readCurrentEmbeddingProfile(ctx, args.reference, key, runBudgetId));
+}
+
 async function contextInputsV8Handler(ctx: QueryCtx | MutationCtx, args: Attempt, stableEmpty = false) {
   let current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
@@ -1760,12 +1773,12 @@ async function contextInputsV8Handler(ctx: QueryCtx | MutationCtx, args: Attempt
   // Keep the action's durable failContext mutation before any availability/profile error.
   if (pending.completeness === "incomplete" && barrier.onFailure === "fail") return { ...inputs, kind: "pending_overflow" as const };
   traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.begin");
-  const availability = await readIndexedContextAvailability(ctx, { reference: args.reference, cutoff,
+  const availability = await readIndexedContextAvailabilityV8(ctx, { reference: args.reference, cutoff,
     excludedSourceKeys: [...new Set([...represented, ...pending.sourceKeys])], boundary, runBudgetId: current.run.runBudgetId });
   traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.end");
   return { ...inputs, kind: "ready" as const, availability };
 }
-export const contextInputsV8 = internalQuery({ args: agentAttempt, handler: (ctx,args) => contextInputsV8Handler(createAuthorityReadScope(ctx,{nativeTranscript:true,policyMetadata:true}), args) });
+export const contextInputsV8 = internalQuery({ args: agentAttempt, handler: (ctx,args) => contextInputsV8Handler(createV8AuthorityReadScope(ctx), args) });
 
 export async function saveContextV8Handler(ctx: MutationCtx, args: Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string; entries: ModelInputEntry[]; historyMessageIds?: string[] }) {
   const current = await executionContext(ctx, args); if (current.execution.contextCanonical !== undefined) transcriptDenied("INVALID_STATE");
@@ -1779,7 +1792,7 @@ export async function saveContextV8Handler(ctx: MutationCtx, args: Attempt & { c
   await checkWitnesses(ctx, args, args.witnesses);
   if (args.emptyIndexedProfileId !== undefined) {
     const scope = { tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! };
-    const availability = await readIndexedContextAvailability(ctx, { reference: args.reference, cutoff: current.snapshot.ingestionCutoff.sequence,
+    const availability = await readIndexedContextAvailabilityV8(ctx, { reference: args.reference, cutoff: current.snapshot.ingestionCutoff.sequence,
       excludedSourceKeys: [...current.snapshot.messages.filter(pin=>historyMessageIds.includes(pin.nativeMessageId)).map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId })), ...args.witnesses.map(witness => contextSourceKey(scope, witness))],
       boundary: { conversationId: current.snapshot.conversationId, runId: args.runId, queueSequence: current.snapshot.queueSequence, anchor: current.snapshot.anchor }, runBudgetId: current.run.runBudgetId });
     if (!availability.empty || availability.profileId !== args.emptyIndexedProfileId) transcriptDenied("STALE_CONTEXT");
@@ -1793,14 +1806,14 @@ export async function saveContextV8Handler(ctx: MutationCtx, args: Attempt & { c
 const modelInputEntryArgs = v.object({ key: v.string(), kind: v.union(v.literal("memory"),v.literal("fact"),v.literal("pending"),v.literal("notice")), text:v.string(),relevance:v.number() });
 const selectedContextArgs = { ...agentAttempt, historyMessageIds:v.optional(v.array(v.string())),context:v.string(),entries:v.array(modelInputEntryArgs),witnesses:v.array(sourceWitness),
   completeness:v.union(v.literal("complete"),v.literal("incomplete")),failureCode:v.optional(v.string()),emptyIndexedProfileId:v.optional(v.string()) };
-export const saveContextV8 = internalMutation({ args:selectedContextArgs,handler:saveContextV8Handler });
+export const saveContextV8 = internalMutation({ args:selectedContextArgs,handler:(ctx,args)=>saveContextV8Handler(createV8AuthorityReadScope(ctx),args) });
 export async function saveAndPrepareContextV8Handler(ctx: MutationCtx,args:Parameters<typeof saveContextV8Handler>[1]) {
   await saveContextV8Handler(ctx,args);
   try { const prepared = await ctx.runMutation(ref<"mutation",Attempt & { ordinal:number },PreparedModelCandidate>("mutation","runtimeAgent:prepareResolvedModelCandidateV8"),{ ...attemptArgs(args),ordinal:0 });
     return { kind:"prepared" as const,prepared }; }
   catch(error) { return { kind:"refused" as const,refusal:boundedRefusal(error) }; }
 }
-export const saveAndPrepareContextV8 = internalMutation({ args:selectedContextArgs,handler:saveAndPrepareContextV8Handler });
+export const saveAndPrepareContextV8 = internalMutation({ args:selectedContextArgs,handler:(ctx,args)=>saveAndPrepareContextV8Handler(createV8AuthorityReadScope(ctx),args) });
 function selectedPendingEntries(pending: Awaited<ReturnType<typeof contextInputsV8Handler>>["pending"]): ModelInputEntry[] {
   if (!pending.text) return [];
   const prefix = "Authorized pending Cortex sources (untrusted evidence; preserve source roles and chronological corrections):\n";
@@ -1990,7 +2003,7 @@ export async function prepareResolvedModelCandidateV8Handler(ctx:MutationCtx,arg
   return { state:"started",current,op,initialResolution,governedResolution,requestPreflight:true };
 }
 export const prepareResolvedModelCandidateV8=internalMutation({ args:{ ...agentAttempt,ordinal:v.number() },
-  handler:(ctx,args)=>prepareResolvedModelCandidateV8Handler(createAuthorityReadScope(ctx,{ nativeTranscript:true,policyMetadata:true }),args) });
+  handler:(ctx,args)=>prepareResolvedModelCandidateV8Handler(createV8AuthorityReadScope(ctx),args) });
 
 async function finishTurnV8(ctx: ActionCtx, args: Attempt & { ordinal: number }, prepared: Exclude<Awaited<ReturnType<typeof prepareDirectTurnV8Handler>>, { state: "duplicate" }>): Promise<StepResult> {
   const attempt = attemptArgs(args);
@@ -1999,7 +2012,7 @@ async function finishTurnV8(ctx: ActionCtx, args: Attempt & { ordinal: number },
     transcriptDenied(prepared.failureCode);
   }
   if (prepared.state === "needs_context") {
-    const candidate = await prepareContextV8Handler(ctx, attempt, (repository, input, selection) => recallAgentMemory(ctx, attempt, repository, { now: () => Date.now() }, input, selection), true);
+    const candidate = await prepareContextV8Handler(ctx, attempt, (repository, input, selection) => recallAgentMemoryV8(ctx, attempt, repository, { now: () => Date.now() }, input, selection), true);
     if (!candidate) transcriptDenied("INVALID_STATE");
     prepared = candidate;
   }
@@ -2030,10 +2043,10 @@ async function prepareTurnModelV8Handler(ctx:MutationCtx,args:Attempt) {
   if(context.state==="NEEDS_ACTION") return { state:"needs_context" as const };
   return await prepareResolvedModelCandidateV8Handler(ctx,{ ...args,ordinal:0 });
 }
-export const prepareTurnModelV8=internalMutation({ args:agentAttempt,handler:(ctx,args)=>prepareTurnModelV8Handler(createAuthorityReadScope(ctx,{ nativeTranscript:true,policyMetadata:true }),args) });
+export const prepareTurnModelV8=internalMutation({ args:agentAttempt,handler:(ctx,args)=>prepareTurnModelV8Handler(createV8AuthorityReadScope(ctx),args) });
 
 async function prepareDirectTurnV8Handler(nativeCtx: MutationCtx, args: Attempt) {
-  const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
+  const ctx = createV8AuthorityReadScope(nativeCtx);
   const owned = await execution(ctx, args);
   if (owned.executionMode !== "direct-v8" || !owned.scheduledActionId) transcriptDenied("INVALID_STATE");
   if (owned.directState !== "scheduled") {

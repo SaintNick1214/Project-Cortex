@@ -1,0 +1,264 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:81908) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeBeliefs/duplicate-candidates.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:37:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:38:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+      18 | if (!explicitEnvironment) {
+    > 19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+      22 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:10
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      21 | }
+      22 |
+      23 | // Determine which Convex deployment to test against
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:10
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:45:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:46:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeBeliefs/atomic.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+      18 | if (!explicitEnvironment) {
+    > 19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+      22 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:10
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      21 | }
+      22 |
+      23 | // Determine which Convex deployment to test against
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:10
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:45:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:46:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/memory-gateway.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+      18 | if (!explicitEnvironment) {
+    > 19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+      22 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:10
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      21 | }
+      22 |
+      23 | // Determine which Convex deployment to test against
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:10
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:45:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:46:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+Test Suites: 4 passed, 4 total
+Tests:       134 passed, 134 total
+Snapshots:   0 total
+Time:        8.44 s
+Ran all test suites within paths "tests/unit/runtimeBeliefs/duplicate-candidates.test.ts", "tests/unit/runtimeIngestion/framing-invalid-output.test.ts", "tests/unit/runtimeBeliefs/atomic.test.ts", "tests/unit/runtime/memory-gateway.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-focused-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

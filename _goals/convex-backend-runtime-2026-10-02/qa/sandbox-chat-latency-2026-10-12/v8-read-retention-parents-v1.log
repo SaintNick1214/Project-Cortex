@@ -1,0 +1,265 @@
+(node:81952) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts (5.009 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"controlled-v8-preparation-read-count","original":{"total":412,"authority":84},"optimized":{"total":332,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:55:10)
+
+    console.info
+      {"type":"controlled-v8-financial-read-count","original":{"total":140,"authority":42},"optimized":{"total":111,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:85:10)
+
+  ● profile availability composes the original helper without changing its repeated current checks
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+    @@ -749,10 +749,13 @@
+              "startedAt": 1000000,
+              "status": "running",
+              "tenantId": "tenant-a",
+            },
+          ],
+    +     "runtimeAgentOperations" => Array [],
+    +     "runtimeIngestionJobs" => Array [],
+    +     "runtimeMemoryVectorGenerations" => Array [],
+        },
+        "scheduled": Array [
+          Object {
+            "args": Object {
+              "reference": Object {
+
+      62 |  const scoped=auth.createV8AuthorityReadScope(f.ctx);
+      63 |  const optimized=await context.readIndexedContextAvailability(scoped,args,(key,id)=>ledger.readCurrentEmbeddingProfile(scoped,f.reference,key,id));
+    > 64 |  expect(optimized).toEqual(original);expect(f.state()).toEqual(before);expect(reads.stateReads()).toEqual(nonControl);
+         |                                                        ^
+      65 | });
+      66 | async function admission(f:Awaited<ReturnType<typeof fixture>>){
+      67 |  const prepared=await f.call<Awaited<ReturnType<typeof agent.prepareResolvedModelCandidateV8Handler>>>(agent.prepareDirectTurnV8,f.attempt);
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:64:56)
+
+PASS tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-source-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"whole-recall-physical-query-count","kind":"controlled-handler","outerCalls":["runtimeAgentRecall:prepareReads","runtimeAgentRecall:readMatches","runtimeMemory:finalDelivery"],"physicalQueries":{"runtimeAgentRecall:prepareReads":1,"_reference/childComponent/agent/messages/getMessagesByIds":4,"runtimeAgentRecall:readMatches":1,"runtimeModelPolicy:embeddingProfile":1},"embeddingProfileBeforeDelivery":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:106:11)
+
+PASS tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.0s | 6/7 passed | /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ✅     3.1s | 56/56 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+  ✅     2.6s | 36/36 passed | /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ✅     2.4s | 14/14 passed | /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ✅     2.4s | 39/39 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✅     1.7s | 28/28 passed | /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.70s ( 4.1%) - long retained history selects recent four without full-history reads or byte-cap rejection
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 2. [32m✓[0m    0.20s ( 1.1%) - actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 3. [32m✓[0m    0.14s ( 0.8%) - confirmed UNKNOWN output replays through a fresh preflight and admission without another native call or liability
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 4. [32m✓[0m    0.14s ( 0.8%) - generic public-style recall still runs its original guard/profile ports and produces the same tail result
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 5. [32m✓[0m    0.13s ( 0.7%) - financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 6. [32m✓[0m    0.10s ( 0.6%) - current budget still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 7. [32m✓[0m    0.10s ( 0.6%) - compound admission is transactionally identical to the original admission then checkpoint handlers
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 8. [32m✓[0m    0.10s ( 0.6%) - actual Agent recall wiring and fresh completion fences selects the same ordered vector/fact evidence with one ordered query per nonempty branch and unchanged final-delivery bindings
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 9. [32m✓[0m    0.09s ( 0.5%) - actual Gateway query plus fresh native parent makes one paid-peer call and retains UNKNOWN capture independently
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+10. [32m✓[0m    0.09s ( 0.5%) - actual Agent recall wiring and fresh completion fences overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (vector-first)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+11. [32m✓[0m    0.09s ( 0.5%) - actual Agent recall wiring and fresh completion fences overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (fact-first)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+12. [32m✓[0m    0.09s ( 0.5%) - exact-bound omitted recent source remains eligible before recall, with no second embedding
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+13. [32m✓[0m    0.08s ( 0.5%) - current lease still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+14. [32m✓[0m    0.08s ( 0.5%) - current binding still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+15. [32m✓[0m    0.08s ( 0.5%) - current revocation still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+16. [32m✓[0m    0.08s ( 0.5%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+17. [32m✓[0m    0.07s ( 0.4%) - actual Agent recall wiring and fresh completion fences issues only one query per nonempty branch (vector)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+18. [32m✓[0m    0.07s ( 0.4%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery winning_save without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+19. [32m✓[0m    0.07s ( 0.4%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery lease without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+20. [32m✓[0m    0.07s ( 0.4%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery cancel without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.57s (14.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      17.31s
+  Test suites:        6
+  Individual tests:   180
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 5 passed, 6 total
+Tests:       1 failed, 179 passed, 180 total
+Snapshots:   0 total
+Time:        17.315 s
+Ran all test suites within paths "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts", "tests/unit/runtimeAgent/whole-recall-composition.test.ts", "tests/unit/runtimeAgent/bounded-context-v8.test.ts", "tests/unit/runtimeAgent/query-embedding-composition.test.ts", "tests/unit/runtimeAgent/checkpoint-composition.test.ts", "tests/unit/runtimeAgent/context-source-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-parents-v1.json

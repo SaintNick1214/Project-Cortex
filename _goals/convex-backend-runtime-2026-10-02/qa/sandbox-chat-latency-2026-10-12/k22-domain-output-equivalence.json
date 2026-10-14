@@ -1,0 +1,119 @@
+{
+  "baselineCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "sourceOnly": true,
+  "financialAndSourceGuardChanges": false,
+  "files": {
+    "src/domain/belief-plan.ts": {
+      "baselineSha256": "8acd2daf8885a97b6ab17835d0ca8b6ab878a26659eb4351feba5d898a80ed83",
+      "currentSha256": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b",
+      "changedOriginalDeclarations": [
+        "planBeliefs"
+      ],
+      "addedDeclarations": [
+        "sameCandidate"
+      ],
+      "unchangedOriginalDeclarations": [
+        "beliefSlot"
+      ]
+    },
+    "convex-dev/runtimeMemoryGateway.ts": {
+      "baselineSha256": "5088a8e6cf8804cf1ff07207f0598a35b45737412b2c9748e52297cf9b68d711",
+      "currentSha256": "40aa189dcc9760abf5e7ae75648bd807d6e999d37135860acdc50869a514c3e6",
+      "changedOriginalDeclarations": [
+        "buildSourceExtractionFramingV4"
+      ],
+      "addedDeclarations": [],
+      "unchangedOriginalDeclarations": [
+        "sourceKey",
+        "invalidModelOutput",
+        "createGatewayMemoryModel"
+      ]
+    },
+    "convex-dev/runtimeIngestion.ts": {
+      "baselineSha256": "fd0b70938a47e9e39e8a0d74eb2f70defb543cdf4dd10fe1e483dccc54de29c8",
+      "currentSha256": "b0ae259e39d9c27595dcf879910ad28a7073fb591e0acfe64ee449e29ab86bde",
+      "changedOriginalDeclarations": [
+        "failStage",
+        "processStageHandler"
+      ],
+      "addedDeclarations": [
+        "domainFailure",
+        "outputErrors",
+        "outputError",
+        "confirmedDomainFailure"
+      ],
+      "unchangedOriginalDeclarations": [
+        "ref",
+        "processRef",
+        "ingestionDenied",
+        "exactOne",
+        "readScopeCutoff",
+        "readScopeSequence",
+        "eventById",
+        "readEventStages",
+        "readEventCurrent",
+        "readScopeEvents",
+        "readiness",
+        "readRunMemoryPublication",
+        "enqueueSourceEvent",
+        "retireSourceEvents",
+        "retireScopedSourceEvents",
+        "retireScopedSource",
+        "writeStage",
+        "stageRow",
+        "requireStageLease",
+        "requireStageCommit",
+        "guardIngestionRunBudget",
+        "stageOperation",
+        "assertIngestionPolicyPin",
+        "extractionParent",
+        "eventArgs",
+        "stageArgs",
+        "claim",
+        "leaseArgs",
+        "waitForCapacity",
+        "hydrate",
+        "persistStage",
+        "expireStage",
+        "failUnclaimed",
+        "retry",
+        "reconcile",
+        "status",
+        "stageInput",
+        "persistDraft",
+        "commitVectors",
+        "predispatch",
+        "controlCode",
+        "capacityRefusal",
+        "identicalBelief",
+        "processStage",
+        "finishBeliefStage",
+        "registerCompletedDerivedSource",
+        "registerCompletedDerived",
+        "registerCompletedToolSource"
+      ]
+    },
+    "src/domain/sources.ts": {
+      "baselineSha256": "6686eda984c286e73235ab66efb050c7416a480efe61caeb4521c44173bc679a",
+      "currentSha256": "6686eda984c286e73235ab66efb050c7416a480efe61caeb4521c44173bc679a",
+      "byteIdentical": true
+    },
+    "src/domain/extraction.ts": {
+      "baselineSha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b",
+      "currentSha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b",
+      "byteIdentical": true
+    },
+    "convex-dev/runtimeIngestionSchema.ts": {
+      "baselineSha256": "3805a881dc722f65ba49dfa5f7298eea04407917220a7e562726a824615dbf4f",
+      "currentSha256": "3805a881dc722f65ba49dfa5f7298eea04407917220a7e562726a824615dbf4f",
+      "byteIdentical": true
+    },
+    "convex-dev/runtimeModelPolicy.ts": {
+      "baselineSha256": "fd93f28de862db6d9d0d60f661e847bad30ae50e23ca2a2292c658457abd8cc0",
+      "currentSha256": "fd93f28de862db6d9d0d60f661e847bad30ae50e23ca2a2292c658457abd8cc0",
+      "byteIdentical": true
+    }
+  },
+  "unchangedDeclarationCount": 52,
+  "verdict": "PASS"
+}

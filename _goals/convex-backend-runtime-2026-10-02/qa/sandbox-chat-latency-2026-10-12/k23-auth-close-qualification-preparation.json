@@ -1,0 +1,24 @@
+{
+  "observedAt": "2026-10-14T14:56:11.985003+00:00",
+  "sourceHelper": "k20-auth-close-diagnostic-readonly.mjs",
+  "adaptedHelper": "k23-auth-close-qualification-readonly.mjs",
+  "sha256": "df16e70ee4b595e48bbf8ccee9f0b14ee29a92f405721177b7fec3b229b06125",
+  "changes": [
+    "exact new kit path",
+    "explicit existing-fetch opt-in for supplied official WebSocket client",
+    "same-origin session-only HTTP metadata statuses",
+    "fresh root GO before service"
+  ],
+  "originalPrivacyTests": {
+    "log": "k23-auth-close-qualification-privacy-v1.log",
+    "exitCode": 0,
+    "sha256": "a98c1fe0cbe816157619de3f24edb7b2c245721a805f43a6127fb49183caad12"
+  },
+  "deadlinesMs": {
+    "auth": 4000,
+    "rpc": 4000
+  },
+  "paidCalls": 0,
+  "nativeExecuted": false,
+  "originalWebSocketFailuresPreserved": true
+}

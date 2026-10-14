@@ -15,7 +15,7 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
   async start() { return "workflow:whole-recall"; }
 } }));
 const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
-const { runs, clock } = await import("../runtimeTranscript/fixture");
+const { runs, clock, definitions } = await import("../runtimeTranscript/fixture");
 const agent = await import("../../../convex-dev/runtimeAgent");
 const whole = await import("../../../convex-dev/runtimeAgentRecall");
 const memory = await import("../../../convex-dev/runtimeMemory");
@@ -23,7 +23,7 @@ const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = aw
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
 beforeEach(installIngestionMockRoot);
 afterEach(() => { jest.restoreAllMocks(); });
-async function fixture() {
+async function fixture(v8 = false) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
   const prepared = await prepareSourceContent(scope, explicitSourceLineage(scope, "whole-source"), "My favorite season is autumn", { now: () => clock });
   await writer.putSource(prepared.source);await ingestion.enqueueSourceEvent(f.ctx, f.reference, prepared.source);
@@ -39,10 +39,13 @@ async function fixture() {
   const startupMutation = f.ctx.runMutation.bind(f.ctx);
   f.ctx.runMutation = (async (ref, args) => {
     let name = "";try { name = getFunctionName(ref); } catch { return startupMutation(ref, args); }
-    if (name === "runs:claimNext") return await f.transaction(() => invoke(runs.claimNext, f.ctx, args));
+    if (name === "runs:claimNext" || name === "runs:claimNextV8") return await f.transaction(() => invoke(name.endsWith("V8") ? runs.claimNextV8 : runs.claimNext, f.ctx, args));
     return startupMutation(ref, args);
   }) as MutationCtx["runMutation"];
-  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() });await f.call(agent.start, { runId: run.runId });
+  const published = v8 ? await f.call<{agentId:string;version:number}>(definitions.publishVersion, { memorySpaceId:"space-a",clientMutationId:"v8-recall-read-scope",expectedPreviousVersion:0,
+    definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:await definitions.executableRegistryHashV3(),
+      inputSelection:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}} }) : undefined;
+  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: { ...f.request(), ...(published ? {agentId:published.agentId,agentVersion:published.version}: {}) } });await f.call(agent.start, { runId: run.runId });
   const owned = f.db.table("runtimeAgentExecutions")[0];
   const attempt = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };await f.call(agent.startContext, attempt);
   const current = await agent.executionContext(f.ctx, attempt);
@@ -65,7 +68,7 @@ async function fixture() {
     const found = lookup(ref); if (!found) return oldQuery(ref, value);
     calls.push(found.name);assertNativeArgs(found.value, value);return invoke(found.value, f.ctx, value); }) as MutationCtx["runQuery"];
   f.ctx.runMutation = (async (ref, value) => { const found = lookup(ref);if (!found) return oldMutation(ref, value);
-    calls.push(found.name);if (found.name === "runtimeMemory:finalDelivery") beforeDeliveryQueries = [...physicalQueries];
+    calls.push(found.name);if (found.name === "runtimeMemory:finalDelivery" || found.name === "runtimeAgentRecall:finalDeliveryV8") beforeDeliveryQueries = [...physicalQueries];
     assertNativeArgs(found.value, value);return f.transaction(() => invoke(found.value, f.ctx, value)); }) as MutationCtx["runMutation"];
   const hits = f.db.table("runtimeMemoryVectors").map(row => ({ id: row._id as Id<"runtimeMemoryVectors">, score: 0.9 }));
   const action = { ...f.ctx, vectorSearch: async () => hits.map(hit => ({ _id: hit.id, _score: hit.score })) } as unknown as ActionCtx;
@@ -195,4 +198,51 @@ it("unknown hostile child errors cannot undo the original saved context or invok
     { ...f.attempt, context: "retained context", witnesses: [], completeness: "complete" });
   expect(result).toEqual({ kind: "refused", refusal: { kind: "unknown" } });expect(diagnostic).not.toHaveBeenCalled();
   expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBe("retained context");
+});
+
+
+it("V8 private read/delivery lane equals the original handlers and removes the nested profile handoff", async () => {
+  const f = await fixture(true), selected: unknown[] = [], writes = f.db.writes;
+  const result = await whole.finishAgentRecallV8(f.action,f.attempt,{now:()=>clock},f.input,profile,
+    {profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},{...f.selection,onSelected:value=>selected.push(value)});
+  expect(f.calls).toEqual(["runtimeAgentRecall:prepareReadsV8","runtimeAgentRecall:readMatchesV8","runtimeAgentRecall:finalDeliveryV8"]);
+  expect(f.physicalQueries.filter(name=>name==="runtimeModelPolicy:embeddingProfile")).toHaveLength(0);
+  expect(f.db.writes).toBe(writes);f.calls.length=0;f.physicalQueries.length=0;
+  const originalSelected:unknown[]=[];
+  const original=await whole.finishAgentRecall(f.action,f.attempt,{now:()=>clock},f.input,profile,
+    {profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},{...f.selection,onSelected:value=>originalSelected.push(value)});
+  expect(result).toEqual(original);expect(selected).toEqual(originalSelected);expect(f.db.writes).toBe(writes);
+  expect(f.physicalQueries.filter(name=>name==="runtimeModelPolicy:embeddingProfile")).toHaveLength(1);
+  expect(whole.finalDeliveryV8.isInternal).toBe(true);expect(whole.finalDeliveryV8.isMutation).toBe(true);
+});
+it.each(["principal","lease","profile","cutoff","boundary","limit","request"])("V8 %s refusal still exercises the actual registered guard",async fault=>{
+  const f=await fixture(true),args={...f.args,input:{...f.input},selection:{...f.selection},profile:{...profile} as EmbeddingProfile};
+  if(fault==="principal")args.reference={...args.reference,principalId:"foreign"};if(fault==="lease")args.leaseVersion++;
+  if(fault==="profile")args.profile={...args.profile,modelId:"wrong-model"};if(fault==="cutoff")args.selection.cutoff++;
+  if(fault==="boundary")args.selection.boundary={...args.selection.boundary,queueSequence:999};
+  if(fault==="limit")args.input.limit=101;if(fault==="request")args.input.requestId="wrong-request";
+  const writes=f.db.writes;
+  await expect(f.call(whole.prepareReadsV8,args)).rejects.toThrow();expect(f.db.writes).toBe(writes);
+});
+it("V8 endpoints reject a historical snapshot rather than applying the new mode to its journal",async()=>{
+  const f=await fixture();await expect(f.call(whole.prepareReadsV8,f.args)).rejects.toThrow("INVALID_STATE");
+  await expect(f.call(whole.readMatchesV8,{...f.args,hits:f.hits,factPlan:(await plan(f)).factPlan})).rejects.toThrow("INVALID_STATE");
+});
+it.each(["fact","source","profile","revocation","budget","tombstone","expiry"])("V8 final %s fence returns the same original failure with zero writes",async fault=>{
+  const f=await fixture(true),read=await matched(f),bindings=read.bindings;
+  if(fault==="fact")f.db.table("facts")[0].fact="changed";
+  if(fault==="source")f.db.table("runtimeMemorySources")[0].contentHash="a".repeat(64);
+  if(fault==="profile")bindings.vectors[0]!.profile={...profile,modelId:"wrong-model"};
+  if(fault==="revocation")f.grant.revokedAt=clock;
+  if(fault==="budget")f.db.table("runtimeBudgetAccounts").find(value=>value.kind==="run")!.cancelled=true;
+  if(fault==="tombstone")f.db.seed("runtimeAuthTombstones",{tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId,resourceType:"source",resourceId:f.db.table("runtimeMemorySources")[0].lineage && (f.db.table("runtimeMemorySources")[0].lineage as {sourceId:string}).sourceId,deletedAt:clock});
+  if(fault==="expiry")f.db.table("facts")[0].validUntil=clock;
+  const error=async(registration:unknown)=>{try{await f.call(registration,{reference:f.reference,bindings});throw Error("Expected refusal");}catch(value){if(!(value instanceof Error)||value.message==="Expected refusal")throw value;return{name:value.name,message:value.message,data:"data" in value?value.data:undefined};}};
+  const writes=f.db.writes;expect(await error(whole.finalDeliveryV8)).toEqual(await error(memory.finalDelivery));expect(f.db.writes).toBe(writes);
+});
+it("V8 delivery still uses raw final authority after consumed resource and hash awaits",async()=>{
+  const f=await fixture(true),read=await matched(f),get=f.db.get.bind(f.db);let grantReads=0;
+  jest.spyOn(f.db,"get").mockImplementation(async(table,id)=>{if(table==="runtimeAuthGrants" && ++grantReads===2)f.grant.revokedAt=clock;return get(table,id);});
+  const writes=f.db.writes;await expect(f.call(whole.finalDeliveryV8,{reference:f.reference,bindings:read.bindings})).rejects.toThrow("FORBIDDEN");
+  expect(grantReads).toBe(2);expect(f.db.writes).toBe(writes);
 });

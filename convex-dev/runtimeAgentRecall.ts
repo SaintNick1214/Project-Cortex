@@ -2,7 +2,7 @@
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import { v } from "convex/values";
-import type { ActionCtx, QueryCtx } from "./_generated/server";
+import type { ActionCtx, QueryCtx, MutationCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import type { DerivedFact, SourceLineage } from "../src/domain/contracts";
 import { contextSourceKey } from "../src/domain/memory-context";
@@ -15,11 +15,12 @@ import { validateModelEmbeddings } from "../src/domain/sources";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { agentAttempt } from "./runtimeAgentSchema";
 import { embeddingProfile, derivedFact, memoryDeliveryBindings } from "./runtimeMemorySchema";
+import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { contextBoundary } from "./runtimeMemoryContext";
 import type { ContextBoundary } from "./runtimeMemoryContext";
 import { readCurrentEmbeddingProfile } from "./runtimeModelPolicy";
-import { internalQuery } from "./_generated/server";
-import { createAuthorityReadScope } from "./runtimeAuth";
+import { internalQuery, internalMutation } from "./_generated/server";
+import { createAuthorityReadScope, createV8AuthorityReadScope } from "./runtimeAuth";
 import { contextSourceBatchHandler } from "./runtimeAgent";
 import { currentQuery, boundedRefusal, throwRefusal } from "./runtimeAgentQueryEmbedding";
 import type { AgentQueryEmbeddingAttempt } from "./runtimeAgentQueryEmbedding";
@@ -40,8 +41,9 @@ const nativeArgs = { ...agentAttempt, input: inputArgs, profile: embeddingProfil
 const factPlanArgs = v.union(v.object({ kind: v.literal("ready"), facts: v.array(derivedFact), bindings: memoryDeliveryBindings }),
   v.object({ kind: v.literal("refused"), refusalCanonical: v.string() }));
 
-async function currentRead(ctx: QueryCtx, args: Args) {
+async function currentRead(ctx: QueryCtx, args: Args, expectedVersion?: 8) {
   const { current } = await currentQuery(ctx, args);
+  if (expectedVersion === 8 && current.snapshot.version !== 8) memoryError("INVALID_STATE", "V8 recall required");
   const expectedBoundary = { conversationId: current.snapshot.conversationId, runId: args.runId,
     queueSequence: current.snapshot.queueSequence, anchor: { order: current.snapshot.anchor.order, stepOrder: current.snapshot.anchor.stepOrder } };
   if (args.selection.cutoff !== current.snapshot.ingestionCutoff.sequence || canonicalModelJson(args.selection.boundary) !== canonicalModelJson(expectedBoundary)
@@ -49,9 +51,9 @@ async function currentRead(ctx: QueryCtx, args: Args) {
   return { current, repository: new ConvexMemoryRepository(ctx, args.reference, "read", undefined, { now: () => Date.now() },
     (key, runBudgetId) => readCurrentEmbeddingProfile(ctx, args.reference, key, runBudgetId)) };
 }
-export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args) {
-  const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
-  const { current, repository } = await currentRead(ctx, args);
+export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args, expectedVersion?: 8) {
+  const ctx = expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
+  const { current, repository } = await currentRead(ctx, args, expectedVersion);
   const [vector, facts] = await Promise.allSettled([
     (async () => { const authority = await repository.authority(undefined, "read");
       await repository.assertProfileReady(args.profile, current.run.runBudgetId); return { resourceAccess: authority.resourceAccess }; })(),
@@ -66,9 +68,9 @@ export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args) {
 }
 export const prepareReads = internalQuery({ args: nativeArgs, handler: prepareReadsHandler });
 
-export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }) {
-  const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
-  const { current, repository } = await currentRead(ctx, args), bindings = emptyBindings();
+export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }, expectedVersion?: 8) {
+  const ctx = expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
+  const { current, repository } = await currentRead(ctx, args, expectedVersion), bindings = emptyBindings();
   const matches = await repository.hydrateVectors(args.hits, args.profile, current.run.runBudgetId);
   await captureRecallVectors(bindings, matches, args.profile, { runBudgetId: current.run.runBudgetId });
   const selectedVectors = await contextSourceBatchHandler(nativeCtx, { reference: args.reference, ...args.selection, permission: "canViewMemories",
@@ -126,5 +128,38 @@ export async function finishAgentRecall(ctx: ActionCtx, attempt: AgentQueryEmbed
   const read = await ctx.runQuery(matchesRef, { ...args, factPlan: plan.factPlan, hits: hits.map(hit => ({ id: hit._id, score: hit._score })) });
   onSelected({ witnesses: read.witnesses, provenance: read.provenance, sourceScores: read.sourceScores, itemLineages: read.itemLineages });
   return await completeRecallDelivery({ clock, finalDelivery: async () => await ctx.runMutation(memoryReferences.finalDelivery,
+    { reference: attempt.reference, bindings: read.bindings }) }, input, profile.profileId, read.vectorItems, read.facts);
+}
+
+export const prepareReadsV8 = internalQuery({ args: nativeArgs, handler: (ctx, args) => prepareReadsHandler(ctx, args, 8) });
+export const readMatchesV8 = internalQuery({ args: { ...nativeArgs, hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })), factPlan: factPlanArgs },
+  handler: (ctx, args) => readMatchesHandler(ctx, args, 8) });
+/** Same consumed-row predicates and final unscoped grant/deadline fence. Only
+ * the original profile helper executes locally instead of in a child query. */
+export async function finalDeliveryV8Handler(nativeCtx: MutationCtx, args: { reference: AgentQueryEmbeddingAttempt["reference"]; bindings: MemoryDeliveryBindings }) {
+  const ctx = createV8AuthorityReadScope(nativeCtx);
+  return await new ConvexMemoryRepository(ctx, args.reference, "read", undefined, { now: () => Date.now() },
+    (key, runBudgetId) => readCurrentEmbeddingProfile(ctx, args.reference, key, runBudgetId)).checkDelivery(args.bindings, nativeCtx);
+}
+export const finalDeliveryV8 = internalMutation({ args: { reference: runtimeAuthorityReference, bindings: memoryDeliveryBindings }, handler: finalDeliveryV8Handler });
+const prepareV8Ref = makeFunctionReference("runtimeAgentRecall:prepareReadsV8") as unknown as typeof prepareRef;
+const matchesV8Ref = makeFunctionReference("runtimeAgentRecall:readMatchesV8") as unknown as typeof matchesRef;
+const deliveryV8Ref = makeFunctionReference("runtimeAgentRecall:finalDeliveryV8") as unknown as typeof memoryReferences.finalDelivery;
+
+export async function finishAgentRecallV8(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, clock: DomainClock, input: Input,
+  profile: EmbeddingProfile, result: Parameters<typeof validateModelEmbeddings>[0], selection: AgentRecallSelection) {
+  validateModelEmbeddings(result, profile, 1);
+  const { onSelected, ...scope } = selection;
+  const args = { ...attempt, input, profile, selection: scope };
+  const plan = await ctx.runQuery(prepareV8Ref, args);
+  const hits = await ctx.vectorSearch("runtimeMemoryVectors", profile.indexName === LARGE_EMBEDDING_PROFILE.indexName ? "by_large_embedding_v1" : "by_default_embedding_v1", {
+    vector: [...result.vectors[0]!], limit: input.limit,
+    filter: q => plan.resourceAccess === "own"
+      ? q.eq("scopeProfileOwnerKey", vectorOwnerScopeKey(attempt.reference.tenantId, attempt.reference.memorySpaceId!, profile.profileId, attempt.reference.principalId))
+      : q.eq("scopeProfileKey", vectorScopeKey(attempt.reference.tenantId, attempt.reference.memorySpaceId!, profile.profileId)),
+  });
+  const read = await ctx.runQuery(matchesV8Ref, { ...args, factPlan: plan.factPlan, hits: hits.map(hit => ({ id: hit._id, score: hit._score })) });
+  onSelected({ witnesses: read.witnesses, provenance: read.provenance, sourceScores: read.sourceScores, itemLineages: read.itemLineages });
+  return await completeRecallDelivery({ clock, finalDelivery: async () => await ctx.runMutation(deliveryV8Ref,
     { reference: attempt.reference, bindings: read.bindings }) }, input, profile.profileId, read.vectorItems, read.facts);
 }

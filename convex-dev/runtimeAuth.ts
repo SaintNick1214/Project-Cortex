@@ -48,12 +48,13 @@ export interface AuthorityReader {
 const authorityReadScope: unique symbol = Symbol("cortex.native-authority-read-scope");
 const policyMetadataReadScope: unique symbol = Symbol("cortex.native-policy-metadata-read-scope");
 const nativeTranscriptReadScope: unique symbol = Symbol("cortex.native-transcript-read-scope");
+const v8ReadScope: unique symbol = Symbol("cortex.native-v8-read-scope");
 type NativeMessageReference = AgentComponent["messages"]["getMessagesByIds"];
 interface NativeTranscriptReader {
   read(reference: NativeMessageReference, messageIds: string[], invoke: () => Promise<(MessageDoc | null)[]>): Promise<(MessageDoc | null)[]>;
   fresh(): void;
-  beginWrite(): void;
-  endWrite(): void;
+  beginWrite(retain?: boolean): void;
+  endWrite(retain?: boolean): void;
 }
 type NativeTranscriptContext = { [nativeTranscriptReadScope]?: NativeTranscriptReader };
 export const NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES = 16;
@@ -83,8 +84,8 @@ function createNativeTranscriptReader(): NativeTranscriptReader {
   const fresh = () => { rows.clear(); bytes = 0; epoch++; };
   return {
     fresh,
-    beginWrite: () => { writers++; fresh(); },
-    endWrite: () => { writers--; fresh(); },
+    beginWrite: retain => { writers++; if (retain) epoch++; else fresh(); },
+    endWrite: retain => { writers--; if (retain) epoch++; else fresh(); },
     read: async (reference, messageIds, invoke) => {
       const key = JSON.stringify([getFunctionAddress(reference), messageIds]), started = epoch;
       if (!writers && rows.has(key)) return cloneAuthorityValue(rows.get(key)!);
@@ -141,6 +142,18 @@ function authorityReadKey(method: string, args: readonly (string | undefined)[])
  * decision: all requirement, generation, expiry and resource predicates still run.
  * Every writer invalidates before/after and suppresses cache use while in flight. */
 export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options?: { policyMetadata?: true; nativeTranscript?: true }): Ctx {
+  // Only an explicit V8 parent can carry this private, nonserialized brand.
+  // Default contexts still receive a fresh reader, including nested scopes.
+  if ((ctx as Ctx & { [v8ReadScope]?: true })[v8ReadScope]) return ctx;
+  return createRawReadScope(ctx, options, false);
+}
+/** Opt-in native V8 transaction only. No derived decision or mutable account/run
+ * row is retained; every original predicate continues to execute. */
+export function createV8AuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx): Ctx {
+  if ((ctx as Ctx & { [v8ReadScope]?: true })[v8ReadScope]) return ctx;
+  return createRawReadScope(ctx, { policyMetadata: true, nativeTranscript: true }, true);
+}
+function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options: { policyMetadata?: true; nativeTranscript?: true } | undefined, v8: boolean): Ctx {
   const values = new Map<string, unknown>();
   const metadata = new Map<string, unknown>();
   // Nested helper scopes share only this explicitly opted-in parent reader.
@@ -175,16 +188,48 @@ export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: 
     if (!writers && epoch === started && metadataEpoch === freshness && metadata.size < POLICY_METADATA_READ_SCOPE_MAX_ENTRIES) metadata.set(key, value);
     return cloneAuthorityValue(value);
   };
-  const writing = async (invoke: () => unknown): Promise<unknown> => {
-    invalidate(); writers++; nativeTranscript?.beginWrite();
-    try { return await invoke(); } finally { writers--; nativeTranscript?.endWrite(); invalidate(); }
+  // Explicit native tables only. State writes affect none of the retained raw
+  // families. Financial writes retain authority alone: accounts/operations/
+  // attempts are never cached, and policy/message rows are freshly read.
+  const retention = (method: string, args: unknown[]): "all" | "authority" | undefined => {
+    if (!v8 || typeof args[0] !== "string") return undefined;
+    const table = args[0];
+    const state = ["runtimeAgentExecutions", "runtimeAgentOperations", "runtimeRunOutbox", "runtimeRuns"].includes(table);
+    const finance = ["runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"].includes(table);
+    if (!state && !finance) return undefined;
+    if (method === "insert") return args.length === 2 ? state ? "all" : "authority" : undefined;
+    if (args.length !== (method === "delete" ? 2 : 3) || typeof args[1] !== "string") return undefined;
+    // The native normalizer proves the ID belongs to the explicit table. If
+    // unavailable/refused, invoke the original writer under full invalidation.
+    const normalize: unknown = Reflect.get(ctx.db, "normalizeId", ctx.db);
+    try {
+      if (typeof normalize !== "function" || Reflect.apply(normalize, ctx.db, [table, args[1]]) !== args[1]) return undefined;
+    } catch { return undefined; }
+    return state ? "all" : "authority";
+  };
+  const writing = async (invoke: () => unknown, retained?: "all" | "authority"): Promise<unknown> => {
+    const boundary = () => { if (retained) { epoch++; if (retained === "authority") freshMetadata(); } else invalidate(); };
+    boundary(); writers++; nativeTranscript?.beginWrite(retained === "all");
+    try { return await invoke(); } finally { writers--; nativeTranscript?.endWrite(retained === "all"); boundary(); }
   };
   const db = new Proxy(ctx.db, { get(target, key) {
     const value: unknown = Reflect.get(target, key, target);
     if (typeof value !== "function") return value;
     const invoke = (args: unknown[]): unknown => Reflect.apply(value, target, args) as unknown;
-    return ["insert", "patch", "replace", "delete"].includes(String(key))
-      ? (...args: unknown[]) => writing(() => invoke(args)) : (...args: unknown[]) => invoke(args);
+    if (["insert", "patch", "replace", "delete"].includes(String(key))) return (...args: unknown[]) => writing(() => invoke(args), retention(String(key), args));
+    // Fluent table writers are intentionally unknown to this mode. Never let
+    // another native writing surface bypass the invalidation fence.
+    if (v8 && key === "table") return (...args: unknown[]) => {
+      const table = invoke(args);
+      if (table === null || typeof table !== "object") return table;
+      return new Proxy(table, { get(target, method) {
+        const fn: unknown = Reflect.get(target, method, target);
+        if (typeof fn !== "function") return fn;
+        return (...input: unknown[]) => ["insert", "patch", "replace", "delete"].includes(String(method))
+          ? writing(() => Reflect.apply(fn, target, input) as unknown) : Reflect.apply(fn, target, input) as unknown;
+      } });
+    };
+    return (...args: unknown[]) => invoke(args);
   } });
   const scoped = { ...ctx, db };
   for (const name of ["runQuery", "runMutation"] as const) {
@@ -195,6 +240,7 @@ export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: 
       : (...args: unknown[]) => Reflect.apply(value, ctx, args) as unknown });
   }
   Object.defineProperty(scoped, authorityReadScope, { value: reader });
+  if (v8) Object.defineProperty(scoped, v8ReadScope, { value: true });
   if (nativeTranscript) Object.defineProperty(scoped, nativeTranscriptReadScope, { value: nativeTranscript });
   if (options?.policyMetadata) Object.defineProperty(scoped, policyMetadataReadScope, { value: {
     deploymentRows: () => readMetadata("deployment", async () => await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65)),

@@ -20,7 +20,7 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
   async start() { return "workflow:query-embedding"; }
 } }));
 const { ingestionFixture, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
-const { ledger, runs, clone, clock } = await import("../runtimeTranscript/fixture");
+const { ledger, runs, clone, clock, definitions } = await import("../runtimeTranscript/fixture");
 const agent = await import("../../../convex-dev/runtimeAgent");
 const query = await import("../../../convex-dev/runtimeAgentQueryEmbedding");
 const memory = await import("../../../convex-dev/runtimeMemory");
@@ -30,7 +30,7 @@ const { createGatewayMemoryModel } = await import("../../../convex-dev/runtimeMe
 const { recallMemory } = await import("../../../convex-dev/runtimeMemoryServices");
 beforeEach(() => { nativeCalls = 0; installIngestionMockRoot(); });
 afterEach(() => { jest.restoreAllMocks(); });
-async function fixture() {
+async function fixture(v8 = false) {
   const f = await ingestionFixture(), oldQuery = f.ctx.runQuery.bind(f.ctx), oldMutation = f.ctx.runMutation.bind(f.ctx);
   const calls: string[] = [];
   const names = { runtimeAgent: agent, runtimeAgentQueryEmbedding: query, runtimeModelPolicy: ledger, runtimeMemory: memory, runs };
@@ -52,7 +52,10 @@ async function fixture() {
     return f.transaction(async () => { if (found.name === "runtimeModelPolicy:checkpoint" && checkpointFault) await checkpointFault();
       return invoke(found.value, f.ctx, args); });
   }) as MutationCtx["runMutation"];
-  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() });
+  const published=v8?await f.call<{agentId:string;version:number}>(definitions.publishVersion,{memorySpaceId:"space-a",clientMutationId:"v8-query-reader",expectedPreviousVersion:0,
+    definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:await definitions.executableRegistryHashV3(),
+      inputSelection:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}}}):undefined;
+  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: {...f.request(),...(published?{agentId:published.agentId,agentVersion:published.version}:{})} });
   await f.call(agent.start, { runId: run.runId });
   const owned = f.db.table("runtimeAgentExecutions")[0], attempt = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
   await f.call(agent.startContext, attempt);
@@ -66,9 +69,9 @@ async function fixture() {
     checkpointFault: (value: typeof checkpointFault) => { checkpointFault = value; } };
 }
 type Fixture = Awaited<ReturnType<typeof fixture>>;
-async function preparation(f: Fixture) { return f.call<Awaited<ReturnType<typeof query.prepareAgentQueryEmbeddingHandler>>>(query.prepare, { ...f.attempt, input: f.input }); }
-async function admitArgs(f: Fixture) {
-  const p = await preparation(f), pins = p.resolutions[0].snapshot.pins;
+async function preparation(f: Fixture, v8 = false) { return f.call<Awaited<ReturnType<typeof query.prepareAgentQueryEmbeddingHandler>>>(v8 ? query.prepareV8 : query.prepare, { ...f.attempt, input: f.input }); }
+async function admitArgs(f: Fixture, v8 = false) {
+  const p = await preparation(f, v8), pins = p.resolutions[0].snapshot.pins;
   const request = { semanticId: p.binding.semanticId, childCallId: "native-placeholder", texts: p.request.texts, inputTokens: Buffer.byteLength(f.input.text), outputTokens: 0,
     toolSteps: 0, timeoutMs: p.resolutions[0].snapshot.limits.timeoutMs, reservationUnits: p.resolutions[0].snapshot.costBound.maximumCostUnits, promptVersion: pins.promptVersion, schemaVersion: pins.schemaVersion,
     extractionVersion: pins.extractionVersion, toolRegistryVersion: pins.toolRegistryVersion, profile: p.profile,
@@ -214,4 +217,33 @@ it("compound admission is transactionally identical to the original admission th
   const permit = await original.call(ledger.checkpoint, { reference: original.reference, attemptId: admission.attemptId, requestCanonical: admission.requestCanonical });
   expect(await composed.call(query.admit, right)).toEqual({ result: { admission, permit } });
   expect(composed.state()).toEqual(original.state()); expect(nativeCalls).toBe(0);
+});
+
+
+it("new V8 embedding lane matches original preflight and conservative ledger outcomes",async()=>{
+  const f=await fixture(true),before=f.state();expect(await preparation(f,true)).toEqual(await preparation(f));expect(f.state()).toEqual(before);
+  expect(query.prepareV8.isInternal).toBe(true);expect(query.admitV8.isInternal).toBe(true);
+  const args=await admitArgs(f,true),first=await f.call(query.admitV8,args);
+  expect(first).toMatchObject({result:{admission:{status:"reserved"},permit:{dispatchPermit:true}}});
+  expect(await f.call(query.admitV8,args)).toMatchObject({result:{admission:{status:"uncertain",replayAllowed:false}}});
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({state:"dispatch_pending",slotReleased:false});expect(nativeCalls).toBe(0);
+});
+it("fresh V8 query admission reaches the new lane with one controlled peer call and independent capture/attachment",async()=>{
+  const f=await fixture(true);f.calls.length=0;const result=await query.recallAgentMemoryV8(f.action,f.attempt,f.repository,{now:()=>clock},f.input);
+  expect(result).toMatchObject({profileId:profile.profileId,items:[]});expect(nativeCalls).toBe(1);
+  expect(f.calls.filter(name=>name==="runtimeAgentQueryEmbedding:prepareV8")).toHaveLength(1);expect(f.calls.filter(name=>name==="runtimeAgentQueryEmbedding:admitV8")).toHaveLength(1);
+  expect(f.calls.filter(name=>name==="runtimeAgentQueryEmbedding:prepare"||name==="runtimeAgentQueryEmbedding:admit")).toEqual([]);
+  expect(f.calls.indexOf("runtimeModelPolicy:captureTerminalEvidence")).toBeLessThan(f.calls.indexOf("runtimeModelPolicy:attachTerminalResult"));
+  expect(f.db.table("runtimeModelAttempts")).toMatchObject([{state:"uncertain",slotReleased:true,resultAttachmentState:"attached"}]);
+});
+it.each(["revocation","partial-write","opaque"])("V8 checkpoint %s preserves committed reservation and rolls back only its child",async fault=>{
+  const f=await fixture(true),args=await admitArgs(f,true),grant=clone(f.grant),sources=f.db.table("runtimeMemorySources").length;
+  f.checkpointFault(async()=>{if(fault==="revocation"){await f.ctx.db.patch("runtimeAuthGrants",f.grant._id as never,{revokedAt:clock});return;}
+    if(fault==="partial-write")await f.source("Private checkpoint-only source","rollback-v8");throw fault==="opaque"?Symbol("opaque"):Error("PARTIAL_CHECKPOINT");});
+  const result=await f.call(query.admitV8,args);expect(result).toHaveProperty("refusal");expect(f.grant).toEqual(grant);expect(f.db.table("runtimeMemorySources")).toHaveLength(sources);
+  expect(f.db.table("runtimeModelAttempts")).toMatchObject([{state:"reserved",slotReleased:false}]);expect(f.db.table("runtimeBudgetAccounts").filter(row=>(row.activeConcurrency as number)>0)).toHaveLength(2);expect(nativeCalls).toBe(0);
+});
+it("V8 preflight/admission refuse historical snapshots without model or reservation effects",async()=>{
+  const f=await fixture(),before=f.state();await expect(f.call(query.prepareV8,{...f.attempt,input:f.input})).rejects.toThrow("INVALID_STATE");
+  const args=await admitArgs(f);await expect(f.call(query.admitV8,args)).rejects.toThrow("INVALID_STATE");expect(f.state()).toEqual(before);expect(nativeCalls).toBe(0);
 });

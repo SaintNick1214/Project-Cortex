@@ -1,0 +1,19 @@
+{
+  "authorization": "root exact QA SourceChunk representation correction + one existing-capture continuation",
+  "originalFailures": [
+    "k22-native-ordinary-memory-v2-1791985510832-a1de5b5c-e7c5-4f4f-9692-30ec9337545f.json",
+    "k22-two-capture-native-proof-1791986120465.json"
+  ],
+  "changedNativeOracle": "only SourceChunk reference x.lineage.sourceEventId -> x.sourceEventId, required by actual shipped SourceChunk/schema and existing native verifier",
+  "newCaptures": 0,
+  "originalCaptureReplays": 0,
+  "newRecallMaximum": 1,
+  "deadlineMs": {
+    "sdkRPC": 12000,
+    "operation": 30000,
+    "auth": 4000,
+    "tableRead": 30000,
+    "closure": 1500
+  },
+  "continuationHash": "8ba2fed856a75e75ff64821715f46c0f62b9f662a7bef452fdf3e467dafa10df"
+}

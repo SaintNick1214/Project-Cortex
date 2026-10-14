@@ -1,0 +1,363 @@
+{
+  "verdict": "PASS",
+  "observedAt": "2026-10-14T15:05:08.366169+00:00",
+  "reviewer": "parallel_policy_source_review (nonauthor)",
+  "scope": "One coherent frozen K23 source/test/docs readiness gate",
+  "sourceOnly": true,
+  "nativeAcceptance": false,
+  "latencyAcceptance": false,
+  "fullFunctionalTaskAcceptance": false,
+  "goalComplete": false,
+  "followUpGoalPercent": 50,
+  "baseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "scores": {
+    "requirements": 4,
+    "tests": 4,
+    "completeness": 4,
+    "code": 3,
+    "patterns": 4,
+    "average": 3.8
+  },
+  "adoptedMinimums": {
+    "requirements": 4,
+    "tests": 4,
+    "completeness": 4,
+    "code": 3,
+    "patterns": 3
+  },
+  "breakingFindings": [],
+  "nonbreakingDebt": [
+    "Explicit V8 raw-retention table classifications and parallel private Action lanes require maintenance with future schema/writer additions.",
+    "Controlled fixture DB-read reductions are not native latency or deployment qualification."
+  ],
+  "requirements": [
+    {
+      "id": "duplicate-consolidation",
+      "result": "PASS",
+      "source": "src/domain/belief-plan.ts:19",
+      "assessment": "Complete supported candidate equality; only existing normalized subject/predicate slot. Inequivalent value, wording, confidence, tags, entities, relations or lineage refuses. Original count/lineage checks and dense ordinals retained. Full raw extraction and canonical messages persist."
+    },
+    {
+      "id": "strict-domain-framing",
+      "result": "PASS",
+      "source": "convex-dev/runtimeMemoryGateway.ts",
+      "assessment": "Trusted V4 required fields/tags/arrays framing uses original strict parser and schema. No coercion, cap increase or provider retry; actual request is measured and admitted."
+    },
+    {
+      "id": "confirmed-output-failure",
+      "result": "PASS",
+      "source": "convex-dev/runtimeIngestion.ts:385",
+      "assessment": "Owned current stage plus exact saved source, terminal dispatch/model/usage/private result bindings and strict reparsing required for nonretryable dead_letter. Financial liability unchanged. Unknown, incomplete, withheld, stale or mismatched outcomes remain UNKNOWN; hint alone is insufficient."
+    },
+    {
+      "id": "v8-raw-read-retention",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAuth.ts:152",
+      "assessment": "Branded invocation-local V8 raw readers only; clones/exact namespace and ordered native IDs, bounded entries, no error/decision cache. Current mutable execution/operation/budget rows and all authority predicates remain fresh."
+    },
+    {
+      "id": "writer-and-fresh-fences",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAuth.ts",
+      "assessment": "Known table-qualified writes retain only eligible families; financial writes invalidate policy/messages. Unproven/security/component writes invalidate before/after, suppress in flight and reject late epoch fills. Original fresh save/delivery fences retained."
+    },
+    {
+      "id": "private-composition-historical-contracts",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAgent.ts:978; convex-dev/runtimeAgentRecall.ts:139",
+      "assessment": "Version8 opt-in private handlers only. Original model bindings, admission/checkpoint rollback, replay/lease/source controls remain. Final raw delivery grant/expiry fence and unscoped source guards preserved; historical/public routes unchanged."
+    },
+    {
+      "id": "denial-only-authentication",
+      "result": "PASS",
+      "source": "src/client-runtime/authentication-denial.ts:10",
+      "assessment": "Same opaque JWT immutable endpoint. Read-only official runtimeClient:session call; deny only actual401 or structured ConvexError own UNAUTHENTICATED code. HTTP success does not authenticate; original WebSocket acceptance and fresh post-I/O session remain."
+    },
+    {
+      "id": "finite-auth-lifecycle",
+      "result": "PASS",
+      "source": "src/client-runtime/client.ts",
+      "assessment": "Original finite deadline, token sequence/generation/expiry and borrowed ownership retained. Refresh/new token/settlement/close abort probe; stale or late outcomes ignored and promise rejection observed; no retry."
+    }
+  ],
+  "verifiedInputs": {
+    "packet": "k23-repair-review-packet.json",
+    "packetSha256": "088f15bb898eee65e2ee64bbe790dacc9772cca22acde9f31c2d6f342a6cedfd",
+    "coreRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "websiteRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+    "coreFiles": {
+      "convex-dev/runtimeAgent.ts": "e1e87761e49eada02b971df30843cc1c4e40bb9de4a37774a87a5a7a83f10f32",
+      "convex-dev/runtimeAgentQueryEmbedding.ts": "f79d4f5d18e381c1f99ef5c74407d7999f602a32790ad413163e176fd8230464",
+      "convex-dev/runtimeAgentRecall.ts": "bfde5b61fce802d7ab4e17f32a2c712ed6e3b8f0fed1c31382673bb1ae4f1a83",
+      "convex-dev/runtimeAuth.ts": "0f5ad4cc2b02fc1479d81e044d7f69ade5c33c7b4d8a5d9839f110ff9786e726",
+      "convex-dev/runtimeIngestion.ts": "b0ae259e39d9c27595dcf879910ad28a7073fb591e0acfe64ee449e29ab86bde",
+      "convex-dev/runtimeMemoryContext.ts": "5fdb7ba3ff46390b89c08540f540d1261700a02cc8799cabcd9a661a371d93e6",
+      "convex-dev/runtimeMemoryGateway.ts": "40aa189dcc9760abf5e7ae75648bd807d6e999d37135860acdc50869a514c3e6",
+      "src/client-runtime/client.ts": "c91f6ac836597697493e28a05c2519c77c91250b6bac353399a2a36c8db29dd9",
+      "src/domain/belief-plan.ts": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b",
+      "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "7eb20cc4207a72299462e5db6ba2ca29717a434fbe49023edc2c4b6ea3fa7b08",
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "47a9f4e8a2e6fb84c1f60f2acffb82f7f9196be80d9e35fa6a2082c3f95576cb",
+      "tests/unit/runtimeIngestion/framing-invalid-output.test.ts": "f708238f95e83c000adf1ff4b060b8e9dffafded16ad12f7469f62cf9be0f791",
+      "src/client-runtime/authentication-denial.ts": "b865f63d575d71f582d0b59c76f8f3fc883f52662a2e8b029959ce7c5f289215",
+      "tests/unit/client-runtime/authentication-denial.test.ts": "9755ab592eb8f88fa5a2bfedf2ad1c5c65152726c26eeeef21e319a969bc2fd5",
+      "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "50fa7aa7344a7f469e48edae05e87cdcd098b002c2bfac9946bbca17d2d2e8b7",
+      "tests/unit/runtimeAuth/v8-read-scope.test.ts": "5430a52dfcde2e71770a52e9a1eb7efc9c52b004a7c35930a7060dda8d140a09",
+      "tests/unit/runtimeBeliefs/duplicate-candidates.test.ts": "8497c23fbb24b00724e9e6ab47a4bf806133cdeb49091e85bd38a38500684adf"
+    },
+    "websiteFiles": {
+      "docs-site/docs/api-reference/memory-operations.mdx": "a0bc9b01fe98cc3429d8b3629bfcb8a3cf432f348a7b6c7d929d33df2fd23912",
+      "docs-site/docs/api-reference/runtime-client.mdx": "257dc193197ae60f24e6a4f707ca85caf4d7a877fbc1535fcb2ef17b68a9a736",
+      "docs-site/docs/architecture/model-policy.mdx": "311a540aa65acf8f7e75ec922f8e75dd7e667d7c0cb3629b9b754c8179e91f8a",
+      "docs-site/docs/architecture/performance.mdx": "e01b62ad53d131918c7461b55895b14f916ad18a39346fa59c3b81283a32e7e4",
+      "docs-site/docs/core-features/memory-orchestration.mdx": "d8ce03e4ef34d9c36c19dca2ba249daab3d177c8e920c58f2664f1deda4b2c7a",
+      "docs-site/docs/getting-started/backend-runtime.mdx": "436169f1d2da844529b4ca610109eb7381ffd4973fb32923e22b7ff8688a37ef",
+      "docs-site/docs/getting-started/five-minute-quickstart.mdx": "ca2a8d0c230f904c3d2d2684efc1076c4005a50a08aa36326606dd0a27b084a0",
+      "docs-site/docs/getting-started/installation.mdx": "53b9b12ceb170883b9d42c9e9f6418346b7b7ae7499d20fa768c7157b213a5cd",
+      "docs-site/docs/reference/cheat-sheet.mdx": "686a6414a43033c518ba1506775e69a2bb6fc815fa0fa01c8027c1eb94fbcc83",
+      "docs-site/docs/tools/cli-reference.mdx": "8dc647e752e14123e82039d535395ed262537c8ad8aa19f8bfd8695d13ac954f"
+    },
+    "verifiedCoreCount": 17,
+    "verifiedWebsiteCount": 10,
+    "hashMismatches": [],
+    "verifiedBeforeAndAfterReview": true
+  },
+  "evidenceSha256": {
+    "v8-read-retention-source-freeze.json": "60d7e2fc8c52d22d8997a403140a6adc49be322ff042a97707b4bd87d1fd96bf",
+    "k22-domain-output-source-freeze.json": "6772d3d55bb849c4506da20df60e7eae38958e6ffd6bd6736a739ce07602cfac",
+    "auth-denial-source-freeze.json": "98da819f3d367b5f76ca0d39d14942f2cb95aee00ad359eca8a09e3c03e60737",
+    "v8-read-retention-source-report.md": "be2318f4fda49ffea26f1269d7a890ef5d89688b62a68bc1dee693dae7bf07ab",
+    "k22-domain-output-source-report.md": "7a0a631724230701fac0b402bd95c5d7fcc59090b472c5ebf05081efe0764816",
+    "auth-denial-source-report.md": "da5e2caa6fe53bd54739eab9dd87ef548c69b09b525260197da2e43670718835",
+    "k23-repair-joint-quality-final-receipt.json": "a3c96cb983ab526c5c3d16475f086d8185109ca7a277fbb9b152b8a62c5fa5a6",
+    "docs-k23-final-receipt.json": "561c980e5b2bfd5622e230e06375a1e86c8b2964e824bc18c03e071bdb152dc2",
+    "v8-read-retention-equivalence.json": "7b6a9125f52e3aea37e8b381aefd0ca38db7b6c6f8ee67b05e8e4c7084402ab8",
+    "k22-domain-output-equivalence.json": "1d879ae7f40e820ea531db3f5c260dec35103ed68960f92c3c0b0388631e4846",
+    "auth-denial-source-equivalence.json": "0939bf1d0150a62a17aab65ab159ee9d04a01f1c78d5eb64cbcfd9cf098a19bd"
+  },
+  "quality": {
+    "receipt": "k23-repair-joint-quality-final-receipt.json",
+    "actualChecks": [
+      {
+        "name": "root-types",
+        "exitCode": 0
+      },
+      {
+        "name": "backend-types",
+        "exitCode": 0
+      },
+      {
+        "name": "lint-types",
+        "exitCode": 0
+      },
+      {
+        "name": "scoped-lint",
+        "exitCode": 0
+      },
+      {
+        "name": "build",
+        "exitCode": 0
+      },
+      {
+        "name": "packed-contracts",
+        "exitCode": 0
+      }
+    ],
+    "backendInstalledOutputs": 169,
+    "tables": 77,
+    "components": 2,
+    "scopedLintExistingWarnings": 11,
+    "newErrors": 0,
+    "performedByReviewer": false,
+    "logsAndExitReceiptsInspected": true
+  },
+  "rawTestReceipts": [
+    {
+      "path": "k22-domain-output-focused-v1.json",
+      "sha256": "7f7d73f934da7ab729780cd7ccd0e7e0271b1c1175bcf2dbabab0a1a22a598cf",
+      "status": "PASS",
+      "totalTests": 134,
+      "passedTests": 134,
+      "failedTests": 0,
+      "totalSuites": 4,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "k22-domain-output-affected-v1.json",
+      "sha256": "9d48f7872240596da51e2c20643f7656a830b0451452b70d9f8f7b0536f53b58",
+      "status": "FAIL",
+      "totalTests": 672,
+      "passedTests": 671,
+      "failedTests": 1,
+      "totalSuites": 14,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "k22-domain-output-confirmed-v2.json",
+      "sha256": "3a048f5df6a83dc3d61eab6e86a345df0b254bfb74908e576c8f726c0d2f62b2",
+      "status": "PASS",
+      "totalTests": 22,
+      "passedTests": 22,
+      "failedTests": 0,
+      "totalSuites": 1,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "v8-read-retention-auth-v1.json",
+      "sha256": "1088772ebb308825493b9ada15b114f62df965d252818d5b07f00d87c6d375dd",
+      "status": "FAIL",
+      "totalTests": 99,
+      "passedTests": 95,
+      "failedTests": 4,
+      "totalSuites": 4,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "v8-read-retention-auth-v2.json",
+      "sha256": "86365bdfaca026dcf82a3e1800d094adb11bd844899df18a4d53e7148d53a45c",
+      "status": "PASS",
+      "totalTests": 43,
+      "passedTests": 43,
+      "failedTests": 0,
+      "totalSuites": 1,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "v8-read-retention-parents-v1.json",
+      "sha256": "d0fa6f6f1983031e929c21f917b96c1446251e5da9378c9a66c39f91d3846c2f",
+      "status": "FAIL",
+      "totalTests": 180,
+      "passedTests": 179,
+      "failedTests": 1,
+      "totalSuites": 6,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "v8-read-retention-parents-v2.json",
+      "sha256": "ce265ab5a73beb519dc3f9e9ae18b2e14b69c7aa7c56d294fbb99841b41b3e9a",
+      "status": "PASS",
+      "totalTests": 7,
+      "passedTests": 7,
+      "failedTests": 0,
+      "totalSuites": 1,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "v8-read-retention-final-focused-v1.json",
+      "sha256": "82965a7906ad14ba3d1605f42ecf69efcb7a6325f7ac7bacd2fdef754be61972",
+      "status": "PASS",
+      "totalTests": 49,
+      "passedTests": 49,
+      "failedTests": 0,
+      "totalSuites": 2,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "v8-read-retention-dependencies-v1.json",
+      "sha256": "6d049aecce6ce4702b27c35410b06c186bfb9df062a30a32656692ff625d13c9",
+      "status": "PASS",
+      "totalTests": 169,
+      "passedTests": 169,
+      "failedTests": 0,
+      "totalSuites": 4,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "auth-denial-source-tests-v1.json",
+      "sha256": "21fca915a2f6843616d52913c5feb9646456f185fe13ffce7cf858508b7178d0",
+      "status": "PASS",
+      "totalTests": 90,
+      "passedTests": 90,
+      "failedTests": 0,
+      "totalSuites": 2,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "auth-denial-client-affected-v2.json",
+      "sha256": "2c35ffcd572d129fb83b01d443973108db654cf0a6c8497519d2f358c3082bcc",
+      "status": "PASS",
+      "totalTests": 201,
+      "passedTests": 201,
+      "failedTests": 0,
+      "totalSuites": 8,
+      "skippedTests": 0,
+      "todoTests": 0
+    },
+    {
+      "path": "auth-denial-final-v5.json",
+      "sha256": "af2c9ef21929537ba458697fc9244271954ce22bb3526ec8124ecf132ba98338",
+      "status": "PASS",
+      "totalTests": 93,
+      "passedTests": 93,
+      "failedTests": 0,
+      "totalSuites": 2,
+      "skippedTests": 0,
+      "todoTests": 0
+    }
+  ],
+  "applicability": {
+    "countsOverlapAndAreNotAdditive": true,
+    "domain": "Original671/672 red remains FAIL. Sole conflicting-values case exposed parser-only undefined probe; concrete correction uses exact persisted values. Focused134/134 and confirmed successor22/22 support final production applicability; no relabeling of broad run.",
+    "retention": "Original95/99 and179/180 reds retained. Successors correct fixture normalizer/fluent/component references and baseline after original read setup. Latest-per-suite reconciliation454/14 is a reconciliation, not a new aggregate run.",
+    "auth": "Latest-per-file reconciliation281/9; overlapping90/2,201/8,93/2 retained. Controlled transport evidence only; no hosted WebSocket claim.",
+    "earlierTypes": "Original owned typing failures retained; shared final types actual0 apply to unchanged final frozen source."
+  },
+  "docs": {
+    "receipt": "docs-k23-final-receipt.json",
+    "finalBuildExitCode": 0,
+    "actualRenderReceipt": "docs-k23-render.json",
+    "renderObserved": true,
+    "consoleWarningsOrErrors": 0,
+    "serverClosed": true,
+    "unpublished": true,
+    "allTenCurrentSourceHashesMatch": true,
+    "retainedLimitations": "Initial literal phrase assertion mismatch and helper unbound variable are preserved; unchanged observations plus final actual content/render support current docs, without inventing a prior PASS."
+  },
+  "nativeScope": {
+    "latestCompletedQualification": "K22 on prior source",
+    "latencyPassed": 0,
+    "latencyTotal": 4,
+    "browserSeconds": [
+      7.76,
+      9.21
+    ],
+    "cliSeconds": [
+      12.07,
+      11.74
+    ],
+    "toolAndRepeatedCapture": "K22 separate tool final answer and repeated canonical capture/public negatives passed; not qualification of this batch.",
+    "ordinaryChatIngestion": "Two K22 user events failed repeated normalized slot/malformed tags. Full original candidate equality unavailable; do not infer both were equivalent duplicates.",
+    "authentication": "K22 HTTP four expected cases passed; original K11/K20 WebSocket UNAUTHENTICATED assertions timed out and remain FAIL. New SDK probe native qualification pending.",
+    "cleanup": "K22 independently ABSENT; no new service calls made for review.",
+    "pending": [
+      "Fresh installed K23 ordinary ingestion/recall and SDK signed-negative behavior",
+      "Native latency original deadlines",
+      "Full functional tasks and final native audit"
+    ]
+  },
+  "reviewerActions": {
+    "productEdits": 0,
+    "testReruns": 0,
+    "buildOrPackRuns": 0,
+    "serviceCalls": 0,
+    "inferenceCalls": 0,
+    "gitOperations": 0,
+    "writes": [
+      "k23-repair-independent-review.md",
+      "k23-repair-independent-review.json"
+    ]
+  },
+  "markdownReport": {
+    "path": "k23-repair-independent-review.md",
+    "sha256": "7b53396eedab398bf5bc73056652a6f8f56c09ce3087bf9dd112f64350c2e5a7"
+  }
+}

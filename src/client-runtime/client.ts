@@ -15,6 +15,7 @@ import { contentJob, contentJobList, contentListOptions, contentSubmit, contentS
 import {rememberInput,rememberResult} from './remember.js';
 import type {RuntimeRememberInput,RuntimeRememberResult} from './types.js';
 import type { ContentSubmitV1, RuntimeContentJobV1 } from "../domain/content.js";
+import { probeAuthenticationDenial } from "./authentication-denial.js";
 
 export type RuntimeClientPort = Pick<ConvexClient, "setAuth" | "query" | "mutation" | "action" | "onUpdate" | "close">;
 /** Metadata only, timed with this client's monotonic clock. RPC end/failed describe
@@ -28,7 +29,9 @@ export interface CortexRuntimeClientOptions {
   deploymentUrl: string; fetchToken: AuthTokenFetcher; scope?: Partial<RuntimeScope>;
   /** Explicit owned HTTP-action origin. Tokens are never forwarded to redirects or storage URLs. */
   assetHttpUrl?: string;
-  /** Optional standard fetch port for hosts/tests; defaults to the browser implementation. */
+  /** Standard HTTP port for assets and the denial-only auth check. Supplying this
+   * also enables that check for a custom borrowed transport. Owned/official
+   * clients use standard fetch by default; HTTP success grants no authority. */
   fetch?: typeof globalThis.fetch;
   onAuthChange?: (authenticated: boolean) => void;
   /** Optional scalar diagnostics. No arguments, results, credentials or error data are emitted. */
@@ -67,6 +70,9 @@ export class CortexRuntimeClient {
   private fetchToken: AuthTokenFetcher;
   private authReady: Promise<void> = Promise.resolve();
   private rejectAuth?: (error: CortexRuntimeError) => void;
+  private stopAuthProbe?: () => void;
+  private authProbeSequence = 0;
+  private readonly authProbeTarget: Readonly<{ deploymentUrl: string; fetch?: typeof globalThis.fetch; enabled: boolean }>;
   private authTimer?: ReturnType<typeof setTimeout>;
   private sessionTimer?: ReturnType<typeof setTimeout>;
   private deliveryTimer?: ReturnType<typeof setTimeout>;
@@ -81,6 +87,8 @@ export class CortexRuntimeClient {
     if (options.authTimeoutMs !== undefined && (!Number.isSafeInteger(options.authTimeoutMs) || options.authTimeoutMs < 1 || options.authTimeoutMs > 120000)) invalid("INVALID_INPUT");
     if (options.requestTimeoutMs !== undefined && (!Number.isSafeInteger(options.requestTimeoutMs) || options.requestTimeoutMs < 1 || options.requestTimeoutMs > 120000)) invalid("INVALID_INPUT");
     this.port = options.client ?? new ConvexClient(options.deploymentUrl);
+    this.authProbeTarget = Object.freeze({ deploymentUrl: options.deploymentUrl, fetch: options.fetch,
+      enabled: !options.client || this.port instanceof ConvexClient || typeof options.fetch === "function" });
     this.fetchToken = options.fetchToken; this.installAuth();
   }
   private latencyNow(): number {
@@ -117,6 +125,7 @@ export class CortexRuntimeClient {
   }
   private installAuth() {
     this.latency("auth.begin");
+    this.stopAuthProbe?.(); this.stopAuthProbe = undefined; this.authProbeSequence++;
     clearTimeout(this.authTimer); clearTimeout(this.sessionTimer); clearTimeout(this.deliveryTimer); this.earliestDelivery = undefined; this.authenticated = false;
     const epoch = this.generation; let settled = false, accepted = false;
     let ready = () => {}, denied = (_error: CortexRuntimeError) => {};
@@ -125,6 +134,7 @@ export class CortexRuntimeClient {
     const reject = (error: CortexRuntimeError) => {
       if (this.closed || epoch !== this.generation || (settled && !accepted)) return;
       settled = true; accepted = false; clearTimeout(this.authTimer); this.authenticated = false;
+      this.stopAuthProbe?.(); this.stopAuthProbe = undefined;
       this.latency("auth.denied");
       denied(error); this.abortAssets(error); this.abortCalls(error); for (const fail of [...this.watchers]) fail(error);
       this.options.onAuthChange?.(false);
@@ -136,12 +146,22 @@ export class CortexRuntimeClient {
       try {
         const token = await this.fetchToken(args);
         if (token === null) reject(new CortexRuntimeError("UNAUTHENTICATED"));
+        else if (typeof token === "string" && !this.closed && epoch === this.generation && !settled
+          && this.authProbeTarget.enabled) {
+          this.stopAuthProbe?.();
+          const sequence = ++this.authProbeSequence;
+          this.stopAuthProbe = probeAuthenticationDenial({ deploymentUrl: this.authProbeTarget.deploymentUrl, token, scope: this.scope,
+            fetch: this.authProbeTarget.fetch,
+            active: () => !this.closed && epoch === this.generation && sequence === this.authProbeSequence && !settled,
+            denied: () => reject(new CortexRuntimeError("UNAUTHENTICATED")) });
+        }
         return token;
       } catch { reject(new CortexRuntimeError("AUTH_TOKEN_FETCH_FAILED")); return null; }
     }, authenticated => {
       if (this.closed || epoch !== this.generation || (settled && !accepted)) return;
       if (!authenticated) { reject(new CortexRuntimeError("UNAUTHENTICATED")); return; }
       settled = true; accepted = true; clearTimeout(this.authTimer); this.authenticated = true; ready();
+      this.stopAuthProbe?.(); this.stopAuthProbe = undefined;
       this.latency("auth.ready");
       this.options.onAuthChange?.(true); for (const wake of [...this.wakeWatchers]) wake();
     });
@@ -603,5 +623,5 @@ export class CortexRuntimeClient {
     this.assetPreviews.add(revoke);
     return Object.freeze({ url, mimeType: blob.type, sizeBytes: blob.size, revoke });
   }
-  async close(): Promise<void> { if (this.closed) return; this.closed = true; clearTimeout(this.authTimer); clearTimeout(this.sessionTimer); clearTimeout(this.deliveryTimer); const error = new CortexRuntimeError("CLIENT_CLOSED"); this.abortAssets(error); this.abortCalls(error); this.rejectAuth?.(error); for (const fail of [...this.watchers]) fail(error); if (!this.options.client) await this.port.close(); }
+  async close(): Promise<void> { if (this.closed) return; this.closed = true; this.stopAuthProbe?.(); this.stopAuthProbe = undefined; clearTimeout(this.authTimer); clearTimeout(this.sessionTimer); clearTimeout(this.deliveryTimer); const error = new CortexRuntimeError("CLIENT_CLOSED"); this.abortAssets(error); this.abortCalls(error); this.rejectAuth?.(error); for (const fail of [...this.watchers]) fail(error); if (!this.options.client) await this.port.close(); }
 }

@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "kind": "exact-k22-facts-unknown",
+  "rawPayloadRetained": false,
+  "paidCalls": 0,
+  "mutations": 0,
+  "newCaptures": 0,
+  "freshVerifications": 17,
+  "tables": {
+    ":runtimeRuns": 5,
+    ":runtimeIngestionEvents": 11,
+    ":runtimeIngestionStages": 33,
+    ":runtimeIngestionJobs": 10,
+    ":runtimeModelOperations": 38,
+    ":runtimeModelAttempts": 38,
+    ":runtimeMemorySources": 12,
+    ":facts": 4
+  },
+  "clientsClosed": true,
+  "target": {
+    "sessionId": "c1017228-182f-43f7-8663-132b976f4fa3",
+    "name": "effervescent-llama-943",
+    "id": 6166959,
+    "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde"
+  },
+  "runs": [
+    {
+      "runId": "run:0297688c5141af8e763e6b1fea6da5a6b11417d0092992bbe1b549c373d97d13",
+      "eventId": "ingestion:efee920ae0caf74830281eb98a767bfbcd16717b272c69adbfc74e69e48b7f2d",
+      "sequence": 4,
+      "factsState": "unknown",
+      "failureCode": "INDEXING_OUTCOME_UNKNOWN",
+      "extractState": "complete",
+      "attempt": 1,
+      "draftPresent": false,
+      "operations": [
+        {
+          "operationKey": "facts.resolve",
+          "state": "uncertain",
+          "attachment": "attached",
+          "withheld": false,
+          "slotReleased": true,
+          "terminalOutcome": "confirmed",
+          "completeUsage": true,
+          "outputPresent": true,
+          "resultBytes": 282,
+          "resultSha256": "8fdf5355020f7139c56adc88089264f972e0ea5214438ad4ba16475c868a40ef",
+          "admittedPromptExistingCount": 8,
+          "promptBytes": 7236,
+          "parserAccepted": true,
+          "action": "SUPERSEDE",
+          "targetPresent": true,
+          "targetInAdmittedPrompt": true,
+          "mergedFactPresent": false,
+          "confidenceFinite": true,
+          "confidenceInRange": true,
+          "currentExistingCount": 4,
+          "currentRowsChangedAfterFailure": true,
+          "genericDecisionValid": true,
+          "noneMissingTarget": false,
+          "addUnexpectedTarget": false,
+          "actualPlannerAccepted": false,
+          "plannerClass": "AMBIGUOUS_EXTRACTION_SLOT"
+        },
+        {
+          "operationKey": "memory.extract",
+          "state": "uncertain",
+          "attachment": "attached",
+          "withheld": false,
+          "slotReleased": true,
+          "terminalOutcome": "confirmed",
+          "completeUsage": true,
+          "outputPresent": true
+        }
+      ]
+    },
+    {
+      "runId": "run:1351af06c7c92d2979c37f951e663d33c2a71c6dca51d59bd960e268c0cfabf3",
+      "eventId": "ingestion:56fb0c308bbb390f4d3aa7243f2fbff000cac046e9ae97ae56b79e639e42fb83",
+      "sequence": 8,
+      "factsState": "pending",
+      "extractState": "unknown",
+      "attempt": 0,
+      "draftPresent": false,
+      "operations": [
+        {
+          "operationKey": "memory.extract",
+          "state": "uncertain",
+          "attachment": "attached",
+          "withheld": false,
+          "slotReleased": true,
+          "terminalOutcome": "confirmed",
+          "completeUsage": true,
+          "outputPresent": true
+        }
+      ]
+    }
+  ],
+  "verdict": "CLASSIFIED"
+}

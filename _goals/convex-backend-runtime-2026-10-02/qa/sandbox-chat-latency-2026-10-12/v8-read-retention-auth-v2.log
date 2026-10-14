@@ -1,0 +1,159 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:81455) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAuth/v8-read-scope.test.ts
+  ✓ retains only untouched raw families across native runtimeAgentExecutions insert (10 ms)
+  ✓ retains only untouched raw families across native runtimeAgentExecutions patch (2 ms)
+  ✓ retains only untouched raw families across native runtimeAgentExecutions replace (2 ms)
+  ✓ retains only untouched raw families across native runtimeAgentExecutions delete (2 ms)
+  ✓ retains only untouched raw families across native runtimeAgentOperations insert (2 ms)
+  ✓ retains only untouched raw families across native runtimeAgentOperations patch (1 ms)
+  ✓ retains only untouched raw families across native runtimeAgentOperations replace (1 ms)
+  ✓ retains only untouched raw families across native runtimeAgentOperations delete (2 ms)
+  ✓ retains only untouched raw families across native runtimeRunOutbox insert (1 ms)
+  ✓ retains only untouched raw families across native runtimeRunOutbox patch (2 ms)
+  ✓ retains only untouched raw families across native runtimeRunOutbox replace (2 ms)
+  ✓ retains only untouched raw families across native runtimeRunOutbox delete (1 ms)
+  ✓ retains only untouched raw families across native runtimeRuns insert (1 ms)
+  ✓ retains only untouched raw families across native runtimeRuns patch (2 ms)
+  ✓ retains only untouched raw families across native runtimeRuns replace (1 ms)
+  ✓ retains only untouched raw families across native runtimeRuns delete (2 ms)
+  ✓ runtimeBudgetAccounts insert retains authority alone and freshly loads policy/messages/accounts (1 ms)
+  ✓ runtimeBudgetAccounts patch retains authority alone and freshly loads policy/messages/accounts (2 ms)
+  ✓ runtimeBudgetAccounts replace retains authority alone and freshly loads policy/messages/accounts (1 ms)
+  ✓ runtimeBudgetAccounts delete retains authority alone and freshly loads policy/messages/accounts (1 ms)
+  ✓ runtimeModelOperations insert retains authority alone and freshly loads policy/messages/accounts (2 ms)
+  ✓ runtimeModelOperations patch retains authority alone and freshly loads policy/messages/accounts (1 ms)
+  ✓ runtimeModelOperations replace retains authority alone and freshly loads policy/messages/accounts (2 ms)
+  ✓ runtimeModelOperations delete retains authority alone and freshly loads policy/messages/accounts (1 ms)
+  ✓ runtimeModelAttempts insert retains authority alone and freshly loads policy/messages/accounts (1 ms)
+  ✓ runtimeModelAttempts patch retains authority alone and freshly loads policy/messages/accounts (2 ms)
+  ✓ runtimeModelAttempts replace retains authority alone and freshly loads policy/messages/accounts (1 ms)
+  ✓ runtimeModelAttempts delete retains authority alone and freshly loads policy/messages/accounts (2 ms)
+  ✓ default mode remains fully invalidating for known state writes; nested V8 scopes stay invocation-local (1 ms)
+  ✓ unknown-table writer fully invalidates rather than guessing table identity (2 ms)
+  ✓ security writer fully invalidates rather than guessing table identity (1 ms)
+  ✓ opaque-id writer fully invalidates rather than guessing table identity (1 ms)
+  ✓ cross-table-id writer fully invalidates rather than guessing table identity (9 ms)
+  ✓ normalizer-missing writer fully invalidates rather than guessing table identity (1 ms)
+  ✓ normalizer-throws writer fully invalidates rather than guessing table identity (2 ms)
+  ✓ all component writers clear every family even after a rejected child (1 ms)
+  ✓ fluent table writes use full invalidation and preserve the native receiver (2 ms)
+  ✓ state rows remain uncached; returned raw grants are cloned and predicates/expiry rerun (1 ms)
+  ✓ in-flight failed state writes suppress hits without discarding valid prior rows (2 ms)
+  ✓ a late raw read cannot populate after a retained write epoch (1 ms)
+  ✓ explicit policy/message save fences and fresh invocation revocation remain observable (2 ms)
+  ✓ query exceptions and absent tombstones are not retained across unknown security writes (1 ms)
+  ✓ the native normalizer receives exact table/ID and invalid IDs preserve original writer failure (1 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.3s | 43/43 passed | /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.3%) - retains only untouched raw families across native runtimeAgentExecutions insert
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.3%) - cross-table-id writer fully invalidates rather than guessing table identity
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeAgentExecutions patch
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeAgentExecutions replace
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeAgentExecutions delete
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeAgentOperations insert
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeAgentOperations delete
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeRunOutbox patch
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeRunOutbox replace
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeRuns patch
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeRuns delete
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - runtimeBudgetAccounts patch retains authority alone and freshly loads policy/messages/accounts
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - runtimeModelOperations insert retains authority alone and freshly loads policy/messages/accounts
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - runtimeModelOperations replace retains authority alone and freshly loads policy/messages/accounts
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - runtimeModelAttempts patch retains authority alone and freshly loads policy/messages/accounts
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - runtimeModelAttempts delete retains authority alone and freshly loads policy/messages/accounts
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - unknown-table writer fully invalidates rather than guessing table identity
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+18. [32m✓[0m    0.00s ( 0.1%) - normalizer-throws writer fully invalidates rather than guessing table identity
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+19. [32m✓[0m    0.00s ( 0.1%) - fluent table writes use full invalidation and preserve the native receiver
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+20. [32m✓[0m    0.00s ( 0.1%) - in-flight failed state writes suppress hits without discarding valid prior rows
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.06s (1.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.39s
+  Test suites:        1
+  Individual tests:   43
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       43 passed, 43 total
+Snapshots:   0 total
+Time:        3.39 s
+Ran all test suites within paths "tests/unit/runtimeAuth/v8-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-auth-v2.json
