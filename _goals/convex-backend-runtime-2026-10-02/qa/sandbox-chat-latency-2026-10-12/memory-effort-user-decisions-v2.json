@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "recordedAt": "2026-10-14T22:32:35.181915+00:00",
+  "state": "USER_CONFIRMED_SETTINGS_DESIGN_ONLY",
+  "implementationPaused": true,
+  "profiles": {
+    "fast": {
+      "maxHops": 2,
+      "latencyTargetMs": 3000
+    },
+    "normal": {
+      "maxHops": 4,
+      "latencyTargetMs": 6000
+    },
+    "high": {
+      "maxHops": 8,
+      "latencyTargetMs": 8000
+    },
+    "max": {
+      "maxHops": null,
+      "latencyTargetMs": 30000
+    }
+  },
+  "defaultEffort": "normal",
+  "latencyMetric": "hosted submission to first visible model-generated answer text",
+  "entryCapsStillProposedNotApproved": {
+    "fast": 4,
+    "normal": 8,
+    "high": 16,
+    "max": null
+  },
+  "supersedes": "revision1 depths1/2/4 and Instant under1second; original source/runtime outcomes unchanged",
+  "ordinaryChatGatewayModel": "openai/gpt-4o-mini",
+  "ordinaryEmbeddingModel": "openai/text-embedding-3-small",
+  "ordinaryEmbeddingDimensions": 1536,
+  "modelEvidence": "Saved current-session actual native model-attempt terminal metadata plus managed profile readback; no service call",
+  "visualization": "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v2.html",
+  "artifact": "memory-effort-design-2026-10-14.md"
+}

@@ -1,10 +1,10 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K29 independent source PASS4.0; fresh accepted-source packaging next; K28 CLEANED/SLO0of4 retained",
+  "phase": "EXECUTION_RESUMED: modified goalv4; K29 quietauthPASS; tokenrefresh then actualbrowser/CLIbaseline first",
   "complete": 2,
-  "total": 4,
+  "total": 6,
   "percent": 50,
-  "metric": "accepted backend/Gateway batch; accepted native SDK/provider/Basic batch; fresh installed-candidate/service/UI integration; final independent audit",
+  "metric": "Accepted backend/Gateway foundation; accepted client/Basic foundation; K29 actualbaseline; effort source/client/docs acceptance; installed realprofile/latency qualification; cleanup/finalaudit",
   "baseline": {
     "firstDurableTextMs": 17597,
     "modelEndedMs": 23137,
@@ -12,8 +12,8 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T21:27:31.618980+00:00",
-  "metricVersion": 2,
+  "updatedAt": "2026-10-14T23:16:14.305Z",
+  "metricVersion": 3,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
     "state": "CLEANED by user; old snapshot retained only"
@@ -33,9 +33,19 @@
       ],
       "verdict": "PASS4.0",
       "liveLatency": false
+    },
+    {
+      "name": "K29 actual cloud baseline and functional regression",
+      "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+      "sourceReview": "k29-independent-review.md",
+      "verdict": "SOURCE_PASS4.0_REAL_FUNCTIONAL_PASS",
+      "memoryReceipt": "k29-memory-native-v2-four-run-verification-1792019495143.json",
+      "ordinaryReceipt": "k29-native-ordinary-memory-recovery-v2-1792019539538-b2f21997-71ac-4b34-a9de-8c3e58e0648c.json",
+      "effortAcceptance": false,
+      "cleanup": "ABSENT_FRESH_VERIFICATION"
     }
   ],
-  "primaryLatencyTarget": "hosted cloud Convex submission to first visible answer text under1000ms",
+  "primaryLatencyTarget": "Hosted submit to first visible model answer by effort: Fast3s/Normal6s/High8s/Max30s; Normal4hops default (design only)",
   "actualFailedEnvironment": {
     "id": "8a1aa585-aff0-4383-acda-c221c6d405e1",
     "database": "energized-wildcat-602",
@@ -58,37 +68,47 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "generation": "K28",
-    "sessionId": "14be01ce-2125-4d36-bb83-f4d842f994e9",
-    "state": "CLEANED",
-    "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
-    "launcherSession": 51883,
-    "launcherPid": 78674,
-    "launcherChildExit": 130,
+    "observedAt": "2026-10-14T21:39:38.903Z",
+    "sessionId": "ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
+    "state": "READY",
+    "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
     "target": {
-      "id": 6177151,
-      "name": "resilient-ptarmigan-738",
+      "id": 6178760,
+      "name": "savory-pheasant-21",
+      "kind": "cloud",
       "teamId": 325340,
       "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
       "deploymentType": "dev",
       "isDefault": false,
-      "expiresAt": 1792614908558,
-      "reference": "dev/cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9"
+      "expiresAt": 1792618565952,
+      "deploymentUrl": "https://savory-pheasant-21.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
     },
     "ports": {
-      "web": 3394,
-      "basic": 3395
+      "web": 3382,
+      "basic": 3383
     },
-    "imageId": "sha256:ae85998b5ffb20e8fd006136473740ec093d504c328d4021d9b7c755dbdaf565",
-    "startupFixedQualification": "8/8PASS",
-    "nativeSLOQualified": false,
     "container": {
-      "name": "cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9",
-      "id": "bb93d48f2e399e7d7e3f8ccce0b7fc6f8007f323b0c38221580edb7aa7e365c5",
-      "imageId": "sha256:ae85998b5ffb20e8fd006136473740ec093d504c328d4021d9b7c755dbdaf565"
+      "name": "cortex-sandbox-ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
+      "imageId": "sha256:8d1afbb653dbcfa5c1592b79831502be3ac7f7e5ee51ee6ceaa7a96703e22fbd",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2"
+      },
+      "id": "aa3a58a73a1f3b9c2822200c5c2406ec5c1c927eaa237b52d53b7fefa848a3e9"
     },
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-native-snapshot-2026-10-14",
+    "launcherSession": 18395,
+    "launcherPid": 94766,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "nativeQualified": false,
+    "generation": "K29",
     "backendTrace": "ENABLED_READBACK1_BEFORE_MEASURED_TURNS",
-    "cleanup": "k28-cleanup-final.json"
+    "launcherChildExit": "UNKNOWN_INTERRUPTED; original process absent; no direct exit receipt",
+    "nativeSLOQualified": false,
+    "authRecoveryV2": "PASS owner/expired/invalid;107freshguards;data+financeunchanged;directexit0/allclientsclosed"
   },
   "actualSamples": {
     "generation": "K21",
@@ -112,7 +132,7 @@
     "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
   },
   "pendingRepairs": [
-    "Reduce measured backend pre-dispatch preparation (2087\u20136949ms) and protected delivery while retaining all current authority/source/accounting predicates and fresh boundaries",
+    "Reduce measured backend pre-dispatch preparation (2087–6949ms) and protected delivery while retaining all current authority/source/accounting predicates and fresh boundaries",
     "Fresh installed hosted sub1000ms and semantic qualification",
     "Unqualified in-plan new-target UPDATE/SUPERSEDE remains disclosed",
     "Independent final audit"
@@ -517,8 +537,8 @@
         "pass": 8,
         "fail": 2,
         "failures": [
-          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
-          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
+          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
+          "invalidsignature→AUTHENTICATION_TIMEOUT"
         ],
         "noAccessDelivered": true,
         "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
@@ -552,8 +572,8 @@
       "priorAuthenticationExpectedCodeFailures": {
         "generation": "K9",
         "failures": [
-          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
-          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
+          "expired valid signature → AUTHENTICATION_TIMEOUT",
+          "invalid signature → AUTHENTICATION_TIMEOUT"
         ],
         "notRerun": true
       },
@@ -575,7 +595,7 @@
       },
       "toolInclusiveSupplement": {
         "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
-        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
         "originalGenericFailPreserved": true
       }
     }
@@ -1822,13 +1842,13 @@
     "requiredIntegrationAccepted": false
   },
   "sourceK29": {
-    "state": "SOURCE_ACCEPTED_PACKAGING_NEXT",
+    "state": "ACTUAL_BASELINE_FUNCTIONAL_PASS",
     "baselineProduct": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
     "baselineQa": "69becda2ba83d848f3768f5c4cea7c23ba946909",
     "scope": "k29-batch-scope.md",
     "sourcePercent": 100,
-    "native": "NOT_RUN",
-    "freshServiceAccess": false,
+    "native": "Four-run45freshchecks and ordinary84freshchecks PASS; effort not implemented",
+    "freshServiceAccess": true,
     "goalPercent": 50,
     "interimAffectedChecks": "468/12 per-file passing coverage union; types/lint0; original6fixture failures preserved",
     "interimSourceFrozen": true,
@@ -1842,6 +1862,109 @@
     "maintenanceNotes": [
       "Pre-existing per-source raw-context comment drift",
       "Test-only Error.stack callsite discrimination may need future explicit injection"
-    ]
+    ],
+    "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+    "packaging": {
+      "isolatedBuildsPassed": 3,
+      "packsPassed": 4,
+      "consumerGroupsPassed": 4,
+      "image": "PASS",
+      "consumerOriginalFailure": "Stale K28 graph-only literal; preserved with exact AST successor for two reviewed native views",
+      "nativeQualified": false,
+      "imageId": "sha256:8d1afbb653dbcfa5c1592b79831502be3ac7f7e5ee51ee6ceaa7a96703e22fbd",
+      "launcherCaseUnion": "122/6latestpassed/0skip/todo; failedtwofiles49/49successor; originalTSloaderfailurepreserved",
+      "dryRunExit": 0
+    }
+  },
+  "memoryEffortDesign": {
+    "state": "APPROVED_EXECUTION_RESUMED",
+    "requestedAtDate": "2026-10-14",
+    "implementationPausedByUser": false,
+    "nativeQualificationPausedByUser": false,
+    "confirmedDepths": {
+      "fast": 2,
+      "normal": 4,
+      "high": 8,
+      "max": null
+    },
+    "countingRule": "Traversal depth; separate entry cap",
+    "instantLatencyTarget": "SUPERSEDED by revision2 Fast3seconds",
+    "artifact": "memory-effort-design-2026-10-14.md",
+    "inlineVisualization": "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html",
+    "traversalExamples": "binary tree cumulative6/30/510; Max2046 at exampledepth10, not fixeddepth",
+    "canonicalMessageStorage": "unchanged",
+    "agentStop": "k29_auth_recovery confirmed no clients opened/service calls begun; unexecuted local draft only",
+    "goalProgressChanged": false,
+    "revision": 3,
+    "latencyTargetsMs": {
+      "fast": 3000,
+      "normal": 6000,
+      "high": 8000,
+      "max": 30000
+    },
+    "defaultEffort": "normal",
+    "confirmedUserSettings": "memory-effort-user-decisions-v2.json",
+    "entryCapsApproval": "Initial administrator policy defaults carried forward by modified goal execution authorization; user approved depths, targets and default",
+    "latestMeasuredBaseline": "memory-effort-latency-baseline-v3.json",
+    "measuredSourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+    "currentK29Latency": "MEASURED_BASELINE_NOT_EFFORT_QUALIFICATION",
+    "sourceProfilesMeasured": false,
+    "receipt": "memory-effort-design-receipt-v3.json",
+    "executionAuthorization": "User: understood, proceed as planned, using modified goal",
+    "executionPlan": "modified-goal-execution-v4.md"
+  },
+  "historicalPreMemoryEffortLatencyTarget": "hosted cloud Convex submission to first visible answer text under1000ms",
+  "historicalMetricV2": {
+    "complete": 2,
+    "total": 4,
+    "percent": 50,
+    "scope": "Earlier latency follow-up before effort extension"
+  },
+  "goalApiTracking": {
+    "lastObservedState": "paused",
+    "userResumeRevokesPriorPause": true,
+    "note": "No active-status mutation is exposed by goal tools; execute direct user authorization and retain actual API state honestly"
+  },
+  "actualSamplesK29": {
+    "generation": "K29",
+    "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+    "browserFirstAfterPaintMs": 3960.4000000953674,
+    "browserWarmAfterPaintMs": 3579.600000023842,
+    "cliFirstStdoutAcknowledgedMs": 6855.492086,
+    "cliWarmFirstStdoutAcknowledgedMs": 6981.217628999999,
+    "responses": "COMPLETE4/4",
+    "readiness": "facts/vectors8of8",
+    "nativeMemory": "PASS45freshchecks/fourcurrentuserfacts/eightmatchingvectors/contiguousthrough8",
+    "nativeMemoryReceipt": "k29-memory-native-v2-four-run-verification-1792019495143.json",
+    "backendTrace": "ENABLED_BEFORE_MEASURED_TURNS",
+    "cliDirectExit": 0,
+    "browserClientsClosed": true,
+    "cliClientsClosed": true,
+    "effortProfileAcceptance": false,
+    "ordinaryQualification": "PASS84freshverifications/2captures/ONEpublicrecall/replay/conflict/accessdenial",
+    "cleanup": "ABSENT_FRESH_VERIFICATION",
+    "ordinaryReceipt": "k29-native-ordinary-memory-recovery-v2-1792019539538-b2f21997-71ac-4b34-a9de-8c3e58e0648c.json",
+    "cleanupReceipt": "k29-cleanup-final.json",
+    "cleanupRecoveryExit": 0,
+    "originalLauncherExit": "UNKNOWN_INTERRUPTED",
+    "fullDelayChain": "k29-four-run-critical-path-readonly.md",
+    "financialSummary": {
+      "attempts": 38,
+      "allTerminal": true,
+      "activeSlots": 0,
+      "allReleased": true,
+      "unknownLiabilityCeilingUnits": 5700000,
+      "actualCharges": "UNKNOWN"
+    }
+  },
+  "memoryEffortExecution": {
+    "state": "E1_AND_E2_IMPLEMENTING",
+    "goalReview": "PASS4.4",
+    "plan": "modified-goal-execution-v4.md",
+    "backendExecutor": "memory_effort_backend",
+    "clientExecutor": "dev_integration_provider_ci",
+    "publicContract": "src/domain/memory-effort.ts",
+    "sourceAcceptance": false,
+    "nativeAcceptance": false
   }
 }

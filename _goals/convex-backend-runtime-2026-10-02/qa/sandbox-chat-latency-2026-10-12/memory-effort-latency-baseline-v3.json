@@ -1,0 +1,341 @@
+{
+  "version": 3,
+  "scope": "Saved measured cloud baseline for design only",
+  "repository": "SaintNick1214/Project-Cortex",
+  "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "latestCandidateSourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+  "latestCandidateChatLatency": "NOT_MEASURED_PAUSED",
+  "measuredEffortProfiles": false,
+  "recordedAt": "2026-10-14T22:35:03.341Z",
+  "sampleWindowPacific": {
+    "first": "Oct 14, 2026, 1:41:13 PM PDT",
+    "lastPublicRecall": "Oct 14, 2026, 1:48:21 PM PDT"
+  },
+  "sourceReceipts": [
+    {
+      "path": "k28-four-run-critical-path-readonly.json",
+      "sha256": "5395902e911384c4a72c393ee06e2e6d01d6e5cc5e45227ae9eb0421913c3afe",
+      "bytes": 190010
+    },
+    {
+      "path": "k28-public-recall-critical-path-readonly.json",
+      "sha256": "174b85c6ed8482f52ae15ee7b4b2b074c95352a31d98ff24bfce53f362c91a8a",
+      "bytes": 15542
+    }
+  ],
+  "originalInputHashesVerified": [
+    {
+      "kind": "browserNative",
+      "path": "service-log-snapshot-k28-browser-post-pair-1792010581782.json",
+      "sha256": "caaec2b6a0ddb00d60671e64247ac0b2b3e1aacc57d69260e7f9e8b9909ce04e",
+      "bytes": 660328
+    },
+    {
+      "kind": "cliNative",
+      "path": "service-log-snapshot-k28-cli-post-pair-1792010774679.json",
+      "sha256": "54ef224f2fcd0e2b3f9cc8403d4e4b5f3996a3a1b2187bde7ff9a856c7ee4bc1",
+      "bytes": 521086
+    },
+    {
+      "kind": "browserLogs",
+      "path": "browser/k28-browser-pair-logs.json",
+      "sha256": "ea5dc41851b4c7e5763892ad93db616ba9ed906fbeb09221fb4cab81302b5ebe",
+      "bytes": 55708
+    },
+    {
+      "kind": "browserOutcome",
+      "path": "browser/k28-browser-pair-outcome.json",
+      "sha256": "6623a16848c45177e1fab7ffefa135ddcdba8dde3861264d30df4912bd9b4a42",
+      "bytes": 1287
+    },
+    {
+      "kind": "cliLog",
+      "path": "k28-cli-session-v1.log",
+      "sha256": "e53183b09f6419ce02bbd78c188dae9afe27c80a9c38b4ea41052c927dfd3031",
+      "bytes": 20265
+    },
+    {
+      "kind": "cliTiming",
+      "path": "k28-cli-pair-observed-timing.json",
+      "sha256": "7274a0514396a6fa5d6ca9d4cb8cdddc27f86c6adb61f9bdcc30e3a353d208b6",
+      "bytes": 1630
+    },
+    {
+      "kind": "traceFlag",
+      "path": "k28-backend-trace-enabled.json",
+      "sha256": "ab0e5e85d3a959468a1975cf47226260f36bd746b27e44305e80019d5495240c",
+      "bytes": 534
+    }
+  ],
+  "samples": [
+    {
+      "label": "browser-first",
+      "name": "Browser · first",
+      "clientMs": 4379.5,
+      "clientMetric": "submit to first visible after paint",
+      "serverMs": 3528.2236328125,
+      "serverStagesMs": {
+        "preparation": 2223,
+        "mainGatewayToFirstText": 668,
+        "firstOutputCommit": 637.2236328125
+      },
+      "preDispatchMs": {
+        "admissionEntryToDirectBegin": 863,
+        "directPreparation": 712,
+        "preparedToMainAdmitBegin": 288,
+        "mainAdmitCheckpoint": 355,
+        "admitReturnToMainDispatch": 5
+      },
+      "privateRecall": null,
+      "selectedInput": [
+        {
+          "phase": "model.input.fit.baseline",
+          "at": 1792010474731,
+          "selectedMessages": 1,
+          "selectedMemories": 0,
+          "selectedFacts": 0,
+          "selectedPending": 0,
+          "contextBytes": 0,
+          "inputTokens": 13226,
+          "inputLimit": 32768
+        },
+        {
+          "phase": "model.input.fit.candidate",
+          "at": 1792010474731,
+          "selectedMessages": 1,
+          "selectedMemories": 0,
+          "selectedFacts": 0,
+          "selectedPending": 0,
+          "contextBytes": 0,
+          "inputTokens": 13226,
+          "inputLimit": 32768
+        }
+      ],
+      "finalProtectedPair": {
+        "observeRpcId": 17,
+        "observeMs": 208.89999997615814,
+        "postSessionMs": 363.60000002384186,
+        "totalMs": 572.5
+      },
+      "atMs": 1792010473864
+    },
+    {
+      "label": "browser-warm",
+      "name": "Browser · warm",
+      "clientMs": 3765.5999999046326,
+      "clientMetric": "submit to first visible after paint",
+      "serverMs": 3070.916015625,
+      "serverStagesMs": {
+        "preparation": 2087,
+        "mainGatewayToFirstText": 481,
+        "firstOutputCommit": 502.916015625
+      },
+      "preDispatchMs": {
+        "admissionEntryToDirectBegin": 803,
+        "directPreparation": 618,
+        "preparedToMainAdmitBegin": 345,
+        "mainAdmitCheckpoint": 316,
+        "admitReturnToMainDispatch": 5
+      },
+      "privateRecall": null,
+      "selectedInput": [
+        {
+          "phase": "model.input.fit.baseline",
+          "at": 1792010503431,
+          "selectedMessages": 3,
+          "selectedMemories": 0,
+          "selectedFacts": 0,
+          "selectedPending": 0,
+          "contextBytes": 0,
+          "inputTokens": 14368,
+          "inputLimit": 32768
+        },
+        {
+          "phase": "model.input.fit.candidate",
+          "at": 1792010503431,
+          "selectedMessages": 3,
+          "selectedMemories": 0,
+          "selectedFacts": 0,
+          "selectedPending": 0,
+          "contextBytes": 0,
+          "inputTokens": 14368,
+          "inputLimit": 32768
+        }
+      ],
+      "finalProtectedPair": {
+        "observeRpcId": 31,
+        "observeMs": 228.79999995231628,
+        "postSessionMs": 200.69999992847443,
+        "totalMs": 429.4999998807907
+      },
+      "atMs": 1792010502625
+    },
+    {
+      "label": "cli-first",
+      "name": "CLI · first",
+      "clientMs": 7704.965461,
+      "clientMetric": "submit to first stdout acknowledged",
+      "serverMs": 6358.75146484375,
+      "serverStagesMs": {
+        "preparation": 5305,
+        "mainGatewayToFirstText": 497,
+        "firstOutputCommit": 556.75146484375
+      },
+      "preDispatchMs": {
+        "admissionEntryToDirectBegin": 725,
+        "directPreparation": 306,
+        "directReturnToRecallBegin": 467,
+        "recall": 1976,
+        "recallReturnToPrepared": 844,
+        "preparedToMainAdmitBegin": 512,
+        "mainAdmitCheckpoint": 472,
+        "admitReturnToMainDispatch": 3
+      },
+      "privateRecall": {
+        "totalMs": 1976,
+        "embeddingAdmitCheckpointMs": 395,
+        "embeddingMs": 312,
+        "captureMs": 262,
+        "attachMs": 231,
+        "postAttachReadTailMs": 751,
+        "postEmbeddingReadyToRecallEndInclusiveMs": 1256
+      },
+      "selectedInput": [
+        {
+          "phase": "model.input.fit.baseline",
+          "at": 1792010631507,
+          "selectedMessages": 1,
+          "selectedMemories": 0,
+          "selectedFacts": 0,
+          "selectedPending": 0,
+          "contextBytes": 0,
+          "inputTokens": 13208,
+          "inputLimit": 32768
+        },
+        {
+          "phase": "model.input.fit.candidate",
+          "at": 1792010633954,
+          "selectedMessages": 1,
+          "selectedMemories": 4,
+          "selectedFacts": 1,
+          "selectedPending": 0,
+          "contextBytes": 2507,
+          "inputTokens": 31842,
+          "inputLimit": 32768
+        }
+      ],
+      "finalProtectedPair": {
+        "observeRpcId": 8,
+        "observeMs": 292.7192500000001,
+        "postSessionMs": 182.51200000000063,
+        "totalMs": 475.2312500000007
+      },
+      "atMs": 1792010630473
+    },
+    {
+      "label": "cli-warm",
+      "name": "CLI · warm",
+      "clientMs": 9901.847421999999,
+      "clientMetric": "submit to first stdout acknowledged",
+      "serverMs": 8507.24072265625,
+      "serverStagesMs": {
+        "preparation": 6949,
+        "mainGatewayToFirstText": 535,
+        "firstOutputCommit": 1023.24072265625
+      },
+      "preDispatchMs": {
+        "admissionEntryToDirectBegin": 843,
+        "directPreparation": 362,
+        "directReturnToRecallBegin": 526,
+        "recall": 3172,
+        "recallReturnToPrepared": 827,
+        "preparedToMainAdmitBegin": 392,
+        "mainAdmitCheckpoint": 823,
+        "admitReturnToMainDispatch": 4
+      },
+      "privateRecall": {
+        "totalMs": 3172,
+        "embeddingAdmitCheckpointMs": 542,
+        "embeddingMs": 336,
+        "captureMs": 410,
+        "attachMs": 311,
+        "postAttachReadTailMs": 1554,
+        "postEmbeddingReadyToRecallEndInclusiveMs": 2281
+      },
+      "selectedInput": [
+        {
+          "phase": "model.input.fit.baseline",
+          "at": 1792010676014,
+          "selectedMessages": 3,
+          "selectedMemories": 0,
+          "selectedFacts": 0,
+          "selectedPending": 0,
+          "contextBytes": 0,
+          "inputTokens": 14320,
+          "inputLimit": 32768
+        },
+        {
+          "phase": "model.input.fit.candidate",
+          "at": 1792010679714,
+          "selectedMessages": 3,
+          "selectedMemories": 2,
+          "selectedFacts": 2,
+          "selectedPending": 0,
+          "contextBytes": 2077,
+          "inputTokens": 29966,
+          "inputLimit": 32768
+        }
+      ],
+      "finalProtectedPair": {
+        "observeRpcId": 29,
+        "observeMs": 629.695166999998,
+        "postSessionMs": 251.3841670000038,
+        "totalMs": 881.0793340000018
+      },
+      "atMs": 1792010674806
+    }
+  ],
+  "publicRecall": {
+    "clientMs": 3702.185957999998,
+    "actionRpcMs": 3332.8060000000005,
+    "preSessionMs": 173.67345800000112,
+    "postSessionMs": 194.7157920000027,
+    "serverMs": 3213.5510444641113,
+    "stages": [
+      {
+        "id": "prepare",
+        "label": "Prepare + budget admission",
+        "ms": 891.22216796875
+      },
+      {
+        "id": "embed",
+        "label": "Query embedding call",
+        "ms": 317
+      },
+      {
+        "id": "capture",
+        "label": "Capture + attach + handoffs",
+        "ms": 516
+      },
+      {
+        "id": "reads",
+        "label": "Read + match + ranking handoffs",
+        "ms": 719
+      },
+      {
+        "id": "final",
+        "label": "Final protected delivery + return",
+        "ms": 770.328857421875
+      }
+    ],
+    "resultItems": 5,
+    "contextBytes": 279
+  },
+  "limits": [
+    "4 ordinary runs plus one public recall; not a percentile/SLO population",
+    "Client and server intervals use separate clocks and are not additive",
+    "Gateway routing/provider/transfer/processing remain a combined measured interval",
+    "No new effort profiles were run; reference targets do not confer qualification",
+    "No service calls or inference were made to build this visualization"
+  ]
+}

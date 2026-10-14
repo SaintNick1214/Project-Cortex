@@ -1,0 +1,72 @@
+{
+  "exitCode": 0,
+  "signal": null,
+  "childPid": 3177,
+  "startedAt": "2026-10-14T22:58:19.213Z",
+  "endedAt": "2026-10-14T22:58:49.304Z",
+  "directChildExitObserved": true,
+  "noPipeline": true,
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "wrapperSha256": "a7e07055199e9393adc2f62c0f7354eb05b8f089629d7ab0bb7e660a4e995d50",
+  "rawPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-auth-native-recovery-v2.log",
+  "rawBytes": 881,
+  "rawSha256": "47be34b52b422d48c35046249684517a7eac4e7fde9847ea92e10327eb1ecaa5",
+  "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-auth-close-diagnostic-readonly-recovery-v2-1792018699273-763e2179-8332-4003-a27d-292ee4629bea.json",
+  "receiptSha256": "6a5b49d664325e5428c32cb12c3e125b5f4d40109b8ff897d564e36475c4d629",
+  "verdict": "PASS",
+  "originalLauncherExit": "UNKNOWN",
+  "originalAuthVerdict": "UNKNOWN_INTERRUPTED",
+  "cases": [
+    {
+      "name": "valid owner metadata control",
+      "verdict": "PASS",
+      "code": null,
+      "httpStatuses": [],
+      "deliveredProtectedPayload": 1,
+      "profileDelivered": true,
+      "operationElapsedMs": 3103.8310409999995,
+      "ownership": {
+        "sdkClosed": true,
+        "suppliedOfficialConvexClientClosed": true
+      }
+    },
+    {
+      "name": "expired valid signature",
+      "verdict": "PASS",
+      "code": "UNAUTHENTICATED",
+      "httpStatuses": [
+        401
+      ],
+      "deliveredProtectedPayload": 0,
+      "profileDelivered": false,
+      "operationElapsedMs": 140.10541699999885,
+      "ownership": {
+        "sdkClosed": true,
+        "suppliedOfficialConvexClientClosed": true
+      }
+    },
+    {
+      "name": "invalid signature",
+      "verdict": "PASS",
+      "code": "UNAUTHENTICATED",
+      "httpStatuses": [
+        401
+      ],
+      "deliveredProtectedPayload": 0,
+      "profileDelivered": false,
+      "operationElapsedMs": 276.1296250000014,
+      "ownership": {
+        "sdkClosed": true,
+        "suppliedOfficialConvexClientClosed": true
+      }
+    }
+  ],
+  "dataAndFinanceUnchanged": true,
+  "freshVerifications": 107,
+  "paidCalls": 0,
+  "allClientsClosed": true,
+  "closureEvidence": "Actual diagnostic process close event; per-case SDK and supplied Convex client close assertions retained",
+  "effortProfileQualification": false,
+  "diagnosticPredatesEffortProfiles": true
+}

@@ -1,0 +1,2541 @@
+{
+  "version": 2,
+  "observedAt": "2026-10-14T23:11:35.143Z",
+  "target": {
+    "sessionId": "ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
+    "name": "savory-pheasant-21",
+    "id": 6178760,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2"
+  },
+  "readOnly": true,
+  "managementNonGetBlocked": true,
+  "existingKeyOnly": true,
+  "rawPrivatePayloadRetained": false,
+  "freshVerifications": 45,
+  "tableCounts": {
+    "runtimeRuns": 4,
+    "runtimeRunMemoryProgress": 4,
+    "runtimeIngestionEvents": 8,
+    "runtimeIngestionStages": 24,
+    "runtimeIngestionJobs": 8,
+    "runtimeMemorySources": 9,
+    "runtimeMemoryChunks": 8,
+    "runtimeMemoryVectors": 8,
+    "runtimeMemoryVectorGenerations": 8,
+    "runtimeMemoryReceipts": 12,
+    "facts": 4,
+    "runtimeModelOperations": 31,
+    "runtimeModelAttempts": 31,
+    "runtimeBudgetAccounts": 22,
+    "runtimeTranscriptMessages": 8,
+    "runtimeIngestionScopes": 1,
+    "runtimeAuthPrincipals": 4,
+    "runtimeAuthMemberships": 4,
+    "runtimeAuthGrants": 4,
+    "runtimeAuthScopes": 6,
+    "runtimeAuthTombstones": 1
+  },
+  "runs": [
+    {
+      "label": "browser-first",
+      "runId": "run:8c8f5add5ea750e917e54606d6691f3f62941b0c11b622e3b305b5f498394d68",
+      "responseStatus": "complete",
+      "memoryStatus": "complete",
+      "events": [
+        {
+          "eventId": "ingestion:4d27e30c0917109e9e8379f1bd4068e81d5d409eb90e1bf5bedbe8833f5a2087",
+          "sequence": 1,
+          "role": "user",
+          "eligibility": "eligible",
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "source": {
+            "lineageSha256": "134b034ecc18cf233d051f4c9cc472b7056bf0c2564f16a2a0ba897918b62c31",
+            "contentBytes": 54,
+            "contentHash": "56b5b1501c9a649d1a7edcf76fa8330b763fee4fee2f5a52b85f02385e0eb1a8",
+            "checks": {
+              "roleMatches": true,
+              "trustMatches": true,
+              "normalized": true,
+              "currentHashMatches": true,
+              "eventHashMatches": true,
+              "eventLineageMatches": true,
+              "preparedIdentityMatches": true,
+              "ownerMatches": true,
+              "canonicalRunBridge": true,
+              "scopeMatches": true,
+              "notTombstoned": true
+            },
+            "authorityChecks": {
+              "principalCurrent": true,
+              "membershipCurrent": true,
+              "grantCurrent": true,
+              "scopeEpochCurrent": true,
+              "readWriteCapabilities": true,
+              "noSourceOrScopeTombstone": true
+            }
+          },
+          "stages": [
+            {
+              "stage": "vectors",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "d7e0dc835ad7250a57b403920ce37d1dd28c870daedf22f1d684f30dd1467f3a",
+              "payload": {
+                "present": true,
+                "bytes": 31894,
+                "sha256": "2fd897af87150b37d86e13be4e37747c2732f8e628843a3fb2217039e3bdb718"
+              }
+            },
+            {
+              "stage": "facts",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "647873e0f5df4fb5da29140edb91c62e347cbe67c2e989359c3ef42c1ee44a88",
+              "payload": {
+                "present": true,
+                "bytes": 3049,
+                "sha256": "a60000f4fcb1b9514f6d04c604e32af235afbe2f6f57c7ae293ac26286fdb20a"
+              }
+            },
+            {
+              "stage": "extract",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "72046019cac7de8729da251d7fc5be396325749ce3951c78d5a097a7cd04bb90",
+              "payload": {
+                "present": true,
+                "bytes": 574,
+                "sha256": "aacb49e988a622658a1ca8345144683e6e0dc94a86af000d77f0712da6327e6f"
+              }
+            }
+          ],
+          "job": {
+            "runBudgetIdSha256": "7a50c180054a71d4724a1e02858d2e74295d60cfa484fb6fe64798602c4cf5b5",
+            "runAccountIdSha256": "ace4863f5edeca4d7ee9f024ed86bd123fa56a3cd6b66a3110a491e10dc75fea",
+            "createdAt": 1792019056912
+          },
+          "account": {
+            "reservedUnits": 0,
+            "settledUnits": 0,
+            "uncertainUnits": 200000,
+            "activeConcurrency": 0,
+            "cancelled": false,
+            "current": true
+          },
+          "operationCount": 2,
+          "attemptCount": 2,
+          "attempts": [
+            {
+              "operationKey": "embedding.memory",
+              "operationDocumentIdSha256": "bcae32b235b91d50df446289f0d4cb4d526ec051eefcaf9185d87bf4fd4f4549",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019062433,
+              "checkpointAt": 1792019062639,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 54,
+              "maximumOutputTokens": 0,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "embedding",
+                "schemaVersion": "facts-v1",
+                "semanticProfileMatches": true
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 13,
+                  "totalTokens": 13
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 3410,
+                "sha256": "9680262308cbe6810afd380798e1167b3aa848bfa8a224b9988666b9ccad9e29"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 29751,
+                "sha256": "60388e49ae10d4873eafa59655d3b3af9acf3598884c840db0a41ca02b4f99ad"
+              }
+            },
+            {
+              "operationKey": "memory.extract",
+              "operationDocumentIdSha256": "720724e1efc681dcbcd5a25d3b53ce3c0b451f14ee846ee03a866bca8695bd99",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019057671,
+              "checkpointAt": 1792019057837,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 5187,
+              "maximumOutputTokens": 512,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "chat",
+                "promptVersion": "memory-extraction-json-object-prompt-v5",
+                "schemaVersion": "facts-v1"
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 1107,
+                  "outputTokens": 70,
+                  "totalTokens": 1177,
+                  "cachedInputTokens": 0,
+                  "reasoningTokens": 0
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 14258,
+                "sha256": "04ce1c6427f50aa0e30bfea0af2192c713372c02bd554941b48c93654ead77af"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 309,
+                "sha256": "40d2416e640d4be91575a1e12d5a14aaadb6cf93e60ed3b959f2fb3fdd8d35df"
+              },
+              "extraction": {
+                "textPresent": true,
+                "textBytes": 256,
+                "textSha256": "8e918e61e210a211b257db0624e540d58cfccc7d8d22d45a164caff062088fe4",
+                "jsonValid": true,
+                "strictDomainValid": true,
+                "factCount": 1,
+                "parsedShape": {
+                  "type": "object",
+                  "topKeyCount": 1,
+                  "factsArray": true,
+                  "factCount": 1,
+                  "schemaDefinitionShape": false
+                },
+                "exactProductionSystem": true,
+                "exactProductionQuotedUser": true,
+                "exactlyTwoTrustedRoles": true,
+                "topLevelFactsOnly": true,
+                "nativeJsonObjectFormat": true,
+                "compiledV5Pin": true,
+                "persistedExtractPayloadMatches": true,
+                "persistedExtractCountMatches": true
+              }
+            }
+          ],
+          "chunkCount": 1,
+          "chunks": [
+            {
+              "chunkIdSha256": "34d43b1d51a1e6f1fb22c2577ce9a48b73dfcad0361be64781049bd01da521cd",
+              "ordinal": 0,
+              "start": 0,
+              "end": 54,
+              "textBytes": 54,
+              "textSha256": "56b5b1501c9a649d1a7edcf76fa8330b763fee4fee2f5a52b85f02385e0eb1a8",
+              "checks": {
+                "expectedWindowMatches": true,
+                "textHashMatches": true,
+                "receiptWindowMatches": true
+              }
+            }
+          ],
+          "vectorCount": 1,
+          "vectors": [
+            {
+              "vectorIdSha256": "e82782e4f1685bf517db2f73c138c5f256d7280f9f3f3846cced47a70b56b460",
+              "chunkIdSha256": "34d43b1d51a1e6f1fb22c2577ce9a48b73dfcad0361be64781049bd01da521cd",
+              "dimensions": 1536,
+              "embeddingSha256": "acc100a6f088ef59a247e51339705982b13e111bbe6fe51154132c25ae3361f1",
+              "allFinite": true,
+              "nonZero": true,
+              "profile": {
+                "profileId": "cortex-text-small-1536-v1",
+                "dimensions": 1536,
+                "indexName": "by_default_embedding_v1",
+                "modelId": "openai/text-embedding-3-small"
+              },
+              "checks": {
+                "shapeValid": true,
+                "profileMatches": true,
+                "sourceChunkExists": true,
+                "processingReceiptMatches": true,
+                "receiptVectorMatches": true,
+                "nativeAttachedVectorMatches": true,
+                "scopeIndexKeyMatches": true,
+                "ownerIndexKeyMatches": true
+              }
+            }
+          ],
+          "generationChecks": {
+            "oneCurrentGeneration": true,
+            "sourceHashMatches": true,
+            "ownerMatches": true,
+            "receiptMatches": true
+          },
+          "receiptChecks": {
+            "present": true,
+            "identityMatches": true,
+            "canonicalIdentityMatches": true,
+            "canonicalPayloadMatches": true,
+            "sourceMatches": true,
+            "chunkCountMatches": true,
+            "vectorCountMatches": true,
+            "embeddingBudgetMatches": true
+          },
+          "receiptCount": 2,
+          "factCount": 1,
+          "facts": [
+            {
+              "factIdSha256": "a3bcf39d468f57902ce8ce6cec34cb7d67abc431cff0418019487c58a200853b",
+              "payloadSha256": "3722b0e89259e3322227a9a5505315bf00b7cc17d00e705804658a018bd631b5",
+              "version": 1,
+              "confidence": 100,
+              "checks": {
+                "exactSourceLineage": true,
+                "ownerMatches": true,
+                "notAssistant": true,
+                "notTombstoned": true,
+                "receiptExists": true,
+                "receiptFactMatches": true
+              }
+            }
+          ],
+          "candidateBindingChecks": {
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true
+          },
+          "candidateBindingSummary": {
+            "rawExtractionCandidates": 1,
+            "retainedCandidates": 1,
+            "privatePlanEntries": 1,
+            "bindings": [
+              {
+                "sourceOrdinal": 0,
+                "ordinal": 0,
+                "candidateId": "76ac1ce92ee49ae592f6f4922cb7f20b33d512410463d194213f87147e4fb507",
+                "semanticId": "ba0f8b87f1d976ad29bdd54d2f69f056e1cbbc8075457cd948f65eeb4d705b3e"
+              }
+            ]
+          },
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        },
+        {
+          "eventId": "ingestion:39f1c5ef46effb752db7d5fc0b2a1a9bfdbf080514c08c8e544eb66c725b99cf",
+          "sequence": 2,
+          "role": "assistant",
+          "eligibility": "eligible",
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "source": {
+            "lineageSha256": "4aed13679f043c24866cd58f2c9b1e60daf95c9f808a35d5898449978e969c8c",
+            "contentBytes": 7,
+            "contentHash": "ec4934639f9f9fb6a9db46686571c669121260c62f9db6b012355f2f7103b578",
+            "checks": {
+              "roleMatches": true,
+              "trustMatches": true,
+              "normalized": true,
+              "currentHashMatches": true,
+              "eventHashMatches": true,
+              "eventLineageMatches": true,
+              "preparedIdentityMatches": true,
+              "ownerMatches": true,
+              "canonicalRunBridge": true,
+              "scopeMatches": true,
+              "notTombstoned": true
+            },
+            "authorityChecks": {
+              "principalCurrent": true,
+              "membershipCurrent": true,
+              "grantCurrent": true,
+              "scopeEpochCurrent": true,
+              "readWriteCapabilities": true,
+              "noSourceOrScopeTombstone": true
+            }
+          },
+          "stages": [
+            {
+              "stage": "vectors",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "5787cb0bac9df66125f650f35a3a92116d5f8ab5cb6186bc97c355c3cb5dbed2",
+              "payload": {
+                "present": true,
+                "bytes": 31783,
+                "sha256": "8db4e6cf960d3c073f315c3c1b491608264d0ea95a529fe2cb22627053f8b9b9"
+              }
+            },
+            {
+              "stage": "facts",
+              "state": "skipped",
+              "attempt": 0,
+              "leaseVersion": 0,
+              "payload": {
+                "present": false
+              }
+            },
+            {
+              "stage": "extract",
+              "state": "skipped",
+              "attempt": 0,
+              "leaseVersion": 0,
+              "payload": {
+                "present": false
+              }
+            }
+          ],
+          "job": {
+            "runBudgetIdSha256": "1e6462cc315a5fae08637cb61992206fe7c1a409fcb076d37e894ddb494fb12e",
+            "runAccountIdSha256": "b7c7a568b03b9521b7155f9a0b99a9093a0824d786f320b1368bbbc0939915e5",
+            "createdAt": 1792019056905
+          },
+          "account": {
+            "reservedUnits": 0,
+            "settledUnits": 0,
+            "uncertainUnits": 100000,
+            "activeConcurrency": 0,
+            "cancelled": false,
+            "current": true
+          },
+          "operationCount": 1,
+          "attemptCount": 1,
+          "attempts": [
+            {
+              "operationKey": "embedding.memory",
+              "operationDocumentIdSha256": "518b3a7e77597b1ee9b60f6e6bbe62187c3c8f459e8627fa2932508db5e9e2cf",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019057985,
+              "checkpointAt": 1792019058163,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 7,
+              "maximumOutputTokens": 0,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "embedding",
+                "schemaVersion": "facts-v1",
+                "semanticProfileMatches": true
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 2,
+                  "totalTokens": 2
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 3307,
+                "sha256": "758ad772281b527ce74e69c06699c73207b79c29c364e653815830a0e81223e4"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 29688,
+                "sha256": "b62371636c777b67c62f97a559c8ac953c995c30a54fcf9592d228445c94b902"
+              }
+            }
+          ],
+          "chunkCount": 1,
+          "chunks": [
+            {
+              "chunkIdSha256": "4c7102be90758c891f398d4d02ce0fec3953d4a9e33772591b075aca338ed389",
+              "ordinal": 0,
+              "start": 0,
+              "end": 7,
+              "textBytes": 7,
+              "textSha256": "ec4934639f9f9fb6a9db46686571c669121260c62f9db6b012355f2f7103b578",
+              "checks": {
+                "expectedWindowMatches": true,
+                "textHashMatches": true,
+                "receiptWindowMatches": true
+              }
+            }
+          ],
+          "vectorCount": 1,
+          "vectors": [
+            {
+              "vectorIdSha256": "c84ff99b7a2cb18ddc1f9491ac2ba45c6792e64f5f23bba9ed62863769502520",
+              "chunkIdSha256": "4c7102be90758c891f398d4d02ce0fec3953d4a9e33772591b075aca338ed389",
+              "dimensions": 1536,
+              "embeddingSha256": "f17557afd83882dcdb6a2c24fc3a4c5274adcd4463fc38802db3c52a16b871b1",
+              "allFinite": true,
+              "nonZero": true,
+              "profile": {
+                "profileId": "cortex-text-small-1536-v1",
+                "dimensions": 1536,
+                "indexName": "by_default_embedding_v1",
+                "modelId": "openai/text-embedding-3-small"
+              },
+              "checks": {
+                "shapeValid": true,
+                "profileMatches": true,
+                "sourceChunkExists": true,
+                "processingReceiptMatches": true,
+                "receiptVectorMatches": true,
+                "nativeAttachedVectorMatches": true,
+                "scopeIndexKeyMatches": true,
+                "ownerIndexKeyMatches": true
+              }
+            }
+          ],
+          "generationChecks": {
+            "oneCurrentGeneration": true,
+            "sourceHashMatches": true,
+            "ownerMatches": true,
+            "receiptMatches": true
+          },
+          "receiptChecks": {
+            "present": true,
+            "identityMatches": true,
+            "canonicalIdentityMatches": true,
+            "canonicalPayloadMatches": true,
+            "sourceMatches": true,
+            "chunkCountMatches": true,
+            "vectorCountMatches": true,
+            "embeddingBudgetMatches": true
+          },
+          "receiptCount": 1,
+          "factCount": 0,
+          "facts": [],
+          "candidateBindingChecks": {
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true
+          },
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        }
+      ],
+      "progress": {
+        "expectedThrough": 2,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "progressChecks": {
+        "exactEventSequences": true,
+        "noMissingScopeEvents": true,
+        "factsContiguous": true,
+        "vectorsContiguous": true,
+        "profileConsistent": true
+      },
+      "userDurableFact": true,
+      "passed": true
+    },
+    {
+      "label": "browser-warm",
+      "runId": "run:04b096094dddc237ee8688a52c5077f5419c3749e449f22c1680bc1e5ca6daea",
+      "responseStatus": "complete",
+      "memoryStatus": "complete",
+      "events": [
+        {
+          "eventId": "ingestion:a58ec8b143e5f9f331e4932b9d26b2d710888c1642a504a03d6c4f5657195d0b",
+          "sequence": 3,
+          "role": "user",
+          "eligibility": "eligible",
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "source": {
+            "lineageSha256": "d43ebd8f6cebdc139646a0d2d57fdf88bd8b4ef9f06a8c26340073f899725243",
+            "contentBytes": 53,
+            "contentHash": "80b2ecac33a3939c4430a2c42e919d25e19d41c2854cd724b02facdf1dc938f6",
+            "checks": {
+              "roleMatches": true,
+              "trustMatches": true,
+              "normalized": true,
+              "currentHashMatches": true,
+              "eventHashMatches": true,
+              "eventLineageMatches": true,
+              "preparedIdentityMatches": true,
+              "ownerMatches": true,
+              "canonicalRunBridge": true,
+              "scopeMatches": true,
+              "notTombstoned": true
+            },
+            "authorityChecks": {
+              "principalCurrent": true,
+              "membershipCurrent": true,
+              "grantCurrent": true,
+              "scopeEpochCurrent": true,
+              "readWriteCapabilities": true,
+              "noSourceOrScopeTombstone": true
+            }
+          },
+          "stages": [
+            {
+              "stage": "vectors",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "5d36edf8c79fd47fffaeb1ea3b0e57c9fcad33a8763f5c93cfff427b3b3d013e",
+              "payload": {
+                "present": true,
+                "bytes": 31928,
+                "sha256": "f35685f5f9ee06f570fbae3315fd6eb36095ea0b6289436199e8c9081f6a0fc1"
+              }
+            },
+            {
+              "stage": "facts",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "088ad7740835627a65757a86c536651276c51069ffecd29e599e45c2d55663dd",
+              "payload": {
+                "present": true,
+                "bytes": 3076,
+                "sha256": "ebe5e616c854581722e2ce2aeda064538007fedb590af100c3397f8201293d86"
+              }
+            },
+            {
+              "stage": "extract",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "ebc89c5c1a6f8d986c106d924c2bcc418f5b2ec7d9a24a32c1f387829aacf48b",
+              "payload": {
+                "present": true,
+                "bytes": 497,
+                "sha256": "cb4aade897117d90bc3188cf768571a54e46261c000efa9ab83fbc026f5ec6dc"
+              }
+            }
+          ],
+          "job": {
+            "runBudgetIdSha256": "aaf28407287bc177e4ea688f37a0232994f8af2e08f961e7dae059d6db913e89",
+            "runAccountIdSha256": "0658892bfa84bd658a1ea0c34429ef565dd2090bc1a2f76f2da215b1dc661f2a",
+            "createdAt": 1792019090624
+          },
+          "account": {
+            "reservedUnits": 0,
+            "settledUnits": 0,
+            "uncertainUnits": 300000,
+            "activeConcurrency": 0,
+            "cancelled": false,
+            "current": true
+          },
+          "operationCount": 3,
+          "attemptCount": 3,
+          "attempts": [
+            {
+              "operationKey": "embedding.memory",
+              "operationDocumentIdSha256": "2628c40496928c310ff426d5346f124cd8d5dd1be4217cec98296ce70bdb11c0",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019098364,
+              "checkpointAt": 1792019098580,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 53,
+              "maximumOutputTokens": 0,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "embedding",
+                "schemaVersion": "facts-v1",
+                "semanticProfileMatches": true
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 14,
+                  "totalTokens": 14
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 3409,
+                "sha256": "80481530f14aa203fc902397a6b54591463b51271e3c2bc35817eb66a136c097"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 29786,
+                "sha256": "3d6bb0b0db04af200dbf7247c54608c2accdad7a30cfbe4ad7cd18ee81b5d2b4"
+              }
+            },
+            {
+              "operationKey": "facts.resolve",
+              "operationDocumentIdSha256": "dd2cecaee3a46574a5ecaa16d21fcc2ecdc44ee77a200fb44883010176e32563",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019094319,
+              "checkpointAt": 1792019094535,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 6414,
+              "maximumOutputTokens": 512,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "chat",
+                "schemaVersion": "conflicts-v1"
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 1641,
+                  "outputTokens": 54,
+                  "totalTokens": 1695,
+                  "cachedInputTokens": 0,
+                  "reasoningTokens": 0
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 17067,
+                "sha256": "b99d7e104394ceb8fa3cba5bb7b7f9833c4d94a4a24d04141428efcc09bd39a4"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 242,
+                "sha256": "ce4b1db73bcd6da84613c14ea6a65b8c0c7a44d9014a18c86e450cad773c6c1a"
+              },
+              "conflictResolution": {
+                "textPresent": true,
+                "textBytes": 211,
+                "textSha256": "897171f3c81b7639726acd430da1d88ae4679cc6824864a8e48c115634b90c2f",
+                "strictDomainValid": true,
+                "action": "ADD"
+              }
+            },
+            {
+              "operationKey": "memory.extract",
+              "operationDocumentIdSha256": "9f51c4f884dda464f0bbf223c6b1b9a1f1cb91a935cbdde55cc70c6ac6c5e11c",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019091400,
+              "checkpointAt": 1792019091562,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 5186,
+              "maximumOutputTokens": 512,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "chat",
+                "promptVersion": "memory-extraction-json-object-prompt-v5",
+                "schemaVersion": "facts-v1"
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 1113,
+                  "outputTokens": 50,
+                  "totalTokens": 1163,
+                  "cachedInputTokens": 0,
+                  "reasoningTokens": 0
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 14256,
+                "sha256": "8a189581b9561a5472d70157be2adcf7c7fe5e52256f4ef8ec8fa92657519d09"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 234,
+                "sha256": "5ec385b1b0e5b673b273728a01a74f445652cbc003c23b4825267cb15060926b"
+              },
+              "extraction": {
+                "textPresent": true,
+                "textBytes": 193,
+                "textSha256": "0a210496ec377c58ba7eb9b789bb6daed77c452e61d8dbb1e6484c06e31cc181",
+                "jsonValid": true,
+                "strictDomainValid": true,
+                "factCount": 1,
+                "parsedShape": {
+                  "type": "object",
+                  "topKeyCount": 1,
+                  "factsArray": true,
+                  "factCount": 1,
+                  "schemaDefinitionShape": false
+                },
+                "exactProductionSystem": true,
+                "exactProductionQuotedUser": true,
+                "exactlyTwoTrustedRoles": true,
+                "topLevelFactsOnly": true,
+                "nativeJsonObjectFormat": true,
+                "compiledV5Pin": true,
+                "persistedExtractPayloadMatches": true,
+                "persistedExtractCountMatches": true
+              }
+            }
+          ],
+          "chunkCount": 1,
+          "chunks": [
+            {
+              "chunkIdSha256": "b77d93d7fde99e49c169ef8328e352734d8a83feac8abc478bf25636355607cb",
+              "ordinal": 0,
+              "start": 0,
+              "end": 53,
+              "textBytes": 53,
+              "textSha256": "80b2ecac33a3939c4430a2c42e919d25e19d41c2854cd724b02facdf1dc938f6",
+              "checks": {
+                "expectedWindowMatches": true,
+                "textHashMatches": true,
+                "receiptWindowMatches": true
+              }
+            }
+          ],
+          "vectorCount": 1,
+          "vectors": [
+            {
+              "vectorIdSha256": "1e31f00f3133c89a6007cc7963bcfe0ac1b950bf83e9c74de10dc3d17b60677d",
+              "chunkIdSha256": "b77d93d7fde99e49c169ef8328e352734d8a83feac8abc478bf25636355607cb",
+              "dimensions": 1536,
+              "embeddingSha256": "7e402ff266b020fab1b24491fa7dc5d9d8fd8cc98e05fcf6b4ae89178d18f61a",
+              "allFinite": true,
+              "nonZero": true,
+              "profile": {
+                "profileId": "cortex-text-small-1536-v1",
+                "dimensions": 1536,
+                "indexName": "by_default_embedding_v1",
+                "modelId": "openai/text-embedding-3-small"
+              },
+              "checks": {
+                "shapeValid": true,
+                "profileMatches": true,
+                "sourceChunkExists": true,
+                "processingReceiptMatches": true,
+                "receiptVectorMatches": true,
+                "nativeAttachedVectorMatches": true,
+                "scopeIndexKeyMatches": true,
+                "ownerIndexKeyMatches": true
+              }
+            }
+          ],
+          "generationChecks": {
+            "oneCurrentGeneration": true,
+            "sourceHashMatches": true,
+            "ownerMatches": true,
+            "receiptMatches": true
+          },
+          "receiptChecks": {
+            "present": true,
+            "identityMatches": true,
+            "canonicalIdentityMatches": true,
+            "canonicalPayloadMatches": true,
+            "sourceMatches": true,
+            "chunkCountMatches": true,
+            "vectorCountMatches": true,
+            "embeddingBudgetMatches": true
+          },
+          "receiptCount": 2,
+          "factCount": 1,
+          "facts": [
+            {
+              "factIdSha256": "8f6cace4a026b1ba242de7709c8687339dd2438698d6dc09481d3839e995b1e8",
+              "payloadSha256": "f2a39ac288b2c38bf739d83c8dc1859cb619a91051f276cd649a6e792f2e688d",
+              "version": 1,
+              "confidence": 100,
+              "checks": {
+                "exactSourceLineage": true,
+                "ownerMatches": true,
+                "notAssistant": true,
+                "notTombstoned": true,
+                "receiptExists": true,
+                "receiptFactMatches": true
+              }
+            }
+          ],
+          "candidateBindingChecks": {
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true
+          },
+          "candidateBindingSummary": {
+            "rawExtractionCandidates": 1,
+            "retainedCandidates": 1,
+            "privatePlanEntries": 1,
+            "bindings": [
+              {
+                "sourceOrdinal": 0,
+                "ordinal": 0,
+                "candidateId": "482af73a749b63418830f37d3c63b19ba8c0a2d8cc033f94bc0bfd31d7527324",
+                "semanticId": "991cac376671504f26bd53fb8bfef6b14f075353be7173fb2702224df28aa1af"
+              }
+            ]
+          },
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        },
+        {
+          "eventId": "ingestion:42b66b8cca36b5ca61a1ca3a1c07f09a9e0e4c1ab178e5839fa574694e029a9d",
+          "sequence": 4,
+          "role": "assistant",
+          "eligibility": "eligible",
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "source": {
+            "lineageSha256": "d4b077e5453a8926ff9a4edbaab1ff02bef4d8133b646190f44e077a4076392f",
+            "contentBytes": 6,
+            "contentHash": "e7e32b7acaaef9900ef7a1d28b4b85ea7c54880ae85ea6645f86b7f22f4faf77",
+            "checks": {
+              "roleMatches": true,
+              "trustMatches": true,
+              "normalized": true,
+              "currentHashMatches": true,
+              "eventHashMatches": true,
+              "eventLineageMatches": true,
+              "preparedIdentityMatches": true,
+              "ownerMatches": true,
+              "canonicalRunBridge": true,
+              "scopeMatches": true,
+              "notTombstoned": true
+            },
+            "authorityChecks": {
+              "principalCurrent": true,
+              "membershipCurrent": true,
+              "grantCurrent": true,
+              "scopeEpochCurrent": true,
+              "readWriteCapabilities": true,
+              "noSourceOrScopeTombstone": true
+            }
+          },
+          "stages": [
+            {
+              "stage": "vectors",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "75d9a2b8e928891fcb25863c68f9a9eb9dddd71d63bae03aeab35faf2ef4e0e4",
+              "payload": {
+                "present": true,
+                "bytes": 31921,
+                "sha256": "e8261dd6643ab94654749b8ed1dcf393509ba6dd279161a0e744a3ea5762b7a3"
+              }
+            },
+            {
+              "stage": "facts",
+              "state": "skipped",
+              "attempt": 0,
+              "leaseVersion": 0,
+              "payload": {
+                "present": false
+              }
+            },
+            {
+              "stage": "extract",
+              "state": "skipped",
+              "attempt": 0,
+              "leaseVersion": 0,
+              "payload": {
+                "present": false
+              }
+            }
+          ],
+          "job": {
+            "runBudgetIdSha256": "09fb14d246e553769ea3ab32729ed05c101b8e7fc91f3bbf79ba457de2ffdd1b",
+            "runAccountIdSha256": "eb0a8f572767b97ea7691eeb03b23d4fc567d485178555303bb6557697246972",
+            "createdAt": 1792019090614
+          },
+          "account": {
+            "reservedUnits": 0,
+            "settledUnits": 0,
+            "uncertainUnits": 100000,
+            "activeConcurrency": 0,
+            "cancelled": false,
+            "current": true
+          },
+          "operationCount": 1,
+          "attemptCount": 1,
+          "attempts": [
+            {
+              "operationKey": "embedding.memory",
+              "operationDocumentIdSha256": "5515285dc464ee41c1e96bb69130c3b11cf3f18dc6e39ef2f643f667e73896e9",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019091661,
+              "checkpointAt": 1792019091821,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 6,
+              "maximumOutputTokens": 0,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "embedding",
+                "schemaVersion": "facts-v1",
+                "semanticProfileMatches": true
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 3,
+                  "totalTokens": 3
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 3306,
+                "sha256": "eb69ced21f2e72f2a30de782c58c98e1c001dd9143abcb7d25fdafa82b9fe11d"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 29827,
+                "sha256": "706cd6b0566f81dd36eabd8d6e84660306d61d7c8d4122775a98fc7519accc5c"
+              }
+            }
+          ],
+          "chunkCount": 1,
+          "chunks": [
+            {
+              "chunkIdSha256": "cd778300cbd20f7b61a134773743c61241d3d55ca96711ad06a75c29a5ac0fb7",
+              "ordinal": 0,
+              "start": 0,
+              "end": 6,
+              "textBytes": 6,
+              "textSha256": "e7e32b7acaaef9900ef7a1d28b4b85ea7c54880ae85ea6645f86b7f22f4faf77",
+              "checks": {
+                "expectedWindowMatches": true,
+                "textHashMatches": true,
+                "receiptWindowMatches": true
+              }
+            }
+          ],
+          "vectorCount": 1,
+          "vectors": [
+            {
+              "vectorIdSha256": "0deaefd6fe9269c1fc597fa5594ed26d3ab20c3c028a91460cd2e3ae00c4d504",
+              "chunkIdSha256": "cd778300cbd20f7b61a134773743c61241d3d55ca96711ad06a75c29a5ac0fb7",
+              "dimensions": 1536,
+              "embeddingSha256": "d2f46b05d82c7a92b1fb2b611adb665ba4552b9b67536daebfe78ae0fd2ec89e",
+              "allFinite": true,
+              "nonZero": true,
+              "profile": {
+                "profileId": "cortex-text-small-1536-v1",
+                "dimensions": 1536,
+                "indexName": "by_default_embedding_v1",
+                "modelId": "openai/text-embedding-3-small"
+              },
+              "checks": {
+                "shapeValid": true,
+                "profileMatches": true,
+                "sourceChunkExists": true,
+                "processingReceiptMatches": true,
+                "receiptVectorMatches": true,
+                "nativeAttachedVectorMatches": true,
+                "scopeIndexKeyMatches": true,
+                "ownerIndexKeyMatches": true
+              }
+            }
+          ],
+          "generationChecks": {
+            "oneCurrentGeneration": true,
+            "sourceHashMatches": true,
+            "ownerMatches": true,
+            "receiptMatches": true
+          },
+          "receiptChecks": {
+            "present": true,
+            "identityMatches": true,
+            "canonicalIdentityMatches": true,
+            "canonicalPayloadMatches": true,
+            "sourceMatches": true,
+            "chunkCountMatches": true,
+            "vectorCountMatches": true,
+            "embeddingBudgetMatches": true
+          },
+          "receiptCount": 1,
+          "factCount": 0,
+          "facts": [],
+          "candidateBindingChecks": {
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true
+          },
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        }
+      ],
+      "progress": {
+        "expectedThrough": 4,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "progressChecks": {
+        "exactEventSequences": true,
+        "noMissingScopeEvents": true,
+        "factsContiguous": true,
+        "vectorsContiguous": true,
+        "profileConsistent": true
+      },
+      "userDurableFact": true,
+      "passed": true
+    },
+    {
+      "label": "cli-first",
+      "runId": "run:ed62d0df45af3bb86e7cd03cadcbeafed5348d6560a1442058e0b6ceae27cee1",
+      "responseStatus": "complete",
+      "memoryStatus": "complete",
+      "events": [
+        {
+          "eventId": "ingestion:c0d6a6d8928c84d1f1be6fc0db96f22d4abd40a1b8fc4815e36994b4b6bc2ce9",
+          "sequence": 5,
+          "role": "user",
+          "eligibility": "eligible",
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "source": {
+            "lineageSha256": "29744a510128443a5ea9588986439863c5a46e9281d614ab4ff8fe63508cc12c",
+            "contentBytes": 51,
+            "contentHash": "f112c834dff587d4468999c0d0b032fde085bd6dc52c8ad14d7b955124717386",
+            "checks": {
+              "roleMatches": true,
+              "trustMatches": true,
+              "normalized": true,
+              "currentHashMatches": true,
+              "eventHashMatches": true,
+              "eventLineageMatches": true,
+              "preparedIdentityMatches": true,
+              "ownerMatches": true,
+              "canonicalRunBridge": true,
+              "scopeMatches": true,
+              "notTombstoned": true
+            },
+            "authorityChecks": {
+              "principalCurrent": true,
+              "membershipCurrent": true,
+              "grantCurrent": true,
+              "scopeEpochCurrent": true,
+              "readWriteCapabilities": true,
+              "noSourceOrScopeTombstone": true
+            }
+          },
+          "stages": [
+            {
+              "stage": "vectors",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "9de3848128dfdfe8f3418d55ae819e87cfa8e7018e22de34339ca1be477dbab3",
+              "payload": {
+                "present": true,
+                "bytes": 31740,
+                "sha256": "db8dbbc28761d225276f5b8b8dac4110b4247a8c6984799d6fa4fdbad8568714"
+              }
+            },
+            {
+              "stage": "facts",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "8c5f322554c4ff6f9db4cee8e45a309461d2e735c38c0417920af11e37efb848",
+              "payload": {
+                "present": true,
+                "bytes": 3297,
+                "sha256": "54da48646f6fc10f311a253e2afc6c8df165be4860d7a2f10fd46706d6cf7fc0"
+              }
+            },
+            {
+              "stage": "extract",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "6ce207edc7af116f49008a78de9f37cfb5e6dbefd370ae8d6f4326988f6e5111",
+              "payload": {
+                "present": true,
+                "bytes": 564,
+                "sha256": "362ef0524cf7f5d774d59043892b3286081b8becde25407ecdacf9a912122fe3"
+              }
+            }
+          ],
+          "job": {
+            "runBudgetIdSha256": "76955d02936f4bd241164e118d9c149b1d4bd7044665161cffea00c706f56f65",
+            "runAccountIdSha256": "d84c725ea06919f3c6b5158ebc0650c068f08ad6060964e36060ce6efeba2a61",
+            "createdAt": 1792019206323
+          },
+          "account": {
+            "reservedUnits": 0,
+            "settledUnits": 0,
+            "uncertainUnits": 300000,
+            "activeConcurrency": 0,
+            "cancelled": false,
+            "current": true
+          },
+          "operationCount": 3,
+          "attemptCount": 3,
+          "attempts": [
+            {
+              "operationKey": "embedding.memory",
+              "operationDocumentIdSha256": "7eba48b4c72b538f6df957c9185ebfb7216325db8a17823dc7a50804f791f7d1",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019213883,
+              "checkpointAt": 1792019214041,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 51,
+              "maximumOutputTokens": 0,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "embedding",
+                "schemaVersion": "facts-v1",
+                "semanticProfileMatches": true
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 13,
+                  "totalTokens": 13
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 3407,
+                "sha256": "05a09d165d5268679df2b56ea31b874bcfc3793fbbc24760ef262485b40c9bc8"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 29600,
+                "sha256": "7b7024a37d9b3f3b670266a548e3d43460632c8ed02cf047332212a6d9c323d3"
+              }
+            },
+            {
+              "operationKey": "facts.resolve",
+              "operationDocumentIdSha256": "773dbf37f827689057371f901f021be7ed35b8be2fa93c2a881691047fe00125",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019210241,
+              "checkpointAt": 1792019210431,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 6713,
+              "maximumOutputTokens": 512,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "chat",
+                "schemaVersion": "conflicts-v1"
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 1765,
+                  "outputTokens": 57,
+                  "totalTokens": 1822,
+                  "cachedInputTokens": 1280,
+                  "reasoningTokens": 0
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 17689,
+                "sha256": "df9398400dfa52bc495ada314021fd4d17b9e56922a726a4ca665216a1c5ba6b"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 274,
+                "sha256": "4570b936c5c157203fa7b93c8149756d020e91bc9027b1b3ee437c2bd5a54eac"
+              },
+              "conflictResolution": {
+                "textPresent": true,
+                "textBytes": 243,
+                "textSha256": "ba09a9f5f36fb880474720f1cabde06d8cae623fbdb7cf3bac88eb99355dd7e6",
+                "strictDomainValid": true,
+                "action": "ADD"
+              }
+            },
+            {
+              "operationKey": "memory.extract",
+              "operationDocumentIdSha256": "ca1c029ac4fef203ec33cac4118a4357d2ac22a3359f37dba1084539cc51a72d",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019207095,
+              "checkpointAt": 1792019207256,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 5184,
+              "maximumOutputTokens": 512,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "chat",
+                "promptVersion": "memory-extraction-json-object-prompt-v5",
+                "schemaVersion": "facts-v1"
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 1106,
+                  "outputTokens": 66,
+                  "totalTokens": 1172,
+                  "cachedInputTokens": 0,
+                  "reasoningTokens": 0
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 14252,
+                "sha256": "831165e6ebeff72d6aa4c9fbd6705fac94c44bef9567ce3cb6a062200831c0e4"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 299,
+                "sha256": "92f78cb513697734850d2c01bbc0c71177038e30707c5825eb9de4eb12531a1b"
+              },
+              "extraction": {
+                "textPresent": true,
+                "textBytes": 246,
+                "textSha256": "0d512f0056ec770dcaf9b65dfd5741e8f10e7ff0649920ff8668bbd088da41c8",
+                "jsonValid": true,
+                "strictDomainValid": true,
+                "factCount": 1,
+                "parsedShape": {
+                  "type": "object",
+                  "topKeyCount": 1,
+                  "factsArray": true,
+                  "factCount": 1,
+                  "schemaDefinitionShape": false
+                },
+                "exactProductionSystem": true,
+                "exactProductionQuotedUser": true,
+                "exactlyTwoTrustedRoles": true,
+                "topLevelFactsOnly": true,
+                "nativeJsonObjectFormat": true,
+                "compiledV5Pin": true,
+                "persistedExtractPayloadMatches": true,
+                "persistedExtractCountMatches": true
+              }
+            }
+          ],
+          "chunkCount": 1,
+          "chunks": [
+            {
+              "chunkIdSha256": "dbae8b15cbe7ba1ea7dcbe2499ed8a87137355bdb8cae0c68c4c15274a5bf508",
+              "ordinal": 0,
+              "start": 0,
+              "end": 51,
+              "textBytes": 51,
+              "textSha256": "f112c834dff587d4468999c0d0b032fde085bd6dc52c8ad14d7b955124717386",
+              "checks": {
+                "expectedWindowMatches": true,
+                "textHashMatches": true,
+                "receiptWindowMatches": true
+              }
+            }
+          ],
+          "vectorCount": 1,
+          "vectors": [
+            {
+              "vectorIdSha256": "1c66aaf7bc439d5438ac31c7c43cf5c69eef0956b08a07c4ce35f061407ccaf3",
+              "chunkIdSha256": "dbae8b15cbe7ba1ea7dcbe2499ed8a87137355bdb8cae0c68c4c15274a5bf508",
+              "dimensions": 1536,
+              "embeddingSha256": "b7135393fdeb1d078f368d9779e57fbc0b0d3f1a3e51d98d8deb76c0220237cd",
+              "allFinite": true,
+              "nonZero": true,
+              "profile": {
+                "profileId": "cortex-text-small-1536-v1",
+                "dimensions": 1536,
+                "indexName": "by_default_embedding_v1",
+                "modelId": "openai/text-embedding-3-small"
+              },
+              "checks": {
+                "shapeValid": true,
+                "profileMatches": true,
+                "sourceChunkExists": true,
+                "processingReceiptMatches": true,
+                "receiptVectorMatches": true,
+                "nativeAttachedVectorMatches": true,
+                "scopeIndexKeyMatches": true,
+                "ownerIndexKeyMatches": true
+              }
+            }
+          ],
+          "generationChecks": {
+            "oneCurrentGeneration": true,
+            "sourceHashMatches": true,
+            "ownerMatches": true,
+            "receiptMatches": true
+          },
+          "receiptChecks": {
+            "present": true,
+            "identityMatches": true,
+            "canonicalIdentityMatches": true,
+            "canonicalPayloadMatches": true,
+            "sourceMatches": true,
+            "chunkCountMatches": true,
+            "vectorCountMatches": true,
+            "embeddingBudgetMatches": true
+          },
+          "receiptCount": 2,
+          "factCount": 1,
+          "facts": [
+            {
+              "factIdSha256": "0e7e4e2caf88d597dc098c564d182db507c1be35714141f688ce0a5324e0c9ef",
+              "payloadSha256": "afaedbc24c730951f38594863127b172927b70e861e21a42f51306450e9df97e",
+              "version": 1,
+              "confidence": 100,
+              "checks": {
+                "exactSourceLineage": true,
+                "ownerMatches": true,
+                "notAssistant": true,
+                "notTombstoned": true,
+                "receiptExists": true,
+                "receiptFactMatches": true
+              }
+            }
+          ],
+          "candidateBindingChecks": {
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true
+          },
+          "candidateBindingSummary": {
+            "rawExtractionCandidates": 1,
+            "retainedCandidates": 1,
+            "privatePlanEntries": 1,
+            "bindings": [
+              {
+                "sourceOrdinal": 0,
+                "ordinal": 0,
+                "candidateId": "f49ec7b299ad09b1499fa2a0afe07907f51f2c60ac8d215e8a7fa24738516ed4",
+                "semanticId": "4e6740cef49eb8ad64b61f460e5b0f21e2561b814fa8ad7237a9359e7a8b7e97"
+              }
+            ]
+          },
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        },
+        {
+          "eventId": "ingestion:bdb9bca4f546e819ac3bd02554ac4ef0d6956204bb7f66588926769cdf9fdf08",
+          "sequence": 6,
+          "role": "assistant",
+          "eligibility": "eligible",
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "source": {
+            "lineageSha256": "08ec89b88a4eaf3e72125321ab375bd3f1cadfb333df5f8a987af26132a70f63",
+            "contentBytes": 5,
+            "contentHash": "a1adc1db6561a07a7cb48ce6a2a37dbd2a616b5a7be5462a2b131ed5fc37fad9",
+            "checks": {
+              "roleMatches": true,
+              "trustMatches": true,
+              "normalized": true,
+              "currentHashMatches": true,
+              "eventHashMatches": true,
+              "eventLineageMatches": true,
+              "preparedIdentityMatches": true,
+              "ownerMatches": true,
+              "canonicalRunBridge": true,
+              "scopeMatches": true,
+              "notTombstoned": true
+            },
+            "authorityChecks": {
+              "principalCurrent": true,
+              "membershipCurrent": true,
+              "grantCurrent": true,
+              "scopeEpochCurrent": true,
+              "readWriteCapabilities": true,
+              "noSourceOrScopeTombstone": true
+            }
+          },
+          "stages": [
+            {
+              "stage": "vectors",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "f68da6e106f55672eb1b86e2bbe62c0d1dfdef08bfb364d708fb93edfbf6e533",
+              "payload": {
+                "present": true,
+                "bytes": 31821,
+                "sha256": "56da6d5658b11d0b7cb986d488e07f75c66b37bab497a3293d79b8b0788074bb"
+              }
+            },
+            {
+              "stage": "facts",
+              "state": "skipped",
+              "attempt": 0,
+              "leaseVersion": 0,
+              "payload": {
+                "present": false
+              }
+            },
+            {
+              "stage": "extract",
+              "state": "skipped",
+              "attempt": 0,
+              "leaseVersion": 0,
+              "payload": {
+                "present": false
+              }
+            }
+          ],
+          "job": {
+            "runBudgetIdSha256": "b058454b7a92fa82d22bd8c5e0a7618fa75796521cf7fbeabca133d6e0beef36",
+            "runAccountIdSha256": "f88669ba37bf71ec4e9ca24fc79c1683a1c8f8becaa6e4584dba5be95cfd265b",
+            "createdAt": 1792019208097
+          },
+          "account": {
+            "reservedUnits": 0,
+            "settledUnits": 0,
+            "uncertainUnits": 100000,
+            "activeConcurrency": 0,
+            "cancelled": false,
+            "current": true
+          },
+          "operationCount": 1,
+          "attemptCount": 1,
+          "attempts": [
+            {
+              "operationKey": "embedding.memory",
+              "operationDocumentIdSha256": "c240aeb4a6147485afd38c20ae27c60090aa6bd845ed6c57d23d2706fa00b734",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019209130,
+              "checkpointAt": 1792019209346,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 5,
+              "maximumOutputTokens": 0,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "embedding",
+                "schemaVersion": "facts-v1",
+                "semanticProfileMatches": true
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 2,
+                  "totalTokens": 2
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 3305,
+                "sha256": "33051427d2c6719188942b1cb2b09e11c8e278892f78b5aecd1476e841e8868a"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 29728,
+                "sha256": "b0110469991b53bfb5c065d81013be266b6b79cfb4ab09259db91e959dc107bb"
+              }
+            }
+          ],
+          "chunkCount": 1,
+          "chunks": [
+            {
+              "chunkIdSha256": "cdeb221aaa12e3f34c0eb4460e107dbb6c3a77fbfdbdf722bbca2f8e213f15eb",
+              "ordinal": 0,
+              "start": 0,
+              "end": 5,
+              "textBytes": 5,
+              "textSha256": "a1adc1db6561a07a7cb48ce6a2a37dbd2a616b5a7be5462a2b131ed5fc37fad9",
+              "checks": {
+                "expectedWindowMatches": true,
+                "textHashMatches": true,
+                "receiptWindowMatches": true
+              }
+            }
+          ],
+          "vectorCount": 1,
+          "vectors": [
+            {
+              "vectorIdSha256": "76f3a8eff7c7eb014304ad2007b04809e27d7690a18af7789fb96a05bb505d98",
+              "chunkIdSha256": "cdeb221aaa12e3f34c0eb4460e107dbb6c3a77fbfdbdf722bbca2f8e213f15eb",
+              "dimensions": 1536,
+              "embeddingSha256": "d3f1c74468c5e6783a0b40cfad9050d7fd551f0c3008b51bb4717647584e7a1b",
+              "allFinite": true,
+              "nonZero": true,
+              "profile": {
+                "profileId": "cortex-text-small-1536-v1",
+                "dimensions": 1536,
+                "indexName": "by_default_embedding_v1",
+                "modelId": "openai/text-embedding-3-small"
+              },
+              "checks": {
+                "shapeValid": true,
+                "profileMatches": true,
+                "sourceChunkExists": true,
+                "processingReceiptMatches": true,
+                "receiptVectorMatches": true,
+                "nativeAttachedVectorMatches": true,
+                "scopeIndexKeyMatches": true,
+                "ownerIndexKeyMatches": true
+              }
+            }
+          ],
+          "generationChecks": {
+            "oneCurrentGeneration": true,
+            "sourceHashMatches": true,
+            "ownerMatches": true,
+            "receiptMatches": true
+          },
+          "receiptChecks": {
+            "present": true,
+            "identityMatches": true,
+            "canonicalIdentityMatches": true,
+            "canonicalPayloadMatches": true,
+            "sourceMatches": true,
+            "chunkCountMatches": true,
+            "vectorCountMatches": true,
+            "embeddingBudgetMatches": true
+          },
+          "receiptCount": 1,
+          "factCount": 0,
+          "facts": [],
+          "candidateBindingChecks": {
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true
+          },
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        }
+      ],
+      "progress": {
+        "expectedThrough": 6,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "progressChecks": {
+        "exactEventSequences": true,
+        "noMissingScopeEvents": true,
+        "factsContiguous": true,
+        "vectorsContiguous": true,
+        "profileConsistent": true
+      },
+      "userDurableFact": true,
+      "passed": true
+    },
+    {
+      "label": "cli-warm",
+      "runId": "run:18a02cbe8c9b990968ef425306dfd1ca2b40aff242048d9fd66d1c6b67492b67",
+      "responseStatus": "complete",
+      "memoryStatus": "complete",
+      "events": [
+        {
+          "eventId": "ingestion:293fc7a25edda88a0ef3976bc03fb40e31c4b76b7aa83f7291ba6f2dfa861d20",
+          "sequence": 7,
+          "role": "user",
+          "eligibility": "eligible",
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "source": {
+            "lineageSha256": "660b82a76a9dae046cd2252270b450dbdd8cd9bd3cfebb9ec81804fe594cfee4",
+            "contentBytes": 50,
+            "contentHash": "335d61e1d04fc5eff2316d8b7c6e31f95528abcdaf9439fca9f877b12f67b310",
+            "checks": {
+              "roleMatches": true,
+              "trustMatches": true,
+              "normalized": true,
+              "currentHashMatches": true,
+              "eventHashMatches": true,
+              "eventLineageMatches": true,
+              "preparedIdentityMatches": true,
+              "ownerMatches": true,
+              "canonicalRunBridge": true,
+              "scopeMatches": true,
+              "notTombstoned": true
+            },
+            "authorityChecks": {
+              "principalCurrent": true,
+              "membershipCurrent": true,
+              "grantCurrent": true,
+              "scopeEpochCurrent": true,
+              "readWriteCapabilities": true,
+              "noSourceOrScopeTombstone": true
+            }
+          },
+          "stages": [
+            {
+              "stage": "vectors",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "de30346f2cd6f385e8d04fdced3c2827639f488d50aae5d8c4e15269d6a86a30",
+              "payload": {
+                "present": true,
+                "bytes": 31766,
+                "sha256": "0c0cc6121d7d2fdf9f366cdf09f17af97d7bb0cbb4aaf1d2ee5d959a8d339b47"
+              }
+            },
+            {
+              "stage": "facts",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "6ef7309db464760c96e826389d31fa3fab04fe48632a45c358ae8af0ec899251",
+              "payload": {
+                "present": true,
+                "bytes": 3230,
+                "sha256": "8ce3921de86180ac498cfdafd543196b644b6606718fbf3736826e031c5fd11d"
+              }
+            },
+            {
+              "stage": "extract",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "2c978a85546a10db621f376c607d31bff29011fbd41b9f892efdc30292d34959",
+              "payload": {
+                "present": true,
+                "bytes": 498,
+                "sha256": "56bb5e96b6cc7cc2831209680403a50d32e573674f6f03d11a140d7c67534062"
+              }
+            }
+          ],
+          "job": {
+            "runBudgetIdSha256": "435891f4a7fb3e7c048e8a432b28a6e71efcc0a9bd81f9e2d0f84ba744b40d62",
+            "runAccountIdSha256": "72608b46db01f42649d94b070c0e912f88a2b9a163c147f39fc967e85c813e36",
+            "createdAt": 1792019259314
+          },
+          "account": {
+            "reservedUnits": 0,
+            "settledUnits": 0,
+            "uncertainUnits": 300000,
+            "activeConcurrency": 0,
+            "cancelled": false,
+            "current": true
+          },
+          "operationCount": 3,
+          "attemptCount": 3,
+          "attempts": [
+            {
+              "operationKey": "embedding.memory",
+              "operationDocumentIdSha256": "9958fff9f37fffe2785c3d9167e1aa28e59ec648be1cae706853ee11410c1e50",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019267428,
+              "checkpointAt": 1792019267612,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 50,
+              "maximumOutputTokens": 0,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "embedding",
+                "schemaVersion": "facts-v1",
+                "semanticProfileMatches": true
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 13,
+                  "totalTokens": 13
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 3406,
+                "sha256": "1f441544e18581e325373e3a17c678b2bd239701c6105499c6340f508ad0ea51"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 29627,
+                "sha256": "12deacebe4b3a42ba0bd56426b57a06e7be14fb53989ae3b286b3b60992fe160"
+              }
+            },
+            {
+              "operationKey": "facts.resolve",
+              "operationDocumentIdSha256": "89285e6bfe55ebff8460a515d07293a49048149004a024fc5f969b7e5eafdb18",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019264150,
+              "checkpointAt": 1792019264320,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 7013,
+              "maximumOutputTokens": 512,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "chat",
+                "schemaVersion": "conflicts-v1"
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 1893,
+                  "outputTokens": 57,
+                  "totalTokens": 1950,
+                  "cachedInputTokens": 0,
+                  "reasoningTokens": 0
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 18313,
+                "sha256": "cb111ed1f5e1b168ae7c71e61a743ae1d8f89c1ffbc97b615b557cec9cc1f536"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 256,
+                "sha256": "3c0004d32f693e6cff216310ee542c2935e71b52a158a4dad255bd620615be50"
+              },
+              "conflictResolution": {
+                "textPresent": true,
+                "textBytes": 225,
+                "textSha256": "5e094e93b4e7937951258e8e5c322abe914ee3e4f86f26058b5b1b64ebcb2be2",
+                "strictDomainValid": true,
+                "action": "ADD"
+              }
+            },
+            {
+              "operationKey": "memory.extract",
+              "operationDocumentIdSha256": "821d47ec5c1c5d7f1564051016803f2074678b4e578977cfaefe437a6fc0de50",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019260368,
+              "checkpointAt": 1792019260555,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 5183,
+              "maximumOutputTokens": 512,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "chat",
+                "promptVersion": "memory-extraction-json-object-prompt-v5",
+                "schemaVersion": "facts-v1"
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 1105,
+                  "outputTokens": 69,
+                  "totalTokens": 1174,
+                  "cachedInputTokens": 0,
+                  "reasoningTokens": 0
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 14250,
+                "sha256": "af8a19c1030e4c08d172aab3aadcc675a72c24467c1b93c3ca20cd2a4ca83520"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 259,
+                "sha256": "5928675e1720305dcfc17eaf5b8ace15d98df13a762bfa598733fb89b97eb865"
+              },
+              "extraction": {
+                "textPresent": true,
+                "textBytes": 218,
+                "textSha256": "e8a31c43dc7bfdf8808f6095383ac7c4ea45b40d8fcaea27b3065b3bea946c36",
+                "jsonValid": true,
+                "strictDomainValid": true,
+                "factCount": 1,
+                "parsedShape": {
+                  "type": "object",
+                  "topKeyCount": 1,
+                  "factsArray": true,
+                  "factCount": 1,
+                  "schemaDefinitionShape": false
+                },
+                "exactProductionSystem": true,
+                "exactProductionQuotedUser": true,
+                "exactlyTwoTrustedRoles": true,
+                "topLevelFactsOnly": true,
+                "nativeJsonObjectFormat": true,
+                "compiledV5Pin": true,
+                "persistedExtractPayloadMatches": true,
+                "persistedExtractCountMatches": true
+              }
+            }
+          ],
+          "chunkCount": 1,
+          "chunks": [
+            {
+              "chunkIdSha256": "87a757e15af3fbe328632aa134653222b66fc5999974ef3527e3768a01d00ed1",
+              "ordinal": 0,
+              "start": 0,
+              "end": 50,
+              "textBytes": 50,
+              "textSha256": "335d61e1d04fc5eff2316d8b7c6e31f95528abcdaf9439fca9f877b12f67b310",
+              "checks": {
+                "expectedWindowMatches": true,
+                "textHashMatches": true,
+                "receiptWindowMatches": true
+              }
+            }
+          ],
+          "vectorCount": 1,
+          "vectors": [
+            {
+              "vectorIdSha256": "163daa21c8581167aa72ae36f20168c0f94e2effe76d5a681e001fda38800943",
+              "chunkIdSha256": "87a757e15af3fbe328632aa134653222b66fc5999974ef3527e3768a01d00ed1",
+              "dimensions": 1536,
+              "embeddingSha256": "ca8a86b17416d3bd9b4e2e42b9165efb947eae89f641c1dca37c4c91dd2d4052",
+              "allFinite": true,
+              "nonZero": true,
+              "profile": {
+                "profileId": "cortex-text-small-1536-v1",
+                "dimensions": 1536,
+                "indexName": "by_default_embedding_v1",
+                "modelId": "openai/text-embedding-3-small"
+              },
+              "checks": {
+                "shapeValid": true,
+                "profileMatches": true,
+                "sourceChunkExists": true,
+                "processingReceiptMatches": true,
+                "receiptVectorMatches": true,
+                "nativeAttachedVectorMatches": true,
+                "scopeIndexKeyMatches": true,
+                "ownerIndexKeyMatches": true
+              }
+            }
+          ],
+          "generationChecks": {
+            "oneCurrentGeneration": true,
+            "sourceHashMatches": true,
+            "ownerMatches": true,
+            "receiptMatches": true
+          },
+          "receiptChecks": {
+            "present": true,
+            "identityMatches": true,
+            "canonicalIdentityMatches": true,
+            "canonicalPayloadMatches": true,
+            "sourceMatches": true,
+            "chunkCountMatches": true,
+            "vectorCountMatches": true,
+            "embeddingBudgetMatches": true
+          },
+          "receiptCount": 2,
+          "factCount": 1,
+          "facts": [
+            {
+              "factIdSha256": "31939a23929a8d148918e0bb2c1a13910a8170b06c2f9a88ba92510590d7caf5",
+              "payloadSha256": "e32eaddcab1194d520766666a669a6d48c7dc58a69cbb8d47c49d09b40e08a82",
+              "version": 1,
+              "confidence": 100,
+              "checks": {
+                "exactSourceLineage": true,
+                "ownerMatches": true,
+                "notAssistant": true,
+                "notTombstoned": true,
+                "receiptExists": true,
+                "receiptFactMatches": true
+              }
+            }
+          ],
+          "candidateBindingChecks": {
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true
+          },
+          "candidateBindingSummary": {
+            "rawExtractionCandidates": 1,
+            "retainedCandidates": 1,
+            "privatePlanEntries": 1,
+            "bindings": [
+              {
+                "sourceOrdinal": 0,
+                "ordinal": 0,
+                "candidateId": "3f76de07ad2bd86f2452542446fc4a5495cbf3d565d20ed1893dd98a3d2b5149",
+                "semanticId": "dbbc7aa3a472d5fac2fe148331ee13c60515c763d5adf59f3e8a95a9d43a7323"
+              }
+            ]
+          },
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        },
+        {
+          "eventId": "ingestion:889bf010f1bef4aa79085c82624fa3ce04d207479efd9572d4bea67cd6f51874",
+          "sequence": 8,
+          "role": "assistant",
+          "eligibility": "eligible",
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "source": {
+            "lineageSha256": "197139230e3aeca2bb2517f6843e27151fc43223e335604b2e82ad98706c3d89",
+            "contentBytes": 5,
+            "contentHash": "468c6c1ad515cfe79c4697666beade9ba32b78e277a7bbf355b4cb96f81ad18b",
+            "checks": {
+              "roleMatches": true,
+              "trustMatches": true,
+              "normalized": true,
+              "currentHashMatches": true,
+              "eventHashMatches": true,
+              "eventLineageMatches": true,
+              "preparedIdentityMatches": true,
+              "ownerMatches": true,
+              "canonicalRunBridge": true,
+              "scopeMatches": true,
+              "notTombstoned": true
+            },
+            "authorityChecks": {
+              "principalCurrent": true,
+              "membershipCurrent": true,
+              "grantCurrent": true,
+              "scopeEpochCurrent": true,
+              "readWriteCapabilities": true,
+              "noSourceOrScopeTombstone": true
+            }
+          },
+          "stages": [
+            {
+              "stage": "vectors",
+              "state": "complete",
+              "attempt": 1,
+              "leaseVersion": 1,
+              "receiptIdSha256": "9364fd589391a374d34677cb52a4cd0018d005685f2207bf470a6cd4200d1c36",
+              "payload": {
+                "present": true,
+                "bytes": 31792,
+                "sha256": "3b65349b36675cddf84538f2625be18d9dde5465cd13d9464deb83049c863425"
+              }
+            },
+            {
+              "stage": "facts",
+              "state": "skipped",
+              "attempt": 0,
+              "leaseVersion": 0,
+              "payload": {
+                "present": false
+              }
+            },
+            {
+              "stage": "extract",
+              "state": "skipped",
+              "attempt": 0,
+              "leaseVersion": 0,
+              "payload": {
+                "present": false
+              }
+            }
+          ],
+          "job": {
+            "runBudgetIdSha256": "058cde436517c55282e9c0aaf98a2413cc19de8ae2abf7de4d97e913f9640c30",
+            "runAccountIdSha256": "1b9b249707adcb6cabefae65c8c9676dcfb4ce13e80124df426634078235cf70",
+            "createdAt": 1792019262829
+          },
+          "account": {
+            "reservedUnits": 0,
+            "settledUnits": 0,
+            "uncertainUnits": 100000,
+            "activeConcurrency": 0,
+            "cancelled": false,
+            "current": true
+          },
+          "operationCount": 1,
+          "attemptCount": 1,
+          "attempts": [
+            {
+              "operationKey": "embedding.memory",
+              "operationDocumentIdSha256": "c1a6464bad4d35e24390b75c19a69a3b6bd85c7856787442a861d461eeca8d25",
+              "state": "uncertain",
+              "attemptNumber": 1,
+              "ordinal": 0,
+              "createdAt": 1792019263809,
+              "checkpointAt": 1792019264003,
+              "reservationUnits": 100000,
+              "measuredInputTokens": 5,
+              "maximumOutputTokens": 0,
+              "slotReleased": true,
+              "resultWithheld": false,
+              "resultAttachmentState": "attached",
+              "operationUnits": {
+                "reservedUnits": 0,
+                "settledUnits": 0,
+                "uncertainUnits": 100000
+              },
+              "sourceBindingMatches": true,
+              "usageComplete": true,
+              "snapshot": {
+                "nativeInterface": "embedding",
+                "schemaVersion": "facts-v1",
+                "semanticProfileMatches": true
+              },
+              "terminal": {
+                "present": true,
+                "outcome": "confirmed",
+                "costSource": "unavailable",
+                "dispatchIdentityMatches": true,
+                "usage": {
+                  "inputTokens": 3,
+                  "totalTokens": 3
+                }
+              },
+              "request": {
+                "present": true,
+                "bytes": 3305,
+                "sha256": "28840aee561f7e56962360145dead19538545034fd16657a0551025631d17759"
+              },
+              "privateResult": {
+                "present": true,
+                "bytes": 29699,
+                "sha256": "20cafb6fd0b09201ba1662a72698cd3b69808fedcdc8b4f550d94d02b3f336d2"
+              }
+            }
+          ],
+          "chunkCount": 1,
+          "chunks": [
+            {
+              "chunkIdSha256": "51b725f13e33e767a27fa6fbbe43416f05e6f5312281f60d138c533ba5f1b4f1",
+              "ordinal": 0,
+              "start": 0,
+              "end": 5,
+              "textBytes": 5,
+              "textSha256": "468c6c1ad515cfe79c4697666beade9ba32b78e277a7bbf355b4cb96f81ad18b",
+              "checks": {
+                "expectedWindowMatches": true,
+                "textHashMatches": true,
+                "receiptWindowMatches": true
+              }
+            }
+          ],
+          "vectorCount": 1,
+          "vectors": [
+            {
+              "vectorIdSha256": "a9c36e57dc6c5a16728940975943b54c13db32f4fbdc1deb2af55dcf8ed67c8f",
+              "chunkIdSha256": "51b725f13e33e767a27fa6fbbe43416f05e6f5312281f60d138c533ba5f1b4f1",
+              "dimensions": 1536,
+              "embeddingSha256": "92bd8a59876731c8ac0cebe1fe55c56349b8caff68dd4ea47fc142af6e15b833",
+              "allFinite": true,
+              "nonZero": true,
+              "profile": {
+                "profileId": "cortex-text-small-1536-v1",
+                "dimensions": 1536,
+                "indexName": "by_default_embedding_v1",
+                "modelId": "openai/text-embedding-3-small"
+              },
+              "checks": {
+                "shapeValid": true,
+                "profileMatches": true,
+                "sourceChunkExists": true,
+                "processingReceiptMatches": true,
+                "receiptVectorMatches": true,
+                "nativeAttachedVectorMatches": true,
+                "scopeIndexKeyMatches": true,
+                "ownerIndexKeyMatches": true
+              }
+            }
+          ],
+          "generationChecks": {
+            "oneCurrentGeneration": true,
+            "sourceHashMatches": true,
+            "ownerMatches": true,
+            "receiptMatches": true
+          },
+          "receiptChecks": {
+            "present": true,
+            "identityMatches": true,
+            "canonicalIdentityMatches": true,
+            "canonicalPayloadMatches": true,
+            "sourceMatches": true,
+            "chunkCountMatches": true,
+            "vectorCountMatches": true,
+            "embeddingBudgetMatches": true
+          },
+          "receiptCount": 1,
+          "factCount": 0,
+          "facts": [],
+          "candidateBindingChecks": {
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true
+          },
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "privatePlanVersion": true,
+            "fullCandidateCoverage": true,
+            "exactSourceCandidateBindings": true,
+            "allRecordedResolutionBindings": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        }
+      ],
+      "progress": {
+        "expectedThrough": 8,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "progressChecks": {
+        "exactEventSequences": true,
+        "noMissingScopeEvents": true,
+        "factsContiguous": true,
+        "vectorsContiguous": true,
+        "profileConsistent": true
+      },
+      "userDurableFact": true,
+      "passed": true
+    }
+  ],
+  "note": "Actual stored vector field/index provenance is checked; no ANN query, inference, mutation, retry, refund or previous-generation access. Read snapshots are bounded per table, not one cross-table transaction.",
+  "mode": "four-supplied-runs",
+  "passed": true
+}
