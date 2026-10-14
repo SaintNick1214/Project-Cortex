@@ -7,7 +7,7 @@ import type {QueryCtx,MutationCtx,ActionCtx} from './_generated/server';
 import type {RuntimeAuthorityReference} from '../src/auth/verified';
 import type {MemoryModel,MemoryRepository} from '../src/domain/contracts';
 import {runtimeAuthorityReference} from './runtimeAuthSchema';
-import {createAuthorityReadScope,createMemorySourceReadScope,withManagedSourceValidationReads} from './runtimeAuth';
+import {createAuthorityReadScope,createMemorySourceReadScope,withNativeSnapshotReads} from './runtimeAuth';
 import {canonicalModelJson} from '../src/domain/model-policy';
 import {normalizeSourceText,semanticHash} from '../src/domain/profile';
 import {ConvexMemoryRepository,memoryError,memoryScope,captureRecallVectors,captureRecallFact,vectorScopeKey,vectorOwnerScopeKey} from './runtimeMemoryRepository';
@@ -103,7 +103,7 @@ export const prepareReads=internalQuery({args:readArgs,handler:prepareRecallRead
 export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hits:{id:Id<'runtimeMemoryVectors'>;score:number}[]}) {
   const ctx=createMemorySourceReadScope(nativeCtx),repository=readRepository(ctx,a);
   const bindings:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]};
-  const sourceCtx=withManagedSourceValidationReads(nativeCtx,ctx);
+  const sourceCtx=withNativeSnapshotReads(nativeCtx,ctx);
   // Isolated branches retain the original staged vector-first failure order;
   // both reads run even when a peer fails, with no unowned late rejection.
   const [vectorRead,factRead]=await Promise.allSettled([

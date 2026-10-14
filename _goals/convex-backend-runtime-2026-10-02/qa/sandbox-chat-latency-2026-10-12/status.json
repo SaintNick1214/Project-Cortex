@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K28 hosted functional checks and independent cleanup complete; latency SLO failed 0/4; next measured backend preparation repair",
+  "phase": "K29 independent source PASS4.0; fresh accepted-source packaging next; K28 CLEANED/SLO0of4 retained",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T20:59:08.504Z",
+  "updatedAt": "2026-10-14T21:27:31.618980+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -112,7 +112,7 @@
     "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
   },
   "pendingRepairs": [
-    "Reduce measured backend pre-dispatch preparation (2087–6949ms) and protected delivery while retaining all current authority/source/accounting predicates and fresh boundaries",
+    "Reduce measured backend pre-dispatch preparation (2087\u20136949ms) and protected delivery while retaining all current authority/source/accounting predicates and fresh boundaries",
     "Fresh installed hosted sub1000ms and semantic qualification",
     "Unqualified in-plan new-target UPDATE/SUPERSEDE remains disclosed",
     "Independent final audit"
@@ -517,8 +517,8 @@
         "pass": 8,
         "fail": 2,
         "failures": [
-          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
-          "invalidsignature→AUTHENTICATION_TIMEOUT"
+          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
+          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
         ],
         "noAccessDelivered": true,
         "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
@@ -552,8 +552,8 @@
       "priorAuthenticationExpectedCodeFailures": {
         "generation": "K9",
         "failures": [
-          "expired valid signature → AUTHENTICATION_TIMEOUT",
-          "invalid signature → AUTHENTICATION_TIMEOUT"
+          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
+          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
         ],
         "notRerun": true
       },
@@ -575,7 +575,7 @@
       },
       "toolInclusiveSupplement": {
         "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
-        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
         "originalGenericFailPreserved": true
       }
     }
@@ -1820,5 +1820,28 @@
     ],
     "subsecondAccepted": false,
     "requiredIntegrationAccepted": false
+  },
+  "sourceK29": {
+    "state": "SOURCE_ACCEPTED_PACKAGING_NEXT",
+    "baselineProduct": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+    "baselineQa": "69becda2ba83d848f3768f5c4cea7c23ba946909",
+    "scope": "k29-batch-scope.md",
+    "sourcePercent": 100,
+    "native": "NOT_RUN",
+    "freshServiceAccess": false,
+    "goalPercent": 50,
+    "interimAffectedChecks": "468/12 per-file passing coverage union; types/lint0; original6fixture failures preserved",
+    "interimSourceFrozen": true,
+    "sourceGateAccepted": true,
+    "directProfile": "k29-chain-direct-table-profile-v4.log",
+    "finiteExtension": "Raw exact versioned Agent-definition and tenant-policy metadata reads; existing by_native bridge raw helper. Every original predicate reruns; mutable runtime rows excluded.",
+    "jointQuality": "6/6PASS/17hashesunchanged",
+    "review": "k29-independent-review.md",
+    "reviewVerdict": "PASS4.0",
+    "breakingFindings": 0,
+    "maintenanceNotes": [
+      "Pre-existing per-source raw-context comment drift",
+      "Test-only Error.stack callsite discrimination may need future explicit injection"
+    ]
   }
 }

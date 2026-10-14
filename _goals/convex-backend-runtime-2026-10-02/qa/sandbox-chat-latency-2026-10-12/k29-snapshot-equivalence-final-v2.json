@@ -1,0 +1,217 @@
+{
+  "createdAt": "2026-10-14T21:19:58.951Z",
+  "baselineProductCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "files": {
+    "convex-dev/runtimeAuth.ts": {
+      "sha256": "fdb75de4c1a4a7c1ae8b01b034241501330b21f426caa4710eac36230195cb6f",
+      "bytes": 54646
+    },
+    "convex-dev/runtimeClient.ts": {
+      "sha256": "2085499eb94c2c5b4d333f79dcffb647864555db447d4ee6a3bf69bd3439be5a",
+      "bytes": 9115
+    },
+    "tests/unit/runtimeAuth/managed-source-read-scope.test.ts": {
+      "sha256": "b064928f04fcfa030e036d16c9b244c056d8a96ba362051e9ac26bda6cb0abc5",
+      "bytes": 30768
+    },
+    "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts": {
+      "sha256": "b2997d9dbd58893dfeae437c8544b220b901a782e185f337dce05a35fdd01cfb",
+      "bytes": 12565
+    },
+    "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts": {
+      "sha256": "e9d85baba13517ed683cf16420ad0d49931eba647a91800dd9ae222f22826be4",
+      "bytes": 10954
+    },
+    "tests/unit/client-runtime/observation-native.test.ts": {
+      "sha256": "c72185f2ff4e4daaf32cc35402e8e326696d630735dff309828c059018f4bebd",
+      "bytes": 20645
+    },
+    "tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts": {
+      "sha256": "0afdf7173f3da8011c6d558170f88467e5cfa878ed9580cf629d6433e0aadbfe",
+      "bytes": 12016
+    }
+  },
+  "auth": {
+    "unchanged": [
+      "import:convex/values#1",
+      "import:convex/server#1",
+      "import:@convex-dev/agent#1",
+      "import:convex/server#2",
+      "import:./_generated/server#1",
+      "import:./_generated/server#2",
+      "import:./_generated/dataModel#1",
+      "import:../src/auth/verified#1",
+      "import:./runtimeAuthSchema#1",
+      "Lifecycle#1",
+      "PrincipalRecord#1",
+      "MembershipRecord#1",
+      "GrantRecord#1",
+      "ScopeRecord#1",
+      "TombstoneKey#1",
+      "AuthorityReader#1",
+      "authorityReadScope#1",
+      "policyMetadataReadScope#1",
+      "nativeTranscriptReadScope#1",
+      "v8ReadScope#1",
+      "managedSourceReadScope#1",
+      "managedSourceValidationScope#1",
+      "nativeReadScopeOwner#1",
+      "ManagedSourceReader#1",
+      "ManagedSourceContext#1",
+      "MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES#1",
+      "MANAGED_SOURCE_READ_SCOPE_MAX_BYTES#1",
+      "readManagedSourceRows#1",
+      "readManagedConversationRows#1",
+      "readManagedTranscriptBridgeRows#1",
+      "readManagedSourceRunRows#1",
+      "freshManagedSourceReads#1",
+      "withManagedSourceReads#1",
+      "ManagedValidationContext#1",
+      "freshManagedSourceValidation#1",
+      "withManagedSourceValidationReads#1",
+      "NativeMessageReference#1",
+      "NativeTranscriptReader#1",
+      "NativeTranscriptContext#1",
+      "NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES#1",
+      "NATIVE_TRANSCRIPT_READ_SCOPE_MAX_BYTES#1",
+      "readNativeTranscriptMessages#1",
+      "freshNativeTranscriptReads#1",
+      "nativeTranscriptBytes#1",
+      "createNativeTranscriptReader#1",
+      "PolicyMetadataContext#1",
+      "AuthorityReadContext#1",
+      "AUTHORITY_READ_SCOPE_MAX_ENTRIES#1",
+      "POLICY_METADATA_READ_SCOPE_MAX_ENTRIES#1",
+      "readDeploymentPolicyRows#1",
+      "readQualificationRows#1",
+      "freshPolicyMetadataReads#1",
+      "cloneAuthorityValue#1",
+      "authorityReadKey#1",
+      "createAuthorityReadScope#1",
+      "RawAuthorityRead#1",
+      "mappedAuthorityReader#1",
+      "deny#1",
+      "active#1",
+      "boundGrants#1",
+      "assertSingleActiveGeneration#1",
+      "validateRequirement#1",
+      "assertResourceScope#1",
+      "assertCurrentScope#1",
+      "materialize#1",
+      "resolveAuthority#1",
+      "resolveAuthorityReference#1",
+      "boundedSingle#1",
+      "createAuthorityReader#1",
+      "createUncachedAuthorityReader#1",
+      "requireAuthority#1",
+      "recheckAuthority#1",
+      "retireGraphAuthority#1",
+      "authorize#1",
+      "recheck#1",
+      "nonempty#1",
+      "ensureScope#1",
+      "provision#1",
+      "revokeGrant#1",
+      "revokeMembership#1",
+      "deletePrincipal#1",
+      "deleteScope#1",
+      "tombstoneResource#1"
+    ],
+    "changed": [
+      "createMemorySourceReadScope#1",
+      "PolicyMetadataReader#1",
+      "createV8AuthorityReadScope#1",
+      "createRawReadScope#1"
+    ],
+    "added": [
+      "withNativeSnapshotReads#1",
+      "EXECUTABLE_METADATA_READ_SCOPE_MAX_ENTRIES#1",
+      "EXECUTABLE_METADATA_READ_SCOPE_MAX_BYTES#1",
+      "readExecutableDefinitionRows#1",
+      "readTenantPolicyRows#1"
+    ]
+  },
+  "client": {
+    "unchanged": [
+      "import:convex/values#1",
+      "import:./_generated/server#1",
+      "import:./_generated/server#2",
+      "import:./runtimeDataAuth#1",
+      "import:./runtimeDelivery#1",
+      "import:./runtimeAgent#1",
+      "import:../src/domain/model-policy#1",
+      "import:../src/domain/profile#1",
+      "import:./runs#1",
+      "import:./runtimeTranscript#1",
+      "import:./runtimeLatencyTrace#1",
+      "Selectors#1",
+      "submitAndStartHandler#1",
+      "submitAndStart#1",
+      "sessionHandler#1",
+      "session#1",
+      "submitAndStartEnvelopeHandler#1",
+      "submitAndStartEnvelope#1",
+      "ObservationHandle#1",
+      "observationMarker#1"
+    ],
+    "changed": [
+      "import:./runtimeAuth#1",
+      "observeEnvelopeHandler#1",
+      "observeEnvelope#1",
+      "signal#1"
+    ],
+    "added": []
+  },
+  "originalFactoryInnerBodies": {
+    "retention": {
+      "before": "576e0ab50369dcc23d73fe516d41afa630b9cda5b5d65cecb909f0e94eed11d2",
+      "after": "576e0ab50369dcc23d73fe516d41afa630b9cda5b5d65cecb909f0e94eed11d2",
+      "unchanged": true
+    },
+    "writing": {
+      "before": "d82101e4da597c5316c8a91641a97b1521d3e6c9339bede6079d55e9b3fa607f",
+      "after": "d82101e4da597c5316c8a91641a97b1521d3e6c9339bede6079d55e9b3fa607f",
+      "unchanged": true
+    },
+    "db": {
+      "before": "3f681a8fa688d54809b34408f24d768a84fd3f19922fae9176b9b04411802734",
+      "after": "3f681a8fa688d54809b34408f24d768a84fd3f19922fae9176b9b04411802734",
+      "unchanged": true
+    },
+    "read": {
+      "before": "e85624ae5cfe9f756d0037eaa7ce2258d125944f4a20dbd183c4028335bee612",
+      "after": "e85624ae5cfe9f756d0037eaa7ce2258d125944f4a20dbd183c4028335bee612",
+      "unchanged": true
+    },
+    "readMetadata": {
+      "before": "4b62e753a4237242d828387ab9d80098e287ad0376e116661c08faf220fe5623",
+      "after": "4b62e753a4237242d828387ab9d80098e287ad0376e116661c08faf220fe5623",
+      "unchanged": true
+    },
+    "readGraph": {
+      "before": "698d0b1b4340a3bcf50d38d2336dd96323ee6da5c8c74affbbf6f0ff1a7266b1",
+      "after": "698d0b1b4340a3bcf50d38d2336dd96323ee6da5c8c74affbbf6f0ff1a7266b1",
+      "unchanged": true
+    },
+    "freshSourceReader": {
+      "before": "fa9d530d06a17f8e6ae9e398e3f2a03bca7cb25512c730af38bb7fa47f3922cf",
+      "after": "fa9d530d06a17f8e6ae9e398e3f2a03bca7cb25512c730af38bb7fa47f3922cf",
+      "unchanged": true
+    }
+  },
+  "intentionalDeltas": [
+    "add exact-owner withNativeSnapshotReads projection",
+    "two closed raw metadata helpers, optional PolicyMetadataReader methods",
+    "privateV8/public-read factory opt-in; legacy policyMetadata scopes unchanged for newfamilies",
+    "freshMetadata also clears new bounded raw store; same existing epoch/in-flight writer conditions",
+    "registered client native session/observe share parent raw reader, original raw finalAuthorityCtx/default K28helper/DTO/SDK unchanged"
+  ],
+  "limits": {
+    "newMetadataEntries": 32,
+    "newMetadataBytes": 1000000,
+    "definitionTake": 2,
+    "tenantPolicyTake": 65
+  },
+  "nativeCandidateStatus": "NOT_RUN",
+  "applicability": "Unique statement occurrence keys avoid the interim per-name duplicate-import comparison ambiguity; behavior evidence is in actual handler tests. Only A owned files are frozen here; B owns callsite integrations."
+}

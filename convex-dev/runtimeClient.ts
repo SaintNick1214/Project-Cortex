@@ -9,7 +9,7 @@ import { canonicalModelJson } from "../src/domain/model-policy";
 import { semanticHash } from "../src/domain/profile";
 import { getHandler, submitHandler } from "./runs";
 import { transcriptDenied } from "./runtimeTranscript";
-import { createAuthorityReadScope } from "./runtimeAuth";
+import { createAuthorityReadScope, createMemorySourceReadScope, withNativeSnapshotReads } from "./runtimeAuth";
 import { traceRuntimeMutationSpan } from "./runtimeLatencyTrace";
 
 type Selectors = { tenantId?: string; memorySpaceId?: string };
@@ -73,7 +73,7 @@ type ObservationHandle = { version: 1; tenantId: string; memorySpaceId: string; 
 /** Compose the original pre-session and private observation in one transaction.
  * The SDK retains a separate fresh post-session after this response crosses I/O. */
 export async function observeEnvelopeHandler(ctx: MutationCtx, args: Selectors & { handle: ObservationHandle;
-  afterSequence?: number; limit?: number; finalOnly?: boolean; acknowledgeSignal?: boolean }) {
+  afterSequence?: number; limit?: number; finalOnly?: boolean; acknowledgeSignal?: boolean }, nativeCtx: MutationCtx = ctx) {
   // Preserve omitted-selector ambiguity. The supplied handle cannot choose a scope
   // in place of the original client configuration or establish current authority.
   const selectors = { ...(args.tenantId === undefined ? {} : { tenantId: args.tenantId }),
@@ -81,9 +81,13 @@ export async function observeEnvelopeHandler(ctx: MutationCtx, args: Selectors &
   const current = await sessionHandler(ctx, selectors), expected = args.handle;
   if (expected.version !== 1 || expected.tenantId !== current.tenantId || expected.memorySpaceId !== current.memorySpaceId
     || expected.principalId !== current.principalId) transcriptDenied("SESSION_CHANGED");
-  const { observation: value, metadata } = await observeWithMetadataHandler(createAuthorityReadScope(ctx), { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, runId: expected.runId,
+  // Only the registered same-native snapshot opts in. Direct/default helper
+  // calls retain their original separate observation scope.
+  const snapshot = withNativeSnapshotReads(nativeCtx, ctx);
+  const readCtx = snapshot === nativeCtx ? createAuthorityReadScope(ctx) : snapshot;
+  const { observation: value, metadata } = await observeWithMetadataHandler(readCtx, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, runId: expected.runId,
     ...(args.afterSequence === undefined ? {} : { afterSequence: args.afterSequence }),
-    ...(args.limit === undefined ? {} : { limit: args.limit }), ...(args.finalOnly === undefined ? {} : { finalOnly: args.finalOnly }) }, ctx);
+    ...(args.limit === undefined ? {} : { limit: args.limit }), ...(args.finalOnly === undefined ? {} : { finalOnly: args.finalOnly }) }, nativeCtx);
   const row = value.run;
   if (row.scope.tenantId !== expected.tenantId || row.scope.memorySpaceId !== expected.memorySpaceId
     || row.runId !== expected.runId || row.conversationId !== expected.conversationId || row.agentId !== expected.agentId
@@ -97,7 +101,7 @@ export const observeEnvelope = mutation({
       runId: v.string(), conversationId: v.string(), agentId: v.string(), agentVersion: v.number(), definitionHash: v.string() }),
     afterSequence: v.optional(v.number()), limit: v.optional(v.number()), finalOnly: v.optional(v.boolean()),
     acknowledgeSignal: v.optional(v.boolean()) },
-  handler: observeEnvelopeHandler,
+  handler: (ctx, args) => observeEnvelopeHandler(createMemorySourceReadScope(ctx), args, ctx),
 });
 
 /** Cursor-independent revision: every durable output append advances outputRevision.
@@ -110,7 +114,7 @@ async function observationMarker(value: Awaited<ReturnType<typeof observeSignalH
 export const signal = query({
   args: { runId: v.string(), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    const value = await observeSignalHandler(createAuthorityReadScope(ctx), { ...args, limit: 1, finalOnly: false }, ctx);
+    const value = await observeSignalHandler(withNativeSnapshotReads(ctx, createMemorySourceReadScope(ctx)), { ...args, limit: 1, finalOnly: false }, ctx);
     return { version: 1 as const, marker: await observationMarker(value),
       ...(value.deliveryExpiresAt === undefined ? {} : { deliveryExpiresAt: value.deliveryExpiresAt }) };
   },

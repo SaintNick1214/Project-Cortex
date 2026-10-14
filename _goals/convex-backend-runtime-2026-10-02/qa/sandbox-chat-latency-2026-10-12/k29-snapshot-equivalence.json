@@ -1,0 +1,173 @@
+{
+  "createdAt": "2026-10-14T21:13:29.974Z",
+  "baselineProductCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "sourceHashes": {
+    "convex-dev/runtimeAuth.ts": {
+      "sha256": "490c7d899d9bf0b160b719995d42f906dffb617fd252b49e4265ddf555fae278",
+      "bytes": 51284
+    },
+    "convex-dev/runtimeClient.ts": {
+      "sha256": "2085499eb94c2c5b4d333f79dcffb647864555db447d4ee6a3bf69bd3439be5a",
+      "bytes": 9115
+    },
+    "tests/unit/runtimeAuth/managed-source-read-scope.test.ts": {
+      "sha256": "b064928f04fcfa030e036d16c9b244c056d8a96ba362051e9ac26bda6cb0abc5",
+      "bytes": 30768
+    },
+    "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts": {
+      "sha256": "b2997d9dbd58893dfeae437c8544b220b901a782e185f337dce05a35fdd01cfb",
+      "bytes": 12565
+    },
+    "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts": {
+      "sha256": "e9d85baba13517ed683cf16420ad0d49931eba647a91800dd9ae222f22826be4",
+      "bytes": 10954
+    },
+    "tests/unit/client-runtime/observation-native.test.ts": {
+      "sha256": "c72185f2ff4e4daaf32cc35402e8e326696d630735dff309828c059018f4bebd",
+      "bytes": 20645
+    }
+  },
+  "auth": {
+    "baselineDeclarations": 87,
+    "currentDeclarations": 88,
+    "unchanged": [
+      "import:convex/values",
+      "import:@convex-dev/agent",
+      "import:convex/server",
+      "import:./_generated/server",
+      "import:./_generated/dataModel",
+      "import:../src/auth/verified",
+      "import:./runtimeAuthSchema",
+      "Lifecycle",
+      "PrincipalRecord",
+      "MembershipRecord",
+      "GrantRecord",
+      "ScopeRecord",
+      "TombstoneKey",
+      "AuthorityReader",
+      "authorityReadScope",
+      "policyMetadataReadScope",
+      "nativeTranscriptReadScope",
+      "v8ReadScope",
+      "managedSourceReadScope",
+      "managedSourceValidationScope",
+      "nativeReadScopeOwner",
+      "ManagedSourceReader",
+      "ManagedSourceContext",
+      "MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES",
+      "MANAGED_SOURCE_READ_SCOPE_MAX_BYTES",
+      "readManagedSourceRows",
+      "readManagedConversationRows",
+      "readManagedTranscriptBridgeRows",
+      "readManagedSourceRunRows",
+      "freshManagedSourceReads",
+      "withManagedSourceReads",
+      "ManagedValidationContext",
+      "freshManagedSourceValidation",
+      "withManagedSourceValidationReads",
+      "createMemorySourceReadScope",
+      "NativeMessageReference",
+      "NativeTranscriptReader",
+      "NativeTranscriptContext",
+      "NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES",
+      "NATIVE_TRANSCRIPT_READ_SCOPE_MAX_BYTES",
+      "readNativeTranscriptMessages",
+      "freshNativeTranscriptReads",
+      "nativeTranscriptBytes",
+      "createNativeTranscriptReader",
+      "PolicyMetadataReader",
+      "PolicyMetadataContext",
+      "AuthorityReadContext",
+      "AUTHORITY_READ_SCOPE_MAX_ENTRIES",
+      "POLICY_METADATA_READ_SCOPE_MAX_ENTRIES",
+      "readDeploymentPolicyRows",
+      "readQualificationRows",
+      "freshPolicyMetadataReads",
+      "cloneAuthorityValue",
+      "authorityReadKey",
+      "createAuthorityReadScope",
+      "createV8AuthorityReadScope",
+      "RawAuthorityRead",
+      "mappedAuthorityReader",
+      "createRawReadScope",
+      "deny",
+      "active",
+      "boundGrants",
+      "assertSingleActiveGeneration",
+      "validateRequirement",
+      "assertResourceScope",
+      "assertCurrentScope",
+      "materialize",
+      "resolveAuthority",
+      "resolveAuthorityReference",
+      "boundedSingle",
+      "createAuthorityReader",
+      "createUncachedAuthorityReader",
+      "requireAuthority",
+      "recheckAuthority",
+      "retireGraphAuthority",
+      "authorize",
+      "recheck",
+      "nonempty",
+      "ensureScope",
+      "provision",
+      "revokeGrant",
+      "revokeMembership",
+      "deletePrincipal",
+      "deleteScope",
+      "tombstoneResource"
+    ],
+    "changed": [
+      "import:convex/server",
+      "import:./_generated/server"
+    ],
+    "added": [
+      "withNativeSnapshotReads"
+    ],
+    "additiveDeclaration": "withNativeSnapshotReads",
+    "entireOriginalFileAfterRemovingOnlyNewDeclarationAndComment": true
+  },
+  "client": {
+    "baselineDeclarations": 24,
+    "currentDeclarations": 24,
+    "unchanged": [
+      "import:convex/values",
+      "import:./_generated/server",
+      "import:./runtimeDataAuth",
+      "import:./runtimeDelivery",
+      "import:./runtimeAgent",
+      "import:../src/domain/model-policy",
+      "import:../src/domain/profile",
+      "import:./runs",
+      "import:./runtimeTranscript",
+      "import:./runtimeLatencyTrace",
+      "Selectors",
+      "submitAndStartHandler",
+      "submitAndStart",
+      "sessionHandler",
+      "session",
+      "submitAndStartEnvelopeHandler",
+      "submitAndStartEnvelope",
+      "ObservationHandle",
+      "observationMarker"
+    ],
+    "changed": [
+      "import:./_generated/server",
+      "import:./runtimeAuth",
+      "observeEnvelopeHandler",
+      "observeEnvelope",
+      "signal"
+    ],
+    "added": []
+  },
+  "preservedBoundaries": [
+    "all existing raw-reader/writer factories and helper bodies",
+    "default observeEnvelopeHandler K28 control scope",
+    "original raw final observation authority context",
+    "legacy omitted-opt-in exact three-field DTO",
+    "original acknowledgement descriptor and signal dependency reads",
+    "independent SDK post-I/O session/refresh/generation/expiry guards; SDK bytes unchanged"
+  ],
+  "nativeQualification": "NOT_RUN",
+  "note": "Declaration comparison is source evidence, not a substitute for actual handler outcomes. RuntimeClient intentional context/registration changes are named; no textual inverse gate is claimed."
+}

@@ -92,10 +92,14 @@ function instrument(f: Fixture) {
       } }); return callback(traced);
     }); }; return builder;
   });
-  const retained = (table: string) => table.startsWith("runtimeAuth") || table === "runtimeModelPolicies" || table === "runtimeModelQualifications";
+  const retained = (row: typeof reads[number]) => row.table.startsWith("runtimeAuth") || row.table === "runtimeModelPolicies" || row.table === "runtimeModelQualifications"
+    // K29 adds this exact detached raw family; decoded definitions and their
+    // hash/registry/root/narrowing predicates are never cached.
+    || row.table === "runtimeAgentDefinitions" && row.index === "by_scoped_version";
   return { clear: () => { reads.length = 0; },
     counts: () => ({ total: reads.length, authority: reads.filter(row => row.table.startsWith("runtimeAuth")).length, graph: reads.filter(row => row.family).length }),
-    mutableReads: () => clone(reads.filter(row => !retained(row.table) && !row.family)) };
+    mutableReads: () => clone(reads.filter(row => !retained(row) && !row.family)),
+    rawIdentitySet: () => [...new Set(reads.map(({ family: _family, ...row }) => JSON.stringify(row)))].sort() };
 }
 async function capture(f: Fixture, v8: boolean) {
   const target = v8 ? ledger.captureTerminalEvidenceV8 : ledger.captureTerminalEvidence;
@@ -107,9 +111,9 @@ async function attach(f: Fixture, value: Capture, v8: boolean) {
 }
 async function differential<T>(f: Fixture, run: (v8: boolean) => Promise<T>) {
   const before = f.state(), observed = instrument(f);
-  const original = await run(false), after = f.state(), baseline = observed.counts(), mutable = observed.mutableReads();
+  const original = await run(false), after = f.state(), baseline = observed.counts(), mutable = observed.mutableReads(), rawIdentities = observed.rawIdentitySet();
   f.restore(before); observed.clear(); const optimized = await run(true);
-  expect(optimized).toEqual(original); expect(f.state()).toEqual(after); expect(observed.mutableReads()).toEqual(mutable);
+  expect(optimized).toEqual(original); expect(f.state()).toEqual(after); expect(observed.mutableReads()).toEqual(mutable); expect(observed.rawIdentitySet()).toEqual(rawIdentities);
   return { value: optimized, baseline, optimized: observed.counts() };
 }
 

@@ -1,0 +1,984 @@
+(node:84039) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts (10.199 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"whole-recall-physical-query-count","kind":"controlled-handler","outerCalls":["runtimeAgentRecall:prepareReads","runtimeAgentRecall:readMatches","runtimeMemory:finalDelivery"],"physicalQueries":{"runtimeAgentRecall:prepareReads":1,"_reference/childComponent/agent/messages/getMessagesByIds":4,"runtimeAgentRecall:readMatches":1,"runtimeModelPolicy:embeddingProfile":1},"embeddingProfileBeforeDelivery":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:124:11)
+
+    console.info
+      {"type":"k25-private-read-parent-counts","kind":"controlled-original-handlers","initial":{"oldGets":6,"newGets":3,"oldQueries":174,"newQueries":143},"tail":{"oldGets":15,"newGets":12,"oldQueries":98,"newQueries":77},"mutableReadSequencesEqual":true,"applicationWrites":0,"cloudLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:457:10)
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":true,"original":{"queries":242,"graphQueries":141,"graphDocuments":141},"optimized":{"queries":111,"graphQueries":10,"graphDocuments":10},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:536:11
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":false,"original":{"queries":246,"graphQueries":141,"graphDocuments":141},"optimized":{"queries":119,"graphQueries":14,"graphDocuments":14},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:536:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":true,"original":{"total":367,"graphQueries":218},"optimized":{"total":169,"graphQueries":20},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:590:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":false,"original":{"total":375,"graphQueries":218},"optimized":{"total":185,"graphQueries":28},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:590:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":true,"baseline":{"total":557,"documents":310},"optimized":{"total":261,"documents":150},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:624:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":false,"baseline":{"total":565,"documents":314},"optimized":{"total":285,"documents":154},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:624:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":true,"baseline":{"total":169,"documents":123},"optimized":{"total":169,"documents":123},"uniqueRawIdentitySetEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:647:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":false,"baseline":{"total":185,"documents":131},"optimized":{"total":185,"documents":131},"uniqueRawIdentitySetEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:647:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":true,"plan":{"baseline":{"calls":104,"documents":61,"authority":60},"actual":{"calls":62,"documents":41,"authority":26}},"tail":{"baseline":{"calls":261,"documents":150,"authority":179},"actual":{"calls":111,"documents":82,"authority":43}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:678:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":false,"plan":{"baseline":{"calls":114,"documents":63,"authority":68},"actual":{"calls":68,"documents":43,"authority":30}},"tail":{"baseline":{"calls":285,"documents":154,"authority":199},"actual":{"calls":119,"documents":86,"authority":47}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:678:11
+
+PASS tests/unit/runtimeAgent/context-routing.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/direct-action.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":true,"original":{"total":70,"authority":24,"graph":20},"optimized":{"total":55,"authority":24,"graph":5},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":true,"original":{"total":66,"authority":24,"graph":20},"optimized":{"total":51,"authority":24,"graph":5},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":false,"original":{"total":74,"authority":28,"graph":20},"optimized":{"total":61,"authority":28,"graph":7},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":false,"original":{"total":70,"authority":28,"graph":20},"optimized":{"total":57,"authority":28,"graph":7},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+  ● real capture handler keeps exact effects/mutable read order and reduces raw authority reads
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 28
+    + Received  +  0
+
+    @@ -249,38 +249,10 @@
+          "method": "query",
+          "table": "runtimeContentJobs",
+        },
+        Object {
+          "family": false,
+    -     "index": "by_scoped_version",
+    -     "keys": Array [
+    -       Array [
+    -         "eq",
+    -         "tenantId",
+    -         "tenant-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "memorySpaceId",
+    -         "space-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "agentId",
+    -         "agent:8a105e30be422cf23a0343523eb1ca4cb6bbcac081b787eec15d5588db8fd1b1",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "version",
+    -         1,
+    -       ],
+    -     ],
+    -     "method": "query",
+    -     "table": "runtimeAgentDefinitions",
+    -   },
+    -   Object {
+    -     "family": false,
+          "index": "by_account",
+          "keys": Array [
+            Array [
+              "eq",
+              "runAccountId",
+
+      110 |   const original = await run(false), after = f.state(), baseline = observed.counts(), mutable = observed.mutableReads();
+      111 |   f.restore(before); observed.clear(); const optimized = await run(true);
+    > 112 |   expect(optimized).toEqual(original); expect(f.state()).toEqual(after); expect(observed.mutableReads()).toEqual(mutable);
+          |                                                                                                          ^
+      113 |   return { value: optimized, baseline, optimized: observed.counts() };
+      114 | }
+      115 |
+
+      at differential (tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:112:106)
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:132:20
+
+  ● real attach handler keeps exact effects/mutable read order and reduces raw authority reads
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 28
+    + Received  +  0
+
+    @@ -249,38 +249,10 @@
+          "method": "query",
+          "table": "runtimeContentJobs",
+        },
+        Object {
+          "family": false,
+    -     "index": "by_scoped_version",
+    -     "keys": Array [
+    -       Array [
+    -         "eq",
+    -         "tenantId",
+    -         "tenant-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "memorySpaceId",
+    -         "space-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "agentId",
+    -         "agent:8a105e30be422cf23a0343523eb1ca4cb6bbcac081b787eec15d5588db8fd1b1",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "version",
+    -         1,
+    -       ],
+    -     ],
+    -     "method": "query",
+    -     "table": "runtimeAgentDefinitions",
+    -   },
+    -   Object {
+    -     "family": false,
+          "index": "by_account",
+          "keys": Array [
+            Array [
+              "eq",
+              "runAccountId",
+
+      110 |   const original = await run(false), after = f.state(), baseline = observed.counts(), mutable = observed.mutableReads();
+      111 |   f.restore(before); observed.clear(); const optimized = await run(true);
+    > 112 |   expect(optimized).toEqual(original); expect(f.state()).toEqual(after); expect(observed.mutableReads()).toEqual(mutable);
+          |                                                                                                          ^
+      113 |   return { value: optimized, baseline, optimized: observed.counts() };
+      114 | }
+      115 |
+
+      at differential (tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:112:106)
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:132:20
+
+  ● capture commit survives fresh malformed-result attachment refusal; no financial replay or private resurrection
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 28
+    + Received  +  0
+
+    @@ -249,38 +249,10 @@
+          "method": "query",
+          "table": "runtimeContentJobs",
+        },
+        Object {
+          "family": false,
+    -     "index": "by_scoped_version",
+    -     "keys": Array [
+    -       Array [
+    -         "eq",
+    -         "tenantId",
+    -         "tenant-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "memorySpaceId",
+    -         "space-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "agentId",
+    -         "agent:8a105e30be422cf23a0343523eb1ca4cb6bbcac081b787eec15d5588db8fd1b1",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "version",
+    -         1,
+    -       ],
+    -     ],
+    -     "method": "query",
+    -     "table": "runtimeAgentDefinitions",
+    -   },
+    -   Object {
+    -     "family": false,
+          "index": "by_account",
+          "keys": Array [
+            Array [
+              "eq",
+              "runAccountId",
+
+      110 |   const original = await run(false), after = f.state(), baseline = observed.counts(), mutable = observed.mutableReads();
+      111 |   f.restore(before); observed.clear(); const optimized = await run(true);
+    > 112 |   expect(optimized).toEqual(original); expect(f.state()).toEqual(after); expect(observed.mutableReads()).toEqual(mutable);
+          |                                                                                                          ^
+      113 |   return { value: optimized, baseline, optimized: observed.counts() };
+      114 | }
+      115 |
+
+      at differential (tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:112:106)
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:171:22
+
+PASS tests/unit/runtimeAgent/context-source-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"controlled-v8-preparation-read-count","original":{"total":406,"authority":84},"optimized":{"total":211,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:70:10)
+
+    console.info
+      {"type":"controlled-v8-financial-read-count","original":{"total":140,"authority":42},"optimized":{"total":88,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:100:10)
+
+    console.info
+      {"type":"k29-current-a773-direct-empty-parent","baseline":{"dbReads":332,"documents":253,"componentQueries":2,"tableQueries":[{"signature":"query:runtimeTranscriptMessages:by_native","calls":48,"documents":48},{"signature":"query:runtimeModelPolicies:by_scope_active","calls":44,"documents":8},{"signature":"query:runtimeAgentDefinitions:by_scoped_version","calls":33,"documents":33},{"signature":"query:runtimeAgentExecutions:by_attempt","calls":25,"documents":25},{"signature":"query:runtimeRunOutbox:by_run","calls":25,"documents":25},{"signature":"query:runtimeRuns:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeConversations:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeRunAttempts:by_run_attempt","calls":24,"documents":24},{"signature":"query:runtimeIngestionJobs:by_account","calls":13,"documents":0},{"signature":"query:runtimeModelQualifications:by_receipt","calls":10,"documents":10},{"signature":"query:runtimeBudgetAccounts:by_run","calls":9,"documents":9},{"signature":"query:runtimeRuns:by_run_account","calls":9,"documents":9},{"signature":"query:runtimeAgentOperations:by_attempt","calls":9,"documents":0},{"signature":"query:runtimeAuthTombstones:by_resource","calls":8,"documents":0},{"signature":"query:runtimeContentJobs:by_account","calls":8,"documents":0},{"signature":"query:runtimeIngestionEvents:by_owner_sequence","calls":5,"documents":5},{"signature":"query:runtimeIngestionSequenceHeads:by_scope","calls":3,"documents":3},{"signature":"query:runtimeAgentOperations:by_operation","calls":3,"documents":1},{"signature":"query:runtimeAuthScopes:by_tenant_space","calls":2,"documents":2},{"signature":"query:runtimeMemoryVectorGenerations:by_owner","calls":2,"documents":0},{"signature":"get:runtimeAuthPrincipals:","calls":1,"documents":1},{"signature":"get:runtimeAuthMemberships:","calls":1,"documents":1},{"signature":"get:runtimeAuthGrants:","calls":1,"documents":1},{"signature":"query:runtimeAuthGrants:by_membership","calls":1,"documents":0}]},"actual":{"dbReads":211,"documents":170,"componentQueries":1,"tableQueries":[{"signature":"query:runtimeAgentExecutions:by_attempt","calls":25,"documents":25},{"signature":"query:runtimeRunOutbox:by_run","calls":25,"documents":25},{"signature":"query:runtimeRuns:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeConversations:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeRunAttempts:by_run_attempt","calls":24,"documents":24},{"signature":"query:runtimeIngestionJobs:by_account","calls":13,"documents":0},{"signature":"query:runtimeBudgetAccounts:by_run","calls":9,"documents":9},{"signature":"query:runtimeRuns:by_run_account","calls":9,"documents":9},{"signature":"query:runtimeAgentOperations:by_attempt","calls":9,"documents":0},{"signature":"query:runtimeAuthTombstones:by_resource","calls":8,"documents":0},{"signature":"query:runtimeContentJobs:by_account","calls":8,"documents":0},{"signature":"query:runtimeTranscriptMessages:by_native","calls":6,"documents":6},{"signature":"query:runtimeIngestionEvents:by_owner_sequence","calls":5,"documents":5},{"signature":"query:runtimeModelQualifications:by_receipt","calls":5,"documents":5},{"signature":"query:runtimeIngestionSequenceHeads:by_scope","calls":3,"documents":3},{"signature":"query:runtimeAgentOperations:by_operation","calls":3,"documents":1},{"signature":"query:runtimeAuthScopes:by_tenant_space","calls":2,"documents":2},{"signature":"query:runtimeModelPolicies:by_scope_active","calls":2,"documents":4},{"signature":"query:runtimeMemoryVectorGenerations:by_owner","calls":2,"documents":0},{"signature":"get:runtimeAuthPrincipals:","calls":1,"documents":1},{"signature":"get:runtimeAuthMemberships:","calls":1,"documents":1},{"signature":"get:runtimeAuthGrants:","calls":1,"documents":1},{"signature":"query:runtimeAuthGrants:by_membership","calls":1,"documents":0},{"signature":"query:runtimeAgentDefinitions:by_scoped_version","calls":1,"documents":1}]},"exactResultStateAndMutableReadOrder":true,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:130:10)
+
+PASS tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k28-controlled-query-checkpoint","oldReads":102,"newReads":96,"oldComponentQueries":3,"newComponentQueries":2,"financialReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/query-embedding-composition.test.ts:288:11)
+
+PASS tests/unit/runtimeAgent/prompt-trust-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k27-public-fact-rpc-count","facts":3,"baselineFactAndSourceRPCs":4,"optimizedFactAndSourceRPCs":1,"providerCalls":1,"retries":0,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:149:11)
+
+    console.info
+      {"type":"k28-controlled-public-read-handoffs","oldCalls":["runtimeMemory:checkAuthority","runtimeMemory:readFacts","runtimeMemory:checkProfileReady","runtimeModelPolicy:embeddingProfile","runtimeMemory:readVectorMatches","runtimeModelPolicy:embeddingProfile","runtimeMemory:checkAuthority","runtimeMemory:finalDelivery","runtimeModelPolicy:embeddingProfile"],"newCalls":["runtimeMemoryQuery:prepareReads","runtimeMemoryQuery:readMatches","runtimeMemoryQuery:finalRecallDelivery"],"items":6,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:190:11)
+
+    console.info
+      {"type":"k29-current-a773-public-read-pipeline","baseline":{"calls":221,"documents":154,"authority":137},"actual":{"calls":167,"documents":124,"authority":83},"exactResultStateAndMutableReadOrder":true,"providerCalls":0,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:276:10)
+
+PASS tests/unit/runtimeAgent/resolution-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeTranscript/managed.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-source-batch.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/direct-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/public-functional.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/query-embedding-tail.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeTranscript/contracts.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    10.2s | 96/96 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✅     3.5s | 28/28 passed | /tests/unit/runtimeAgent/direct-action.test.ts
+  ✅     3.0s | 48/48 passed | /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ✅     2.9s | 52/52 passed | /tests/unit/runtimeAgent/context-routing.test.ts
+  ✅     2.8s | 56/56 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+  ❌     2.7s | 35/38 passed | /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ✅     2.5s | 198/198 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     2.4s | 21/21 passed | /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ✅     2.3s | 39/39 passed | /tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ✅     1.8s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+  ✅     1.7s | 25/25 passed | /tests/unit/runtimeAgent/context-source-batch.test.ts
+  ✅     1.6s | 28/28 passed | /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ✅     1.5s | 15/15 passed | /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ✅     1.4s | 26/26 passed | /tests/unit/runtimeAgent/resolution-composition.test.ts
+  ✅     1.3s | 41/41 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+  ✅     1.1s | 2/2 passed | /tests/unit/runtimeAgent/direct-workflow.test.ts
+  ✅     1.1s | 27/27 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     0.9s | 11/11 passed | /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+  ✅     0.4s | 5/5 passed | /tests/unit/runtimeAgent/prompt-trust-v8.test.ts
+  ✅     0.4s | 2/2 passed | /tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+  ✅     0.3s | 31/31 passed | /tests/unit/runtimeTranscript/contracts.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.64s ( 1.4%) - long retained history selects recent four without full-history reads or byte-cap rejection
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 2. [32m✓[0m    0.48s ( 1.0%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 3. [32m✓[0m    0.43s ( 0.9%) - ordered native context source batch matches original 100-item handler outputs, both getters and zero writes without a premature 32-witness cap
+    /tests/unit/runtimeAgent/context-source-batch.test.ts
+
+ 4. [32m✓[0m    0.20s ( 0.4%) - same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.19s ( 0.4%) - V6 retains exactly the original V5 fresh Agent prompt with pending=true
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 6. [32m✓[0m    0.18s ( 0.4%) - V6 retains exactly the original V5 fresh Agent prompt with pending=false
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 7. [32m✓[0m    0.17s ( 0.4%) - save/candidate shared=true ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 8. [32m✓[0m    0.17s ( 0.4%) - save/candidate shared=false ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [32m✓[0m    0.17s ( 0.4%) - actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+10. [32m✓[0m    0.15s ( 0.3%) - V8 real shared=true ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+11. [32m✓[0m    0.14s ( 0.3%) - V8 context/preflight parent equals both original registered read handlers with zero effects
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+12. [32m✓[0m    0.14s ( 0.3%) - K29 exact-owner direct empty parent reruns save predicates with identical outcome/state and fewer raw rereads
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+13. [32m✓[0m    0.14s ( 0.3%) - V8 real shared=false ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [32m✓[0m    0.14s ( 0.3%) - K27 incremental K26 read/delivery comparison shared=true retains all outcomes and raw identities
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+15. [32m✓[0m    0.14s ( 0.3%) - K29 same-snapshot private parents shared=false match a773 values/readset/state with fewer physical reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+16. [32m✓[0m    0.14s ( 0.3%) - K27 incremental K26 read/delivery comparison shared=false retains all outcomes and raw identities
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+17. [32m✓[0m    0.14s ( 0.3%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+18. [32m✓[0m    0.13s ( 0.3%) - K29 same-snapshot private parents shared=true match a773 values/readset/state with fewer physical reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+19. [32m✓[0m    0.13s ( 0.3%) - K27 incremental K26 save/fresh-child comparison shared=false preserves state and complete native readset
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+20. [32m✓[0m    0.13s ( 0.3%) - one direct empty turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 4.15s (9.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      46.07s
+  Test suites:        21
+  Individual tests:   765
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 21
+════════════════════════════════════════════════════════════════════════════════
+
+
+Summary of all failing tests
+FAIL tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ● real capture handler keeps exact effects/mutable read order and reduces raw authority reads
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 28
+    + Received  +  0
+
+    @@ -249,38 +249,10 @@
+          "method": "query",
+          "table": "runtimeContentJobs",
+        },
+        Object {
+          "family": false,
+    -     "index": "by_scoped_version",
+    -     "keys": Array [
+    -       Array [
+    -         "eq",
+    -         "tenantId",
+    -         "tenant-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "memorySpaceId",
+    -         "space-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "agentId",
+    -         "agent:8a105e30be422cf23a0343523eb1ca4cb6bbcac081b787eec15d5588db8fd1b1",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "version",
+    -         1,
+    -       ],
+    -     ],
+    -     "method": "query",
+    -     "table": "runtimeAgentDefinitions",
+    -   },
+    -   Object {
+    -     "family": false,
+          "index": "by_account",
+          "keys": Array [
+            Array [
+              "eq",
+              "runAccountId",
+
+      110 |   const original = await run(false), after = f.state(), baseline = observed.counts(), mutable = observed.mutableReads();
+      111 |   f.restore(before); observed.clear(); const optimized = await run(true);
+    > 112 |   expect(optimized).toEqual(original); expect(f.state()).toEqual(after); expect(observed.mutableReads()).toEqual(mutable);
+          |                                                                                                          ^
+      113 |   return { value: optimized, baseline, optimized: observed.counts() };
+      114 | }
+      115 |
+
+      at differential (tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:112:106)
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:132:20
+
+  ● real attach handler keeps exact effects/mutable read order and reduces raw authority reads
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 28
+    + Received  +  0
+
+    @@ -249,38 +249,10 @@
+          "method": "query",
+          "table": "runtimeContentJobs",
+        },
+        Object {
+          "family": false,
+    -     "index": "by_scoped_version",
+    -     "keys": Array [
+    -       Array [
+    -         "eq",
+    -         "tenantId",
+    -         "tenant-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "memorySpaceId",
+    -         "space-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "agentId",
+    -         "agent:8a105e30be422cf23a0343523eb1ca4cb6bbcac081b787eec15d5588db8fd1b1",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "version",
+    -         1,
+    -       ],
+    -     ],
+    -     "method": "query",
+    -     "table": "runtimeAgentDefinitions",
+    -   },
+    -   Object {
+    -     "family": false,
+          "index": "by_account",
+          "keys": Array [
+            Array [
+              "eq",
+              "runAccountId",
+
+      110 |   const original = await run(false), after = f.state(), baseline = observed.counts(), mutable = observed.mutableReads();
+      111 |   f.restore(before); observed.clear(); const optimized = await run(true);
+    > 112 |   expect(optimized).toEqual(original); expect(f.state()).toEqual(after); expect(observed.mutableReads()).toEqual(mutable);
+          |                                                                                                          ^
+      113 |   return { value: optimized, baseline, optimized: observed.counts() };
+      114 | }
+      115 |
+
+      at differential (tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:112:106)
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:132:20
+
+  ● capture commit survives fresh malformed-result attachment refusal; no financial replay or private resurrection
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 28
+    + Received  +  0
+
+    @@ -249,38 +249,10 @@
+          "method": "query",
+          "table": "runtimeContentJobs",
+        },
+        Object {
+          "family": false,
+    -     "index": "by_scoped_version",
+    -     "keys": Array [
+    -       Array [
+    -         "eq",
+    -         "tenantId",
+    -         "tenant-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "memorySpaceId",
+    -         "space-a",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "agentId",
+    -         "agent:8a105e30be422cf23a0343523eb1ca4cb6bbcac081b787eec15d5588db8fd1b1",
+    -       ],
+    -       Array [
+    -         "eq",
+    -         "version",
+    -         1,
+    -       ],
+    -     ],
+    -     "method": "query",
+    -     "table": "runtimeAgentDefinitions",
+    -   },
+    -   Object {
+    -     "family": false,
+          "index": "by_account",
+          "keys": Array [
+            Array [
+              "eq",
+              "runAccountId",
+
+      110 |   const original = await run(false), after = f.state(), baseline = observed.counts(), mutable = observed.mutableReads();
+      111 |   f.restore(before); observed.clear(); const optimized = await run(true);
+    > 112 |   expect(optimized).toEqual(original); expect(f.state()).toEqual(after); expect(observed.mutableReads()).toEqual(mutable);
+          |                                                                                                          ^
+      113 |   return { value: optimized, baseline, optimized: observed.counts() };
+      114 | }
+      115 |
+
+      at differential (tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:112:106)
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:171:22
+
+
+Test Suites: 1 failed, 20 passed, 21 total
+Tests:       3 failed, 801 passed, 804 total
+Snapshots:   0 total
+Time:        46.088 s, estimated 54 s
+Ran all test suites within paths "tests/unit/runtimeAgent/whole-recall-composition.test.ts", "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts", "tests/unit/runtimeMemory/query-composition.test.ts", "tests/unit/runtimeAgent/bounded-context-v8.test.ts", "tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts", "tests/unit/runtimeAgent/prompt-trust-v8.test.ts", "tests/unit/runtimeAgent/direct-action.test.ts", "tests/unit/runtimeAgent/direct-workflow.test.ts", "tests/unit/runtimeAgent/context-source-batch.test.ts", "tests/unit/runtimeAgent/context-source-composition.test.ts", "tests/unit/runtimeAgent/context-routing.test.ts", "tests/unit/runtimeAgent/empty-context-inline.test.ts", "tests/unit/runtimeAgent/query-embedding-composition.test.ts", "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts", "tests/unit/runtimeAgent/checkpoint-composition.test.ts", "tests/unit/runtimeAgent/resolution-composition.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtimeTranscript/contracts.test.ts", "tests/unit/runtimeTranscript/managed.test.ts", "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/query-embedding-tail.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-chain-affected-v7.json

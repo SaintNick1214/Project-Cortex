@@ -1,0 +1,120 @@
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:84038) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"k29-executable-metadata-validators","beforeQueries":22,"afterQueries":15,"definitionQueries":[3,1],"policyQueries":[7,2],"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts:60:11)
+
+PASS tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+  ✓ keeps default and legacy metadata opts uncached; exact explicit queries retain detached raw rows (40 ms)
+  ✓ actual definition and profile validators retain outcomes while repeated exact definition/tenant queries collapse (55 ms)
+  ✓ fresh revoked metadata keeps actual original validator refusal (21 ms)
+  ✓ fresh hash metadata keeps actual original validator refusal (26 ms)
+  ✓ fresh malformed metadata keeps actual original validator refusal (22 ms)
+  ✓ fresh duplicate-definition metadata keeps actual original validator refusal (13 ms)
+  ✓ fresh tenant-revoked metadata keeps actual original validator refusal (20 ms)
+  ✓ fresh tenant-overflow metadata keeps actual original validator refusal (14 ms)
+  ✓ unknown component writer invalidates both families before/after and suppresses in-flight reuse, error=false (8 ms)
+  ✓ unknown component writer invalidates both families before/after and suppresses in-flight reuse, error=true (9 ms)
+  ✓ known state writes retain only these untouched rows; finance, policy, definition and fluent writes invalidate (9 ms)
+  ✓ entry and byte bounds fall through without truncation; absent results remain exact (10 ms)
+  ✓ a late pre-write definition read cannot populate a newer epoch, and failed reads are never retained (16 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.3s | 13/13 passed | /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.06s ( 1.6%) - actual definition and profile validators retain outcomes while repeated exact definition/tenant queries collapse
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 2. [32m✓[0m    0.04s ( 1.2%) - keeps default and legacy metadata opts uncached; exact explicit queries retain detached raw rows
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.8%) - fresh hash metadata keeps actual original validator refusal
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.7%) - fresh malformed metadata keeps actual original validator refusal
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.6%) - fresh revoked metadata keeps actual original validator refusal
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.6%) - fresh tenant-revoked metadata keeps actual original validator refusal
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.5%) - a late pre-write definition read cannot populate a newer epoch, and failed reads are never retained
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.4%) - fresh tenant-overflow metadata keeps actual original validator refusal
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.4%) - fresh duplicate-definition metadata keeps actual original validator refusal
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+10. [32m✓[0m    0.01s ( 0.3%) - entry and byte bounds fall through without truncation; absent results remain exact
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+11. [32m✓[0m    0.01s ( 0.3%) - unknown component writer invalidates both families before/after and suppresses in-flight reuse, error=true
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+12. [32m✓[0m    0.01s ( 0.3%) - known state writes retain only these untouched rows; finance, policy, definition and fluent writes invalidate
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - unknown component writer invalidates both families before/after and suppresses in-flight reuse, error=false
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.26s (7.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.38s
+  Test suites:        1
+  Individual tests:   13
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       13 passed, 13 total
+Snapshots:   0 total
+Time:        3.378 s
+Ran all test suites within paths "tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-snapshot-metadata-fixture-successor-v5.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

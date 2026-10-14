@@ -1,0 +1,316 @@
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:83964) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"k29-executable-metadata-validators","beforeQueries":22,"afterQueries":15,"definitionQueries":[3,1],"policyQueries":[7,2],"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts:60:11)
+
+  ● known state writes retain only these untouched rows; finance, policy, definition and fluent writes invalidate
+
+    TypeError: this.table(...).filter is not a function
+
+      105 |   query(table: string) {
+      106 |     const filters: ((row: Row) => boolean)[] = []; let keys: string[] = []; let direction = 1;
+    > 107 |     const selected = () => this.table(table).filter(row => filters.every(f => f(row))).sort((a, b) => {
+          |                                              ^
+      108 |       for (const key of keys) { const av = field(a, key); const bv = field(b, key); if (av !== bv) return direction * ((av as number | string) < (bv as number | string) ? -1 : 1); }
+      109 |       return direction * this.table(table).indexOf(a) - direction * this.table(table).indexOf(b);
+      110 |     });
+
+      at selected (tests/unit/runtimeTranscript/fixture.ts:107:46)
+      at Object.take (tests/unit/runtimeTranscript/fixture.ts:134:40)
+      at convex-dev/runtimeAuth.ts:418:200
+      at readExecutableMetadata (convex-dev/runtimeAuth.ts:335:45)
+      at Object.executableDefinitionRows (convex-dev/runtimeAuth.ts:417:112)
+      at readExecutableDefinitionRows (convex-dev/runtimeAuth.ts:232:61)
+      at read (tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts:13:22)
+      at Object.<anonymous> (tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts:104:9)
+
+PASS tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k29-private-hydration-raw-messages","originalPhysical":4,"currentPhysical":1,"originalLogical":4,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/native-transcript-read-scope.test.ts:80:11)
+
+PASS tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k29-profile-snapshot-reads","originalQueries":24,"currentQueries":12,"originalGets":6,"currentGets":3,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts:93:11)
+
+PASS tests/unit/client-runtime/observation-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.log
+      {"controlledObservationReads":{"original":66,"scoped":27,"originalAuthority":62,"scopedAuthority":23}}
+
+      at Object.<anonymous> (tests/unit/client-runtime/observation-native.test.ts:202:13)
+
+    console.log
+      {"k29EnvelopeSnapshotReads":{"acceptedK28":43,"current":27,"acceptedAuthority":39,"currentAuthority":23}}
+
+      at Object.<anonymous> (tests/unit/client-runtime/observation-native.test.ts:214:13)
+
+PASS tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/v8-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"controlled-managed-source-graph-reads","originalGraphQueries":70,"scopedGraphQueries":17,"originalGraphDocuments":70,"scopedGraphDocuments":17,"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/managed-source-read-scope.test.ts:93:13)
+
+    console.info
+      {"type":"k27-traversal-raw-reads","shared":true,"baselineGets":120,"optimizedGets":6,"baselineQueries":255,"optimizedQueries":43,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:217:13
+
+    console.info
+      {"type":"k27-traversal-raw-reads","shared":false,"baselineGets":78,"optimizedGets":6,"baselineQueries":176,"optimizedQueries":42,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:217:13
+
+    console.info
+      {"type":"k29-native-snapshot-source-reads","shared":true,"originalGets":9,"currentGets":3,"originalQueries":57,"currentQueries":31,"uniqueGetIdentities":3,"uniqueQueryIdentities":31,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:263:13
+
+    console.info
+      {"type":"k29-native-snapshot-source-reads","shared":false,"originalGets":9,"currentGets":3,"originalQueries":56,"currentQueries":36,"uniqueGetIdentities":3,"uniqueQueryIdentities":36,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:263:13
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.4s | 12/13 passed | /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+  ✅     2.3s | 47/47 passed | /tests/unit/client-runtime/observation-native.test.ts
+  ✅     1.4s | 31/31 passed | /tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ✅     1.0s | 14/14 passed | /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ✅     0.9s | 43/43 passed | /tests/unit/runtimeAuth/v8-read-scope.test.ts
+  ✅     0.9s | 18/18 passed | /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ✅     0.9s | 49/49 passed | /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.07s ( 0.8%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 0 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 2. [32m✓[0m    0.06s ( 0.6%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 4 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.3%) - private observation transaction composition returns the exact original session and observation projections with selectors 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.2%) - actual definition and profile validators retain outcomes while repeated exact definition/tenant queries collapse
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.2%) - explicit native raw-authority read scope entry limit falls through to uncached raw reads without adding an authorization failure
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.2%) - default/unscoped remains uncached; nested opted-in helper shares exact IDs/order and detached raw rows
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.2%) - keeps default and legacy metadata opts uncached; exact explicit queries retain detached raw rows
+    /tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition returns the exact original session and observation projections with selectors 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition does not fill omitted ambiguous client scope from the supplied handle
+    /tests/unit/client-runtime/observation-native.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition returns the exact original session and observation projections with selectors 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - unscoped/default factory stays uncached; opted queries retain exact original index/arguments/caps and detached rows
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition the immutable conversationId handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition the immutable definitionHash handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition run_tombstone retains the original authority/resource denial and complete prior state
+    /tests/unit/client-runtime/observation-native.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - private observation transaction composition conversation_tombstone retains the original authority/resource denial and complete prior state
+    /tests/unit/client-runtime/observation-native.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.39s (4.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      9.79s
+  Test suites:        7
+  Individual tests:   206
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 7
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 6 passed, 7 total
+Tests:       1 failed, 214 passed, 215 total
+Snapshots:   0 total
+Time:        9.795 s, estimated 12 s
+Ran all test suites within paths "tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts", "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts", "tests/unit/runtimeAuth/v8-read-scope.test.ts", "tests/unit/runtimeAuth/authority-read-scope.test.ts", "tests/unit/runtimeAuth/managed-source-read-scope.test.ts", "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts", "tests/unit/client-runtime/observation-native.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-snapshot-metadata-successor-v4.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

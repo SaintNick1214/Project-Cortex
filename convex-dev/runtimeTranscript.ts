@@ -20,7 +20,7 @@ import { boundedIdentifier, clientRequestKey, comparePosition, normalizeTextSubm
 import type { CutoffV1, CutoffV8, ExecutionCutoff, MessagePin, PublicTranscriptMessage } from "../src/domain/transcript";
 import { dataAuthorityReference, managedConversationAccess, requireDataAuthority, recheckDataAuthority } from "./runtimeDataAuth";
 import type { ScopedDataAuthority } from "./runtimeDataAuth";
-import { readNativeTranscriptMessages, recheckAuthority } from "./runtimeAuth";
+import { readNativeTranscriptMessages, recheckAuthority, readManagedTranscriptBridgeRows } from "./runtimeAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
@@ -96,8 +96,7 @@ async function nativeById(ctx: Pick<QueryCtx, "runQuery">, ids: string[]) {
   return await readNativeTranscriptMessages(ctx, agentComponent.messages.getMessagesByIds, ids);
 }
 export async function bridgeFor(ctx: Pick<QueryCtx, "db">, conversation: ManagedConversation, nativeMessageId: string) {
-  return singleTranscript(await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", conversation.tenantId)
-    .eq("memorySpaceId", conversation.memorySpaceId).eq("nativeMessageId", nativeMessageId)).take(2));
+  return singleTranscript(await readManagedTranscriptBridgeRows(ctx, conversation.tenantId, conversation.memorySpaceId, nativeMessageId));
 }
 function content(message: MessageDoc) {
   const role = message.message?.role;

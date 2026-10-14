@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "status": "PREPARATION_ONLY_NOT_READY",
+  "oldHelperOriginals": {
+    "service-log-snapshot-k28.mjs": {
+      "sha256": "9257e0438d295ef2588b65139aa16de204e75bf9dab3733a1134eb98b9bf6a55",
+      "bytes": 8285
+    },
+    "k28-latency-phase-projection.mjs": {
+      "sha256": "1cb4d37979af05322d18c8188c1c56f2bdc65a6fecd7831d545b578e20b2cb02",
+      "bytes": 1251
+    },
+    "k28-saved-critical-path-projection.mjs": {
+      "sha256": "c2ceb4748ed223632d9e0af12cc87aabefc7c6b77e2712c6eeef6b26d69746f8",
+      "bytes": 11420
+    },
+    "k28-collector-pins.mjs": {
+      "sha256": "d76db7cd6689e751ff170eb3ee4a77569bd8c1ba1ba5d64bdbb8621c20ec9d35",
+      "bytes": 3588
+    }
+  },
+  "newHelpers": [
+    "service-log-snapshot-k29.mjs",
+    "k29-latency-phase-projection.mjs",
+    "k29-saved-critical-path-projection.mjs"
+  ],
+  "sourceCommit": null,
+  "target": null,
+  "image": null,
+  "cursorProtocol": {
+    "browser": "First actual capture from cursor0 only on Root phase GO",
+    "cli": "Use actual preceding browser snapshot newCursor, exact K29 session/source validation",
+    "public": "Use actual preceding CLI/public snapshot newCursor only on distinct Root public phase GO"
+  },
+  "bounds": {
+    "deadlineMs": 30000,
+    "bytes": 16777216,
+    "executions": 1000,
+    "rows": 256,
+    "retries": 0
+  },
+  "servicesAccessed": false
+}

@@ -1,0 +1,93 @@
+{
+  "status": "PREPARED_NOT_READY",
+  "createdAt": "2026-10-14T21:25:53.053Z",
+  "sourceCommit": "NOT_READY",
+  "image": "NOT_READY",
+  "target": "NOT_READY",
+  "rootGoRequired": true,
+  "originals": {
+    "k28-collector-pins.mjs": "d76db7cd6689e751ff170eb3ee4a77569bd8c1ba1ba5d64bdbb8621c20ec9d35",
+    "k28-four-run-memory-readonly.mjs": "33a0fa7126f30f37df90bd052d1e64d6f543aef126b87e528b11711b8c3803d1",
+    "k28-native-ordinary-memory.mjs": "c764787902021dec42c5f6825b96e10596013fea32204f4e5fb6bcdb4764ba1e",
+    "k28-ordinary-memory-pins.mjs": "8b3b8f639d902e7a9e6ac6cebdee9ff5d217900ff560c3c13661052c40d4d26f"
+  },
+  "prepared": {
+    "k29-collector-pins.mjs": "597752f852a607793d8360dc4acc4aebeffca0911ead066b9ed49a245cdb8920",
+    "k29-four-run-memory-readonly.mjs": "d8130eeb8a622d940fe3376d7039bcde896d65869c559c9ca01c9a334411e97a",
+    "k29-native-ordinary-memory.mjs": "b0318b91ad901f91a38af1d665ed8e19b1dc240fc4eb5e63d61d915ffbc2f78e",
+    "k29-ordinary-memory-pins.mjs": "b7e073318ed98c82f1034c14df68161b75f929d542cf0eb32a9a3bc8bc1ea247"
+  },
+  "syntax": [
+    {
+      "path": "k29-collector-pins.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "k29-four-run-memory-readonly.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "k29-native-ordinary-memory.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "k29-ordinary-memory-pins.mjs",
+      "exitCode": 0
+    }
+  ],
+  "unready": {
+    "exitCode": 0,
+    "log": "k29-native-memory-unready-refusal.log",
+    "logSha256": "aef32627349da92a33bcb6738e9ad3e9ccb7ba56332a248002e69236c6089322",
+    "ready": false,
+    "clientsCreated": 0,
+    "serviceCalls": 0
+  },
+  "normalization": [
+    {
+      "original": "k28-four-run-memory-readonly.mjs",
+      "successor": "k29-four-run-memory-readonly.mjs",
+      "onlyNamespaceAndKitChanged": true
+    },
+    {
+      "original": "k28-native-ordinary-memory.mjs",
+      "successor": "k29-native-ordinary-memory.mjs",
+      "onlyNamespaceAndKitChanged": true
+    },
+    {
+      "original": "k28-ordinary-memory-pins.mjs",
+      "successor": "k29-ordinary-memory-pins.mjs",
+      "onlyNamespaceAndKitChanged": true
+    }
+  ],
+  "nativeNamesCount": 34,
+  "nativeNamesUnchanged": true,
+  "protocol": {
+    "zeroToolPrefix": true,
+    "markers": [
+      "READY49",
+      "WARM49",
+      "CLI49",
+      "CLW49"
+    ],
+    "toolMarker": "TOOL49",
+    "expectedFloors": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "fourRunOriginalFreshChecks": 45,
+    "systemRows": 256,
+    "systemQueryDeadlineMs": 30000,
+    "readinessDeadlineMs": 30000,
+    "sdkRpcDeadlineMs": 12000,
+    "newCaptureIntents": 2,
+    "publicRecallCalls": 1,
+    "paidRetries": 0,
+    "perRunUsd": 3,
+    "tenantUsd": 10,
+    "actualFreshVerificationCount": "observed after execution, not forced"
+  },
+  "preserved": "All original canonical/source/fact/vector/profile/candidate/usage/current-authority/readiness/replay/conflict/isolation/lock/delete/revoke assertions; no native calls. Originals preserved by hash."
+}

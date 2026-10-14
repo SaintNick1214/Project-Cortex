@@ -11,6 +11,21 @@ let calls=0;
 const native=jest.fn<(id:string)=>EmbeddingModelV4>(id=>({specificationVersion:'v4',modelId:id,provider:'convexGateway.embedding',maxEmbeddingsPerCall:1,supportsParallelCalls:false,
   doEmbed:async()=>{calls++;return {embeddings:[Array.from({length:1536},(_,i)=>i===0?1:0)],warnings:[],response:{body:{id:'controlled-public-query',model:'text-embedding-3-small',data:[{index:0,object:'embedding'}],usage:{prompt_tokens:1}}}};}}));
 jest.unstable_mockModule('@convex-dev/ai-sdk-provider',()=>({convexGateway:Object.assign(()=>{throw Error('No chat');},{embeddingModel:native})}));
+let nativeSnapshotReads=true;
+const originalAuth=await import('../../../convex-dev/runtimeAuth');
+jest.unstable_mockModule('../../../convex-dev/runtimeAuth',()=>({...originalAuth,
+  readTenantPolicyRows:async(ctx:Parameters<typeof originalAuth.readTenantPolicyRows>[0],tenantId:string)=>nativeSnapshotReads
+    ?originalAuth.readTenantPolicyRows(ctx,tenantId):ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active",q=>q.eq("scope","tenant").eq("tenantId",tenantId).eq("active",true)).take(65),
+  readExecutableDefinitionRows:async(ctx:Parameters<typeof originalAuth.readExecutableDefinitionRows>[0],tenantId:string,memorySpaceId:string,agentId:string,version:number)=>nativeSnapshotReads
+    ?originalAuth.readExecutableDefinitionRows(ctx,tenantId,memorySpaceId,agentId,version):ctx.db.query("runtimeAgentDefinitions").withIndex("by_scoped_version",q=>q.eq("tenantId",tenantId).eq("memorySpaceId",memorySpaceId).eq("agentId",agentId).eq("version",version)).take(2),
+  // Only bridgeFor changed in K29. DataAuth's old managed graph reads remain
+  // active in the a773 control, preserving its original traversal behavior.
+  readManagedTranscriptBridgeRows:async(ctx:Parameters<typeof originalAuth.readManagedTranscriptBridgeRows>[0],tenantId:string,memorySpaceId:string,nativeMessageId:string)=>!nativeSnapshotReads&&(new Error().stack??"").includes("bridgeFor")
+    ?ctx.db.query("runtimeTranscriptMessages").withIndex("by_native",q=>q.eq("tenantId",tenantId).eq("memorySpaceId",memorySpaceId).eq("nativeMessageId",nativeMessageId)).take(2)
+    :originalAuth.readManagedTranscriptBridgeRows(ctx,tenantId,memorySpaceId,nativeMessageId),
+  withNativeSnapshotReads:<Ctx extends Parameters<typeof originalAuth.withNativeSnapshotReads>[0]>(nativeCtx:Ctx,parent:Ctx):Ctx=>nativeSnapshotReads
+    ?originalAuth.withNativeSnapshotReads(nativeCtx,parent):originalAuth.withManagedSourceValidationReads(nativeCtx,parent),
+}));
 const {ingestionFixture,installIngestionMockRoot,invoke}=await import('../runtimeIngestion/fixture');
 const {ledger,clone,clock}=await import('../runtimeTranscript/fixture');
 const query=await import('../../../convex-dev/runtimeMemoryQuery');
@@ -20,7 +35,7 @@ const {ConvexMemoryRepository,createActionMemoryRepository}=await import('../../
 const {readCurrentEmbeddingProfile,resolveHandler}=await import('../../../convex-dev/runtimeModelPolicy');
 const {createGatewayMemoryModel}=await import('../../../convex-dev/runtimeMemoryGateway');
 const {recallMemory}=await import('../../../convex-dev/runtimeMemoryServices');
-beforeEach(()=>{calls=0;installIngestionMockRoot();});afterEach(()=>{jest.restoreAllMocks();});
+beforeEach(()=>{calls=0;nativeSnapshotReads=true;installIngestionMockRoot();});afterEach(()=>{jest.restoreAllMocks();});
 async function fixture() {
   const f=await ingestionFixture(),oldQuery=f.ctx.runQuery.bind(f.ctx),oldMutation=f.ctx.runMutation.bind(f.ctx),rpc:string[]=[];
   const names={runtimeMemory:memory,runtimeMemoryQuery:query,runtimeModelPolicy:ledger,runtimeAuth:auth};
@@ -224,4 +239,54 @@ it('K28 composed native staged branches join both peers and preserve the exact o
   jest.spyOn(ConvexMemoryRepository.prototype,'listFacts').mockImplementation(async()=>{factsRead++;finishVector();throw factFailure;});
   await expect(f.call(query.readMatches,{...f.args,profile,hits:[]})).rejects.toBe(failure);
   expect(factsRead).toBe(1);expect(f.db.writes).toBe(writes);expect(calls).toBe(0);
+});
+
+
+type PublicRead={method:string;table:string;id?:string;index?:string;keys:unknown[];terminal?:string;documents:number;managed:boolean};
+function publicReadLog(f:Awaited<ReturnType<typeof fixture>>){
+ const get=f.db.get.bind(f.db),queryPort=f.db.query.bind(f.db),reads:PublicRead[]=[];
+ jest.spyOn(f.db,'get').mockImplementation(async(table,id)=>{const row=await get(table,id);reads.push({method:'get',table,id,keys:[],documents:row?1:0,managed:false});return row;});
+ jest.spyOn(f.db,'query').mockImplementation(table=>{
+  const record:PublicRead={method:'query',table,keys:[],documents:0,managed:/readManaged(?:SourceRows|ConversationRows|TranscriptBridgeRows|SourceRunRows)/.test(new Error().stack??'')};
+  reads.push(record);const builder=queryPort(table),indexPort=builder.withIndex.bind(builder),take=builder.take.bind(builder),unique=builder.unique.bind(builder);
+  builder.withIndex=(index,callback)=>{record.index=index;return indexPort(index,q=>{
+   if(q===null||typeof q!=='object')throw Error('Expected original index builder');
+   const traced:object=new Proxy(q,{get(target,key){const value:unknown=Reflect.get(target,key,target);if(typeof value!=='function')return value;
+    return(...args:unknown[])=>{record.keys.push([String(key),...args]);const result:unknown=Reflect.apply(value,target,args);return result===target?traced:result;};}});return callback(traced);
+  });};
+  builder.take=async n=>{record.terminal=`take:${n}`;const rows=await take(n);record.documents=rows.length;return rows;};
+  builder.unique=async()=>{record.terminal='unique';const row=await unique();record.documents=row?1:0;return row;};return builder;
+ });
+ return{reads,clear:()=>{reads.length=0;}};
+}
+const publicReadIdentity=({method,table,id,index,keys,terminal}:PublicRead)=>({method,table,id,index,keys,terminal});
+const publicMutableReads=(reads:PublicRead[])=>reads.filter(row=>!row.managed&&!row.table.startsWith('runtimeAuth')&&!['runtimeModelPolicies','runtimeModelQualifications','runtimeAgentDefinitions'].includes(row.table)).map(publicReadIdentity);
+it('K29 actual public read pipeline matches a773 result/readset/state while sharing exact-owner raw rows',async()=>{
+ const f=await populatedPublicFixture(true),observed=publicReadLog(f),result={profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]};
+ const before=f.state();nativeSnapshotReads=false;f.rpc.length=0;
+ const expected=await query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>clock});
+ const baseline=clone(observed.reads),oldCalls=[...f.rpc];observed.clear();nativeSnapshotReads=true;f.rpc.length=0;
+ const actual=await query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>clock}),reads=clone(observed.reads);
+ expect(actual).toEqual(expected);expect(actual.items).toHaveLength(6);expect(f.state()).toEqual(before);expect(calls).toBe(0);expect(f.rpc).toEqual(oldCalls);
+ expect(publicMutableReads(reads)).toEqual(publicMutableReads(baseline));
+ const identities=(values:PublicRead[])=>[...new Set(values.map(row=>JSON.stringify(publicReadIdentity(row))))].sort();
+ expect(identities(reads)).toEqual(identities(baseline));expect(reads.length).toBeLessThan(baseline.length);
+ expect(f.rpc).toEqual(['runtimeMemoryQuery:prepareReads','runtimeMemoryQuery:readMatches','runtimeMemoryQuery:finalRecallDelivery']);
+ const count=(values:PublicRead[])=>({calls:values.length,documents:values.reduce((n,row)=>n+row.documents,0),authority:values.filter(row=>row.table.startsWith('runtimeAuth')).length});
+ console.info(JSON.stringify({type:'k29-current-a773-public-read-pipeline',baseline:count(baseline),actual:count(reads),exactResultStateAndMutableReadOrder:true,providerCalls:0,nativeLatency:'NOT_RUN'}));
+});
+it.each(['revision','tombstone','revoked','expired','profile','foreign'])(
+ 'K29 actual public snapshot view preserves a773 %s result/refusal and no effects',async fault=>{
+ const f=await populatedPublicFixture(true),hits=f.db.table('runtimeMemoryVectors').map(row=>({id:row._id as Id<'runtimeMemoryVectors'>,score:0.9}));
+ if(fault==='revision')(f.db.table('runtimeMemorySources')[0].lineage as {sourceRevision:number}).sourceRevision++;
+ if(fault==='tombstone')f.db.table('runtimeMemorySources')[0].tombstonedAt=clock;
+ if(fault==='revoked')f.grant.revokedAt=clock;if(fault==='expired')f.grant.expiresAt=clock;
+ const args={...f.args,reference:fault==='foreign'?{...f.reference,principalId:'foreign'}:f.reference,profile:fault==='profile'?{...profile,modelId:'wrong-model'}:profile,hits};
+ const before=f.state(),outcome=async()=>{try{return{kind:'returned' as const,value:await f.call<Awaited<ReturnType<typeof query.readRecallMatchesHandler>>>(query.readMatches,args)};}
+  catch(error){if(!(error instanceof Error))throw error;return{kind:'refused' as const,name:error.name,message:error.message,data:error instanceof ConvexError?error.data:undefined};}};
+ nativeSnapshotReads=false;const expected=await outcome();nativeSnapshotReads=true;const actual=await outcome();expect(actual).toEqual(expected);
+ if(fault==='revision'||fault==='tombstone'){expect(actual.kind).toBe('returned');if(actual.kind!=='returned')throw Error('Expected original stale-neighbor exclusion');
+  expect(actual.value.vectorItems).toHaveLength(2);expect(actual.value.facts).toHaveLength(2);}
+ else expect(actual.kind).toBe('refused');
+ expect(f.state()).toEqual(before);expect(calls).toBe(0);
 });

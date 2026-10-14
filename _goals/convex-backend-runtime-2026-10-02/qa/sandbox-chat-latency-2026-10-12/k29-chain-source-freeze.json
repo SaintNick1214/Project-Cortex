@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "status": "SOURCE_AND_TEST_BYTES_FROZEN",
+  "baseline": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "owner": "cloud_checkpoint_composition",
+  "source": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "07c678144e78897163522681c2ba54c026dfe32d94bf8dc404e461c7aadae381"
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "c416ed31be66ddea55e2080c49c918115e5d497449d70ee4e10c1efc09262341"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryQuery.ts",
+      "sha256": "61b99f9e56cc7d1c9330a61aa9c2cc350a74c077ed4271d2c8e9291a9a51e667"
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "sha256": "f8bada51143bf24d3329b99415295908eb996e99ae3f99447c18b11687041b94"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "8ca4f47a3f0cd826a6b5dff174d449b62b2dd2e34fb246377ca4467d148512d2"
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "sha256": "7ac8272e9943a3014577005be274e70155b2cb956bd6711fdb577daf7e55bc4f"
+    }
+  ],
+  "tests": [
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "30616a86e8871ed2b751d2bb591e406ecd6862e6def0daaa1822952564475bbe"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+      "sha256": "93c443fdc2184167bfa1bb4c02ba8e7de4576c13497488f3ff5e7537e74276a1"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts",
+      "sha256": "71fffa3ea001c3be15fa7f811823f117fb7393fd343ed81f0354713cb471defd"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "sha256": "50e1d7e597cb7460008f05171c632342163bd85742d33d10c295fafcac4b20ce"
+    }
+  ],
+  "checksSummary": "k29-chain-source-checks.json",
+  "report": "k29-chain-source-report.md",
+  "equivalence": "k29-chain-original-bodies.json",
+  "nativeQualification": "NOT_RUN",
+  "notes": "Six production files and four meaningful test files frozen. Root owns final shared quality and one independent review. All prior failure receipts retained."
+}

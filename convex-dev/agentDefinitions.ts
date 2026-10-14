@@ -11,7 +11,7 @@ import type { ModelOperationKey, TrustedModelPolicyRecord } from "../src/domain/
 import { semanticHash } from "../src/domain/profile";
 import { assertUnicode, boundedIdentifier, clientRequestKey, utf8Bytes } from "../src/domain/transcript";
 import { requireDataAuthority, dataAuthorityReference } from "./runtimeDataAuth";
-import { recheckAuthority, readDeploymentPolicyRows } from "./runtimeAuth";
+import { recheckAuthority, readDeploymentPolicyRows, readTenantPolicyRows, readExecutableDefinitionRows } from "./runtimeAuth";
 import { lookupDeploymentManifest } from "./runtimeModelPolicyBootstrap";
 import { NATIVE_TOOL_NAMES_V2 as NATIVE_TOOL_NAMES } from "../src/domain/agent-tools";
 import { modelInputPolicy } from "../src/domain/model-input-selection";
@@ -98,7 +98,7 @@ async function narrowPolicies(ctx: Pick<QueryCtx, "db">, reference: RuntimeAutho
   const expected = rootProvenanceEncodings(fullRootProvenanceFor(manifest, manifestCanonical, await semanticHash(manifestCanonical)), canonicalModelJson);
   if (roots.some(row => row.revokedAt !== undefined || !rootProvenanceEqual(canonicalModelJson(row.root), canonicalModelJson(root), expected))) denied("CAPABILITY_UNAVAILABLE");
   if (!rootProvenanceMatches(canonicalModelJson(root), expected)) denied();
-  const tenantRows = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "tenant").eq("tenantId", reference.tenantId).eq("active", true)).take(65);
+  const tenantRows = await readTenantPolicyRows(ctx, reference.tenantId);
   if (tenantRows.length > 64 || tenantRows.some(row => row.revokedAt !== undefined || !rootProvenanceEqual(canonicalModelJson(row.root), canonicalModelJson(root), expected))) denied();
   const tenantPolicies = tenantRows.map(row => JSON.parse(row.canonical) as TrustedModelPolicyRecord);
   const keys = [...new Set(definition.policies.map(p => p.operationKey ?? "agent.respond"))];
@@ -113,8 +113,7 @@ async function narrowPolicies(ctx: Pick<QueryCtx, "db">, reference: RuntimeAutho
   }
 }
 async function rowFor(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, agent: { agentId: string; version: number }) {
-  return one(await ctx.db.query("runtimeAgentDefinitions").withIndex("by_scoped_version", q => q.eq("tenantId", reference.tenantId)
-    .eq("memorySpaceId", reference.memorySpaceId!).eq("agentId", agent.agentId).eq("version", agent.version)).take(2));
+  return one(await readExecutableDefinitionRows(ctx, reference.tenantId, reference.memorySpaceId!, agent.agentId, agent.version));
 }
 async function checkRow(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, row: Doc<"runtimeAgentDefinitions">,
   capability: "run" | "admin", allowRevoked = false): Promise<ExecutableDefinitionV1> {

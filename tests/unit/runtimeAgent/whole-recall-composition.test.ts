@@ -15,6 +15,21 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
   define(input: { handler: unknown }) { return { _handler: input.handler }; }
   async start() { return "workflow:whole-recall"; }
 } }));
+let nativeSnapshotReads = true;
+const originalAuth = await import("../../../convex-dev/runtimeAuth");
+jest.unstable_mockModule("../../../convex-dev/runtimeAuth", () => ({ ...originalAuth,
+  readTenantPolicyRows:async(ctx:Parameters<typeof originalAuth.readTenantPolicyRows>[0],tenantId:string)=>nativeSnapshotReads
+    ?originalAuth.readTenantPolicyRows(ctx,tenantId):ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active",q=>q.eq("scope","tenant").eq("tenantId",tenantId).eq("active",true)).take(65),
+  readExecutableDefinitionRows:async(ctx:Parameters<typeof originalAuth.readExecutableDefinitionRows>[0],tenantId:string,memorySpaceId:string,agentId:string,version:number)=>nativeSnapshotReads
+    ?originalAuth.readExecutableDefinitionRows(ctx,tenantId,memorySpaceId,agentId,version):ctx.db.query("runtimeAgentDefinitions").withIndex("by_scoped_version",q=>q.eq("tenantId",tenantId).eq("memorySpaceId",memorySpaceId).eq("agentId",agentId).eq("version",version)).take(2),
+  // Only bridgeFor changed in K29. DataAuth's old managed graph reads remain
+  // active in the a773 control, preserving its original traversal behavior.
+  readManagedTranscriptBridgeRows:async(ctx:Parameters<typeof originalAuth.readManagedTranscriptBridgeRows>[0],tenantId:string,memorySpaceId:string,nativeMessageId:string)=>!nativeSnapshotReads&&(new Error().stack??"").includes("bridgeFor")
+    ?ctx.db.query("runtimeTranscriptMessages").withIndex("by_native",q=>q.eq("tenantId",tenantId).eq("memorySpaceId",memorySpaceId).eq("nativeMessageId",nativeMessageId)).take(2)
+    :originalAuth.readManagedTranscriptBridgeRows(ctx,tenantId,memorySpaceId,nativeMessageId),
+  withNativeSnapshotReads: <Ctx extends Parameters<typeof originalAuth.withNativeSnapshotReads>[0]>(nativeCtx: Ctx, parent: Ctx): Ctx => nativeSnapshotReads
+    ? originalAuth.withNativeSnapshotReads(nativeCtx, parent) : originalAuth.withManagedSourceValidationReads(nativeCtx, parent),
+}));
 const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
 const { runs, clock, definitions, clone } = await import("../runtimeTranscript/fixture");
 const agent = await import("../../../convex-dev/runtimeAgent");
@@ -24,7 +39,7 @@ const { createV8AuthorityReadScope } = await import("../../../convex-dev/runtime
 const memory = await import("../../../convex-dev/runtimeMemory");
 const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = await import("../../../convex-dev/runtimeMemoryRepository");
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
-beforeEach(installIngestionMockRoot);
+beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; });
 afterEach(() => { jest.restoreAllMocks(); });
 async function fixture(v8 = false) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
@@ -423,9 +438,9 @@ it("shared native parent keeps the final raw revocation fence and fresh save rec
 });
 
 it("same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal",async()=>{
- const f=await fixture(true),get=f.db.get.bind(f.db),query=f.db.query.bind(f.db),seen:{table:string;id:string}[]=[],queries:string[]=[];
+ const f=await fixture(true),get=f.db.get.bind(f.db),query=f.db.query.bind(f.db),seen:{table:string;id:string}[]=[],queries:{table:string;index?:string}[]=[];
  jest.spyOn(f.db,"get").mockImplementation(async(table,id)=>{seen.push({table,id});return await get(table,id);});
- jest.spyOn(f.db,"query").mockImplementation(table=>{queries.push(table);return query(table);});
+ jest.spyOn(f.db,"query").mockImplementation(table=>{const record:{table:string;index?:string}={table};queries.push(record);const builder=query(table),withIndex=builder.withIndex.bind(builder);builder.withIndex=(index,callback)=>{record.index=index;return withIndex(index,callback);};return builder;});
  const before=wholeState(f);
  const inputs=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>["inputs"]>(agent.contextInputsV8,f.attempt);
  const proposal=await f.call(queryEmbedding.prepareV8,{...f.attempt,input:f.input});const originalInitial=[...seen],originalInitialQueries=[...queries];seen.length=0;queries.length=0;
@@ -436,7 +451,7 @@ it("same-snapshot parents reuse raw control rows only; mutable read order and al
  expect(await f.call(whole.readMatchesAndDeliveryV8,args)).toEqual({read,delivery});const parentTail=[...seen],parentTailQueries=[...queries];
  const mutable=(reads:typeof seen)=>reads.filter(row=>!row.table.startsWith("runtimeAuth") && !["runtimeModelPolicies","runtimeModelQualifications"].includes(row.table));
  expect(mutable(parentInitial)).toEqual(mutable(originalInitial));expect(mutable(parentTail)).toEqual(mutable(originalTail));
- const mutableQueries=(reads:string[])=>reads.filter(table=>!table.startsWith("runtimeAuth") && !["runtimeModelPolicies","runtimeModelQualifications"].includes(table));
+ const mutableQueries=(reads:typeof queries)=>reads.filter(row=>!row.table.startsWith("runtimeAuth") && !["runtimeModelPolicies","runtimeModelQualifications","runtimeAgentDefinitions"].includes(row.table) && !(row.table==="runtimeTranscriptMessages"&&row.index==="by_native"));
  expect(mutableQueries(parentInitialQueries)).toEqual(mutableQueries(originalInitialQueries));expect(mutableQueries(parentTailQueries)).toEqual(mutableQueries(originalTailQueries));
  expect(parentInitial.length).toBeLessThan(originalInitial.length);expect(parentTail.length).toBeLessThan(originalTail.length);expect(wholeState(f)).toEqual(before);
  console.info(JSON.stringify({type:"k25-private-read-parent-counts",kind:"controlled-original-handlers",initial:{oldGets:originalInitial.length,newGets:parentInitial.length,oldQueries:originalInitialQueries.length,newQueries:parentInitialQueries.length},tail:{oldGets:originalTail.length,newGets:parentTail.length,oldQueries:originalTailQueries.length,newQueries:parentTailQueries.length},mutableReadSequencesEqual:true,applicationWrites:0,cloudLatency:"UNAVAILABLE"}));
@@ -501,7 +516,7 @@ function instrumentGraphReads(f: Fixture) {
 }
 const graphReadIdentity = ({ method, table, id, index, keys, terminal, phase }: GraphRead) => ({ method, table, id, index, keys, terminal, phase });
 const originalMutableReads = (reads: GraphRead[]) => reads.filter(row => !row.family && !row.table.startsWith("runtimeAuth")
-  && !["runtimeModelPolicies", "runtimeModelQualifications"].includes(row.table)).map(graphReadIdentity);
+  && !["runtimeModelPolicies", "runtimeModelQualifications", "runtimeAgentDefinitions"].includes(row.table)).map(graphReadIdentity);
 it.each([true, false])("V8 real shared=%s ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads", async shared => {
   const f = await ancestryFixture(shared), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan }, before = wholeState(f);
   const observed = instrumentGraphReads(f), originalScope = createV8AuthorityReadScope(f.ctx);
@@ -591,6 +606,8 @@ function k26GraphScope(ctx: MutationCtx) {
 }
 const uniqueRawReads = (reads: GraphRead[]) => [...new Set(reads.map(row => JSON.stringify(graphReadIdentity(row))))].sort();
 it.each([true, false])("K27 incremental K26 read/delivery comparison shared=%s retains all outcomes and raw identities", async shared => {
+  // This historical comparison keeps the K27 graph-only source view on both sides.
+  nativeSnapshotReads = false;
   const f = await ancestryFixture(shared), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan }, before = wholeState(f);
   const observed = instrumentGraphReads(f), scope = k26GraphScope(f.ctx);
   const read = await whole.readMatchesHandler(f.ctx, args, 8, scope);
@@ -629,4 +646,66 @@ it.each([true, false])("K27 incremental K26 save/fresh-child comparison shared=%
   expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
   console.info(JSON.stringify({ type: "k27-incremental-k26-save-child", shared, baseline: { total: baseline.length, documents: baseline.reduce((n,r)=>n+r.documents,0) },
     optimized: { total: optimized.length, documents: optimized.reduce((n,r)=>n+r.documents,0) }, uniqueRawIdentitySetEqual: true, independentChild: true, billableAttempts: 0, nativeLatency: "UNAVAILABLE" }));
+});
+
+
+it.each([true, false])("K29 same-snapshot private parents shared=%s match a773 values/readset/state with fewer physical reads", async shared => {
+  const f = await ancestryFixture(shared), observed = instrumentGraphReads(f), before = wholeState(f);
+  nativeSnapshotReads = false;
+  const originalPlan = await f.call<Awaited<ReturnType<typeof whole.prepareReadsHandler>>>(whole.prepareReadsV8, f.args);
+  const baselinePlan = clone(observed.reads); observed.clear();
+  const args = { ...f.args, hits: f.hits, factPlan: originalPlan.factPlan };
+  const original = await f.call(whole.readMatchesAndDeliveryV8, args), baselineTail = clone(observed.reads); observed.clear();
+  nativeSnapshotReads = true;
+  expect(await f.call(whole.prepareReadsV8, f.args)).toEqual(originalPlan);
+  const actualPlan = clone(observed.reads); observed.clear();
+  expect(await f.call(whole.readMatchesAndDeliveryV8, args)).toEqual(original);
+  const actualTail = clone(observed.reads);
+  for (const [baseline, actual] of [[baselinePlan, actualPlan], [baselineTail, actualTail]]) {
+    expect(originalMutableReads(actual)).toEqual(originalMutableReads(baseline));
+    // Metadata may be reused across the two logical stages of this ONE native
+    // snapshot; the transaction's exact raw read identity set stays unchanged.
+    const nativeReadSet = (values: GraphRead[]) => [...new Set(values.map(row => {
+      const { phase: _phase, ...identity } = graphReadIdentity(row); return JSON.stringify(identity);
+    }))].sort();
+    expect(nativeReadSet(actual)).toEqual(nativeReadSet(baseline));
+    expect(actual.length).toBeLessThan(baseline.length);
+  }
+  expect(actualTail.filter(row => row.phase === "final" && row.table === "runtimeAuthGrants").length).toBeGreaterThan(0);
+  expect(wholeState(f)).toEqual(before);
+  const counts = (reads: GraphRead[]) => ({ calls: reads.length, documents: reads.reduce((n, row) => n + row.documents, 0),
+    authority: reads.filter(row => row.table.startsWith("runtimeAuth")).length });
+  console.info(JSON.stringify({ type: "k29-current-a773-private-parent-reads", shared,
+    plan: { baseline: counts(baselinePlan), actual: counts(actualPlan) }, tail: { baseline: counts(baselineTail), actual: counts(actualTail) },
+    exactResultStateAndMutableReadOrder: true, applicationWrites: 0, nativeLatency: "NOT_RUN" }));
+});
+it.each(["ancestor-hash", "ancestor-tombstone", "ancestor-duplicate", "revoked", "expiry", "principal", "profile", "fact-binding"])(
+  "K29 private snapshot view retains a773 %s refusal and zero partial effects", async fault => {
+    const f = await ancestryFixture(true), proposed = await f.call<Awaited<ReturnType<typeof whole.prepareReadsHandler>>>(whole.prepareReadsV8, f.args);
+    const args = { ...f.args, hits: f.hits, factPlan: clone(proposed.factPlan) };
+    const leaf = f.db.table("runtimeMemorySources").find(row => (row.lineage as { sourceId: string }).sourceId === f.leaves[0]!.lineage.sourceId)!;
+    if (fault === "ancestor-hash") leaf.contentHash = "f".repeat(64);
+    if (fault === "ancestor-tombstone") leaf.tombstonedAt = clock;
+    if (fault === "ancestor-duplicate") f.db.seed("runtimeMemorySources", { ...leaf, _id: "runtimeMemorySources:k29-duplicate" });
+    if (fault === "revoked") f.grant.revokedAt = clock;
+    if (fault === "expiry") f.grant.expiresAt = clock;
+    if (fault === "principal") args.reference = { ...args.reference, principalId: "foreign" };
+    if (fault === "profile") args.profile = { ...profile, modelId: "foreign" };
+    if (fault === "fact-binding") { if (args.factPlan.kind !== "ready") throw Error("Expected ready plan"); args.factPlan.facts[0]!.fact = "forged payload"; }
+    const before = wholeState(f); nativeSnapshotReads = false;
+    const expected = await failureValue(() => f.call(whole.readMatchesAndDeliveryV8, args));
+    nativeSnapshotReads = true;
+    expect(await failureValue(() => f.call(whole.readMatchesAndDeliveryV8, args))).toEqual(expected);
+    expect(wholeState(f)).toEqual(before);
+  });
+it.each(["edit", "revoke"])("K29 independent native save still sees %s after a successful read snapshot", async fault => {
+  const f = await ancestryFixture(true), proposed = await f.call<Awaited<ReturnType<typeof whole.prepareReadsHandler>>>(whole.prepareReadsV8, f.args);
+  const read = await f.call<Awaited<ReturnType<typeof whole.readMatchesAndDeliveryV8Handler>>>(whole.readMatchesAndDeliveryV8,
+    { ...f.args, hits: f.hits, factPlan: proposed.factPlan });
+  if (!("read" in read)) throw Error("Expected current read plan");
+  if (fault === "edit") f.db.table("runtimeMemorySources").find(row => (row.lineage as { sourceId: string }).sourceId === f.leaves[0]!.lineage.sourceId)!.contentHash = "e".repeat(64);
+  else f.grant.revokedAt = clock;
+  const before = wholeState(f);
+  await expect(f.call(agent.saveContextV8, { ...f.attempt, context: "", entries: [], witnesses: read.read.witnesses, completeness: "complete" })).rejects.toThrow();
+  expect(wholeState(f)).toEqual(before);
 });

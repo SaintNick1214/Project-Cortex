@@ -3,7 +3,7 @@ import { beforeEach, afterEach, expect, it, jest } from "@jest/globals";
 import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import type { CutoffV1 } from "../../../src/domain/transcript";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
-import { createAuthorityReadScope, freshNativeTranscriptReads, readNativeTranscriptMessages, NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES, NATIVE_TRANSCRIPT_READ_SCOPE_MAX_BYTES } from "../../../convex-dev/runtimeAuth";
+import { createAuthorityReadScope, freshNativeTranscriptReads, readNativeTranscriptMessages, NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES, NATIVE_TRANSCRIPT_READ_SCOPE_MAX_BYTES, createMemorySourceReadScope, withManagedSourceValidationReads, withNativeSnapshotReads } from "../../../convex-dev/runtimeAuth";
 import { transcriptFixture, installMockRoot, transcript } from "../runtimeTranscript/fixture";
 beforeEach(() => installMockRoot()); afterEach(() => { jest.restoreAllMocks(); });
 async function fixture() { const f = await transcriptFixture(); await f.run(); const ids = [...f.native.messages.keys()];
@@ -61,4 +61,21 @@ it.each(["complete", "pending", "failed"] as const)("private hydration's second 
  if(boundary==="failed")await expect(writing).rejects.toBe(failure);
  release();if(boundary==="complete")await expect(hydration).rejects.toThrow("STALE_TRANSCRIPT");else {await hydration;releaseWriter();if(boundary==="pending")await writing;}
  const nativeReads=reads.mock.calls.filter(([ref])=>String((ref as Partial<Record<symbol,string>>)[Symbol.for("toReferencePath")]).endsWith("/getMessagesByIds"));expect(nativeReads).toHaveLength(2);
+});
+
+it("original private hydration validates the same canonical cutoff while sharing only official raw messages across helper traversals", async () => {
+  const f = await fixture(), { runs } = await import("../runtimeTranscript/fixture");
+  await f.call(runs.claimNext, { reference: f.reference, conversationId: f.db.table("runtimeConversations")[0].conversationId, leaseMs: 300000 });
+  const row = f.db.table("runtimeRuns")[0] as unknown as import("../../../convex-dev/_generated/dataModel").Doc<"runtimeRuns">;
+  const conversation = f.db.table("runtimeConversations")[0] as unknown as import("../../../convex-dev/_generated/dataModel").Doc<"runtimeConversations">, snapshot = JSON.parse(row.snapshotCanonical!) as CutoffV1;
+  const spy = jest.spyOn(f.ctx, "runQuery"), oldView = withManagedSourceValidationReads(f.ctx, createMemorySourceReadScope(f.ctx));
+  const expected = [await transcript.hydratePrivateCutoff(oldView, conversation, row, snapshot), await transcript.hydratePrivateCutoff(oldView, conversation, row, snapshot)];
+  const oldCalls = spy.mock.calls.map(([,args]) => args); spy.mockClear();
+  const view = withNativeSnapshotReads(f.ctx, createMemorySourceReadScope(f.ctx));
+  expect([await transcript.hydratePrivateCutoff(view, conversation, row, snapshot), await transcript.hydratePrivateCutoff(view, conversation, row, snapshot)]).toEqual(expected);
+  expect(spy.mock.calls).toHaveLength(1); expect(oldCalls).toHaveLength(4); expect(spy.mock.calls[0][1]).toEqual(oldCalls[0]);
+  const changed = { ...f.ctx }; f.native.messages.get(f.ids[0])!.message = { role: "user", content: "later native transaction edit" };
+  await expect(transcript.hydratePrivateCutoff(withNativeSnapshotReads(changed, view), conversation, row, snapshot)).rejects.toThrow("STALE_TRANSCRIPT");
+  await expect(transcript.hydratePrivateCutoff(f.ctx, conversation, row, snapshot)).rejects.toThrow("STALE_TRANSCRIPT");
+  console.info(JSON.stringify({ type: "k29-private-hydration-raw-messages", originalPhysical: oldCalls.length, currentPhysical: spy.mock.calls.length - 2, originalLogical: 4, nativeLatency: "NOT_RUN" }));
 });

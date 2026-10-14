@@ -1,0 +1,17 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false,
+    "rootDir": "../../../.."
+  },
+  "include": [
+    "../../../../tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "../../../../tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+    "../../../../tests/unit/runtimeMemory/query-composition.test.ts",
+    "../../../../tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts"
+  ],
+  "exclude": [
+    "../../../../node_modules"
+  ]
+}

@@ -7,7 +7,7 @@ import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference, RuntimeCapability } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { createAuthorityReader, recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, createMemorySourceReadScope, readDeploymentPolicyRows, readQualificationRows } from "./runtimeAuth";
+import { createAuthorityReader, recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, createMemorySourceReadScope, readDeploymentPolicyRows, readQualificationRows, readTenantPolicyRows } from "./runtimeAuth";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
@@ -264,7 +264,7 @@ export async function readTrustedAgentPolicyVersion(ctx: ReadCtx, reference: Run
   return { tenantId: current.tenantId, agent: current.agent, policies: current.policies };
 }
 async function policies(ctx: ReadCtx, manifest: DeploymentPolicyManifest, root: Root, encodings: RootProvenanceEncodings, reference: RuntimeAuthorityReference, key: ModelOperationKey, agent?: { agentId: string; version: number }): Promise<TrustedModelPolicyRecord[]> {
-  const rows = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "tenant").eq("tenantId", reference.tenantId).eq("active", true)).take(65);
+  const rows = await readTenantPolicyRows(ctx, reference.tenantId);
   if (rows.length > 64) fail("POLICY_DENIED");
   const agentPolicies = agent ? (await readTrustedAgentPolicyVersion(ctx, reference, agent)).policies : [];
   const selected: TrustedModelPolicyRecord[] = [...manifest.policies.filter((policy) => policy.scope === "deployment" && (!policy.operationKey || policy.operationKey === key)),

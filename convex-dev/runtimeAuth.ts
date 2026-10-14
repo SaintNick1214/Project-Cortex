@@ -125,10 +125,31 @@ export function withManagedSourceValidationReads<Ctx extends Pick<QueryCtx, "db"
   Object.defineProperty(view, managedSourceValidationScope, { value: create });
   return view;
 }
+/** Explicit same-native-snapshot view. The official native runQuery contract
+ * shares its parent's transaction; Action/child RPC contexts cannot inherit this
+ * nonserialized owner token. Only raw bounded readers cross helper traversals,
+ * never their permission/currentness decisions or mutable account/output reads.
+ * Keep the original native context for a caller's independent fresh fence. */
+export function withNativeSnapshotReads<Ctx extends Pick<QueryCtx, "db">>(nativeCtx: Ctx, parentScope: Ctx): Ctx {
+  const owner = (parentScope as Ctx & { [nativeReadScopeOwner]?: Ctx })[nativeReadScopeOwner];
+  if (owner !== nativeCtx || !(parentScope as AuthorityReadContext)[authorityReadScope]) return nativeCtx;
+  const view = { ...nativeCtx, db: parentScope.db };
+  for (const name of ["runQuery", "runMutation"] as const) {
+    const value: unknown = Reflect.get(parentScope, name);
+    if (typeof value === "function") Object.defineProperty(view, name, { enumerable: true, value });
+  }
+  for (const name of [authorityReadScope, policyMetadataReadScope, nativeTranscriptReadScope,
+    managedSourceReadScope, managedSourceValidationScope] as const) {
+    const value: unknown = Reflect.get(parentScope, name);
+    if (value !== undefined) Object.defineProperty(view, name, { value });
+  }
+  Object.defineProperty(view, nativeReadScopeOwner, { value: owner });
+  return view;
+}
 /** Read-only public memory native entries opt in explicitly; this does not
  * acquire the V8 control-writer retention behavior or brand other routes. */
 export function createMemorySourceReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx): Ctx {
-  return createRawReadScope(ctx, { policyMetadata: true, nativeTranscript: true, managedSources: true }, false);
+  return createRawReadScope(ctx, { policyMetadata: true, executableMetadata: true, nativeTranscript: true, managedSources: true }, false);
 }
 type NativeMessageReference = AgentComponent["messages"]["getMessagesByIds"];
 interface NativeTranscriptReader {
@@ -183,12 +204,16 @@ function createNativeTranscriptReader(): NativeTranscriptReader {
 interface PolicyMetadataReader {
   deploymentRows(): Promise<Doc<"runtimeModelPolicies">[]>;
   qualificationRows(receiptId: string, revision: number): Promise<Doc<"runtimeModelQualifications">[]>;
+  executableDefinitionRows?(tenantId: string, memorySpaceId: string, agentId: string, version: number): Promise<Doc<"runtimeAgentDefinitions">[]>;
+  tenantRows?(tenantId: string): Promise<Doc<"runtimeModelPolicies">[]>;
   fresh(): void;
 }
 type PolicyMetadataContext = Pick<QueryCtx, "db"> & { [policyMetadataReadScope]?: PolicyMetadataReader };
 type AuthorityReadContext = Pick<QueryCtx, "db"> & { [authorityReadScope]?: AuthorityReader };
 export const AUTHORITY_READ_SCOPE_MAX_ENTRIES = 512;
 export const POLICY_METADATA_READ_SCOPE_MAX_ENTRIES = 64;
+export const EXECUTABLE_METADATA_READ_SCOPE_MAX_ENTRIES = 32;
+export const EXECUTABLE_METADATA_READ_SCOPE_MAX_BYTES = 1_000_000;
 /** Exact original bounded raw queries; callers retain every validation predicate. */
 export async function readDeploymentPolicyRows(ctx: Pick<QueryCtx, "db">): Promise<Doc<"runtimeModelPolicies">[]> {
   const reader = (ctx as PolicyMetadataContext)[policyMetadataReadScope];
@@ -199,6 +224,18 @@ export async function readQualificationRows(ctx: Pick<QueryCtx, "db">, receiptId
   const reader = (ctx as PolicyMetadataContext)[policyMetadataReadScope];
   if (reader) return await reader.qualificationRows(receiptId, revision);
   return await ctx.db.query("runtimeModelQualifications").withIndex("by_receipt", q => q.eq("receiptId", receiptId).eq("version", revision)).take(2);
+}
+/** These two closed families require a private V8 or explicit public-read parent.
+ * Legacy policyMetadata scopes retain their original uncached behavior. */
+export async function readExecutableDefinitionRows(ctx: Pick<QueryCtx, "db">, tenantId: string, memorySpaceId: string, agentId: string, version: number): Promise<Doc<"runtimeAgentDefinitions">[]> {
+  const reader = (ctx as PolicyMetadataContext)[policyMetadataReadScope];
+  if (reader?.executableDefinitionRows) return await reader.executableDefinitionRows(tenantId, memorySpaceId, agentId, version);
+  return await ctx.db.query("runtimeAgentDefinitions").withIndex("by_scoped_version", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("agentId", agentId).eq("version", version)).take(2);
+}
+export async function readTenantPolicyRows(ctx: Pick<QueryCtx, "db">, tenantId: string): Promise<Doc<"runtimeModelPolicies">[]> {
+  const reader = (ctx as PolicyMetadataContext)[policyMetadataReadScope];
+  if (reader?.tenantRows) return await reader.tenantRows(tenantId);
+  return await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "tenant").eq("tenantId", tenantId).eq("active", true)).take(65);
 }
 /** Only opted-in metadata is cleared: the original context/writer/authority reader is retained. */
 export function freshPolicyMetadataReads<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx): Ctx {
@@ -233,7 +270,7 @@ export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: 
 export function createV8AuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options?: { managedSources: true }): Ctx {
   if ((ctx as Ctx & { [v8ReadScope]?: true })[v8ReadScope]
     && (!options?.managedSources || (ctx as ManagedSourceContext)[managedSourceReadScope])) return ctx;
-  return createRawReadScope(ctx, { policyMetadata: true, nativeTranscript: true, ...options }, true);
+  return createRawReadScope(ctx, { policyMetadata: true, executableMetadata: true, nativeTranscript: true, ...options }, true);
 }
 type RawAuthorityRead = <T>(method: string, args: readonly (string | undefined)[], invoke: () => Promise<T>) => Promise<T>;
 function mappedAuthorityReader(base: AuthorityReader, read: RawAuthorityRead): AuthorityReader {
@@ -249,9 +286,11 @@ function mappedAuthorityReader(base: AuthorityReader, read: RawAuthorityRead): A
   };
 }
 
-function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options: { policyMetadata?: true; nativeTranscript?: true; managedSources?: true } | undefined, v8: boolean): Ctx {
+function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options: { policyMetadata?: true; executableMetadata?: true; nativeTranscript?: true; managedSources?: true } | undefined, v8: boolean): Ctx {
   const values = new Map<string, unknown>();
   const metadata = new Map<string, unknown>();
+  const executableMetadata = new Map<string, unknown>();
+  let executableMetadataBytes = 0;
   const graph = new Map<string, unknown>();
   let graphBytes = 0, graphEpoch = 0;
   const freshGraph = () => { graph.clear(); graphBytes = 0; graphEpoch++; };
@@ -260,7 +299,7 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
   const nativeTranscript = (ctx as NativeTranscriptContext)[nativeTranscriptReadScope] ?? (options?.nativeTranscript ? createNativeTranscriptReader() : undefined);
   let epoch = 0, writers = 0;
   let metadataEpoch = 0;
-  const freshMetadata = () => { metadata.clear(); metadataEpoch++; };
+  const freshMetadata = () => { metadata.clear(); executableMetadata.clear(); executableMetadataBytes = 0; metadataEpoch++; };
   const invalidate = () => { values.clear(); epoch++; freshMetadata(); };
   const read = async <T>(method: string, args: readonly (string | undefined)[], invoke: () => Promise<T>): Promise<T> => {
     const key = authorityReadKey(method, args), started = epoch;
@@ -288,6 +327,19 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
     if (!writers && metadata.has(key)) return cloneAuthorityValue(metadata.get(key)) as T;
     const value = cloneAuthorityValue(await invoke());
     if (!writers && epoch === started && metadataEpoch === freshness && metadata.size < POLICY_METADATA_READ_SCOPE_MAX_ENTRIES) metadata.set(key, value);
+    return cloneAuthorityValue(value);
+  };
+  const readExecutableMetadata = async <T>(key: string, invoke: () => Promise<T>): Promise<T> => {
+    const started = epoch, freshness = metadataEpoch;
+    if (!writers && executableMetadata.has(key)) return cloneAuthorityValue(executableMetadata.get(key)) as T;
+    const value = cloneAuthorityValue(await invoke());
+    if (!writers && epoch === started && metadataEpoch === freshness && !executableMetadata.has(key)
+      && executableMetadata.size < EXECUTABLE_METADATA_READ_SCOPE_MAX_ENTRIES) {
+      const bytes = nativeTranscriptBytes(value) + new TextEncoder().encode(key).length;
+      if (executableMetadataBytes + bytes <= EXECUTABLE_METADATA_READ_SCOPE_MAX_BYTES) {
+        executableMetadata.set(key, value); executableMetadataBytes += bytes;
+      }
+    }
     return cloneAuthorityValue(value);
   };
   const readGraph = async <T>(family: string, args: readonly string[], invoke: () => Promise<T>): Promise<T> => {
@@ -361,6 +413,12 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
     deploymentRows: () => readMetadata("deployment", async () => await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65)),
     qualificationRows: (receiptId: string, revision: number) => readMetadata(JSON.stringify(["qualification", receiptId, revision]), async () =>
       await ctx.db.query("runtimeModelQualifications").withIndex("by_receipt", q => q.eq("receiptId", receiptId).eq("version", revision)).take(2)),
+    ...(options.executableMetadata ? {
+      executableDefinitionRows: (tenantId: string, memorySpaceId: string, agentId: string, version: number) => readExecutableMetadata(JSON.stringify(["definition", tenantId, memorySpaceId, agentId, version]), async () =>
+        await ctx.db.query("runtimeAgentDefinitions").withIndex("by_scoped_version", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("agentId", agentId).eq("version", version)).take(2)),
+      tenantRows: (tenantId: string) => readExecutableMetadata(JSON.stringify(["tenant", tenantId]), async () =>
+        await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "tenant").eq("tenantId", tenantId).eq("active", true)).take(65)),
+    } : {}),
     fresh: freshMetadata,
   } satisfies PolicyMetadataReader });
   if (options?.managedSources) {

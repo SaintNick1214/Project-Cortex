@@ -1,0 +1,325 @@
+(node:82969) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts (7.625 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"whole-recall-physical-query-count","kind":"controlled-handler","outerCalls":["runtimeAgentRecall:prepareReads","runtimeAgentRecall:readMatches","runtimeMemory:finalDelivery"],"physicalQueries":{"runtimeAgentRecall:prepareReads":1,"_reference/childComponent/agent/messages/getMessagesByIds":4,"runtimeAgentRecall:readMatches":1,"runtimeModelPolicy:embeddingProfile":1},"embeddingProfileBeforeDelivery":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:115:11)
+
+    console.info
+      {"type":"k25-private-read-parent-counts","kind":"controlled-original-handlers","initial":{"oldGets":6,"newGets":3,"oldQueries":238,"newQueries":219},"tail":{"oldGets":15,"newGets":12,"oldQueries":110,"newQueries":91},"mutableReadSequencesEqual":true,"applicationWrites":0,"cloudLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:448:10)
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":true,"original":{"queries":252,"graphQueries":135,"graphDocuments":135},"optimized":{"queries":125,"graphQueries":8,"graphDocuments":8},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:527:11
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":false,"original":{"queries":256,"graphQueries":135,"graphDocuments":135},"optimized":{"queries":133,"graphQueries":12,"graphDocuments":12},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:527:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":true,"original":{"total":389,"graphQueries":198},"optimized":{"total":207,"graphQueries":16},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:581:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":false,"original":{"total":397,"graphQueries":198},"optimized":{"total":223,"graphQueries":24},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:581:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":true,"baseline":{"total":557,"documents":310},"optimized":{"total":261,"documents":150},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:615:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":false,"baseline":{"total":565,"documents":314},"optimized":{"total":285,"documents":154},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:615:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":true,"baseline":{"total":207,"documents":149},"optimized":{"total":207,"documents":149},"uniqueRawIdentitySetEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:638:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":false,"baseline":{"total":223,"documents":157},"optimized":{"total":223,"documents":157},"uniqueRawIdentitySetEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:638:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":true,"plan":{"baseline":{"calls":104,"documents":61,"authority":60},"actual":{"calls":70,"documents":46,"authority":26}},"tail":{"baseline":{"calls":261,"documents":150,"authority":179},"actual":{"calls":125,"documents":90,"authority":43}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:664:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":false,"plan":{"baseline":{"calls":114,"documents":63,"authority":68},"actual":{"calls":76,"documents":48,"authority":30}},"tail":{"baseline":{"calls":285,"documents":154,"authority":199},"actual":{"calls":133,"documents":94,"authority":47}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:664:11
+
+FAIL tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k27-public-fact-rpc-count","facts":3,"baselineFactAndSourceRPCs":4,"optimizedFactAndSourceRPCs":1,"providerCalls":1,"retries":0,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:140:11)
+
+    console.info
+      {"type":"k28-controlled-public-read-handoffs","oldCalls":["runtimeMemory:checkAuthority","runtimeMemory:readFacts","runtimeMemory:checkProfileReady","runtimeModelPolicy:embeddingProfile","runtimeMemory:readVectorMatches","runtimeModelPolicy:embeddingProfile","runtimeMemory:checkAuthority","runtimeMemory:finalDelivery","runtimeModelPolicy:embeddingProfile"],"newCalls":["runtimeMemoryQuery:prepareReads","runtimeMemoryQuery:readMatches","runtimeMemoryQuery:finalRecallDelivery"],"items":6,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:181:11)
+
+    console.info
+      {"type":"k29-current-a773-public-read-pipeline","baseline":{"calls":221,"documents":154,"authority":137},"actual":{"calls":167,"documents":124,"authority":83},"exactResultStateAndMutableReadOrder":true,"providerCalls":0,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:267:10)
+
+  ● K29 actual public snapshot view preserves a773 hash result/refusal and no effects
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 2
+    Received length: 3
+    Received array:  [{"content": "Independent preference 0", "graphContext": {"connectedEntities": []}, "id": "4aeb8ce5e787782de82c4bd0242c9eec896389eeb9cfc57cf5ed74eaf1d2ab17", "memory": {"_id": "public-vector-0", "accessCount": 0, "content": "Independent preference 0", "contentType": "raw", "createdAt": 1000000, "importance": 50, "memoryId": "4aeb8ce5e787782de82c4bd0242c9eec896389eeb9cfc57cf5ed74eaf1d2ab17", "memorySpaceId": "space-a", "messageRole": "user", "previousVersions": [], "sourceTimestamp": 1000000, "sourceType": "conversation", "tags": [], "tenantId": "tenant-a", "updatedAt": 1000000, "userId": "runtimeAuthPrincipals:1", "version": 1}, "score": 0.9, "source": "vector", "type": "memory"}, {"content": "Independent preference 1", "graphContext": {"connectedEntities": []}, "id": "3ffffba8bd2de83eef8a7d3213133a523f0b84b875cd6bd8669f1a0597a269e6", "memory": {"_id": "public-vector-1", "accessCount": 0, "content": "Independent preference 1", "contentType": "raw", "createdAt": 1000000, "importance": 50, "memoryId": "3ffffba8bd2de83eef8a7d3213133a523f0b84b875cd6bd8669f1a0597a269e6", "memorySpaceId": "space-a", "messageRole": "user", "previousVersions": [], "sourceTimestamp": 1000000, "sourceType": "conversation", "tags": [], "tenantId": "tenant-a", "updatedAt": 1000000, "userId": "runtimeAuthPrincipals:1", "version": 1}, "score": 0.9, "source": "vector", "type": "memory"}, {"content": "Independent preference 2", "graphContext": {"connectedEntities": []}, "id": "cc72dfff6023c1b53ed5a6e17445fb1470d3bc5056e7b12f811baa05ea24e0f8", "memory": {"_id": "public-vector-2", "accessCount": 0, "content": "Independent preference 2", "contentType": "raw", "createdAt": 1000000, "importance": 50, "memoryId": "cc72dfff6023c1b53ed5a6e17445fb1470d3bc5056e7b12f811baa05ea24e0f8", "memorySpaceId": "space-a", "messageRole": "user", "previousVersions": [], "sourceTimestamp": 1000000, "sourceType": "conversation", "tags": [], "tenantId": "tenant-a", "updatedAt": 1000000, "userId": "runtimeAuthPrincipals:1", "version": 1}, "score": 0.9, "source": "vector", "type": "memory"}]
+
+      278 |  nativeSnapshotReads=false;const expected=await outcome();nativeSnapshotReads=true;const actual=await outcome();expect(actual).toEqual(expected);
+      279 |  if(fault==='hash'||fault==='tombstone'){expect(actual.kind).toBe('returned');if(actual.kind!=='returned')throw Error('Expected original stale-neighbor exclusion');
+    > 280 |   expect(actual.value.vectorItems).toHaveLength(2);expect(actual.value.facts).toHaveLength(2);}
+          |                                    ^
+      281 |  else expect(actual.kind).toBe('refused');
+      282 |  expect(f.state()).toEqual(before);expect(calls).toBe(0);
+      283 | });
+
+      at tests/unit/runtimeMemory/query-composition.test.ts:280:36
+
+FAIL tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"controlled-v8-preparation-read-count","original":{"total":406,"authority":84},"optimized":{"total":326,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:59:10)
+
+    console.info
+      {"type":"controlled-v8-financial-read-count","original":{"total":140,"authority":42},"optimized":{"total":111,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:89:10)
+
+    console.info
+      {"type":"k29-current-a773-direct-empty-parent","baseline":{"dbReads":332,"componentQueries":2},"actual":{"dbReads":326,"componentQueries":1},"exactResultStateAndMutableReadOrder":true,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:115:10)
+
+  ● K29 direct empty save fence retains original unknown-write denial/rollback
+
+    Missing row
+
+      146 |     const table = typeof idOrValue === "string" ? tableOrId : tableOrId.split(":")[0];
+      147 |     const id = typeof idOrValue === "string" ? idOrValue : tableOrId; const patch = typeof idOrValue === "string" ? value! : idOrValue;
+    > 148 |     const row = this.table(table).find(row => row._id === id); if (!row) throw new Error("Missing row"); Object.assign(row, clone(patch)); this.writes++;
+          |                                                                                ^
+      149 |   }
+      150 |   async replace(table: string, id: string, value: Record<string, unknown>) { const row = this.table(table).find(row => row._id === id); if (!row) throw new Error("Missing row"); const index = this.table(table).indexOf(row); this.table(table)[index] = { ...clone(value), _id: id, _creationTime: row._creationTime }; this.writes++; }
+      151 |   async delete(table: string, id: string) { this.rows.set(table, this.table(table).filter(row => row._id !== id)); this.writes++; }
+
+      at TranscriptDb.patch (tests/unit/runtimeTranscript/fixture.ts:148:80)
+      at TranscriptDb.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:136:88)
+      at invoke (convex-dev/runtimeAuth.ts:353:58)
+      at convex-dev/runtimeAuth.ts:354:118
+      at writing (convex-dev/runtimeAuth.ts:348:24)
+      at Proxy.<anonymous> (convex-dev/runtimeAuth.ts:354:104)
+      at atSnapshot (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:137:22)
+      at withNativeSnapshotReads (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:16:17)
+      at prepareEmptyContextV8Handler (convex-dev/runtimeAgent.ts:2014:35)
+      at prepareRoutedContextV8Handler (convex-dev/runtimeAgent.ts:2039:10)
+      at Function.prepareDirectTurnV8Handler [as _handler] (convex-dev/runtimeAgent.ts:2125:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at failure (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:140:30)
+      at tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:143:37
+
+  ● K29 direct empty save fence retains original unknown-write denial/rollback
+
+    Missing row
+
+      146 |     const table = typeof idOrValue === "string" ? tableOrId : tableOrId.split(":")[0];
+      147 |     const id = typeof idOrValue === "string" ? idOrValue : tableOrId; const patch = typeof idOrValue === "string" ? value! : idOrValue;
+    > 148 |     const row = this.table(table).find(row => row._id === id); if (!row) throw new Error("Missing row"); Object.assign(row, clone(patch)); this.writes++;
+          |                                                                                ^
+      149 |   }
+      150 |   async replace(table: string, id: string, value: Record<string, unknown>) { const row = this.table(table).find(row => row._id === id); if (!row) throw new Error("Missing row"); const index = this.table(table).indexOf(row); this.table(table)[index] = { ...clone(value), _id: id, _creationTime: row._creationTime }; this.writes++; }
+      151 |   async delete(table: string, id: string) { this.rows.set(table, this.table(table).filter(row => row._id !== id)); this.writes++; }
+
+      at TranscriptDb.patch (tests/unit/runtimeTranscript/fixture.ts:148:80)
+      at TranscriptDb.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:136:88)
+      at invoke (convex-dev/runtimeAuth.ts:353:58)
+      at convex-dev/runtimeAuth.ts:354:118
+      at writing (convex-dev/runtimeAuth.ts:348:24)
+      at Proxy.<anonymous> (convex-dev/runtimeAuth.ts:354:104)
+      at atSnapshot (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:137:22)
+      at withNativeSnapshotReads (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:16:17)
+      at prepareEmptyContextV8Handler (convex-dev/runtimeAgent.ts:2014:35)
+      at prepareRoutedContextV8Handler (convex-dev/runtimeAgent.ts:2039:10)
+      at Function.prepareDirectTurnV8Handler [as _handler] (convex-dev/runtimeAgent.ts:2125:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at failure (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:140:30)
+      at tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:143:37
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.6s | 96/96 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ❌     2.5s | 13/14 passed | /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ❌     2.2s | 40/41 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.17s ( 1.4%) - actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 2. [32m✓[0m    0.14s ( 1.2%) - save/candidate shared=false ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 3. [32m✓[0m    0.14s ( 1.2%) - save/candidate shared=true ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 4. [32m✓[0m    0.14s ( 1.1%) - same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.14s ( 1.1%) - K29 exact-owner direct empty parent reruns save predicates with identical outcome/state and fewer raw rereads
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 6. [32m✓[0m    0.13s ( 1.1%) - K27 incremental K26 save/fresh-child comparison shared=false preserves state and complete native readset
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 7. [32m✓[0m    0.13s ( 1.1%) - K29 same-snapshot private parents shared=false match a773 values/readset/state with fewer physical reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 8. [32m✓[0m    0.13s ( 1.0%) - K27 incremental K26 save/fresh-child comparison shared=true preserves state and complete native readset
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [32m✓[0m    0.13s ( 1.0%) - K27 incremental K26 read/delivery comparison shared=false retains all outcomes and raw identities
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.13s ( 1.0%) - K29 same-snapshot private parents shared=true match a773 values/readset/state with fewer physical reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+11. [32m✓[0m    0.12s ( 0.9%) - V8 real shared=true ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+12. [32m✓[0m    0.12s ( 0.9%) - financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+13. [32m✓[0m    0.12s ( 0.9%) - V8 context/preflight parent equals both original registered read handlers with zero effects
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [32m✓[0m    0.12s ( 0.9%) - K27 incremental K26 read/delivery comparison shared=true retains all outcomes and raw identities
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+15. [32m✓[0m    0.11s ( 0.9%) - V8 real shared=false ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+16. [32m✓[0m    0.09s ( 0.7%) - current budget still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+17. [32m✓[0m    0.09s ( 0.7%) - private assembler consumes the native preflight proposal without a second preparation handoff
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+18. [32m✓[0m    0.09s ( 0.7%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+19. [32m✓[0m    0.08s ( 0.7%) - K29 direct empty save fence retains original component-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+20. [32m✓[0m    0.08s ( 0.6%) - current binding still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.38s (19.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      12.42s
+  Test suites:        3
+  Individual tests:   151
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       2 failed, 149 passed, 151 total
+Snapshots:   0 total
+Time:        12.424 s, estimated 13 s
+Ran all test suites within paths "tests/unit/runtimeAgent/whole-recall-composition.test.ts", "tests/unit/runtimeMemory/query-composition.test.ts", "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-chain-focused-v2.json

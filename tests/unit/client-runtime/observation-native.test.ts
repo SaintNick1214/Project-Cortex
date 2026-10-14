@@ -202,6 +202,20 @@ describe("private observation transaction composition", () => {
     console.log(JSON.stringify({ controlledObservationReads: { original: referenceReads.length, scoped: actualReads.length,
       originalAuthority: referenceReads.filter(isAuthority).length, scopedAuthority: actualReads.filter(isAuthority).length } }));
   });
+  it("K29 compares the accepted K28 envelope helper against the explicit registered snapshot without changing results or raw final denial", async () => {
+    const f = await fixture(), query = f.db.query.bind(f.db), get = f.db.get.bind(f.db), reads: string[] = [];
+    f.db.query = table => { reads.push(`query:${table}`); return query(table); };
+    f.db.get = async (table, id) => { reads.push(`get:${table}:${id}`); return await get(table, id); };
+    const expected = await client.observeEnvelopeHandler(f.ctx, { handle: f.handle, acknowledgeSignal: true }), control = reads.splice(0);
+    const result = await f.observe({ acknowledgeSignal: true }), actual = reads.splice(0); expect(result).toEqual(expected);
+    const isAuthority = (value: string) => /^(get|query):runtimeAuth/.test(value);
+    expect(actual.filter(value => !isAuthority(value))).toEqual(control.filter(value => !isAuthority(value)));
+    expect(new Set(actual)).toEqual(new Set(control)); expect(actual.length).toBeLessThan(control.length);
+    console.log(JSON.stringify({ k29EnvelopeSnapshotReads: { acceptedK28: control.length, current: actual.length,
+      acceptedAuthority: control.filter(isAuthority).length, currentAuthority: actual.filter(isAuthority).length } }));
+    // This original native endpoint still starts a fresh scope on the next RPC.
+    f.grant.revokedAt = Date.now(); await expect(f.observe({ acknowledgeSignal: true })).rejects.toThrow("FORBIDDEN");
+  });
   it.each(["malformed_json", "missing_media"])("opaque signal retains original output validation for %s", async kind => {
     const f = await fixture(); f.db.table("runtimeAgentOutput")[0].partCanonical = kind === "malformed_json" ? "{" : JSON.stringify({ type: "media-job", kind: "image", jobId: "missing", artifactId: "missing" });
     const expected = await f.call(runtime.observe, { runId: f.handle.runId, limit: 1, finalOnly: false }).catch(error => error as Error);

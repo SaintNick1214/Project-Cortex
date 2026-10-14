@@ -1,0 +1,168 @@
+(node:83076) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"controlled-v8-preparation-read-count","original":{"total":406,"authority":84},"optimized":{"total":326,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:59:10)
+
+    console.info
+      {"type":"controlled-v8-financial-read-count","original":{"total":140,"authority":42},"optimized":{"total":111,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:89:10)
+
+    console.info
+      {"type":"k29-current-a773-direct-empty-parent","baseline":{"dbReads":332,"componentQueries":2},"actual":{"dbReads":326,"componentQueries":1},"exactResultStateAndMutableReadOrder":true,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:115:10)
+
+PASS tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k27-public-fact-rpc-count","facts":3,"baselineFactAndSourceRPCs":4,"optimizedFactAndSourceRPCs":1,"providerCalls":1,"retries":0,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:140:11)
+
+    console.info
+      {"type":"k28-controlled-public-read-handoffs","oldCalls":["runtimeMemory:checkAuthority","runtimeMemory:readFacts","runtimeMemory:checkProfileReady","runtimeModelPolicy:embeddingProfile","runtimeMemory:readVectorMatches","runtimeModelPolicy:embeddingProfile","runtimeMemory:checkAuthority","runtimeMemory:finalDelivery","runtimeModelPolicy:embeddingProfile"],"newCalls":["runtimeMemoryQuery:prepareReads","runtimeMemoryQuery:readMatches","runtimeMemoryQuery:finalRecallDelivery"],"items":6,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:181:11)
+
+    console.info
+      {"type":"k29-current-a773-public-read-pipeline","baseline":{"calls":221,"documents":154,"authority":137},"actual":{"calls":167,"documents":124,"authority":83},"exactResultStateAndMutableReadOrder":true,"providerCalls":0,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:267:10)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.4s | 14/14 passed | /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ✅     2.4s | 41/41 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.20s ( 3.0%) - actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 2. [32m✓[0m    0.15s ( 2.1%) - K29 exact-owner direct empty parent reruns save predicates with identical outcome/state and fewer raw rereads
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 3. [32m✓[0m    0.14s ( 2.0%) - financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 4. [32m✓[0m    0.11s ( 1.7%) - K29 direct empty save fence retains original authority-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 5. [32m✓[0m    0.11s ( 1.6%) - current budget still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 6. [32m✓[0m    0.10s ( 1.5%) - K29 direct empty save fence retains original component-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 7. [32m✓[0m    0.09s ( 1.3%) - K29 direct empty save fence retains original qualification-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 8. [32m✓[0m    0.09s ( 1.3%) - K29 direct empty save fence retains original policy-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 9. [32m✓[0m    0.09s ( 1.3%) - current lease still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+10. [32m✓[0m    0.08s ( 1.2%) - K29 actual public read pipeline matches a773 result/readset/state while sharing exact-owner raw rows
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+11. [32m✓[0m    0.08s ( 1.2%) - current revocation still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+12. [32m✓[0m    0.08s ( 1.2%) - K29 direct empty save fence retains original unknown-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+13. [32m✓[0m    0.08s ( 1.2%) - K29 direct empty save fence retains original expiry denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+14. [32m✓[0m    0.08s ( 1.2%) - current binding still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+15. [32m✓[0m    0.08s ( 1.1%) - actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+16. [32m✓[0m    0.07s ( 1.1%) - actual populated public API uses three native read/delivery parents with identical original replayed outcome
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+17. [32m✓[0m    0.06s ( 0.8%) - K28 public native read parents are internal and preserve the Action ranking/final-delivery boundary
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+18. [32m✓[0m    0.05s ( 0.7%) - K28 fresh independent public delivery retains late source-tombstone refusal
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+19. [32m✓[0m    0.05s ( 0.7%) - K28 fresh independent public delivery retains late grant refusal
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+20. [32m✓[0m    0.05s ( 0.7%) - K28 fresh independent public delivery retains late profile refusal
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.85s (27.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.88s
+  Test suites:        2
+  Individual tests:   55
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       55 passed, 55 total
+Snapshots:   0 total
+Time:        6.876 s
+Ran all test suites within paths "tests/unit/runtimeMemory/query-composition.test.ts", "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-chain-failed-successor-v3.json

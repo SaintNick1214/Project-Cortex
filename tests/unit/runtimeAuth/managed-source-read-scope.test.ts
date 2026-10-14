@@ -1,12 +1,13 @@
 /** Actual source-currentness predicates on controlled native storage ports; no cloud-speed claim. */
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { makeFunctionReference } from "convex/server";
 import type { Doc, Id } from "../../../convex-dev/_generated/dataModel";
 import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import { fixture } from "../runtimeMetadataAuth/fixture";
 import { managedSourceIsCurrent } from "../../../convex-dev/runtimeDataAuth";
 import { createV8AuthorityReadScope, createAuthorityReadScope, freshManagedSourceReads, withManagedSourceReads,
   readManagedSourceRows, readManagedConversationRows, readManagedTranscriptBridgeRows, readManagedSourceRunRows,
-  recheckAuthority, MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES, MANAGED_SOURCE_READ_SCOPE_MAX_BYTES } from "../../../convex-dev/runtimeAuth";
+  recheckAuthority, withNativeSnapshotReads, withManagedSourceValidationReads, createMemorySourceReadScope, MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES, MANAGED_SOURCE_READ_SCOPE_MAX_BYTES } from "../../../convex-dev/runtimeAuth";
 
 beforeEach(() => { jest.spyOn(Date, "now").mockReturnValue(1000); });
 afterEach(() => { jest.restoreAllMocks(); });
@@ -240,5 +241,75 @@ describe("fresh traversal-local authority rows", () => {
     try { await expect(recheckAuthority(traversal, f.reference, requirement)).rejects.toThrow("FORBIDDEN"); }
     finally { release(); await settled; }
     await expect(recheckAuthority(traversal, f.reference, requirement)).rejects.toThrow("FORBIDDEN");
+  });
+});
+
+// K29 retains raw authority across synchronous original traversals in one native
+// snapshot. The accepted K28 graph/traversal view above remains the control.
+describe("explicit native snapshot validator views", () => {
+  it.each([true, false])("actual full source predicates retain exact identities with shared ancestry=%s", async shared => {
+    const f = setup(), end = shared ? f.second : f.makeSource("other", [f.makeSource("other-leaf")]);
+    const physical = observe(f), get = f.db.get.bind(f.db), gets: string[] = [];
+    jest.spyOn(f.db, "get").mockImplementation(async (table, id) => { gets.push(JSON.stringify([table, id])); return get(table, id); });
+    const validate = async (ctx: MutationCtx) => [await read(ctx, f, f.first), await read(ctx, f, end), await read(ctx, f, f.first, "canViewFacts")];
+    const control = withManagedSourceValidationReads(f.ctx, createV8AuthorityReadScope(f.ctx, { managedSources: true }));
+    const original = await validate(control), originalGets = gets.splice(0), originalQueries = physical.splice(0);
+    const before = structuredClone(f.db.rows), parent = createV8AuthorityReadScope(f.ctx, { managedSources: true });
+    const current = await validate(withNativeSnapshotReads(f.ctx, parent));
+    expect(current).toEqual(original); expect(current).toEqual([true, true, true]); expect(f.db.rows).toEqual(before); expect(f.db.writes).toBe(0);
+    expect(new Set(gets)).toEqual(new Set(originalGets)); expect(new Set(physical.map(r => r.identity))).toEqual(new Set(originalQueries.map(r => r.identity)));
+    expect(physical.filter(r => !r.table.startsWith("runtimeAuth"))).toEqual(originalQueries.filter(r => !r.table.startsWith("runtimeAuth")));
+    expect(gets.length).toBeLessThan(originalGets.length); expect(physical.length).toBeLessThan(originalQueries.length);
+    console.info(JSON.stringify({ type: "k29-native-snapshot-source-reads", shared, originalGets: originalGets.length, currentGets: gets.length,
+      originalQueries: originalQueries.length, currentQueries: physical.length, uniqueGetIdentities: new Set(gets).size,
+      uniqueQueryIdentities: new Set(physical.map(r => r.identity)).size, nativeLatency: "NOT_RUN" }));
+  });
+  it("wrong-owner, serialized, unscoped and already-scoped contexts retain their original fallback", async () => {
+    const f = setup(), parent = createMemorySourceReadScope(f.ctx), other = { ...f.ctx };
+    expect(withNativeSnapshotReads(f.ctx, f.ctx)).toBe(f.ctx);
+    expect(withNativeSnapshotReads(other, parent)).toBe(other);
+    expect(withNativeSnapshotReads(parent, parent)).toBe(parent);
+    expect(withNativeSnapshotReads(f.ctx, JSON.parse(JSON.stringify(parent)) as MutationCtx)).toBe(f.ctx);
+    const view = withNativeSnapshotReads(f.ctx, parent);
+    expect(view).not.toBe(f.ctx); expect(Object.getOwnPropertySymbols(view).length).toBeGreaterThan(0);
+    expect(Object.getOwnPropertySymbols(view).every(symbol => !Object.getOwnPropertyDescriptor(view, symbol)?.enumerable)).toBe(true);
+    expect(await read(view, f, f.first)).toBe(true);
+    f.grant.revokedAt = 1000;
+    await expect(read(withNativeSnapshotReads(other, parent), f, f.first)).rejects.toThrow("FORBIDDEN");
+    await expect(read(f.ctx, f, f.first)).rejects.toThrow("FORBIDDEN");
+  });
+  it.each(["grant-revoke", "source-edit", "source-delete", "conversation-delete", "bridge-delete", "run-delete", "duplicate-source", "source-tombstone"])("an original %s writer clears shared raw rows and preserves refusal", async fault => {
+    const f = setup(), parent = createV8AuthorityReadScope(f.ctx, { managedSources: true }), view = withNativeSnapshotReads(f.ctx, parent);
+    expect(await read(view, f, f.first)).toBe(true);
+    const writer = view.db as unknown as Pick<typeof f.db, "patch" | "insert">;
+    if (fault === "grant-revoke") await writer.patch("runtimeAuthGrants", f.grant._id, { revokedAt: 1000 });
+    if (fault === "source-edit") await writer.patch("runtimeMemorySources", f.a._id, { contentHash: "changed" });
+    if (fault === "source-delete") await writer.patch("runtimeMemorySources", f.a._id, { tombstonedAt: 1000 });
+    if (fault === "conversation-delete") await writer.patch("runtimeConversations", f.conversation._id, { tombstonedAt: 1000 });
+    if (fault === "bridge-delete") await writer.patch("runtimeTranscriptMessages", f.db.table("runtimeTranscriptMessages")[0]!._id, { tombstonedAt: 1000 });
+    if (fault === "run-delete") await writer.patch("runtimeRuns", f.db.table("runtimeRuns")[0]!._id, { tombstonedAt: 1000 });
+    if (fault === "duplicate-source") await writer.insert("runtimeMemorySources", { ...f.a, _id: "runtimeMemorySources:duplicate" });
+    if (fault === "source-tombstone") await writer.insert("runtimeAuthTombstones", { tenantId: "tenant-a", memorySpaceId: "space-a", resourceType: "source", resourceId: "a", deletedAt: 1000 });
+    expect(await outcome(() => read(view, f, f.first))).toEqual(await outcome(() => read(f.ctx, f, f.first)));
+    expect(await outcome(() => read(view, f, f.first))).not.toEqual({ result: true });
+  });
+  it.each(["grant", "retention"])("raw retention never caches the original clock-dependent %s predicate", async kind => {
+    const f = setup(); if (kind === "grant") f.grant.expiresAt = 1010; else f.conversation.retentionUntil = 1010;
+    const view = withNativeSnapshotReads(f.ctx, createMemorySourceReadScope(f.ctx)); expect(await read(view, f, f.first)).toBe(true);
+    jest.spyOn(Date, "now").mockReturnValue(1010);
+    expect(await outcome(() => read(view, f, f.first))).toEqual(await outcome(() => read(f.ctx, f, f.first)));
+    expect(await outcome(() => read(view, f, f.first))).not.toEqual({ result: true });
+  });
+  it.each([false, true])("pending unknown child writers suppress raw reuse and preserve rollback/error=%s", async fail => {
+    const f = setup(), error = Error("CHILD_ROLLBACK"), get = jest.spyOn(f.db, "get"); let entered!: () => void, release!: () => void;
+    const enteredPromise = new Promise<void>(resolve => { entered = resolve; }), gate = new Promise<void>(resolve => { release = resolve; });
+    const native = { ...f.ctx, runMutation: async () => { entered(); await gate; if (fail) throw error; return null; } } as unknown as MutationCtx;
+    const parent = createMemorySourceReadScope(native), view = withNativeSnapshotReads(native, parent);
+    expect(await read(view, f, f.first)).toBe(true); const before = get.mock.calls.length;
+    const writing = view.runMutation(makeFunctionReference<"mutation">("controlled:write"), {}); void writing.catch(() => {}); await enteredPromise;
+    expect(await read(view, f, f.first)).toBe(true); expect(await read(view, f, f.first)).toBe(true);
+    expect(get.mock.calls.length).toBeGreaterThan(before + 6);
+    release(); if (fail) await expect(writing).rejects.toBe(error); else await writing;
+    const after = get.mock.calls.length; expect(await read(view, f, f.first)).toBe(true); expect(get.mock.calls.length).toBeGreaterThan(after);
   });
 });

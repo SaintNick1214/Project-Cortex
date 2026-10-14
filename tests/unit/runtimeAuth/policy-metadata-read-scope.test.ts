@@ -1,7 +1,7 @@
 /** Exact raw metadata queries only; controlled native DB ports, no authorization/decision cache. */
 import { afterEach, beforeEach, expect, it, jest } from "@jest/globals";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
-import { createAuthorityReadScope, freshPolicyMetadataReads, readDeploymentPolicyRows, readQualificationRows, POLICY_METADATA_READ_SCOPE_MAX_ENTRIES } from "../../../convex-dev/runtimeAuth";
+import { createAuthorityReadScope, freshPolicyMetadataReads, readDeploymentPolicyRows, readQualificationRows, POLICY_METADATA_READ_SCOPE_MAX_ENTRIES, createMemorySourceReadScope, withManagedSourceValidationReads, withNativeSnapshotReads } from "../../../convex-dev/runtimeAuth";
 import { transcriptFixture, installMockRoot, clock } from "../runtimeTranscript/fixture";
 beforeEach(() => { installMockRoot(); }); afterEach(() => { jest.restoreAllMocks(); });
 it("unscoped/default factory stays uncached; opted queries retain exact original index/arguments/caps and detached rows", async () => {
@@ -77,4 +77,34 @@ it("finite capacity falls through to original raw lookup and cannot share a chil
   await readQualificationRows(scoped, "receipt:0", 1); expect(query).toHaveBeenCalledTimes(POLICY_METADATA_READ_SCOPE_MAX_ENTRIES + 2);
   const child = createAuthorityReadScope(f.ctx); await readQualificationRows(child, "receipt:0", 1); await readQualificationRows(child, "receipt:0", 1);
   expect(query).toHaveBeenCalledTimes(POLICY_METADATA_READ_SCOPE_MAX_ENTRIES + 4);
+});
+
+it("original embedding-profile validation repeats every predicate with fewer raw queries in the explicit snapshot view", async () => {
+  const { installIngestionMockRoot, ledger } = await import("../runtimeTranscript/fixture"); installIngestionMockRoot();
+  const f = await transcriptFixture({ maxContextTokens: 16384 }), spy = jest.spyOn(f.db, "query"), get = jest.spyOn(f.db, "get");
+  const oldView = withManagedSourceValidationReads(f.ctx, createMemorySourceReadScope(f.ctx));
+  const expected = [await ledger.readCurrentEmbeddingProfile(oldView, f.reference, "embedding.query"), await ledger.readCurrentEmbeddingProfile(oldView, f.reference, "embedding.query")];
+  const oldQueries = spy.mock.calls.map(([table]) => table), oldGets = get.mock.calls.map(args => JSON.stringify(args)); spy.mockClear(); get.mockClear();
+  const view = withNativeSnapshotReads(f.ctx, createMemorySourceReadScope(f.ctx));
+  expect([await ledger.readCurrentEmbeddingProfile(view, f.reference, "embedding.query"), await ledger.readCurrentEmbeddingProfile(view, f.reference, "embedding.query")]).toEqual(expected);
+  const queries = spy.mock.calls.map(([table]) => table), gets = get.mock.calls.map(args => JSON.stringify(args));
+  expect(new Set(queries)).toEqual(new Set(oldQueries)); expect(new Set(gets)).toEqual(new Set(oldGets));
+  expect(queries.length).toBeLessThan(oldQueries.length); expect(gets.length).toBeLessThan(oldGets.length);
+  console.info(JSON.stringify({ type: "k29-profile-snapshot-reads", originalQueries: oldQueries.length, currentQueries: queries.length, originalGets: oldGets.length, currentGets: gets.length, nativeLatency: "NOT_RUN" }));
+});
+it.each(["root-inactive", "qualification-revoked", "qualification-canonical", "duplicate-root", "clock-expired"])("fresh profile %s keeps original denial with snapshot readers", async fault => {
+  const { installIngestionMockRoot, ledger } = await import("../runtimeTranscript/fixture"); installIngestionMockRoot();
+  const f = await transcriptFixture({ maxContextTokens: 16384 }), parent = createMemorySourceReadScope(f.ctx), view = withNativeSnapshotReads(f.ctx, parent);
+  await ledger.readCurrentEmbeddingProfile(view, f.reference, "embedding.query");
+  const policy = f.db.table("runtimeModelPolicies").find(row => row.scope === "deployment")!, qualification = f.db.table("runtimeModelQualifications")[0]!;
+  if (fault === "root-inactive") await view.db.patch("runtimeModelPolicies", policy._id as Id<"runtimeModelPolicies">, { active: false });
+  if (fault === "qualification-revoked") await view.db.patch("runtimeModelQualifications", qualification._id as Id<"runtimeModelQualifications">, { revokedAt: clock });
+  if (fault === "qualification-canonical") await view.db.patch("runtimeModelQualifications", qualification._id as Id<"runtimeModelQualifications">, { canonical: "changed" });
+  if (fault === "duplicate-root") {
+    const { _id, _creationTime, ...body } = policy;
+    const writer = view.db as unknown as Pick<typeof f.db, "insert">; await writer.insert("runtimeModelPolicies", body);
+  }
+  if (fault === "clock-expired") jest.mocked(Date.now).mockReturnValue(clock + 600_000);
+  const error = async (ctx: typeof f.ctx) => { try { await ledger.readCurrentEmbeddingProfile(ctx, f.reference, "embedding.query"); return null; } catch (value) { return value && typeof value === "object" && "data" in value ? value.data : value; } };
+  expect(await error(view)).toEqual(await error(f.ctx)); expect(await error(view)).not.toBeNull();
 });

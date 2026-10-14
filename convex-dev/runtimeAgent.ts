@@ -36,7 +36,7 @@ import { currentRun, currentControlRun, activeAttempt, publicRunCurrent } from "
 import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, hydrateSelectedCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
-import { recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads } from "./runtimeAuth";
+import { recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads, withNativeSnapshotReads } from "./runtimeAuth";
 import { createBackendGatewayComposition, withV8GatewayTerminalPorts } from "./runtimeGatewayBackend";
 import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
 import { admitHandler, checkpointHandler, resolveHandler, readCurrentEmbeddingProfile, attachTerminalResultHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
@@ -1992,7 +1992,7 @@ export async function prepareContextV8Handler(ctx: ActionCtx, args: Attempt, rec
   await ctx.runMutation(ref<"mutation",typeof save,null>("mutation","runtimeAgent:saveContextV8"), save); return null;
 }
 
-async function prepareEmptyContextV8Handler(ctx: MutationCtx, args: Attempt, stableEmpty = false): Promise<EmptyContextResult> {
+async function prepareEmptyContextV8Handler(ctx: MutationCtx, args: Attempt, stableEmpty = false, nativeSnapshot?: MutationCtx): Promise<EmptyContextResult> {
   const inputs = await contextInputsV8Handler(ctx, args, stableEmpty);
   if (inputs.kind === "pending_overflow") return { state: "FAILED", failureCode: "CONTEXT_OVERFLOW" };
   if (!inputs.availability.empty) return { state: "NEEDS_ACTION" };
@@ -2008,14 +2008,17 @@ async function prepareEmptyContextV8Handler(ctx: MutationCtx, args: Attempt, sta
     text:`Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.` }] : []),...selectedPendingEntries(pending)];
   const context = renderModelInputEntries(entries);
   if (utf8Bytes(context) > 16_384 || witnesses.size > 32) return { state: "FAILED", failureCode: "CONTEXT_OVERFLOW" };
-  // Repeat the complete original save fence in this transaction, including its
-  // source/witness checks and fresh empty/profile re-probe. No external I/O.
-  await saveContextV8Handler(freshNativeTranscriptReads(freshPolicyMetadataReads(ctx)), { ...args, context, entries, historyMessageIds,witnesses: [...witnesses.values()], completeness,
+  // Repeat every original save predicate and empty/profile probe. Only the
+  // exact owning native mutation can retain raw metadata/transcript rows here;
+  // wrapped writers still invalidate them and no verdict crosses this fence.
+  const shared = nativeSnapshot ? withNativeSnapshotReads(nativeSnapshot, ctx) : undefined;
+  const saveCtx = shared && shared !== nativeSnapshot ? shared : freshNativeTranscriptReads(freshPolicyMetadataReads(ctx));
+  await saveContextV8Handler(saveCtx, { ...args, context, entries, historyMessageIds,witnesses: [...witnesses.values()], completeness,
     ...(failureCode ? { failureCode } : {}), emptyIndexedProfileId: availability.profileId });
   return { state: "COMPLETE" };
 }
 
-async function prepareRoutedContextV8Handler(ctx: MutationCtx, args: Attempt, stableEmpty = false): Promise<EmptyContextResult> {
+async function prepareRoutedContextV8Handler(ctx: MutationCtx, args: Attempt, stableEmpty = false, nativeSnapshot?: MutationCtx): Promise<EmptyContextResult> {
   ctx = createAuthorityReadScope(ctx, { policyMetadata: true });
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
@@ -2033,7 +2036,7 @@ async function prepareRoutedContextV8Handler(ctx: MutationCtx, args: Attempt, st
   if (events.length > 1024 || events.some(event => event.eligibility === "eligible" && !represented.has(contextSourceKey(scope, event.lineage)))) {
     return { state: "NEEDS_ACTION" };
   }
-  return await prepareEmptyContextV8Handler(ctx, args, stableEmpty);
+  return await prepareEmptyContextV8Handler(ctx, args, stableEmpty, nativeSnapshot);
 }
 
 export async function prepareResolvedModelCandidateV8Handler(ctx:MutationCtx,args:Attempt & { ordinal:number }):Promise<PreparedModelCandidate> {
@@ -2119,7 +2122,7 @@ async function prepareDirectTurnV8Handler(nativeCtx: MutationCtx, args: Attempt)
   const barrier = await contextBarrierHandler(ctx, args);
   if (barrier.state !== "ready") transcriptDenied("INVALID_STATE");
   await ctx.db.patch("runtimeAgentExecutions", owned._id, { directState: "started" });
-  const context = await prepareRoutedContextV8Handler(ctx, args, true);
+  const context = await prepareRoutedContextV8Handler(ctx, args, true, nativeCtx);
   if (context.state === "FAILED") return { state: "failed_context" as const, failureCode: context.failureCode };
   if (context.state === "NEEDS_ACTION") return { state: "needs_context" as const };
   return await prepareResolvedModelCandidateV8Handler(ctx, { ...args, ordinal: 0 });
