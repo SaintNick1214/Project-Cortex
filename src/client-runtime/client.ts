@@ -298,7 +298,7 @@ export class CortexRuntimeClient {
     return result as { runId: string; attemptNumber: number; state: string; failureCode?: string };
   }
   async get(handle: RuntimeRunHandle): Promise<RuntimeRun> { const { result } = await this.inSession(current => this.mutation(refs.get, this.selector(handle, current))); return this.pinned(handle, run(result)); }
-  private async observeInSession(handle: RuntimeRunHandle, args: Record<string, unknown>): Promise<{ current: RuntimeSession; result: RuntimeObservation }> {
+  private async observeInSession(handle: RuntimeRunHandle, args: Record<string, unknown>, acknowledgeSignal = false): Promise<{ current: RuntimeSession; result: RuntimeObservation; marker?: string }> {
     this.check(); const epoch = this.generation; await this.authReady;
     if (epoch !== this.generation) invalid("SESSION_CHANGED"); if (!this.authenticated) invalid("UNAUTHENTICATED");
     const input = object(handle);
@@ -306,12 +306,13 @@ export class CortexRuntimeClient {
     const expected: RuntimeRunHandle = { version: 1, tenantId: identifier(input.tenantId), memorySpaceId: identifier(input.memorySpaceId),
       principalId: identifier(input.principalId), runId: identifier(input.runId, 512), conversationId: identifier(input.conversationId, 512),
       agentId: identifier(input.agentId, 512), agentVersion: input.agentVersion as number, definitionHash: identifier(input.definitionHash, 512) };
-    const raw = await this.call(() => this.mutation(refs.observe, { ...args, ...this.scope, handle: expected }));
+    const raw = await this.call(() => this.mutation(refs.observe, { ...args, ...this.scope, handle: expected, ...(acknowledgeSignal ? { acknowledgeSignal: true } : {}) }));
     try {
       if (epoch !== this.generation || !this.authenticated) invalid("SESSION_CHANGED");
       const envelope = object(raw);
-      if (envelope.version !== 1 || Object.keys(envelope).length !== 3
+      if (envelope.version !== 1 || Object.keys(envelope).some(key => !["version", "session", "observation", "marker"].includes(key))
         || !Object.hasOwn(envelope, "session") || !Object.hasOwn(envelope, "observation")) invalid("INVALID_RESPONSE");
+      if (Object.hasOwn(envelope, "marker") && (typeof envelope.marker !== "string" || !/^[a-f0-9]{64}$/.test(envelope.marker))) invalid("INVALID_RESPONSE");
       const actor = object(envelope.session);
       if (Object.keys(actor).some(key => !["version", "tenantId", "memorySpaceId", "principalId", "userId", "deliveryExpiresAt"].includes(key))) invalid("INVALID_RESPONSE");
       const current = session(actor); this.selector(expected, current); this.sessionDeadline(current);
@@ -325,7 +326,7 @@ export class CortexRuntimeClient {
       if (current.deliveryExpiresAt !== undefined && current.deliveryExpiresAt <= Date.now()) invalid("AUTHORITY_EXPIRED");
       // Existing one-shot trackDelivery and per-watcher deadline checks consume
       // the protected-source bound before return/callback, with their original cleanup.
-      return { current, result };
+      return { current, result, ...(envelope.marker === undefined ? {} : { marker: envelope.marker as string }) };
     } catch (error) { throw new CortexRuntimeError(runtimeError(error).code, "uncertain"); }
   }
   async observe(handle: RuntimeRunHandle, options: { cursor?: RuntimeOutputCursor; finalOnly?: boolean; limit?: number } = {}): Promise<RuntimeObservation> {
@@ -336,7 +337,13 @@ export class CortexRuntimeClient {
   }
   private watch<T>(handle: RuntimeRunHandle, ref: ReturnType<typeof mutation>, args: Record<string, unknown> | (() => Record<string, unknown>), parse: (raw: unknown) => T,
     callback: (value: T) => void, onError?: (error: CortexRuntimeError) => void): () => void {
-    this.check(); let active = true, inFlight = false, pending = false, stopSignal = () => {};
+    this.check(); let active = true, inFlight = false, stopSignal = () => {};
+    let forced = 0, servedForced = 0, signalled = 0, servedSignal = 0;
+    type Revision = { marker: string; deliveryExpiresAt?: number };
+    let latestSignal: Revision | undefined, acknowledged: Revision | undefined;
+    const sameRevision = (left: Revision | undefined, right: Revision | undefined) => left !== undefined && right !== undefined
+      && left.marker === right.marker && left.deliveryExpiresAt === right.deliveryExpiresAt;
+    const pending = () => forced > servedForced || signalled > servedSignal;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const close = () => { if (!active) return; active = false; clearTimeout(timer); stopSignal(); this.watchers.delete(fail); this.wakeWatchers.delete(wake); };
     const fail = (error: unknown) => { if (!active) return; close(); onError?.(runtimeError(error)); };
@@ -346,23 +353,33 @@ export class CortexRuntimeClient {
       timer = setTimeout(() => { if (expiresAt <= Date.now()) { this.abortAssets(new CortexRuntimeError("AUTHORITY_EXPIRED")); fail(new CortexRuntimeError("AUTHORITY_EXPIRED")); } else deadline(expiresAt); }, Math.min(remaining, 2147483647));
       if (typeof timer === "object" && "unref" in timer) timer.unref();
     };
+    const drain = () => {
+      if (!active || inFlight) return; inFlight = true;
+      void (async () => {
+        while (active && pending()) {
+          const epoch = this.generation, throughForced = forced, throughSignal = signalled;
+          try {
+            const acquired = await this.observeInSession(handle, typeof args === "function" ? args() : args, true);
+            if (!active || epoch !== this.generation) continue;
+            const raw = object(acquired.result), value = parse(raw);
+            const sourceDeadline = deliveryDeadline(raw.deliveryExpiresAt);
+            const bounds = [acquired.current.deliveryExpiresAt, sourceDeadline].filter((bound): bound is number => bound !== undefined);
+            deadline(bounds.length ? Math.min(...bounds) : undefined);
+            // The acknowledgement belongs to this guarded read, including its
+            // independent post-I/O session. It caches no protected payload or permit.
+            acknowledged = acquired.marker === undefined ? undefined : { marker: acquired.marker,
+              ...(sourceDeadline === undefined ? {} : { deliveryExpiresAt: sourceDeadline }) };
+            servedForced = throughForced;
+            servedSignal = sameRevision(acknowledged, latestSignal) ? signalled : throughSignal;
+            if (active && epoch === this.generation) callback(value);
+          } catch (error) { if (!active) break; if (epoch !== this.generation) continue; fail(error); }
+        }
+      })().finally(() => { inFlight = false; if (active && pending()) drain(); });
+    };
     const wake = () => {
       if (!active) return;
       if (this.options.onLatencyEvent) this.latency("watcher.wake", { method: getFunctionName(ref) });
-      pending = true; if (inFlight) return; inFlight = true;
-      void (async () => {
-        while (active && pending) {
-          pending = false; const epoch = this.generation;
-          try {
-            const acquired = await this.observeInSession(handle, typeof args === "function" ? args() : args);
-            if (!active || epoch !== this.generation) continue;
-            const raw = object(acquired.result), value = parse(raw);
-            const bounds = [acquired.current.deliveryExpiresAt, deliveryDeadline(raw.deliveryExpiresAt)].filter((bound): bound is number => bound !== undefined);
-            deadline(bounds.length ? Math.min(...bounds) : undefined);
-            if (active && epoch === this.generation) callback(value);
-          } catch (error) { if (!active) break; if (epoch !== this.generation) { pending = true; continue; } fail(error); }
-        }
-      })().finally(() => { inFlight = false; if (active && pending) wake(); });
+      forced++; drain();
     };
     this.watchers.add(fail); this.wakeWatchers.add(wake);
     // Only opaque invalidation metadata is cacheable. Every delivery executes a fresh mutation.
@@ -371,10 +388,17 @@ export class CortexRuntimeClient {
       try { const signal = object(raw);
         if (signal.version !== 1 || typeof signal.marker !== "string" || !/^[a-f0-9]{64}$/.test(signal.marker)
           || Object.keys(signal).some(key => !["version", "marker", "deliveryExpiresAt"].includes(key))) invalid("INVALID_RESPONSE");
-        deliveryDeadline(signal.deliveryExpiresAt); wake();
+        const expiresAt = deliveryDeadline(signal.deliveryExpiresAt);
+        const revision = { marker: signal.marker, ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
+        // A legacy three-field envelope has no acknowledgement: retain its
+        // conservative wake behavior. Expiry validation above always runs.
+        if (sameRevision(revision, acknowledged) || acknowledged !== undefined && sameRevision(revision, latestSignal)) return;
+        latestSignal = revision; signalled++;
+        if (this.options.onLatencyEvent) this.latency("watcher.wake", { method: getFunctionName(ref) });
+        drain();
       } catch (error) { fail(error); }
     }, fail);
-    if (!active) stopSignal(); else wake();
+    if (!active) stopSignal(); else if (!inFlight) wake();
     return close;
   }
   watchRun(handle: RuntimeRunHandle, onUpdate: (run: RuntimeRun) => void, onError?: (error: CortexRuntimeError) => void): () => void {

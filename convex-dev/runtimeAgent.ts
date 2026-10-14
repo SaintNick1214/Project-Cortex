@@ -39,7 +39,7 @@ import { deliveryExpiresAt } from "./runtimeDelivery";
 import { recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads } from "./runtimeAuth";
 import { createBackendGatewayComposition, withV8GatewayTerminalPorts } from "./runtimeGatewayBackend";
 import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
-import { admitHandler, checkpointHandler, resolveHandler, readCurrentEmbeddingProfile, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
+import { admitHandler, checkpointHandler, resolveHandler, readCurrentEmbeddingProfile, attachTerminalResultHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
 import { createAgentGatewayCancellationBridge, createGovernedGatewayModel, assertGatewayReservedRequest, GatewayDispatchError, preflightAgentModelRequest } from "./runtimeGateway";
 import { createActionMemoryRepository } from "./runtimeMemoryRepository";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
@@ -996,6 +996,21 @@ export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v
   const parts = projectNativeOutputParts(args.parts, current.definition.tools.map(tool => NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]), knownToolCalls);
   await writeParts(ctx, current.execution, parts); return null;
 } });
+/** Read-only Agent guard followed by the original independent attachment write.
+ * Capture remains a previous committed RPC. No earlier write can be rolled back here. */
+export async function attachModelResultV8Handler(nativeCtx: MutationCtx, args: Attempt & {
+  attachmentReference: RuntimeAuthorityReference; attemptId: Parameters<typeof attachTerminalResultHandler>[1]["attemptId"]; evidenceId: string; privateResultCanonical: string;
+}) {
+  const current = await executionContext(createV8AuthorityReadScope(nativeCtx, { managedSources: true }), args);
+  if (current.snapshot.version !== 8) transcriptDenied("INVALID_STATE");
+  // A fresh reader retains the original interval's independent grant/source
+  // checks. No guarded decision or mutable accounting row crosses this seam.
+  return await attachTerminalResultHandler(createV8AuthorityReadScope(nativeCtx, { managedSources: true }), {
+    reference: args.attachmentReference, attemptId: args.attemptId, evidenceId: args.evidenceId, privateResultCanonical: args.privateResultCanonical,
+  });
+}
+export const attachModelResultV8 = internalMutation({args:{...agentAttempt,attachmentReference:runtimeAuthorityReference,attemptId:v.id("runtimeModelAttempts"),evidenceId:v.string(),privateResultCanonical:v.string()},handler:attachModelResultV8Handler});
+const attachModelResultV8Ref = ref<"mutation",Parameters<typeof attachModelResultV8Handler>[1],Awaited<ReturnType<typeof attachModelResultV8Handler>>>("mutation","runtimeAgent:attachModelResultV8");
 export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal: number }): Promise<StepResult> {
   const attempt = attemptArgs(args);
   const prepared = await ctx.runMutation(refs.prepareModelOperation, { ...attempt, ordinal: args.ordinal });
@@ -1019,7 +1034,9 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
         ...(request.parentOperationId !== undefined ? { parentOperationId: request.parentOperationId } : {}) }) });
     return await ctx.runMutation(refs.admitModelOperation, { ...attempt, operationId: op.operationId, ordinal: args.ordinal,
       requestCanonical: request.requestCanonical, snapshotCanonical: request.snapshotCanonical });
-  });
+  }, current.snapshot.version === 8 ? { attachTerminalResult: async request =>
+    await ctx.runMutation(attachModelResultV8Ref, { ...attempt, attachmentReference: request.reference, attemptId: request.attemptId,
+      evidenceId: request.evidenceId, privateResultCanonical: request.privateResultCanonical }) } : undefined);
   const proposals = proposal ? [proposal.initialResolution, proposal.governedResolution] : [];
   const resolve: GatewayLedgerPort["resolve"] = async request => {
     // Two original native checks were executed sequentially in preparation.
@@ -1035,7 +1052,7 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
     resolve,
     // The native mutation repeats the complete current Agent fence atomically.
     markVisible: async request => await base.ledger.markVisible(request),
-    attachTerminalResult: async request => { await guard(); return await base.ledger.attachTerminalResult(request); },
+    attachTerminalResult: async request => { if (current.snapshot.version !== 8) await guard(); return await base.ledger.attachTerminalResult(request); },
   } }, { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId,
     semanticId: op.semanticId, ordinal: args.ordinal });
   let cancellationBridge: ReturnType<typeof createAgentGatewayCancellationBridge> | undefined;
@@ -1611,7 +1628,7 @@ export const onInitialWorkflowComplete = internalMutation({ args: { workflowId: 
   }
   return await ctx.runMutation(ref<"mutation", WorkflowCompletion, null>("mutation", "runtimeAgent:onWorkflowComplete"), args);
 } });
-export async function observeHandler(ctx: QueryCtx, args: { runId: string; tenantId?: string; memorySpaceId?: string; afterSequence?: number; limit?: number; finalOnly?: boolean }) {
+async function guardedObservation(ctx: QueryCtx, args: { runId: string; tenantId?: string; memorySpaceId?: string; afterSequence?: number; limit?: number; finalOnly?: boolean }, finalAuthorityCtx: QueryCtx, opaque = false) {
   const actor = await requireDataAuthority(ctx, args, "read"); const current = await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read");
   const reference = dataAuthorityReference(actor), deadlines: number[] = [];
   await managedConversationAccess(ctx, reference, current.conversation, "read", undefined, deadlines);
@@ -1645,13 +1662,28 @@ export async function observeHandler(ctx: QueryCtx, args: { runId: string; tenan
       if (!job || job.artifactId !== part.artifactId || job.kind !== part.kind) transcriptDenied("STALE_CONTEXT");
       await checkMediaJob(ctx, job, dataAuthorityReference(actor));
     }
-    parts.push({ sequence: row.sequence, part });
+    if (!opaque) parts.push({ sequence: row.sequence, part });
   }
-  const visibleApprovals = await Promise.all(approvals.filter(op => op.state === "waiting_approval").map(async op => ({ operationId: op.operationId, toolName: op.toolName, requestHash: await semanticHash(op.requestCanonical) })));
-  const expiresAt = await deliveryExpiresAt(ctx, reference, deadlines);
-  return { run: await publicRunCurrent(ctx, current.row), state, parts,
-    cursor: rows[rows.length - 1]?.sequence ?? after, approvals: visibleApprovals,
+  const visibleApprovals = opaque ? [] : await Promise.all(approvals.filter(op => op.state === "waiting_approval").map(async op => ({ operationId: op.operationId, toolName: op.toolName, requestHash: await semanticHash(op.requestCanonical) })));
+  const expiresAt = await deliveryExpiresAt(finalAuthorityCtx, reference, deadlines);
+  const run = await publicRunCurrent(ctx, current.row);
+  const observation = { run, state, parts, cursor: rows[rows.length - 1]?.sequence ?? after, approvals: visibleApprovals,
     ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
+  return { observation, metadata: { attempt: run.attemptNumber, updatedAt: run.updatedAt, memoryStatus: run.memoryStatus,
+    state, cursor: observation.cursor, outputRevision: owned?.nextOutputSequence ?? 0,
+    ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) } };
+}
+/** Existing private delivery projection; its original guarded read remains the default. */
+export async function observeHandler(ctx: QueryCtx, args: Parameters<typeof guardedObservation>[1]) {
+  return (await guardedObservation(ctx, args, ctx)).observation;
+}
+/** Server-only envelope seam. The final deadline uses the original native context. */
+export async function observeWithMetadataHandler(ctx: QueryCtx, args: Parameters<typeof guardedObservation>[1], finalAuthorityCtx: QueryCtx = ctx) {
+  return await guardedObservation(ctx, args, finalAuthorityCtx);
+}
+/** Same guarded dependencies and JSON/media validation, without private DTO/hash construction. */
+export async function observeSignalHandler(ctx: QueryCtx, args: Parameters<typeof guardedObservation>[1], finalAuthorityCtx: QueryCtx = ctx) {
+  return (await guardedObservation(ctx, args, finalAuthorityCtx, true)).metadata;
 }
 export const observe = mutation({ args: { ...selector, afterSequence: v.optional(v.number()), limit: v.optional(v.number()), finalOnly: v.optional(v.boolean()) }, handler: observeHandler });
 export const cancel = mutation({ args: selector, handler: async (ctx, args) => {

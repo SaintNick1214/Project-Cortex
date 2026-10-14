@@ -2,6 +2,8 @@
  * This exercises product guards, not actual Convex OCC, services or cloud timings. */
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { getFunctionName } from "convex/server";
+import { CortexRuntimeClient } from "../../../src/client-runtime/client";
+import type { RuntimeClientPort } from "../../../src/client-runtime/client";
 import type { RuntimeObservation, RuntimeRunHandle, RuntimeSession } from "../../../src/client-runtime/types";
 import { assertNativeArgs } from "../runtimeAgent/native-arguments";
 
@@ -12,7 +14,7 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
 const { installMockRoot, transcriptFixture, runs, invoke, clone } = await import("../runtimeTranscript/fixture");
 const runtime = await import("../../../convex-dev/runtimeAgent");
 const client = await import("../../../convex-dev/runtimeClient");
-type Envelope = { version: 1; session: RuntimeSession; observation: RuntimeObservation };
+type Envelope = { version: 1; session: RuntimeSession; observation: RuntimeObservation; marker?: string };
 beforeEach(() => { installMockRoot(); });
 afterEach(() => { jest.restoreAllMocks(); });
 async function fixture() {
@@ -32,7 +34,7 @@ async function fixture() {
     principalId: f.principal._id, runId: value.runId, conversationId: value.conversationId, agentId: value.agentId,
     agentVersion: value.agentVersion, definitionHash: value.definitionHash };
   const observe = async (options: { tenantId?: string; memorySpaceId?: string; afterSequence?: number; limit?: number; finalOnly?: boolean;
-    handle?: RuntimeRunHandle } = {}) => {
+    handle?: RuntimeRunHandle; acknowledgeSignal?: boolean } = {}) => {
     const args = { handle, ...options }; assertNativeArgs(client.observeEnvelope, args);
     return await f.call<Envelope>(client.observeEnvelope, args);
   };
@@ -159,4 +161,79 @@ describe("private observation transaction composition", () => {
     f.grant.revokedAt = Date.now();
     await expect(f.call(client.signal, { runId: f.handle.runId })).rejects.toThrow("FORBIDDEN");
   });
+  it.each([undefined, false])("old SDK exact-three-field contract remains unchanged without acknowledgement opt-in (%s)", async acknowledgeSignal => {
+    const f = await fixture();
+    const result = await f.observe(acknowledgeSignal === undefined ? {} : { acknowledgeSignal });
+    expect(Object.keys(result).sort()).toEqual(["observation", "session", "version"]);
+    expect(result).toEqual({ version: 1, session: await f.call(client.session, {}), observation: await f.call(runtime.observe, { runId: f.handle.runId }) });
+    const next = await f.observe({ acknowledgeSignal: true });
+    expect(Object.keys(next).sort()).toEqual(["marker", "observation", "session", "version"]);
+    expect(next.marker).toBe((await f.call<{ marker: string }>(client.signal, { runId: f.handle.runId })).marker);
+    const { marker: _marker, ...originalFields } = next; expect(originalFields).toEqual(result);
+  });
+  it.each([
+    { afterSequence: 0, limit: 1, finalOnly: false }, { afterSequence: 1, limit: 100, finalOnly: false },
+    { afterSequence: 0, limit: 100, finalOnly: true }, { afterSequence: 99, limit: 1, finalOnly: true },
+  ])("acknowledges the same fixed signal revision for every protected page %#", async options => {
+    const f = await fixture(), before = f.snapshot();
+    const signal = await f.call<{ marker: string }>(client.signal, { runId: f.handle.runId });
+    expect((await f.observe({ ...options, acknowledgeSignal: true })).marker).toBe(signal.marker); expect(f.snapshot()).toEqual(before);
+    const execution = f.db.table("runtimeAgentExecutions")[0]; execution.state = "complete";
+    const completed = await f.call<{ marker: string }>(client.signal, { runId: f.handle.runId });
+    expect(completed.marker).not.toBe(signal.marker); expect((await f.observe({ ...options, acknowledgeSignal: true })).marker).toBe(completed.marker);
+    // Both endpoints derive attempt identity from the current run, never a supplied cursor.
+    f.db.table("runtimeRuns")[0].attemptNumber = 2;
+    const next = await f.call<{ marker: string }>(client.signal, { runId: f.handle.runId });
+    expect(next.marker).not.toBe(completed.marker); expect((await f.observe({ ...options, acknowledgeSignal: true })).marker).toBe(next.marker);
+  });
+  it("reuses raw authority reads within delivery while preserving non-authority order and the raw final fence", async () => {
+    const f = await fixture(), originalQuery = f.db.query.bind(f.db), originalGet = f.db.get.bind(f.db);
+    const reads: string[] = [];
+    f.db.query = table => { reads.push(`query:${table}`); return originalQuery(table); };
+    f.db.get = async (table, id) => { reads.push(`get:${table}:${id}`); return await originalGet(table, id); };
+    const current = await client.sessionHandler(f.ctx, {}), observation = await runtime.observeHandler(f.ctx, { runId: f.handle.runId });
+    const referenceReads = reads.splice(0), actual = await f.observe(), actualReads = reads.splice(0);
+    expect(actual.session).toEqual(current); expect(actual.observation).toEqual(observation);
+    const isAuthority = (read: string) => /^(query|get):runtimeAuth/.test(read);
+    expect(actualReads.filter(read => !isAuthority(read))).toEqual(referenceReads.filter(read => !isAuthority(read)));
+    expect(actualReads.filter(isAuthority).length).toBeLessThan(referenceReads.filter(isAuthority).length);
+    // Original final delivery authority reads are outside the scoped reader.
+    expect(actualReads.slice(-1)).toEqual(referenceReads.slice(-1));
+    console.log(JSON.stringify({ controlledObservationReads: { original: referenceReads.length, scoped: actualReads.length,
+      originalAuthority: referenceReads.filter(isAuthority).length, scopedAuthority: actualReads.filter(isAuthority).length } }));
+  });
+  it.each(["malformed_json", "missing_media"])("opaque signal retains original output validation for %s", async kind => {
+    const f = await fixture(); f.db.table("runtimeAgentOutput")[0].partCanonical = kind === "malformed_json" ? "{" : JSON.stringify({ type: "media-job", kind: "image", jobId: "missing", artifactId: "missing" });
+    const expected = await f.call(runtime.observe, { runId: f.handle.runId, limit: 1, finalOnly: false }).catch(error => error as Error);
+    await expect(f.call(client.signal, { runId: f.handle.runId })).rejects.toThrow((expected as Error).message);
+  });
+
+  it.each([false, true])("actual SDK and registered endpoints coalesce only acknowledged initial signals (legacy=%s)", async legacy => {
+    const f = await fixture(), updates = jest.fn(), errors = jest.fn();
+    let notify = (_value: unknown) => {}, release = () => {}, reached = () => {}, completed = () => {}, reads = 0, sessions = 0, closed = false;
+    const issued = new Promise<void>(resolve => { reached = resolve; }), delivered = new Promise<void>(resolve => { completed = resolve; });
+    const port = {
+      setAuth: (_fetch: unknown, changed: (authenticated: boolean) => void) => changed(true),
+      mutation: async (ref: Parameters<RuntimeClientPort["mutation"]>[0], args: Record<string, unknown>) => {
+        if (getFunctionName(ref) === "runtimeClient:session") { sessions++; return await f.call(client.session, args); }
+        if (getFunctionName(ref) !== "runtimeClient:observeEnvelope") throw Error("UNEXPECTED_NATIVE_CALL");
+        const result = await f.observe(args as Parameters<typeof f.observe>[0]);
+        if (++reads === 1) { reached(); await new Promise<void>(resolve => { release = resolve; }); }
+        if (!legacy) return result;
+        const { marker: _marker, ...oldEnvelope } = result; return oldEnvelope;
+      },
+      onUpdate: (_ref: unknown, _args: unknown, update: (value: unknown) => void) => { notify = update; return () => { closed = true; }; },
+      query: async () => { throw Error("PROTECTED_QUERY_FORBIDDEN"); }, action: async () => { throw Error("ACTION_FORBIDDEN"); }, close: async () => {},
+    } as unknown as RuntimeClientPort;
+    const sdk = new CortexRuntimeClient({ deploymentUrl: "https://fixture.convex.cloud", client: port, fetchToken: async () => "fixture" });
+    try {
+      const stop = sdk.watchObservation(f.handle, value => { updates(value); if (updates.mock.calls.length === (legacy ? 2 : 1)) completed(); }, errors);
+      await issued; expect(reads).toBe(1);
+      notify(await f.call(client.signal, { runId: f.handle.runId })); release(); await delivered;
+      expect(reads).toBe(legacy ? 2 : 1); expect(sessions).toBe(reads); expect(updates).toHaveBeenCalledTimes(reads);
+      expect(updates.mock.calls[0][0]).toMatchObject({ parts: [{ sequence: 1, part: { text: "PRIVATE_CURRENT_TEXT" } }] });
+      expect(errors).not.toHaveBeenCalled(); stop(); expect(closed).toBe(true);
+    } finally { await sdk.close(); }
+  });
+
 });

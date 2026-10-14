@@ -1,0 +1,3 @@
+# K28 docs render predicate limitation
+
+The original docs-k28-public-render-v1.json field runtimeAcknowledgementRendered:false is preserved. Its .includes check consumed the subsequent AX diff/no-change response after clicking the already rendered paragraph. It was not a full article snapshot. Root directly observed the acknowledgement paragraph in the initial full AX navigation state (paragraph474) and in docs-k28-runtime-render-v1.png, whose SHA256 is 2967d7d0f885e3ddc6e6014d5626172670646c2eb26673a2666ea6b8d39ce613. The screenshot was emitted and inspected before closing tab58; no browser rerun occurred. This supplement distinguishes observed rendering from the failed diff-string predicate and does not relabel that Boolean as true.

@@ -1,0 +1,13 @@
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(299,27): error TS2532: Object is possibly 'undefined'.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(302,93): error TS2345: Argument of type '(table: any, id: any, value: any) => Promise<never>' is not assignable to parameter of type '(id: string, value: Record<string, unknown>) => Promise<void>'.
+  Target signature provides too few arguments. Expected 3 or more, but got 2.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(302,99): error TS7006: Parameter 'table' implicitly has an 'any' type.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(302,105): error TS7006: Parameter 'id' implicitly has an 'any' type.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(302,108): error TS7006: Parameter 'value' implicitly has an 'any' type.
+tests/unit/runtimeMemory/query-composition.test.ts(117,40): error TS2352: Conversion of type '() => Promise<{ _id: string; _score: number; }[]>' to type '<TableName extends TableNamesInDataModel<{ runtimeAuthPrincipals: { document: { _id: Id<"runtimeAuthPrincipals">; _creationTime: number; metadataUserId?: string | undefined; revokedAt?: number | undefined; deletedAt?: number | undefined; ... 4 more ...; createdAt: number; }; fieldPaths: ExtractFieldPaths<...> | "_id...' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Promise<{ _id: string; _score: number; }[]>' is not comparable to type 'Promise<{ _id: Id<any>; _score: number; }[]>'.
+    Type '{ _id: string; _score: number; }[]' is not comparable to type '{ _id: Id<any>; _score: number; }[]'.
+      Type '{ _id: string; _score: number; }' is not comparable to type '{ _id: Id<any>; _score: number; }'.
+        Types of property '_id' are incompatible.
+          Type 'string' is not comparable to type 'Id<any>'.
+            Type 'string' is not comparable to type '{ __tableName: any; }'.

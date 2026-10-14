@@ -49,7 +49,7 @@ async function fixture(v8 = false) {
     calls.push(found.name); assertNativeArgs(found.value, args);
     // Native nested mutation partial rollback is an explicit fixture transaction,
     // not an injected result that pretends the original handler ran.
-    return f.transaction(async () => { if (found.name === "runtimeModelPolicy:checkpoint" && checkpointFault) await checkpointFault();
+    return f.transaction(async () => { if (["runtimeModelPolicy:checkpoint", "runtimeModelPolicy:checkpointRecall"].includes(found.name) && checkpointFault) await checkpointFault();
       return invoke(found.value, f.ctx, args); });
   }) as MutationCtx["runMutation"];
   const published=v8?await f.call<{agentId:string;version:number}>(definitions.publishVersion,{memorySpaceId:"space-a",clientMutationId:"v8-query-reader",expectedPreviousVersion:0,
@@ -267,4 +267,24 @@ it.each(["revoked","cancelled","forged-profile","forged-binding"])("native propo
  if(fault==="forged-binding")proposal.binding={...proposal.binding,ordinal:1};
  const before=f.state();await expect(query.recallAgentMemoryV8(f.action,f.attempt,f.repository,{now:()=>clock},f.input,undefined,proposal)).rejects.toThrow();
  expect(f.state()).toEqual(before);expect(nativeCalls).toBe(0);
+});
+
+it('K28 scoped recall checkpoint runs the same original guard/accounting body with fewer native control reads',async()=>{
+  const outcomes:{state:unknown;result:unknown;financial:string[];reads:number;component:string[]}[]=[];
+  for(const scoped of [false,true]) {
+    const f=await fixture(true),args=await admitArgs(f,true),queryPort=f.ctx.runQuery.bind(f.ctx),mutationPort=f.ctx.runMutation.bind(f.ctx),get=f.db.get.bind(f.db),dbQuery=f.db.query.bind(f.db);
+    const financial:string[]=[],component:string[]=[];let reads=0;
+    jest.spyOn(f.db,'query').mockImplementation(table=>{reads++;if(['runtimeBudgetAccounts','runtimeModelOperations','runtimeModelAttempts'].includes(table))financial.push(`query:${table}`);return dbQuery(table);});
+    jest.spyOn(f.db,'get').mockImplementation(async(table,id)=>{reads++;if(['runtimeBudgetAccounts','runtimeModelOperations','runtimeModelAttempts'].includes(table))financial.push(`get:${table}:${String(id)}`);return await get(table,id);});
+    f.ctx.runQuery=(async(ref,value)=>{let name='component';try{name=getFunctionName(ref);}catch{/* actual installed component address is retained as a distinct class */}component.push(name);return await queryPort(ref,value);}) as MutationCtx['runQuery'];
+    if(!scoped)f.ctx.runMutation=(async(ref,value)=>getFunctionName(ref)==='runtimeModelPolicy:checkpointRecall'
+      ?await f.call(ledger.checkpoint,value):await mutationPort(ref,value)) as MutationCtx['runMutation'];
+    const result=await f.call(query.admitV8,args);
+    outcomes.push({state:f.state(),result,financial,reads,component});jest.restoreAllMocks();installIngestionMockRoot();
+  }
+  expect(outcomes[1]!.result).toEqual(outcomes[0]!.result);expect(outcomes[1]!.state).toEqual(outcomes[0]!.state);
+  expect(outcomes[1]!.financial).toEqual(outcomes[0]!.financial);expect(outcomes[1]!.reads).toBeLessThan(outcomes[0]!.reads);
+  expect(outcomes[1]!.component.length).toBeLessThan(outcomes[0]!.component.length);
+  console.info(JSON.stringify({type:'k28-controlled-query-checkpoint',oldReads:outcomes[0]!.reads,newReads:outcomes[1]!.reads,
+    oldComponentQueries:outcomes[0]!.component.length,newComponentQueries:outcomes[1]!.component.length,financialReadSequenceEqual:true,nativeLatency:'UNAVAILABLE'}));
 });

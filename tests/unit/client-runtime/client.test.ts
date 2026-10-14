@@ -496,4 +496,81 @@ describe("browser remote runtime client", () => {
     } finally { jest.useRealTimers(); }
   });
 
+  describe("guarded opaque revision acknowledgements", () => {
+    const marker = "a".repeat(64), nextMarker = "b".repeat(64);
+    const withMarker = (observation: RuntimeObservation, revision = marker) => ({ ...envelope(observation), marker: revision });
+    const empty: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    it.each(["during delivery", "after delivery"])("coalesces the matching initial signal %s without removing fresh post-session", async timing => {
+      const f = fixture(), update = jest.fn(), error = jest.fn(), fresh = f.mutation.getMockImplementation()!;
+      let release = (_value: unknown) => {}, reads = 0;
+      f.mutation.mockImplementation(async (ref, args) => {
+        if (getFunctionName(ref) === "runtimeClient:observeEnvelope") { reads++; return await new Promise<unknown>(resolve => { release = resolve; }) as never; }
+        return await fresh(ref, args);
+      });
+      const close = f.client.watchObservation(handle, update, error); await tick();
+      if (timing === "during delivery") f.subscriptions[0].update({ version: 1, marker });
+      release(withMarker(empty)); await tick();
+      if (timing === "after delivery") f.subscriptions[0].update({ version: 1, marker });
+      for (let i = 0; i < 20; i++) f.subscriptions[0].update({ version: 1, marker });
+      await tick(); expect(reads).toBe(1); expect(update).toHaveBeenCalledTimes(1); expect(error).not.toHaveBeenCalled();
+      expect(f.calls.map(call => call.name)).toEqual(["runtimeClient:session"]);
+      expect(f.port.query).not.toHaveBeenCalled(); close(); await f.client.close();
+    });
+    it("a changed revision arriving during the post-session causes a new guarded delivery", async () => {
+      const f = fixture(), update = jest.fn(), fresh = f.mutation.getMockImplementation()!;
+      let release = (_value: unknown) => {}, reads = 0, sessions = 0;
+      f.mutation.mockImplementation(async (ref, args) => {
+        if (getFunctionName(ref) === "runtimeClient:observeEnvelope") return withMarker({ ...empty, parts: [{ sequence: ++reads, part: { type: "text-delta", text: String(reads) } }], cursor: reads }, reads === 1 ? marker : nextMarker) as never;
+        if (getFunctionName(ref) === "runtimeClient:session" && ++sessions === 1) return await new Promise<unknown>(resolve => { release = resolve; }) as never;
+        return await fresh(ref, args);
+      });
+      const close = f.client.watchObservation(handle, update); await tick();
+      f.subscriptions[0].update({ version: 1, marker: nextMarker }); release(verified); await tick();
+      expect(reads).toBe(2); expect(sessions).toBe(2); expect(update.mock.calls.map(([row]) => (row as RuntimeObservation).cursor)).toEqual([1, 2]);
+      f.subscriptions[0].update({ version: 1, marker: nextMarker }); await tick(); expect(reads).toBe(2);
+      close(); await f.client.close();
+    });
+    it("authentication refresh forces a fresh read even when the revision is acknowledged", async () => {
+      const f = fixture(), fresh = f.mutation.getMockImplementation()!, update = jest.fn(); let reads = 0;
+      f.mutation.mockImplementation(async (ref, args) => getFunctionName(ref) === "runtimeClient:observeEnvelope" ? (++reads, withMarker(empty)) as never : await fresh(ref, args));
+      const close = f.client.watchObservation(handle, update); await tick();
+      f.subscriptions[0].update({ version: 1, marker }); await tick(); expect(reads).toBe(1);
+      await f.client.refreshAuth(); await tick(); expect(reads).toBe(2); expect(update).toHaveBeenCalledTimes(2);
+      expect(f.calls.filter(row => row.name === "runtimeClient:session")).toHaveLength(2); close(); await f.client.close();
+    });
+    it("a changed expiry with the same marker reacquires and retains time-only expiry cleanup", async () => {
+      jest.useFakeTimers();
+      try {
+        const f = fixture(), fresh = f.mutation.getMockImplementation()!, update = jest.fn(), error = jest.fn(); let reads = 0;
+        const expiresAt = Date.now() + 40;
+        f.mutation.mockImplementation(async (ref, args) => getFunctionName(ref) === "runtimeClient:observeEnvelope"
+          ? (++reads, withMarker(reads === 1 ? empty : { ...empty, deliveryExpiresAt: expiresAt })) as never : await fresh(ref, args));
+        f.client.watchObservation(handle, update, error); await tick();
+        f.subscriptions[0].update({ version: 1, marker, deliveryExpiresAt: expiresAt }); await tick();
+        expect(reads).toBe(2); expect(update).toHaveBeenCalledTimes(2);
+        await jest.advanceTimersByTimeAsync(40);
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ code: "AUTHORITY_EXPIRED" })); expect(f.subscriptions[0].closed).toBe(true);
+        await f.client.close();
+      } finally { jest.useRealTimers(); }
+    });
+    it("legacy envelopes conservatively reacquire a signal received during their initial read", async () => {
+      const f = fixture(), fresh = f.mutation.getMockImplementation()!, update = jest.fn(); let release = (_value: unknown) => {}, reads = 0;
+      f.mutation.mockImplementation(async (ref, args) => {
+        if (getFunctionName(ref) === "runtimeClient:observeEnvelope" && ++reads === 1) return await new Promise<unknown>(resolve => { release = resolve; }) as never;
+        return await fresh(ref, args);
+      });
+      const close = f.client.watchObservation(handle, update); await tick();
+      f.subscriptions[0].update({ version: 1, marker }); release(envelope(empty)); await tick();
+      expect(reads).toBe(2); expect(update).toHaveBeenCalledTimes(2); expect(f.calls.filter(row => row.name === "runtimeClient:session")).toHaveLength(2);
+      close(); await f.client.close();
+    });
+    it.each([undefined, "bad", 1, { private: "payload" }])("rejects malformed acknowledgement %# before protected delivery", async marker => {
+      const f = fixture(), fresh = f.mutation.getMockImplementation()!, update = jest.fn(), error = jest.fn();
+      f.mutation.mockImplementation(async (ref, args) => getFunctionName(ref) === "runtimeClient:observeEnvelope" ? { ...envelope(empty), marker } as never : await fresh(ref, args));
+      f.client.watchObservation(handle, update, error); await tick();
+      expect(update).not.toHaveBeenCalled(); expect(error).toHaveBeenCalledWith(expect.objectContaining({ code: "INVALID_RESPONSE", outcome: "uncertain" }));
+      expect(f.subscriptions[0].closed).toBe(true); await f.client.close();
+    });
+  });
+
 });

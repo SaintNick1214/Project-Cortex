@@ -1,0 +1,238 @@
+(node:68337) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"capture","original":{"total":122,"authority":91,"graph":0},"optimized":{"total":43,"authority":14,"graph":0},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:135:11
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"attach","original":{"total":118,"authority":91,"graph":0},"optimized":{"total":39,"authority":14,"graph":0},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:135:11
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":true,"original":{"total":73,"authority":24,"graph":18},"optimized":{"total":59,"authority":24,"graph":4},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":true,"original":{"total":69,"authority":24,"graph":18},"optimized":{"total":55,"authority":24,"graph":4},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":false,"original":{"total":77,"authority":28,"graph":18},"optimized":{"total":65,"authority":28,"graph":6},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":false,"original":{"total":73,"authority":28,"graph":18},"optimized":{"total":61,"authority":28,"graph":6},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+PASS tests/unit/runtimeMemory/public-functional.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/query-embedding-tail.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k27-public-fact-rpc-count","facts":3,"baselineFactAndSourceRPCs":4,"optimizedFactAndSourceRPCs":1,"providerCalls":1,"retries":0,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:134:11)
+
+    console.info
+      {"type":"k28-controlled-public-read-handoffs","oldCalls":["runtimeMemory:checkAuthority","runtimeMemory:readFacts","runtimeMemory:checkProfileReady","runtimeModelPolicy:embeddingProfile","runtimeMemory:readVectorMatches","runtimeModelPolicy:embeddingProfile","runtimeMemory:checkAuthority","runtimeMemory:finalDelivery","runtimeModelPolicy:embeddingProfile"],"newCalls":["runtimeMemoryQuery:prepareReads","runtimeMemoryQuery:readMatches","runtimeMemoryQuery:finalRecallDelivery"],"items":6,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:175:11)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.6s | 198/198 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     3.3s | 38/38 passed | /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ✅     1.9s | 34/34 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+  ✅     1.1s | 27/27 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     0.9s | 11/11 passed | /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.24s ( 2.0%) - both independent V8 terminal mutations retain only raw shared=false graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 2. [32m✓[0m    0.12s ( 1.0%) - both independent V8 terminal mutations retain only raw shared=true graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 3. [32m✓[0m    0.07s ( 0.6%) - compact root loops hash compiled provenance once per install/active-root invocation, never once per qualification row
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 4. [32m✓[0m    0.07s ( 0.6%) - actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 5. [32m✓[0m    0.07s ( 0.6%) - actual populated public API uses three native read/delivery parents with identical original replayed outcome
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 6. [32m✓[0m    0.06s ( 0.5%) - real attach handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 7. [32m✓[0m    0.06s ( 0.5%) - new terminal ports are internal, exact-shape and retain two separately committed mutations
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 8. [32m✓[0m    0.06s ( 0.5%) - real capture handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 9. [32m✓[0m    0.06s ( 0.5%) - K28 V8 guard-plus-attachment parent has identical effects and keeps the earlier charge commit
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+10. [32m✓[0m    0.05s ( 0.4%) - fresh edit in retained ancestry closes attachment while preserving the incurred capture
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+11. [32m✓[0m    0.05s ( 0.4%) - capture commit survives fresh malformed-result attachment refusal; no financial replay or private resurrection
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+12. [32m✓[0m    0.05s ( 0.4%) - fresh tombstone in retained ancestry closes attachment while preserving the incurred capture
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+13. [32m✓[0m    0.05s ( 0.4%) - K28 compound attachment preserves partial-write error/rollback and previously committed financial evidence
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+14. [32m✓[0m    0.05s ( 0.4%) - native JSON-object admission and financial guards (offline handlers) capture cannot deliver extraction merely because money is known without complete usage
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+15. [32m✓[0m    0.05s ( 0.4%) - K28 public native read parents are internal and preserve the Action ranking/final-delivery boundary
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+16. [32m✓[0m    0.05s ( 0.4%) - K28 fresh independent public delivery retains late fact-version refusal
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+17. [32m✓[0m    0.04s ( 0.4%) - K28 fresh independent public delivery retains late profile refusal
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+18. [32m✓[0m    0.04s ( 0.4%) - K28 compound attachment preserves unknown error/rollback and previously committed financial evidence
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+19. [32m✓[0m    0.04s ( 0.4%) - K28 fresh independent public delivery retains late source-hash refusal
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+20. [32m✓[0m    0.04s ( 0.4%) - capture commit survives fresh policy attachment refusal; no financial replay or private resurrection
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.31s (11.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      11.86s
+  Test suites:        5
+  Individual tests:   290
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 5 passed, 5 total
+Tests:       308 passed, 308 total
+Snapshots:   0 total
+Time:        11.856 s
+Ran all test suites within paths "tests/unit/runtimeMemory/query-composition.test.ts", "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/query-embedding-tail.test.ts", "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts", "tests/unit/runtime/model-policy-admission.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-backend-affected-successor-v2.json

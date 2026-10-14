@@ -1,0 +1,74 @@
+{
+  "repository": "SaintNick1214/Project-Cortex",
+  "productBaseline": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "head": "86e51df8a46f8088d15aca7d9ffbd170a3b90bcb",
+  "scope": "One coherent K28 backend recall/accounting + authenticated reactive delivery + source/test/docs review",
+  "acceptancePolicy": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+  "sourceOnly": true,
+  "nativeCandidateStatus": "NOT_RUN",
+  "fullGoalAcceptance": false,
+  "hashes": {
+    "core": {
+      "convex-dev/runtimeAgent.ts": "3961f384bbbba51f22169d172e0f1797a808560239315c2218bd0531e79637ae",
+      "convex-dev/runtimeAgentQueryEmbedding.ts": "27e67c4ed6301b76badefec97707c51bb48813824a4a8737fd8a7c3143af659a",
+      "convex-dev/runtimeClient.ts": "e06fa0d49e0607c9c1d82767251f85a88507dac41e787612a2a80e45467c9d46",
+      "convex-dev/runtimeGatewayBackend.ts": "f8c5377968951e226cc7554fda17c03c4571ae7bc180ade46c00d91ab323fd3c",
+      "convex-dev/runtimeMemoryQuery.ts": "6518083d35f811cd1015f43be12d8f0709c06cc4465a02560b0efd7050454245",
+      "convex-dev/runtimeModelPolicy.ts": "bc3950da727b14d0fb7228cb86795d4a9b72ae4ee0f7467f269a37e45afab1ca",
+      "src/client-runtime/client.ts": "7967fef6dce376a23f79aaaec92d251bf9a7247e3c4fee369997fed6acdcabba",
+      "tests/unit/client-runtime/admission-native.test.ts": "d860b61ec34533f8e71e09f11fdfb6b34c0004eb1b2b8cd8638c24854cf0f415",
+      "tests/unit/client-runtime/client.test.ts": "1fd95674ce9fae83e65b072e734adf0d4bd89349879a64e30fa202d633d62f32",
+      "tests/unit/client-runtime/observation-native.test.ts": "ff8239d54b89fa24e0b14e589df048a8205cfde5420d207b5a5d550daa3dd874",
+      "tests/unit/runtime/model-policy-admission.test.ts": "61949fdbd608203843e13ed0f2e79f03245011fa2244678fec8faf13054a137e",
+      "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "77f2351da905a81883f624ff3a492a6b1fdf3a1be528fa00e4acbe696c147216",
+      "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts": "a0ad318b28ffba377bd0705b2bd49bae0e39b5b7761f46298082965b2ca6f35a",
+      "tests/unit/runtimeMemory/fixture.ts": "343956298fb8a0d1a491d00903e2477a0b8582038775a021655c9bb1853271ef",
+      "tests/unit/runtimeMemory/query-composition.test.ts": "4ba3f497833de210bb661c25523222356d90add187b51749956b7e49555bcd52"
+    },
+    "website": {
+      "docs-site/docs/api-reference/memory-operations.mdx": "9fbc92c05304a7fcac424b2802ae3731c172c0a2994be048828ab616ff7d5efb",
+      "docs-site/docs/api-reference/runtime-client.mdx": "91dd88228809c30b59f803e3a128b3f62eb1080e2c48536bbffdb96bf03933d4",
+      "docs-site/docs/architecture/model-policy.mdx": "311a540aa65acf8f7e75ec922f8e75dd7e667d7c0cb3629b9b754c8179e91f8a",
+      "docs-site/docs/architecture/performance.mdx": "b2dce767a587882ab27e8f69f8faed10d17b1cc37ff5328174ccff76b82a5bc0",
+      "docs-site/docs/core-features/memory-orchestration.mdx": "3d40829aab9aa6aa282b905282e0f489301c8994493528ffbbefa37eb017ae54",
+      "docs-site/docs/getting-started/backend-runtime.mdx": "5e1cf3fa198e0ec58a8755adfa221aad59570d1bfc762b486638791722f56423",
+      "docs-site/docs/getting-started/five-minute-quickstart.mdx": "ca2a8d0c230f904c3d2d2684efc1076c4005a50a08aa36326606dd0a27b084a0",
+      "docs-site/docs/getting-started/installation.mdx": "53b9b12ceb170883b9d42c9e9f6418346b7b7ae7499d20fa768c7157b213a5cd",
+      "docs-site/docs/reference/cheat-sheet.mdx": "686a6414a43033c518ba1506775e69a2bb6fc815fa0fa01c8027c1eb94fbcc83",
+      "docs-site/docs/tools/cli-reference.mdx": "8dc647e752e14123e82039d535395ed262537c8ad8aa19f8bfd8695d13ac954f"
+    },
+    "proofs": {
+      "SANDBOX.md": "ab2eb044fb8d7274f15fc9227478688f90341ad9f557c593b10463df0249080b"
+    },
+    "evidence": {
+      "k28-joint-quality-final-v1.json": "e93fc0d23568e75b155de83b532d6be333c8b2700dad587a3e1840935c7025d1",
+      "k28-joint-quality-inputs-v1.json": "931ef3bd1c35617d731ce86df95388333faabbfe2686bf87ee6c06a3f9f0b5f9",
+      "k28-delivery-source-report-v2.md": "6e8695151a6a8eaff79c8100d57a398d62e3f029b9dd8a5204934d5ad9868a13",
+      "k28-delivery-source-freeze-v2.json": "edc69da5c8a88570240354bf75b42db1c0fdf4c4bc0d9f2d2e471b27ff566fca",
+      "k28-delivery-checks-v2.json": "3d67c5573cf79c7269bb8d7226ad7c920bef20ed4aa86de89e75c903b8925863",
+      "k28-backend-source-report.md": "0609426ec9fff2dc63ee73b684deda2210888e6d1c31f7365599c50a0de3b708",
+      "k28-backend-source-freeze.json": "7db2cb7cc72aa99119bacfae3c8af9d245677ff9e883d9a1826eac2dfb79c397",
+      "k28-backend-checksummary.json": "9639a2d4454306d8a8770f1220fa479bd2ba0d0521094823956194953839b42c",
+      "k28-backend-original-body-equivalence.json": "02620692eb76337de0bbb7280e8b48fb33d696df10f198ffd332d2b4aad6ca55",
+      "docs-k28-public-final-receipt-v1.json": "f74e593d811a04805df173f8b372a1114b97bd5b3f1d73096af6cee99aede249",
+      "docs-k28-public-render-v1.json": "7b14bdb87521281a75dd67ce7d7e2ba3b816cfc9dac407dc2c4fd6e5f565c129",
+      "k28-native-qualification-plan.md": "707a4c7fddfec5780635d17cf8943f26a0dc14b8a42ce20adc07b5b9a2881886",
+      "k27-four-run-critical-path-readonly.md": "d4294a7ae6ce617ba6883d2c449c3a6853ce28c5cd55eca0a60307fd50431fe1"
+    }
+  },
+  "roots": {
+    "core": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "website": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+    "proofs": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+    "qa": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12"
+  },
+  "constraints": [
+    "Original source/authority/expiry/revocation/tombstone/isolation and final freshness fences stay enforced",
+    "No mutable accounting or authorization-decision caching; per-invocation bounded raw data only",
+    "Canonical message rows,4/4/4/4/16 caps,32768 bound,quoted untrusted evidence and pre-pending hydration remain",
+    "Every billable call retains per-call qualification,capability,budget,replay and independent terminal financial evidence",
+    "Prior SDK exact3-field response preserved by watch-only opt-in; new watcher requires matching backend argument revision",
+    "Hosted SLO0/4 and historical failures remain; no native/speed acceptance from controlled tests",
+    "One nonauthor batch review only; no receipt/controller/custody subjudges"
+  ]
+}

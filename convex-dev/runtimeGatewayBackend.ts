@@ -56,7 +56,8 @@ export async function ensureBackendGatewayBudget(
  * Terminal capture is charge-only: it settles known/uncertain liability atomically
  * even if delivery authority was revoked. Attachment independently fences output.
  * No second settlement, automatic inference retry or fallback is introduced. */
-export function createBackendGatewayComposition(ctx: BackendGatewayContext, admitAndCheckpoint?: NonNullable<GatewayLedgerPort["admitAndCheckpoint"]>): GatewayComposition {
+export function createBackendGatewayComposition(ctx: BackendGatewayContext, admitAndCheckpoint?: NonNullable<GatewayLedgerPort["admitAndCheckpoint"]>,
+  privatePorts?: Pick<GatewayLedgerPort, "attachTerminalResult">): GatewayComposition {
   const terminalReferences = (ctx as BackendGatewayContext & { [v8TerminalPorts]?: true })[v8TerminalPorts] ? v8TerminalReferences : references;
   type Correlation = { runBudgetId: string; operationKey: string; semanticId?: string };
   const attempts = new Map<string, Correlation>();
@@ -107,7 +108,7 @@ export function createBackendGatewayComposition(ctx: BackendGatewayContext, admi
         if (result.recorded !== true) throw new GatewayDispatchError("VISIBILITY_NOT_RECORDED");
         return { recorded: true };
       },
-      attachTerminalResult: async (args) => await timed("attach", attempts.get(args.attemptId), () => ctx.runMutation(terminalReferences.attachTerminalResult, args)),
+      attachTerminalResult: async (args) => await timed("attach", attempts.get(args.attemptId), () => privatePorts ? privatePorts.attachTerminalResult(args) : ctx.runMutation(terminalReferences.attachTerminalResult, args)),
     },
     terminalSink: {
       capture: async (evidence) => await timed("capture", attempts.get(evidence.attemptId), () => ctx.runMutation(terminalReferences.captureTerminalEvidence, evidence)),

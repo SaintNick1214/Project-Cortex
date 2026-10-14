@@ -281,3 +281,43 @@ it.each(["edit", "tombstone", "revoked"])("fresh %s in retained ancestry closes 
   expect(f.db.table("runtimeModelAttempts")).toMatchObject([{ state: "settled", slotReleased: true, resultAttachmentState: "closed" }]);
   expect(await capture(f, true)).toEqual(captured);
 });
+
+it('K28 V8 guard-plus-attachment parent has identical effects and keeps the earlier charge commit',async()=>{
+  const f=await fixture(),captured=await capture(f,true),before=f.state(),args={...f.attempt,attachmentReference:f.reference,...f.attachment(captured)};
+  const observed=instrument(f);
+  await agent.executionContext((await import('../../../convex-dev/runtimeAuth')).createAuthorityReadScope(f.ctx,{nativeTranscript:true}),f.attempt);
+  const original=await attach(f,captured,true),after=f.state(),mutable=observed.mutableReads();
+  f.restore(before);observed.clear();
+  const actual=await f.call(agent.attachModelResultV8,args);
+  expect(actual).toEqual(original);expect(f.state()).toEqual(after);expect(observed.mutableReads()).toEqual(mutable);
+  expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'settled',slotReleased:true,resultAttachmentState:'attached'}]);
+  expect(agent.attachModelResultV8.isInternal).toBe(true);expect(agent.attachModelResultV8.isMutation).toBe(true);
+});
+it.each(['revoked','transcript','lease','partial-write','unknown'])('K28 compound attachment preserves %s error/rollback and previously committed financial evidence',async fault=>{
+  const f=await fixture(),captured=await capture(f,true),args={...f.attempt,attachmentReference:f.reference,...f.attachment(captured)};
+  if(fault==='revoked')f.grant.revokedAt=clock;
+  if(fault==='transcript'){const message=f.native.messages.values().next().value;if(!message)throw Error('Expected stored canonical message');message.message={role:'user',content:'changed'};}
+  if(fault==='lease')args.leaseVersion++;
+  const before=f.state(),failure=Symbol('opaque-attachment'),patch=f.db.patch.bind(f.db);
+  if(fault==='partial-write'||fault==='unknown')jest.spyOn(f.db,'patch').mockImplementation(async(table:string,id:string|Record<string,unknown>,value?:Record<string,unknown>)=>{
+    if(typeof id!=='string'||value===undefined)throw Error('Expected native explicit-table writer');
+    if(fault==='partial-write')await patch(table,id,value);throw failure;
+  });
+  let original:unknown;
+  try{await agent.executionContext((await import('../../../convex-dev/runtimeAuth')).createAuthorityReadScope(f.ctx,{nativeTranscript:true}),args);await attach(f,captured,true);}catch(error){original=error;}
+  expect(original).toBeDefined();expect(f.state()).toEqual(before);
+  await expect(f.call(agent.attachModelResultV8,args)).rejects.toEqual(original);expect(f.state()).toEqual(before);
+  expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'settled',slotReleased:true,resultAttachmentState:'pending'}]);
+});
+it('K28 private attachment port retains default charge capture and propagates the exact independent attachment failure',async()=>{
+  const f=await fixture(),captured=await capture(f,true),request=f.attachment(captured),calls:string[]=[],failure=Symbol('attachment-storage');
+  const ctx={runQuery:async()=>{throw Error('UNEXPECTED_QUERY');},runMutation:async(ref:Parameters<typeof getFunctionName>[0])=>{
+    calls.push(getFunctionName(ref));return captured;
+  }} as unknown as MutationCtx;
+  const privateAttach=jest.fn(async(value:typeof request)=>{expect(value).toEqual(request);calls.push('private-agent-parent');throw failure;});
+  const composition=createBackendGatewayComposition(withV8GatewayTerminalPorts(ctx),undefined,{attachTerminalResult:privateAttach});
+  expect(await composition.terminalSink.capture(f.captureArgs)).toEqual(captured);
+  await expect(composition.ledger.attachTerminalResult(request)).rejects.toBe(failure);
+  expect(calls).toEqual(['runtimeModelPolicy:captureTerminalEvidenceV8','private-agent-parent']);expect(privateAttach).toHaveBeenCalledTimes(1);
+  expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'settled',slotReleased:true,resultAttachmentState:'pending'}]);
+});

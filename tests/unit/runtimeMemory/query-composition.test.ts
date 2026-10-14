@@ -2,6 +2,7 @@
 import {afterEach,beforeEach,it,expect,jest} from '@jest/globals';
 import {getFunctionName} from 'convex/server';
 import {ConvexError} from 'convex/values';
+import type {Id} from '../../../convex-dev/_generated/dataModel';
 import type {EmbeddingModelV4} from '@ai-sdk/provider';
 import type {MutationCtx,ActionCtx} from '../../../convex-dev/_generated/server';
 import {canonicalModelJson} from '../../../src/domain/model-policy';
@@ -28,7 +29,7 @@ async function fixture() {
   f.ctx.runQuery=(async(ref,args)=>{const found=registration(ref);if(!found)return oldQuery(ref,args);rpc.push(found.name);return invoke(found.value,f.ctx,args);}) as MutationCtx['runQuery'];
   let fault:(()=>Promise<void>)|undefined;
   f.ctx.runMutation=(async(ref,args)=>{const found=registration(ref);if(!found)return oldMutation(ref,args);rpc.push(found.name);
-    return f.transaction(async()=>{if(found.name==='runtimeModelPolicy:checkpoint'&&fault)await fault();return invoke(found.value,f.ctx,args);});}) as MutationCtx['runMutation'];
+    return f.transaction(async()=>{if(['runtimeModelPolicy:checkpoint','runtimeModelPolicy:checkpointRecall'].includes(found.name)&&fault)await fault();return invoke(found.value,f.ctx,args);});}) as MutationCtx['runMutation'];
   const input={text:'coral preference',requestId:'public-query',limit:10};
   const budget=await f.call<{runBudgetId:string}>(ledger.ensureBudget,{reference:f.reference,operationKey:'embedding.query',requestId:input.requestId,requestCanonical:canonicalModelJson({purpose:'recall',text:input.text,limit:input.limit})});
   const args={reference:f.reference,runBudgetId:budget.runBudgetId,input},action={...f.ctx,vectorSearch:async()=>[]} as unknown as ActionCtx,
@@ -53,7 +54,7 @@ it('actual public Action and governed model produce the original generic result 
   const actual=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId});
   expect(actual).toMatchObject({items:[],context:'',profileId:profile.profileId});expect(calls).toBe(1);
   expect(f.rpc.filter(n=>n==='runtimeMemoryQuery:prepare')).toHaveLength(1);expect(f.rpc.filter(n=>n==='runtimeMemoryQuery:admit')).toHaveLength(1);
-  expect(f.rpc.filter(n=>n==='runtimeModelPolicy:checkpoint')).toHaveLength(1);expect(f.rpc.filter(n=>n==='runtimeModelPolicy:resolve')).toEqual([]);
+  expect(f.rpc.filter(n=>n==='runtimeModelPolicy:checkpointRecall')).toHaveLength(1);expect(f.rpc.filter(n=>n==='runtimeModelPolicy:resolve')).toEqual([]);
   expect(f.rpc.indexOf('runtimeModelPolicy:captureTerminalEvidence')).toBeLessThan(f.rpc.indexOf('runtimeModelPolicy:attachTerminalResult'));
   expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'uncertain',slotReleased:true,resultAttachmentState:'attached'}]);
   const before=calls,referenceModel=createGatewayMemoryModel(f.action,f.repository,{runBudgetId:f.args.runBudgetId});
@@ -99,9 +100,9 @@ it('actual public Action preserves committed reservation after bounded checkpoin
   expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'reserved',slotReleased:false}]);expect(calls).toBe(0);
 });
 
-async function populatedPublicFixture() {
+async function populatedPublicFixture(withVectors=false) {
   const f=await fixture();
-  const {prepareSourceContent}=await import('../../../src/domain/sources');
+  const {prepareSourceContent,processingIdentityKey}=await import('../../../src/domain/sources');
   const {memoryScope}=await import('../../../convex-dev/runtimeMemoryRepository');
   const scope=memoryScope(f.reference),writer=new ConvexMemoryRepository(f.ctx,f.reference,'write',f.ctx.db);
   for(let i=0;i<3;i++) {
@@ -110,15 +111,21 @@ async function populatedPublicFixture() {
     const identity={sourceId:source.lineage.sourceId,sourceEventId:source.lineage.sourceEventId,sourceRevision:1,stage:'facts' as const,semanticPolicyVersion:'controlled-public-v1'};
     const fact={_id:'',factId:`public-bound-fact-${i}`,tenantId:scope.tenantId,memorySpaceId:scope.memorySpaceId,ownerPrincipalId:scope.principalId,
       lineage:source.lineage,extractionPolicyVersion:'controlled-public-v1',fact:text,factType:'preference' as const,confidence:90,sourceType:'manual' as const,tags:[],version:1,createdAt:clock,updatedAt:clock};
-    await writer.commitDerived({source:identity,identity,chunks:prepared.chunks,facts:[fact],expectedFactVersions:{[fact.factId]:0}});
+    await writer.commitDerived({source:identity,identity,chunks:prepared.chunks,facts:[fact],expectedFactVersions:{[fact.factId]:0},
+      ...(withVectors?{vectors:[{...identity,vectorId:`public-vector-${i}`,chunkId:prepared.chunks[0]!.chunkId,tenantId:scope.tenantId,memorySpaceId:scope.memorySpaceId,
+        profile,embedding:Array.from({length:1536},(_,j)=>j===0?1:0),processingReceiptId:await processingIdentityKey(identity)}]}:{})});
   }
+  if(withVectors)f.action.vectorSearch=(async()=>f.db.table('runtimeMemoryVectors').map(row=>({_id:row._id as Id<'runtimeMemoryVectors'>,_score:0.9}))) as ActionCtx['vectorSearch'];
   return f;
 }
-it('actual populated public API uses one bound fact RPC instead of per-fact RPCs with identical original replayed outcome',async()=>{
+it('actual populated public API uses three native read/delivery parents with identical original replayed outcome',async()=>{
   const f=await populatedPublicFixture();f.rpc.length=0;
   const actual=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId});
   const optimized=[...f.rpc];expect(actual).toHaveProperty('items');expect((actual as {items:unknown[]}).items).toHaveLength(3);expect(calls).toBe(1);
-  expect(optimized.filter(name=>name==='runtimeMemory:readFacts')).toHaveLength(1);
+  expect(optimized.filter(name=>name==='runtimeMemory:readFacts')).toHaveLength(0);
+  expect(optimized.filter(name=>name==='runtimeMemoryQuery:prepareReads')).toHaveLength(1);
+  expect(optimized.filter(name=>name==='runtimeMemoryQuery:readMatches')).toHaveLength(1);
+  expect(optimized.filter(name=>name==='runtimeMemoryQuery:finalRecallDelivery')).toHaveLength(1);
   expect(optimized.filter(name=>name==='runtimeMemory:readSource')).toHaveLength(0);f.rpc.length=0;
   const expected=await recallMemory({repository:f.repository,model:createGatewayMemoryModel(f.action,f.repository,{runBudgetId:f.args.runBudgetId}),clock:{now:()=>clock}},f.input);
   expect(actual).toEqual(expected);expect(calls).toBe(1); // Attached native operation replay, no second provider dispatch.
@@ -149,4 +156,72 @@ it.each(['revocation','source-revision','source-tombstone'])('bound fact read pr
     expect(fired).toBe(1);expect(f.db.writes).toBe(writes);expect(calls).toBe(0);
   }
   expect(results[1]).toEqual(results[0]);expect(results[1]).toHaveProperty('code',fault==='source-revision'?'STALE_SOURCE':'FORBIDDEN');
+});
+
+it('K28 public native read parents are internal and preserve the Action ranking/final-delivery boundary',async()=>{
+  for(const registration of [query.prepareReads,query.readMatches,query.finalRecallDelivery]) {
+    expect(registration.isInternal).toBe(true);expect(Reflect.get(registration,'isPublic')).not.toBe(true);
+  }
+  const f=await populatedPublicFixture(true),{finishRecallFromEmbedding}=await import('../../../convex-dev/runtimeMemoryServices');
+  const result={profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]};
+  f.rpc.length=0;
+  const expected=await finishRecallFromEmbedding({repository:createActionMemoryRepository(f.action,f.reference,'read',{boundRecallFacts:true}),clock:{now:()=>clock}},f.input,{profile,runBudgetId:f.args.runBudgetId},result);
+  const oldCalls=[...f.rpc],before=f.state();f.rpc.length=0;
+  const actual=await query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>clock});
+  expect(actual).toEqual(expected);expect(f.state()).toEqual(before);expect(calls).toBe(0);
+  expect(f.rpc).toEqual(['runtimeMemoryQuery:prepareReads','runtimeMemoryQuery:readMatches','runtimeMemoryQuery:finalRecallDelivery']);
+  expect(oldCalls.filter(name=>name.startsWith('runtimeMemory:'))).toHaveLength(6);
+  expect(oldCalls.filter(name=>name==='runtimeModelPolicy:embeddingProfile')).toHaveLength(3);
+  console.info(JSON.stringify({type:'k28-controlled-public-read-handoffs',oldCalls,newCalls:f.rpc,items:actual.items.length,nativeLatency:'UNAVAILABLE'}));
+});
+it.each(['source-hash','source-tombstone','fact-version','grant','profile'])('K28 fresh independent public delivery retains late %s refusal',async fault=>{
+  const outcomes:unknown[]=[];
+  for(const composed of [false,true]) {
+    const f=await populatedPublicFixture(true),oldMutation=f.action.runMutation.bind(f.action);
+    f.action.runMutation=(async(ref,args)=>{
+      const name=getFunctionName(ref);
+      if(name==='runtimeMemory:finalDelivery'||name==='runtimeMemoryQuery:finalRecallDelivery') {
+        if(fault==='source-hash')f.db.table('runtimeMemorySources')[0].contentHash='f'.repeat(64);
+        if(fault==='source-tombstone')f.db.table('runtimeMemorySources')[0].tombstonedAt=clock;
+        if(fault==='fact-version')f.db.table('facts')[0].version=2;
+        if(fault==='grant')f.grant.revokedAt=clock;
+        if(fault==='profile')f.db.table('runtimeModelPolicies')[0].active=false;
+      }
+      return await oldMutation(ref,args);
+    }) as ActionCtx['runMutation'];
+    const result={profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},writes=f.db.writes;
+    try {
+      if(composed)await query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>clock});
+      else {const {finishRecallFromEmbedding}=await import('../../../convex-dev/runtimeMemoryServices');await finishRecallFromEmbedding({repository:createActionMemoryRepository(f.action,f.reference,'read',{boundRecallFacts:true}),clock:{now:()=>clock}},f.input,{profile,runBudgetId:f.args.runBudgetId},result);}
+      throw Error('EXPECTED_REFUSAL');
+    }catch(error){if(!(error instanceof ConvexError))throw error;outcomes.push(error.data);}
+    expect(f.db.writes).toBe(writes);expect(calls).toBe(0);
+  }
+  expect(outcomes[1]).toEqual(outcomes[0]);
+});
+it.each(['revocation','expiry','foreign','limit','hits'])('K28 new public read handlers reject %s without effects',async fault=>{
+  const f=await populatedPublicFixture(true),args={...f.args,profile,input:{...f.input},hits:[] as {id:never;score:number}[]};
+  if(fault==='revocation')f.grant.revokedAt=clock;if(fault==='expiry')f.grant.expiresAt=clock;
+  if(fault==='foreign')args.reference={...args.reference,principalId:'foreign'};
+  if(fault==='limit')args.input.limit=101;if(fault==='hits')args.hits=Array.from({length:101},()=>({id:'runtimeMemoryVectors:missing' as never,score:1}));
+  const before=f.state();await expect(f.call(query.readMatches,args)).rejects.toBeInstanceOf(ConvexError);
+  expect(f.state()).toEqual(before);expect(calls).toBe(0);
+});
+it('K28 unknown ranking failure precedes final native delivery and never changes its error identity',async()=>{
+  const f=await populatedPublicFixture(true),failure=Symbol('ranking-clock'),result={profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]};f.rpc.length=0;
+  await expect(query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>{throw failure;}})).rejects.toBe(failure);
+  expect(f.rpc).not.toContain('runtimeMemoryQuery:finalRecallDelivery');expect(calls).toBe(0);
+});
+it('K28 native final delivery retains Action elapsed-expiry refusal',async()=>{
+  const f=await populatedPublicFixture(true);f.grant.expiresAt=clock+1;const result={profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]};
+  await expect(query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>clock+2})).rejects.toMatchObject({data:{code:'FORBIDDEN'}});
+  expect(f.rpc.filter(name=>name==='runtimeMemoryQuery:finalRecallDelivery')).toHaveLength(1);expect(calls).toBe(0);
+});
+it('K28 composed native staged branches join both peers and preserve the exact opaque vector-first failure',async()=>{
+  const f=await populatedPublicFixture(true),failure=Symbol('vector-first'),factFailure=Symbol('fact-second'),writes=f.db.writes;let factsRead=0;
+  let finishVector!:()=>void;const factEntered=new Promise<void>(resolve=>{finishVector=resolve;});
+  jest.spyOn(ConvexMemoryRepository.prototype,'hydrateVectors').mockImplementation(async()=>{await factEntered;throw failure;});
+  jest.spyOn(ConvexMemoryRepository.prototype,'listFacts').mockImplementation(async()=>{factsRead++;finishVector();throw factFailure;});
+  await expect(f.call(query.readMatches,{...f.args,profile,hits:[]})).rejects.toBe(failure);
+  expect(factsRead).toBe(1);expect(f.db.writes).toBe(writes);expect(calls).toBe(0);
 });

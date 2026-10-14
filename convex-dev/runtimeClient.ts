@@ -4,7 +4,7 @@ import { mutation, query } from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
 import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
-import { observeHandler, startHandler } from "./runtimeAgent";
+import { observeSignalHandler, observeWithMetadataHandler, startHandler } from "./runtimeAgent";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { semanticHash } from "../src/domain/profile";
 import { getHandler, submitHandler } from "./runs";
@@ -65,7 +65,7 @@ export async function submitAndStartEnvelopeHandler(ctx: MutationCtx, args: Sele
 }
 export const submitAndStartEnvelope = mutation({
   args: { request: v.any(), streaming: v.optional(v.boolean()), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
-  handler: (ctx, args) => submitAndStartEnvelopeHandler(createAuthorityReadScope(ctx), args),
+  handler: (ctx, args) => submitAndStartEnvelopeHandler(createAuthorityReadScope(ctx, { policyMetadata: true, nativeTranscript: true }), args),
 });
 
 type ObservationHandle = { version: 1; tenantId: string; memorySpaceId: string; principalId: string;
@@ -73,7 +73,7 @@ type ObservationHandle = { version: 1; tenantId: string; memorySpaceId: string; 
 /** Compose the original pre-session and private observation in one transaction.
  * The SDK retains a separate fresh post-session after this response crosses I/O. */
 export async function observeEnvelopeHandler(ctx: MutationCtx, args: Selectors & { handle: ObservationHandle;
-  afterSequence?: number; limit?: number; finalOnly?: boolean }) {
+  afterSequence?: number; limit?: number; finalOnly?: boolean; acknowledgeSignal?: boolean }) {
   // Preserve omitted-selector ambiguity. The supplied handle cannot choose a scope
   // in place of the original client configuration or establish current authority.
   const selectors = { ...(args.tenantId === undefined ? {} : { tenantId: args.tenantId }),
@@ -81,36 +81,37 @@ export async function observeEnvelopeHandler(ctx: MutationCtx, args: Selectors &
   const current = await sessionHandler(ctx, selectors), expected = args.handle;
   if (expected.version !== 1 || expected.tenantId !== current.tenantId || expected.memorySpaceId !== current.memorySpaceId
     || expected.principalId !== current.principalId) transcriptDenied("SESSION_CHANGED");
-  const value = await observeHandler(ctx, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, runId: expected.runId,
+  const { observation: value, metadata } = await observeWithMetadataHandler(createAuthorityReadScope(ctx), { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, runId: expected.runId,
     ...(args.afterSequence === undefined ? {} : { afterSequence: args.afterSequence }),
-    ...(args.limit === undefined ? {} : { limit: args.limit }), ...(args.finalOnly === undefined ? {} : { finalOnly: args.finalOnly }) });
+    ...(args.limit === undefined ? {} : { limit: args.limit }), ...(args.finalOnly === undefined ? {} : { finalOnly: args.finalOnly }) }, ctx);
   const row = value.run;
   if (row.scope.tenantId !== expected.tenantId || row.scope.memorySpaceId !== expected.memorySpaceId
     || row.runId !== expected.runId || row.conversationId !== expected.conversationId || row.agentId !== expected.agentId
     || row.agentVersion !== expected.agentVersion || row.definitionHash !== expected.definitionHash) transcriptDenied("RUN_IDENTITY_CHANGED");
-  return { version: 1 as const, session: current, observation: value };
+  return { version: 1 as const, session: current, observation: value,
+    ...(args.acknowledgeSignal ? { marker: await observationMarker(metadata) } : {}) };
 }
 export const observeEnvelope = mutation({
   args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()),
     handle: v.object({ version: v.literal(1), tenantId: v.string(), memorySpaceId: v.string(), principalId: v.string(),
       runId: v.string(), conversationId: v.string(), agentId: v.string(), agentVersion: v.number(), definitionHash: v.string() }),
-    afterSequence: v.optional(v.number()), limit: v.optional(v.number()), finalOnly: v.optional(v.boolean()) },
+    afterSequence: v.optional(v.number()), limit: v.optional(v.number()), finalOnly: v.optional(v.boolean()),
+    acknowledgeSignal: v.optional(v.boolean()) },
   handler: observeEnvelopeHandler,
 });
 
+/** Cursor-independent revision: every durable output append advances outputRevision.
+ * Requested pagination/finalOnly never makes a protected page a different revision. */
+async function observationMarker(value: Awaited<ReturnType<typeof observeSignalHandler>>) {
+  return await semanticHash(canonicalModelJson({ attempt: value.attempt, updatedAt: value.updatedAt,
+    memoryStatus: value.memoryStatus, state: value.state, outputRevision: value.outputRevision }));
+}
 /** Reads the same fenced dependencies as observe, but never delivers its private payload from a cached query. */
 export const signal = query({
   args: { runId: v.string(), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    const value = await observeHandler(ctx, { ...args, limit: 1, finalOnly: false });
-    const execution = await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", value.run.scope.tenantId)
-      .eq("memorySpaceId", value.run.scope.memorySpaceId).eq("runId", value.run.runId).eq("attemptNumber", value.run.attemptNumber)).unique();
-    const marker = await semanticHash(canonicalModelJson({ attempt: value.run.attemptNumber,
-      updatedAt: value.run.updatedAt, memoryStatus: value.run.memoryStatus, state: value.state, cursor: value.cursor,
-      // Execution bookkeeping alone has no delivered change. Source/authority
-      // dependencies above still re-evaluate and deny stale observers.
-      outputRevision: execution?.nextOutputSequence ?? 0 }));
-    return { version: 1 as const, marker,
+    const value = await observeSignalHandler(createAuthorityReadScope(ctx), { ...args, limit: 1, finalOnly: false }, ctx);
+    return { version: 1 as const, marker: await observationMarker(value),
       ...(value.deliveryExpiresAt === undefined ? {} : { deliveryExpiresAt: value.deliveryExpiresAt }) };
   },
 });

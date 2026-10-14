@@ -123,6 +123,10 @@ export function memoryFixture(options: { profile?: () => EmbeddingProfile; budge
         const ingestion = await import("../../../convex-dev/runtimeIngestion");
         return await db.transaction(async () => await registeredHandler<unknown, unknown>((ingestion as unknown as Record<string, unknown>)[key!]!)(ctx, args));
       }
+      if(module==='runtimeMemoryQuery') {
+        const query=await import('../../../convex-dev/runtimeMemoryQuery');
+        return await db.transaction(async()=>await registeredHandler<unknown,unknown>((query as unknown as Record<string,unknown>)[key!]!)(ctx,args));
+      }
       if (module !== "runtimeMemory") throw new Error("Unsupported fixture mutation");
       return await db.transaction(async () => await registeredHandler<unknown, unknown>((memory as unknown as Record<string, unknown>)[key!]!)(ctx, args));
     },

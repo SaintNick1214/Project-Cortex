@@ -6,6 +6,7 @@ import { ConvexError } from "convex/values";
 import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import type { RuntimeRun, RuntimeStartResult } from "../../../src/client-runtime/types";
 import { assertNativeArgs } from "../runtimeAgent/native-arguments";
+import { createAuthorityReadScope } from "../../../convex-dev/runtimeAuth";
 
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(input: { handler: unknown }) { return { _handler: input.handler }; }
@@ -71,6 +72,22 @@ describe("combined native run admission", () => {
     expect(await f.admitEnvelope()).toEqual(result);
     expect(f.snapshot()).toEqual(legacyEffects); expect(f.effects.saves).toBe(1);
     expect(f.db.table("runtimeAgentExecutions")).toHaveLength(1); expect(f.workflows()).toHaveLength(1);
+  });
+  it("admission retains original results and effects with bounded raw policy/message reuse", async () => {
+    const f = await fixture(), originalQuery = f.db.query.bind(f.db), originalRead = f.ctx.runQuery.bind(f.ctx);
+    const reads: string[] = []; const rollback = new Error("REFERENCE_ROLLBACK"); let expected: unknown, effects: unknown;
+    f.db.query = table => { reads.push(`query:${table}`); return originalQuery(table); };
+    f.ctx.runQuery = async (ref, ...args) => { reads.push(`component:${JSON.stringify(ref)}`); return await originalRead(ref, ...args); };
+    await expect(f.transaction(async () => {
+      expected = await client.submitAndStartEnvelopeHandler(createAuthorityReadScope(f.ctx), { request: f.request() }); effects = f.snapshot(); throw rollback;
+    })).rejects.toBe(rollback);
+    const originalReads = reads.splice(0), actual = await f.admitEnvelope(), actualReads = reads.splice(0);
+    expect(actual).toEqual(expected); expect(f.snapshot()).toEqual(effects);
+    const retained = (read: string) => read.includes("runtimeModelPolicies") || read.includes("runtimeModelQualifications") || read.includes("getMessagesByIds");
+    expect(actualReads.filter(read => !retained(read))).toEqual(originalReads.filter(read => !retained(read)));
+    expect(actualReads.filter(retained).length).toBeLessThan(originalReads.filter(retained).length);
+    console.log(JSON.stringify({ controlledAdmissionReads: { original: originalReads.length, scoped: actualReads.length,
+      originalRetainable: originalReads.filter(retained).length, scopedRetainable: actualReads.filter(retained).length } }));
   });
   it.each(["read_missing", "revoked", "unauthenticated", "cross_scope"])("envelope %s pre-session denial starts no native writes or dispatch", async kind => {
     const f = await fixture();

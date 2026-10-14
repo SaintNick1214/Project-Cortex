@@ -87,6 +87,7 @@ type AdmitArgs = NativeArgs & { bindingCanonical: string; requestCanonical: stri
 type AdmissionResult = { result: GatewayAdmissionCheckpoint } | { refusal: Refusal };
 const checkpointRef = makeFunctionReference("runtimeModelPolicy:checkpoint") as unknown as FunctionReference<"mutation", "internal",
   { reference: RuntimeAuthorityReference; attemptId: Parameters<typeof assertGatewayReservedRequest>[0]["attemptId"]; requestCanonical: string }, GatewayCheckpoint>;
+const checkpointRecallRef = makeFunctionReference("runtimeModelPolicy:checkpointRecall") as unknown as typeof checkpointRef;
 
 /** Reservation commits even if validation/checkpoint refuses. Child checkpoint writes roll back separately. */
 export async function admitAgentQueryEmbeddingHandler(ctx: MutationCtx, args: AdmitArgs, expectedVersion?: 8): Promise<AdmissionResult> {
@@ -105,7 +106,7 @@ export async function admitAgentQueryEmbeddingHandler(ctx: MutationCtx, args: Ad
   try {
     assertGatewayReservedRequest(admission, args.requestCanonical, args.snapshotCanonical, MODEL_LEDGER_STORAGE_LIMITS.canonicalBytes);
     // A native child mutation supplies the original partial rollback/savepoint boundary.
-    const permit = await ctx.runMutation(checkpointRef, { reference: args.reference, attemptId: admission.attemptId, requestCanonical: admission.requestCanonical });
+    const permit = await ctx.runMutation(expectedVersion === 8 ? checkpointRecallRef : checkpointRef, { reference: args.reference, attemptId: admission.attemptId, requestCanonical: admission.requestCanonical });
     return { result: { admission, permit } };
   } catch (error) { return { refusal: boundedRefusal(error) }; }
 }

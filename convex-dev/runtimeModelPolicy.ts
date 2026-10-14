@@ -7,7 +7,7 @@ import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference, RuntimeCapability } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { createAuthorityReader, recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, readDeploymentPolicyRows, readQualificationRows } from "./runtimeAuth";
+import { createAuthorityReader, recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, createMemorySourceReadScope, readDeploymentPolicyRows, readQualificationRows } from "./runtimeAuth";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
@@ -824,6 +824,10 @@ export async function checkpointHandler(ctx: MutationCtx, args: Infer<typeof _ch
   return { dispatchPermit: true as const, dispatchIdentity: attempt.dispatchIdentity, snapshot, requestCanonical: canonical(validated.request) };
 }
 export const checkpoint = internalMutation({ args: checkpointArgs, handler: (ctx, args) => checkpointHandler(createAuthorityReadScope(ctx), args) });
+/** Explicit query-recall child only. Same original checkpoint/savepoint and mutable
+ * accounting reads; retain only native raw control/message/graph rows in this invocation. */
+export const checkpointRecall = internalMutation({ args: checkpointArgs,
+  handler: (ctx, args) => checkpointHandler(createMemorySourceReadScope(ctx), args) });
 export const markVisible = internalMutation({ args: { ...attemptArgs, ...visibilityFields }, handler: async (nativeCtx, args) => {
   const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
   const { attempt, operation } = await attemptContext(ctx, args.attemptId);
