@@ -32,6 +32,7 @@ type EmbeddingRequest = Parameters<MemoryModel["embed"]>[0];
 const attemptArgs = { reference: runtimeAuthorityReference, runId: v.string(), attemptNumber: v.number(), leaseVersion: v.number() };
 const inputArgs = v.object({ text: v.string(), requestId: v.string(), limit: v.number() });
 type NativeArgs = AgentQueryEmbeddingAttempt & { input: Input };
+export type AgentQueryEmbeddingProposal = Awaited<ReturnType<typeof prepareAgentQueryEmbeddingHandler>>;
 
 function checkedInput(input: Input): string {
   assertMemoryRequestId(input.requestId);
@@ -142,8 +143,10 @@ export const admitV8 = internalMutation({ args: { ...attemptArgs, input: inputAr
 const prepareV8Ref = makeFunctionReference("runtimeAgentQueryEmbedding:prepareV8") as unknown as typeof prepareRef;
 const admitV8Ref = makeFunctionReference("runtimeAgentQueryEmbedding:admitV8") as unknown as typeof admitRef;
 
-export async function recallAgentMemoryV8(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, repository: MemoryRepository, clock: DomainClock, input: Input, selection?: AgentRecallSelection) {
-  const proposal = await ctx.runQuery(prepareV8Ref, { ...attempt, input });
+export async function recallAgentMemoryV8(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, repository: MemoryRepository, clock: DomainClock, input: Input, selection?: AgentRecallSelection, preparedProposal?: AgentQueryEmbeddingProposal) {
+  // Only a private native context/preflight parent supplies this tentative data.
+  // Admission derives and rechecks the request again; refresh keeps its own RPC.
+  const proposal = preparedProposal ?? await ctx.runQuery(prepareV8Ref, { ...attempt, input });
   const model = createGatewayMemoryModel(withV8GatewayTerminalPorts(ctx), repository, { runBudgetId: proposal.binding.runBudgetId,
     queryEmbedding: { binding: proposal.binding, requestCanonical: canonicalModelJson(proposal.request), resolutions: proposal.resolutions,
       refresh: async () => (await ctx.runQuery(prepareV8Ref, { ...attempt, input })).resolutions[1],

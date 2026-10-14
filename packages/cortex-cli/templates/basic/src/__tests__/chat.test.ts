@@ -6,28 +6,28 @@ import { CortexRuntimeClient } from "@cortexmemory/sdk/runtime";
 import type { RuntimeClientPort } from "@cortexmemory/sdk/runtime";
 import { getFunctionName } from "convex/server";
 describe("backend-owned text runs", () => {
-  it("actual SDK Basic admission uses one combined operation between fresh sessions", async () => {
+  it("actual SDK Basic admission uses its initial envelope session and fresh post-I/O session", async () => {
     const f = runtimeMock(), calls: string[] = [];
     const port = { setAuth: (_fetch: unknown, ready: (accepted: boolean) => void) => ready(true),
       mutation: async (ref: Parameters<RuntimeClientPort["mutation"]>[0], args: Record<string, unknown>) => {
         const name = getFunctionName(ref); calls.push(name);
         if (name === "runtimeClient:session") return f.verified;
-        if (name === "runtimeClient:submitAndStart") {
+        if (name === "runtimeClient:submitAndStartEnvelope") {
           expect(args).toEqual({ tenantId: "tenant", memorySpaceId: "space", streaming: true,
             request: { version: 1, agentId: "agent", agentVersion: 2, clientRequestId: "basic-key", parts: [{ type: "text", text: "hello" }] } });
-          return { version: 1, run: { ...f.run, attemptNumber: 1, responseStatus: "running" }, start: { runId: f.handle.runId, attemptNumber: 1, state: "ready" } };
+          return { version: 1, session: f.verified, admission: { version: 1, run: { ...f.run, attemptNumber: 1, responseStatus: "running" }, start: { runId: f.handle.runId, attemptNumber: 1, state: "ready" } } };
         }
         throw new Error("UNEXPECTED_RPC");
       }, query: async () => { throw new Error("PRIVATE_QUERY_PROHIBITED"); }, action: async () => { throw new Error("PAID_CALL_PROHIBITED"); },
       onUpdate: () => { throw new Error("UNEXPECTED_WATCH"); }, close: async () => {},
     } as unknown as RuntimeClientPort;
-    const client = new CortexRuntimeClient({ deploymentUrl: config.deploymentUrl, fetchToken: async () => "opaque", client: port });
+    const client = new CortexRuntimeClient({ deploymentUrl: config.deploymentUrl, fetchToken: async () => "opaque", scope: { tenantId: config.tenantId, memorySpaceId: config.memorySpaceId }, client: port });
     try {
       const result = await chat(client, config, { requestId: "basic-key", message: "hello" });
       expect(result.handle).toEqual({ version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "owner", runId: f.handle.runId,
         conversationId: f.handle.conversationId, agentId: "agent", agentVersion: 2, definitionHash: f.handle.definitionHash });
       expect(result.run).toMatchObject({ responseStatus: "running", attemptNumber: 1 });
-      expect(calls).toEqual(["runtimeClient:session", "runtimeClient:submitAndStart", "runtimeClient:session"]);
+      expect(calls).toEqual(["runtimeClient:submitAndStartEnvelope", "runtimeClient:session"]);
     } finally { await client.close(); }
   });
   it("submits only new text with the caller key and published Agent, without recall/model/remember", async () => {

@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals
 import type { LanguageModelV4, EmbeddingModelV4, LanguageModelV4CallOptions } from "@ai-sdk/provider";
 import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
 import type { SourceContent } from "../../../src/domain/contracts";
+import type { StageLease } from "../../../convex-dev/runtimeIngestion";
 import { getFunctionName } from "convex/server";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "../../../src/domain/profile";
@@ -194,12 +195,18 @@ describe("v4 framing through registered ingestion and charge-only terminal captu
     expect(JSON.parse(attempt.terminalEvidenceCanonical as string).outcome).toBe("confirmed");
     expect(f.db.table("runtimeIngestionEvents")[0]).toMatchObject({ factsState: "complete", vectorsState: "pending" });
   });
-  it("confirmed conflicting values are a known non-retryable ambiguity, without rewriting extraction or funding another call", async () => {
-    const f = await fixture(), event = await f.enqueue(await f.source("User likes jasmine tea and lavender tea"));
+  it("legacy unbound conflicting values remain a known non-retryable ambiguity, without rewriting extraction or funding another call", async () => {
+    const f = await fixture(), source = await f.source("User likes jasmine tea and lavender tea"), event = await f.enqueue(source);
     nativeText = JSON.stringify({ facts: [valid.facts[0], { ...valid.facts[0], fact: "User likes lavender tea", object: "lavender tea" }] });
     await f.worker(event.eventId); const extract = f.db.table("runtimeIngestionStages").find(s => s.stage === "extract")!;
     const before = canonicalModelJson({ extract, accounts: f.db.table("runtimeBudgetAccounts"), attempts: f.db.table("runtimeModelAttempts") });
-    await f.worker(event.eventId, "facts");
+    // The new worker binds each candidate. Existing unbound plans must still
+    // refuse, through the original native commit and confirmed-failure guards.
+    const owned = await f.call(ingestion.claim, { reference: f.reference, eventId: event.eventId, stage: "facts" }) as StageLease;
+    const lease: StageLease = { reference: owned.reference, eventId: owned.eventId, stage: owned.stage, attempt: owned.attempt, leaseVersion: owned.leaseVersion };
+    await expect(f.call(beliefs.commit, { ...lease, planCanonical: canonicalModelJson({ version: 1, eventId: event.eventId,
+      sequence: event.sequence, sourceHash: source.contentHash, expectedVersions: {}, entries: [] }) })).rejects.toThrow("AMBIGUOUS_EXTRACTION_SLOT");
+    await f.call(ingestion.failStage, { ...lease, uncertain: false, failureCode: "INDEXING_FAILED", domainFailure: "ambiguous_extraction" });
     expect(f.db.table("runtimeIngestionStages").find(s => s.stage === "facts")).toMatchObject({ state: "dead_letter", failureCode: "AMBIGUOUS_EXTRACTION_SLOT" });
     expect(canonicalModelJson({ extract, accounts: f.db.table("runtimeBudgetAccounts"), attempts: f.db.table("runtimeModelAttempts") })).toBe(before);
     expect(f.db.table("facts")).toHaveLength(0); expect(f.db.table("runtimeBeliefOutbox")).toHaveLength(0); expect(nativeCalls).toHaveLength(1);

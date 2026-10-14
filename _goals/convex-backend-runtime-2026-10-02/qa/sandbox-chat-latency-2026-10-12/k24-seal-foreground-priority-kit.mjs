@@ -9,7 +9,7 @@ const proofs = '/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs';
 const qa = path.dirname(new URL(import.meta.url).pathname);
 const base = path.join(proofs, 'sandbox-env');
 const kit = path.join(proofs, 'manual-sandbox-foreground-priority-2026-10-14');
-const sourceCommit = 'PENDING_COMMITTED_SOURCE_GO';
+const sourceCommit = 'be39655e09fdee69907a6ba81b096e5a44067945';
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const manifest = JSON.parse(await fs.readFile(path.join(kit, 'image/archives/manifest.json')));
 const identity = JSON.parse(await fs.readFile(path.join(qa, 'kit-checks-foreground-priority/docker-image-identity.json')));
@@ -43,7 +43,8 @@ const verdict = JSON.parse(await fs.readFile(path.join(qa, 'k24-repair-independe
 assert.equal(verdict.verdict, 'PASS');
 assert.equal(verdict.sourceOnly, true);
 assert.equal(verdict.nativeAcceptance, false);
-assert.equal(verdict.verifiedInputs.verifiedCoreCount, 12);
+assert.equal(Object.keys(verdict.verifiedPacket.groups.core).length, 12);
+assert.equal(verdict.verifiedPacket.sha256, sha(await fs.readFile(path.join(qa,verdict.verifiedPacket.path))));
 
 const approvalPath = path.join(base, 'procedure-approval.json');
 const originalApproval = await fs.readFile(approvalPath);
@@ -89,7 +90,8 @@ for (const row of approval.files) row.sha256 = sha(await fs.readFile(path.resolv
 approval.sourceAcceptance = { kind: 'NORMAL_REVIEWED_SOURCE_PIN_INTEGRATION', sourceCommit, kit, imageId: identity.imageId, artifactReceiptSha256: sha(await fs.readFile(path.join(kit, 'image/archives/manifest.json'))), reviewHashes: { ...(approval.sourceAcceptance?.reviewHashes ?? {}), 'k24-repair-independent-review.md': sha(review) } };
 approval.priorManualObservations.push({ sessionId: '039e3c83-810a-40a5-b718-4efbaa20e783', environment:'CLEANED', cleanupReceipt:path.join(qa,'k23-cleanup-final.json'), subsecondOutcomes:'0PASS/4FAIL', browserMs:[3927.2000000476837,8495.300000071526], cliMs:[9304.916921,9716.290628000017], scopedFunctional:'PASS4facts8vectors/repeatedcapture/publicrecall/negatives/auth/toolreconnect/strict11', actualCharges:'UNKNOWN', originalFailuresPreserved:true });
 await fs.writeFile(approvalPath, JSON.stringify(approval, null, 2) + '\n');
-await fs.writeFile(path.join(kit,'image-id.txt'),identity.imageId+'\n',{flag:'wx',mode:0o600});
+assert.equal((await fs.readFile(path.join(kit,'image-id.txt'),'utf8')).trim(),identity.imageId);
+assert.equal((await fs.stat(path.join(kit,'image-id.txt'))).mode & 0o777,0o600);
 let localTests=await fs.readFile(path.join(base,'local.test.mjs'),'utf8');
 localTests=localTests.replace('PRIOR_BOUNDED_REPAIR_IMAGE_ID, SOURCE_COMMIT','PRIOR_BOUNDED_REPAIR_IMAGE_ID, PRIOR_READ_RETENTION_IMAGE_ID, SOURCE_COMMIT').replace('PRIOR_BOUNDED_REPAIR_IMAGE_ID])','PRIOR_BOUNDED_REPAIR_IMAGE_ID, PRIOR_READ_RETENTION_IMAGE_ID])').replaceAll('manual-sandbox-read-retention-2026-10-14','manual-sandbox-foreground-priority-2026-10-14');
 await fs.writeFile(path.join(base,'local.test.mjs'),localTests);

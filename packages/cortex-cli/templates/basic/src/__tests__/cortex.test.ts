@@ -2,8 +2,8 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { bearer, hostToken, identifier, runtimeConfig, withRuntime } from "../cortex.js";
-import type { RuntimeFactory } from "../cortex.js";
+import { bearer, hostToken, identifier, runtimeConfig, withRuntime, closeRuntimeConnection } from "../cortex.js";
+import type { RuntimeFactory, RuntimeConnection } from "../cortex.js";
 import { config, runtimeMock } from "./helpers/test-utils.js";
 afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); vi.unstubAllEnvs(); });
 describe("verified remote configuration", () => {
@@ -76,5 +76,49 @@ describe("per-operation client ownership", () => {
   it("operation failure closes exactly once and is never resubmitted", async () => {
     const f = runtimeMock(), work = vi.fn(async () => { throw new Error("failed"); });
     await expect(withRuntime(async () => "token", work, { config, factory: () => f.client })).rejects.toThrow("failed"); expect(work).toHaveBeenCalledOnce(); expect(f.client.close).toHaveBeenCalledOnce();
+  });
+});
+
+describe("interactive owned connection", () => {
+  it("reuses transport across commands while checking current sessions twice each time and closes once", async () => {
+    const f=runtimeMock(),factory=vi.fn<RuntimeFactory>(()=>f.client),connection:RuntimeConnection={},token=async()=>"opaque";
+    await withRuntime(token,async()=>"first",{config,factory,connection});
+    await withRuntime(token,async()=>"second",{config,factory,connection});
+    expect(factory).toHaveBeenCalledOnce();expect(f.client.session).toHaveBeenCalledTimes(4);expect(f.client.close).not.toHaveBeenCalled();
+    closeRuntimeConnection(connection);closeRuntimeConnection(connection);expect(f.client.close).toHaveBeenCalledOnce();
+  });
+  it("changed principal fails and releases the transport without invoking another paid intent",async()=>{
+    const f=runtimeMock(),connection:RuntimeConnection={},token=async()=>"opaque",factory=()=>f.client;
+    await withRuntime(token,async()=>null,{config,factory,connection});
+    f.client.session.mockResolvedValueOnce(f.verified).mockResolvedValueOnce({...f.verified,principalId:"changed"});
+    const work=vi.fn(async()=>"result");await expect(withRuntime(token,work,{config,factory,connection})).rejects.toThrow("SESSION_CHANGED");
+    expect(work).toHaveBeenCalledOnce();expect(connection.entry).toBeUndefined();expect(f.client.close).toHaveBeenCalledOnce();
+    expect(f.client.submitAndStart).not.toHaveBeenCalled();
+  });
+  it("rejects changed endpoint or token provider before work and clears old ownership",async()=>{
+    const f=runtimeMock(),connection:RuntimeConnection={},token=async()=>"opaque",factory=()=>f.client;
+    await withRuntime(token,async()=>null,{config,factory,connection});
+    const work=vi.fn();await expect(withRuntime(token,work,{config:{...config,deploymentUrl:"https://other.convex.cloud"},factory,connection})).rejects.toThrow("RUNTIME_CONFIGURATION_CHANGED");
+    expect(work).not.toHaveBeenCalled();expect(f.client.close).toHaveBeenCalledOnce();expect(connection.entry).toBeUndefined();
+    const g=runtimeMock(),connection2:RuntimeConnection={},factory2=()=>g.client;
+    await withRuntime(token,async()=>null,{config,factory:factory2,connection:connection2});
+    await expect(withRuntime(async()=>"different",work,{config,factory:factory2,connection:connection2})).rejects.toThrow("RUNTIME_CONFIGURATION_CHANGED");
+    expect(g.client.close).toHaveBeenCalledOnce();expect(work).not.toHaveBeenCalled();
+  });
+  it("timeout retires only the original entry, never a later explicitly issued command",async()=>{
+    vi.useFakeTimers();const f=runtimeMock(),g=runtimeMock(),connection:RuntimeConnection={},token=async()=>"opaque",factory=vi.fn<RuntimeFactory>().mockReturnValueOnce(f.client).mockReturnValueOnce(g.client);
+    let release!:()=>void;const pending=withRuntime(token,()=>new Promise<void>(resolve=>{release=resolve;}),{config:{...config,timeoutMs:10},factory,connection});
+    const assertion=expect(pending).rejects.toThrow("REQUEST_DEADLINE_EXCEEDED");await vi.advanceTimersByTimeAsync(11);await assertion;
+    expect(f.client.close).toHaveBeenCalledOnce();expect(connection.entry).toBeUndefined();
+    await withRuntime(token,async()=>null,{config:{...config,timeoutMs:10},factory,connection});release();await Promise.resolve();
+    expect(g.client.close).not.toHaveBeenCalled();closeRuntimeConnection(connection);expect(g.client.close).toHaveBeenCalledOnce();
+    expect(f.client.cancel).not.toHaveBeenCalled();
+  });
+  it("idle abort closes retained ownership; simultaneous command is rejected without disturbing active work",async()=>{
+    const f=runtimeMock(),connection:RuntimeConnection={},token=async()=>"opaque",factory=()=>f.client;
+    await withRuntime(token,async()=>null,{config,factory,connection});const controller=new AbortController();controller.abort();
+    await expect(withRuntime(token,async()=>null,{config,factory,connection,signal:controller.signal})).rejects.toThrow("REQUEST_ABORTED");
+    expect(f.client.close).toHaveBeenCalledOnce();expect(connection.entry).toBeUndefined();
+    connection.busy=true;const work=vi.fn();await expect(withRuntime(token,work,{config,factory,connection})).rejects.toThrow("RUNTIME_BUSY");expect(work).not.toHaveBeenCalled();
   });
 });

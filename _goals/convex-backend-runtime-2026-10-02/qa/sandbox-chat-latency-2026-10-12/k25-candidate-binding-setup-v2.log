@@ -1,0 +1,102 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:15108) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/candidate-binding.test.ts
+  source-owned candidate decision bindings
+    ✕ executes the real worker/Gateway twice for two candidate conflicts, then commits both without replay or extraction loss (78 ms)
+    ○ skipped retains old unbound unequal-slot refusal and never interprets one result as the next candidate
+    ○ skipped retains every unequal field, source ordinal and independently bound decision
+    ○ skipped refuses unbound resolution before a plan can be committed
+    ○ skipped refuses wrong-candidate resolution before a plan can be committed
+    ○ skipped refuses rewrite-new-target resolution before a plan can be committed
+    ○ skipped native commit rejects candidateId private binding tampering atomically
+    ○ skipped native commit rejects ordinal private binding tampering atomically
+    ○ skipped native commit rejects operationId private binding tampering atomically
+    ○ skipped native commit rejects semanticId private binding tampering atomically
+    ○ skipped native commit rejects sourceHash private binding tampering atomically
+    ○ skipped native commit rejects missing private binding tampering atomically
+    ○ skipped native commit rejects truncated private binding tampering atomically
+    ○ skipped fresh grant fence rejects a complete bound plan without partial writes
+    ○ skipped fresh source fence rejects a complete bound plan without partial writes
+    ○ skipped fresh lease fence rejects a complete bound plan without partial writes
+    ○ skipped fresh policy fence rejects a complete bound plan without partial writes
+    ○ skipped Gateway refuses a candidate under its sibling's operation before reservation/provider dispatch
+
+  ● source-owned candidate decision bindings › executes the real worker/Gateway twice for two candidate conflicts, then commits both without replay or extraction loss
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: ArrayContaining [ObjectContaining {"stage": "extract", "state": "complete"}, ObjectContaining {"stage": "facts", "state": "complete"}]
+    Received: [{"failureCode": "INVALID_CONFIRMED_MODEL_OUTPUT", "stage": "extract", "state": "dead_letter"}, {"failureCode": undefined, "stage": "facts", "state": "pending"}, {"failureCode": undefined, "stage": "vectors", "state": "pending"}]
+
+      117 |     const f = await fixture(), earlier = await f.source("prior"); const before = await ingestion.enqueueSourceEvent(f.ctx, f.reference, earlier);
+      118 |     outputs.push(JSON.stringify({ facts: [{ ...first, fact: "User likes birch", object: "birch" }] })); await f.worker(before.eventId); await f.worker(before.eventId, "facts");
+    > 119 |     expect(f.db.table("runtimeIngestionStages").filter(x => x.eventId === before.eventId).map(x => ({ stage: x.stage, state: x.state, failureCode: x.failureCode }))).toEqual(expect.arrayContaining([expect.objectContaining({ stage: "extract", state: "complete" }), expect.objectContaining({ stage: "facts", state: "complete" })]));
+          |                                                                                                                                                                       ^
+      120 |     const source = await f.source(), event = await ingestion.enqueueSourceEvent(f.ctx, f.reference, source);
+      121 |     outputs.push(JSON.stringify({ facts: [first, second] })); await f.worker(event.eventId);
+      122 |     const extract = f.db.table("runtimeIngestionStages").find(x => x.eventId === event.eventId && x.stage === "extract")!, raw = canonicalModelJson(extract);
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/candidate-binding.test.ts:119:167)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.0s | 0/1 passed | /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.08s ( 2.5%) - source-owned candidate decision bindings executes the real worker/Gateway twice for two candidate conflicts, then commits both without replay or extraction loss
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.08s (2.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.12s
+  Test suites:        1
+  Individual tests:   1
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 17 skipped, 18 total
+Snapshots:   0 total
+Time:        3.125 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/candidate-binding.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-candidate-binding-setup-v2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

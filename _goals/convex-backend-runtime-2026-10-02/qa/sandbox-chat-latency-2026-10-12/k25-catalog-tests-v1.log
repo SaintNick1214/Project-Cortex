@@ -1,0 +1,32 @@
+✔ append retains old bytes and selects a distinct version; same-version changes fail before publication (13.364375ms)
+✔ canonical hash helpers match independently computed CLI wire rules (1.510333ms)
+✔ assembly is byte-identical across input/tree order and timestamps with all three managers (17.290375ms)
+✔ manifest rendering rewrites only Cortex file/link development references without altering source or app fields (5.008708ms)
+✔ changing one selected source changes its actual hashes without changing other template payloads (5.726875ms)
+✔ local/generated/lock/credential files are omitted; only explicitly selected examples and executable source survive (8.0515ms)
+✔ documented .env.local.example opt-in is supported by producer and omission remains the default (5.94475ms)
+✔ manifest refuses manifest version (3.239166ms)
+✔ manifest refuses manager (3.433667ms)
+✔ manifest refuses old SDK fallback (5.359125ms)
+✔ manifest refuses duplicate SDK maps (6.864958ms)
+✔ manifest refuses unrelated source link (5.370417ms)
+✔ manifest refuses missing SDK (6.09675ms)
+✔ manifest refuses Convex link (3.58ms)
+✔ manifest refuses invalid Convex range (3.771667ms)
+✔ Next provider is required; invalid JSON and missing root manifest refuse (5.219542ms)
+✔ selection identity/provenance/env declarations refuse malformed values and exact duplicate tuples (4.566833ms)
+✔ included symlinks and hardlinks refuse while source roots cannot be symlinks (3.685333ms)
+✔ portable path validation and file budget refuse unsupported source payloads (5.60575ms)
+✔ data-package output has exact catalog/payload bytes, no dependencies/lifecycle, modes and safe existing-output refusal (8.852ms)
+✔ actual assembler subprocess joins with deterministic success and invalid later selection makes zero output (69.784666ms)
+✔ Basic npm requirement becomes explicit capability without changing dependencies or app version (5.386875ms)
+✔ a source swapped to a symlink between traversal and open is refused without reading foreign bytes (6.5255ms)
+✔ growth while an opened source is read refuses the candidate and closes the handle (1.862666ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 225.635

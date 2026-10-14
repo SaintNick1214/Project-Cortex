@@ -20,7 +20,8 @@ export async function commitBeliefPlan(ctx: MutationCtx, args: StageLease & { pl
   if (args.stage !== "facts" || current.source.lineage.role === "assistant" || new TextEncoder().encode(args.planCanonical).length > 1_000_000) ingestionDenied("INVALID_INPUT");
   const plan = JSON.parse(args.planCanonical) as BeliefPlanV1;
   if (canonicalModelJson(plan) !== args.planCanonical || plan.version !== 1 || plan.eventId !== current.event.eventId
-    || plan.sequence !== current.event.sequence || plan.sourceHash !== current.source.contentHash) ingestionDenied("INVALID_BELIEF_PLAN");
+    || plan.sequence !== current.event.sequence || plan.sourceHash !== current.source.contentHash
+    || plan.candidateBindingVersion !== undefined && plan.candidateBindingVersion !== 1) ingestionDenied("INVALID_BELIEF_PLAN");
   const extraction = await ctx.db.query("runtimeIngestionStages").withIndex("by_event_stage", q => q.eq("tenantId", current.event.tenantId)
     .eq("memorySpaceId", current.event.memorySpaceId).eq("eventId", current.event.eventId).eq("stage", "extract")).unique();
   if (!extraction || extraction.state !== "complete" || !extraction.payloadCanonical) ingestionDenied("INVALID_STATE");
@@ -33,7 +34,15 @@ export async function commitBeliefPlan(ctx: MutationCtx, args: StageLease & { pl
     if (expected !== (fact?.version ?? 0)) ingestionDenied("FACT_VERSION_CONFLICT");
   }
   const checked = await planBeliefs({ eventId: current.event.eventId, sequence: current.event.sequence, source: current.source, candidates, existing,
-    resolve: async (_candidate, _existing, ordinal) => { const entry = plan.entries[ordinal]; if (!entry) ingestionDenied("INVALID_BELIEF_PLAN"); return entry.decision; } });
+    ...(plan.candidateBindingVersion === 1 ? { candidateAttempt: args.attempt } : {}),
+    resolve: async (_candidate, _existing, ordinal, binding) => {
+      const entry = plan.entries[ordinal]; if (!entry) ingestionDenied("INVALID_BELIEF_PLAN");
+      if (binding) {
+        if (!entry.candidateBinding) ingestionDenied("INVALID_BELIEF_PLAN");
+        return { candidateBinding: entry.candidateBinding, decision: entry.decision };
+      }
+      return entry.decision;
+    } });
   if (canonicalModelJson(checked) !== args.planCanonical) ingestionDenied("FACT_VERSION_CONFLICT");
   // Exact source order defeats reversed model completion, not merely source wall-clock time.
   for (const entry of plan.entries) {
@@ -86,7 +95,8 @@ export const replan = internalMutation({ args: { reference: runtimeAuthorityRefe
   const prior = JSON.parse(args.planCanonical) as BeliefPlanV1;
   if (canonicalModelJson(prior) !== args.planCanonical || prior.version !== 1 || prior.eventId !== current.event.eventId
     || prior.sequence !== current.event.sequence || prior.sourceHash !== current.source.contentHash
-    || current.stage.payloadCanonical !== args.planCanonical) ingestionDenied("INVALID_BELIEF_PLAN");
+    || current.stage.payloadCanonical !== args.planCanonical
+    || prior.candidateBindingVersion !== undefined && prior.candidateBindingVersion !== 1) ingestionDenied("INVALID_BELIEF_PLAN");
   const extraction = await ctx.db.query("runtimeIngestionStages").withIndex("by_event_stage", q => q.eq("tenantId", current.event.tenantId)
     .eq("memorySpaceId", current.event.memorySpaceId).eq("eventId", current.event.eventId).eq("stage", "extract")).unique();
   if (!extraction || extraction.state !== "complete" || !extraction.payloadCanonical) ingestionDenied("INVALID_STATE");
@@ -96,8 +106,9 @@ export const replan = internalMutation({ args: { reference: runtimeAuthorityRefe
   // No historical paid decision is rebound to a different read-set. Equal
   // assertions are deterministic NONE; other conflicts require disposition.
   const plan = await planBeliefs({ eventId: current.event.eventId, sequence: current.event.sequence, source: current.source, candidates, existing,
-    resolve: async (candidate, matching) => {
-      const duplicate = identicalBelief(candidate, matching); if (duplicate) return duplicate;
+    ...(prior.candidateBindingVersion === 1 ? { candidateAttempt: args.attempt } : {}),
+    resolve: async (candidate, matching, _ordinal, binding) => {
+      const duplicate = identicalBelief(candidate, matching); if (duplicate) return binding ? { candidateBinding: binding, decision: duplicate } : duplicate;
       return ingestionDenied("REPLAN_REQUIRED");
     } });
   // The original native commit repeats every policy/lease/source/read-version

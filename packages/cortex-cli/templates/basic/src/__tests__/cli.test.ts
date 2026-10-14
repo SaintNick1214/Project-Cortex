@@ -178,3 +178,17 @@ it("CLI unknown commands never submit and exit creates no connection", async () 
   await expect(cli("/unknown")).rejects.toThrow("UNKNOWN_COMMAND"); expect(f.client.submitAndStart).not.toHaveBeenCalled(); expect(f.client.close).toHaveBeenCalledOnce();
   expect(await cli("/exit")).toBe(false); expect(factory).toHaveBeenCalledOnce();
 });
+
+it("interactive main retains one transport across two commands and closes it on exit",async()=>{
+ const f=runtimeMock(),input=new PassThrough(),output=new PassThrough(),factory=vi.fn(()=>f.client);
+ vi.spyOn(console,"log").mockImplementation(()=>{});
+ const pending=main({config,factory,fetchToken:async()=>"opaque",input,output});
+ input.write("/session\n");await tick();expect(f.client.session).toHaveBeenCalledTimes(3);expect(f.client.close).not.toHaveBeenCalled();
+ input.write("/session\n");await tick();expect(f.client.session).toHaveBeenCalledTimes(6);expect(factory).toHaveBeenCalledOnce();expect(f.client.close).not.toHaveBeenCalled();
+ input.write("/exit\n");await pending;expect(f.client.close).toHaveBeenCalledOnce();input.destroy();output.destroy();
+});
+
+it("local help and exit remain available without configuration or authentication",async()=>{
+ vi.stubEnv("CONVEX_URL","");vi.stubEnv("NEXT_PUBLIC_CONVEX_URL","");const input=new PassThrough(),output=new PassThrough(),factory=vi.fn(()=>{throw Error("UNEXPECTED_CLIENT");});vi.spyOn(console,"log").mockImplementation(()=>{});
+ const pending=main({factory,input,output});input.write("/help\n");await tick();expect(factory).not.toHaveBeenCalled();input.write("/exit\n");await pending;expect(factory).not.toHaveBeenCalled();input.destroy();output.destroy();
+});

@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K24 source/test/docs independently accepted; exact committed packaging next; K23 independently absent",
+  "phase": "K25 source/test frozen; shared quality/build and one independent review underway; K24 environment independently CLEANED",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T16:33:53.035616+00:00",
+  "updatedAt": "2026-10-14T17:23:20.841602+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,31 +58,31 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "generation": "K23",
-    "sessionId": "039e3c83-810a-40a5-b718-4efbaa20e783",
+    "generation": "K24",
+    "sessionId": "34d179da-1942-4602-ae7e-a41610880e9a",
     "state": "CLEANED",
-    "sourceCommit": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
-    "launcherSession": 1531,
-    "nativeSLOQualified": false,
-    "fixedStartupCeilingUnits": 2700000,
+    "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+    "launcherSession": 2041,
     "target": {
-      "id": 6169873,
-      "name": "giant-ferret-931",
+      "id": 6171787,
+      "name": "zany-cardinal-533",
       "teamId": 325340,
       "projectId": 3200658,
-      "isDefault": false,
       "deploymentType": "dev",
-      "expiresAt": 1792595792443
+      "isDefault": false,
+      "expiresAt": 1792600960400
     },
+    "requestedRegion": "aws-us-east-1",
+    "observedRegion": "UNAVAILABLE",
     "ports": {
-      "web": 3150,
-      "basic": 3151
+      "web": 3156,
+      "basic": 3157
     },
     "startupFixedQualification": "8/8PASS",
-    "UIAndCLIClientsClosed": true,
-    "launcherExit": 130,
-    "cleanupReceipt": "k23-cleanup-final.json",
-    "cleanupIndependent": "ABSENT"
+    "nativeSLOQualified": false,
+    "launcherExitCode": 130,
+    "cleanupReceipt": "k24-cleanup-final.json",
+    "nativeWholeMemoryAccepted": false
   },
   "actualSamples": {
     "generation": "K21",
@@ -106,8 +106,10 @@
     "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
   },
   "pendingRepairs": [
-    "Measured terminal checkpoint read retention and bounded same-run foreground scheduling",
-    "Fresh candidate cloud under1000ms qualification",
+    "K25 trusted per-candidate fact binding retaining unequal facts",
+    "K25 two original read-parent compositions with fresh authority checks",
+    "K25 interactive Basic connection ownership with per-command fresh sessions",
+    "Fresh installed cloud under1000ms qualification and full memory outcomes",
     "Independent final audit"
   ],
   "refinements": [
@@ -1411,7 +1413,7 @@
     }
   },
   "currentRepairBatch": {
-    "state": "SOURCE_ACCEPTED",
+    "state": "COMMITTED_PACKAGING",
     "baseline": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
     "goalPercent": 50,
     "nativeQualified": false,
@@ -1421,7 +1423,11 @@
     "independentReviewPercent": 100,
     "qualityPercent": 100,
     "review": "k24-repair-independent-review.md",
-    "breakingFindings": 0
+    "breakingFindings": 0,
+    "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+    "packagingPercent": 100,
+    "launcherPercent": 100,
+    "launcherTests": "117/117PASS0skip"
   },
   "k22ActualSamples": {
     "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
@@ -1524,5 +1530,45 @@
     },
     "cleanup": "fresh independent ABSENT",
     "cleanupReceipt": "k23-cleanup-final.json"
+  },
+  "actualSamplesK24": {
+    "generation": "K24",
+    "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+    "browserFirstAfterPaintMs": 3665.1999999284744,
+    "browserWarmAfterPaintMs": 3263.6999999284744,
+    "cliFirstStdoutAcknowledgedMs": 7148.28367,
+    "cliWarmFirstStdoutAcknowledgedMs": 9541.891629999998,
+    "responses": "COMPLETE4/4",
+    "sloPass": 0,
+    "sloTotal": 4,
+    "wholeMemory": "FAIL warm user facts AMBIGUOUS_EXTRACTION_SLOT; contiguous facts/vectors through2",
+    "auth": "PASS signed owner; expired/invalid HTTP-authoritative refusals",
+    "ordinaryCaptureRecall": "PASS separate capture/replay/public recall/isolation negatives",
+    "toolReconnect": "PASS one approval/tool effect/final answer",
+    "strictBarrier": "CONTEXT_INCOMPLETE refusal; positive qualification failed due prior gap",
+    "activeSlots": 0,
+    "nativeAttempts": 45,
+    "actualCharges": "UNKNOWN",
+    "cleanup": "Independent exact resources ABSENT",
+    "resubmissions": 0,
+    "paidRetries": 0
+  },
+  "sourceMilestoneK25": {
+    "timestamp": "2026-10-14T17:23:20.841602+00:00",
+    "milestone": "K25 source implementation and affected tests frozen",
+    "sourceTaskPercent": 100,
+    "independentSourceReview": "RUNNING",
+    "goalPercent": 50,
+    "nativeAcceptance": false,
+    "sloAccepted": false,
+    "checks": {
+      "candidateBinding": 293,
+      "readParentLatestUnion": 318,
+      "basicLatestUnion": 136,
+      "basicControlledIntegration": 25,
+      "catalog": 24
+    },
+    "skips": 0,
+    "note": "Per-file unions overlap and are not one aggregate invocation; no native speed claim"
   }
 }

@@ -15,9 +15,10 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
   async start() { return "workflow:whole-recall"; }
 } }));
 const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
-const { runs, clock, definitions } = await import("../runtimeTranscript/fixture");
+const { runs, clock, definitions, clone } = await import("../runtimeTranscript/fixture");
 const agent = await import("../../../convex-dev/runtimeAgent");
 const whole = await import("../../../convex-dev/runtimeAgentRecall");
+const queryEmbedding = await import("../../../convex-dev/runtimeAgentQueryEmbedding");
 const memory = await import("../../../convex-dev/runtimeMemory");
 const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = await import("../../../convex-dev/runtimeMemoryRepository");
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
@@ -245,4 +246,196 @@ it("V8 delivery still uses raw final authority after consumed resource and hash 
   jest.spyOn(f.db,"get").mockImplementation(async(table,id)=>{if(table==="runtimeAuthGrants" && ++grantReads===2)f.grant.revokedAt=clock;return get(table,id);});
   const writes=f.db.writes;await expect(f.call(whole.finalDeliveryV8,{reference:f.reference,bindings:read.bindings})).rejects.toThrow("FORBIDDEN");
   expect(grantReads).toBe(2);expect(f.db.writes).toBe(writes);
+});
+
+function wholeState(f: Fixture) {
+  return clone({ rows: new Map([...f.db.rows].filter(([, rows]) => rows.length)), writes: f.db.writes,
+    native: f.native, effects: f.effects, scheduled: f.scheduled });
+}
+async function failureValue(call: () => Promise<unknown>) {
+  try { await call(); throw Error("EXPECTED_REFUSAL"); }
+  catch (value) {
+    if (!(value instanceof Error) || value.message === "EXPECTED_REFUSAL") throw value;
+    return { name: value.name, message: value.message, data: "data" in value ? value.data : undefined };
+  }
+}
+it("V8 context/preflight parent equals both original registered read handlers with zero effects", async () => {
+  const f = await fixture(true), before = wholeState(f);
+  const inputs = await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>["inputs"]>(agent.contextInputsV8, f.attempt);
+  expect(inputs.kind).toBe("ready"); if (inputs.kind !== "ready") throw Error("Expected indexed fixture");
+  expect(inputs.availability.empty).toBe(false);
+  const proposal = await f.call<Awaited<ReturnType<typeof queryEmbedding.prepareAgentQueryEmbeddingHandler>>>(queryEmbedding.prepareV8, { ...f.attempt, input: f.input });
+  const combined = await f.call(agent.contextInputsAndEmbeddingV8, f.attempt);
+  expect(combined).toEqual({ inputs, proposal }); expect(wholeState(f)).toEqual(before);
+  expect(agent.contextInputsAndEmbeddingV8.isInternal).toBe(true); expect(agent.contextInputsAndEmbeddingV8.isQuery).toBe(true);
+  expect(() => assertNativeArgs(agent.contextInputsAndEmbeddingV8, { ...f.attempt, input: f.input })).toThrow("Unknown native field");
+});
+it.each(["principal", "lease", "revoked", "expired", "profile", "budget", "pending-first", "historical"])("context parent %s preserves original refusal precedence and complete state", async fault => {
+  const f = await fixture(fault !== "historical");
+  const args = { ...f.attempt };
+  if (fault === "principal") args.reference = { ...args.reference, principalId: "foreign" };
+  if (fault === "lease") args.leaseVersion++;
+  if (fault === "revoked") f.grant.revokedAt = clock;
+  if (fault === "expired") f.grant.expiresAt = clock;
+  if (fault === "profile") {
+    const rows = f.db.table("runtimeModelQualifications").filter(row => String(row.canonical).includes(profile.modelId));
+    expect(rows.length).toBeGreaterThan(0); rows.forEach(row => { row.active = false; });
+  }
+  if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+  if (fault === "pending-first") {
+    // A genuine authority refusal at pending read must precede any embedding profile call.
+    f.grant.capabilities = [];
+  }
+  const before = wholeState(f);
+  const original = () => (async () => {
+    const inputs = await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>["inputs"]>(agent.contextInputsV8, args);
+    if (inputs.kind === "pending_overflow" || inputs.availability.empty) return { inputs };
+    return { inputs, proposal: await f.call(queryEmbedding.prepareV8, { ...args, input: f.input }) };
+  })();
+  expect(await failureValue(() => f.call(agent.contextInputsAndEmbeddingV8, args))).toEqual(await failureValue(original));
+  expect(wholeState(f)).toEqual(before);
+});
+it("private assembler consumes the native preflight proposal without a second preparation handoff", async () => {
+  const f = await fixture(true), supplied: unknown[] = []; f.calls.length = 0;
+  const result = await agent.prepareContextV8Handler(f.action, f.attempt, async (_repository, input, selection, proposal) => {
+    expect(input).toEqual(f.input); expect(selection).toBeDefined(); expect(proposal?.binding.operationKey).toBe("embedding.query");
+    supplied.push(proposal); return { items: [], context: "", profileId: profile.profileId };
+  }, true);
+  expect(result?.state).toBe("started"); expect(supplied).toHaveLength(1);
+  expect(f.calls.filter(name => name === "runtimeAgent:contextInputsAndEmbeddingV8")).toHaveLength(1);
+  expect(f.calls).not.toContain("runtimeAgent:contextInputsV8");
+  expect(f.calls).toContain("runtimeAgent:saveAndPrepareContextV8");
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it("an unsupported/custom context callback retains its original three arguments and ports", async () => {
+  const f = await fixture(true); f.calls.length = 0;
+  const callback: NonNullable<Parameters<typeof agent.prepareContextV8Handler>[2]> = async function (_repository, input, selection) {
+    expect(arguments).toHaveLength(3); expect(input).toEqual(f.input); expect(selection).toBeUndefined();
+    return { items: [], context: "", profileId: profile.profileId };
+  };
+  expect(await agent.prepareContextV8Handler(f.action, f.attempt, callback)).toBeNull();
+  expect(f.calls).toContain("runtimeAgent:contextInputsV8"); expect(f.calls).not.toContain("runtimeAgent:contextInputsAndEmbeddingV8");
+  expect(f.calls).toContain("runtimeAgent:saveContextV8"); expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it("new read/delivery parent returns exact original match and delivery data with zero application writes", async () => {
+  const f = await fixture(true), prepared = await plan(f), args = { ...f.args, hits: f.hits, factPlan: prepared.factPlan }, before = wholeState(f);
+  const read = await f.call<Awaited<ReturnType<typeof whole.readMatchesHandler>>>(whole.readMatchesV8, args);
+  const delivery = await f.call(whole.finalDeliveryV8, { reference: f.reference, bindings: read.bindings });
+  expect(await f.call(whole.readMatchesAndDeliveryV8, args)).toEqual({ read, delivery }); expect(wholeState(f)).toEqual(before);
+  expect(whole.readMatchesAndDeliveryV8.isInternal).toBe(true); expect(whole.readMatchesAndDeliveryV8.isMutation).toBe(true);
+});
+it.each(["principal", "lease", "profile", "cutoff", "boundary", "request", "oversize", "revocation", "source", "tombstone", "facts", "fact-refusal"])("read/delivery %s returns the same original first refusal without partial effects", async fault => {
+  const f = await fixture(true), prepared = await plan(f), args = { ...f.args, hits: [...f.hits], input: { ...f.input }, selection: { ...f.selection }, factPlan: prepared.factPlan };
+  if (fault === "principal") args.reference = { ...args.reference, principalId: "foreign" };
+  if (fault === "lease") args.leaseVersion++;
+  if (fault === "profile") args.profile = { ...profile, modelId: "foreign-model" };
+  if (fault === "cutoff") args.selection.cutoff++;
+  if (fault === "boundary") args.selection.boundary = { ...args.selection.boundary, queueSequence: 999 };
+  if (fault === "request") args.input.requestId = "wrong-request";
+  if (fault === "oversize") args.hits = Array.from({ length: 101 }, () => f.hits[0]!);
+  if (fault === "revocation") f.grant.revokedAt = clock;
+  if (fault === "source") f.db.table("runtimeMemorySources")[0].contentHash = "a".repeat(64);
+  if (fault === "tombstone") f.db.table("runtimeMemorySources")[0].tombstonedAt = clock;
+  if (fault === "facts" && args.factPlan.kind === "ready") args.factPlan.facts[0]!.fact = "changed fact payload";
+  if (fault === "fact-refusal") { args.factPlan = { kind: "refused", refusalCanonical: canonicalModelJson({ kind: "error", message: "FACT_LAST" }) }; f.db.table("runtimeMemorySources")[0].tombstonedAt = clock; }
+  const before = wholeState(f), original = async () => {
+    const read = await f.call<Awaited<ReturnType<typeof whole.readMatchesHandler>>>(whole.readMatchesV8, args);
+    return await f.call(whole.finalDeliveryV8, { reference: f.reference, bindings: read.bindings });
+  };
+  expect(await failureValue(async () => {
+    const combined = await f.call<Awaited<ReturnType<typeof whole.readMatchesAndDeliveryV8Handler>>>(whole.readMatchesAndDeliveryV8, args);
+    if (combined.refusal !== undefined) queryEmbedding.throwRefusal(combined.refusal);
+    return combined.delivery;
+  })).toEqual(await failureValue(original));
+  expect(wholeState(f)).toEqual(before);
+});
+it("private synchronous selection removes one outer handoff while arbitrary callbacks retain the original fresh delivery route", async () => {
+  const f = await fixture(true), selected: unknown[] = [], before = wholeState(f);
+  const input = { profile, vectors: [Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0)] };
+  const actual = await whole.finishAgentRecallV8(f.action, f.attempt, { now: () => clock }, f.input, profile, input,
+    whole.withPrivateInlineAgentSelection({ ...f.selection, onSelected: value => { selected.push(value); } }));
+  expect(f.calls).toEqual(["runtimeAgentRecall:prepareReadsV8", "runtimeAgentRecall:readMatchesAndDeliveryV8"]);
+  f.calls.length = 0; const originalSelected: unknown[] = [];
+  const original = await whole.finishAgentRecallV8(f.action, f.attempt, { now: () => clock }, f.input, profile, input,
+    { ...f.selection, onSelected: value => { originalSelected.push(value); } });
+  expect(f.calls).toEqual(["runtimeAgentRecall:prepareReadsV8", "runtimeAgentRecall:readMatchesV8", "runtimeAgentRecall:finalDeliveryV8"]);
+  expect(actual).toEqual(original); expect(selected).toEqual(originalSelected); expect(wholeState(f)).toEqual(before);
+});
+it("unbranded callback revocation is still checked after callback and callback failure precedes final delivery", async () => {
+  const f = await fixture(true), input = { profile, vectors: [Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0)] };
+  await expect(whole.finishAgentRecallV8(f.action, f.attempt, { now: () => clock }, f.input, profile, input,
+    { ...f.selection, onSelected: () => { f.grant.revokedAt = clock; } })).rejects.toThrow("FORBIDDEN");
+  expect(f.calls).not.toContain("runtimeAgentRecall:readMatchesAndDeliveryV8");
+  f.grant.revokedAt = undefined; f.calls.length = 0;
+  const error = Error("CALLBACK_FIRST");
+  await expect(whole.finishAgentRecallV8(f.action, f.attempt, { now: () => clock }, f.input, profile, input,
+    { ...f.selection, onSelected: () => { throw error; } })).rejects.toBe(error);
+  expect(f.calls).not.toContain("runtimeAgentRecall:finalDeliveryV8");
+});
+it("private parent preserves foreign error identity and real Action deadline refusal after returned delivery", async () => {
+  const f = await fixture(true), prepared = await plan(f), args = { ...f.args, hits: f.hits, factPlan: prepared.factPlan };
+  const error = Error("UNRECOGNIZED_DELIVERY_ERROR"), delivery = jest.spyOn(ConvexMemoryRepository.prototype, "checkDelivery").mockRejectedValue(error);
+  await expect(f.call(whole.readMatchesAndDeliveryV8, args)).rejects.toBe(error);
+  await expect(f.call(whole.finalDeliveryV8, { reference: f.reference, bindings: { sources: [], facts: [], vectors: [] } })).rejects.toBe(error);
+  delivery.mockRestore(); f.grant.expiresAt = clock + 1;
+  const before = f.db.writes;
+  await expect(whole.finishAgentRecallV8(f.action, f.attempt, { now: () => clock + 2 }, f.input, profile,
+    { profile, vectors: [Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0)] },
+    whole.withPrivateInlineAgentSelection({ ...f.selection, onSelected: () => {} }))).rejects.toThrow("FORBIDDEN");
+  expect(f.db.writes).toBe(before);
+});
+
+it("recognized final refusal waits for synchronous selection and original ranking failure precedence", async () => {
+  const f = await fixture(true), selected = jest.fn(), input = { profile, vectors: [Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0)] };
+  const { ConvexError } = await import("convex/values");
+  const data = { version: 1, code: "STALE_SOURCE", message: "Original final consumed source refusal", retryable: false, outcome: "not_dispatched" };
+  const refusalError = new ConvexError(data);
+  jest.spyOn(ConvexMemoryRepository.prototype, "checkDelivery").mockRejectedValue(refusalError);
+  const selection = whole.withPrivateInlineAgentSelection({ ...f.selection, onSelected: selected });
+  expect(await failureValue(() => whole.finishAgentRecallV8(f.action, f.attempt, { now: () => clock }, f.input, profile, input, selection)))
+    .toEqual({ name: refusalError.name, message: refusalError.message, data });
+  expect(selected).toHaveBeenCalledTimes(1);
+  const rankError = Error("RANK_FIRST");
+  await expect(whole.finishAgentRecallV8(f.action, f.attempt, { now: () => { throw rankError; } }, f.input, profile, input, selection)).rejects.toBe(rankError);
+  expect(selected).toHaveBeenCalledTimes(2);
+});
+it("shared native parent keeps the final raw revocation fence and fresh save rechecks after return", async () => {
+  const f = await fixture(true), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan };
+  const check = ConvexMemoryRepository.prototype.checkDelivery, get = f.db.get.bind(f.db);
+  let finalPhase = false, finalRawGrantReads = 0;
+  const deliverySpy = jest.spyOn(ConvexMemoryRepository.prototype, "checkDelivery").mockImplementation(async function (this: InstanceType<typeof ConvexMemoryRepository>, ...values) {
+    finalPhase = true; return await check.apply(this, values);
+  });
+  const getSpy = jest.spyOn(f.db, "get").mockImplementation(async (table, id) => {
+    if (finalPhase && table === "runtimeAuthGrants") { finalRawGrantReads++; f.grant.revokedAt = clock; }
+    return await get(table, id);
+  });
+  const refused = await f.call<Awaited<ReturnType<typeof whole.readMatchesAndDeliveryV8Handler>>>(whole.readMatchesAndDeliveryV8, args);
+  expect(refused.refusal).toMatchObject({ kind: "convex", data: { code: "FORBIDDEN" } }); expect(finalRawGrantReads).toBe(1);
+  deliverySpy.mockRestore(); getSpy.mockRestore(); delete f.grant.revokedAt;
+  const result = await f.call<Awaited<ReturnType<typeof whole.readMatchesAndDeliveryV8Handler>>>(whole.readMatchesAndDeliveryV8, args);
+  expect(result.delivery).toBeDefined(); f.grant.revokedAt = clock;
+  const execution = clone(f.db.table("runtimeAgentExecutions")[0]), writes = f.db.writes;
+  await expect(f.call(agent.saveContextV8, { ...f.attempt, context: "", entries: [], witnesses: result.read.witnesses, completeness: "complete" })).rejects.toThrow("FORBIDDEN");
+  expect(f.db.table("runtimeAgentExecutions")[0]).toEqual(execution); expect(f.db.writes).toBe(writes);
+});
+
+it("same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal",async()=>{
+ const f=await fixture(true),get=f.db.get.bind(f.db),query=f.db.query.bind(f.db),seen:{table:string;id:string}[]=[],queries:string[]=[];
+ jest.spyOn(f.db,"get").mockImplementation(async(table,id)=>{seen.push({table,id});return await get(table,id);});
+ jest.spyOn(f.db,"query").mockImplementation(table=>{queries.push(table);return query(table);});
+ const before=wholeState(f);
+ const inputs=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>["inputs"]>(agent.contextInputsV8,f.attempt);
+ const proposal=await f.call(queryEmbedding.prepareV8,{...f.attempt,input:f.input});const originalInitial=[...seen],originalInitialQueries=[...queries];seen.length=0;queries.length=0;
+ expect(await f.call(agent.contextInputsAndEmbeddingV8,f.attempt)).toEqual({inputs,proposal});const parentInitial=[...seen],parentInitialQueries=[...queries];seen.length=0;queries.length=0;
+ const args={...f.args,hits:f.hits,factPlan:(await plan(f)).factPlan};seen.length=0;queries.length=0;
+ const read=await f.call<Awaited<ReturnType<typeof whole.readMatchesHandler>>>(whole.readMatchesV8,args);
+ const delivery=await f.call(whole.finalDeliveryV8,{reference:f.reference,bindings:read.bindings});const originalTail=[...seen],originalTailQueries=[...queries];seen.length=0;queries.length=0;
+ expect(await f.call(whole.readMatchesAndDeliveryV8,args)).toEqual({read,delivery});const parentTail=[...seen],parentTailQueries=[...queries];
+ const mutable=(reads:typeof seen)=>reads.filter(row=>!row.table.startsWith("runtimeAuth") && !["runtimeModelPolicies","runtimeModelQualifications"].includes(row.table));
+ expect(mutable(parentInitial)).toEqual(mutable(originalInitial));expect(mutable(parentTail)).toEqual(mutable(originalTail));
+ const mutableQueries=(reads:string[])=>reads.filter(table=>!table.startsWith("runtimeAuth") && !["runtimeModelPolicies","runtimeModelQualifications"].includes(table));
+ expect(mutableQueries(parentInitialQueries)).toEqual(mutableQueries(originalInitialQueries));expect(mutableQueries(parentTailQueries)).toEqual(mutableQueries(originalTailQueries));
+ expect(parentInitial.length).toBeLessThan(originalInitial.length);expect(parentTail.length).toBeLessThan(originalTail.length);expect(wholeState(f)).toEqual(before);
+ console.info(JSON.stringify({type:"k25-private-read-parent-counts",kind:"controlled-original-handlers",initial:{oldGets:originalInitial.length,newGets:parentInitial.length,oldQueries:originalInitialQueries.length,newQueries:parentInitialQueries.length},tail:{oldGets:originalTail.length,newGets:parentTail.length,oldQueries:originalTailQueries.length,newQueries:parentTailQueries.length},mutableReadSequencesEqual:true,applicationWrites:0,cloudLatency:"UNAVAILABLE"}));
 });

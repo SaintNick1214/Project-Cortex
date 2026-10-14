@@ -1,4 +1,4 @@
-/** One verified, bounded connection per CLI command or HTTP request. */
+/** Fresh bounded session checks; interactive CLI may retain its owned transport. */
 import { constants } from "node:fs";
 import { open } from "node:fs/promises";
 import { CortexRuntimeClient, CortexRuntimeError } from "@cortexmemory/sdk/runtime";
@@ -39,16 +39,27 @@ export async function hostToken(env: Readonly<Record<string, string | undefined>
   return bearer(token ? `Bearer ${token}` : undefined);
 }
 export function sameSession(a: RuntimeSession, b: RuntimeSession): boolean { return a.principalId === b.principalId && a.tenantId === b.tenantId && a.memorySpaceId === b.memorySpaceId; }
+export interface RuntimeConnection { entry?: { client: RuntimeClient; configKey: string; closed: boolean; fetchToken: CortexRuntimeClientOptions["fetchToken"]; factory?: RuntimeFactory }; busy?: boolean }
+export function closeRuntimeConnection(connection: RuntimeConnection): void {
+  const entry = connection.entry; connection.entry = undefined;
+  if (entry && !entry.closed) { entry.closed = true; entry.client.close(); }
+}
 export async function withRuntime<T>(fetchToken: CortexRuntimeClientOptions["fetchToken"], work: (client: RuntimeClient, config: RuntimeConfig) => Promise<T>,
-  options: { config?: RuntimeConfig; factory?: RuntimeFactory; signal?: AbortSignal } = {}): Promise<T> {
+  options: { config?: RuntimeConfig; factory?: RuntimeFactory; signal?: AbortSignal; connection?: RuntimeConnection } = {}): Promise<T> {
   const config = options.config ?? runtimeConfig();
-  if (options.signal?.aborted) throw new AppError("REQUEST_ABORTED", 499);
-  const client = (options.factory ?? (settings => new CortexRuntimeClient(settings)))({ deploymentUrl: config.deploymentUrl, fetchToken,
+  if (options.signal?.aborted) { if (options.connection) closeRuntimeConnection(options.connection); throw new AppError("REQUEST_ABORTED", 499); }
+  const connection = options.connection;
+  if (connection?.busy) throw new AppError("RUNTIME_BUSY");
+  const configKey = JSON.stringify([config.deploymentUrl, config.tenantId, config.memorySpaceId, config.agentId, config.agentVersion, config.timeoutMs]);
+  if (connection?.entry && (connection.entry.configKey !== configKey || connection.entry.fetchToken !== fetchToken || connection.entry.factory !== options.factory)) { closeRuntimeConnection(connection); throw new AppError("RUNTIME_CONFIGURATION_CHANGED"); }
+  const entry = connection?.entry ?? { configKey, closed: false, fetchToken, factory: options.factory, client: (options.factory ?? (settings => new CortexRuntimeClient(settings)))({ deploymentUrl: config.deploymentUrl, fetchToken,
     scope: { ...(config.tenantId ? { tenantId: config.tenantId } : {}), ...(config.memorySpaceId ? { memorySpaceId: config.memorySpaceId } : {}) },
     authTimeoutMs: Math.min(config.timeoutMs, 10000), requestTimeoutMs: Math.min(config.timeoutMs, 12000),
-    ...(process.env.CORTEX_RUNTIME_LATENCY_TRACE === "1" ? { onLatencyEvent: event => console.error(JSON.stringify({ type: "cortex-client-latency", ...event })) } : {}) });
-  let closed = false, timer: ReturnType<typeof setTimeout> | undefined, rejectBound: (error: Error) => void = () => {};
-  const close = () => { if (!closed) { closed = true; client.close(); } };
+    ...(process.env.CORTEX_RUNTIME_LATENCY_TRACE === "1" ? { onLatencyEvent: event => console.error(JSON.stringify({ type: "cortex-client-latency", ...event })) } : {}) }) };
+  if (connection) { connection.entry = entry; connection.busy = true; }
+  const client = entry.client;
+  let completed = false, timer: ReturnType<typeof setTimeout> | undefined, rejectBound: (error: Error) => void = () => {};
+  const close = () => { if (connection?.entry === entry) connection.entry = undefined; if (!entry.closed) { entry.closed = true; client.close(); } };
   const abort = () => { close(); rejectBound(new AppError("REQUEST_ABORTED", 499)); };
   const bound = new Promise<never>((_, reject) => { rejectBound = reject; timer = setTimeout(() => { close(); reject(new AppError("REQUEST_DEADLINE_EXCEEDED", 504)); }, config.timeoutMs); });
   options.signal?.addEventListener("abort", abort, { once: true });
@@ -60,8 +71,8 @@ export async function withRuntime<T>(fetchToken: CortexRuntimeClientOptions["fet
     for (const deadline of [before.deliveryExpiresAt, after.deliveryExpiresAt]) if (deadline !== undefined && Date.now() >= deadline) throw new AppError("AUTHORITY_EXPIRED", 403);
     return result;
   })();
-  try { return await Promise.race([operation, bound]); }
-  finally { clearTimeout(timer); options.signal?.removeEventListener("abort", abort); close(); }
+  try { const result = await Promise.race([operation, bound]); completed = true; return result; }
+  finally { clearTimeout(timer); options.signal?.removeEventListener("abort", abort); if (connection) connection.busy = false; if (!completed || !connection) close(); }
 }
 // Retained display utilities consume server-confirmed statuses only. They do not execute inference.
 export type OrchestrationPhase = "recall" | "remember";

@@ -1,0 +1,64 @@
+{
+  "observedAt": "2026-10-14T16:44:42.750259+00:00",
+  "status": "PREPARED_NOT_EXECUTED",
+  "scope": "Prospective exact K24 independent cleanup verifier only",
+  "helper": "verify-k24-cleanup.mjs",
+  "helperSha256": "af20fc88a7d21220a082572cc49f3a599cefee71e9f61fadf79c2823da4c08ab",
+  "adaptedFrom": "verify-k23-cleanup.mjs",
+  "originalHelperSha256": "8e717147132f1f9c2b9f35be4bf498117efb1c2fd9309e8494b72ce1dfc51847",
+  "target": {
+    "sessionId": "34d179da-1942-4602-ae7e-a41610880e9a",
+    "name": "zany-cardinal-533",
+    "targetId": 6171787,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "expiresAt": 1792600960400
+  },
+  "requestedRegion": "aws-us-east-1",
+  "observedRegion": "UNAVAILABLE",
+  "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "imageId": "sha256:a762d002ee35db9d3b385a565b156d486326182da2de505a5a5ceac51161af8e",
+  "kit": "manual-sandbox-foreground-priority-2026-10-14",
+  "awaiting": [
+    "Root explicit CLEANED + GO",
+    "Root confirms all native clients/readers closed and actual launcher exit"
+  ],
+  "futureInvocation": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--import",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k24-cleanup.mjs"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "syntaxCheck": {
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "--check",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k24-cleanup.mjs"
+    ],
+    "exitCode": 0,
+    "executesHelper": false
+  },
+  "preservedChecks": [
+    "Session CLEANED before credential/service access",
+    "Exact approved project/team/slug GET",
+    "Exact deployment ID/name/reference absent in approved inventory",
+    "Actual exact Docker inspect negative, not missing-tool or guessed absence",
+    "Owned issuerDir/secretsDir/workspace/backendDir ENOENT",
+    "30-second management GET and Docker deadlines",
+    "Existing redacted history/financial uncertainty retained"
+  ],
+  "prospectiveCleanupStatus": "NOT_RUN",
+  "cleanupVerificationExecutions": 0,
+  "managementRequests": 0,
+  "dockerCalls": 0,
+  "deletions": 0,
+  "paidCalls": 0,
+  "productEdits": 0,
+  "gitOperations": 0,
+  "notes": [
+    "K24 general collector pins are currently prospective/unready; this helper uses only Root-supplied immutable cleanup tuple and does not modify those pins.",
+    "No final cleanup receipt or ABSENT assertion exists from this preparation.",
+    "launcherExit130 remains prospective until actual post-CLEANED verification authorization."
+  ]
+}

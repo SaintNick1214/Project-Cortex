@@ -250,3 +250,21 @@ it("V8 preflight/admission refuse historical snapshots without model or reservat
   const f=await fixture(),before=f.state();await expect(f.call(query.prepareV8,{...f.attempt,input:f.input})).rejects.toThrow("INVALID_STATE");
   const args=await admitArgs(f);await expect(f.call(query.admitV8,args)).rejects.toThrow("INVALID_STATE");expect(f.state()).toEqual(before);expect(nativeCalls).toBe(0);
 });
+
+it("V8 supplied native preflight data avoids the preparation RPC but fresh dispatch remains governed", async () => {
+  const f=await fixture(true),proposal=await preparation(f,true);f.calls.length=0;
+  const result=await query.recallAgentMemoryV8(f.action,f.attempt,f.repository,{now:()=>clock},f.input,undefined,proposal);
+  expect(result).toMatchObject({profileId:profile.profileId,items:[]});expect(nativeCalls).toBe(1);
+  expect(f.calls).not.toContain("runtimeAgentQueryEmbedding:prepareV8");expect(f.calls.filter(name=>name==="runtimeAgentQueryEmbedding:admitV8")).toHaveLength(1);
+  expect(f.calls.indexOf("runtimeModelPolicy:captureTerminalEvidenceV8")).toBeLessThan(f.calls.indexOf("runtimeModelPolicy:attachTerminalResultV8"));
+  expect(f.db.table("runtimeModelAttempts")).toMatchObject([{state:"uncertain",slotReleased:true,resultAttachmentState:"attached"}]);
+});
+it.each(["revoked","cancelled","forged-profile","forged-binding"])("native proposal %s is rechecked before a paid peer call",async fault=>{
+ const f=await fixture(true),proposal=await preparation(f,true);
+ if(fault==="revoked")f.grant.revokedAt=clock;
+ if(fault==="cancelled")f.db.table("runtimeBudgetAccounts").find(row=>row.runBudgetId===f.runBudgetId)!.cancelled=true;
+ if(fault==="forged-profile")proposal.request={...proposal.request,profile:{...profile,modelId:"foreign-embedding"}};
+ if(fault==="forged-binding")proposal.binding={...proposal.binding,ordinal:1};
+ const before=f.state();await expect(query.recallAgentMemoryV8(f.action,f.attempt,f.repository,{now:()=>clock},f.input,undefined,proposal)).rejects.toThrow();
+ expect(f.state()).toEqual(before);expect(nativeCalls).toBe(0);
+});

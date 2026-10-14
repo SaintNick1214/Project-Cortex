@@ -587,7 +587,10 @@ export async function processStageHandler(ctx: ActionCtx, args: { reference: Run
     const repository = { ...base, recheckAuthority: async () => {
       await base.recheckAuthority(); await ctx.runQuery(ref<"query", StageLease, unknown>("query", "runtimeIngestion:hydrate"), lease);
     } };
-    const model = modelFactory(ctx, repository, { runBudgetId: owned.runBudgetId, ...(owned.parentOperationId ? { parentOperationId: owned.parentOperationId } : {}) });
+    const beliefCandidates = args.stage === "facts" ? { eventId: input.event.eventId, sequence: input.event.sequence,
+      source: input.source, candidates: JSON.parse(input.extraction) as AttributedFact[], attempt: owned.attempt } : undefined;
+    const model = modelFactory(ctx, repository, { runBudgetId: owned.runBudgetId, ...(owned.parentOperationId ? { parentOperationId: owned.parentOperationId } : {}),
+      ...(beliefCandidates ? { beliefCandidates } : {}) });
     const operationId = `${args.eventId}:${args.stage}:${owned.attempt}`;
     if (args.stage === "extract") {
       dispatched = true;
@@ -597,17 +600,20 @@ export async function processStageHandler(ctx: ActionCtx, args: { reference: Run
       await ctx.runMutation(ref<"mutation", StageLease & { payloadCanonical: string }, unknown>("mutation", "runtimeIngestion:persistStage"),
         { ...lease, payloadCanonical: canonicalModelJson(JSON.parse(JSON.stringify(facts))) });
     } else if (args.stage === "facts") {
-      const candidates = JSON.parse(input.extraction) as AttributedFact[];
+      const candidates = beliefCandidates!.candidates;
       const oldPlan = input.stage.payloadCanonical ? JSON.parse(input.stage.payloadCanonical) as import("../src/domain/belief-plan").BeliefPlanV1 : undefined;
       const unchanged = oldPlan && input.existing.every(fact => oldPlan.expectedVersions[fact.factId] === fact.version)
         && Object.entries(oldPlan.expectedVersions).every(([id, version]) => version === 0 || input.existing.some(fact => fact.factId === id && fact.version === version));
       const plan = unchanged ? oldPlan : await planBeliefs({ eventId: args.eventId, sequence: input.event.sequence, source: input.source, candidates, existing: input.existing,
-        resolve: async (candidate, existing, ordinal) => {
-          const duplicate = identicalBelief(candidate, existing); if (duplicate) return duplicate;
+        candidateAttempt: owned.attempt,
+        resolve: async (candidate, existing, ordinal, binding) => {
+          if (!binding) ingestionDenied("INVALID_BELIEF_PLAN");
+          const duplicate = identicalBelief(candidate, existing); if (duplicate) return { candidateBinding: binding, decision: duplicate };
           await repository.recheckAuthority(); dispatched = true;
           const prompt = buildConflictResolutionPrompt(candidate, [...existing], { maxExistingFacts: 100 }, { now: () => input.source.createdAt });
-          return await model.resolve({ purpose: "facts.resolve", operationId: `${operationId}:${ordinal}`, policyVersion: input.event.beliefVersion,
+          const decision = await model.resolve({ purpose: "facts.resolve", operationId: `${operationId}:${ordinal}`, policyVersion: input.event.beliefVersion,
             attempt: 1, source: input.source.lineage, system: prompt.system, prompt: prompt.user, candidate });
+          return { candidateBinding: binding, decision };
         } });
       await ctx.runMutation(ref<"mutation", StageLease & { payloadCanonical: string }, null>("mutation", "runtimeIngestion:persistDraft"), { ...lease, payloadCanonical: canonicalModelJson(plan) });
       try {

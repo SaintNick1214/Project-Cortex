@@ -19,11 +19,16 @@ import type { BackendGatewayContext } from "./runtimeGatewayBackend";
 import { createGovernedGatewayModel, GatewayDispatchError } from "./runtimeGateway";
 import type { GatewayBinding, GatewayComposition, GatewayLedgerPort } from "./runtimeGateway";
 import { memoryError } from "./runtimeMemoryRepository";
+import { sourceCandidateBindings } from "../src/domain/belief-plan";
+import { BELIEF_POLICY_VERSION } from "../src/domain/ingestion";
+import type { ConflictCandidate } from "../src/domain/conflicts";
 
 /** Existing run bindings are server-issued and checked again by the native ledger. */
 export interface MemoryGatewayRun {
   runBudgetId?: string;
   parentOperationId?: Id<"runtimeModelOperations">;
+  /** Private worker-owned extraction. Native request/schema stays unchanged. */
+  beliefCandidates?: Parameters<typeof sourceCandidateBindings>[0];
   /** Private V6 query-only proposals; every admission is freshly fenced in its native parent. */
   queryEmbedding?: {
     binding: GatewayBinding;
@@ -72,7 +77,7 @@ export function createGatewayMemoryModel(
       return admitted;
     },
   } };
-  async function prepare(request: InternalModelOperation, key: ModelOperationKey, ordinal: number) {
+  async function prepare(request: InternalModelOperation & { candidate?: ConflictCandidate }, key: ModelOperationKey, ordinal: number) {
     if (request.attempt !== 1) memoryError("INVALID_INPUT", "Memory inference retries require a new governed operation");
     if (key === "embedding.query" && run.queryEmbedding) {
       const proposal = run.queryEmbedding, binding = proposal.binding;
@@ -104,6 +109,15 @@ export function createGatewayMemoryModel(
       source = { sourceId: request.source.sourceId, sourceEventId: request.source.sourceEventId,
         sourceRevision: request.source.sourceRevision, contentHash: current.contentHash };
       sourceContent = current;
+    }
+    if (key === "facts.resolve" && run.beliefCandidates) {
+      const original = run.beliefCandidates;
+      if (!sourceContent || sourceContent.contentHash !== original.source.contentHash
+        || sourceContent.ownerPrincipalId !== original.source.ownerPrincipalId
+        || canonicalModelJson(sourceContent.lineage) !== canonicalModelJson(original.source.lineage)) memoryError("STALE_SOURCE", "Belief candidate source changed before dispatch");
+      const selected = (await sourceCandidateBindings(original)).find(value => value.binding.operationId === request.operationId);
+      if (!selected || request.policyVersion !== BELIEF_POLICY_VERSION || !request.candidate
+        || canonicalModelJson(selected.candidate) !== canonicalModelJson(request.candidate)) memoryError("INVALID_INPUT", "Belief candidate does not match its source-owned operation");
     }
     const semanticId = await semanticHash(canonicalModelJson([key, request.operationId, request.policyVersion]));
     if (!budget) {

@@ -32,6 +32,12 @@ import { completeRecallDelivery, vectorRecallItems } from "./runtimeMemoryServic
 type Input = { text: string; requestId: string; limit: number };
 type Selection = { cutoff: number; boundary: ContextBoundary; excludedSourceKeys: string[] };
 export type AgentRecallSelection = Selection & { onSelected(value: { witnesses: ContextSourceWitness[]; provenance: [string, SourceLineage][]; sourceScores?: [string, number][]; itemLineages?: [string, SourceLineage][] }): void };
+const privateInlineSelection = Symbol("private-inline-agent-selection");
+/** Internal opt-in for the V8 context assembler's synchronous Map bookkeeping.
+ * Arbitrary callbacks keep the original read/callback/final-delivery sequence. */
+export function withPrivateInlineAgentSelection(selection: AgentRecallSelection): AgentRecallSelection {
+  return Object.defineProperty({ ...selection }, privateInlineSelection, { value: true });
+}
 type Args = AgentQueryEmbeddingAttempt & { input: Input; profile: EmbeddingProfile; selection: Selection };
 type FactPlan = { kind: "ready"; facts: DerivedFact[]; bindings: MemoryDeliveryBindings } | { kind: "refused"; refusalCanonical: string };
 const emptyBindings = (): MemoryDeliveryBindings => ({ sources: [], facts: [], vectors: [] });
@@ -68,8 +74,8 @@ export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args, expec
 }
 export const prepareReads = internalQuery({ args: nativeArgs, handler: prepareReadsHandler });
 
-export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }, expectedVersion?: 8) {
-  const ctx = expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
+export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }, expectedVersion?: 8, invocationScope?: QueryCtx) {
+  const ctx = invocationScope ?? (expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true }));
   const { current, repository } = await currentRead(ctx, args, expectedVersion), bindings = emptyBindings();
   const matches = await repository.hydrateVectors(args.hits, args.profile, current.run.runBudgetId);
   await captureRecallVectors(bindings, matches, args.profile, { runBudgetId: current.run.runBudgetId });
@@ -136,8 +142,8 @@ export const readMatchesV8 = internalQuery({ args: { ...nativeArgs, hits: v.arra
   handler: (ctx, args) => readMatchesHandler(ctx, args, 8) });
 /** Same consumed-row predicates and final unscoped grant/deadline fence. Only
  * the original profile helper executes locally instead of in a child query. */
-export async function finalDeliveryV8Handler(nativeCtx: MutationCtx, args: { reference: AgentQueryEmbeddingAttempt["reference"]; bindings: MemoryDeliveryBindings }) {
-  const ctx = createV8AuthorityReadScope(nativeCtx);
+export async function finalDeliveryV8Handler(nativeCtx: MutationCtx, args: { reference: AgentQueryEmbeddingAttempt["reference"]; bindings: MemoryDeliveryBindings }, invocationScope?: MutationCtx) {
+  const ctx = invocationScope ?? createV8AuthorityReadScope(nativeCtx);
   return await new ConvexMemoryRepository(ctx, args.reference, "read", undefined, { now: () => Date.now() },
     (key, runBudgetId) => readCurrentEmbeddingProfile(ctx, args.reference, key, runBudgetId)).checkDelivery(args.bindings, nativeCtx);
 }
@@ -145,6 +151,22 @@ export const finalDeliveryV8 = internalMutation({ args: { reference: runtimeAuth
 const prepareV8Ref = makeFunctionReference("runtimeAgentRecall:prepareReadsV8") as unknown as typeof prepareRef;
 const matchesV8Ref = makeFunctionReference("runtimeAgentRecall:readMatchesV8") as unknown as typeof matchesRef;
 const deliveryV8Ref = makeFunctionReference("runtimeAgentRecall:finalDeliveryV8") as unknown as typeof memoryReferences.finalDelivery;
+
+/** No application writes. Per-source reads and the final authority fence keep
+ * the raw native context; only trusted raw control readers share this snapshot.
+ * Defer delivery refusal so Action selection/ranking retain their precedence. */
+export async function readMatchesAndDeliveryV8Handler(nativeCtx: MutationCtx, args: Parameters<typeof readMatchesHandler>[1]) {
+  const ctx = createV8AuthorityReadScope(nativeCtx);
+  const read = await readMatchesHandler(nativeCtx, args, 8, ctx);
+  try { return { read, delivery: await finalDeliveryV8Handler(nativeCtx, { reference: args.reference, bindings: read.bindings }, ctx) }; }
+  catch (error) {
+    const refusal = boundedRefusal(error);
+    if (refusal.kind !== "convex" && refusal.kind !== "gateway") throw error;
+    return { read, refusal };
+  }
+}
+export const readMatchesAndDeliveryV8 = internalMutation({ args: { ...nativeArgs, hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })), factPlan: factPlanArgs }, handler: readMatchesAndDeliveryV8Handler });
+const matchesDeliveryV8Ref = makeFunctionReference("runtimeAgentRecall:readMatchesAndDeliveryV8") as unknown as FunctionReference<"mutation", "internal", Parameters<typeof readMatchesHandler>[1], Awaited<ReturnType<typeof readMatchesAndDeliveryV8Handler>>>;
 
 export async function finishAgentRecallV8(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, clock: DomainClock, input: Input,
   profile: EmbeddingProfile, result: Parameters<typeof validateModelEmbeddings>[0], selection: AgentRecallSelection) {
@@ -158,8 +180,15 @@ export async function finishAgentRecallV8(ctx: ActionCtx, attempt: AgentQueryEmb
       ? q.eq("scopeProfileOwnerKey", vectorOwnerScopeKey(attempt.reference.tenantId, attempt.reference.memorySpaceId!, profile.profileId, attempt.reference.principalId))
       : q.eq("scopeProfileKey", vectorScopeKey(attempt.reference.tenantId, attempt.reference.memorySpaceId!, profile.profileId)),
   });
-  const read = await ctx.runQuery(matchesV8Ref, { ...args, factPlan: plan.factPlan, hits: hits.map(hit => ({ id: hit._id, score: hit._score })) });
+  const nativeArgs = { ...args, factPlan: plan.factPlan, hits: hits.map(hit => ({ id: hit._id, score: hit._score })) };
+  // The brand is local server data, never an RPC argument or authority proof.
+  const combined = (selection as AgentRecallSelection & { [privateInlineSelection]?: true })[privateInlineSelection]
+    ? await ctx.runMutation(matchesDeliveryV8Ref, nativeArgs) : undefined;
+  const read = combined ? combined.read : await ctx.runQuery(matchesV8Ref, nativeArgs);
   onSelected({ witnesses: read.witnesses, provenance: read.provenance, sourceScores: read.sourceScores, itemLineages: read.itemLineages });
-  return await completeRecallDelivery({ clock, finalDelivery: async () => await ctx.runMutation(deliveryV8Ref,
-    { reference: attempt.reference, bindings: read.bindings }) }, input, profile.profileId, read.vectorItems, read.facts);
+  return await completeRecallDelivery({ clock, finalDelivery: async () => {
+    if (!combined) return await ctx.runMutation(deliveryV8Ref, { reference: attempt.reference, bindings: read.bindings });
+    if (combined.refusal !== undefined) throwRefusal(combined.refusal);
+    return combined.delivery;
+  } }, input, profile.profileId, read.vectorItems, read.facts);
 }

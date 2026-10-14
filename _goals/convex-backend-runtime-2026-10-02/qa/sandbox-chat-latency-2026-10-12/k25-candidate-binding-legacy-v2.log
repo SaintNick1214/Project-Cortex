@@ -1,0 +1,146 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:15363) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+  v4 framing through registered ingestion and charge-only terminal capture
+    ✓ commits a valid empty instance with the measured v4 roles and original source witness (194 ms)
+    ✓ commits a valid attributed instance with the measured v4 roles and original source witness (167 ms)
+    ✓ refuses malformed delimiters without repair, extra operation, commit or uncertain-liability release (57 ms)
+    ✓ refuses Markdown fence without repair, extra operation, commit or uncertain-liability release (56 ms)
+    ✓ refuses prose wrapper without repair, extra operation, commit or uncertain-liability release (59 ms)
+    ✓ refuses schema definition without repair, extra operation, commit or uncertain-liability release (54 ms)
+    ✓ refuses extra root field without repair, extra operation, commit or uncertain-liability release (54 ms)
+    ✓ refuses malformed fact without repair, extra operation, commit or uncertain-liability release (56 ms)
+    ✓ refuses extra nested field without repair, extra operation, commit or uncertain-liability release (58 ms)
+    ✓ refuses malformed relation without repair, extra operation, commit or uncertain-liability release (56 ms)
+    ✓ refuses missing tags without repair, extra operation, commit or uncertain-liability release (55 ms)
+    ✓ refuses string tags without repair, extra operation, commit or uncertain-liability release (55 ms)
+    ✓ refuses non-string tag without repair, extra operation, commit or uncertain-liability release (55 ms)
+    ✓ does not reinterpret the retained v3 invalid result or its UNKNOWN event after installing v4 (62 ms)
+    ✓ true native failure remains UNKNOWN, with no invented retained result or retry (39 ms)
+    ✓ retains a confirmed duplicate extraction unchanged and commits one belief through the original native planner fence (78 ms)
+    ✓ legacy unbound conflicting values remain a known non-retryable ambiguity, without rewriting extraction or funding another call (80 ms)
+    ✓ hash mismatch cannot promote uncertain work to a known invalid-output disposition (58 ms)
+    ✓ attachment mismatch cannot promote uncertain work to a known invalid-output disposition (54 ms)
+    ✓ withheld mismatch cannot promote uncertain work to a known invalid-output disposition (54 ms)
+    ✓ terminal mismatch cannot promote uncertain work to a known invalid-output disposition (54 ms)
+    ✓ source mismatch cannot promote uncertain work to a known invalid-output disposition (53 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.0s | 22/22 passed | /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.19s ( 4.8%) - v4 framing through registered ingestion and charge-only terminal capture commits a valid empty instance with the measured v4 roles and original source witness
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 2. [32m✓[0m    0.17s ( 4.1%) - v4 framing through registered ingestion and charge-only terminal capture commits a valid attributed instance with the measured v4 roles and original source witness
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 3. [32m✓[0m    0.08s ( 2.0%) - v4 framing through registered ingestion and charge-only terminal capture legacy unbound conflicting values remain a known non-retryable ambiguity, without rewriting extraction or funding another call
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 4. [32m✓[0m    0.08s ( 1.9%) - v4 framing through registered ingestion and charge-only terminal capture retains a confirmed duplicate extraction unchanged and commits one belief through the original native planner fence
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 5. [32m✓[0m    0.06s ( 1.5%) - v4 framing through registered ingestion and charge-only terminal capture does not reinterpret the retained v3 invalid result or its UNKNOWN event after installing v4
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 6. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture refuses prose wrapper without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 7. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture refuses extra nested field without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 8. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture hash mismatch cannot promote uncertain work to a known invalid-output disposition
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 9. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture refuses malformed delimiters without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+10. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture refuses Markdown fence without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+11. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture refuses malformed fact without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+12. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture refuses malformed relation without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+13. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture refuses missing tags without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+14. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture refuses string tags without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+15. [32m✓[0m    0.06s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture refuses non-string tag without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+16. [32m✓[0m    0.05s ( 1.3%) - v4 framing through registered ingestion and charge-only terminal capture refuses schema definition without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+17. [32m✓[0m    0.05s ( 1.3%) - v4 framing through registered ingestion and charge-only terminal capture refuses extra root field without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+18. [32m✓[0m    0.05s ( 1.3%) - v4 framing through registered ingestion and charge-only terminal capture attachment mismatch cannot promote uncertain work to a known invalid-output disposition
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+19. [32m✓[0m    0.05s ( 1.3%) - v4 framing through registered ingestion and charge-only terminal capture withheld mismatch cannot promote uncertain work to a known invalid-output disposition
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+20. [32m✓[0m    0.05s ( 1.3%) - v4 framing through registered ingestion and charge-only terminal capture terminal mismatch cannot promote uncertain work to a known invalid-output disposition
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.42s (34.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.07s
+  Test suites:        1
+  Individual tests:   22
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       22 passed, 22 total
+Snapshots:   0 total
+Time:        4.07 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/framing-invalid-output.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-candidate-binding-legacy-v2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,35 @@
+{
+  "status": "SOURCE_FROZEN_PENDING_INDEPENDENT_REVIEW",
+  "repository": "SaintNick1214/Project-Cortex",
+  "acceptedSourceBaseline": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "sourceOnly": true,
+  "files": {
+    "convex-dev/runtimeAgent.ts": "b209850e583ebd2e638e37bf33829e5461a165a244286bb3269e815948485328",
+    "convex-dev/runtimeAgentQueryEmbedding.ts": "443dceeca5040d2fa302cdc4470fd4cdade17024f72c6122026da0f33ee5e542",
+    "convex-dev/runtimeAgentRecall.ts": "797a4c453d7e91f934d8a174b4d9f2c55926f1e91514456ddf24d3b27c5ffdba",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "7a21db0a39b240c16c2c2affaa0e991ac421ad62c0f5eb024df1cf293f560e05",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "d42186e1dfc736378b34c80e6cb2a865629a67f20f14fae590b7a72bb069305c",
+    "tests/unit/runtimeAgent/bounded-context-v8.test.ts": "74765eede7938d825e265729a851f8a1775071afc1aefe59f5eabb336ed347e9"
+  },
+  "registrations": {
+    "runtimeAgent:contextInputsAndEmbeddingV8": "internalQuery",
+    "runtimeAgentRecall:readMatchesAndDeliveryV8": "internalMutation; no application writes"
+  },
+  "qa": {
+    "k25-private-read-parents-report.md": "d8febcdfb88e67a04a02aec1707aef8da62d6db2f2558f22e1fd97d59d5c7a98",
+    "k25-private-read-parents-checks.json": "f029c6411dc1c84667fbf84f5c9c9d3240735e212ed5b7b0a702e1aef1157bee",
+    "k25-private-read-parents-equivalence.json": "9de716d5da08e3efc9249c573234dc643883ff3dc1aa0cc24506ae1d9f4166ef"
+  },
+  "allOwnedCheckProcessesClosed": true,
+  "newTables": 0,
+  "newModules": 0,
+  "nativeSpeed": "UNAVAILABLE",
+  "cloudSloLastObserved": {
+    "pass": 0,
+    "fail": 4,
+    "source": "K24 accepted be396 baseline"
+  },
+  "implementationMilestonePercent": 100,
+  "overallLatencyFollowupPercent": 50,
+  "noFurtherSourceEditsPlanned": true
+}

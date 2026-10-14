@@ -1,0 +1,201 @@
+{
+  "version": 1,
+  "sourceBaseline": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "files": [
+    {
+      "file": "src/domain/belief-plan.ts",
+      "sha256": "f054597f30617f1e1e87d8f529e214d31a655da43e711591742eb8465237ff4a",
+      "bytes": 9216,
+      "beforeSha256": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryGateway.ts",
+      "sha256": "d2ce14203e1e695b943b80123d1b62de1f97a6f095091df8c2a48e7f76d944be",
+      "bytes": 17425,
+      "beforeSha256": "40aa189dcc9760abf5e7ae75648bd807d6e999d37135860acdc50869a514c3e6"
+    },
+    {
+      "file": "convex-dev/runtimeIngestion.ts",
+      "sha256": "a275307d10e087a08895607d1680973204d18bd9610fe48e053e00bab1272d33",
+      "bytes": 71450,
+      "beforeSha256": "cea443ebfb051acb5df68f8b0782a28568443daab72feadcd14d26d05bbb1d7c"
+    },
+    {
+      "file": "convex-dev/runtimeBeliefs.ts",
+      "sha256": "fd1d1586c1822e07fae0e7e2f03f16e5477878f6bfafb897493c4ad29e1b11d8",
+      "bytes": 10479,
+      "beforeSha256": "51caa9b7941727b833eada32e4ebd345c4ed2bd6664c3423e465b6eca6a55c5e"
+    },
+    {
+      "file": "tests/unit/runtimeIngestion/candidate-binding.test.ts",
+      "sha256": "c2dd56ab2940947585a2e9de22d58a725a7764d10a9db167e86c85023897195d",
+      "bytes": 19547
+    },
+    {
+      "file": "tests/unit/runtimeIngestion/framing-invalid-output.test.ts",
+      "sha256": "1ae68e0c285201de85c1f8b0145c956537200b3ac4a2759c155e2871d51b88a6",
+      "bytes": 19923,
+      "beforeSha256": "f708238f95e83c000adf1ff4b060b8e9dffafded16ad12f7469f62cf9be0f791"
+    }
+  ],
+  "moduleEvidence": [
+    {
+      "file": "convex-dev/runtimeIngestion.ts",
+      "unchanged": [
+        {
+          "name": "ref",
+          "sha256": "ebe684f34b14923c9a318866779bf52e9600293476884f4a6da07b678c7ffc16"
+        },
+        {
+          "name": "ingestionDenied",
+          "sha256": "5db7d2d2cb2fb59a9b5979eb5ed52b6336b08ad096ca7b983f9fb65d14a3d025"
+        },
+        {
+          "name": "exactOne",
+          "sha256": "116a7188213e1bad02702fb88617ec446c303951891eccf880f4cf49b6f9e868"
+        },
+        {
+          "name": "readScopeCutoff",
+          "sha256": "250062eca2aa390c616ee90ae2ee9085ca80a70db53e71e5b94df5ff6af16500"
+        },
+        {
+          "name": "readScopeSequence",
+          "sha256": "1749c52bd121305a0db17ddfccc786cda9ba8a7ec99ce7f1e97fc6dee08ac624"
+        },
+        {
+          "name": "eventById",
+          "sha256": "02eac65f3c5df87618efeade32495c1f3e62507f56998ab54d041788351a988a"
+        },
+        {
+          "name": "readEventStages",
+          "sha256": "15a6e79fc119fb1a04cbc301f7609d76b60b0fd567d3eb903cd9920523aaaf44"
+        },
+        {
+          "name": "readEventCurrent",
+          "sha256": "17f3d2d700f096bfa9ae801f3d8c7bf665ce5a8e86b64815b8c24d2c8e38169e"
+        },
+        {
+          "name": "readScopeEvents",
+          "sha256": "3ed2f29ce6f49f95ba85390719103c7fc84e1eec573ed2cbd9799f6369924e33"
+        },
+        {
+          "name": "readiness",
+          "sha256": "6b7b15fbe7d4e5f97fa421756e1491a3a320cd5c6128f134287ab0fc6a16748a"
+        },
+        {
+          "name": "readRunMemoryPublication",
+          "sha256": "79d1a94ab5e1e7c0a478b03cb2f9f5ab21733eaa0ce90317bf8a1a7ef6b1e82a"
+        },
+        {
+          "name": "enqueueSourceEvent",
+          "sha256": "5848a38b7e3a8181d033010b3219fcbadc01aa4b769acb700d03e162ea748e45"
+        },
+        {
+          "name": "retireSourceEvents",
+          "sha256": "ad7af2ba256d76d3a7311abe0bbd54c50ffdebad811f088db39c63ef37562061"
+        },
+        {
+          "name": "retireScopedSourceEvents",
+          "sha256": "d94db7bbe0dbab00442577ec3a1bcec3c18c9bf72737b852c17d903ba75c3766"
+        },
+        {
+          "name": "writeStage",
+          "sha256": "fedb9d18b0de826c5422af99a7f89b42e9b0061743420d9a852b2279d5fe34c7"
+        },
+        {
+          "name": "stageRow",
+          "sha256": "b47d210680906a0fe9aa2b72ecfba099c3da411f43064e3e093c4c546448da0b"
+        },
+        {
+          "name": "requireStageLease",
+          "sha256": "5db287e989e6464e648c4a59e84afdab3d8efb9a10b280f2c50a55aae5e93360"
+        },
+        {
+          "name": "requireStageCommit",
+          "sha256": "87d5da0a2084f5d6c14326f486079d5f50710f9ec625e2a50ad428cae552cb77"
+        },
+        {
+          "name": "guardIngestionRunBudget",
+          "sha256": "2904355f58d85a819f95363cc046e46a868e1de7eb6f46ea0bd23f72e44f8d2d"
+        },
+        {
+          "name": "assertIngestionPolicyPin",
+          "sha256": "b4b4cafe99e76d4bae6300b0d588b6dc0f2e11f708f32a140e1dfc270794d1f9"
+        },
+        {
+          "name": "extractionParent",
+          "sha256": "963ecc83b98f2236ff5469b267f3f7b95ba1694856e1117786a89a73f05b63cf"
+        },
+        {
+          "name": "outputError",
+          "sha256": "1e59a5dec3bfb30fccb1f5390f8cc814e1d1f9b025d858caa4d57d909426e239"
+        },
+        {
+          "name": "confirmedDomainFailure",
+          "sha256": "4cb86b5e647f73ea8f18da85ef5ab0c9800399205cc88f777f53abf769c1b786"
+        },
+        {
+          "name": "predispatch",
+          "sha256": "a838808b46e2dfa2d8296f03f7cb10e9c4aeb19493167db1a6f4c5cbfd9963a6"
+        },
+        {
+          "name": "controlCode",
+          "sha256": "6b9c0a0871e7bc1f128299a23210e0f597836169dfed50ac31a4a1336f416eb5"
+        },
+        {
+          "name": "capacityRefusal",
+          "sha256": "8c46d667cdc16ba418e3a27df97b99a26e4026c60dea2302609a171b72fd1574"
+        },
+        {
+          "name": "identicalBelief",
+          "sha256": "befaf6de3764ee4445c3750b08372bd0d6a39fe82654c9e422213694759cf913"
+        },
+        {
+          "name": "finishBeliefStage",
+          "sha256": "a25f591ef931b6299ea23fe714acc7d02a303124a113406b6729ed8b28a2985e"
+        },
+        {
+          "name": "registerCompletedDerivedSource",
+          "sha256": "eef6f66ca2a61a325622c5870aae7c4028b403af1bd5db69248a37cbe1696f8d"
+        },
+        {
+          "name": "registerCompletedToolSource",
+          "sha256": "5d8500839f78242606cbbd258f68f252fffda20b31a2d176c1a7e70ec0363635"
+        }
+      ],
+      "intentional": [
+        "processStageHandler"
+      ],
+      "missing": []
+    },
+    {
+      "file": "convex-dev/runtimeMemoryGateway.ts",
+      "unchanged": [
+        {
+          "name": "sourceKey",
+          "sha256": "f7383e460c58c952f813a12a7349f9e15fde3e0659102d9910b4d48acbad8261"
+        },
+        {
+          "name": "invalidModelOutput",
+          "sha256": "cef932e0a7d9ce84b3fa0d9dff27b612e0642831a19445638b06c820d6608655"
+        },
+        {
+          "name": "buildSourceExtractionFramingV4",
+          "sha256": "44cabbff55804d0346bda77f2420608c863c5dad14e82beccb6e6f9f39401612"
+        },
+        {
+          "name": "text",
+          "sha256": "cae6d97e79eec3fb5dca47cc0bd5dbb7cfe86936f22c81151a2650faded1cbda"
+        }
+      ],
+      "intentional": [
+        "createGatewayMemoryModel",
+        "prepare"
+      ],
+      "missing": []
+    }
+  ],
+  "qualifiedContract": "Native prompt assembly text(), extraction framing, output JSON schema and existing semantic operation formula remain unchanged; binding metadata is private plan data.",
+  "semantics": "Bound candidates use original per-candidate virtual matching; legacy unbound unequal-slot refusal retained; no UPDATE/SUPERSEDE of in-plan targets accepted.",
+  "noUniversalLiteralEqualityClaim": true
+}

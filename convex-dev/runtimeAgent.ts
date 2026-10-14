@@ -53,8 +53,10 @@ import { traceRuntimePhase, traceRuntimeMutationSpan } from "./runtimeLatencyTra
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { recallMemory } from "./runtimeMemoryServices";
 import type { AgentRecallSelection } from "./runtimeAgentRecall";
+import { withPrivateInlineAgentSelection } from "./runtimeAgentRecall";
 import { boundedRefusal, throwRefusal } from "./runtimeAgentQueryEmbedding";
-import { recallAgentMemory, recallAgentMemoryV8 } from "./runtimeAgentQueryEmbedding";
+import { recallAgentMemory, recallAgentMemoryV8, prepareAgentQueryEmbeddingHandler } from "./runtimeAgentQueryEmbedding";
+import type { AgentQueryEmbeddingProposal } from "./runtimeAgentQueryEmbedding";
 import { executeServerTool, NATIVE_TOOL_NAMES, semanticToolName, serverTools, serverToolSourceLineage, validateToolInput } from "./runtimeAgentTools";
 import { projectNativeOutputParts } from "./runtimeOutputProjection";
 import type { RuntimePublicOutputPart } from "./runtimeOutputProjection";
@@ -1786,6 +1788,21 @@ async function contextInputsV8Handler(ctx: QueryCtx | MutationCtx, args: Attempt
 }
 export const contextInputsV8 = internalQuery({ args: agentAttempt, handler: (ctx,args) => contextInputsV8Handler(createV8AuthorityReadScope(ctx), args) });
 
+/** Ordered original context predicates, then tentative embedding preparation.
+ * Empty and pending-failure branches never perform an embedding preflight. */
+export async function contextInputsAndEmbeddingV8Handler(nativeCtx: QueryCtx, args: Attempt) {
+  const ctx = createV8AuthorityReadScope(nativeCtx);
+  const inputs = await contextInputsV8Handler(ctx, args);
+  if (inputs.kind === "pending_overflow" || inputs.availability.empty) return { inputs };
+  const text = inputs.current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
+    : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
+  const input = { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 };
+  const proposal = await prepareAgentQueryEmbeddingHandler(ctx, { ...args, input }, 8);
+  return { inputs, proposal };
+}
+export const contextInputsAndEmbeddingV8 = internalQuery({ args: agentAttempt, handler: contextInputsAndEmbeddingV8Handler });
+const contextInputsAndEmbeddingV8Ref = ref<"query", Attempt, Awaited<ReturnType<typeof contextInputsAndEmbeddingV8Handler>>>("query", "runtimeAgent:contextInputsAndEmbeddingV8");
+
 export async function saveContextV8Handler(ctx: MutationCtx, args: Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string; entries: ModelInputEntry[]; historyMessageIds?: string[] }) {
   const current = await executionContext(ctx, args); if (current.execution.contextCanonical !== undefined) transcriptDenied("INVALID_STATE");
   if (utf8Bytes(args.context) > 16_384 || args.witnesses.length > 32) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
@@ -1833,8 +1850,12 @@ function selectedPendingEntries(pending: Awaited<ReturnType<typeof contextInputs
   });
 }
 
-export async function prepareContextV8Handler(ctx: ActionCtx, args: Attempt, recall?: (repository: Parameters<typeof recallAgentMemory>[2], input: Parameters<typeof recallAgentMemory>[4], selection?: AgentRecallSelection) => ReturnType<typeof recallAgentMemory>, privateComposition = false): Promise<null | PreparedModelCandidate> {
-  const inputs = await ctx.runQuery(contextInputsV8Ref, args);
+export async function prepareContextV8Handler(ctx: ActionCtx, args: Attempt, recall?: (repository: Parameters<typeof recallAgentMemory>[2], input: Parameters<typeof recallAgentMemory>[4], selection?: AgentRecallSelection, proposal?: AgentQueryEmbeddingProposal) => ReturnType<typeof recallAgentMemory>, privateComposition = false): Promise<null | PreparedModelCandidate> {
+  const parent = privateComposition ? await ctx.runQuery(contextInputsAndEmbeddingV8Ref, args) : undefined;
+  const inputs = parent ? parent.inputs : await ctx.runQuery(contextInputsV8Ref, args);
+  const invokeRecall = recall && parent?.proposal
+    ? (repository: Parameters<typeof recall>[0], input: Parameters<typeof recall>[1], selection?: AgentRecallSelection) => recall(repository, input, selection, parent.proposal)
+    : recall;
   const { current, boundary, represented, pending, historyMessageIds } = inputs;
   const cutoff = current.snapshot.ingestionCutoff.sequence;
   let completeness: "complete" | "incomplete" = current.execution.contextCompleteness ?? "complete"; let failureCode = current.execution.contextFailureCode;
@@ -1908,10 +1929,10 @@ export async function prepareContextV8Handler(ctx: ActionCtx, args: Attempt, rec
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
   const availability = inputs.availability;
   traceRuntimePhase(args.runId, args.attemptNumber, availability.empty ? "context.indexed.empty" : "context.recall.begin");
-  const result = availability.empty ? { context: "" } : recall ? await recall(privateComposition ? repository : scoped,
-    { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 }, privateComposition ? { cutoff, boundary, excludedSourceKeys: [...excluded],
+  const result = availability.empty ? { context: "" } : invokeRecall ? await invokeRecall(privateComposition ? repository : scoped,
+    { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 }, privateComposition ? withPrivateInlineAgentSelection({ cutoff, boundary, excludedSourceKeys: [...excluded],
       onSelected: selected => { sourceScores = selected.sourceScores ?? []; itemLineages = selected.itemLineages ?? []; for (const witness of selected.witnesses) witnesses.set(witness.sourceId, witness);
-        for (const [key, lineage] of selected.provenance) provenance.set(key, lineage); } } : undefined) : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
+        for (const [key, lineage] of selected.provenance) provenance.set(key, lineage); } }) : undefined) : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
     { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 });
   traceRuntimePhase(args.runId, args.attemptNumber, "context.recall.end");
   for (const source of pending.sources) {
@@ -2018,7 +2039,7 @@ async function finishTurnV8(ctx: ActionCtx, args: Attempt & { ordinal: number },
     transcriptDenied(prepared.failureCode);
   }
   if (prepared.state === "needs_context") {
-    const candidate = await prepareContextV8Handler(ctx, attempt, (repository, input, selection) => recallAgentMemoryV8(ctx, attempt, repository, { now: () => Date.now() }, input, selection), true);
+    const candidate = await prepareContextV8Handler(ctx, attempt, (repository, input, selection, proposal) => recallAgentMemoryV8(ctx, attempt, repository, { now: () => Date.now() }, input, selection, proposal), true);
     if (!candidate) transcriptDenied("INVALID_STATE");
     prepared = candidate;
   }

@@ -1,10 +1,10 @@
-/** CLI commands use a fresh host JWT callback and always release the connection. */
+/** Interactive CLI owns one transport; every command retains fresh session checks. */
 import { createInterface } from "node:readline/promises";
 import { randomUUID } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import type { RuntimeRunHandle, RuntimeObservation, CortexRuntimeClientOptions } from "@cortexmemory/sdk/runtime";
-import type { RuntimeConfig, RuntimeFactory } from "./cortex.js";
-import { AppError, CortexRuntimeError, hostToken, withRuntime, identifier } from "./cortex.js";
+import type { RuntimeConfig, RuntimeFactory, RuntimeConnection } from "./cortex.js";
+import { AppError, CortexRuntimeError, hostToken, withRuntime, identifier, closeRuntimeConnection } from "./cortex.js";
 import { chat, observe, terminal, watch } from "./chat.js";
 /** Display only freshly delivered backend parts; reconcile canonical final text with its streamed prefix. */
 function observationPrinter(onFirstPrinted?: () => void): (value: RuntimeObservation) => void {
@@ -38,7 +38,7 @@ function observationPrinter(onFirstPrinted?: () => void): (value: RuntimeObserva
     }
   };
 }
-export interface CliOptions { config?: RuntimeConfig; factory?: RuntimeFactory; fetchToken?: CortexRuntimeClientOptions["fetchToken"]; signal?: AbortSignal }
+export interface CliOptions { config?: RuntimeConfig; factory?: RuntimeFactory; fetchToken?: CortexRuntimeClientOptions["fetchToken"]; signal?: AbortSignal; connection?: RuntimeConnection }
 export function createCli(options: CliOptions = {}) {
   let conversationId: string | undefined, current: RuntimeRunHandle | undefined, commandSequence = 0, latencyAt = 0;
   const clock = () => {
@@ -91,16 +91,21 @@ export function createCli(options: CliOptions = {}) {
 }
 export async function main(options: Omit<CliOptions, "signal"> & { input?: NodeJS.ReadableStream; output?: NodeJS.WritableStream } = {}) {
   const controller = new AbortController(), rl = createInterface({ input: options.input ?? process.stdin, output: options.output ?? process.stdout });
-  const command = createCli({ ...options, signal: controller.signal });
+  const connection: RuntimeConnection = {};
+  const config = options.config ? Object.freeze({ ...options.config }) : undefined;
+  const fetchToken = options.fetchToken ?? (async () => hostToken());
+  const runtimeOptions = { ...options, fetchToken, config, connection, signal: controller.signal };
+  const command = createCli(runtimeOptions);
   console.log("Cortex Basic remote runtime. /help lists commands. Host JWTs are verified by the backend.");
   const stop = () => { controller.abort(); rl.close(); }; process.once("SIGINT", stop); process.once("SIGTERM", stop);
-  try { while (!controller.signal.aborted) {
+  try {
+    while (!controller.signal.aborted) {
     let line: string; try { line = await rl.question("You: "); } catch { break; }
     try { if (!await command(line)) break; } catch (error) {
       if (controller.signal.aborted) break;
       const code = error instanceof AppError || error instanceof CortexRuntimeError ? error.code : "RUNTIME_UNAVAILABLE";
       console.error(`Command failed: ${code}. Retain the request/run ID; no paid request is automatically retried.`);
     }
-  } } finally { controller.abort(); rl.close(); process.removeListener("SIGINT", stop); process.removeListener("SIGTERM", stop); }
+  } } finally { controller.abort(); closeRuntimeConnection(connection); rl.close(); process.removeListener("SIGINT", stop); process.removeListener("SIGTERM", stop); }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) void main().catch(() => { console.error("CLI configuration failed."); process.exitCode = 1; });

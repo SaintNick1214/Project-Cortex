@@ -1,0 +1,426 @@
+{
+  "status": "PACKAGING_COMPLETE",
+  "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "sourceRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14",
+  "identity": {
+    "version": 1,
+    "id": "68c96901-9eda-4627-b198-f1a682551007",
+    "ownerUid": 501,
+    "ownerGid": 20
+  },
+  "imageId": "sha256:a762d002ee35db9d3b385a565b156d486326182da2de505a5a5ceac51161af8e",
+  "image": {
+    "imageId": "sha256:a762d002ee35db9d3b385a565b156d486326182da2de505a5a5ceac51161af8e",
+    "tag": "cortex-sandbox-foreground-priority:20261014",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "68c96901-9eda-4627-b198-f1a682551007",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "68c96901-9eda-4627-b198-f1a682551007",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14",
+      "dev.cortex.manual-sandbox.source": "be39655e09fdee69907a6ba81b096e5a44067945"
+    },
+    "size": 823685607,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false,
+    "id": "sha256:a762d002ee35db9d3b385a565b156d486326182da2de505a5a5ceac51161af8e",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14",
+    "identity": {
+      "version": 1,
+      "id": "68c96901-9eda-4627-b198-f1a682551007",
+      "ownerUid": 501,
+      "ownerGid": 20
+    }
+  },
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "inputCount": 2225,
+  "inputOrigin": "Each staged input read from exact accepted committed Git blob; every backend source/output digest verified",
+  "inputManifestSha256": "6cfbee61e4ded583ff9fcb9c1329099d2c040fea35299b1fcaef043fabde82b4",
+  "backend": {
+    "distributionId": "cortex-backend-v1-sdk-0.39.0",
+    "files": 170,
+    "allSourceOutputHashesMatch": true,
+    "manifestSha256": "dc63ad425e575aa6b939150243c85fdf66b27b51b94dac00b26a586adf578490",
+    "tables": 78,
+    "components": [
+      "agent",
+      "workflow"
+    ]
+  },
+  "artifactManifestSha256": "368dd9e7467d2af45828d63b76d895e337a6b6c0637bc7509394d1b9fffe3efc",
+  "packages": [
+    {
+      "role": "sdk",
+      "name": "@cortexmemory/sdk",
+      "version": "0.39.0",
+      "filename": "cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "8548f4b0c39a50b14c094f863079fb52dbfe849809e55a00b80221bceb0b7882",
+      "bytes": 1701319,
+      "files": 337
+    },
+    {
+      "role": "cli",
+      "name": "@cortexmemory/cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "bytes": 538578,
+      "files": 451
+    },
+    {
+      "role": "provider",
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "92077112906ae82972f0e4abdb006a901d426161492e4f23d22934c0735cb66b",
+      "bytes": 77665,
+      "files": 18
+    },
+    {
+      "role": "catalog",
+      "name": "@cortexmemory/templates",
+      "version": "1.3.2",
+      "filename": "cortexmemory-templates-1.3.2.tgz",
+      "sha256": "f34185052f71305fc9c308b67bcb36ea600002d036293d1b2091dc72c0407c97",
+      "bytes": 1714863,
+      "files": 1801
+    }
+  ],
+  "consumerChecks": [
+    {
+      "group": "verify-actual-packed-public-contracts",
+      "version": "v1",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-actual-packed-public-contracts-exit-v1.json",
+      "receiptSha256": "3466cfd6172fc3a28cc4816f15c02b6678514c8d3eb4439fa754024485498966",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-actual-packed-public-contracts-v1.log",
+      "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68",
+      "exitCode": 0
+    },
+    {
+      "group": "verify-packed-dependent-contracts",
+      "version": "v1",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-dependent-contracts-exit-v1.json",
+      "receiptSha256": "b1ffe8d452fdde74ae2285c9100c4c5ba739c6959b1b2f58ab45af20980190c3",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-dependent-contracts-v1.log",
+      "logSha256": "67a70755186f8f7063e958c6ada40dde7c29e386d1a28446a4f77fa0bf8c114b",
+      "exitCode": 0
+    },
+    {
+      "group": "verify-packed-backend-export-closure",
+      "version": "v1",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-backend-export-closure-exit-v1.json",
+      "receiptSha256": "9645bcac1701a1297c1e32bbdb639752fe212ee4d8dff42d3084ac7186397bbd",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-backend-export-closure-v1.log",
+      "logSha256": "5502b9f2d2d4a08e2ae47b282ed23f6df9359aa0a27e3b7e2490ccf009598908",
+      "exitCode": 0
+    },
+    {
+      "group": "verify-packed-template-catalog",
+      "version": "v1",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-template-catalog-exit-v1.json",
+      "receiptSha256": "a34102655fad40de01fb1600848adb507c019f3be5ee56270cee444d88d62790",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-template-catalog-v1.log",
+      "logSha256": "30b818b98b3f8139af6a34c27462ec67b94f29669b090565410d0059690281ab",
+      "exitCode": 0
+    }
+  ],
+  "catalog": {
+    "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+    "actualFreshCatalogArchiveSha256": "f34185052f71305fc9c308b67bcb36ea600002d036293d1b2091dc72c0407c97",
+    "catalogSha256": "9097a29db60531b6aca020efb5657fcf9093f219567b22d259b6ed5e01f4bc98",
+    "templateId": "vercel-ai-quickstart",
+    "templateVersion": "1.4.2",
+    "selectedPayloadFiles": 74,
+    "payloadHash": "ec60588d69878eb8f8ea45f53e0844e7b619ca183416fc62e4182942df3e0025",
+    "allSelectedPayloadBytesMatchCatalog": true,
+    "exactQaDevPins": {
+      "@testing-library/react": "16.3.3",
+      "jest-environment-jsdom": "30.5.2"
+    },
+    "actualCommittedUiAndNewFixtureBytes": true,
+    "retainedUiFinalObserverCalls": 1,
+    "removedUiWatchRunCalls": 0,
+    "finalOnlyOptionAndStatusCallbackPresent": true,
+    "transportObservationCallbackAndRetainedOnlyGuardPresent": true,
+    "historicalImmutableTuplesPreserved": 13,
+    "k21ImmutableDescriptorsByteExact": 14,
+    "browserRenderOrFreshDependencyInstallProven": false,
+    "servicesStarted": 0,
+    "inferenceCalls": 0,
+    "ownedScratchRemoved": true
+  },
+  "controls": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14/prepare.mjs",
+      "sha256": "9d583ccdca905a54371c27581276b880aa5b9dc9ed9fe8e37b8711f8c7822a39"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14/image/Dockerfile",
+      "sha256": "dc29f122ff1818e2cfe7907be628d9f92b2c3767d8499a4a0176a1acaf8c1806"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14/image/install-candidates.mjs",
+      "sha256": "27b266edb64b67eb533673866f0029735c84ae1e3e4f6fcaa1b0ffbcb3d67db7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14/image/entrypoint.mjs",
+      "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+    }
+  ],
+  "helpers": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-backend-export-closure.mjs",
+      "sha256": "338f6ad4f84977454d7d1dd7276b8222d7ddd8d2aa7229731847d3937b6e8694"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-template-catalog.mjs",
+      "sha256": "6ff81e8191b0bf592eb0e4cf146968b211b0a2ae92a135bba5e5a1629db4c27c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-dependent-contracts.mjs",
+      "sha256": "31151f1f81896f3d9878710f297ada0976e43f5ea3eb3899d4dc0d0e1fa97df4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/run-consumers.mjs",
+      "sha256": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-actual-packed-public-contracts.mjs",
+      "sha256": "9ed2b13b8c0605540d55b312f5c947fbc55ce621c067ba2d0f49f49bbff61cb1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/build-image.mjs",
+      "sha256": "2f9c21f9cc0c814e71ea05380eb175c4a024a031c4bbc8990f9c5db04d8da293"
+    }
+  ],
+  "checksFiles": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-template-catalog-exit-v1.json",
+      "sha256": "a34102655fad40de01fb1600848adb507c019f3be5ee56270cee444d88d62790",
+      "bytes": 594,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/artifact-receipt.json",
+      "sha256": "368dd9e7467d2af45828d63b76d895e337a6b6c0637bc7509394d1b9fffe3efc",
+      "bytes": 1750,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/docker-build-exit.json",
+      "sha256": "fc5733167223adadafb7024924587157b93f668d2bf7d53453b09a654a7f1bba",
+      "bytes": 987,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/packed-cli-version.log",
+      "sha256": "f7ada3982d4e3ce9f5b135992938383496e4dbfda2468d51dd676d1dd86f24a0",
+      "bytes": 7,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/packed-cli-dependency-selection.json",
+      "sha256": "dccd77d48f2a6c7c154d25b008b2e112beaadf4a15d0cc92566ff43a0965ff53",
+      "bytes": 235,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/pack-provider.json",
+      "sha256": "1b026093416f32d2bae16ba5ef6700a63f9ac074a5b50ec853451a26ab9213fb",
+      "bytes": 2048,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/docker-image-inspect-full.json",
+      "sha256": "02f3a1915ef644f940d5868ce0fa7d24dc95ccb26699886671105fe1a588cb7b",
+      "bytes": 2646,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/build-image-wrapper-v1.log",
+      "sha256": "62e6130f14435749cf1a49e1f9389f180f770b5c01986248ddf606491fd4e13e",
+      "bytes": 687,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-backend-export-closure-v1.log",
+      "sha256": "5502b9f2d2d4a08e2ae47b282ed23f6df9359aa0a27e3b7e2490ccf009598908",
+      "bytes": 119,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-dependent-contracts-v1.log",
+      "sha256": "67a70755186f8f7063e958c6ada40dde7c29e386d1a28446a4f77fa0bf8c114b",
+      "bytes": 175,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/packed-template-catalog.json",
+      "sha256": "ccaf8c5f4d9c2a5c0ed0e0c6108e6e2d2ed11458870461d96fb267b947a7db2c",
+      "bytes": 1048,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-dependent-contracts-exit-v1.json",
+      "sha256": "b1ffe8d452fdde74ae2285c9100c4c5ba739c6959b1b2f58ab45af20980190c3",
+      "bytes": 591,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/prepare-exit-v1.json",
+      "sha256": "9415122527c3dc20bb1c95b7fe1e4ad461469566808b3e7808ef4e35b8ce5142",
+      "bytes": 431,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/prepare-v1.log",
+      "sha256": "ffbe65d39c98f8da55ec1eccc9e82d5f4a59bc389c01a287fb01d973743c1b30",
+      "bytes": 1887,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-actual-packed-public-contracts-exit-v1.json",
+      "sha256": "3466cfd6172fc3a28cc4816f15c02b6678514c8d3eb4439fa754024485498966",
+      "bytes": 594,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/pack-catalog.json",
+      "sha256": "44d7633e6fa3744a252901e9c9113586b0d5204f8303df051485abaf7f3e2bbd",
+      "bytes": 219095,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/packed-cli-help.log",
+      "sha256": "48d57e4a9961fce570bedc7b84c5d1a792021ebf89657bdbaebc8f878dc7e33d",
+      "bytes": 3768,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-actual-packed-public-contracts-v1.log",
+      "sha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68",
+      "bytes": 141,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/pack-cli.json",
+      "sha256": "09cb4a38bebbe836773f53c9b32e3988574a34b6e402b9abb6a13248babe8167",
+      "bytes": 46861,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-backend-export-closure-exit-v1.json",
+      "sha256": "9645bcac1701a1297c1e32bbdb639752fe212ee4d8dff42d3084ac7186397bbd",
+      "bytes": 601,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/packed-backend-export-closure.json",
+      "sha256": "ce4b5733743c435861da98eb07299d849a867e9dc78954a638d97c24ce75ac8f",
+      "bytes": 49145,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/docker-build-v1.log",
+      "sha256": "b0cd12fbc24f643d0486092f89f550967d0b65796d1f0d90ea2fce54fc7b349b",
+      "bytes": 2849,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/build-provider.log",
+      "sha256": "67237c5930627b496d74079b41ea7498bb9f066acda5eb049aed9a98e39f6eba",
+      "bytes": 1315,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/pack-sdk.json",
+      "sha256": "aa0300c7df11e7a7bd8a10823d3aab2e0c4883861eb503e03a5bb8f1ff921280",
+      "bytes": 36093,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/old-kit-preservation-final.json",
+      "sha256": "19e87aed35a6e6ab9075f48d344ad6b7d59b4367f601f5f0b1da25e08d09e4d2",
+      "bytes": 4533,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/committed-source-go.json",
+      "sha256": "7ffde88ad8ae922a61b739ac733ae0a1a5452c98eab5b6b5bd50afa53ab818bd",
+      "bytes": 3806,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/build-sdk.log",
+      "sha256": "0edee652dd42c3cc1a209b74332ad7894164a9e79382969d6c6514f17d095fae",
+      "bytes": 2722,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/build-cli.log",
+      "sha256": "c4d2cb92a2d91b91b538a808ef0eb977534255d7785d908c24e2edf4bf6c715f",
+      "bytes": 91,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/docker-image-identity.json",
+      "sha256": "ed75fefae6ac5b2f9380eb892868abf85c0d4c77e225df1fc90d77e3c5a4a236",
+      "bytes": 793,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/verify-packed-template-catalog-v1.log",
+      "sha256": "30b818b98b3f8139af6a34c27462ec67b94f29669b090565410d0059690281ab",
+      "bytes": 952,
+      "retention": "local-only; not a commit instruction"
+    }
+  ],
+  "preservedFailures": [],
+  "executionCounts": {
+    "prepare": 1,
+    "isolatedBuilds": 3,
+    "packs": 4,
+    "consumerFirstRuns": 4,
+    "failedConsumerSuccessors": 0,
+    "imageBuilds": 1
+  },
+  "ownedConsumerScratchRemoved": true,
+  "dependencyInputs": "Existing host dependency links only; no old kit dependencies copied",
+  "oldKitPreservationReceipt": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-foreground-priority/old-kit-preservation-final.json",
+    "sha256": "19e87aed35a6e6ab9075f48d344ad6b7d59b4367f601f5f0b1da25e08d09e4d2"
+  },
+  "sourceReview": {
+    "mdSha256": "a8f7ca9a7d75e21c959622dc97986dc35fb2a2b2af6c280576f6300e66b08098",
+    "jsonSha256": "ea33bfc834daa218881ee560fc61da8f887d47464060b21a82ad6999d0e6e595"
+  },
+  "freshVerifiedImageIdFile": {
+    "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14/image-id.txt",
+    "sha256": "ff0f65f1715a51f70f85f19c59b715e96b0ce4fdf1001d754d0add94ac7e79d9",
+    "mode": "0600",
+    "verifiedSourceUuidOsUserAndLabelsBeforeWrite": true
+  },
+  "startupQualification": false,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "runtimeContainersStarted": 0,
+  "deploymentStarted": false,
+  "sourceChanges": false,
+  "launcherChanges": false,
+  "commitsCreated": 0,
+  "nativeQualificationOrLatencyAccepted": false,
+  "packagingPercent": 100,
+  "overallLatencyGoalPercent": 50
+}

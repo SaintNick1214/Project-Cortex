@@ -177,3 +177,27 @@ it("tool approval wait releases V8 ingestion before any human decision",async()=
  expect(f.db.table("runtimeRuns")[0]!.responseStatus).toBe("waiting_approval");
  expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
 });
+
+it("V8 read parent keeps empty context local without an embedding proposal or any writes", async () => {
+ const f=await fixture({inputLimit:64000}),{attempt}=await f.start();await f.call(agent.startContext,attempt);
+ const writes=f.db.writes;
+ const original=await f.call(agent.contextInputsV8,attempt);
+ const parent=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>>(agent.contextInputsAndEmbeddingV8,attempt);
+ expect(parent).toEqual({inputs:original});expect(parent.inputs.kind).toBe("ready");
+ if(parent.inputs.kind!=="ready")throw Error("Expected empty context");expect(parent.inputs.availability.empty).toBe(true);
+ expect(parent.proposal).toBeUndefined();expect(f.db.writes).toBe(writes);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it("V8 pending failure skips embedding preparation and Action commits the original failure",async()=>{
+ const f=await fixture({inputLimit:64000}),ingestion=await import("../../../convex-dev/runtimeIngestion");
+ for(let i=0;i<5;i++)await ingestion.enqueueSourceEvent(f.ctx,f.reference,await f.source(`Pending first ${i}`,`read-parent-pending-${i}`));
+ const {attempt}=await f.start();await f.call(agent.startContext,attempt);
+ const {ConvexMemoryRepository}=await import("../../../convex-dev/runtimeMemoryRepository");
+ const embeddingGuard=jest.spyOn(ConvexMemoryRepository.prototype,"assertReadAuthority").mockRejectedValue(Error("EMBEDDING_PREP_MUST_NOT_RUN"));
+ const writes=f.db.writes;
+ expect(await f.call(agent.contextInputsAndEmbeddingV8,attempt)).toMatchObject({inputs:{kind:"pending_overflow",pending:{completeness:"incomplete",reason:"CONTEXT_OVERFLOW"}}});
+ expect(f.db.writes).toBe(writes);
+ await expect(agent.prepareContextV8Handler(f.ctx as unknown as Parameters<typeof agent.prepareContextV8Handler>[0],attempt,undefined,true)).rejects.toThrow("CONTEXT_OVERFLOW");
+ expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({contextState:"failed",contextCompleteness:"incomplete",contextFailureCode:"CONTEXT_OVERFLOW"});
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);expect(f.db.table("runtimeAgentOperations")).toHaveLength(0);
+ expect(embeddingGuard).not.toHaveBeenCalled();
+});

@@ -1,0 +1,412 @@
+{
+  "version": 1,
+  "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "target": {
+    "sessionId": "34d179da-1942-4602-ae7e-a41610880e9a",
+    "name": "zany-cardinal-533",
+    "id": 6171787,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-34d179da-1942-4602-ae7e-a41610880e9a"
+  },
+  "observedAt": "2026-10-14T17:03:27.994Z",
+  "fixedFour": {
+    "passed": false,
+    "exitCode": 1,
+    "freshVerifications": 45,
+    "responseCompleteCount": 4,
+    "eventChecksPassed": 7,
+    "eventCount": 8,
+    "positiveUserFacts": 3,
+    "currentVectors": 7,
+    "contiguousThrough": 2,
+    "nativeAttempts": 12,
+    "allUsageComplete": true,
+    "allTerminalConfirmedAttached": true,
+    "allJobAccountsReservedAndConcurrencyZero": true,
+    "selectedJobUncertainCeilingUnits": 1200000,
+    "actualMonetaryCharge": "unavailable"
+  },
+  "failedWarmLeaf": {
+    "nativeStage": {
+      "stage": "facts",
+      "state": "dead_letter",
+      "failureCode": "AMBIGUOUS_EXTRACTION_SLOT",
+      "attempt": 1,
+      "leaseVersion": 1,
+      "payloadPresent": false,
+      "extractState": "complete"
+    },
+    "account": {
+      "reservedUnits": 0,
+      "settledUnits": 0,
+      "uncertainUnits": 200000,
+      "activeConcurrency": 0,
+      "current": true,
+      "cancelled": false
+    },
+    "native": [
+      {
+        "operationKey": "facts.resolve",
+        "attemptState": "uncertain",
+        "attachment": "attached",
+        "slotReleased": true,
+        "withheld": false,
+        "terminalOutcome": "confirmed",
+        "usageComplete": true,
+        "usage": {
+          "inputTokens": 1635,
+          "outputTokens": 54,
+          "totalTokens": 1689,
+          "cachedInputTokens": 0,
+          "reasoningTokens": 0
+        },
+        "reservationUnits": 100000,
+        "parsedAction": "ADD",
+        "targetPresent": false
+      },
+      {
+        "operationKey": "memory.extract",
+        "attemptState": "uncertain",
+        "attachment": "attached",
+        "slotReleased": true,
+        "withheld": false,
+        "terminalOutcome": "confirmed",
+        "usageComplete": true,
+        "usage": {
+          "inputTokens": 1105,
+          "outputTokens": 111,
+          "totalTokens": 1216,
+          "cachedInputTokens": 0,
+          "reasoningTokens": 0
+        },
+        "reservationUnits": 100000
+      }
+    ],
+    "extractionStrictDomainValid": true,
+    "extractionCandidateCount": 2,
+    "originalFullClassifierVerdict": "CLASSIFICATION_FAIL",
+    "originalFullClassifierExitCode": 1,
+    "clientsClosed": true
+  },
+  "narrowComparison": {
+    "passed": true,
+    "exitCode": 0,
+    "nativeQueries": 1,
+    "documents": 6,
+    "freshVerifications": 3,
+    "comparison": {
+      "candidateCount": 2,
+      "candidates": [
+        {
+          "allowedKeys": [
+            "fact",
+            "factType",
+            "subject",
+            "predicate",
+            "object",
+            "confidence",
+            "tags",
+            "entities",
+            "lineage"
+          ],
+          "confidence": 1,
+          "kindType": "string",
+          "wordingSha256": "1e262bbaba9f95cefb80019a1d6c0049047f48e1cac09de096a2a35ffd28d8df",
+          "valueSha256": "c52c4fb88926f84bcbc39459fb74792f00032309d52aa2f242741702958003cc",
+          "slotSha256": "0a290ae2324665d0a73410674aa8c872d12f93a6ed8ecfbbfcf09732a50064a8",
+          "lineageSha256": "75d4ecbd06ad938945c1ba0cf49b186180a0cfc7f09a065116cdcb427cb1f49b",
+          "tagsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "entitiesSha256": "8ae95e7b5d2adb8832a7c946e58e5a3ca964f196706fb866b7f2ff183e69a08b",
+          "relationsSha256": "a4d0f0eb87fed960b9f1819efda1cd7935b4f665fdd3872149260986d11e96da",
+          "candidateIdFieldPresent": false
+        },
+        {
+          "allowedKeys": [
+            "fact",
+            "factType",
+            "subject",
+            "predicate",
+            "object",
+            "confidence",
+            "tags",
+            "lineage"
+          ],
+          "confidence": 1,
+          "kindType": "string",
+          "wordingSha256": "2e74c57f7e263620b99e29623a2bd1b0752eb135fa54befb5ae3e565bc62ba74",
+          "valueSha256": "b369e960f45d114738364ffd089140c5e4019b3e51817448dcd21772bdb14cd1",
+          "slotSha256": "0a290ae2324665d0a73410674aa8c872d12f93a6ed8ecfbbfcf09732a50064a8",
+          "lineageSha256": "75d4ecbd06ad938945c1ba0cf49b186180a0cfc7f09a065116cdcb427cb1f49b",
+          "tagsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "entitiesSha256": "a4d0f0eb87fed960b9f1819efda1cd7935b4f665fdd3872149260986d11e96da",
+          "relationsSha256": "a4d0f0eb87fed960b9f1819efda1cd7935b4f665fdd3872149260986d11e96da",
+          "candidateIdFieldPresent": false
+        }
+      ],
+      "pairs": [
+        {
+          "left": 0,
+          "right": 1,
+          "sameNormalizedSlot": true,
+          "sameExactCandidate": false,
+          "sameLineage": true,
+          "sameKind": true,
+          "sameValue": false,
+          "sameWording": false,
+          "sameConfidence": true,
+          "sameTags": true,
+          "sameEntities": false,
+          "sameRelations": true,
+          "differentAllowedFields": [
+            "fact",
+            "object",
+            "entities"
+          ],
+          "leftSha256": "1f4c2904315610450b279c76859e0827e7873190a5d01fda4c4a97f169c9e45c",
+          "rightSha256": "963175d6b23debba68eb73e9f46103f7ccb9df55f25bc0b3ffa757e20bfba937"
+        }
+      ]
+    },
+    "decision": {
+      "action": "ADD",
+      "targetReferenceType": "null",
+      "targetReferencePresent": false,
+      "targetReferenceInAdmittedPrompt": false,
+      "operationSemanticIdentityMatches": true,
+      "requestKeys": [
+        "childCallId",
+        "inputTokens",
+        "messages",
+        "semanticId"
+      ],
+      "requestOrdinalPresent": false,
+      "requestCandidateIdPresent": false,
+      "attemptOrdinal": 0,
+      "attemptNumber": 1,
+      "promptCandidateOrdinalFieldPresent": false,
+      "candidateInPromptExactWordings": [
+        true,
+        false
+      ],
+      "existingPromptReferenceCount": 7,
+      "resultSha256": "61bbeb1b417d2f8d5b82abdc4a0b4c10ae990851acc70c945bef9f9003c6cb24",
+      "resultBytes": 211,
+      "terminalOutcome": "confirmed",
+      "usageComplete": true,
+      "slotReleased": true,
+      "resultAttachmentState": "attached"
+    },
+    "completeEquivalence": false,
+    "sourceModules": [
+      {
+        "sourcePath": "src/domain/conflicts.ts",
+        "outputSha256": "41a66d89aecee2db9b84e686c16568465dd3f6f0e3eebf993fa032b2017d77f6",
+        "sourceSha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+      },
+      {
+        "sourcePath": "src/domain/belief-plan.ts",
+        "outputSha256": "5ab6820bb6b9340eab15bbbc37538c46b5adfcbda7871ce165cccb9067a86c63",
+        "sourceSha256": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b"
+      },
+      {
+        "sourcePath": "src/domain/ingestion.ts",
+        "outputSha256": "8ef0aadb96ed0d5a14fe2d265f4be22dd39affdcb75622d28bbf7ad2e8fd7357",
+        "sourceSha256": "0f94fa1c791283994e58ef417d095aa930ebfcd007389056290784216e9fc70a"
+      }
+    ],
+    "clientsClosed": true,
+    "bulkScans": 0,
+    "databaseWrites": 0,
+    "endpoint": "/api/run_test_function",
+    "registration": "official Convex1.46 sandboxed readonly query"
+  },
+  "ordinary": {
+    "passed": true,
+    "exitCode": 0,
+    "freshVerifications": 82,
+    "newCaptureIntents": 2,
+    "recallCalls": 1,
+    "retries": 0,
+    "native": {
+      "captureCount": 2,
+      "traceRows": 4,
+      "nativeMessageRows": 4,
+      "eventCount": 4,
+      "sourceRefsSha256": "e077e867b3ec1aec1a8c03af9967b5b244e73318185b29134e141e481cc60ade",
+      "positiveCoralFact": true,
+      "assistantExternal": true,
+      "metadataMatches": true,
+      "currentGrant": true,
+      "nativeUsageAttempts": 6
+    },
+    "assertions": {
+      "freshEqualContentCreatesTwo": true,
+      "exactReplayNoNewCapture": true,
+      "changed_same_id": {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "protectedPayloadReturned": false
+      },
+      "contiguousReadinessThrough4": true,
+      "reader.capture": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "outsider.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "locked.new": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "locked.replay": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "lockedStatusReadAllowed": true,
+      "explicitAdminManualUnlockForDelete": true,
+      "deleted.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "revoked.new": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "demoOwnerGrantUntouched": true
+    },
+    "firstCaptureApiMs": 2081.2821249999997,
+    "secondCaptureApiMs": 1417.0204580000004,
+    "profileApiMs": 692.6844999999994,
+    "recallApiMs": 2922.6483750000007,
+    "recallRpcMs": 2564.7954999999965,
+    "publicRecall": {
+      "itemCount": 5,
+      "contextBytes": 279,
+      "currentProfile": true,
+      "scopedPositivePreference": true,
+      "requestIdSha256": "af7f830fd997086c19ad022f39affcc244a7f44c5f871665e0427cd526a651c6"
+    },
+    "clientsClosed": true
+  },
+  "limits": {
+    "systemRows": 256,
+    "systemDeadlineMs": 30000,
+    "ordinaryRpcMs": 12000,
+    "ordinaryOperationReadinessMs": 30000,
+    "originalBudgetCapsUnchanged": true,
+    "narrowQueryDuplicateReadBoundPerIndex": 2
+  },
+  "privacy": {
+    "rawPrivateOutputsRetained": false,
+    "rawTokensRetained": false,
+    "rawPromptsRetained": false
+  },
+  "scope": {
+    "noProductEdits": true,
+    "noMainWorkspaceGrantMutation": true,
+    "noPaidRetry": true,
+    "noAuthOrToolInvocationByAuthor": true,
+    "allClientsClosed": true,
+    "sloAccepted": false
+  },
+  "artifacts": [
+    {
+      "name": "verify-k24-four-run-memory-readonly.mjs",
+      "sha256": "19252444553a7a7a1c71816c77b2330eb27451f0ba5cb5f9ed85bdd35a8d7498"
+    },
+    {
+      "name": "k24-collector-pins.mjs",
+      "sha256": "4287fdb9b30ec120b0adb2d6a92682f35cb39e764032383421942de70f26bfdc"
+    },
+    {
+      "name": "k24-memory-native-v2-four-run-verification-1791996647857.json",
+      "sha256": "d4d458452b7f91a50266fe55fd92a15fe84384a0083dda647d99f9137ac55769"
+    },
+    {
+      "name": "k24-four-run-memory-invocation-v1.log",
+      "sha256": "cb780e1a74066e8825bf7f9e7bc94a017cc64013e9d67ba0ff59a488a7a559f7"
+    },
+    {
+      "name": "k24-four-run-memory-invocation-v1-exit.json",
+      "sha256": "d12859342cec9178b59aab2204f6cfc8a46b691b348c5f301e6f322debc71489"
+    },
+    {
+      "name": "k24-exact-warm-facts-leaf-readonly.mjs",
+      "sha256": "fa4b9a1c38cc64c3b645e97b56f631cdafc2f858dda88f62ac43bb1942e8ae74"
+    },
+    {
+      "name": "k24-exact-warm-facts-leaf-readonly-before-syntax-correction.mjs",
+      "sha256": "470c5e97d52220fdf297aebec4cd14f1008be80a5cdd802d778cb63155a4a70a"
+    },
+    {
+      "name": "k24-exact-warm-facts-leaf-syntax-v1-exit.json",
+      "sha256": "4cb01caee785fbe961e06ab862a79cd1ab43a81843df5410a8474436ef51e2d3"
+    },
+    {
+      "name": "k24-exact-warm-facts-leaf-1791996801508.json",
+      "sha256": "a1838cea2b2f34bd3f853366791691b2ac6a786d76928f180fd342c9fcc9c8fa"
+    },
+    {
+      "name": "k24-exact-warm-facts-leaf-invocation-v1.log",
+      "sha256": "342a6ebc19bf399deb7c640bea019032d7150cf43fe9a76da0a01feac7e1bc2d"
+    },
+    {
+      "name": "k24-exact-warm-facts-leaf-invocation-v1-exit.json",
+      "sha256": "d8ad7b19fe8e713357a00f399636875b7520de8174f69d9f3bb294d647269433"
+    },
+    {
+      "name": "k24-exact-warm-facts-leaf-1791996836247.json",
+      "sha256": "f8ede1b47bbad15a6c9f8b2745d44c6c47290eddb74de5e31403ae41720107db"
+    },
+    {
+      "name": "k24-exact-warm-facts-leaf-invocation-v2.log",
+      "sha256": "f8447113de1671fc8b93225fefe6028a1cd7bc7bc822437c60bb98177a7dee64"
+    },
+    {
+      "name": "k24-exact-warm-facts-leaf-invocation-v2-exit.json",
+      "sha256": "1180bdf50d976f386ccaae249c83b8f4d3271aae4428200109cce917844bad0c"
+    },
+    {
+      "name": "k24-native-ordinary-memory.mjs",
+      "sha256": "1739a5045e8da34f6db6faa9e495c1fcb01b2fc4ee98344e7291790423e83316"
+    },
+    {
+      "name": "k24-native-ordinary-memory-v2-1791996876973-c681d1df-095a-43e6-a30c-7f053038f0af.json",
+      "sha256": "7c753d3a362d3274d056f92d27fcdde91d5876aab927f562d556737379ab6ce7"
+    },
+    {
+      "name": "k24-ordinary-memory-invocation-v1.log",
+      "sha256": "71a389fb80e85404266f0e11fbbf9084858c89d27b43e162b265d4640cfee02f"
+    },
+    {
+      "name": "k24-ordinary-memory-invocation-v1-exit.json",
+      "sha256": "ab06364c9d5af138188e7ad9a63c3f9e1bd03a00287a3ae38230948384a97641"
+    },
+    {
+      "name": "k24-exact-warm-candidate-comparison-readonly.mjs",
+      "sha256": "b9dd8065da6c6851a3769fd9e11dd6db841fb1ed2935337fe5cad63e32e2a349"
+    },
+    {
+      "name": "k24-exact-warm-candidate-comparison-1791997246598.json",
+      "sha256": "e88023dcbc7719f16ef4ff076e2294fc03b27ca0a89154810d2ea8c060766697"
+    },
+    {
+      "name": "k24-warm-candidate-comparison-invocation-v1.log",
+      "sha256": "6cf0ac6fbdb0c6745e7f8564659422a93aa613ce7a01b5f21510bb4abe0cf96d"
+    },
+    {
+      "name": "k24-warm-candidate-comparison-invocation-v1-exit.json",
+      "sha256": "4d9f14cceb310c55e9a85636a40778cf7e1ef07d294dc8ef43ace6753fa486a9"
+    },
+    {
+      "name": "k24-native-controls-outcomes.md",
+      "sha256": "a7aca1cd435730665e144b0c87450e73b4d2b1929a75a06d35721ac4f2415e5c"
+    },
+    {
+      "name": "k24-warm-ambiguity-repair-seam.md",
+      "sha256": "38d83010bbfaf6552121a459ae015285af0532bb92859df734b895097b983cb7"
+    }
+  ]
+}

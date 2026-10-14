@@ -1,0 +1,498 @@
+{
+  "status": "SOURCE_EQUIVALENCE_COMPLETE",
+  "acceptedSourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "baseline": "Existing prospective immutable kit staging bytes verified against its retained backend source manifest; no Git/network/archive copies",
+  "files": [
+    {
+      "relative": "convex-dev/runtimeAgent.ts",
+      "acceptedSourceSha256": "2430155032241294e1beee4457e3961b317766b15208d079dc25c90a49632a99",
+      "currentSha256": "b209850e583ebd2e638e37bf33829e5461a165a244286bb3269e815948485328",
+      "originalFunctions": [
+        {
+          "name": "attemptArgs",
+          "kind": "literal-original-body",
+          "oldSha256": "b5ba0e12c02537e7f423073d372185f4cfddaf1be192e47d13d80458b6be68b4",
+          "normalizedCurrentSha256": "b5ba0e12c02537e7f423073d372185f4cfddaf1be192e47d13d80458b6be68b4"
+        },
+        {
+          "name": "ref",
+          "kind": "literal-original-body",
+          "oldSha256": "a9147caaca8dbf9344b8971110fa644efb0c4805f924351e77ac00cad8c4752f",
+          "normalizedCurrentSha256": "a9147caaca8dbf9344b8971110fa644efb0c4805f924351e77ac00cad8c4752f"
+        },
+        {
+          "name": "attemptName",
+          "kind": "literal-original-body",
+          "oldSha256": "ca1bf837f4e7667bb860d9a81db816f28d689c06abfe921823ac60c48c6f650c",
+          "normalizedCurrentSha256": "ca1bf837f4e7667bb860d9a81db816f28d689c06abfe921823ac60c48c6f650c"
+        },
+        {
+          "name": "execution",
+          "kind": "literal-original-body",
+          "oldSha256": "f9e782d2bacc40765ff0a4b7364e65a3822617a93ba27ebfae78ac3a3c797566",
+          "normalizedCurrentSha256": "f9e782d2bacc40765ff0a4b7364e65a3822617a93ba27ebfae78ac3a3c797566"
+        },
+        {
+          "name": "operation",
+          "kind": "literal-original-body",
+          "oldSha256": "c0763df8665510f0f6b2ce6b8385d49b23c33c3b6dc9d5047a08a654be074683",
+          "normalizedCurrentSha256": "c0763df8665510f0f6b2ce6b8385d49b23c33c3b6dc9d5047a08a654be074683"
+        },
+        {
+          "name": "executionMediaReferences",
+          "kind": "literal-original-body",
+          "oldSha256": "1b25983b26a9a0c5bc69648179a8e9c8244ecaaa8693514c00fce2fe75e48f1b",
+          "normalizedCurrentSha256": "1b25983b26a9a0c5bc69648179a8e9c8244ecaaa8693514c00fce2fe75e48f1b"
+        },
+        {
+          "name": "writeParts",
+          "kind": "literal-original-body",
+          "oldSha256": "5930f59f313ac79410f28058ea9f409572c9013410eec275bb6665c739fa698d",
+          "normalizedCurrentSha256": "5930f59f313ac79410f28058ea9f409572c9013410eec275bb6665c739fa698d"
+        },
+        {
+          "name": "checkWitnesses",
+          "kind": "literal-original-body",
+          "oldSha256": "edf760d30dd90e2cb0efa41a3be24441b8e244ef6aa5748ece9e7f904f88ebf4",
+          "normalizedCurrentSha256": "edf760d30dd90e2cb0efa41a3be24441b8e244ef6aa5748ece9e7f904f88ebf4"
+        },
+        {
+          "name": "executionContext",
+          "kind": "literal-original-body",
+          "oldSha256": "8f4c0151b17a0add287f1c6e3f50e9155ceede4ec20843d2b796795d17b8a6d1",
+          "normalizedCurrentSha256": "8f4c0151b17a0add287f1c6e3f50e9155ceede4ec20843d2b796795d17b8a6d1"
+        },
+        {
+          "name": "resolveModelOperationHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "2a4dd7e861881dfc633763229173ae1fb6e7552186696236f6a3825ea8f4e8e6",
+          "normalizedCurrentSha256": "2a4dd7e861881dfc633763229173ae1fb6e7552186696236f6a3825ea8f4e8e6"
+        },
+        {
+          "name": "contextInputsHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "b626ccbab03f75f5311ccbcf7afacbcc1f0a332844891a91bdf6dd32bf7c123e",
+          "normalizedCurrentSha256": "b626ccbab03f75f5311ccbcf7afacbcc1f0a332844891a91bdf6dd32bf7c123e"
+        },
+        {
+          "name": "startHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "27228df94aaec5a52b42315b37418178c25be5eaf4ea190381701fa6a475bb65",
+          "normalizedCurrentSha256": "27228df94aaec5a52b42315b37418178c25be5eaf4ea190381701fa6a475bb65"
+        },
+        {
+          "name": "startExecution",
+          "kind": "literal-original-body",
+          "oldSha256": "9009b930636444ebd14324bec627d944645046eca8d8f2a76ff2502336b2996b",
+          "normalizedCurrentSha256": "9009b930636444ebd14324bec627d944645046eca8d8f2a76ff2502336b2996b"
+        },
+        {
+          "name": "saveContextHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "6b54ee2c1bc856cada9fea4f98ae18c2ca21bd7acaf63485a89057b3cf722c2a",
+          "normalizedCurrentSha256": "6b54ee2c1bc856cada9fea4f98ae18c2ca21bd7acaf63485a89057b3cf722c2a"
+        },
+        {
+          "name": "saveAndPrepareContextHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "2ae3bcad06cba110fa7eec0d9485520fb04c8bea7dc9bc66f92251dc88c73e29",
+          "normalizedCurrentSha256": "2ae3bcad06cba110fa7eec0d9485520fb04c8bea7dc9bc66f92251dc88c73e29"
+        },
+        {
+          "name": "startContextHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "480fd193bce3d6e4e0e963bbed9607c43f3280ca7d2e3e85a2f5a247b7871b9a",
+          "normalizedCurrentSha256": "480fd193bce3d6e4e0e963bbed9607c43f3280ca7d2e3e85a2f5a247b7871b9a"
+        },
+        {
+          "name": "contextBarrierHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "12b97aa6c355e94971c72e63ab5acf2a78f3607ce7a619ce5331e225e67f7d00",
+          "normalizedCurrentSha256": "12b97aa6c355e94971c72e63ab5acf2a78f3607ce7a619ce5331e225e67f7d00"
+        },
+        {
+          "name": "contextSourceHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "8e52013312cd708824a93a247c6e072828cfd40af08fe58dab642a8643dc770b",
+          "normalizedCurrentSha256": "8e52013312cd708824a93a247c6e072828cfd40af08fe58dab642a8643dc770b"
+        },
+        {
+          "name": "contextSourceBatchHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "f1fb630632235780623d57cb8f92904073cb89a9c8986dc3c0878a0d79ee2bfc",
+          "normalizedCurrentSha256": "f1fb630632235780623d57cb8f92904073cb89a9c8986dc3c0878a0d79ee2bfc"
+        },
+        {
+          "name": "prepareContextHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "3e6c04780a11edd8bc3ae18ef95edff7a50bf219a8f2a1e306679e7dd1d6e3ca",
+          "normalizedCurrentSha256": "3e6c04780a11edd8bc3ae18ef95edff7a50bf219a8f2a1e306679e7dd1d6e3ca"
+        },
+        {
+          "name": "prepareEmptyContextHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "954b3e51af7cd4e0b321234df266fa89c43b3c8973eed4c95af4b220e5492c70",
+          "normalizedCurrentSha256": "954b3e51af7cd4e0b321234df266fa89c43b3c8973eed4c95af4b220e5492c70"
+        },
+        {
+          "name": "prepareRoutedContextHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "7e8415bec426a90a74d86706cd5bd0e8e51ed55e75494bf4493342a71f5e2142",
+          "normalizedCurrentSha256": "7e8415bec426a90a74d86706cd5bd0e8e51ed55e75494bf4493342a71f5e2142"
+        },
+        {
+          "name": "beginOperationHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "efba92ca3e76cb8873c916cf27fe249820b4bffbcf01e9b79526a66394d9964f",
+          "normalizedCurrentSha256": "efba92ca3e76cb8873c916cf27fe249820b4bffbcf01e9b79526a66394d9964f"
+        },
+        {
+          "name": "completedModelStepHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "6e9c38cbab0f42350722d4a1da1268e270dca65e254458b47c5d4034e4ec426c",
+          "normalizedCurrentSha256": "6e9c38cbab0f42350722d4a1da1268e270dca65e254458b47c5d4034e4ec426c"
+        },
+        {
+          "name": "startOperationHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "b695a103c76ee9ae3bb69c53ad09fac0f4464274bea9cc7f6550262d017a3f85",
+          "normalizedCurrentSha256": "b695a103c76ee9ae3bb69c53ad09fac0f4464274bea9cc7f6550262d017a3f85"
+        },
+        {
+          "name": "prepareModelOperationHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "55caa9e263f082c170e09a9a4fb5a7cef410b1bb0fb945be79502c72b58b81a9",
+          "normalizedCurrentSha256": "55caa9e263f082c170e09a9a4fb5a7cef410b1bb0fb945be79502c72b58b81a9"
+        },
+        {
+          "name": "prepareResolvedModelOperationHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "0eb713c4725684249f8b34133d9cb5f9e9b71512a02b50c8381aefd2a39098bf",
+          "normalizedCurrentSha256": "0eb713c4725684249f8b34133d9cb5f9e9b71512a02b50c8381aefd2a39098bf"
+        },
+        {
+          "name": "preflightModelCandidate",
+          "kind": "literal-original-body",
+          "oldSha256": "7c17f970989ba449006c7461e292754619fe87fa3a8b0c7bc33d556eef6bdd00",
+          "normalizedCurrentSha256": "7c17f970989ba449006c7461e292754619fe87fa3a8b0c7bc33d556eef6bdd00"
+        },
+        {
+          "name": "preflightModelCandidateV8",
+          "kind": "literal-original-body",
+          "oldSha256": "178a9850d68a1b28f7e16057c66b0d7a81492d26e3df54a8b54660f2cf844699",
+          "normalizedCurrentSha256": "178a9850d68a1b28f7e16057c66b0d7a81492d26e3df54a8b54660f2cf844699"
+        },
+        {
+          "name": "prepareResolvedModelCandidateHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "5f82928bb7eec145030a80312e87702ac876a5ed326ff52d11b84bcf1f792921",
+          "normalizedCurrentSha256": "5f82928bb7eec145030a80312e87702ac876a5ed326ff52d11b84bcf1f792921"
+        },
+        {
+          "name": "prepareTurnModelHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "295a21d11e1b406ef5f43f5fb4cb088685bdada8ea57c0b9d4d648bdf238de63",
+          "normalizedCurrentSha256": "295a21d11e1b406ef5f43f5fb4cb088685bdada8ea57c0b9d4d648bdf238de63"
+        },
+        {
+          "name": "bindNativeOperationHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "010f62d2c1f23eeb0b486b8fc6fd0c8ba5f6c9a9bebecc3ae623b761c5ec3baf",
+          "normalizedCurrentSha256": "010f62d2c1f23eeb0b486b8fc6fd0c8ba5f6c9a9bebecc3ae623b761c5ec3baf"
+        },
+        {
+          "name": "admitModelOperationHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "7f9b1bb339e32cd404eff05839862ba6a2c91771d9b71d3fa8e038cf80d673b5",
+          "normalizedCurrentSha256": "7f9b1bb339e32cd404eff05839862ba6a2c91771d9b71d3fa8e038cf80d673b5"
+        },
+        {
+          "name": "admitPreparedModelOperationHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "e609da55fabc2afbf695419705cd263854ed32d144cfeba98039865b487ed614",
+          "normalizedCurrentSha256": "e609da55fabc2afbf695419705cd263854ed32d144cfeba98039865b487ed614"
+        },
+        {
+          "name": "modelStepHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "83ecaece2d46f0e2d6177430a3274d0e64dad99200b8eb69dd40c4776de33781",
+          "normalizedCurrentSha256": "83ecaece2d46f0e2d6177430a3274d0e64dad99200b8eb69dd40c4776de33781"
+        },
+        {
+          "name": "executePreparedModelStep",
+          "kind": "literal-original-body",
+          "oldSha256": "23dcf2203fb20895cbeb0aa10edefa1404432204c101fd1fe42916aab68ffb75",
+          "normalizedCurrentSha256": "23dcf2203fb20895cbeb0aa10edefa1404432204c101fd1fe42916aab68ffb75"
+        },
+        {
+          "name": "turnStepV5Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "9850a7b28085e1e7125d8161eb84f6975a8cc103fc3b535e89112e0274b61529",
+          "normalizedCurrentSha256": "9850a7b28085e1e7125d8161eb84f6975a8cc103fc3b535e89112e0274b61529"
+        },
+        {
+          "name": "finishTurnV6",
+          "kind": "literal-original-body",
+          "oldSha256": "e6627fdd53df394d02f53860c0fd907222bd8fe167d82acca0056915594f6264",
+          "normalizedCurrentSha256": "e6627fdd53df394d02f53860c0fd907222bd8fe167d82acca0056915594f6264"
+        },
+        {
+          "name": "prepareDirectTurnHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "be169df1fd4a83d3d073a5d0e33aa81788662dbc48d273efe8f687387c5b724c",
+          "normalizedCurrentSha256": "be169df1fd4a83d3d073a5d0e33aa81788662dbc48d273efe8f687387c5b724c"
+        },
+        {
+          "name": "attachDirectContinuationHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "84a2442e63a6a6d2cd668d015a25354298a993b6645a21e6cb244fb7e3274f0a",
+          "normalizedCurrentSha256": "84a2442e63a6a6d2cd668d015a25354298a993b6645a21e6cb244fb7e3274f0a"
+        },
+        {
+          "name": "interruptDirectHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "18b6c7549dfe3d5732fdb6cd9b6cdd6c660530d3a4a7f9ad5231a8a19897de02",
+          "normalizedCurrentSha256": "18b6c7549dfe3d5732fdb6cd9b6cdd6c660530d3a4a7f9ad5231a8a19897de02"
+        },
+        {
+          "name": "toolStepHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "7771f4528358210884d6da9fb3fa2bbc6fe9dc2860adaea1627b14e04d9be257",
+          "normalizedCurrentSha256": "7771f4528358210884d6da9fb3fa2bbc6fe9dc2860adaea1627b14e04d9be257"
+        },
+        {
+          "name": "currentToolPermission",
+          "kind": "literal-original-body",
+          "oldSha256": "99ecbc02fc7617b3c15e42c1dbb92970fb23557912f52cd70b8f864cdf7a0119",
+          "normalizedCurrentSha256": "99ecbc02fc7617b3c15e42c1dbb92970fb23557912f52cd70b8f864cdf7a0119"
+        },
+        {
+          "name": "toolWriteFence",
+          "kind": "literal-original-body",
+          "oldSha256": "4749202bc701e16a389f86db936cfb46f13c8680dcd05f5eb689cd2c1b61fae0",
+          "normalizedCurrentSha256": "4749202bc701e16a389f86db936cfb46f13c8680dcd05f5eb689cd2c1b61fae0"
+        },
+        {
+          "name": "finalizeExecution",
+          "kind": "literal-original-body",
+          "oldSha256": "f8015b433fbaaae55a514c06fa32a3a28eb8a6c14edcd469660415a52dfaa276",
+          "normalizedCurrentSha256": "f8015b433fbaaae55a514c06fa32a3a28eb8a6c14edcd469660415a52dfaa276"
+        },
+        {
+          "name": "attemptWithFinal",
+          "kind": "literal-original-body",
+          "oldSha256": "3f9683b6663732a982e13aa96fbae1d5d137b156685c4b19d0785914e7b44b13",
+          "normalizedCurrentSha256": "3f9683b6663732a982e13aa96fbae1d5d137b156685c4b19d0785914e7b44b13"
+        },
+        {
+          "name": "endInterruptedHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "382f0748b1f770c642d5a21c5875dcefc4cf665bcd36535569b1e4a064f0e305",
+          "normalizedCurrentSha256": "382f0748b1f770c642d5a21c5875dcefc4cf665bcd36535569b1e4a064f0e305"
+        },
+        {
+          "name": "observeHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "6fa9de02725589845cc7f8a30d499b294c286abade4f3821d93ebf7c3e29cab2",
+          "normalizedCurrentSha256": "6fa9de02725589845cc7f8a30d499b294c286abade4f3821d93ebf7c3e29cab2"
+        },
+        {
+          "name": "startExecutionV8",
+          "kind": "literal-original-body",
+          "oldSha256": "a3e5f8c5b58053f315f4ed4390fd5e391a4ae9f67fb8894373afca48e91d0b02",
+          "normalizedCurrentSha256": "a3e5f8c5b58053f315f4ed4390fd5e391a4ae9f67fb8894373afca48e91d0b02"
+        },
+        {
+          "name": "readIndexedContextAvailabilityV8",
+          "kind": "literal-original-body",
+          "oldSha256": "51090d10c3e590ce6f120630a954821e0c0df8eb06c654cf006c856ade36b120",
+          "normalizedCurrentSha256": "51090d10c3e590ce6f120630a954821e0c0df8eb06c654cf006c856ade36b120"
+        },
+        {
+          "name": "contextInputsV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "2b045e93aa833afcec9487ec261b9821fd6c3de95bf29be129cd106ed47fd360",
+          "normalizedCurrentSha256": "2b045e93aa833afcec9487ec261b9821fd6c3de95bf29be129cd106ed47fd360"
+        },
+        {
+          "name": "saveContextV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "4e4ae55e4bd5e5c8e5137621ab619ff8c11f3e0e7ef1ee6623f370b2ab89dee5",
+          "normalizedCurrentSha256": "4e4ae55e4bd5e5c8e5137621ab619ff8c11f3e0e7ef1ee6623f370b2ab89dee5"
+        },
+        {
+          "name": "saveAndPrepareContextV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "2507474be90c1c87aa1b20518b987057765e597088f08da7048bb8bb5d117447",
+          "normalizedCurrentSha256": "2507474be90c1c87aa1b20518b987057765e597088f08da7048bb8bb5d117447"
+        },
+        {
+          "name": "selectedPendingEntries",
+          "kind": "literal-original-body",
+          "oldSha256": "6a587e68bcdf187b47666cc15c8b33e2a70e5643a7ec2d323af4ca1e7d81b68f",
+          "normalizedCurrentSha256": "6a587e68bcdf187b47666cc15c8b33e2a70e5643a7ec2d323af4ca1e7d81b68f"
+        },
+        {
+          "name": "prepareContextV8Handler",
+          "kind": "explicit-private-V8-routing-change",
+          "oldSha256": "b5dd1ecd812f870290010deee1ff91b16aee5c8a42cb9e954ee0f2b34640dcf2",
+          "newSha256": "cc596ffdef91237ea23f7f7a03b798b778a6eae74e930ac4e875e26cd7c93c7b"
+        },
+        {
+          "name": "prepareEmptyContextV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "4adb65552db4e6362157f815685d612f4446cf115459587131f7b63ead0e3f04",
+          "normalizedCurrentSha256": "4adb65552db4e6362157f815685d612f4446cf115459587131f7b63ead0e3f04"
+        },
+        {
+          "name": "prepareRoutedContextV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "868b6d6ec9422109ad792870e9ab726b68e26a03df6d4eedb18a77f4f14c36ad",
+          "normalizedCurrentSha256": "868b6d6ec9422109ad792870e9ab726b68e26a03df6d4eedb18a77f4f14c36ad"
+        },
+        {
+          "name": "prepareResolvedModelCandidateV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "f0091e913c2308836e8a2d1f3c55db58267d7c522a48aba1301b8cef9292402f",
+          "normalizedCurrentSha256": "f0091e913c2308836e8a2d1f3c55db58267d7c522a48aba1301b8cef9292402f"
+        },
+        {
+          "name": "finishTurnV8",
+          "kind": "explicit-private-V8-routing-change",
+          "oldSha256": "b9cdb95e1c6643dfbaf0af44222c864032d5c112d89fbec55d440fe55c7e13a5",
+          "newSha256": "fb8af9eb3610e3ed537f5193b3ce6721ab7471b188a4c24f24c49de9a7850923"
+        },
+        {
+          "name": "prepareTurnModelV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "bb6e5adc18fa1d245af1aecec52dabc0bf755bcc1585121f60bd98644c2be777",
+          "normalizedCurrentSha256": "bb6e5adc18fa1d245af1aecec52dabc0bf755bcc1585121f60bd98644c2be777"
+        },
+        {
+          "name": "prepareDirectTurnV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "2f8fec69c11e3a295b8f5d17a7cb1e33508232bf0d61b5914846a24b617335a5",
+          "normalizedCurrentSha256": "2f8fec69c11e3a295b8f5d17a7cb1e33508232bf0d61b5914846a24b617335a5"
+        },
+        {
+          "name": "attachDirectContinuationV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "cd3ec1b6788b1637bf67ebdcc038f70103d58f79eefa6bdfa423e60c424ffcb1",
+          "normalizedCurrentSha256": "cd3ec1b6788b1637bf67ebdcc038f70103d58f79eefa6bdfa423e60c424ffcb1"
+        },
+        {
+          "name": "interruptDirectV8Handler",
+          "kind": "literal-original-body",
+          "oldSha256": "2d8d158c04baf97e03a7e35bfc06411c4e85aea41b17c806c951e9ee5e71873f",
+          "normalizedCurrentSha256": "2d8d158c04baf97e03a7e35bfc06411c4e85aea41b17c806c951e9ee5e71873f"
+        }
+      ],
+      "originalVariablesLiteralEqual": 95
+    },
+    {
+      "relative": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "acceptedSourceSha256": "67a0ab59d6650ef967a04b7b2b59c7d2a8d1e9c08f9365ba4cdae0f992772eb0",
+      "currentSha256": "443dceeca5040d2fa302cdc4470fd4cdade17024f72c6122026da0f33ee5e542",
+      "originalFunctions": [
+        {
+          "name": "checkedInput",
+          "kind": "literal-original-body",
+          "oldSha256": "45e43a8371cfb51b53f3043b55033a4e12a65a47f3197afd510e584462d37843",
+          "normalizedCurrentSha256": "45e43a8371cfb51b53f3043b55033a4e12a65a47f3197afd510e584462d37843"
+        },
+        {
+          "name": "currentQuery",
+          "kind": "literal-original-body",
+          "oldSha256": "d2778d8a276db6fc3ee671493084ae896bfef0173cdfd3279b9c1a0b282f2cc6",
+          "normalizedCurrentSha256": "d2778d8a276db6fc3ee671493084ae896bfef0173cdfd3279b9c1a0b282f2cc6"
+        },
+        {
+          "name": "queryBinding",
+          "kind": "literal-original-body",
+          "oldSha256": "b659a8b75b5c89ee4ef6a8715d2083e13cfff21dbe34df0f4320d82187cfb0be",
+          "normalizedCurrentSha256": "b659a8b75b5c89ee4ef6a8715d2083e13cfff21dbe34df0f4320d82187cfb0be"
+        },
+        {
+          "name": "gatewayResolution",
+          "kind": "literal-original-body",
+          "oldSha256": "50d129711971cb579c359d6bf6177f63a8093ee663e0b843093b56946bc60925",
+          "normalizedCurrentSha256": "50d129711971cb579c359d6bf6177f63a8093ee663e0b843093b56946bc60925"
+        },
+        {
+          "name": "prepareAgentQueryEmbeddingHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "66780ef37f294fea3a5725ad4cd1f889e96f114d11fd60808e6645586f3169ef",
+          "normalizedCurrentSha256": "66780ef37f294fea3a5725ad4cd1f889e96f114d11fd60808e6645586f3169ef"
+        },
+        {
+          "name": "admitAgentQueryEmbeddingHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "ab9331f9c0de4869d5a6ddf357dc9947a254ce6b21595271f64e63e96fc4e71f",
+          "normalizedCurrentSha256": "ab9331f9c0de4869d5a6ddf357dc9947a254ce6b21595271f64e63e96fc4e71f"
+        },
+        {
+          "name": "recallAgentMemory",
+          "kind": "literal-original-body",
+          "oldSha256": "e2405a54ae8582043ba5760b2f79f4f198658e412aca9ca5f7b8f8c1e8dc34ca",
+          "normalizedCurrentSha256": "e2405a54ae8582043ba5760b2f79f4f198658e412aca9ca5f7b8f8c1e8dc34ca"
+        },
+        {
+          "name": "recallAgentMemoryV8",
+          "kind": "only-tentative-private-proposal-selection-mask",
+          "oldSha256": "a067a97d597fb2a00e2c9de1830f4790da8e16d94d289d7f0276c97a7a708578",
+          "normalizedCurrentSha256": "a067a97d597fb2a00e2c9de1830f4790da8e16d94d289d7f0276c97a7a708578"
+        }
+      ],
+      "originalVariablesLiteralEqual": 11
+    },
+    {
+      "relative": "convex-dev/runtimeAgentRecall.ts",
+      "acceptedSourceSha256": "bfde5b61fce802d7ab4e17f32a2c712ed6e3b8f0fed1c31382673bb1ae4f1a83",
+      "currentSha256": "797a4c453d7e91f934d8a174b4d9f2c55926f1e91514456ddf24d3b27c5ffdba",
+      "originalFunctions": [
+        {
+          "name": "currentRead",
+          "kind": "literal-original-body",
+          "oldSha256": "6dad53dd492dc0eee20aeaea756d305e3650e5f729c562c0d7765058278c1104",
+          "normalizedCurrentSha256": "6dad53dd492dc0eee20aeaea756d305e3650e5f729c562c0d7765058278c1104"
+        },
+        {
+          "name": "prepareReadsHandler",
+          "kind": "literal-original-body",
+          "oldSha256": "b6b1bd45bba3158c31e29819d875ed4df44b8a4f7a9223081e3f2a6af7c9e9ed",
+          "normalizedCurrentSha256": "b6b1bd45bba3158c31e29819d875ed4df44b8a4f7a9223081e3f2a6af7c9e9ed"
+        },
+        {
+          "name": "readMatchesHandler",
+          "kind": "only-invocation-reader-injection-mask",
+          "oldSha256": "3bb7873e38b77453e7b9f7707d20fe801852697338e4731fdfbf292d61daa4f3",
+          "normalizedCurrentSha256": "3bb7873e38b77453e7b9f7707d20fe801852697338e4731fdfbf292d61daa4f3"
+        },
+        {
+          "name": "finishAgentRecall",
+          "kind": "literal-original-body",
+          "oldSha256": "a40af349e091ebdd46da425d41a73ae037072b8d7edb5f19809e60c8e0c3aa05",
+          "normalizedCurrentSha256": "a40af349e091ebdd46da425d41a73ae037072b8d7edb5f19809e60c8e0c3aa05"
+        },
+        {
+          "name": "finalDeliveryV8Handler",
+          "kind": "only-invocation-reader-injection-mask",
+          "oldSha256": "9f166559a675274c9c652f3aeae5ae3d7ec755c4c579a14b825920ff137bd99f",
+          "normalizedCurrentSha256": "9f166559a675274c9c652f3aeae5ae3d7ec755c4c579a14b825920ff137bd99f"
+        },
+        {
+          "name": "finishAgentRecallV8",
+          "kind": "explicit-private-V8-routing-change",
+          "oldSha256": "7b397266a00be74f23101429af04940637c1006546bd7f2c9992453bd568516f",
+          "newSha256": "6a3f7e38370ae86e59b79d0abdb980f94369c6cd368e85bad348df3f57176e21"
+        }
+      ],
+      "originalVariablesLiteralEqual": 15
+    }
+  ],
+  "literalFunctionBodies": 71,
+  "maskedOriginalHelperBodies": 3,
+  "explicitPrivateRoutingChanges": 3,
+  "originalRegistrationsAndConstants": 121,
+  "nativeSpeed": "UNAVAILABLE"
+}
