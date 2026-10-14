@@ -13,13 +13,13 @@ const {ingestionFixture,installIngestionMockRoot,invoke}=await import("../runtim
 const {definitions,runs,transcript,clock}=await import("../runtimeTranscript/fixture");
 const agent=await import("../../../convex-dev/runtimeAgent");
 beforeEach(()=>{installIngestionMockRoot();workflows.length=0;});afterEach(()=>{jest.restoreAllMocks();});
-async function fixture(options:{strict?:boolean;inputLimit?:number;recent?:number;incomplete?:boolean;tools?:boolean}={}){
+async function fixture(options:{strict?:boolean;inputLimit?:number;recent?:number;incomplete?:boolean;tools?:boolean;approval?:boolean}={}){
  const f=await ingestionFixture(),oldMutation=f.ctx.runMutation.bind(f.ctx),oldQuery=f.ctx.runQuery.bind(f.ctx),calls:string[]=[];
  const resolve=(name:string)=>name.startsWith("runtimeAgent:")?agent[name.split(":")[1] as keyof typeof agent]:name.startsWith("runs:")?runs[name.split(":")[1] as keyof typeof runs]:undefined;
  f.ctx.runMutation=(async(ref,args)=>{let name="";try{name=getFunctionName(ref);}catch{return oldMutation(ref,args);}const target=resolve(name);if(target){calls.push(name);assertNativeArgs(target,args);return f.call(target,args);}return oldMutation(ref,args);}) as MutationCtx["runMutation"];
  f.ctx.runQuery=(async(ref,args)=>{let name="";try{name=getFunctionName(ref);}catch{return oldQuery(ref,args);}const target=resolve(name);if(target){calls.push(name);assertNativeArgs(target,args);return invoke(target,f.ctx,args);}return oldQuery(ref,args);}) as MutationCtx["runQuery"];
  if(options.tools)f.grant.capabilities=[...f.grant.capabilities as string[],"tool"];
- const published=await f.call<{agentId:string;version:number}>(definitions.publishVersion,{memorySpaceId:"space-a",clientMutationId:"bounded-v8",expectedPreviousVersion:0,definitionInput:{...f.definitionInput,...(options.tools?{tools:[{toolId:"memory.recall",toolVersion:1,registryHash:await definitions.executableRegistryHashV3(),requiredCapability:"tool",approval:"none"}]}:{}),
+ const published=await f.call<{agentId:string;version:number}>(definitions.publishVersion,{memorySpaceId:"space-a",clientMutationId:"bounded-v8",expectedPreviousVersion:0,definitionInput:{...f.definitionInput,...(options.tools?{tools:[{toolId:"memory.recall",toolVersion:1,registryHash:await definitions.executableRegistryHashV3(),requiredCapability:"tool",approval:options.approval?"explicit":"none"}]}:{}),
   context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:await definitions.executableRegistryHashV3(),memoryMode:options.strict?"strict":"indexed-plus-pending",maxContextTokens:1000,...(options.incomplete?{barrier:{deadlineMs:30000,onFailure:"incomplete"}}:{}),inputSelection:{version:1,recentMessages:options.recent??4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16},...(options.strict?{requiredStages:["facts","vectors"],barrier:{deadlineMs:30000,onFailure:"fail"}}:{})},
   policies:[{policyId:"bounded-v8",version:1,rules:{limits:{inputTokens:options.inputLimit??8000,outputTokens:256,toolSteps:options.tools?4:0}}}]}});
  const request=(key="v8-first",conversationId?:string,text="Hello world!")=>({...f.request(key,conversationId),agentId:published.agentId,agentVersion:published.version,parts:[{type:"text" as const,text}]});
@@ -125,4 +125,55 @@ it("fitted V8 diagnostics expose exact selected counts and bounds without stored
   expect(JSON.stringify(events)).not.toContain("CURRENT_PRIVATE_MARKER");expect(JSON.stringify(events)).not.toContain("PRIVATE_EVIDENCE_MARKER");
   expect(JSON.stringify(events)).not.toContain("PRIVATE_FACT_MARKER");expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
  }finally{if(previous===undefined)delete process.env.CORTEX_RUNTIME_LATENCY_TRACE;else process.env.CORTEX_RUNTIME_LATENCY_TRACE=previous;}
+});
+
+// Scheduling changes must leave the original executable transcript and terminal fences intact.
+it("V8 ordinal0 completion releases ingestion early after original native-message checks", async () => {
+ const f=await fixture(),{attempt}=await f.start();
+ const marker=f.db.table("runtimeIngestionForegroundPriority")[0]!;expect(marker.state).toBe("held");
+ await f.call(agent.startContext,attempt);await f.call(agent.saveContextV8,{...attempt,context:"",entries:[],witnesses:[],completeness:"complete"});
+ const op=await f.call<{operationId:string}>(agent.beginOperation,{...attempt,kind:"model",ordinal:0,requestCanonical:"{}"});
+ await f.call(agent.startOperation,{...attempt,operationId:op.operationId});
+ const input=f.native.messages.values().next().value!;
+ const id="native:priority-final";f.native.messages.set(id,{...input,_id:id,stepOrder:1,status:"success",message:{role:"assistant",content:"answer"}});
+ await expect(f.call(agent.finishOperation,{...attempt,operationId:op.operationId,resultCanonical:"{}",nativeMessageIds:["native:missing"]})).rejects.toThrow("STALE_TRANSCRIPT");
+ expect(f.db.table("runtimeIngestionForegroundPriority")[0]!.state).toBe("held");
+ await f.call(agent.finishOperation,{...attempt,operationId:op.operationId,resultCanonical:"{}",nativeMessageIds:[id]});
+ expect(f.db.table("runtimeIngestionForegroundPriority")[0]!.state).toBe("released");
+ expect(f.db.table("runtimeAgentOperations")[0]!.state).toBe("complete");
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+ expect(f.scheduled.filter(x=>x.name==="runtimeIngestion:processStage").length).toBeGreaterThan(1);
+});
+it("V8 interruption releases scheduling preference without retrying or marking source indexed",async()=>{
+ const f=await fixture(),{attempt}=await f.start();
+ await f.call(agent.endInterrupted,{...attempt,cancelled:false});
+ expect(f.db.table("runtimeIngestionForegroundPriority")[0]!.state).toBe("released");
+ expect(f.db.table("runtimeAgentExecutions")[0]!.state).toBe("failed");
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+ expect(f.db.table("runtimeIngestionStages").every(row=>row.state==="pending"&&row.attempt===0)).toBe(true);
+});
+it.each(["relevant","default"])("strict %s barrier promotes captured ordinary inputs across conversations without claiming readiness",async handler=>{
+ const f=await fixture();const ordinary=await f.call<ReturnType<typeof runs.publicRun>>(runs.submit,{request:f.request("ordinary-before-strict")});
+ expect(f.db.table("runtimeIngestionForegroundPriority")[0]!.state).toBe("held");
+ const strict=await f.call<{agentId:string;version:number}>(definitions.publishVersion,{memorySpaceId:"space-a",clientMutationId:`strict-priority-override-${handler}`,expectedPreviousVersion:0,
+ definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,...(handler==="relevant"?{handlerId:"cortex.transcript.relevant",registryHash:await definitions.executableRegistryHashV3()}:{}),memoryMode:"strict",requiredStages:["facts","vectors"],barrier:{deadlineMs:100,onFailure:"fail"}}}});
+ const run=await f.call<ReturnType<typeof runs.publicRun>>(runs.submit,{request:{...f.request("strict-new-conversation"),agentId:strict.agentId,agentVersion:strict.version}});
+ expect(run.conversationId).not.toBe(ordinary.conversationId);await f.call(agent.start,{runId:run.runId});
+ const owned=f.db.table("runtimeAgentExecutions")[0]!,attempt={reference:f.reference,runId:run.runId,attemptNumber:1,leaseVersion:owned.leaseVersion as number};
+ await f.call(agent.startContext,attempt);expect(await f.call(agent.contextBarrier,attempt)).toMatchObject({state:"waiting",remainingMs:100});
+ expect(f.db.table("runtimeIngestionForegroundPriority")[0]!.state).toBe("released");
+ expect(f.db.table("runtimeIngestionStages").every(row=>row.state==="pending"&&row.attempt===0)).toBe(true);
+ jest.spyOn(Date,"now").mockReturnValue(clock+101);
+ expect(await f.call(agent.contextBarrier,attempt)).toMatchObject({state:"failed",failureCode:"MEMORY_BARRIER_TIMEOUT"});
+});
+
+it("tool approval wait releases V8 ingestion before any human decision",async()=>{
+ const f=await fixture({tools:true,approval:true}),{attempt}=await f.start();
+ await f.call(agent.startContext,attempt);await f.call(agent.saveContextV8,{...attempt,context:"",entries:[],witnesses:[],completeness:"complete"});
+ const op=await f.call<{operationId:string}>(agent.beginOperation,{...attempt,kind:"tool",ordinal:0,toolCallId:"priority-tool",toolName:"memory_recall",requestCanonical:canonicalModelJson({text:"query",limit:1})});
+ await f.call(agent.waitForApproval,{...attempt,operationId:op.operationId});
+ expect(f.db.table("runtimeIngestionForegroundPriority")[0]!.state).toBe("released");
+ expect(f.db.table("runtimeAgentOperations")[0]!.state).toBe("waiting_approval");
+ expect(f.db.table("runtimeRuns")[0]!.responseStatus).toBe("waiting_approval");
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
 });

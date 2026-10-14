@@ -1,0 +1,11 @@
+# K24 native controls preparation
+
+Prepared only; every source/image/session/artifact/run pin remains PENDING_ROOT_GO and ready:false. Five individually adapted control files are listed/hash-bound in k24-native-controls-preparation.json. No service, inference, product, kit/Proofs or Git operation occurred.
+
+Use verify-k24-four-run-memory-readonly.mjs only after original zero-prefix4ordinary EOF confirmation, with positional SESSION NAME ID BROWSER_FIRST BROWSER_WARM CLI_FIRST CLI_WARM and CORTEX_K24_MEMORY_TURN_COMPLETE_CONFIRMED=1. It retains45fresh target checks,256row/30s bounds and every original source/fact/vector/nativeusage/currentprofile/authority/contiguous-through8 assertion.
+
+Use k24-auth-close-qualification-readonly.mjs only with verified READY pins/exact paired arguments and CORTEX_K24_AUTH_GO=1; valid owner control optional --owner-control 1 is the intended full case. Actual original auth and SDK RPC deadlines are4s; owner profile outer bound12s. Official callbacks/logger, denial-only HTTP probe and unchanged-inventory checks remain. AuthError/TIMEOUT is never converted to UNAUTHENTICATED or PASS.
+
+Use k24-native-ordinary-memory.mjs only with exact fresh paired args, CORTEX_K24_ORDINARY_MEMORY_GO=1 and freshly matching CORTEX_K24_FOUR_RUN_PROOF_RECEIPT. Two fresh equal-content capture IDs/four canonical rows, exact replay/body conflict, metadata/external assistant/currentprofile/native usage/provenance, contiguous4, one publicrecall and reader/outsider/lock/delete/revoke checks remain. Corrected SourceChunk.sourceEventId stays top-level. SDK RPC12s, operation/readiness30s, no paidretry or deadline extension. Expected6native capture stage calls+1publicrecall embedding. Structural upper bound207 includes up to100 original facts.resolve calls per user source; existing3/run10/tenant policy caps remain authoritative; do not claim forcedCAS/concurrency coverage. All original close/finally behavior remains.
+
+Planned order is fixed8startup (existing$2.70 ceiling), four ordinary samples/proof, quiet readonly auth, ordinary2capture+recall/negatives, then Root's one disconnected/reconnected approved-tool run. Full fixed-four proof runs before supplemental work so original watermark assumptions are unchanged. Expected new closure170files/78tables/2components; no artifact/native acceptance from preparation.

@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K23 source independently accepted; packaging fresh installed candidate",
+  "phase": "K24 source/test/docs independently accepted; exact committed packaging next; K23 independently absent",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T15:05:51.673394+00:00",
+  "updatedAt": "2026-10-14T16:33:53.035616+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,30 +58,31 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "generation": "K22",
-    "sessionId": "c1017228-182f-43f7-8663-132b976f4fa3",
+    "generation": "K23",
+    "sessionId": "039e3c83-810a-40a5-b718-4efbaa20e783",
     "state": "CLEANED",
-    "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
-    "launcherSession": 68539,
+    "sourceCommit": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
+    "launcherSession": 1531,
     "nativeSLOQualified": false,
     "fixedStartupCeilingUnits": 2700000,
     "target": {
-      "id": 6166959,
-      "name": "effervescent-llama-943",
+      "id": 6169873,
+      "name": "giant-ferret-931",
       "teamId": 325340,
       "projectId": 3200658,
       "isDefault": false,
-      "deploymentType": "dev"
+      "deploymentType": "dev",
+      "expiresAt": 1792595792443
     },
     "ports": {
-      "web": 3140,
-      "basic": 3141
+      "web": 3150,
+      "basic": 3151
     },
     "startupFixedQualification": "8/8PASS",
-    "cleanupReceipt": "k22-cleanup-final.json",
+    "UIAndCLIClientsClosed": true,
     "launcherExit": 130,
-    "freshCleanupVerificationExit": 0,
-    "allClientsClosed": true
+    "cleanupReceipt": "k23-cleanup-final.json",
+    "cleanupIndependent": "ABSENT"
   },
   "actualSamples": {
     "generation": "K21",
@@ -105,8 +106,8 @@
     "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
   },
   "pendingRepairs": [
-    "Fresh hosted K23 browser/CLI/public-memory/tool/auth qualification",
-    "Hosted under1000ms",
+    "Measured terminal checkpoint read retention and bounded same-run foreground scheduling",
+    "Fresh candidate cloud under1000ms qualification",
     "Independent final audit"
   ],
   "refinements": [
@@ -1410,35 +1411,17 @@
     }
   },
   "currentRepairBatch": {
-    "state": "Source/review/packaging/launcher complete; fresh native qualification starting",
-    "sourceBaseline": "03256989da22bde35dff78023c1c3962391a68c6",
-    "owners": {
-      "actualWholePromptFitAndContextFanout": "cloud_checkpoint_composition",
-      "repeatCaptureCASAndPredispatchCapacity": "latency_backend_repair"
-    },
-    "nativeQualified": false,
+    "state": "SOURCE_ACCEPTED",
+    "baseline": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
     "goalPercent": 50,
-    "rootAssembledInputAndDiagnostics": {
-      "implementationPercent": 100,
-      "focusedChecksPercent": 100,
-      "tests": "60/60/2suites/0skip",
-      "receipt": "v8-assembled-input-root-receipt-v3.json",
-      "nativeQualified": false,
-      "observationTests": "37/37/2suites/0skip; two fixturetypeguards successor pending"
-    },
+    "nativeQualified": false,
+    "boundedContext": "complete canonical per-message history retained; request selects4recent/4memories/4facts/4pending,16combined cap",
+    "regions": "next disposable requests aws-us-east-1; K23 observed region UNAVAILABLE",
     "implementationPercent": 100,
     "independentReviewPercent": 100,
-    "sharedQualityPercent": 100,
-    "qualityReceipt": "v8-native-repair-joint-quality-final-receipt.json",
-    "reviewPacket": "v8-native-repair-review-packet-v2.json",
-    "verdict": "PASS3.8 source/test/docsONLY",
-    "breakingFindings": 0,
-    "review": "v8-native-repair-independent-review.md",
-    "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
-    "packagingPercent": 100,
-    "launcherPercent": 100,
-    "launcherTests": "111/111/0skip",
-    "launcherDryRunExit": 0
+    "qualityPercent": 100,
+    "review": "k24-repair-independent-review.md",
+    "breakingFindings": 0
   },
   "k22ActualSamples": {
     "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
@@ -1516,5 +1499,30 @@
       ],
       "report": "k22-whole-path-delay-diagnosis.json"
     }
+  },
+  "actualSamplesK23": {
+    "browserFirstAfterPaintMs": 3927.2000000476837,
+    "browserWarmAfterPaintMs": 8495.300000071526,
+    "cliFirstStdoutMs": 9304.916921,
+    "cliWarmStdoutMs": 9716.290628000017,
+    "sloPass": 0,
+    "sloTotal": 4,
+    "responses": "4/4COMPLETE",
+    "fullNativeMemory": "PASS4positivefacts/8vectors/provenance/currentauthority/contiguousthrough8",
+    "fullNativeMemoryReceipt": "k23-memory-native-v2-four-run-verification-1791991879691.json",
+    "originalDeadlineMs": 30000,
+    "resubmissions": 0,
+    "auth": "PASS owner2207ms; authoritative expired133ms/invalid89ms UNAUTHENTICATED0protectedpayload; historicalWSfailuresunchanged",
+    "captureRecallNegatives": "PASS repeated capture/distinct intent/replay/body conflict/public recall2711ms/scoped negatives; no forced CAS/capacity claim",
+    "tool": "PASS one approval/same-run disconnect-reconnect/final answer/strict facts-vectors through11",
+    "finance": {
+      "attempts": 47,
+      "activeSlots": 0,
+      "allReleased": true,
+      "reservationCeilingUnits": 6600000,
+      "actualCharges": "UNKNOWN"
+    },
+    "cleanup": "fresh independent ABSENT",
+    "cleanupReceipt": "k23-cleanup-final.json"
   }
 }

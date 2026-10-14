@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "qualificationOnly": true,
+  "denialOnlyHttpProbe": true,
+  "historicalWebSocketResultsUnchanged": true,
+  "expectedCodeGateUnchanged": true,
+  "authTimeoutMs": 4000,
+  "rawPrivatePayloadRetained": false,
+  "managementGetOnly": true,
+  "effectfulMutationsBlocked": true,
+  "actionsBlocked": true,
+  "paidCalls": 0,
+  "cases": [],
+  "historicalK9": {
+    "receipt": "k9-native-negative-final-receipt.json",
+    "failuresPreserved": [
+      "expired valid signature: AUTHENTICATION_TIMEOUT",
+      "invalid signature: AUTHENTICATION_TIMEOUT"
+    ],
+    "expectedCode": "UNAUTHENTICATED"
+  },
+  "verdict": "FAIL",
+  "guardOrDiagnosticError": {
+    "code": "OTHER_ERROR",
+    "messageSha256": "fd791c4e29c241c8b8a41016791663fc110bd86d5e045eae5da9ac2b65799820",
+    "messageBytes": 151
+  },
+  "observedAt": "2026-10-14T15:33:23.250Z"
+}

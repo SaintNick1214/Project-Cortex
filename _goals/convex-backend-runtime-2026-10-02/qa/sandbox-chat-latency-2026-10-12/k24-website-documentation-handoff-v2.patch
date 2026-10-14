@@ -1,0 +1,477 @@
+diff --git a/docs-site/docs/api-reference/memory-operations.mdx b/docs-site/docs/api-reference/memory-operations.mdx
+index 5297002..a5f7906 100644
+--- a/docs-site/docs/api-reference/memory-operations.mdx
++++ b/docs-site/docs/api-reference/memory-operations.mdx
+@@ -14,7 +14,11 @@ Access the namespace on an explicitly configured root `Cortex` client. Host JWT
+ 
+ ## Remember, search and validation
+ 
+-`remember` is an advanced operator orchestration. It validates the exchange, registers the selected space/owner when appropriate, stores the canonical exchange for this explicit ingestion operation, then builds the requested memory/fact layers. For ordinary application chat, use the remote runtime, which already owns this work. A host session cannot use operator orchestration: it receives `CAPABILITY_UNAVAILABLE` before local callbacks or backend calls.
++In the new local candidate, ordinary authenticated `cortex.memory.remember(params)` submits one backend-owned canonical exchange capture. The backend stores a separate row per message and schedules memory asynchronously. The result has `conversation` and a `durable` receipt; `memories` and `facts` are initially empty, so inspect the receipt's indexing status or use [`rememberStatus`](runtime-client.mdx#capture-an-external-exchange). The latest disposable cloud scenario passed distinct repeated captures, exact replay, canonical provenance, contiguous facts/vectors, public recall and access/lock/deletion/revocation negatives. Earlier failures remain recorded. The subsequent candidate also passed all four ordinary chat memory outcomes; the latency target remains unresolved; see [measured outcomes](../architecture/performance.mdx#latency-diagnostics).
++
++An optional caller-supplied `requestId` provides exact replay. Without one, each invocation generates a new identity, including identical exchanges at different points in a conversation. Retain an explicit identity for recovery; an uncertain capture error carries the generated request ID when applicable. `participantId`, ownership labels and metadata remain subject to verified grants. The ordinary path accepts no local extraction/embedding callbacks or processing-policy overrides; unsupported options receive `CAPABILITY_UNAVAILABLE` before dispatch.
++
++Explicit deployment-operator orchestration remains a separate historical administrative contract. The options, synchronous layer results and local callbacks described below apply to that operator path. They do not describe ordinary backend capture and cannot bypass runtime model policy. For ordinary application chat, use the remote runtime, which already owns canonical capture and indexing.
+ 
+ Supply a nonempty `conversationId`, `userMessage` and `agentResponse`. At least one of `userId` or `agentId` must own the exchange; `userName` is required when `userId` is present. `participantId` records the contributing participant. An omitted `memorySpaceId` uses `"default"` with a warning; explicit space IDs are preferable for administration. `importance` is 0–100; tags must be nonempty strings. Missing required fields raise `MemoryValidationError` with `code: MISSING_REQUIRED_FIELD` and `field`; missing ownership uses `OWNER_REQUIRED`; invalid importance uses `INVALID_IMPORTANCE`.
+ 
+@@ -60,14 +64,16 @@ export async function searchApprovedMemory(cortex: Cortex, spaceId: string) {
+ 
+ The retained `autoEmbed`/`autoSummarize` flags do not provision a hosted embedding or summarization service. Current explicit processing uses supported configured/local callbacks; runtime processing uses backend policy.
+ 
+-## Parameter and result contracts
++## Operator parameters and result contracts {#parameter-and-result-contracts}
+ 
+-These are reference definitions for the explicit server APIs. Optional fields use `?`; timestamps are milliseconds since epoch unless an operation accepts a `Date`. Resource identifiers and participant metadata do not grant runtime authority.
++These are reference definitions for the explicit operator APIs. Ordinary capture accepts the limited fields described above and checks existing verified scope; it does not auto-register grants, users or spaces. Optional fields use `?`; timestamps are milliseconds since epoch unless an operation accepts a `Date`. Resource identifiers and participant metadata do not grant runtime authority.
+ 
+ ### `RememberParams`
+ 
+ ```text
+ export interface RememberParams {
++  requestId?: string;
++  expectedRevision?: number;
+   memorySpaceId?: string;
+   tenantId?: string;
+   conversationId: string;
+diff --git a/docs-site/docs/api-reference/runtime-client.mdx b/docs-site/docs/api-reference/runtime-client.mdx
+index 1f25017..0d847bd 100644
+--- a/docs-site/docs/api-reference/runtime-client.mdx
++++ b/docs-site/docs/api-reference/runtime-client.mdx
+@@ -41,14 +41,13 @@ export async function openRun(options: {
+     }
+   };
+   try {
+-    await client.session();
+-    const handle = await client.submit({
++    const { handle, run, start } = await client.submitAndStart({
+       version: 1,
+       agentId: options.agentId,
+       agentVersion: options.agentVersion,
+       clientRequestId: options.clientRequestId,
+       parts: [{ type: 'text', text: options.text }],
+-    });
++    }, { streaming: true });
+     disconnect = client.watchObservation(handle, options.render, error => {
+       if (error instanceof CortexRuntimeError &&
+           ['FORBIDDEN', 'UNAUTHENTICATED', 'AUTHORITY_EXPIRED', 'SESSION_CHANGED'].includes(error.code)) {
+@@ -58,8 +57,7 @@ export async function openRun(options: {
+       }
+       options.onError(error);
+     });
+-    await client.start(handle, { streaming: true });
+-    return { client, handle, disconnect, close: async () => {
++    return { client, handle, run, start, disconnect, close: async () => {
+       disconnect();
+       await client.close();
+     } };
+@@ -72,24 +70,90 @@ export async function openRun(options: {
+ }
+ ```
+ 
+-The caller generates and retains `clientRequestId` before calling `openRun`, so a lost submit response can be recovered with the same identity. The returned `close()` owns observer/client cleanup; authority errors also clear and close this view. Keep the same request identity for the same semantic intent. `submit` retains admission; `start` begins execution after configured input approval. Never write the returned exchange to memory again.
++The caller generates and retains `clientRequestId` before calling `openRun`, so a lost submit response can be recovered with the same identity. The returned `close()` owns observer/client cleanup; authority errors also clear and close this view. Keep the same request identity for the same semantic intent. `submitAndStart` retains admission and requests execution in one guarded backend transaction; configured input approval still controls whether execution can proceed. The returned `start.state` can report queued or waiting-for-approval work rather than an answer. Never write the returned exchange to memory again.
++
++## Combined admission and recovery
++
++`submitAndStart(request, { streaming: true })` returns `RuntimeAdmissionResult` with `{ handle, run, start }`. Streaming defaults to true. The upcoming client uses two RPCs: `runtimeClient:submitAndStartEnvelope`, which runs the original fresh session check before admission writes, then an independent fresh session read before delivering the result. Omitted scope selectors retain their original ambiguity checks. The client validates the returned actor, scope, authentication generation and delivery expiry against that post-I/O session. The parent mutation preserves the existing admission, approval, queue, authority and immutable-identity guards. The original three-field `runtimeClient:submitAndStart` backend endpoint remains supported. Authentication/connection setup and later observation have additional work.
++
++The legacy `submit`, `start`, `attach` and `get` APIs remain supported for explicit control and recovery. Fresh ordinary V6 starts atomically claim the attempt and schedule one owned Action. Strict memory definitions retain their Workflow stage barriers and deadlines. A completed first-model tool result continues through an additive Workflow for tools, approval and subsequent model ordinals; it does not repeat the first model call. Historical V1–V5 journals retain their execution versions. An initial failure can already be recorded when admission returns, so inspect the returned run and start states. An uncertain issued request can already have admitted or started the run. Stop automatic dispatch, retain the exact original request and `clientRequestId`, and inspect the original run before deciding what to do next. With a known run ID, use `attach` and `get`/observation. If the admission handle was lost, an explicit `submit` of the unchanged original request can recover the original admission identity; it is not a new intent. Do not generate a new request ID or automatically call `start` to recover an unknown execution outcome.
++
++Backend `runtimeAgent:reconcile` can attach the retained completed tool result's missing continuation and return `{ workflowId }`, or recover a final answer and return `{ receiptId }`. This is an explicit recovery operation under the current run authority. It neither retries an uncertain model call nor proves asynchronous ingestion complete. The SDK currently has no run-reconciliation wrapper.
++
++Response completion is distinct from asynchronous memory/graph readiness. Optional conversation-title work is scheduled after canonical answer finalization, so callers do not need to wait for a title to display the answer.
+ 
+ ## Methods
+ 
+ | Group | Methods |
+ | --- | --- |
+ | Authentication | `session()`, `refreshAuth(fetchToken?)`, `close()` |
+-| Runs | `submit(input)`, `attach(runId)`, `start(handle, { streaming? })`, `get(handle)`, `cancel(handle)` |
++| Runs | `submitAndStart(input, { streaming? })`, `submit(input)`, `attach(runId)`, `start(handle, { streaming? })`, `get(handle)`, `cancel(handle)` |
+ | Observation | `observe(handle, { cursor?, finalOnly?, limit? })`, `watchRun(handle, onUpdate, onError?)`, `watchObservation(handle, onUpdate, onError?, options?)` |
+ | Approval | `approveInput(handle)`, `approveTool(handle, approval)` |
+ | Definitions/history | `getDefinition(agentId, version)`, `messages(conversationId, { cursor?, limit? })`, `listConversations(limit?)` |
+-| Memory | `getEmbeddingProfile(options?)`, `getDefaultProfile()`, `memoryReadiness(options?)`, `recall({ text, requestId, limit? })` |
++| Memory | `getEmbeddingProfile(options?)`, `getDefaultProfile()`, `memoryReadiness(options?)`, `recall({ text, requestId, limit? })`, `remember(input)`, `rememberStatus(receiptId)` |
+ | Content | `submitContentJob(input)`, `getContentJob(jobId)`, `listContentJobs(options?)`, `cancelContentJob(jobId)`, `reconcileContentJob(jobId)`, `applyContentSuggestion(input)` |
+ | Media/artifacts | `submitMediaJob(input)`, `getMediaJob(jobId)`, `listMediaJobs(options?)`, `cancelMediaJob(jobId)`, `reconcileMediaJob(jobId)`, `getArtifact(artifactId)` |
+ | Private assets | `uploadAsset(bytesOrBlob, options)`, `getAsset(reference)`, `fetchAsset(reference, options?)`, `createAssetUrl(reference, options?)` |
+ 
++Private observation acquires a guarded session/output envelope and then obtains a separate fresh session before returning data or invoking a callback. A scope/principal change, expired protected source, reauthentication or disposal suppresses stale delivery. Cached reactive signals carry no private output.
++
+ `watchObservation` options include attempt/sequence cursor and final-only projection. Returned disconnect functions affect only the observer. An optional borrowed Convex client remains caller-owned when the runtime client closes.
+ 
++## Capture an external exchange
++
++The new local candidate's `remember` method captures an independently supplied exchange in the backend. Do not call it to copy an answer already stored by a remote Cortex run.
++
++```ts
++import type { CortexRuntimeClient } from '@cortexmemory/sdk/runtime';
++
++export async function captureExchange(client: CortexRuntimeClient, requestId: string) {
++  const captured = await client.remember({
++    conversationId: 'external-chat-1',
++    requestId,
++    userMessage: 'I play cello.',
++    agentResponse: 'Thanks for telling me.',
++    metadata: { channel: 'support' },
++  });
++  return client.rememberStatus(captured.receiptId);
++}
++```
++
++Retain the request ID before submitting. Exact replay returns the same receipt and two message IDs; changing an exchange under the same ID is a conflict. The backend verifies identity and current grants, appends individual canonical message rows and schedules its original asynchronous memory pipeline. Metadata does not grant authority, and supplied assistant text is external captured content rather than proof of a Cortex model or tool result.
++
++The receipt includes `messageIds`, `sourceEventIds`, `historyRevision`, `created`, the managed profile, `memoryStatus` and per-message fact/vector stage states. Pending indexing is an actual state; this method does not return fabricated immediate facts or vectors. `rememberStatus` performs fresh receipt/source/profile/authority checks without starting inference. Normal capture appends are separate from manual transcript edits: manual writes remain locked by default, and an administrator can explicitly lock capture appends. Existing Agent conversations keep their original edit/approval rules. These new methods require the matching backend installation. Earlier repeated-capture indexing failures remain recorded. The latest bounded cloud scenario passed capture/replay, native canonical provenance, contiguous indexing, public recall and access/lock/deletion/revocation negatives. The subsequent cloud candidate passed all four ordinary chat memory outcomes and the approved tool continuation. Subsecond latency remains unqualified; historical failures remain preserved.
++
++## Opt-in client latency events
++
++Pass `onLatencyEvent` in `CortexRuntimeClientOptions` to receive scalar diagnostics from the client's monotonic clock. It is disabled when the callback is absent and emits no request arguments, results, prompts, reply text, credentials or error payloads. Keep the callback lightweight; callback failures are ignored.
++
++```ts
++import { CortexRuntimeClient, type CortexRuntimeClientOptions,
++  type RuntimeLatencyEvent } from '@cortexmemory/sdk/runtime';
++
++export function createTracedClient(options: CortexRuntimeClientOptions) {
++  return new CortexRuntimeClient({ ...options,
++    onLatencyEvent: (event: RuntimeLatencyEvent) => {
++      console.log(JSON.stringify(event));
++    },
++  });
++}
++```
++
++```text
++RuntimeLatencyEvent {
++  version: 1;
++  phase: "rpc.begin" | "rpc.end" | "rpc.failed" |
++    "auth.begin" | "auth.ready" | "auth.denied" | "watcher.wake";
++  atMs: number;
++  rpcId?: number;
++  method?: string;
++  durationMs?: number;
++}
++```
++
++Use `rpcId` to pair RPC begin/end/failed events; `method` identifies the fixed runtime function. RPC end/failed describes settlement of the official client-port promise, which can happen after a local observation deadline has already suppressed delivery. A watcher wake indicates a reactive invalidation, not proof of visible text. These events do not expose Gateway HTTP internals or provider queue timing. See [performance measurement](../architecture/performance.mdx#latency-diagnostics) for backend and browser markers.
++
+ ## Contracts and outcomes
+ 
+ `TextSubmitV1` accepts only new text parts, Agent selectors, optional conversation and a stable `clientRequestId`. Scope is server-resolved. `RuntimeRunHandle` pins actor/scope/run/conversation/definition identity but grants no access.
+@@ -104,4 +168,6 @@ The `video` kind, `media.video.generate` operation, video input and signed callb
+ 
+ Defaults are 10 seconds for authentication and 12 seconds for RPC observation. `CortexRuntimeError` includes `code` and outcome classification. Uncertain issued mutations are recovered by their original identity, never blindly retried as new work. Clear private views on authority loss and close owned clients/previews.
+ 
++The unreleased SDK 0.39 candidate adds a cancellable HTTP session check during a pending owned or official-client handshake. Only an authoritative401 or structured `UNAUTHENTICATED` refusal can end a silent WebSocket wait. HTTP success cannot authenticate the client; official WebSocket acceptance and the original fresh session/delivery checks remain required. Custom borrowed transports enable the refusal check by supplying the standard `fetch` option. Refresh, token replacement, timeout and close discard late probe results. Controlled tests and fresh native owner/expired/invalid-signature checks passed. The signed negatives returned `UNAUTHENTICATED` in 133/89 ms with no protected data and unchanged data/financial inventories; these observed timings are not a guarantee. Historical WebSocket timeout failures remain recorded.
++
+ See [streaming](../core-features/streaming-support.mdx), [memory](../core-features/memory-orchestration.mdx), [artifacts](../core-features/artifacts.mdx), [assets/media](../core-features/assets-and-media.mdx) and [types](../reference/types-interfaces.mdx).
+diff --git a/docs-site/docs/architecture/model-policy.mdx b/docs-site/docs/architecture/model-policy.mdx
+index 7d16b26..193feb7 100644
+--- a/docs-site/docs/architecture/model-policy.mdx
++++ b/docs-site/docs/architecture/model-policy.mdx
+@@ -26,10 +26,22 @@ Deployment policy establishes qualified bounds. Tenant and Agent/version policie
+ 
+ Policy checks include allowed models and native interfaces, capabilities, options, tool registry, input/context/output tokens, tool steps, timeout, operation/run/tenant budgets and concurrency. Prompt/schema/extraction/tool-registry/price/bound revisions are pinned. A model catalog listing does not establish compatible tools, structured output, embedding, image or video support.
+ 
++The Agent text/tool contract uses a conservative bound over its complete normalized request, including history, instructions and tools. Adding a tool call and result can cross a cap even when the initial call fits; the bound is not an observed tokenizer count. The next ordinary/tool candidate checks the original request projection before operation start and before pending-message storage. It preserves the full supported prompt and selected caps, so an actual oversized request still refuses. No hidden trimming, model substitution or paid retry follows.
++
++With explicit backend `CORTEX_RUNTIME_LATENCY_TRACE=1`, the original validation boundary records numeric dimensions and limits, fixed exceeded-field labels, ordinal and hashed identities. It records no prompt, tool arguments/results, credential or provider body. Default-off execution emits no such diagnostic. A known early refusal retains completed earlier model/tool effects and leaves no newly started model operation or pending message; its durable failure code remains generic `EXECUTION_FAILED`. This improves diagnosis and disposition, and does not certify a successful over-cap continuation.
++
+ Convex Gateway does not support asynchronous video generation and cannot enable it for an individual team or deployment. Video generation is explicitly deferred until official support, implementation compatibility qualification, real service outcomes and independent acceptance. Retaining the operation key or native interface does not make the capability available or permit a policy override. Image generation, private assets and existing video-file uploads remain in scope.
+ 
+ The observed image descriptor is text-prompt only with `callbacks: false` and requested-only model identity. It does not establish serving identity or known USD charges; cost admission and retained uncertainty still apply.
+ 
++## Memory extraction and qualification lifetime
++
++The qualified memory extraction contract uses native JSON-object output with the strict attributed-source parser. Its prompt, input/output bounds and no-tools policy are pinned for this operation. This does not enable arbitrary JSON schemas, other models or caller-selected structured output. Complete native usage is required before extraction output is attached; unavailable pricing retains the full admitted UNKNOWN liability.
++
++Actual qualification records have finite expiry and remain tied to their observed provider/interface/request contracts. Operators must refresh qualification through the trusted installation process before expiry; changing a model name or editing a catalog cannot renew a proof. A duplicate preference can produce an attributed extraction and a governed `facts.resolve` result of `NONE`, retaining the existing fact while advancing the indexing watermark. A new fact row is not required for that duplicate outcome.
++
++Fresh installations store compact versioned manifest provenance. New accounts inherit the validated installed root. Every field must match the trusted compiled manifest; the encoding does not refresh evidence, grant authority or create a new budget or retry identity. Existing full provenance records remain supported without migration or resetting incurred uncertainty.
++
+ ## One operation identity
+ 
+ Semantic identity binds the request to scope, source revision, policy and model/interface version. Stable request IDs replay the same intent; changed input under the same identity conflicts. Reconnect and observation never create another paid operation.
+diff --git a/docs-site/docs/architecture/performance.mdx b/docs-site/docs/architecture/performance.mdx
+index bbe8261..748dcd9 100644
+--- a/docs-site/docs/architecture/performance.mdx
++++ b/docs-site/docs/architecture/performance.mdx
+@@ -5,7 +5,7 @@ title: Performance
+ 
+ # Performance and limits
+ 
+-Cortex separates user-visible response completion from asynchronous memory/graph completion. This avoids coupling response latency to every indexing stage while retaining explicit consistency controls.
++Cortex separates user-visible response completion from asynchronous memory/graph completion and optional conversation-title work. This avoids coupling response latency to every indexing stage while retaining explicit consistency controls.
+ 
+ ## Bounded work
+ 
+@@ -13,7 +13,117 @@ Published policy bounds input/context/output tokens, tool steps, timeout, budget
+ 
+ Runtime client authentication defaults to 10,000 ms; RPC observation defaults to 12,000 ms, configurable within supported bounds. An issued mutation timeout reports uncertainty rather than cancellation/retry. Retain run/job identities for recovery.
+ 
+-Private upload/delivery is capped at 20,000,000 decoded bytes; providers can impose smaller input limits. Reconnect snapshots retain bounded references rather than copying assets or upstream responses into browser persistence.
++Private upload/delivery is capped at 20,000,000 decoded bytes; providers can impose smaller input limits. Reconnect snapshots retain bounded references rather than copying assets or upstream responses into browser persistence. Asynchronous video generation remains deferred because the official Convex AI Gateway does not support it.
++
++## Admission and answer completion
++
++[`submitAndStart`](../api-reference/runtime-client.mdx#combined-admission-and-recovery) combines the original initial session check, admission and start request in one parent mutation, followed by an independent fresh session RPC before delivery. The upcoming V6 client uses two admission RPCs while retaining the original authority, approval, queue, identity, generation and expiry checks. Authentication, observation and rendering are additional boundaries. Legacy manual APIs remain available, and a local timeout does not authorize a new intent or a blind execution retry.
++
++Display authorized response text as it arrives. Response completion is independent of later asynchronous facts/chunks/vectors and optional graph work; strict Agents still honor their captured memory barriers before execution. Optional title generation is scheduled after canonical answer finalization and can complete later. Do not include memory readiness or title completion in a first-visible-text measurement.
++
++Fresh ordinary V6 starts atomically claim their run attempt and schedule one owned Action for guarded context preparation, the model step, canonical finalization and background-title enqueue. Strict definitions retain the original Workflow stage barriers and deadlines. A persisted completed first-model tool result attaches an additive Workflow for tools, approval and later model ordinals without replaying ordinal zero. Historical V1–V5 journals are preserved. Duplicate delivery cannot begin another paid operation; interrupted work retains UNKNOWN liability and explicit recovery rather than an automatic model retry. Measure both admission and first-visible-text latency. Agent streaming preserves whole received text fragments and publishes the first nonempty authorized fragment immediately. Later fragments retain bounded batching; every publication still checks current authority, transcript and source witnesses. Its hosted ordinary replies and native memory proof passed, but all four latency samples and the supplemental final tool response failed. Further qualification remains open.
++
++Context preparation uses bounded, authorized ingestion metadata to route potentially populated context to retrieval. Metadata alone never proves that context is empty: the empty path still runs pending-context, profile, source, authorization and fresh save checks. The next candidate creates a separate ingestion sequence head only with a new scope. Its bounded empty scan uses that head without depending on the row updated by asynchronous watermark progress; missing heads use the original reader. Populated pending context and strict contiguous stage barriers retain their progress checks. Capture still updates the original scope row, so this does not remove all capture contention. No backfill or legacy transcript migration runs.
++
++After governed query embedding, the upcoming private Agent recall path uses a fresh read-plan query, the official Action vector search, and a fresh ordered source-selection query. Original vector-before-fact refusal order, source/hash/profile/owner/share/tombstone checks and witness bounds remain. Final delivery and its actual Action-clock expiry check still precede context saving. One save-and-prepare parent catches a refused model-preparation child so the successful context save remains committed while the child's partial writes roll back. The measured 12–13 outer read/preparation handoffs become four; official Agent message reads and one final-delivery profile child remain. This count is a source expectation, not measured speed. Generic public recall keeps its original transport and is not certified by the private Agent measurements.
++
++The Agent context handler freshly hydrates before its native pending message write; a prepared-data shortcut failed revocation/write ordering and was rejected. New ordinary and tool candidates also preflight the complete supported model request against the unchanged qualified bound before operation start and again before pending storage, without an activation RPC. Successful requests retain their original normalized content. Unsupported shapes retain the guarded original path. Historical V1–V6 tool journals and strict V5 preparation remain supported; fresh later tool turns use an additive V7 journal. Measure empty and populated memory separately on the installed cloud backend; source acceptance does not establish a latency improvement.
++
++Backend vector and fact retrieval overlap after the original read checks and validated query embedding. Successful results retain deterministic vector-first source bindings and context; failed reads do not publish or save context. Older adapters and tool wrappers retain their guarded serial path unless they explicitly support staged retrieval. This removes sequential retrieval work without adding a model call or retry.
++
++The private Agent query-embedding preflight composes the original authority, profile, readiness, preparation and policy-resolution checks. Server-derived attempt, request, profile, semantic identity, ordinal and budget bindings govern the billable embedding. The next candidate invokes the original profile helper locally in its private preflight and read parents; final delivery retains its profile child query. Admission and the nested dispatch checkpoint share a parent that preserves the reservation if the checkpoint refuses, while rolling back the checkpoint's partial writes. Charge-only capture and private attachment remain separate durable boundaries. Generic public recall and ingestion retain their original preflight. The installed V6 measurements below predate these new read parents; source acceptance alone does not certify latency or tool continuation.
++
++Private observation combines its initial session and authorized output read in one backend mutation, followed by a separate fresh session check before delivery. The upcoming canonical demo uses the text transport's observation for live run status, approvals and output. After its terminal cursor page drains, a continuing observer protects retained text and tracks later memory status. A failed stream also hands retained text to that guard; disconnect and signout release it. This avoids two concurrent acquisition lanes during ordinary generation. Normal acquisition uses two RPCs; cursor resets and page draining can require further acquisitions. Current principal, scope, protected-source expiry and authentication generation still fence every delivered payload. This observer change requires installed browser qualification.
++
++Agent model preparation composes the original execution/operation handlers and both policy-resolution checks. Their results propose pinned model inputs; current authorization, qualification, source, transcript and budget controls still run at each billable admission/checkpoint. The outer pre-admission hydration, request binding, admission, parent binding and dispatch checkpoint share one transaction. These changes reduce database handoffs while retaining the current policy, source, lease and budget checks. Their installed latency must be measured separately from source acceptance.
++
++Selected native queries and mutations reuse raw principal, membership, grant, scope and tombstone records within one atomic invocation. Every authorization predicate still runs, returned records are detached, and database or child-mutation writes invalidate the retained reads. The next invocation reads current records again. Source retrieval, final memory delivery and private output observation retain their original read paths. This scope does not retain permissions, model decisions or authority across a network call or process lifetime.
++
++Empty-context preparation can also reuse raw deployment-policy and qualification rows within its own transaction. It fetches that metadata again before saving context, and every original policy, qualification and profile check still runs. This reuse does not cross transactions or replace source and delivery checks.
++
++Selected model-preparation parents also reuse exact raw official Agent message-ID lookups within one invocation. Canonical transcript, current source and authorization checks still run; writes invalidate retained results, and fresh save fences clear them. The installed hosted candidate passed functional qualification, but this does not establish a subsecond response or a controlled speed improvement.
++
++Fresh installations store compact versioned references to the trusted compiled manifest. New accounts inherit the validated installed root. Existing full records remain supported without rewriting their data or financial history. The runtime still reads and validates current controls. Final memory delivery also shares profile and run-budget initialization for vectors with identical complete profiles and budget identities within one transaction; each vector retains its own authorization, source, chunk, receipt, hash and expiry checks. These changes require hosted measurements before reporting latency improvements.
++
++## Latency diagnostics
++
++Diagnostics are opt-in and contain fixed scalar metadata rather than prompts, output, credentials or raw errors. Enable each flag in the process that owns its clock:
++
++| Surface | Enablement | Observable boundary |
++| --- | --- | --- |
++| SDK | `onLatencyEvent` client option | Auth begin/ready/denied, per-RPC begin/end/failed with method/duration, and watcher wake. |
++| Backend | `CORTEX_RUNTIME_LATENCY_TRACE=1` | Native claim, context retrieval, model-policy, Gateway acquisition/processed-part/text and finalization phase metadata. |
++| Basic CLI | `CORTEX_RUNTIME_LATENCY_TRACE=1` in the CLI process | SDK events plus submit begin and first non-whitespace answer write acknowledged by stdout. |
++| Vercel quickstart | `NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1` in the app environment | SDK events plus submission, admission delivery, first-text DOM commit, after-paint marker, response-status DOM commit, canonical-answer completion DOM commit and transport completion. |
++
++The SDK's [`RuntimeLatencyEvent`](../api-reference/runtime-client.mdx#opt-in-client-latency-events) includes version, phase, atMs and optional rpcId/method/durationMs. Pair events within the same client clock. Backend timestamps and browser/CLI clocks have different origins; do not subtract their absolute timestamps to invent an end-to-end duration. RPC settlement may occur after a local deadline, and a watcher wake does not imply that text was painted.
++
++Workflow's deterministic handlers disable `process`, so tracing safely defaults off inside those handlers. Use the actual Workflow journal's step start/completion metadata for memory barriers, context preparation, model steps and title enqueue. Native mutations also keep `Date.now()` fixed within one transaction; a zero timestamp difference there does not prove zero execution time. Opt-in native mutation spans use `performance.now()` to measure admission submission, start, final read, run claim and Workflow startup. Match their native execution/request identities; the submission span uses a fixed correlation label because the run does not yet exist. Inclusive start contains claim and Workflow startup, so do not add those nested durations again. Missing or invalid durations remain unavailable.
++
++Hosted Convex is the primary latency measurement environment. Run the canonical clients against a verified disposable cloud database and label the conditions. Docker can host those clients while the backend remains hosted; a local Convex benchmark is separate evidence.
++
++The quickstart records first-text DOM commit from React's layout phase and schedules its after-paint marker with two animation frames, retaining document visibility metadata. The quickstart separately records `response.status.dom-commit`, `transport.complete` and `answer.complete.dom-commit`; canonical answer completion waits for the matching transported assistant message to be committed. Distinguish those markers from the first durable backend part and the first processed native stream text. The CLI's stdout acknowledgement is a separate boundary from a browser paint. Measure submission-to-visible text in the actual foreground application and report the selected boundary explicitly.
++
++The official Gateway provider internally acquires its service token and makes its HTTP request without exposing those subphase hooks. Native stream acquisition combines that opaque work. Processed-part/text markers are not raw network-first-byte measurements and do not reveal OpenAI internal queue timing.
++
++A submission-to-first-visible-text duration below one second is a product target, not a measured result or service guarantee. The October 13–14 disposable hosted tests of the unreleased 0.39 candidates measured the following actual canonical-client boundaries. The latest tested candidate uses bounded V8 context selection and direct ordinary scheduling; all four of its measured samples still fail the target.
++
++| Candidate | Client and condition | First turn | Warm turn | Below one second |
++| --- | --- | ---: | ---: | --- |
++| Parallel retrieval and policy reads | Vercel quickstart, foreground after paint | 7.84 seconds | 8.93 seconds | No |
++| Parallel retrieval and policy reads | Basic CLI, first stdout acknowledgement | 12.84 seconds | 15.01 seconds | No |
++| V5 ordinary-turn consolidation | Vercel quickstart, foreground after paint | 7.50 seconds | 6.98 seconds | No |
++| V5 ordinary-turn consolidation | Basic CLI, first stdout acknowledgement | 12.84 seconds | 14.65 seconds | No |
++| Scoped raw transcript reads | Vercel quickstart, foreground after paint | Unavailable | 5.20 seconds | Warm: no; first: unavailable |
++| Scoped raw transcript reads | Basic CLI, first stdout acknowledgement | 11.37 seconds | 14.70 seconds | No |
++| Reduced progress writes and batched source witnesses | Vercel quickstart, foreground after paint | 6.80 seconds | 6.15 seconds | No |
++| Reduced progress writes and batched source witnesses | Basic CLI, first stdout acknowledgement | 10.53 seconds | 14.39 seconds | No |
++| Additional output read scopes and admission timings | Vercel quickstart, foreground after paint | 5.91 seconds | 4.71 seconds | No |
++| Additional output read scopes and admission timings | Basic CLI, first stdout acknowledgement | 10.43 seconds | 9.92 seconds | No |
++| V6 direct scheduling and governed embedding preparation | Vercel quickstart, foreground after paint | 4.88 seconds | 5.90 seconds | No |
++| V6 direct scheduling and governed embedding preparation | Basic CLI, first stdout acknowledgement | 8.58 seconds | 9.47 seconds | No |
++| V8 bounded context selection | Vercel quickstart, foreground after paint | 3.78 seconds | 7.18 seconds | No |
++| V8 bounded context selection | Basic CLI, first stdout acknowledgement | 10.61 seconds | 10.82 seconds | No |
++| V8 repaired tool continuation and repeated capture | Vercel quickstart, foreground after paint | 7.76 seconds | 9.21 seconds | No |
++| V8 repaired tool continuation and repeated capture | Basic CLI, first stdout acknowledgement | 12.07 seconds | 11.74 seconds | No |
++| V8 scoped read retention and validated ingestion | Vercel quickstart, visible after paint | 3.93 seconds | 8.50 seconds | No |
++| V8 scoped read retention and validated ingestion | Basic CLI, first stdout acknowledgement | 9.30 seconds | 9.72 seconds | No |
++
++The latest October 14 scoped-read candidate's admission epoch to main-model dispatch took 2.16/4.16 seconds in the browser and 5.96/6.76 seconds in the CLI. Dispatch to processed first text took 0.55–0.69 seconds. Populated CLI recall took 3.26/3.75 seconds, including query embedding acquisition of 0.39/0.38 seconds. The warm browser's admission/checkpoint span took 2.36 seconds with a shared budget-account conflict. Protected delivery and current-source checks also add delay. These are separate, sometimes overlapping clocks; they cannot be summed into an invented total. Gateway routing and external-provider internal timings remain unavailable.
++
++All four ordinary replies completed. Native checks passed four attributed positive facts, eight current-profile source vectors and contiguous facts/vectors through eight events. A separate repeated-capture scenario passed canonical rows, replay/body-conflict, provenance, six complete native stage usages, public recall and the original access/lock/deletion/revocation negatives; public recall took 2.71 seconds. The approved memory tool and its final answer completed after one approval and observer disconnect/reconnect, with strict facts/vectors through 11 of 11. Expired and invalid-signature SDK tokens returned `UNAUTHENTICATED` in 133/89 ms with no protected payload and unchanged data/financial inventories. The disposable database, container and private credentials were independently verified absent. These functional successes leave the subsecond target unmet; optional graph work was not qualified by this run.
++
++The next source candidate reduces repeated terminal-accounting reads within one native invocation while preserving separate evidence-capture and attachment commits. It also gives an ordinary V8 run's unstarted canonical input ingestion a scheduling delay of at most five seconds from the original capture. Ordinal-zero model completion, response interruption or a tool approval wait releases that delay early. A strict barrier with any supported context handler promotes held inputs through its captured cutoff, including inputs from other conversations. Running jobs, reservations, unknown outcomes, previous assistant jobs and other ordinary runs retain their original scheduling. Durable expiry ensures progress if the foreground fails. These changes await fresh installed cloud qualification; no latency improvement is claimed.
++
++The preceding October 14 repair's run creation to main-model dispatch took 5.51/7.22 seconds in the browser and 7.19/8.98 seconds in the CLI. Dispatch to processed first text took 0.57–0.71 seconds; private recall took 2.34–4.57 seconds. Actual selected context remained within the published input bound: one or three messages, two to four memories, zero to two facts and zero or one pending entry. The response model and Gateway's internal network subdivisions are not separately observable. Cortex preparation, retrieval and protected delivery still require further work; these separate clocks are not additive.
++
++Its approved memory tool and final answer completed after one approval, including an observer disconnect/reconnect. A separate repeated-exchange test passed 221 native provenance checks, contiguous facts/vectors through four messages, public recall and the original access, lock, deletion and revocation negatives. That public recall took 2.79 seconds. These results do not accept every chat memory outcome: two ordinary user events failed validation because one extraction duplicated a fact slot and another returned malformed tags. Later successful events correctly remained behind those watermark holes. The disposable database, container and private credentials were independently verified absent after testing.
++
++The preceding V8 candidate's run creation to main-model dispatch took 2.37/5.43 seconds in the browser and 8.33/7.22 seconds in the CLI. Dispatch to processed first text took 0.46–0.52 seconds. The CLI's private recall took 4.05/2.87 seconds, including 1.09/0.25 seconds of embedding acquisition. Preparation, guarded retrieval and delivery account for most of the observed delay; these clocks do not split Gateway routing from external-provider timing. Native logs retained conflicts on shared budget-account and ingestion-scope rows. The four foreground user facts, eight vectors and contiguous indexing through eight events passed. The disposable database, container and private credential directories were freshly verified absent afterward.
++
++Separate tests of that preceding V8 candidate exposed two functional failures. Repeated ordinary exchange capture stored distinct canonical message pairs and enforced request-ID replay, but later indexing failed with `FACT_VERSION_CONFLICT` and a pre-admission `BUDGET_EXCEEDED`; the historical evidence does not identify that budget refusal's subpredicate. An approved memory tool saved its effect, while its final answer failed before another model admission: the conservative assembled input was 41,870 against 32,768. Early fitting did not cover the actual continuation shape. Those historical failures remain preserved alongside the latest scoped successes; the full functional and latency gate remains open.
++
++The preceding V7 candidate measured 4.47/4.33 seconds in the foreground browser and 9.95/14.62 seconds at CLI stdout. It also has zero passes and four measured failures against the 1,000 ms target. Both clients had diagnostics enabled before submission. The earlier scoped-transcript candidate has zero passes, three measured failures and one unavailable timing. Its first browser turn had incorrect diagnostic enablement in its launcher process; that historical timing gap remains unavailable and was not repaired with another inference request.
++
++Both clients returned their requested ordinary replies. Earlier candidates passed the eight-event native memory check. V7 completed contiguous indexing through all eight events and passed the individual source/vector/usage checks, but its original fact-attribution check failed: only one of four user events had a fresh attributed fact. Two question turns produced no facts; the declaration turn's missing attribution remains unexplained. The complete memory verifier remains FAIL. The browser was signed out and closed before the CLI samples, and each disposable database and container was verified absent after testing. These are separate empty/populated-context conditions, not a controlled comparison with a historical release. The latency target remains unmet.
++
++V7's main answer dispatch started 2.76/2.72 seconds after run creation in the browser and 6.30/11.21 seconds in the CLI. Processed first model text followed 0.46–0.68 seconds later. CLI recall took 3.12/6.06 seconds, with actual budget-account and foreground run-row conflicts. A separate authenticated public `memory.recall` returned the correct nine results in 4.79 seconds; its final delivery transaction alone took 2.21 seconds and read 998 documents. These measurements identify repeated validation/read work and transaction contention before inference. They do not expose Gateway internal routing or provider queue timing.
++
++The V7 tool request failed before its first answer-model call: the unchanged conservative input bound computed 34,938 against a configured 32,768 limit. This is an accounting ceiling, not a provider token measurement. No approval or tool effect occurred. The user has authorized bounded context selection to address request growth while retaining the complete canonical transcript and these model limits. The subsequent bounded-context candidate passed the separately measured tool continuation. That result does not repair any historical failed sample.
++
++The separate V6 approved-tool scenario failed its final answer. Its `memory_remember` effect succeeded and was indexed, but the next model ordinal received `POLICY_DENIED: request exceeds bounded limits` before native model admission. Its lease was valid and no second model request was dispatched. The exact exceeded numeric field could not be recovered from that run's saved evidence. That historical failure is retained. The latest candidate passed a separate approved-tool continuation; the eight-event ordinary-memory proof alone does not certify it.
++
++The preceding scoped-transcript trace places the first durable text row 4.76/4.21 seconds after run creation for browser first/warm and 8.99/11.09 seconds for CLI first/warm. Those mutation-start timestamps precede durable publication and client display; they are not substitutes for the measured paint or stdout boundary. Processed model-text acquisition took 0.48–0.62 seconds. Cortex orchestration, repeated validation and protected delivery dominate those samples.
++
++In that preceding trace, populated CLI recall took 3.59/4.47 seconds, with query embedding taking only 0.33/0.44 seconds inside those intervals. Facts and vector retrieval overlap, so their child durations must not be added. Native conflict metadata identified background ingestion claims writing event rows during browser preparation and memory-stage persistence writing run rows during visibility checks, causing transaction retries. The progress/source-batch candidate's populated CLI recall took 3.54/5.73 seconds, and total turn preparation took 4.98/7.51 seconds. Reducing those writes and source-query handoffs did not resolve the remaining preparation and delivery cost.
++
++The preceding candidate's populated CLI recall took 3.58/4.06 seconds, including only 0.326/0.413 seconds of native embedding. Its recall partitions were 1.056/1.585 seconds before embedding, 0.716/0.575 seconds from result readiness through governed attachment, and 1.486 seconds for the remaining retrieval/source/final-delivery work in each run. Workflow startup itself took 0.935/0.461 seconds in the browser and 0.825/0.591 seconds in the CLI. Answer inference started 3.89/3.06 seconds after committed run creation in the browser and 7.60/7.36 seconds in the CLI, already beyond the target before provider text.
++
++The latest V6 candidate's answer dispatch occurred 3.00/3.58 seconds after run creation in the browser and 6.07/6.97 seconds in the CLI. Populated CLI recall took 2.99/3.70 seconds, including a native embedding call of only 0.354/0.292 seconds. Before embedding took 0.717/0.946 seconds, governed capture/attachment took 0.476/0.696 seconds, and guarded retrieval/final delivery took 1.440/1.766 seconds. Empty browser preparation retried after actual conflicts with asynchronous watermark writes on `runtimeIngestionScopes`. Ordinary runs had no Workflow journal steps, so Workflow startup does not explain these remaining delays. The combined Gateway/provider interval from dispatch to processed first text was 0.448–0.683 seconds; its internal routing and network subdivisions remain unavailable. Fresh authorization, transcript, source and budget fences remain required. These server boundaries are separate from client paint/stdout clocks, and the measurements do not establish a causal speed ratio between candidate generations.
++
++The browser's strict readiness check initially returned `CONTEXT_INCOMPLETE` while asynchronous memory was pending. A later nonbillable check after memory completion confirmed facts and vectors through 4 of 4. This preserves the original failure and demonstrates that response completion and memory readiness are separate states; it is not an inference retry or a repaired latency sample.
++
++The published 0.35 and 0.37 legacy recall implementations have the same four awaited expressions, including parallel vector/fact reads; the newly measured backend runtime is an unreleased 0.39 path. This source comparison does not reconstruct a same-environment historical benchmark or assign an exact version-to-version slowdown.
+ 
+ ## Measure the right states
+ 
+diff --git a/docs-site/docs/core-features/memory-orchestration.mdx b/docs-site/docs/core-features/memory-orchestration.mdx
+index 12835a2..a8209e5 100644
+--- a/docs-site/docs/core-features/memory-orchestration.mdx
++++ b/docs-site/docs/core-features/memory-orchestration.mdx
+@@ -18,6 +18,14 @@ Facts, canonical chunks and profile-specific vectors retain tenant/space, source
+ 
+ The `indexed-plus-pending` memory mode combines authorized indexed results with eligible approved transcript history and authorized pending sources. This allows recent information to participate before indexing catches up. Pending context still obeys source revision, approval, visibility, retention and token bounds.
+ 
++## Canonical history and model context
++
++The complete canonical transcript is stored as individual message rows, with conversation/order, actor, revision and source metadata. A model request is a bounded selection from that history and memory. Omitting a row from a request does not delete it or prevent authorized history retrieval.
++
++The new V8 request policy defaults to at most four recent messages, four relevant memory entries and four relevant facts. Required current input and complete tool-call/result groups are retained together. Pending context has a separate four-entry bound, with a 16-entry total request bound, and must report incomplete coverage when required evidence cannot fit. Selected facts use existing source relevance and lexical matching; this does not add fact embeddings or another inference call.
++
++Those counts are maxima. The assembled request includes instructions, context wrappers, tool definitions and output reserve, and must pass the published model input/context/cost limits. Optional whole entries are removed to fit; required content that cannot fit fails before a new model call. Full transcript pagination and memory indexing remain separate from this selection. Historical execution versions keep their existing behavior. An earlier V8 continuation was safely refused because early fitting missed its actual shape. The latest repaired cloud scenario completed its approved memory tool and final answer. The subsequent cloud candidate also passed all four positive chat facts, eight current-profile vectors, contiguous indexing through eight events, repeated-capture negatives and strict facts/vectors through 11 of 11 after the tool. Historical extraction failures remain preserved. Subsecond latency remains open; these functional outcomes do not establish full candidate acceptance.
++
+ ## Contiguous watermarks
+ 
+ Ordered commits advance a stage's watermark only through consecutive completed events. A later success cannot jump over an earlier pending, failed or missing event. A captured cutoff identifies the point in history required by a consistency check.
+diff --git a/docs-site/docs/getting-started/backend-runtime.mdx b/docs-site/docs/getting-started/backend-runtime.mdx
+index 3e35936..4e083ff 100644
+--- a/docs-site/docs/getting-started/backend-runtime.mdx
++++ b/docs-site/docs/getting-started/backend-runtime.mdx
+@@ -58,6 +58,8 @@ The JWT identifies the actor. Caller claims, tenant labels, run IDs, local snaps
+ 
+ An operator installs the deployment's versioned model qualifications and policies, narrows them for tenants/Agents, and publishes an executable Agent definition through the guarded `agentDefinitions:publishVersion` contract. The definition pins instructions, registered tools and context-handler versions/hashes, memory mode, required stages and policy versions. Revoke a version through `agentDefinitions:revokeVersion` when it should no longer run.
+ 
++For the new bounded-input candidate, publish `cortex.transcript.relevant` version 1 using executable registry version 3 and its verified registry hash. Its default selection is four recent messages, four relevant memories, four relevant facts and four pending entries, with a ceiling of 16 entries across messages, evidence and instructions. These are maxima subject to the stricter qualified token/cost limits. Complete canonical history remains stored and paginated. Existing `cortex.transcript` definitions retain their original behavior; changing a definition requires publishing a new version. See [context selection](../core-features/memory-orchestration.mdx#canonical-history-and-model-context).
++
+ Use `runtimeModelPolicy:installDeploymentPolicy` with a trusted manifest; tenant policy provisioning and qualification records are internal operator contracts. Never fabricate model qualification receipts from a provider catalog entry. A model name alone does not establish interface, structured output, tool, embedding or media support.
+ 
+ The [model-policy guide](../architecture/model-policy.mdx) explains operation keys, limits, replay and incurred uncertainty. Text chat needs a qualified response policy and managed query/memory embedding profile. Applications read the profile from the backend.
+@@ -79,6 +81,20 @@ This appends public metadata to `.env.local`, preserves existing values and refu
+ 
+ Deployment keys, Gateway/provider keys, callback secrets and graph passwords stay in trusted backend/operator services. The app supplies a short-lived host JWT through `fetchToken`.
+ 
++## 5. Submit and observe
++
++Use [`submitAndStart`](../api-reference/runtime-client.mdx#combined-admission-and-recovery) with a retained caller request ID to admit new text and request streaming execution. The result contains the handle, current run and start metadata; observe the handle for the answer rather than issuing a second model call. Existing `submit`/`start` remain available for explicit approval and recovery. An unknown outcome requires inspecting the original request/run, not automatic redispatch with a new identity.
++
++In the canonical Basic app, plain text generates and prints one request ID, submits the turn, and watches/displays streamed output plus the canonical final answer through the same client. `/send <requestId> <text>` returns the handle for later `/observe` or `/watch`; it does not wait to display the answer. Ctrl+C closes local observation, while `/cancel` asks the backend to cancel. Response completion can precede asynchronous memory readiness, and optional title work follows canonical answer finalization.
++
++The current local release candidates are SDK/CLI/provider 0.39.0, Basic app payload 1.4.1, Vercel quickstart app payload 1.4.2, and the independently versioned templates catalog 1.3.2. These versions do not claim registry publication.
++
++## Optional latency diagnostics
++
++For an authorized backend, enable `CORTEX_RUNTIME_LATENCY_TRACE=1` in that backend's environment to record scalar context, model-policy, Gateway and finalization phase metadata. The Basic CLI uses the same flag in its own process for client RPC and submission-to-first-printed-answer markers. The Vercel quickstart uses `NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1` for SDK events and browser DOM-commit/after-paint markers; set it in the app environment before building/running the app.
++
++These opt-in flags do not contain prompts, output text or credentials. [Performance measurement](../architecture/performance.mdx#latency-diagnostics) explains the clock domains and visibility boundaries. Submission to first visible text under one second is a target; current measurements must establish whether a particular deployment meets it.
++
+ ## Optional capabilities
+ 
+ Configure [graph workers](../advanced-topics/graph-integration.mdx) when graph projection is required. [Private assets and media](../core-features/assets-and-media.mdx) use the configured HTTP origin and retained jobs. The media guide covers service access, supported inputs and saved-operation recovery.
+diff --git a/docs-site/docs/getting-started/five-minute-quickstart.mdx b/docs-site/docs/getting-started/five-minute-quickstart.mdx
+index f111eb3..69791fe 100644
+--- a/docs-site/docs/getting-started/five-minute-quickstart.mdx
++++ b/docs-site/docs/getting-started/five-minute-quickstart.mdx
+@@ -11,7 +11,7 @@ Start with an [installed and configured backend](./backend-runtime.mdx): accepte
+ ## Vercel quickstart
+ 
+ ```bash
+-cortex templates init demo --template vercel-ai-quickstart --template-version 1.4.0 --catalog-version 1.3.0 --yes --graph none
++cortex templates init demo --template vercel-ai-quickstart --template-version 1.4.2 --catalog-version 1.3.2 --yes --graph none
+ cd demo
+ npm run dev
+ ```
+@@ -23,7 +23,7 @@ Watch response and memory status separately. Use **Disconnect observer**, **Reco
+ ## Basic terminal and HTTP app
+ 
+ ```bash
+-cortex templates init basic-app --template basic --template-version 1.4.0 --catalog-version 1.3.0 --yes --graph none
++cortex templates init basic-app --template basic --template-version 1.4.1 --catalog-version 1.3.2 --yes --graph none
+ cd basic-app
+ npm start
+ # In a separate terminal, when the HTTP interface is needed:
+@@ -37,7 +37,7 @@ Plain input prints a request ID before submit. `/send <requestId> <text>`, `/obs
+ ## ChatSDK
+ 
+ ```bash
+-cortex templates init chat --template chat-sdk --template-version 1.4.2 --catalog-version 1.3.0 --yes --graph none
++cortex templates init chat --template chat-sdk --template-version 1.4.2 --catalog-version 1.3.2 --yes --graph none
+ cd chat
+ pnpm dev
+ ```
+@@ -46,4 +46,4 @@ The canonical home uses AI SDK 7 remote transport and host JWTs. Its document pa
+ 
+ Application development scripts start the application. Backend registration/deployment and optional graph workers are separate operator tasks. See [AI SDK integration](../integrations/vercel-ai-sdk/getting-started.mdx) for your own React host.
+ 
+-The templates catalog is independently versioned at 1.3.0. The current app payloads are Basic and Vercel AI quickstart 1.4.0, and Chat SDK 1.4.2. These are upcoming release selections; the registry publication step is separate. Existing immutable app payloads remain available for their pinned versions.
++The templates catalog is independently versioned at 1.3.2. The current app payloads are Basic 1.4.1, Vercel AI quickstart 1.4.2 and Chat SDK 1.4.2. These are upcoming release selections; the registry publication step is separate. Existing immutable app payloads remain available for their pinned versions.
+diff --git a/docs-site/docs/getting-started/installation.mdx b/docs-site/docs/getting-started/installation.mdx
+index 5a07d09..2764c34 100644
+--- a/docs-site/docs/getting-started/installation.mdx
++++ b/docs-site/docs/getting-started/installation.mdx
+@@ -34,9 +34,9 @@ The installer composes the runtime table map and Agent/Workflow/Workpool compone
+ 
+ ```bash
+ npx cortex templates list --format json
+-npx cortex templates init basic-app --template basic --template-version 1.4.0 --catalog-version 1.3.0 --yes --graph none
+-npx cortex templates init demo --template vercel-ai-quickstart --template-version 1.4.0 --catalog-version 1.3.0 --yes --graph none
+-npx cortex templates init chat --template chat-sdk --template-version 1.4.2 --catalog-version 1.3.0 --yes --graph none
++npx cortex templates init basic-app --template basic --template-version 1.4.1 --catalog-version 1.3.2 --yes --graph none
++npx cortex templates init demo --template vercel-ai-quickstart --template-version 1.4.2 --catalog-version 1.3.2 --yes --graph none
++npx cortex templates init chat --template chat-sdk --template-version 1.4.2 --catalog-version 1.3.2 --yes --graph none
+ ```
+ 
+ For local archives, template commands accept `--sdk-package`, `--provider-package` and `--templates-package`; use matching archives rather than relying on registry fallback. Basic and Vercel use npm; ChatSDK follows its declared pnpm manager. The CLI does not install or switch package managers for you. Graph off needs no Docker.
+@@ -45,4 +45,4 @@ SDK/backend updates and application updates are separate. CLI build does not syn
+ 
+ The Python SDK is archived under `_DEPRECATED/cortex-sdk-python`; no Python remote-runtime client is provided by this release.
+ 
+-The templates catalog is independently versioned at 1.3.0. The current app payloads are Basic and Vercel AI quickstart 1.4.0, and Chat SDK 1.4.2. These are upcoming release selections; the registry publication step is separate. Existing immutable app payloads remain available for their pinned versions.
++The templates catalog is independently versioned at 1.3.2. The current app payloads are Basic 1.4.1, Vercel AI quickstart 1.4.2 and Chat SDK 1.4.2. These are upcoming release selections; the registry publication step is separate. Existing immutable app payloads remain available for their pinned versions.
+diff --git a/docs-site/docs/reference/cheat-sheet.mdx b/docs-site/docs/reference/cheat-sheet.mdx
+index f255b7a..30eae71 100644
+--- a/docs-site/docs/reference/cheat-sheet.mdx
++++ b/docs-site/docs/reference/cheat-sheet.mdx
+@@ -16,6 +16,7 @@ sidebar_position: 4
+ | Observe/reconnect | `watchObservation(handle, render)`, `attach(runId)` |
+ | Approve/cancel | `approveInput`, `approveTool`, `cancel` |
+ | Canonical history | `messages(conversationId)`, `listConversations()` |
++| Independent exchange capture | New candidate: `remember(input)`, `rememberStatus(receiptId)`; indexing is asynchronous |
+ | Profile/search/readiness | `getEmbeddingProfile`, `recall`, `memoryReadiness` |
+ | Content/media | `submitContentJob`, `submitMediaJob`, retained get/list/reconcile/cancel |
+ | Private bytes | `uploadAsset`, `fetchAsset`, `createAssetUrl` then `revoke()` |
+diff --git a/docs-site/docs/tools/cli-reference.mdx b/docs-site/docs/tools/cli-reference.mdx
+index 4244711..3f15061 100644
+--- a/docs-site/docs/tools/cli-reference.mdx
++++ b/docs-site/docs/tools/cli-reference.mdx
+@@ -25,10 +25,10 @@ Installation composes the host functions directory/schema/components/auth/HTTP r
+ 
+ ```bash
+ cortex templates list --format json
+-cortex templates init demo --template vercel-ai-quickstart --template-version 1.4.0 --catalog-version 1.3.0 --yes --graph none
+-cortex templates init chat --template chat-sdk --template-version 1.4.2 --catalog-version 1.3.0 --yes --graph none
+-cortex templates init basic-app --template basic --template-version 1.4.0 --catalog-version 1.3.0 --yes --graph none
+-cortex templates update ./demo --to 1.4.0 --catalog-version 1.3.0 --dry-run
++cortex templates init demo --template vercel-ai-quickstart --template-version 1.4.2 --catalog-version 1.3.2 --yes --graph none
++cortex templates init chat --template chat-sdk --template-version 1.4.2 --catalog-version 1.3.2 --yes --graph none
++cortex templates init basic-app --template basic --template-version 1.4.1 --catalog-version 1.3.2 --yes --graph none
++cortex templates update ./demo --to 1.4.2 --catalog-version 1.3.2 --dry-run
+ ```
+ 
+ Template IDs are `basic`, `vercel-ai-quickstart` and `chat-sdk`. Catalog and payload versions are independent of the SDK. CLI build does not assemble payloads. Basic/Vercel use npm; Chat follows its declared pnpm manager. Graph off needs no Docker. Application dev scripts start only the app; backend registration/deployment is explicit.
+@@ -87,4 +87,4 @@ Native `db export` uses deployment ZIPs; it is separate from domain export. Life
+ 
+ Use leaf `--help` for exact formats/options. Completion is explicit script output (`completion bash|zsh|fish`) and does not edit shell RC files.
+ 
+-The templates catalog is independently versioned at 1.3.0. The current app payloads are Basic and Vercel AI quickstart 1.4.0, and Chat SDK 1.4.2. These are upcoming release selections; the registry publication step is separate. Existing immutable app payloads remain available for their pinned versions.
++The templates catalog is independently versioned at 1.3.2. The current app payloads are Basic 1.4.1, Vercel AI quickstart 1.4.2 and Chat SDK 1.4.2. These are upcoming release selections; the registry publication step is separate. Existing immutable app payloads remain available for their pinned versions.

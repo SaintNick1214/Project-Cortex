@@ -1,0 +1,47 @@
+{
+  "status": "FROZEN",
+  "baselineCommit": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
+  "observedAt": "2026-10-14T16:02:12.981906+00:00",
+  "production": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "0612738bc0af651c69bd2d49557fbf5e05f2e7a89dfd114790aa3175b873bb0c"
+    },
+    {
+      "path": "convex-dev/runtimeGatewayBackend.ts",
+      "sha256": "76197320c792ce588e55d0d456bb18ef06ead2c517beb6da7ea9b06c50331c86"
+    },
+    {
+      "path": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "sha256": "67a0ab59d6650ef967a04b7b2b59c7d2a8d1e9c08f9365ba4cdae0f992772eb0"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "90f91bb65ab5322c02f1272d3b89d3ca9e63c46e4fefdf0e4a38c943a222c5ab"
+    }
+  ],
+  "tests": [
+    {
+      "path": "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts",
+      "sha256": "4d6c0f7c18df6fb61b04d54adf6c75e45a61430ae17c3e196758ff5792d9a8b7"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "sha256": "f912ebfbca67a67790429f923e7dae832f3ff92c038ecb2a2d5a8e916233635d"
+    }
+  ],
+  "report": {
+    "path": "v8-terminal-scope-source-report.md",
+    "sha256": "cd57d5bd3c8c4222e2b2bed8e147066da508b058183f6eae42e12afbbbc099cd"
+  },
+  "checks": {
+    "path": "v8-terminal-scope-checks.json",
+    "sha256": "d10b4368c066dd409df49a4208db3b6752734f4cc0d3ab3347a6683371ef320f"
+  },
+  "equivalence": {
+    "path": "v8-terminal-scope-equivalence.json",
+    "sha256": "53471cd17e0065416065c7869f155116ccde9776aca8c4d198add61b5ae3a036"
+  },
+  "independentAcceptance": "PENDING root joint review",
+  "nativeLatencyAcceptance": false
+}

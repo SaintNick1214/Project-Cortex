@@ -7,7 +7,7 @@ import { createRequire } from 'node:module';
 const r='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion', q=path.dirname(new URL(import.meta.url).pathname);
 const ts=createRequire(path.join(r,'package.json'))('typescript');
 const kit='/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-read-retention-2026-10-14';
-const commit='SOURCE_COMMIT_UNREADY';
+const commit='efcc91d2317dadcb143c5cf1929504bd0cbee3a6';
 assert.match(commit,/^[a-f0-9]{40}$/,'Root accepted commit GO required');
 const artifact=JSON.parse(fs.readFileSync(path.join(q,'artifact-receipt.json')));
 const manifest=JSON.parse(fs.readFileSync(path.join(kit,'staging',commit,'dist/backend/v1/manifest.json')));
@@ -49,7 +49,7 @@ const files=paths.map(sourcePath=>{
  const current=declarationsOf(committed.toString(),sourcePath),packedDeclarations=declarationsOf(packed.toString(),row.path);
  assert.deepEqual(packedDeclarations.endpoints,current.endpoints);
  const additions={
-  'convex-dev/runtimeAgent.ts':[['contextInputsV8','internalQuery'],['saveContextV8','internalMutation'],['saveAndPrepareContextV8','internalMutation'],['prepareResolvedModelCandidateV8','internalMutation'],['turnStepV8','internalAction'],['prepareTurnModelV8','internalMutation'],['prepareDirectTurnV8','internalMutation'],['attachDirectContinuationV8','internalMutation'],['interruptDirectV8','internalMutation'],['executeDirectV8','internalAction'],['retireDirectV8','internalMutation'],['executeToolsV8','workflow.define'],['executeTurnV8','workflow.define'],['admitPreparedModelOperationV8','internalMutation']],
+  'convex-dev/runtimeAgent.ts':[['admitPreparedModelOperationV8','internalMutation'],['contextInputsV8','internalQuery'],['saveContextV8','internalMutation'],['saveAndPrepareContextV8','internalMutation'],['prepareResolvedModelCandidateV8','internalMutation'],['turnStepV8','internalAction'],['prepareTurnModelV8','internalMutation'],['prepareDirectTurnV8','internalMutation'],['attachDirectContinuationV8','internalMutation'],['interruptDirectV8','internalMutation'],['executeDirectV8','internalAction'],['retireDirectV8','internalMutation'],['executeToolsV8','workflow.define'],['executeTurnV8','workflow.define']],
   'convex-dev/runs.ts':[['claimNextV8','internalMutation']],
   'convex-dev/runtimeMemoryCapture.ts':[['rememberExchange','mutation'],['rememberStatus','mutation'],['setCaptureLock','mutation']],
   'convex-dev/runtimeAgentQueryEmbedding.ts':[['prepareV8','internalQuery'],['admitV8','internalMutation']],

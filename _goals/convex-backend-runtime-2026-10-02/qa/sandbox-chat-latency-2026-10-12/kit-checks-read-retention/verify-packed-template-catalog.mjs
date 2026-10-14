@@ -8,7 +8,7 @@ import { payloadHash } from '/Users/SaintNick/Documents/Cortex/worktrees/backend
 const r='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion';
 const q=path.dirname(new URL(import.meta.url).pathname);
 const kit='/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-read-retention-2026-10-14';
-const commit='SOURCE_COMMIT_UNREADY';
+const commit='efcc91d2317dadcb143c5cf1929504bd0cbee3a6';
 assert.match(commit,/^[a-f0-9]{40}$/,'Root accepted commit GO required');
 const receipt=JSON.parse(fs.readFileSync(path.join(q,'artifact-receipt.json')));
 assert.equal(receipt.sourceCommit,commit);

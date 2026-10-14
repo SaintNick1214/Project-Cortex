@@ -1,0 +1,233 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:37:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:38:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:200) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/foreground-priority.test.ts
+  original native ingestion claim with foreground scheduling metadata
+    ✓ original submit atomically installs the hold and original cancel retirement releases it (47 ms)
+    ✓ defers only unstarted work before job/budget/lease; replay does not extend deadline (14 ms)
+    ✓ fallback progresses after foreground crash using ORIGINAL claim and one unchanged intent (18 ms)
+    ✓ early/wrong-deadline callbacks cannot release and released markers never renew (12 ms)
+    ✓ strict/custom legacy path is never held: {"strict":true} (15 ms)
+    ✓ strict/custom legacy path is never held: {"legacy":true} (15 ms)
+    ✓ explicit capture/non-Agent source has no run binding and retains original claim (15 ms)
+    ✓ running stage and its financial state are untouched (11 ms)
+    ✓ unknown stage and its financial state are untouched (12 ms)
+    ✓ complete stage and its financial state are untouched (11 ms)
+    ✓ failed stage and its financial state are untouched (12 ms)
+    ✓ dead_letter stage and its financial state are untouched (11 ms)
+    ✕ existing job/unreserved wait is not deferred or re-leased (11 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: cancel (10 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: delete (11 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: foreign-owner (10 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: foreign-native (11 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: wrong-epoch (11 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: foreign-grant (10 ms)
+    ✓ source edit/revocation still deny BEFORE deferral and no stage/job changes commit (26 ms)
+    ✓ strict promotion across conversations releases only through cutoff and publishes no readiness (19 ms)
+    ✓ admission fallback scheduler failure rolls back marker; release fault rolls back publication (11 ms)
+    ✓ fallback scheduler fault inside actual submit rolls back run/transcript/source/marker (11 ms)
+    ✕ missing/mismatched authoritative definition and expired capture use original path (12 ms)
+    ✓ scope capacity is finite; overflow takes original path (17 ms)
+
+  ● original native ingestion claim with foreground scheduling metadata › existing job/unreserved wait is not deferred or re-leased
+
+    expect(received).toMatchObject(expected)
+
+    Matcher error: received value must be a non-null object
+
+    Received has value: null
+
+      90 |   test("existing job/unreserved wait is not deferred or re-leased", async () => {
+      91 |     const f = await setup(); const owned = await f.claim(f.eventId); await f.hold();
+    > 92 |     expect(owned).toMatchObject({ attempt: 1 }); const stage = await f.stage();
+         |                   ^
+      93 |     await f.ctx.db.patch("runtimeIngestionStages", stage._id, { state: "pending", capacityWait: { deadline: f.run.createdAt + 10000, notBefore: f.run.createdAt + 1000, wakes: 1 } });
+      94 |     expect(await priority.deferForegroundStage(f.ctx, await f.event(), await f.stage())).toBe(false);
+      95 |   });
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/foreground-priority.test.ts:92:19)
+
+  ● original native ingestion claim with foreground scheduling metadata › missing/mismatched authoritative definition and expired capture use original path
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 2
+
+      Object {
+    -   "held": false,
+    +   "deadline": 1005000,
+    +   "held": true,
+      }
+
+      154 |     const f = await setup(); expect(await priority.holdForegroundIngestion(f.ctx, f.run)).toEqual({ held: false });
+      155 |     expect(await priority.holdForegroundIngestion(f.ctx, f.run, { ...f.definition, definitionHash: "wrong" })).toEqual({ held: false });
+    > 156 |     jest.spyOn(Date, "now").mockReturnValue(f.run.createdAt + 5001); expect(await f.hold()).toEqual({ held: false });
+          |                                                                                             ^
+      157 |     expect(await f.claim(f.eventId)).toMatchObject({ attempt: 1 });
+      158 |   });
+      159 |   test("scope capacity is finite; overflow takes original path", async () => {
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/foreground-priority.test.ts:156:93)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.9s | 23/25 passed | /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.6%) - original native ingestion claim with foreground scheduling metadata original submit atomically installs the hold and original cancel retirement releases it
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.9%) - original native ingestion claim with foreground scheduling metadata source edit/revocation still deny BEFORE deferral and no stage/job changes commit
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.6%) - original native ingestion claim with foreground scheduling metadata strict promotion across conversations releases only through cutoff and publishes no readiness
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.6%) - original native ingestion claim with foreground scheduling metadata fallback progresses after foreground crash using ORIGINAL claim and one unchanged intent
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.6%) - original native ingestion claim with foreground scheduling metadata scope capacity is finite; overflow takes original path
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.5%) - original native ingestion claim with foreground scheduling metadata strict/custom legacy path is never held: {"strict":true}
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.5%) - original native ingestion claim with foreground scheduling metadata strict/custom legacy path is never held: {"legacy":true}
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.5%) - original native ingestion claim with foreground scheduling metadata explicit capture/non-Agent source has no run binding and retains original claim
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.5%) - original native ingestion claim with foreground scheduling metadata defers only unstarted work before job/budget/lease; replay does not extend deadline
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+10. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata early/wrong-deadline callbacks cannot release and released markers never renew
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+11. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata unknown stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+12. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata failed stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+13. [31m✗[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata missing/mismatched authoritative definition and expired capture use original path
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+14. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata running stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+15. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata complete stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+16. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata dead_letter stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+17. [31m✗[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata existing job/unreserved wait is not deferred or re-leased
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+18. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata changed parent binding bypasses hint; original fences retained: delete
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+19. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata changed parent binding bypasses hint; original fences retained: foreign-native
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+20. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata changed parent binding bypasses hint; original fences retained: wrong-epoch
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.31s (10.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.03s
+  Test suites:        1
+  Individual tests:   25
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 23 passed, 25 total
+Snapshots:   0 total
+Time:        3.027 s, estimated 6 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/foreground-priority.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-parent-focused-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

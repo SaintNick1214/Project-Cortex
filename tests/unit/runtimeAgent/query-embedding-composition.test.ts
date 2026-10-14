@@ -233,7 +233,10 @@ it("fresh V8 query admission reaches the new lane with one controlled peer call 
   expect(result).toMatchObject({profileId:profile.profileId,items:[]});expect(nativeCalls).toBe(1);
   expect(f.calls.filter(name=>name==="runtimeAgentQueryEmbedding:prepareV8")).toHaveLength(1);expect(f.calls.filter(name=>name==="runtimeAgentQueryEmbedding:admitV8")).toHaveLength(1);
   expect(f.calls.filter(name=>name==="runtimeAgentQueryEmbedding:prepare"||name==="runtimeAgentQueryEmbedding:admit")).toEqual([]);
-  expect(f.calls.indexOf("runtimeModelPolicy:captureTerminalEvidence")).toBeLessThan(f.calls.indexOf("runtimeModelPolicy:attachTerminalResult"));
+  expect(f.calls.filter(name=>name==="runtimeModelPolicy:captureTerminalEvidenceV8")).toHaveLength(1);
+  expect(f.calls.filter(name=>name==="runtimeModelPolicy:attachTerminalResultV8")).toHaveLength(1);
+  expect(f.calls.indexOf("runtimeModelPolicy:captureTerminalEvidenceV8")).toBeLessThan(f.calls.indexOf("runtimeModelPolicy:attachTerminalResultV8"));
+  expect(f.calls.filter(name=>name==="runtimeModelPolicy:captureTerminalEvidence"||name==="runtimeModelPolicy:attachTerminalResult")).toEqual([]);
   expect(f.db.table("runtimeModelAttempts")).toMatchObject([{state:"uncertain",slotReleased:true,resultAttachmentState:"attached"}]);
 });
 it.each(["revocation","partial-write","opaque"])("V8 checkpoint %s preserves committed reservation and rolls back only its child",async fault=>{

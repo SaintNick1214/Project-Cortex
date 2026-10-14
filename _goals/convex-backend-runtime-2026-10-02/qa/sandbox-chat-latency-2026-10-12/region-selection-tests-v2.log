@@ -1,0 +1,22 @@
+✔ host signer rotates one-hour scoped JWTs atomically without stdout, metadata claims or private receipt leakage (59.689333ms)
+✔ unqualified runtime, expired owner grant, and target drift cannot mint usable tokens (12.439417ms)
+✔ new nondefault dev identity is journaled before create; exact key is private; empty delete response verifies absence (18.261458ms)
+✔ unknown create with exact discovered reference is reconciled without another POST (2.125584ms)
+✔ unknown create and initially empty inventory cannot claim cleanup; exact late commit can then be deleted (2.843625ms)
+✔ unknown delete after server deletion succeeds only from fresh exact absence; present target fails closed (3.822041ms)
+✔ identity/default/type/expiry drift refuses deletion and paid verification before a mutation (7.149708ms)
+✔ foreign team project, missing credentials, and already aborted setup create no database (1.526333ms)
+✔ no creation intent needs no management access; planned-only setup verifies empty cleanup (0.940708ms)
+✔ atomic private writes preserve restrictive modes and exclusive issued journals refuse repeats (1.295291ms)
+✔ an unavailable, absent, duplicate or malformed team region response issues no create POST (11.585ms)
+✔ invalid names and aliases cannot choose a default or bypass the exact available region list (17.730875ms)
+✔ region lookup transport failure and cancellation before POST cannot create or retry a database (2.163291ms)
+✔ legacy target reconciliation, key retrieval and cleanup need neither region metadata nor new target fields (3.62075ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 111.244875

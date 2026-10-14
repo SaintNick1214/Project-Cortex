@@ -29,6 +29,19 @@ const references = Object.freeze({
   attachTerminalResult: policyReference("attachTerminalResult"),
 });
 
+const v8TerminalPorts = Symbol("private-v8-gateway-terminal-ports");
+const v8TerminalReferences = Object.freeze({
+  captureTerminalEvidence: policyReference("captureTerminalEvidenceV8"),
+  attachTerminalResult: policyReference("attachTerminalResultV8"),
+});
+/** Compiled V8 Agent paths select terminal ports only after their native V8
+ * preparation. This private, nonserialized marker is not an authority result;
+ * every terminal invocation repeats the original accounting/delivery guards. */
+export function withV8GatewayTerminalPorts<Ctx extends BackendGatewayContext>(ctx: Ctx): Ctx {
+  return Object.defineProperty({ ...ctx, runQuery: ctx.runQuery.bind(ctx), runMutation: ctx.runMutation.bind(ctx) },
+    v8TerminalPorts, { value: true });
+}
+
 /** Creates/reuses the native account for an exact authorized request. Task05 can
  * instead bind this in its parent mutation using bindTrustedBudget atomically. */
 export async function ensureBackendGatewayBudget(
@@ -44,6 +57,7 @@ export async function ensureBackendGatewayBudget(
  * even if delivery authority was revoked. Attachment independently fences output.
  * No second settlement, automatic inference retry or fallback is introduced. */
 export function createBackendGatewayComposition(ctx: BackendGatewayContext, admitAndCheckpoint?: NonNullable<GatewayLedgerPort["admitAndCheckpoint"]>): GatewayComposition {
+  const terminalReferences = (ctx as BackendGatewayContext & { [v8TerminalPorts]?: true })[v8TerminalPorts] ? v8TerminalReferences : references;
   type Correlation = { runBudgetId: string; operationKey: string; semanticId?: string };
   const attempts = new Map<string, Correlation>();
   const timed = async <T>(phase: string, correlation: Correlation | undefined, invoke: () => Promise<T>): Promise<T> => {
@@ -93,10 +107,10 @@ export function createBackendGatewayComposition(ctx: BackendGatewayContext, admi
         if (result.recorded !== true) throw new GatewayDispatchError("VISIBILITY_NOT_RECORDED");
         return { recorded: true };
       },
-      attachTerminalResult: async (args) => await timed("attach", attempts.get(args.attemptId), () => ctx.runMutation(references.attachTerminalResult, args)),
+      attachTerminalResult: async (args) => await timed("attach", attempts.get(args.attemptId), () => ctx.runMutation(terminalReferences.attachTerminalResult, args)),
     },
     terminalSink: {
-      capture: async (evidence) => await timed("capture", attempts.get(evidence.attemptId), () => ctx.runMutation(references.captureTerminalEvidence, evidence)),
+      capture: async (evidence) => await timed("capture", attempts.get(evidence.attemptId), () => ctx.runMutation(terminalReferences.captureTerminalEvidence, evidence)),
     },
   };
 }

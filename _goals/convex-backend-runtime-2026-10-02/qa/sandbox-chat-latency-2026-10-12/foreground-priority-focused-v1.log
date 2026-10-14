@@ -1,0 +1,271 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:37:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:38:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:98593) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/foreground-priority.test.ts
+  original native ingestion claim with foreground scheduling metadata
+    ✓ defers only unstarted work before job/budget/lease; replay does not extend deadline (30 ms)
+    ✕ fallback progresses after foreground crash using ORIGINAL claim and one unchanged intent (15 ms)
+    ✕ early/wrong-deadline callbacks cannot release and released markers never renew (13 ms)
+    ✓ strict/custom legacy path is never held: {"strict":true} (17 ms)
+    ✓ strict/custom legacy path is never held: {"legacy":true} (17 ms)
+    ✓ explicit capture/non-Agent source has no run binding and retains original claim (16 ms)
+    ✓ running stage and its financial state are untouched (11 ms)
+    ✓ unknown stage and its financial state are untouched (12 ms)
+    ✓ complete stage and its financial state are untouched (11 ms)
+    ✓ failed stage and its financial state are untouched (11 ms)
+    ✓ dead_letter stage and its financial state are untouched (12 ms)
+    ✓ existing job/unreserved wait is not deferred or re-leased (14 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: cancel (10 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: delete (10 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: foreign-owner (10 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: foreign-native (11 ms)
+    ✓ changed parent binding bypasses hint; original fences retained: wrong-epoch (11 ms)
+    ✓ source edit/revocation still deny BEFORE deferral and no stage/job changes commit (25 ms)
+    ✕ strict promotion across conversations releases only through cutoff and publishes no readiness (16 ms)
+    ✕ admission fallback scheduler failure rolls back marker; release fault rolls back publication (17 ms)
+    ✓ missing/mismatched authoritative definition and expired capture use original path (14 ms)
+    ✓ scope capacity is finite; overflow takes original path (17 ms)
+
+  ● original native ingestion claim with foreground scheduling metadata › fallback progresses after foreground crash using ORIGINAL claim and one unchanged intent
+
+    ConvexError: {"version":1,"code":"INGESTION_CONFLICT","message":"Memory scheduling control denied.","retryable":false,"outcome":"not_dispatched"}
+
+      14 | type Priority = Doc<"runtimeIngestionForegroundPriority">;
+      15 | type CurrentDefinition = Awaited<ReturnType<typeof readCurrentExecutableDefinition>>;
+    > 16 | function deny(): never { throw new ConvexError({ version: 1, code: "INGESTION_CONFLICT", message: "Memory scheduling control denied.", retryable: false, outcome: "not_dispatched" }); }
+         |                                ^
+      17 | function single<T>(rows: T[]): T | undefined { if (rows.length > 1) deny(); return rows[0]; }
+      18 | function internalRef<T extends "action" | "mutation", Args extends Record<string, unknown>>(kind: T, name: string) {
+      19 |   return makeFunctionReference<T, Args, null>(name) as unknown as FunctionReference<T, "internal", Args, null>;
+
+      at deny (convex-dev/runtimeIngestionPriority.ts:16:32)
+      at associatedEvents (convex-dev/runtimeIngestionPriority.ts:36:26)
+      at release (convex-dev/runtimeIngestionPriority.ts:43:23)
+      at Function.handler [as _handler] (convex-dev/runtimeIngestionPriority.ts:113:78)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/foreground-priority.test.ts:44:5)
+
+  ● original native ingestion claim with foreground scheduling metadata › early/wrong-deadline callbacks cannot release and released markers never renew
+
+    ConvexError: {"version":1,"code":"INGESTION_CONFLICT","message":"Memory scheduling control denied.","retryable":false,"outcome":"not_dispatched"}
+
+      14 | type Priority = Doc<"runtimeIngestionForegroundPriority">;
+      15 | type CurrentDefinition = Awaited<ReturnType<typeof readCurrentExecutableDefinition>>;
+    > 16 | function deny(): never { throw new ConvexError({ version: 1, code: "INGESTION_CONFLICT", message: "Memory scheduling control denied.", retryable: false, outcome: "not_dispatched" }); }
+         |                                ^
+      17 | function single<T>(rows: T[]): T | undefined { if (rows.length > 1) deny(); return rows[0]; }
+      18 | function internalRef<T extends "action" | "mutation", Args extends Record<string, unknown>>(kind: T, name: string) {
+      19 |   return makeFunctionReference<T, Args, null>(name) as unknown as FunctionReference<T, "internal", Args, null>;
+
+      at deny (convex-dev/runtimeIngestionPriority.ts:16:32)
+      at associatedEvents (convex-dev/runtimeIngestionPriority.ts:36:26)
+      at release (convex-dev/runtimeIngestionPriority.ts:43:23)
+      at Module.releaseForegroundIngestion (convex-dev/runtimeIngestionPriority.ts:80:61)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/foreground-priority.test.ts:59:5)
+
+  ● original native ingestion claim with foreground scheduling metadata › strict promotion across conversations releases only through cutoff and publishes no readiness
+
+    ConvexError: {"version":1,"code":"INGESTION_CONFLICT","message":"Memory scheduling control denied.","retryable":false,"outcome":"not_dispatched"}
+
+      14 | type Priority = Doc<"runtimeIngestionForegroundPriority">;
+      15 | type CurrentDefinition = Awaited<ReturnType<typeof readCurrentExecutableDefinition>>;
+    > 16 | function deny(): never { throw new ConvexError({ version: 1, code: "INGESTION_CONFLICT", message: "Memory scheduling control denied.", retryable: false, outcome: "not_dispatched" }); }
+         |                                ^
+      17 | function single<T>(rows: T[]): T | undefined { if (rows.length > 1) deny(); return rows[0]; }
+      18 | function internalRef<T extends "action" | "mutation", Args extends Record<string, unknown>>(kind: T, name: string) {
+      19 |   return makeFunctionReference<T, Args, null>(name) as unknown as FunctionReference<T, "internal", Args, null>;
+
+      at deny (convex-dev/runtimeIngestionPriority.ts:16:32)
+      at associatedEvents (convex-dev/runtimeIngestionPriority.ts:36:26)
+      at release (convex-dev/runtimeIngestionPriority.ts:43:23)
+      at Module.promoteForegroundIngestion (convex-dev/runtimeIngestionPriority.ts:89:85)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/foreground-priority.test.ts:112:12)
+
+  ● original native ingestion claim with foreground scheduling metadata › admission fallback scheduler failure rolls back marker; release fault rolls back publication
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "wake unavailable"
+    Received message:   "{\"version\":1,\"code\":\"INGESTION_CONFLICT\",\"message\":\"Memory scheduling control denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+
+          14 | type Priority = Doc<"runtimeIngestionForegroundPriority">;
+          15 | type CurrentDefinition = Awaited<ReturnType<typeof readCurrentExecutableDefinition>>;
+        > 16 | function deny(): never { throw new ConvexError({ version: 1, code: "INGESTION_CONFLICT", message: "Memory scheduling control denied.", retryable: false, outcome: "not_dispatched" }); }
+             |                                ^
+          17 | function single<T>(rows: T[]): T | undefined { if (rows.length > 1) deny(); return rows[0]; }
+          18 | function internalRef<T extends "action" | "mutation", Args extends Record<string, unknown>>(kind: T, name: string) {
+          19 |   return makeFunctionReference<T, Args, null>(name) as unknown as FunctionReference<T, "internal", Args, null>;
+
+      at deny (convex-dev/runtimeIngestionPriority.ts:16:32)
+      at associatedEvents (convex-dev/runtimeIngestionPriority.ts:36:26)
+      at release (convex-dev/runtimeIngestionPriority.ts:43:23)
+      at Module.releaseForegroundIngestion (convex-dev/runtimeIngestionPriority.ts:80:61)
+      at Object.transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/foreground-priority.test.ts:126:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/foreground-priority.test.ts:126:111)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.0s | 18/22 passed | /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 1.0%) - original native ingestion claim with foreground scheduling metadata defers only unstarted work before job/budget/lease; replay does not extend deadline
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.8%) - original native ingestion claim with foreground scheduling metadata source edit/revocation still deny BEFORE deferral and no stage/job changes commit
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.6%) - original native ingestion claim with foreground scheduling metadata strict/custom legacy path is never held: {"strict":true}
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.6%) - original native ingestion claim with foreground scheduling metadata strict/custom legacy path is never held: {"legacy":true}
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 5. [31m✗[0m    0.02s ( 0.6%) - original native ingestion claim with foreground scheduling metadata admission fallback scheduler failure rolls back marker; release fault rolls back publication
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.6%) - original native ingestion claim with foreground scheduling metadata scope capacity is finite; overflow takes original path
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.5%) - original native ingestion claim with foreground scheduling metadata explicit capture/non-Agent source has no run binding and retains original claim
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 8. [31m✗[0m    0.02s ( 0.5%) - original native ingestion claim with foreground scheduling metadata strict promotion across conversations releases only through cutoff and publishes no readiness
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+ 9. [31m✗[0m    0.01s ( 0.5%) - original native ingestion claim with foreground scheduling metadata fallback progresses after foreground crash using ORIGINAL claim and one unchanged intent
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+10. [32m✓[0m    0.01s ( 0.5%) - original native ingestion claim with foreground scheduling metadata existing job/unreserved wait is not deferred or re-leased
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+11. [32m✓[0m    0.01s ( 0.5%) - original native ingestion claim with foreground scheduling metadata missing/mismatched authoritative definition and expired capture use original path
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+12. [31m✗[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata early/wrong-deadline callbacks cannot release and released markers never renew
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+13. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata unknown stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+14. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata dead_letter stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+15. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata running stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+16. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata complete stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+17. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata failed stage and its financial state are untouched
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+18. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata changed parent binding bypasses hint; original fences retained: foreign-native
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+19. [32m✓[0m    0.01s ( 0.4%) - original native ingestion claim with foreground scheduling metadata changed parent binding bypasses hint; original fences retained: wrong-epoch
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+20. [32m✓[0m    0.01s ( 0.3%) - original native ingestion claim with foreground scheduling metadata changed parent binding bypasses hint; original fences retained: cancel
+    /tests/unit/runtimeIngestion/foreground-priority.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.30s (9.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.08s
+  Test suites:        1
+  Individual tests:   22
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 18 passed, 22 total
+Snapshots:   0 total
+Time:        3.081 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/foreground-priority.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-focused-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

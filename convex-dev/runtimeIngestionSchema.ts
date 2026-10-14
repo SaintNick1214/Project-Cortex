@@ -13,6 +13,12 @@ export const ingestionStageState = v.union(v.literal("pending"), v.literal("runn
   v.literal("failed"), v.literal("unknown"), v.literal("dead_letter"), v.literal("skipped"));
 const scope = { tenantId: v.string(), memorySpaceId: v.string() };
 export const runtimeIngestionTables = {
+  runtimeIngestionForegroundPriority: defineTable({ ...scope, runId: v.string(), runDocId: v.id("runtimeRuns"),
+    ownerPrincipalId: v.string(), conversationId: v.string(), conversationEpoch: v.number(),
+    nativeMessageIds: v.array(v.string()), captureAt: v.number(), deadline: v.number(),
+    state: v.union(v.literal("held"), v.literal("released")), releasedAt: v.optional(v.number()) })
+    .index("by_run", ["tenantId", "memorySpaceId", "runId"])
+    .index("by_scope_state", ["tenantId", "memorySpaceId", "state"]),
   runtimeRunMemoryProgress: defineTable({ ...scope, runId: v.string(), runDocId: v.id("runtimeRuns"), version: v.number(),
     memoryStatus: v.union(v.literal("pending"), v.literal("complete"), v.literal("failed"), v.literal("not_requested")), updatedAt: v.number() })
     .index("by_run", ["tenantId", "memorySpaceId", "runId"]),
@@ -32,6 +38,7 @@ export const runtimeIngestionTables = {
     .index("by_event", ["tenantId", "memorySpaceId", "eventId"])
     .index("by_scope_sequence", ["tenantId", "memorySpaceId", "sequence"])
     .index("by_owner_sequence", ["tenantId", "memorySpaceId", "ownerPrincipalId", "sequence"])
+    .index("by_run_message_eligibility", ["tenantId", "memorySpaceId", "runId", "nativeMessageId", "eligibility", "sequence"])
     .index("by_source", ["tenantId", "memorySpaceId", "lineage.sourceId", "lineage.sourceRevision"])
     .index("by_source_eligibility", ["tenantId", "memorySpaceId", "lineage.sourceId", "eligibility"])
     .index("by_conversation_sequence", ["tenantId", "memorySpaceId", "conversationId", "sequence"]),

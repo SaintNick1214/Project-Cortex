@@ -16,6 +16,7 @@ import { canonicalModelJson } from "../src/domain/model-policy";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { createAuthorityReadScope, createV8AuthorityReadScope } from "./runtimeAuth";
 import { executionContext } from "./runtimeAgent";
+import { withV8GatewayTerminalPorts } from "./runtimeGatewayBackend";
 import { ConvexMemoryRepository, memoryError } from "./runtimeMemoryRepository";
 import { admitHandler, readCurrentEmbeddingProfile, resolveHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
 import { assertGatewayReservedRequest, GatewayDispatchError } from "./runtimeGateway";
@@ -143,7 +144,7 @@ const admitV8Ref = makeFunctionReference("runtimeAgentQueryEmbedding:admitV8") a
 
 export async function recallAgentMemoryV8(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, repository: MemoryRepository, clock: DomainClock, input: Input, selection?: AgentRecallSelection) {
   const proposal = await ctx.runQuery(prepareV8Ref, { ...attempt, input });
-  const model = createGatewayMemoryModel(ctx, repository, { runBudgetId: proposal.binding.runBudgetId,
+  const model = createGatewayMemoryModel(withV8GatewayTerminalPorts(ctx), repository, { runBudgetId: proposal.binding.runBudgetId,
     queryEmbedding: { binding: proposal.binding, requestCanonical: canonicalModelJson(proposal.request), resolutions: proposal.resolutions,
       refresh: async () => (await ctx.runQuery(prepareV8Ref, { ...attempt, input })).resolutions[1],
       admitAndCheckpoint: async request => {

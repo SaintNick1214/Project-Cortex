@@ -1,0 +1,138 @@
+[1mnpm[22m [96mnotice[39m [94mrun[39m basic@1.4.1 start
+[1mnpm[22m [96mnotice[39m [94mrun[39m node --env-file-if-exists=.env.local --import tsx src/index.ts
+Cortex Basic remote runtime. /help lists commands. Host JWTs are verified by the backend.
+[1G[0JYou: [6GMy favorite color is coral. Do not use any tools; reply exactly CLI43.
+{"type":"cortex-cli-latency","version":1,"phase":"submit.begin","atMs":15481.37209,"commandId":1,"method":"cli.chat"}
+{"type":"cortex-client-latency","version":1,"phase":"auth.begin","atMs":15514.525382}
+{"type":"cortex-client-latency","version":1,"phase":"auth.ready","atMs":15988.007299}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":15988.811632,"rpcId":1,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":16367.125966,"rpcId":1,"method":"runtimeClient:session","durationMs":378.3143339999988}
+Request ID: 6c41315d-9cbc-4bb4-92f5-84710bc3e219
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":16370.577757,"rpcId":2,"method":"runtimeClient:submitAndStartEnvelope"}
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376","attemptNumber":0,"phase":"admission.submit.begin","at":1791991521060}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376","attemptNumber":0,"phase":"admission.submit.end","at":1791991521060,"durationMs":291.6000000000349}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4","attemptNumber":0,"phase":"admission.start.begin","at":1791991521060}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4","attemptNumber":0,"phase":"claim.begin","at":1791991521060}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4","attemptNumber":0,"phase":"start.claimNext.begin","at":1791991521060}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4","attemptNumber":0,"phase":"start.claimNext.end","at":1791991521060,"durationMs":182.29999999998836}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4","attemptNumber":1,"phase":"claim.end","at":1791991521060}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4","attemptNumber":0,"phase":"admission.start.end","at":1791991521060,"durationMs":208.09999999997672}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4","attemptNumber":1,"phase":"admission.get.begin","at":1791991521060}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4","attemptNumber":1,"phase":"admission.get.end","at":1791991521060,"durationMs":6.099999999976717}'
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":17093.037299,"rpcId":2,"method":"runtimeClient:submitAndStartEnvelope","durationMs":722.4595420000005}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":17093.852716,"rpcId":3,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":17333.003508,"rpcId":3,"method":"runtimeClient:session","durationMs":239.15079200000037}
+Run run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4: running. Use /observe or /watch to resume; /cancel asks the backend to cancel.
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":17337.529716,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":17338.302466,"rpcId":4,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":17553.52755,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":18193.853217,"rpcId":4,"method":"runtimeClient:observeEnvelope","durationMs":855.5507509999989}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":18195.074508,"rpcId":5,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":18405.1463,"rpcId":5,"method":"runtimeClient:session","durationMs":210.07179199999882}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":18406.846717,"rpcId":6,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":18691.371175,"rpcId":6,"method":"runtimeClient:observeEnvelope","durationMs":284.52445799999987}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":18691.851884,"rpcId":7,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":18899.16805,"rpcId":7,"method":"runtimeClient:session","durationMs":207.31616600000052}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":21487.355635,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":21487.72651,"rpcId":8,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":21699.977968,"rpcId":8,"method":"runtimeClient:observeEnvelope","durationMs":212.25145799999882}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":21700.576135,"rpcId":9,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":21980.720427,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":21981.686968,"rpcId":9,"method":"runtimeClient:session","durationMs":281.11083300000246}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":21982.294343,"rpcId":10,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":22809.152927,"rpcId":10,"method":"runtimeClient:observeEnvelope","durationMs":826.8585839999978}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":22809.566427,"rpcId":11,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":23007.355219,"rpcId":11,"method":"runtimeClient:session","durationMs":197.78879199999938}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":24259.785511,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":24260.085261,"rpcId":12,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":24599.724636,"rpcId":12,"method":"runtimeClient:observeEnvelope","durationMs":339.63937499999884}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":24600.740927,"rpcId":13,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":24785.556594,"rpcId":13,"method":"runtimeClient:session","durationMs":184.81566700000258}
+CLI{"type":"cortex-cli-latency","version":1,"phase":"answer.first_printed","atMs":24786.289011,"commandId":1,"method":"cli.chat","durationMs":9304.916921}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":25761.097886,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":25761.58222,"rpcId":14,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":26546.900803,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":26632.795303,"rpcId":14,"method":"runtimeClient:observeEnvelope","durationMs":871.2130829999987}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":26633.384303,"rpcId":15,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":26851.065887,"rpcId":15,"method":"runtimeClient:session","durationMs":217.68158400000175}
+43
+Run run:abe32cf91aed6a732fc2c9cd4f71526347db26d03079b6073f3048a0633dc2f4: complete; memory pending; graph not_requested
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":26851.741345,"rpcId":16,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":26851.885178,"rpcId":17,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":27127.33847,"rpcId":16,"method":"runtimeClient:observeEnvelope","durationMs":275.59712500000023}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":27127.798804,"rpcId":18,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":27303.530845,"rpcId":17,"method":"runtimeClient:session","durationMs":451.6456670000007}
+[1G[0JYou: [6GI collect stamps. Do not use any tools; reply exactly CLW43.
+{"type":"cortex-cli-latency","version":1,"phase":"submit.begin","atMs":139984.770314,"commandId":2,"method":"cli.chat"}
+{"type":"cortex-client-latency","version":1,"phase":"auth.begin","atMs":139989.906314}
+{"type":"cortex-client-latency","version":1,"phase":"auth.ready","atMs":140395.122147}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":140395.561522,"rpcId":1,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":140740.100606,"rpcId":1,"method":"runtimeClient:session","durationMs":344.5390839999891}
+Request ID: 8a6ad155-bcbf-4baa-acbf-9bcff0556117
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":140741.071648,"rpcId":2,"method":"runtimeClient:submitAndStartEnvelope"}
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376","attemptNumber":0,"phase":"admission.submit.begin","at":1791991645420}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376","attemptNumber":0,"phase":"admission.submit.end","at":1791991645420,"durationMs":246.80000000004657}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0","attemptNumber":0,"phase":"admission.start.begin","at":1791991645420}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0","attemptNumber":0,"phase":"claim.begin","at":1791991645420}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0","attemptNumber":0,"phase":"start.claimNext.begin","at":1791991645420}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0","attemptNumber":0,"phase":"start.claimNext.end","at":1791991645420,"durationMs":188}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0","attemptNumber":1,"phase":"claim.end","at":1791991645420}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0","attemptNumber":0,"phase":"admission.start.end","at":1791991645420,"durationMs":214.40000000002328}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0","attemptNumber":1,"phase":"admission.get.begin","at":1791991645420}'
+[CONVEX M(runtimeClient:submitAndStartEnvelope)] [LOG] '{"runId":"run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0","attemptNumber":1,"phase":"admission.get.end","at":1791991645420,"durationMs":5.299999999930151}'
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":141398.550731,"rpcId":2,"method":"runtimeClient:submitAndStartEnvelope","durationMs":657.4790829999838}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":141398.922939,"rpcId":3,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":141622.587065,"rpcId":3,"method":"runtimeClient:session","durationMs":223.66412599998876}
+Run run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0: running. Use /observe or /watch to resume; /cancel asks the backend to cancel.
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":141624.164481,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":141624.39794,"rpcId":4,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":141810.876106,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":141990.77244,"rpcId":4,"method":"runtimeClient:observeEnvelope","durationMs":366.37450000000536}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":141991.320356,"rpcId":5,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":142181.549315,"rpcId":5,"method":"runtimeClient:session","durationMs":190.22895900000003}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":142182.628232,"rpcId":6,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":142377.659023,"rpcId":6,"method":"runtimeClient:observeEnvelope","durationMs":195.0307909999974}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":142378.328982,"rpcId":7,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":142587.685857,"rpcId":7,"method":"runtimeClient:session","durationMs":209.35687499999767}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":145757.067149,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":145757.440691,"rpcId":8,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":145984.337107,"rpcId":8,"method":"runtimeClient:observeEnvelope","durationMs":226.89641600000323}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":145984.800399,"rpcId":9,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":146178.441649,"rpcId":9,"method":"runtimeClient:session","durationMs":193.64124999998603}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":146867.742233,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":146868.115816,"rpcId":10,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":147171.530775,"rpcId":10,"method":"runtimeClient:observeEnvelope","durationMs":303.414958999987}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":147171.856025,"rpcId":11,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":147374.582775,"rpcId":11,"method":"runtimeClient:session","durationMs":202.72675000000163}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":149179.217942,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":149179.585067,"rpcId":12,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":149447.146609,"rpcId":12,"method":"runtimeClient:observeEnvelope","durationMs":267.5615419999813}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":149447.581234,"rpcId":13,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":149697.099526,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":149700.147817,"rpcId":13,"method":"runtimeClient:session","durationMs":252.56658299997798}
+CL{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":149700.580692,"rpcId":14,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-cli-latency","version":1,"phase":"answer.first_printed","atMs":149701.060942,"commandId":2,"method":"cli.chat","durationMs":9716.290628000017}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":149959.396026,"rpcId":14,"method":"runtimeClient:observeEnvelope","durationMs":258.81533400001354}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":149959.779109,"rpcId":15,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":150300.381193,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":150301.198693,"rpcId":15,"method":"runtimeClient:session","durationMs":341.4195840000175}
+W43{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":150301.764693,"rpcId":16,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":150560.008526,"rpcId":16,"method":"runtimeClient:observeEnvelope","durationMs":258.2438329999859}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":150560.442901,"rpcId":17,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":150749.252151,"rpcId":17,"method":"runtimeClient:session","durationMs":188.80924999999115}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":151748.790193,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":151749.065318,"rpcId":18,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":152031.254444,"rpcId":18,"method":"runtimeClient:observeEnvelope","durationMs":282.18912599998293}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":152031.640235,"rpcId":19,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":152497.710152,"rpcId":19,"method":"runtimeClient:session","durationMs":466.06991700001527}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":153080.730236,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":153081.090736,"rpcId":20,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":153431.633278,"rpcId":20,"method":"runtimeClient:observeEnvelope","durationMs":350.54254199998104}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":153432.073069,"rpcId":21,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":153609.852528,"rpcId":21,"method":"runtimeClient:session","durationMs":177.77945899998304}
+
+Run run:bbaccd025e4e2a777b235c40ecd852d3ea8b45b6add8318f9c2e14f919ccc5f0: complete; memory pending; graph not_requested
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":153611.275569,"rpcId":22,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":153789.397486,"rpcId":22,"method":"runtimeClient:session","durationMs":178.1219170000113}
+[1G[0JYou: [6G/exit
+\[1G[0K

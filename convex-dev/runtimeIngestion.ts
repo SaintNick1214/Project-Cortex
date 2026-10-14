@@ -24,6 +24,7 @@ import { bindTrustedBudget, assertUnreservedIngestionCapacity } from "./runtimeM
 import type { UnreservedCapacityRefusal } from "./runtimeModelPolicy";
 import type { ConflictDecision } from "../src/domain/conflicts";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
+import { deferForegroundStage } from "./runtimeIngestionPriority";
 
 type ReadCtx = Pick<QueryCtx, "db">;
 type Event = Doc<"runtimeIngestionEvents">;
@@ -267,6 +268,7 @@ export const claim = internalMutation({ args: stageArgs, handler: async (ctx, ar
     await readiness(ctx, current.event); return null;
   }
   if (row.state !== "pending") return null;
+  if (await deferForegroundStage(ctx, current.event, row)) return null;
   // Capacity wakes are the SAME never-dispatched stage intent, not a new paid
   // retry. Keep the first lease deadline and operation identity across wakes.
   if (row.capacityWait) {

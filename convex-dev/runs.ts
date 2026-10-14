@@ -19,6 +19,7 @@ import { agentComponent, approveRegisteredMessage, bridgeFor, captureCutoff, cap
 import { recheckAuthority } from "./runtimeAuth";
 import { stageStatus } from "./runtimeTranscriptSchema";
 import { readRunMemoryPublication } from "./runtimeIngestion";
+import { holdForegroundIngestion, releaseForegroundIngestion } from "./runtimeIngestionPriority";
 
 function internalMutationRef<Args extends Record<string, unknown>, Result>(name: string) {
   return makeFunctionReference<"mutation", Args, Result>(name) as unknown as FunctionReference<"mutation", "internal", Args, Result>;
@@ -116,7 +117,9 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown; 
   // Scheduler insertion is part of this same parent transaction. A failed parent leaves no work or transcript.
   await ctx.scheduler.runAfter(0, recoverRef, { reference, conversationId: conversation.conversationId });
   await recheckAuthority(ctx, reference, { capability: "run", tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId });
-  return publicRun((await ctx.db.get("runtimeRuns", id))!);
+  const admittedRun = (await ctx.db.get("runtimeRuns", id))!;
+  await holdForegroundIngestion(ctx, admittedRun, definition);
+  return publicRun(admittedRun);
 }
 export const submit = mutation({ args: { request: v.any(), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) }, handler: submitHandler });
 const runSelector = { runId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()) };
@@ -164,6 +167,7 @@ async function outboxFor(ctx: Pick<QueryCtx, "db">, row: Doc<"runtimeRuns">) {
   if (!outbox) transcriptDenied("INVALID_STATE"); return outbox;
 }
 async function retireWork(ctx: MutationCtx, row: Doc<"runtimeRuns">, status: "cancelled" | "failed", failureCode: string, now: number) {
+  if (row.modelInputVersion === 8) await releaseForegroundIngestion(ctx, row, row.runId);
   await ctx.db.patch("runtimeRuns", row._id, { responseStatus: status, failureCode,
     ...(status === "cancelled" ? { cancellationRequestedAt: now, cancelledAt: now } : {}), updatedAt: now });
   const outbox = await outboxFor(ctx, row);

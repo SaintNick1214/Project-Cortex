@@ -7,7 +7,7 @@ import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference, RuntimeCapability } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { createAuthorityReader, recheckAuthority, createAuthorityReadScope, readDeploymentPolicyRows, readQualificationRows } from "./runtimeAuth";
+import { createAuthorityReader, recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, readDeploymentPolicyRows, readQualificationRows } from "./runtimeAuth";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
@@ -1132,7 +1132,7 @@ export async function mediaResultPublicationAllowed(ctx: ReadCtx, reference: Run
   return permittedAttachment(ctx, reference, state);
 }
 /** Trusted compiled terminal producers only. This authority accounts liability, never grants data access. */
-export const captureTerminalEvidence = internalMutation({ args: { attemptId: v.id("runtimeModelAttempts"), dispatchIdentity: v.string(), receiptCanonical: v.string() }, handler: async (ctx, args) => {
+export async function captureTerminalEvidenceHandler(ctx: MutationCtx, args: { attemptId: Id<"runtimeModelAttempts">; dispatchIdentity: string; receiptCanonical: string }) {
   const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, snapshot, proof } = state;
   const captured = capturedAttempt(attempt);
   if (attempt.checkpointAt === undefined || args.dispatchIdentity !== attempt.dispatchIdentity) fail("POLICY_DENIED", "uncertain");
@@ -1174,9 +1174,14 @@ export const captureTerminalEvidence = internalMutation({ args: { attemptId: v.i
   const latest = await attemptContext(ctx, args.attemptId);
   return { evidenceId: await captureIdentity(latest.attempt), state: accounted.state as "settled" | "confirmed_rejected" | "uncertain",
     ...(latest.attempt.settledCostUnits !== undefined ? { settledCostUnits: latest.attempt.settledCostUnits } : {}), overrun: latest.operation.overrun };
-} });
+}
+const terminalCaptureArgs = { attemptId: v.id("runtimeModelAttempts"), dispatchIdentity: v.string(), receiptCanonical: v.string() };
+export const captureTerminalEvidence = internalMutation({ args: terminalCaptureArgs, handler: captureTerminalEvidenceHandler });
+/** Compiled private V8 producers opt in without adding an access gate before accounting. */
+export const captureTerminalEvidenceV8 = internalMutation({ args: terminalCaptureArgs,
+  handler: (ctx, args) => captureTerminalEvidenceHandler(createV8AuthorityReadScope(ctx), args) });
 /** Private delivery is independently fenced by exact current original authority. Closed never reopens. */
-export const attachTerminalResult = internalMutation({ args: { ...attemptArgs, evidenceId: v.string(), privateResultCanonical: v.string() }, handler: async (ctx, args) => {
+export async function attachTerminalResultHandler(ctx: MutationCtx, args: { reference: RuntimeAuthorityReference; attemptId: Id<"runtimeModelAttempts">; evidenceId: string; privateResultCanonical: string }) {
   const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, snapshot } = state;
   if (!capturedAttempt(attempt)) return { attached: false, resultWithheld: true };
   if (args.evidenceId !== await captureIdentity(attempt)) fail("IDEMPOTENCY_CONFLICT", "uncertain");
@@ -1196,7 +1201,12 @@ export const attachTerminalResult = internalMutation({ args: { ...attemptArgs, e
   }
   await ctx.db.patch("runtimeModelAttempts", attempt._id, { privateResultCanonical: privateResult, resultWithheld: false, resultAttachmentState: "attached", outputVisible: true });
   return { attached: true, resultWithheld: false };
-} });
+}
+const terminalAttachmentArgs = { ...attemptArgs, evidenceId: v.string(), privateResultCanonical: v.string() };
+export const attachTerminalResult = internalMutation({ args: terminalAttachmentArgs, handler: attachTerminalResultHandler });
+/** A new native invocation repeats the original independent private-result fence. */
+export const attachTerminalResultV8 = internalMutation({ args: terminalAttachmentArgs,
+  handler: (ctx, args) => attachTerminalResultHandler(createV8AuthorityReadScope(ctx), args) });
 /** Positive canonical retirement evidence; absence alone is never deployment authority. */
 async function retiredScope(ctx: ReadCtx, operation: Operation) {
   const reader = createAuthorityReader(ctx);

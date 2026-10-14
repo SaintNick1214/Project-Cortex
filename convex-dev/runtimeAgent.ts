@@ -37,7 +37,7 @@ import { agentComponent, canonicalMessageHash, checkConversation, conversationBy
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
 import { recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads } from "./runtimeAuth";
-import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
+import { createBackendGatewayComposition, withV8GatewayTerminalPorts } from "./runtimeGatewayBackend";
 import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
 import { admitHandler, checkpointHandler, resolveHandler, readCurrentEmbeddingProfile, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
 import { createAgentGatewayCancellationBridge, createGovernedGatewayModel, assertGatewayReservedRequest, GatewayDispatchError, preflightAgentModelRequest } from "./runtimeGateway";
@@ -46,6 +46,7 @@ import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sourceContent, commitDerivedInput } from "./runtimeMemorySchema";
 import { contextSourcePermission } from "./runtimeContextWitnessSchema";
 import { registerCompletedToolSource } from "./runtimeIngestion";
+import { promoteForegroundIngestion, releaseForegroundIngestion } from "./runtimeIngestionPriority";
 import { contextBoundary, readIndexedContextAvailability, readIndexedSourceAtCutoff, readPendingContext, readEmptyPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
 import type { ContextBoundary } from "./runtimeMemoryContext";
 import { traceRuntimePhase, traceRuntimeMutationSpan } from "./runtimeLatencyTrace";
@@ -562,8 +563,9 @@ async function contextBarrierHandler(ctx: MutationCtx, args: Attempt) {
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started" || current.execution.barrierStartedAt === undefined) transcriptDenied("INVALID_STATE");
   if (current.definition.context.memoryMode !== "strict") return { state: "ready" as const, remainingMs: 0 };
-  await refreshScopeWatermarks(ctx, args.reference);
   const cutoff = current.snapshot.ingestionCutoff.sequence;
+  await promoteForegroundIngestion(ctx, current.run, cutoff);
+  await refreshScopeWatermarks(ctx, args.reference);
   const progress = await readStageProgress(ctx, args.reference, cutoff, current.run.runBudgetId, current.snapshot.ingestionCutoff.graphSequence);
   const barrier = current.definition.context.barrier ?? { deadlineMs: 30_000, onFailure: "fail" as const };
   const decision = evaluateMemoryBarrier({ cutoff, requiredStages: current.snapshot.ingestionCutoff.requiredStages,
@@ -915,6 +917,8 @@ export const finishOperation = internalMutation({ args: { ...agentAttempt, opera
     pins.set(pin.id, pin);
   }
   await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { savedMessageIds: ids, savedMessagePins: [...pins.values()], nextModelStep: owned.kind === "model" ? owned.ordinal + 1 : current.execution.nextModelStep, updatedAt: Date.now() });
+  if (current.snapshot.version === 8 && owned.kind === "model" && owned.ordinal === 0)
+    await releaseForegroundIngestion(ctx, current.run, args.runId);
   if (owned.kind === "tool") {
     if (owned.toolName === "memory_remember") await registerCompletedToolSource(ctx, args.reference, owned.operationId);
     const value = JSON.parse(args.resultCanonical) as { receiptId?: unknown; version?: unknown; jobId?: unknown; artifactId?: unknown; kind?: unknown };
@@ -1001,7 +1005,7 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
   if (prepared.state === "completed") return JSON.parse(prepared.resultCanonical) as StepResult;
   const { current, op } = prepared;
   const guard = async () => { await ctx.runQuery(refs.hydrate, attempt); };
-  const base = createBackendGatewayComposition(ctx, async request => {
+  const base = createBackendGatewayComposition(current.snapshot.version === 8 ? withV8GatewayTerminalPorts(ctx) : ctx, async request => {
     if (!proposal) await guard();
     if (!proposal && (canonicalModelJson(request.reference) !== canonicalModelJson(args.reference) || request.operationKey !== "agent.respond"
       || request.runBudgetId !== current.run.runBudgetId || request.semanticId !== op.semanticId || request.ordinal !== args.ordinal
@@ -1408,6 +1412,7 @@ export const waitForApproval = internalMutation({ args: { ...agentAttempt, opera
   if (!outbox || outbox.state !== "claimed" || outbox.leaseVersion !== args.leaseVersion || outbox.leaseExpiresAt === undefined || Date.now() >= outbox.leaseExpiresAt) transcriptDenied("LEASE_EXPIRED");
   await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { state: "waiting_approval", updatedAt: Date.now() });
   await ctx.db.patch("runtimeRuns", current.run._id, { responseStatus: "waiting_approval", updatedAt: Date.now() });
+  if (current.snapshot.version === 8) await releaseForegroundIngestion(ctx, current.run, args.runId);
   await ctx.scheduler.runAfter(outbox.leaseExpiresAt - Date.now(), ref<"mutation", Attempt & { leaseExpiresAt: number }, null>("mutation", "runtimeAgent:expireApproval"),
     { ...attemptArgs(args), leaseExpiresAt: outbox.leaseExpiresAt });
   await writeParts(ctx, current.execution, [{ type: "status", state: "waiting_approval" }]); return null;
@@ -1572,6 +1577,7 @@ async function endInterruptedHandler(ctx: MutationCtx, args: Attempt & { cancell
   await ctx.db.patch("runtimeAgentExecutions", owned._id, { state, failureCode, updatedAt: Date.now() });
   await writeParts(ctx, owned, [{ type: "status", state }, ...(cancelled ? [] : [{ type: "error" as const, code: "RUNTIME_OUTPUT_FAILED" as const }])]);
   if (row && row.attemptNumber === args.attemptNumber && row.responseStatus !== "complete") {
+    if (row.modelInputVersion === 8) await releaseForegroundIngestion(ctx, row, args.runId);
     await ctx.db.patch("runtimeRuns", row._id, { responseStatus: cancelled ? "cancelled" : "failed", failureCode, updatedAt: Date.now() });
     const outbox = singleTranscript(await ctx.db.query("runtimeRunOutbox").withIndex("by_run", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId)).take(2));
     if (outbox) await ctx.db.patch("runtimeRunOutbox", outbox._id, { state: "complete", updatedAt: Date.now() });

@@ -1,0 +1,98 @@
+{
+  "status": "SOURCE_COMPLETE_FROZEN",
+  "repository": "Project-Cortex-Proofs (local checkout; remote visibility not inferred)",
+  "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+  "observedAt": "2026-10-14T16:21:13.181783+00:00",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "toolchainPathFirst": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+  "scope": {
+    "teamId": 325340,
+    "projectId": 3200658,
+    "projectSlug": "cortex-sandboxes",
+    "requestedRegion": "aws-us-east-1"
+  },
+  "availabilityEvidence": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cortex-sandbox-region-capabilities.json",
+    "sha256": "697127f79fd4da046cb1c1bf54125c9b4db514386f15987891df069f3021c0d4",
+    "reuse": "Previously captured actual availability only. New source checks availability freshly before each new creation; no service access during this task."
+  },
+  "files": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs",
+      "relativePath": "sandbox-env/cloud.mjs",
+      "sha256": "d14d0886f4ba09d3114237bd907701d2544f55f392ca44e2dbabe43841d13682"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud-config.json",
+      "relativePath": "sandbox-env/cloud-config.json",
+      "sha256": "e74904989e5c97095603d47a0792dcec2dab97ed993ffe930b03add19e01d062"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud-runtime.test.mjs",
+      "relativePath": "sandbox-env/cloud-runtime.test.mjs",
+      "sha256": "10d5312798e5c38db190953f6cde02ec6f6946e8fb883d79634879027dea8f3f"
+    }
+  ],
+  "checks": [
+    {
+      "name": "region-selection-tests-v1",
+      "command": "node --test sandbox-env/cloud-runtime.test.mjs sandbox-env/cloud-runtime-tokens.test.mjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+      "exitCode": 0,
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "logSha256": "87bfd6094cac12fd64286c0d3abd67a567beb0bffcbf0232c6ab6cb2e3fc00ea"
+    },
+    {
+      "name": "region-selection-tests-v2",
+      "command": "node --test sandbox-env/cloud-runtime.test.mjs sandbox-env/cloud-runtime-tokens.test.mjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+      "exitCode": 0,
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "logSha256": "3166bf26dba406fa244c1f2021f07bbd5152b01bf7a64a5f377722298f8bf98b"
+    }
+  ],
+  "syntaxChecks": {
+    "cloud.mjs": 0,
+    "cloud-runtime.test.mjs": 0,
+    "configExactPins": true,
+    "finalSourceParsedByActualTests": true
+  },
+  "preservedFailures": [],
+  "behavior": {
+    "newCreationOnly": true,
+    "regionGetBeforeIssuedAndPost": true,
+    "validatedRegionPrimitiveIsPostAndReceiptPrimitive": true,
+    "existingIntentNoRegionGet": true,
+    "unknownCreationNoRetry": true,
+    "legacyPublicTargetFieldsUnchanged": true,
+    "observedDeploymentRegion": "UNAVAILABLE: target DTO/response fixture omits location; requestedRegion is intent, not verified location",
+    "expiryMs": 604800000,
+    "managementRequestDeadlineMs": 30000
+  },
+  "sourceTaskPercent": 100,
+  "overallLatencyGoalPercent": 50,
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "deployments": 0,
+  "commits": 0,
+  "unrelatedWorkPreserved": [
+    "Existing .gitignore edit",
+    "All other Proofs files and core source"
+  ],
+  "remaining": [
+    "One coherent non-author review (root-owned)",
+    "Procedure approval/pin resealing by root before a new launch",
+    "Actual future create with requested region and independent cleanup; no service outcome claimed"
+  ]
+}

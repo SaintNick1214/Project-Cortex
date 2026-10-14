@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--runInBand",
+    "--forceExit",
+    "--runTestsByPath",
+    "tests/unit/runtimeIngestion/foreground-priority.test.ts",
+    "tests/unit/runtimeIngestion/worker.test.ts",
+    "tests/unit/runtimeIngestion/stages.test.ts",
+    "tests/unit/runtimeIngestion/context.test.ts",
+    "tests/unit/runtimeIngestion/context-permissions.test.ts",
+    "tests/unit/runtimeIngestion/shared-edit.test.ts",
+    "tests/unit/runtimeIngestion/sequence-head.test.ts",
+    "tests/unit/runtimeIngestion/progress-publication.test.ts",
+    "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+    "tests/unit/runtimeIngestion/framing-invalid-output.test.ts",
+    "tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-affected-v1.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "24.15.0",
+  "exitCode": 0
+}

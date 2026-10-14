@@ -9,7 +9,7 @@ import vm from "node:vm";
 import { build } from "esbuild";
 const q = path.dirname(new URL(import.meta.url).pathname);
 const kit = "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-read-retention-2026-10-14";
-const sha = "SOURCE_COMMIT_UNREADY";
+const sha = "efcc91d2317dadcb143c5cf1929504bd0cbee3a6";
 assert.match(sha, /^[a-f0-9]{40}$/, 'Root accepted commit GO required');
 const receipt = JSON.parse(fs.readFileSync(path.join(kit, "image/archives/manifest.json"), "utf8"));
 assert.equal(receipt.sourceCommit, sha);

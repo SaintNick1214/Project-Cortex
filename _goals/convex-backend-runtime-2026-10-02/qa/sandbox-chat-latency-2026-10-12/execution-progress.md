@@ -154,3 +154,9 @@ K22 2026-10-14T14:12:02.815583+00:00: boundedrepeatcapture scenarioPASS (221nati
 17 product/test files frozen. Shared root/backend/lint types, scoped lint, SDK build and packed contracts each exited0. Separate cortexmemory.dev docs build/render passed. One joint independent source/test/docs review is running. Source implementation100%; follow-up goal2/4 (50%). New native qualification remains open; K22 failures preserved.
 
 K23 independent source/test/docs PASS:0 unresolved breaking findings;17core+10website hashes match. Fresh packaging/native qualification authorized next. Source task100%; follow-up2/4 (50%). Native speed/auth/chat qualification remains open.
+
+K23 hosted ordinary memory milestone100%:4positivefacts/8vectors/currentprofile/provenance/authority and contiguousfacts/vectors through8 PASS with45freshtarget checks. All4response completionsPASS. Browser3.927/8.495s andCLI9.305/9.716s allFAILunder1000ms; no resubmission. SDKauth/capture/tool tests pending. Follow-up2/4 (50%).
+
+K23 scoped native functional milestone100%; latency follow-up50%. Four ordinary replies,4facts/8vectors, repeated external capture/public recall/scoped negatives, SDK authentication and approved tool/reconnect/strict11of11 outcomes passed. All4ordinary SLO samples failed. Fresh independent cleanup verifies exact sandbox resources ABSENT;47native attempts released,0active slots,actual charges UNKNOWN. Original failures retained. Next bounded source batch retains terminal reads and defers only same-run unstarted input ingestion up to original capture+5s.
+
+K24 source/test/docs accepted by one independent nonauthor review after correction of retained default strict-barrier compatibility. Source100%; latencyfollow-up50%. Final6quality/build/packedchecksPASS; latest192/8 parent-suite unionPASS0skip (not one aggregate invocation). Native K24 not run; originalK23 SLO0/4 remains.

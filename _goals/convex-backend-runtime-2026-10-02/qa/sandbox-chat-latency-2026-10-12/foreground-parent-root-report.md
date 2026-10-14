@@ -1,0 +1,9 @@
+# Root foreground scheduling integration
+
+Baseline efcc91d2317dadcb143c5cf1929504bd0cbee3a6 in SaintNick1214/Project-Cortex. B terminal-scope Agent intermediate hash remains recorded in v8-terminal-scope-freeze.json; Root then added only ingestion scheduling hooks.
+
+Original submit reads the newly admitted run once, then atomically holds its eligible V8 original input before parent commit. Original authorization, canonical saves, source enqueue, run budget/outbox, recovery scheduler and final authority checks remain. Replay returns through the original branch and cannot renew the five-second capture deadline. Original retirement releases only V8 hints before its existing retirement effects.
+
+Agent strict promotion runs for all supported strict snapshots after original execution/source checks and before original refresh/evaluation; captured cutoff and original stage deadline/readiness remain. Ordinal0 model completion releases after native message validation, canonical pins and completed operation write. Missing native output rolls back and retains held state. Tool approval wait releases scheduling only; original approval/lease guard remains. Original interruption releases on the matching V8 run without refund/retry/indexed readiness. Historical Workflow bodies and journals are unchanged.
+
+The original snapshot8-only integration was rejected for retained default strict deadlines; the correction and paired cross-conversation regression retain this original finding. v3:136/136PASS5suites0skip, with the other3v2suites unchanged. Q/foreground-parent-root-v1.json:17/17PASS focused. New explicit human-wait regression plus original dependencies in v2:191/191PASS8suites0skip. These are controlled registered-handler tests, not native cloud timing. Shared six quality/build/packed checks passed; separate native qualification remains. Scope is same-run USER INPUT ONLY; earlier assistant/other-run contention is unaffected.
