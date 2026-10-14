@@ -1,0 +1,8 @@
+# K28 auth and cleanup preparation
+
+**PREPARED / NOT_READY / NOT_EXECUTED.** Source `a773bd545c22e3c6eeb228b800d4c3a679375c5b`; kit `manual-sandbox-delivery-plan-2026-10-14`. Target and image remain unknown. B owns shared `k28-collector-pins.mjs`; it was not written or executed by this reviewer.
+
+- Auth: `k28-run-auth-once.mjs` → `k28-auth-close-qualification-readonly.mjs`. Original signed owner/profile, expired-valid-signature and invalid-signature cases,4000ms auth/RPC bounds,256metadata, exact data/finance equality, negative zero payload and final client closure remain. Only generation/source/kit changes; inverse restores K27. Requires exact READY pins and `CORTEX_K28_AUTH_GO=1` from Root's exclusive auth-FIRST idle window after startup/trace readback, before browser/CLI/memory writes.
+- Cleanup: `verify-k28-cleanup-v1.mjs` consumes actual `k28-environment-ready.json` (top-level sessionId), `k28-launcher-start-v1.json` and `k28-launcher-child-exit-v1.json`. It checks source/image/target, matching start/close/journal PID, actual exit130/no pipeline and current CLEANED journal. Original approved project/team inventory, nondefault-dev tuple/expiry,30s bounds, exact Docker negative and issuer/secrets/workspace/backend ENOENT oracles remain. Requires separate `CORTEX_K28_CLEANUP_GO=1` and Root CLEANED/all-readers-closed GO. No fake readiness or prospective completion receipt is created.
+
+Pinned Node24.15 syntax checks: **3/3 exit0**; no helper import/execution, pins invocation, test/build, service/network/target access or paid call. Exact helper hashes and observed syntax results are in the companion JSON. K27 helpers and both cleanup outcomes remain unchanged.

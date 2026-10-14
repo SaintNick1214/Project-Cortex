@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K28 coherentbackend +authenticatedreactivedelivery implementation underway; K27 independentlyCLEANED; SLO0/4 retained",
+  "phase": "K28 hosted functional checks and independent cleanup complete; latency SLO failed 0/4; next measured backend preparation repair",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T20:26:57.163Z",
+  "updatedAt": "2026-10-14T20:59:08.504Z",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,36 +58,37 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "generation": "K27",
-    "sessionId": "acd3400a-4d6a-4589-bbaa-9c7fac860369",
+    "generation": "K28",
+    "sessionId": "14be01ce-2125-4d36-bb83-f4d842f994e9",
     "state": "CLEANED",
-    "sourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
-    "launcherSession": 6629,
-    "launcherPid": 62957,
+    "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+    "launcherSession": 51883,
+    "launcherPid": 78674,
     "launcherChildExit": 130,
     "target": {
-      "id": 6175898,
-      "name": "ideal-dolphin-181",
+      "id": 6177151,
+      "name": "resilient-ptarmigan-738",
       "teamId": 325340,
       "projectId": 3200658,
       "deploymentType": "dev",
       "isDefault": false,
-      "expiresAt": 1792611314248,
-      "reference": "dev/cortex-sandbox-acd3400a-4d6a-4589-bbaa-9c7fac860369"
+      "expiresAt": 1792614908558,
+      "reference": "dev/cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9"
     },
     "ports": {
-      "web": 3236,
-      "basic": 3237
+      "web": 3394,
+      "basic": 3395
     },
-    "imageId": "sha256:7b2568d008df68301e7dd81692f532092c725cd549f656fc566f91254e73a83c",
+    "imageId": "sha256:ae85998b5ffb20e8fd006136473740ec093d504c328d4021d9b7c755dbdaf565",
     "startupFixedQualification": "8/8PASS",
     "nativeSLOQualified": false,
     "container": {
-      "name": "cortex-sandbox-acd3400a-4d6a-4589-bbaa-9c7fac860369",
-      "id": "c34fca21379380863011afd044ec6f941cbd89a1955a1978bd13262c4e7c97da",
-      "imageId": "sha256:7b2568d008df68301e7dd81692f532092c725cd549f656fc566f91254e73a83c"
+      "name": "cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9",
+      "id": "bb93d48f2e399e7d7e3f8ccce0b7fc6f8007f323b0c38221580edb7aa7e365c5",
+      "imageId": "sha256:ae85998b5ffb20e8fd006136473740ec093d504c328d4021d9b7c755dbdaf565"
     },
-    "cleanupReceipt": "k27-cleanup-final.json"
+    "backendTrace": "ENABLED_READBACK1_BEFORE_MEASURED_TURNS",
+    "cleanup": "k28-cleanup-final.json"
   },
   "actualSamples": {
     "generation": "K21",
@@ -111,9 +112,8 @@
     "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
   },
   "pendingRepairs": [
-    "K27 recalled data wrongly trailing system-role after current input; safe bounded request order/trust repair",
-    "K27 repeated native query work in Agent AND actual public recall; no authorization decision cache",
-    "Fresh installed cloud under1000ms and semantic answer qualification",
+    "Reduce measured backend pre-dispatch preparation (2087–6949ms) and protected delivery while retaining all current authority/source/accounting predicates and fresh boundaries",
+    "Fresh installed hosted sub1000ms and semantic qualification",
     "Unqualified in-plan new-target UPDATE/SUPERSEDE remains disclosed",
     "Independent final audit"
   ],
@@ -1698,12 +1698,12 @@
     "trace": "browsernativecompletionsavailable/phasegap; CLI218phases+18boundrecords; fullpacket k27-four-run-critical-path-readonly.md"
   },
   "sourceK28": {
-    "state": "INDEPENDENT_SOURCE_PASS",
+    "state": "SOURCE_ACCEPTED_NATIVE_FUNCTIONAL_PASS_LATENCY_FAIL_CLEANED",
     "scope": "k28-batch-scope.md",
     "productBaseline": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
     "qaHead": "86e51df8a46f8088d15aca7d9ffbd170a3b90bcb",
     "review": "k28-independent-review.md",
-    "native": "NOT_RUN",
+    "native": "FUNCTIONAL_SCOPED_PASS_SLO0_OF4",
     "client": {
       "state": "FROZEN_COMPATIBILITY_REPAIRED",
       "sourcePercent": 100,
@@ -1730,10 +1730,95 @@
       "receipt": "docs-k28-public-final-receipt-v1.json",
       "published": false,
       "committed": false,
-      "sourceReview": "PENDING"
+      "sourceReview": "PASS3.8 for v1 bytes; later actual-results-only refresh separately built/rendered"
     },
     "jointQuality": "6/6PASS/15sourcehashesunchanged",
     "reviewPacket": "k28-review-packet-v1.json",
-    "reviewVerdict": "PASS3.8"
+    "reviewVerdict": "PASS3.8",
+    "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+    "packaging": {
+      "isolatedBuildsPassed": 3,
+      "packsPassed": 4,
+      "consumers": "4/4PASS",
+      "image": "PASS",
+      "imageId": "sha256:ae85998b5ffb20e8fd006136473740ec093d504c328d4021d9b7c755dbdaf565",
+      "launcherTests": "121/121/0skip/todo",
+      "dryRunExit": 0,
+      "nativeQualified": false
+    }
+  },
+  "actualSamplesK28": {
+    "generation": "K28",
+    "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+    "browserFirstAfterPaintMs": 4379.5,
+    "browserWarmAfterPaintMs": 3765.5999999046326,
+    "responses": "COMPLETE4/4",
+    "uiMarkers": "2/2",
+    "memoryUI": "complete2/2",
+    "sloPass": 0,
+    "sloTotal": 4,
+    "backendTrace": "ENABLED_READBACK1_BEFORE_ALL_MEASURED_TURNS",
+    "resubmissions": 0,
+    "browserClosed": true,
+    "nativeMemory": "PASS45freshchecks/6factsAcross4positiveInputs/8matchingVectors/currentprofile/source/nativeusage/contiguous8",
+    "cliFirstStdoutAcknowledgedMs": 7704.965461,
+    "cliWarmFirstStdoutAcknowledgedMs": 9901.847421999999,
+    "cliClosed": true,
+    "readinessUI": "facts/vectors8of8",
+    "canonicalMemoryNative": "PASS exact canonical markers4/4 plus45fresh memory checks",
+    "semanticMarkers": "PASS4/4canonicalhashes",
+    "nativeMemoryReceipt": "k28-memory-native-v2-four-run-verification-1792010809070.json",
+    "canonicalMarkerReceipt": "k28-native-canonical-markers-from-proof.json",
+    "ordinaryCaptureRecall": "PASS82freshverifications/2captureintents/exactreplay+conflict/ONEpublicrecall/allnegatives",
+    "preliminaryServerAdmissionToModelDispatchMs": [
+      2223,
+      2087,
+      5305,
+      6949
+    ],
+    "preliminaryModelFirstTextMs": [
+      668,
+      481,
+      497,
+      535
+    ],
+    "ordinaryReceipt": "k28-native-ordinary-memory-v2-1792010868737-a1fe9fc3-3610-4c7c-8718-d36c9c8f3233.json",
+    "publicRecallMs": 3702.185958,
+    "publicRecallNestedRpcMs": 3332.806,
+    "tool": "PASS ONEsubmit/ONEapproval/ONEeffect/reconnect/finalTOOL48/strictfacts+vectors11of11",
+    "toolReceipt": "browser/k28-tool-outcome.json",
+    "auth": "PASS quiet owner+expired+invalid; negativeHTTP401/0protectedRPC/exactinventory+financeunchanged",
+    "financialSummary": {
+      "nativeAttempts": 46,
+      "activeSlots": 0,
+      "reservationCeilingsUnits": 6500000,
+      "allSlotsReleased": true,
+      "chargesUnknown": true,
+      "manualCallsNotRetried": true
+    },
+    "financialReceipt": "k28-financial-metadata-1792011421540.json",
+    "cleanup": "ABSENT independently verified; direct launcher130; exact DB/container/private directories absent",
+    "cleanupReceipt": "k28-cleanup-final.json",
+    "fullDelayChain": "k28-four-run-critical-path-readonly.md",
+    "backendPreparationToMainDispatchMs": [
+      2223,
+      2087,
+      5305,
+      6949
+    ],
+    "modelDispatchToProcessedFirstTextMs": [
+      668,
+      481,
+      497,
+      535
+    ],
+    "processedFirstTextToFirstOutputCommitMs": [
+      637.2,
+      502.9,
+      556.8,
+      1023.2
+    ],
+    "subsecondAccepted": false,
+    "requiredIntegrationAccepted": false
   }
 }

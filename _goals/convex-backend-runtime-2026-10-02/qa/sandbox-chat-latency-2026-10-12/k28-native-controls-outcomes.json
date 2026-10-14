@@ -1,0 +1,177 @@
+{
+  "status": "AUTHORIZED_NATIVE_CONTROLS_COMPLETE",
+  "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "target": {
+    "sessionId": "14be01ce-2125-4d36-bb83-f4d842f994e9",
+    "name": "resilient-ptarmigan-738",
+    "id": 6177151,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9"
+  },
+  "imageId": "sha256:ae85998b5ffb20e8fd006136473740ec093d504c328d4021d9b7c755dbdaf565",
+  "fixedFour": {
+    "passed": true,
+    "directChildExit": 0,
+    "readOnly": true,
+    "freshVerifications": 45,
+    "runCount": 4,
+    "canonicalMarkersPassed": 4,
+    "events": 8,
+    "retainedUserFacts": 6,
+    "currentProfileVectors": 8,
+    "exactZeroPrefixSequences": [
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        7,
+        8
+      ]
+    ],
+    "factsAndCurrentProfileContiguousThrough": 8,
+    "allSourceCandidateUsageAuthorityChecks": true,
+    "clientClosed": true
+  },
+  "ordinary": {
+    "passed": true,
+    "directChildExit": 0,
+    "clientsClosed": true,
+    "freshVerifications": 82,
+    "readinessPolls": 3,
+    "readinessLoopUnchanged": true,
+    "newCaptureIntents": 2,
+    "publicRecallCalls": 1,
+    "paidRetries": 0,
+    "native": {
+      "captureCount": 2,
+      "traceRows": 4,
+      "nativeMessageRows": 4,
+      "eventCount": 4,
+      "sourceRefsSha256": "3b0c12c13da864d75357744d5ced429236ca59e42986e98441864d24385606fb",
+      "positiveCoralFact": true,
+      "assistantExternal": true,
+      "metadataMatches": true,
+      "currentGrant": true,
+      "nativeUsageAttempts": 6
+    },
+    "assertions": {
+      "freshEqualContentCreatesTwo": true,
+      "exactReplayNoNewCapture": true,
+      "changed_same_id": {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "protectedPayloadReturned": false
+      },
+      "contiguousReadinessThrough4": true,
+      "reader.capture": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "outsider.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "locked.new": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "locked.replay": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "lockedStatusReadAllowed": true,
+      "explicitAdminManualUnlockForDelete": true,
+      "deleted.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "revoked.new": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "demoOwnerGrantUntouched": true
+    },
+    "publicRecall": {
+      "itemCount": 5,
+      "contextBytes": 279,
+      "currentProfile": true,
+      "scopedPositivePreference": true,
+      "requestIdSha256": "add3cca8df185246b8b363b4c3bf3cef6e30aa9dd13fc7e5204271383162058e"
+    }
+  },
+  "clocks": {
+    "basis": "One Node process monotonic performance clock; APIs include pre/post sessions, nested durations are not additive",
+    "firstCaptureApiMs": 1329.849083,
+    "secondCaptureApiMs": 1019.1486249999998,
+    "defaultProfileApiMs": 1066.4464169999992,
+    "publicRecallApiMs": 3702.185957999998,
+    "publicRecallRpcMs": 3332.8060000000005,
+    "publicRecallPreSessionMs": 173.6331250000003,
+    "publicRecallPostSessionMs": 194.68504100000064
+  },
+  "rawArtifacts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-memory-native-v2-four-run-verification-1792010809070.json",
+      "sha256": "df6c7626b0a77c0a979d32811ce96d9bd5b56cc764876526256b514cef9cd754"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-native-ordinary-memory-v2-1792010868737-a1fe9fc3-3610-4c7c-8718-d36c9c8f3233.json",
+      "sha256": "e2cb0f310a9565fbabfb239e6ea0d695eb06c4e2fc1cca3e96b31c694184fecf"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-native-canonical-markers-from-proof.json",
+      "sha256": "6bb68dea515ae66d8b802a018fc5e460f69ced20577416af435abde7ce61000d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-four-proof-outcome.json",
+      "sha256": "69618b9f43acda4faf56a2022c490d86226c215230647eeab2a658710ee44625"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-four-run-memory-invocation-v1.log",
+      "sha256": "155ba0dfa153b18338477220db066e7e40b3290b5fc4230a4defb30dab07c4c9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-four-run-memory-invocation-v1-exit.json",
+      "sha256": "2e01bc21c513b1faea5e772fe9beb0d5a30f181e08e8c0b790ed8a5cdf4c484b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-ordinary-memory-invocation-v1.log",
+      "sha256": "631a7cd49896c285109aea1d28b25749fe0ee1ec7d09d44b91142adda864c5d4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-ordinary-memory-invocation-v1-exit.json",
+      "sha256": "2862e36a07fb238340ea7d5801cb27c9f1ea533ae7b455efbea5b9a71a4a9903"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-four-run-memory-readonly.mjs",
+      "sha256": "33a0fa7126f30f37df90bd052d1e64d6f543aef126b87e528b11711b8c3803d1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-native-ordinary-memory.mjs",
+      "sha256": "c764787902021dec42c5f6825b96e10596013fea32204f4e5fb6bcdb4764ba1e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-ordinary-memory-pins.mjs",
+      "sha256": "8b3b8f639d902e7a9e6ac6cebdee9ff5d217900ff560c3c13661052c40d4d26f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-native-memory-helpers-prepared.json",
+      "sha256": "23b21a5f2b84011793fb33e0aad5f985032762da53b51e78eb87f73e095a0125"
+    }
+  ],
+  "globalFinanceAndRemainingJobs": "No global finance census by A after recall; capture jobs were complete/skipped with no reserved liability/slots at original native checks. Root owns final global finance/tool/cleanup.",
+  "comparisonLimits": "No causal cross-generation latency ratio; functional proof does not measure or accept first-output subsecond SLO. No extra service reads for report or canonical markers.",
+  "privateRawPayloadRetained": false,
+  "allAClientsClosed": true,
+  "furtherAServiceOrInferenceCalls": 0,
+  "nativeSloAcceptance": false
+}
