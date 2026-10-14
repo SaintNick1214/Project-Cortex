@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "sourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+  "offlineOnly": true,
+  "serviceCalls": 0,
+  "productEdits": 0,
+  "newTestsOrMeasurements": 0,
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k25-cli-post-pair-1792000040205.json",
+      "sha256": "dbb9bfe229cb55c2e212611acc2c97ba0e19d2ac1878474b61effcf3afeb76f2",
+      "executionCount": 391
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k25-browser-post-pair-1791999882772.json",
+      "sha256": "f82890d745557518616ede6da15d5d701f37f184cb672a1abaa55dfd63267d7a",
+      "executionCount": 542
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-memory-native-v2-four-run-verification-1792000180623.json",
+      "sha256": "c1ea8e41b38bed8fafa1248df4ea78fe353950b74fe2e829bb3b612b812052db",
+      "inventoryCondition": "Captured after four turns, before separate ordinary QA captures; not exact per-transaction table inventory."
+    }
+  ],
+  "sourceHashes": {
+    "convex-dev/runtimeAgentRecall.ts": "797a4c453d7e91f934d8a174b4d9f2c55926f1e91514456ddf24d3b27c5ffdba",
+    "convex-dev/runtimeAgent.ts": "b209850e583ebd2e638e37bf33829e5461a165a244286bb3269e815948485328",
+    "convex-dev/runtimeMemoryRepository.ts": "8f709ce143026616646d97349d731a9a2db6565df4bdd9ef355778047d0ad812",
+    "convex-dev/runtimeMemoryContext.ts": "5fdb7ba3ff46390b89c08540f540d1261700a02cc8799cabcd9a661a371d93e6",
+    "convex-dev/runtimeDataAuth.ts": "a0f637ab028b7e499681844a622d5d08055927408c7881f55e124985dae16ad0",
+    "convex-dev/runtimeContextWitness.ts": "0c5246000f4f1d9fcda8f5fb497b9f2ea05f12c8615bd3b0b78bd92d976113fd",
+    "convex-dev/runtimeAuth.ts": "0f5ad4cc2b02fc1479d81e044d7f69ade5c33c7b4d8a5d9839f110ff9786e726",
+    "convex-dev/runtimeAgentFence.ts": "3969de14ba28b38409ecccea53719f95186cb1ccceab6a33568077385ddb764d",
+    "convex-dev/runtimeModelPolicy.ts": "0612738bc0af651c69bd2d49557fbf5e05f2e7a89dfd114790aa3175b873bb0c",
+    "src/domain/model-input-selection.ts": "bdfe44adae91c7dc838b9abef1b06a0ef5d2607e601d50012444c7b09a9d0fa0"
+  },
+  "measured": [
+    {
+      "identifier": "runtimeModelPolicy:captureTerminalEvidenceV8",
+      "executionId": "46524b9a-20b8-43a1-9d2f-69f7cb1c452a",
+      "requestId": "88b3fdb4517ad858",
+      "engineMs": 721.169627,
+      "ownUserMs": 130.12062,
+      "databaseReadDocuments": 101,
+      "databaseReadBytes": 298332,
+      "willRetry": false,
+      "errorPresent": false,
+      "executionTimestamp": 1791999971.386
+    },
+    {
+      "identifier": "runtimeModelPolicy:attachTerminalResultV8",
+      "executionId": "e80c3009-df69-429c-a8d9-614fe7017f09",
+      "requestId": "88b3fdb4517ad858",
+      "engineMs": 743.0451009999999,
+      "ownUserMs": 139.947147,
+      "databaseReadDocuments": 93,
+      "databaseReadBytes": 234790,
+      "willRetry": false,
+      "errorPresent": false,
+      "executionTimestamp": 1791999972.124
+    },
+    {
+      "identifier": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+      "executionId": "e3d6049f-3c46-4156-829c-2fd59b4b0477",
+      "requestId": "88b3fdb4517ad858",
+      "engineMs": 1914.4763469999998,
+      "ownUserMs": 380.995853,
+      "databaseReadDocuments": 899,
+      "databaseReadBytes": 1900360,
+      "willRetry": false,
+      "errorPresent": false,
+      "executionTimestamp": 1791999973.206
+    },
+    {
+      "identifier": "runtimeAgent:saveAndPrepareContextV8",
+      "executionId": "eaa93d87-6f08-4e77-9c07-9f0e0fe9a5c1",
+      "requestId": "88b3fdb4517ad858",
+      "engineMs": 930.740365,
+      "ownUserMs": 121.134241,
+      "databaseReadDocuments": 905,
+      "databaseReadBytes": 2202107,
+      "willRetry": false,
+      "errorPresent": false,
+      "executionTimestamp": 1791999975.13
+    },
+    {
+      "identifier": "runtimeModelPolicy:captureTerminalEvidenceV8",
+      "executionId": "f58098ae-06c2-460d-9f1b-54f3e785f403",
+      "requestId": "88b3fdb4517ad858",
+      "engineMs": 348.857152,
+      "ownUserMs": 118.108844,
+      "databaseReadDocuments": 125,
+      "databaseReadBytes": 438366,
+      "willRetry": true,
+      "errorPresent": false,
+      "executionTimestamp": 1791999978.365
+    },
+    {
+      "identifier": "runtimeModelPolicy:captureTerminalEvidenceV8",
+      "executionId": "6cdf0790-177f-4876-b872-aed508c94364",
+      "requestId": "88b3fdb4517ad858",
+      "engineMs": 294.095139,
+      "ownUserMs": 135.989007,
+      "databaseReadDocuments": 125,
+      "databaseReadBytes": 438366,
+      "willRetry": false,
+      "errorPresent": false,
+      "executionTimestamp": 1791999978.729
+    },
+    {
+      "identifier": "runtimeModelPolicy:attachTerminalResultV8",
+      "executionId": "bb0a4ca5-65d1-4ec3-a61f-c0066b084ab8",
+      "requestId": "88b3fdb4517ad858",
+      "engineMs": 211.789408,
+      "ownUserMs": 119.52058,
+      "databaseReadDocuments": 117,
+      "databaseReadBytes": 336656,
+      "willRetry": false,
+      "errorPresent": false,
+      "executionTimestamp": 1791999979.212
+    }
+  ],
+  "observedInventory": {
+    "runtimeRuns": 4,
+    "runtimeRunMemoryProgress": 4,
+    "runtimeIngestionEvents": 8,
+    "runtimeIngestionStages": 24,
+    "runtimeIngestionJobs": 8,
+    "runtimeMemorySources": 9,
+    "runtimeMemoryChunks": 8,
+    "runtimeMemoryVectors": 8,
+    "runtimeMemoryVectorGenerations": 8,
+    "runtimeMemoryReceipts": 12,
+    "facts": 4,
+    "runtimeModelOperations": 31,
+    "runtimeModelAttempts": 31,
+    "runtimeBudgetAccounts": 22,
+    "runtimeTranscriptMessages": 8,
+    "runtimeIngestionScopes": 1,
+    "runtimeAuthPrincipals": 4,
+    "runtimeAuthMemberships": 4,
+    "runtimeAuthGrants": 4,
+    "runtimeAuthScopes": 6,
+    "runtimeAuthTombstones": 1
+  },
+  "sourceFindings": [
+    {
+      "location": "runtimeAgent.ts:1798,1924-1938; model-input-selection.ts:22,131",
+      "fact": "Recall requests10 candidates;4 memory/4 fact policy is applied after native retrieval/delivery, not to all native reads."
+    },
+    {
+      "location": "runtimeAgentRecall.ts:80-110",
+      "fact": "Full vector/fact delivery bindings are captured before cutoff selection. Both contextSourceBatch branches use nativeCtx rather than the existing parent scope."
+    },
+    {
+      "location": "runtimeAgent.ts:590-621; runtimeMemoryContext.ts:120-128",
+      "fact": "Each contextSourceBatch item calls original getSource, then readIndexedSourceAtCutoff calls getSource again before indexed eligibility. The second call and all predicates are intentionally retained."
+    },
+    {
+      "location": "runtimeDataAuth.ts:190-246,256-270",
+      "fact": "Each managedSourceIsCurrent root gets a fresh bounded traversal. Canonical sources reload conversation, transcript bridge and originating run; generated sources recursively traverse source and bridge context witnesses. The visited map exists only within one root call."
+    },
+    {
+      "location": "runtimeMemoryRepository.ts:344-392",
+      "fact": "Delivery checks consumed-source bindings, then fact source attribution, then vector source/chunk/receipt/profile again; only identical profile initialization is shared. Its final authority/deadline check remains unscoped."
+    },
+    {
+      "location": "runtimeAgent.ts:1813-1838,2006-2033; runtimeAgentFence.ts:18-71",
+      "fact": "Save checks execution and incoming witnesses; candidate runs as an original child mutation with a fresh invocation scope, then repeats execution/current-source/transcript checks through completed-step/two-resolve/begin/start helpers. Child isolation is required for rollback and does not inherit nonserialized parent readers."
+    },
+    {
+      "location": "runtimeAuth.ts:150-249",
+      "fact": "V8 reuse only retains named authority rows, deployment/qualification metadata and exact native message lookups. It does not retain managed-source/conversation/bridge/origin-run indexed queries. State writers can retain control rows; finance clears policy/native message metadata; child mutations conservatively invalidate."
+    }
+  ],
+  "candidate": {
+    "name": "Bounded raw managed-source graph reads within each fresh native parent",
+    "reason": "Targets the repeated root-plus-ancestor source/currentness workload shared by recall delivery and save/candidate instead of another three-read control adjustment.",
+    "scope": [
+      "Named exact indexed raw lookups only: managed source by scope/source, conversation by scoped ID, bridge by native ID, origin run by scoped ID; retain original query arguments and duplicate limits.",
+      "Rerun every original owner/grant/epoch/hash/role/share/profile/cutoff/lease/tombstone/deadline predicate and preserve original vector-first/fact/final-delivery error order. Do not memoize managedSourceIsCurrent booleans or permissions.",
+      "Detached finite raw values only; fresh per native invocation and explicit fresh original final fences; before/after all known or unknown writes plus in-flight suppression. Never carry a decision/source graph across Action/RPC or child rollback boundary.",
+      "Use existing original source-getter/final authority negatives as nonnegotiable controls; if strict final reads cannot retain their denials, exclude that boundary rather than widen retention."
+    ],
+    "notProposed": [
+      "Do not reduce10 to4 or prune witnesses merely to obtain lower counts; that changes ranking/dependency/error semantics.",
+      "Do not fuse away save/candidate child rollback; do not cache authorization or recursive validity decisions."
+    ],
+    "requiredEvidence": "One actual-handler controlled identity/epoch census on a privacy-safe generated-source DAG with repeated same and distinct ancestors; compare exact returned/error/state/query order against current source. Prove late revocation/deletion/edit/expiry, duplicate rows, writer/error/in-flight and child isolation before any activation. Native time improvement remains unmeasured."
+  },
+  "limits": [
+    "Native usage is aggregate: exact table/identity contribution to899/905 is unavailable. The identified repeated call graph is source-proven; its exact native savings are not.",
+    "Only the later four-proof inventory is saved locally; no precise warm selected-vector/fact/witness counts or raw dependency DAG was recovered in this offline pass.",
+    "Engine and own-user times are distinct native fields; the difference does not identify CPU/network/provider work.",
+    "Main-model terminal capture later had an OCC retry in the same request; the pre-model readMatches/save and embedding-terminal measurements above did not. Do not generalize noOCC to the entire run.",
+    "No new source edit, service query, inference or test run was performed."
+  ],
+  "savedSelectedInput": [
+    {
+      "runId": "run:48d3f46421945350920e9c2f2cead30287bcf6dec5b2472ecf9e73ff5aefbd6b",
+      "attemptNumber": 1,
+      "phase": "model.input.fit.candidate",
+      "at": 1791999975130,
+      "selectedMessages": 3,
+      "selectedMemories": 3,
+      "selectedFacts": 2,
+      "selectedPending": 0,
+      "contextBytes": 2605,
+      "inputTokens": 31598,
+      "inputLimit": 32768,
+      "functionPath": "runtimeAgent:saveAndPrepareContextV8",
+      "executionId": "eaa93d87-6f08-4e77-9c07-9f0e0fe9a5c1"
+    }
+  ]
+}

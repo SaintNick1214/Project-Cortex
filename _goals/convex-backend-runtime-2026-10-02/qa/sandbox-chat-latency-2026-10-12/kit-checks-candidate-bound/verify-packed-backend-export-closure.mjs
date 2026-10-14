@@ -7,7 +7,7 @@ import { createRequire } from 'node:module';
 const r='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion', q=path.dirname(new URL(import.meta.url).pathname);
 const ts=createRequire(path.join(r,'package.json'))('typescript');
 const kit='/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14';
-const commit='PENDING_COMMITTED_SOURCE_GO';
+const commit='6f5d31fc920c3ac06512348ebe79d955ccd92e92';
 assert.match(commit,/^[a-f0-9]{40}$/,'Root accepted commit GO required');
 const artifact=JSON.parse(fs.readFileSync(path.join(q,'artifact-receipt.json')));
 const manifest=JSON.parse(fs.readFileSync(path.join(kit,'staging',commit,'dist/backend/v1/manifest.json')));

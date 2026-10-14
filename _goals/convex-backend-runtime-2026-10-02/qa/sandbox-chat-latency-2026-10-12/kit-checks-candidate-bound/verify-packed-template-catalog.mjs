@@ -4,11 +4,11 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
-import { payloadHash } from '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-templates/scripts/assemble.mjs';
+import { payloadHash, stableJson } from '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-templates/scripts/assemble.mjs';
 const r='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion';
 const q=path.dirname(new URL(import.meta.url).pathname);
 const kit='/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14';
-const commit='PENDING_COMMITTED_SOURCE_GO';
+const commit='6f5d31fc920c3ac06512348ebe79d955ccd92e92';
 assert.match(commit,/^[a-f0-9]{40}$/,'Root accepted commit GO required');
 const receipt=JSON.parse(fs.readFileSync(path.join(q,'artifact-receipt.json')));
 assert.equal(receipt.sourceCommit,commit);
@@ -29,7 +29,7 @@ try {
  assert.equal(priorCatalog.templates.length,13);const retained=JSON.parse(k21CatalogBytes);assert.equal(retained.templates.length,14);
  assert.equal(catalog.templates.length,15);for(const prior of retained.templates)assert.deepEqual(catalog.templates.find(t=>t.id===prior.id&&t.version===prior.version),prior,'Historical immutable template tuple changed');
  const basic=catalog.templates.find(t=>t.id==='basic'&&t.version==='1.4.2');assert(basic);assert.equal(basic.files.length,38);assert.equal(basic.payloadHash,'b8a0e0ba1e266ec68abe45c0c0ae2dee16f963a35bd3805dd1c564cd98db99c1');
- const basicBytes=new Map();for(const file of basic.files){const physical=file.storagePath??file.path;assert(!physical.startsWith('/')&&!physical.split('/').includes('..'));const b=fs.readFileSync(path.join(base,'payloads/basic/1.4.2',physical));assert.equal(b.length,file.bytes,file.path);assert.equal(digest(b),file.hash,file.path);const source=execFileSync('git',['show',commit+':packages/cortex-cli/templates/basic/'+file.path],{cwd:r,maxBuffer:2*1024*1024});assert.deepEqual(b,source);basicBytes.set(file.path,b);}
+ const basicBytes=new Map();for(const file of basic.files){const physical=file.storagePath??file.path;assert(!physical.startsWith('/')&&!physical.split('/').includes('..'));const b=fs.readFileSync(path.join(base,'payloads/basic/1.4.2',physical));assert.equal(b.length,file.bytes,file.path);assert.equal(digest(b),file.hash,file.path);const source=execFileSync('git',['show',commit+':packages/cortex-cli/templates/basic/'+file.path],{cwd:r,maxBuffer:2*1024*1024});if(file.path==='package.json'){const canonical=JSON.parse(source);assert.equal(canonical.dependencies['@cortexmemory/sdk'],'file:../../../..');canonical.dependencies['@cortexmemory/sdk']='^0.39.0';assert.deepEqual(b,Buffer.from(stableJson(canonical)+'\n'));}else assert.deepEqual(b,source);basicBytes.set(file.path,b);}
  assert.equal(payloadHash(basicBytes),basic.payloadHash);assert.equal(JSON.parse(basicBytes.get('package.json')).version,'1.4.2');
  assert(catalog.templates.some(t=>t.id==='basic'&&t.version==='1.4.1'));
  const bytes=new Map();
@@ -59,7 +59,7 @@ try {
    }
   }ts.forEachChild(node,visit);
  }visit(ast);assert.equal(watchRunCalls,0);assert.equal(watchObservationCalls,1);assert(finalOnlyLiteral&&setRunCallback);assert(onObservationCallback&&retainedRunGuard);
- result={sourceCommit:commit,actualFreshCatalogArchiveSha256:pack.sha256,catalogSha256:digest(catalogBytes),templateId:target.id,templateVersion:target.version,selectedPayloadFiles:target.files.length,payloadHash:target.payloadHash,allSelectedPayloadBytesMatchCatalog:true,exactQaDevPins:{'@testing-library/react':'16.3.3','jest-environment-jsdom':'30.5.2'},actualCommittedUiAndNewFixtureBytes:true,retainedUiFinalObserverCalls:watchObservationCalls,removedUiWatchRunCalls:watchRunCalls,finalOnlyOptionAndStatusCallbackPresent:true,transportObservationCallbackAndRetainedOnlyGuardPresent:onObservationCallback&&retainedRunGuard,historicalImmutableTuplesPreserved:priorCatalog.templates.length,k21ImmutableDescriptorsByteExact:14,newBasicVersion:basic.version,newBasicFiles:basic.files.length,newBasicPayloadHash:basic.payloadHash,newBasicCanonicalBytesMatch:true,totalDescriptors:15,browserRenderOrFreshDependencyInstallProven:false,servicesStarted:0,inferenceCalls:0};
+ result={sourceCommit:commit,actualFreshCatalogArchiveSha256:pack.sha256,catalogSha256:digest(catalogBytes),templateId:target.id,templateVersion:target.version,selectedPayloadFiles:target.files.length,payloadHash:target.payloadHash,allSelectedPayloadBytesMatchCatalog:true,exactQaDevPins:{'@testing-library/react':'16.3.3','jest-environment-jsdom':'30.5.2'},actualCommittedUiAndNewFixtureBytes:true,retainedUiFinalObserverCalls:watchObservationCalls,removedUiWatchRunCalls:watchRunCalls,finalOnlyOptionAndStatusCallbackPresent:true,transportObservationCallbackAndRetainedOnlyGuardPresent:onObservationCallback&&retainedRunGuard,historicalImmutableTuplesPreserved:priorCatalog.templates.length,k21ImmutableDescriptorsByteExact:14,newBasicVersion:basic.version,newBasicFiles:basic.files.length,newBasicPayloadHash:basic.payloadHash,newBasicCanonicalBytesMatch:true,basicManifestTransform:'official rewriteManifest SDK file:../../../.. to ^0.39.0 plus stableJson; no assembly invocation',totalDescriptors:15,browserRenderOrFreshDependencyInstallProven:false,servicesStarted:0,inferenceCalls:0};
 } finally { fs.rmSync(scratch,{recursive:true,force:true}); }
 assert.equal(fs.existsSync(scratch),false);result.ownedScratchRemoved=true;
 fs.writeFileSync(path.join(q,'packed-template-catalog.json'),JSON.stringify(result,null,2)+'\n');

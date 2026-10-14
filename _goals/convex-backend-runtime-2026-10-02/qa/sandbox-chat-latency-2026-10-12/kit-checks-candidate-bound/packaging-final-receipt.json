@@ -1,0 +1,438 @@
+{
+  "status": "PACKAGING_COMPLETE",
+  "sourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+  "acceptedSourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+  "sourceRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14",
+  "identity": {
+    "version": 1,
+    "id": "dd2c8f49-7d67-48dc-8f92-7c09ed63cb79",
+    "ownerUid": 501,
+    "ownerGid": 20
+  },
+  "imageId": "sha256:6d2f2aaa2a785ed8ad7b622814473501589e58f9d75b7ed660aabc27ca7aeda8",
+  "image": {
+    "imageId": "sha256:6d2f2aaa2a785ed8ad7b622814473501589e58f9d75b7ed660aabc27ca7aeda8",
+    "tag": "cortex-sandbox-candidate-bound:20261014",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "dd2c8f49-7d67-48dc-8f92-7c09ed63cb79",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "dd2c8f49-7d67-48dc-8f92-7c09ed63cb79",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14",
+      "dev.cortex.manual-sandbox.source": "6f5d31fc920c3ac06512348ebe79d955ccd92e92"
+    },
+    "size": 824135752,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false,
+    "id": "sha256:6d2f2aaa2a785ed8ad7b622814473501589e58f9d75b7ed660aabc27ca7aeda8",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14",
+    "identity": {
+      "version": 1,
+      "id": "dd2c8f49-7d67-48dc-8f92-7c09ed63cb79",
+      "ownerUid": 501,
+      "ownerGid": 20
+    }
+  },
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "inputCount": 2263,
+  "inputOrigin": "Each staged input read from exact accepted committed Git blob; every backend source/output digest verified",
+  "inputManifestSha256": "b54157b7d3f807f4fdd9ea14b9dc911a28f5c2237ee4e1a3314825f3be363d6a",
+  "backend": {
+    "distributionId": "cortex-backend-v1-sdk-0.39.0",
+    "files": 170,
+    "allSourceOutputHashesMatch": true,
+    "manifestSha256": "30daa3bfaf9fb6b159c571ecc9c597c219fd314e7a341efeeabfcb9034c47650",
+    "tables": 78,
+    "components": [
+      "agent",
+      "workflow"
+    ]
+  },
+  "artifactManifestSha256": "274f5493d76b536d4cf54d0240fa56e286bffc671bf4cfccc8625db29f3bb820",
+  "packages": [
+    {
+      "role": "sdk",
+      "name": "@cortexmemory/sdk",
+      "version": "0.39.0",
+      "filename": "cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "25d6333ea87d095f8ba9e204fcb6652a9ac7b4d9a6c840ac1e4b19433b63fb97",
+      "bytes": 1704114,
+      "files": 337
+    },
+    {
+      "role": "cli",
+      "name": "@cortexmemory/cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "bytes": 538578,
+      "files": 451
+    },
+    {
+      "role": "provider",
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+      "bytes": 77673,
+      "files": 18
+    },
+    {
+      "role": "catalog",
+      "name": "@cortexmemory/templates",
+      "version": "1.3.3",
+      "filename": "cortexmemory-templates-1.3.3.tgz",
+      "sha256": "dc5fb8c7066797bbd8a6a1caf2f2b542c5595a8bc797f47efd21691dc5ba59be",
+      "bytes": 1719766,
+      "files": 1839
+    }
+  ],
+  "consumerChecks": [
+    {
+      "group": "verify-actual-packed-public-contracts",
+      "version": "v1",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-actual-packed-public-contracts-exit-v1.json",
+      "receiptSha256": "f3b6e2458ba95ceb2383dba1fa2561a1fe4a99550e2f05ae81fb47798cd1eb7c",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-actual-packed-public-contracts-v1.log",
+      "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68",
+      "exitCode": 0
+    },
+    {
+      "group": "verify-packed-dependent-contracts",
+      "version": "v1",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-dependent-contracts-exit-v1.json",
+      "receiptSha256": "4a4e556d0d95a09c8480ba5e5168004adf45b76e284b3c43d48bb35a64602da8",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-dependent-contracts-v1.log",
+      "logSha256": "67a70755186f8f7063e958c6ada40dde7c29e386d1a28446a4f77fa0bf8c114b",
+      "exitCode": 0
+    },
+    {
+      "group": "verify-packed-backend-export-closure",
+      "version": "v1",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-backend-export-closure-exit-v1.json",
+      "receiptSha256": "553927a95309e72e95ce089a180592623d3d6374ebbbd3b02d510b3ed329a36b",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-backend-export-closure-v1.log",
+      "logSha256": "da9285f51facb310c7819ea95ad28a9600a69787a4c5532f86167d13d30734ed",
+      "exitCode": 0
+    },
+    {
+      "group": "verify-packed-template-catalog",
+      "version": "v3",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog-exit-v3.json",
+      "receiptSha256": "c23e6f25cfb12198c3d3429e0cf15e1cc4c21c748d8d5f0560b0bd8b154f041a",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog-v3.log",
+      "logSha256": "b3648e7ade8b37732ffc09f35a2da3c725646598fda15216e0921d19d5c7312e",
+      "exitCode": 0
+    }
+  ],
+  "catalog": {
+    "version": "1.3.3",
+    "descriptors": 15,
+    "historicalDescriptorsPreserved": 14,
+    "basicVersion": "1.4.2",
+    "basicFiles": 38,
+    "basicPayloadHash": "b8a0e0ba1e266ec68abe45c0c0ae2dee16f963a35bd3805dd1c564cd98db99c1",
+    "vercelVersion": "1.4.2"
+  },
+  "rawReceipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/artifact-receipt.json",
+      "sha256": "274f5493d76b536d4cf54d0240fa56e286bffc671bf4cfccc8625db29f3bb820",
+      "bytes": 1750,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/build-cli.log",
+      "sha256": "c4d2cb92a2d91b91b538a808ef0eb977534255d7785d908c24e2edf4bf6c715f",
+      "bytes": 91,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/build-provider.log",
+      "sha256": "58caddc407662109dfe2d23d4dd70dd09a1f9dff6885d4fd08239fb32309173f",
+      "bytes": 1315,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/build-sdk.log",
+      "sha256": "610e4c75474b23b1810ef6b677c8d4b070e03cb9b98914e1034b75904c24b4fa",
+      "bytes": 2722,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/committed-source-go.json",
+      "sha256": "0908a7e0d09bfaaac2995ec34bb43ebcd55e5c73113fa1c85a64e6f4c54f119e",
+      "bytes": 3661,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/consumers-exit-v1.json",
+      "sha256": "3893982b219ab6430cfa115626d04a646e611cf2979dad9a7a8e51cad049d12e",
+      "bytes": 27,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/consumers-v1.log",
+      "sha256": "f632fc10a017dd120670c12525c33c0e8cab6aebf655cbc46f89b22daf5b6b5a",
+      "bytes": 236,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/docker-build-exit.json",
+      "sha256": "a0cabf721b09b065b614a416cdf2de84401545686169f3127d628946eb1d4447",
+      "bytes": 971,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/docker-build-v1.log",
+      "sha256": "658e9c2daefe57a40cba73b9446a7c49c877d117d85aff11f0493b2bdbbc291d",
+      "bytes": 2842,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/docker-image-id.txt",
+      "sha256": "b7699d3cdff05eca4aee79f2e83e29329b5d109cf19cbc145886ef93b5381a98",
+      "bytes": 71,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/docker-image-identity.json",
+      "sha256": "c9d15f480f80894e6e005bd1ea28a5e22af2e707d83fc3c741c04b2f6f8ab7ce",
+      "bytes": 1107,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/docker-image-inspect-full.json",
+      "sha256": "d00e38be7da2ff6c46d0c93f612043a7f0a66f13f2ec4776979aa8bc1bb62091",
+      "bytes": 2634,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/image-build-wrapper-exit-v1.json",
+      "sha256": "5ee2bb2d33ce14d84b00f87b776b654516a0cf4b8818b0302074794bf49918bd",
+      "bytes": 56,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/image-build-wrapper-v1.log",
+      "sha256": "54292634188b932e1e6c89e9cfe38376ac498c95641aef4bfb5a4cb37ac63b22",
+      "bytes": 679,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/old-kit-preservation-final.json",
+      "sha256": "af81379a5bee63b296a4a00868a75313e3d80dd61cb8dec59619a08a7af1fbe0",
+      "bytes": 6283,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/pack-catalog.json",
+      "sha256": "7a284d102b7fcb795928c1deeaf45e18ed380f010bc1e49edf50c832cc1a8e93",
+      "bytes": 223450,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/pack-cli.json",
+      "sha256": "09cb4a38bebbe836773f53c9b32e3988574a34b6e402b9abb6a13248babe8167",
+      "bytes": 46861,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/pack-provider.json",
+      "sha256": "64e8fbe7077f9714ee9a47cd116f6ac39c2258381a927e28ebab7b1201a6a755",
+      "bytes": 2048,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/pack-sdk.json",
+      "sha256": "53a1bec8f60a1782bd1d2c18241a4715f0b011c0eb5393c92f2763e5fbb32d44",
+      "bytes": 36095,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/packed-backend-export-closure.json",
+      "sha256": "b5b1dce8257e4303bf90bd57a63beee3d0224fdd04e2f85ccace7fd606acf3ea",
+      "bytes": 49972,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/packed-cli-dependency-selection.json",
+      "sha256": "dccd77d48f2a6c7c154d25b008b2e112beaadf4a15d0cc92566ff43a0965ff53",
+      "bytes": 235,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/packed-cli-help.log",
+      "sha256": "48d57e4a9961fce570bedc7b84c5d1a792021ebf89657bdbaebc8f878dc7e33d",
+      "bytes": 3768,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/packed-cli-version.log",
+      "sha256": "f7ada3982d4e3ce9f5b135992938383496e4dbfda2468d51dd676d1dd86f24a0",
+      "bytes": 7,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/packed-template-catalog.json",
+      "sha256": "054870351fa6fb887a369d11fd1fbaffa0526070bec070a9285bd493ba29b084",
+      "bytes": 1387,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/preparation-syntax-receipt.json",
+      "sha256": "663fa99a8d1acd3a656525a6ee8aef7b79a8cae33db1917e238e0003a588da3c",
+      "bytes": 1569,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/prepare-exit-v1.json",
+      "sha256": "d5faf12bc3f3e8a24c1a9fcbaf2efa7df9df56155a9f53590a1db8a0d3341119",
+      "bytes": 54,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/prepare-v1.log",
+      "sha256": "63bba3d2d66c2354cfc4c851693d50d6de44e6ed1ff1da7f34119764f61e0479",
+      "bytes": 1887,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-actual-packed-public-contracts-exit-v1.json",
+      "sha256": "f3b6e2458ba95ceb2383dba1fa2561a1fe4a99550e2f05ae81fb47798cd1eb7c",
+      "bytes": 589,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-actual-packed-public-contracts-v1.log",
+      "sha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68",
+      "bytes": 141,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-backend-export-closure-exit-v1.json",
+      "sha256": "553927a95309e72e95ce089a180592623d3d6374ebbbd3b02d510b3ed329a36b",
+      "bytes": 597,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-backend-export-closure-v1.log",
+      "sha256": "da9285f51facb310c7819ea95ad28a9600a69787a4c5532f86167d13d30734ed",
+      "bytes": 119,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-dependent-contracts-exit-v1.json",
+      "sha256": "4a4e556d0d95a09c8480ba5e5168004adf45b76e284b3c43d48bb35a64602da8",
+      "bytes": 594,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-dependent-contracts-v1.log",
+      "sha256": "67a70755186f8f7063e958c6ada40dde7c29e386d1a28446a4f77fa0bf8c114b",
+      "bytes": 175,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog-exit-v1.json",
+      "sha256": "d86d1d95d7eb41f8895962b2054cee1367888270b4aae82e2a8b5867b501afb1",
+      "bytes": 590,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog-exit-v2.json",
+      "sha256": "29f646cff08441a90da3047ae86bbbc444b5c56b147d7e82331fc6082ab52db8",
+      "bytes": 79,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog-exit-v3.json",
+      "sha256": "c23e6f25cfb12198c3d3429e0cf15e1cc4c21c748d8d5f0560b0bd8b154f041a",
+      "bytes": 79,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog-v1.log",
+      "sha256": "25c75d5fe76fc8862036898e3f76593d0d40ecbc2eac8f08768b7481c876dfe4",
+      "bytes": 19105,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog-v2.log",
+      "sha256": "8ca98995167d7a1bd496057e9b340270aa4039ab5aeb4310d2b09114719184c9",
+      "bytes": 801,
+      "retention": "local-only; not a commit instruction"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog-v3.log",
+      "sha256": "b3648e7ade8b37732ffc09f35a2da3c725646598fda15216e0921d19d5c7312e",
+      "bytes": 1267,
+      "retention": "local-only; not a commit instruction"
+    }
+  ],
+  "preservedFailures": [
+    {
+      "group": "verify-packed-template-catalog",
+      "version": "v1",
+      "exitCode": 1,
+      "reason": "New fixture compared normalized packed package.json to untransformed development manifest.",
+      "receiptSha256": "d86d1d95d7eb41f8895962b2054cee1367888270b4aae82e2a8b5867b501afb1",
+      "logSha256": "25c75d5fe76fc8862036898e3f76593d0d40ecbc2eac8f08768b7481c876dfe4"
+    },
+    {
+      "group": "verify-packed-template-catalog",
+      "version": "v2",
+      "exitCode": 1,
+      "reason": "Formatting correction incorrectly expected canonical SDK release range; canonical accepted source uses file:../../../...",
+      "receiptSha256": "29f646cff08441a90da3047ae86bbbc444b5c56b147d7e82331fc6082ab52db8",
+      "logSha256": "8ca98995167d7a1bd496057e9b340270aa4039ab5aeb4310d2b09114719184c9"
+    }
+  ],
+  "executionCounts": {
+    "prepare": 1,
+    "isolatedBuilds": 3,
+    "packs": 4,
+    "consumerFirstRuns": 4,
+    "failedConsumerSuccessors": 2,
+    "imageBuilds": 1
+  },
+  "ownedConsumerScratchRemoved": true,
+  "dependencyInputs": "Existing host dependency links only; no old kit dependencies copied",
+  "oldKitPreservationReceipt": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/old-kit-preservation-final.json",
+    "sha256": "af81379a5bee63b296a4a00868a75313e3d80dd61cb8dec59619a08a7af1fbe0"
+  },
+  "sourceReview": {
+    "mdSha256": "5b5e80fd8ab9c430d42489204427ce37141a5f7426b479710c8ede1954349016",
+    "jsonSha256": "326e66d8d887e1b63e12cda445912f0c106f425edcb1b549ca6a3bc6e6335a34"
+  },
+  "freshVerifiedImageIdFile": {
+    "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image-id.txt",
+    "sha256": "71885d3c7ec7e1441711fa7a68cb45edc6e9a89d4869fe1330399b25e0f0095f",
+    "mode": "0600",
+    "verifiedSourceUuidOsUserAndLabelsBeforeWrite": true
+  },
+  "startupQualification": false,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "runtimeContainersStarted": 0,
+  "deploymentStarted": false,
+  "sourceChanges": false,
+  "launcherChanges": false,
+  "commitsCreated": 0,
+  "nativeQualificationOrLatencyAccepted": false,
+  "packagingPercent": 100,
+  "overallLatencyGoalPercent": 50
+}

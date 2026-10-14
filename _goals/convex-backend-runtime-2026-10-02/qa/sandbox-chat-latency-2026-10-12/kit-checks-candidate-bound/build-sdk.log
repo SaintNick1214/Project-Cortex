@@ -1,0 +1,64 @@
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2022
+CLI Cleaning output folder
+CJS Build start
+ESM Build start
+CJS dist/index.cjs 993.15 KB
+CJS ⚡️ Build success in 88ms
+ESM dist/ProgressiveGraphSync-ADE72BV3.js      2.83 KB
+ESM dist/backendApi-KVITJGBS.js                93.00 B
+ESM dist/chunk-EOYUOIQS.js                     5.83 KB
+ESM dist/StreamProcessor-NL3NUOFP.js           5.76 KB
+ESM dist/StreamMetrics-YNNJGIZN.js             119.00 B
+ESM dist/ErrorRecovery-FSXDAYYB.js             7.60 KB
+ESM dist/ChunkingStrategies-GIZC5TDJ.js        8.03 KB
+ESM dist/ProgressiveStorageHandler-LAFDYY3A.js 7.61 KB
+ESM dist/chunk-VSVBRDLJ.js                     442.00 B
+ESM dist/chunk-6ADBIXWZ.js                     105.00 B
+ESM dist/chunk-YZUI7ZOP.js                     2.95 KB
+ESM dist/chunk-KDSHPSON.js                     3.73 KB
+ESM dist/chunk-SBXOBFKB.js                     80.56 KB
+ESM dist/chunk-3RG5ZIWI.js                     390.00 B
+ESM dist/chunk-S4SO7T2T.js                     6.48 KB
+ESM dist/AdaptiveProcessor-SHAPUARM.js         6.65 KB
+ESM dist/chunk-RL3YA7MA.js                     1.21 KB
+ESM dist/FactExtractor-RGXNPXQY.js             8.00 KB
+ESM dist/index.js                              826.48 KB
+ESM ⚡️ Build success in 92ms
+DTS Build start
+DTS ⚡️ Build success in 8907ms
+DTS dist/index.d.cts 787.56 KB
+DTS dist/index.d.ts  787.56 KB
+CLI Building entry: src/client-runtime/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2022
+CJS Build start
+ESM Build start
+ESM dist/client-runtime/index.js 78.50 KB
+ESM ⚡️ Build success in 19ms
+CJS dist/client-runtime/index.cjs 79.81 KB
+CJS ⚡️ Build success in 19ms
+DTS Build start
+DTS ⚡️ Build success in 624ms
+DTS dist/client-runtime/index.d.cts 22.02 KB
+DTS dist/client-runtime/index.d.ts  22.02 KB
+CLI Building entry: src/graph/runtime/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2022
+CJS Build start
+ESM Build start
+CJS dist/graph-runtime/index.cjs 49.46 KB
+CJS ⚡️ Build success in 15ms
+ESM dist/graph-runtime/index.js 45.93 KB
+ESM ⚡️ Build success in 15ms
+DTS Build start
+DTS ⚡️ Build success in 8018ms
+DTS dist/graph-runtime/index.d.cts 8.49 KB
+DTS dist/graph-runtime/index.d.ts  8.49 KB
+Built cortex-backend-v1-sdk-0.39.0: 170 source files, 78 tables, 2 components; no deployment.
+npm notice run @cortexmemory/sdk@0.39.0 build
+npm notice run tsup src/index.ts --format cjs,esm --dts --clean && tsup src/client-runtime/index.ts --format cjs,esm --dts --out-dir dist/client-runtime && tsup src/graph/runtime/index.ts --format cjs,esm --dts --out-dir dist/graph-runtime && node scripts/backend/build-distribution.mjs

@@ -12,7 +12,7 @@ import { loadSession, createContext, PROOFS_ROOT } from '/Users/SaintNick/Docume
 import { verifyCloud } from '/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs';
 
 const Q = path.dirname(fileURLToPath(import.meta.url));
-const KIT = path.join(PROOFS_ROOT, 'manual-sandbox-foreground-priority-2026-10-14');
+const KIT = path.join(PROOFS_ROOT, 'manual-sandbox-candidate-bound-2026-10-14');
 const AUTH_MS = 4000, RPC_MS = 4000, MAX_EVENTS = 256;
 const officialSourceHashes = Object.freeze({
   'src/browser/sync/authentication_manager.ts': '13fa5fa3d1f4c64e56f28777eb959d314e9698b51c3656edabcfc7fb8a15ecd6',

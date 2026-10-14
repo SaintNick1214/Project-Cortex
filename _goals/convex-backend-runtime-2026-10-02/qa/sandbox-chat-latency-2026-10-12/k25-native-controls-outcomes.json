@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-14T17:52:12.987Z",
+  "sourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+  "target": {
+    "sessionId": "493abde6-26c5-43bf-a882-4ade9b610af6",
+    "name": "amiable-hare-169",
+    "id": 6173196,
+    "expiresAt": 1792604319584
+  },
+  "imageId": "sha256:6d2f2aaa2a785ed8ad7b622814473501589e58f9d75b7ed660aabc27ca7aeda8",
+  "backendManifestSha256": "30daa3bfaf9fb6b159c571ecc9c597c219fd314e7a341efeeabfcb9034c47650",
+  "archiveManifestSha256": "274f5493d76b536d4cf54d0240fa56e286bffc671bf4cfccc8625db29f3bb820",
+  "sdkArchiveSha256": "25d6333ea87d095f8ba9e204fcb6652a9ac7b4d9a6c840ac1e4b19433b63fb97",
+  "helpersUnchanged": true,
+  "helperHashes": {
+    "k25-four-run-memory-readonly.mjs": "464b9725bd2e6718fe0930fa20deb82f1008c303e6716bae5b36070fe165a5d0",
+    "k25-native-ordinary-memory.mjs": "a6d3fe8fd83c3159257254dd15df0e11cc171599caef5fbd8a6a029cda9776fc",
+    "k25-ordinary-memory-pins.mjs": "544eda072b84c5968dfca1ac98ebf78f2a5a804fec03bc5b660b7f8dcfbf5497",
+    "k25-failed-candidate-comparison-readonly.mjs": "b38bd3e393cac96474eb65270d2b8f37094d3784ca78006d25bc858df58b0b74"
+  },
+  "receipts": {
+    "fourProof": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-memory-native-v2-four-run-verification-1792000180623.json",
+      "sha256": "c1ea8e41b38bed8fafa1248df4ea78fe353950b74fe2e829bb3b612b812052db"
+    },
+    "fourInvocation": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-four-run-memory-invocation-v1-exit.json",
+      "sha256": "e131c1a6fc552e76a804b89ab575ea7ee67eb87900cba0f529c8b096fd932b26",
+      "exitCode": 0
+    },
+    "fourLog": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-four-run-memory-invocation-v1.log",
+      "sha256": "36f9f5f842785b0c1ef0659f8902332b7e560f02601221c78d59e009065e78ab"
+    },
+    "ordinary": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-native-ordinary-memory-v2-1792000223851-c972463f-9db8-42cb-aa8a-9fb6f61f0d65.json",
+      "sha256": "15778f67fcf7a03480b68cf344c8756e92a6604fa43739c606b782bf33d26028"
+    },
+    "ordinaryInvocation": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-ordinary-memory-invocation-v1-exit.json",
+      "sha256": "3f513e28a50770224c0d323581256fcaf4900a43e11bfce96734393f8d13b827",
+      "exitCode": 0
+    },
+    "ordinaryLog": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-ordinary-memory-invocation-v1.log",
+      "sha256": "d9dc840cda7131cf10194413a52d5b2b858065d847892c4cf3285ee1fef8d016"
+    }
+  },
+  "fourProof": {
+    "passed": true,
+    "freshVerifications": 45,
+    "runCount": 4,
+    "completeResponses": 4,
+    "completeMemory": 4,
+    "eventCount": 8,
+    "positiveUserFacts": 4,
+    "vectorCount": 8,
+    "contiguousThrough": 8,
+    "candidateBindingChecksPass": true,
+    "userCandidateCounts": [
+      {
+        "label": "browser-first",
+        "rawExtractionCandidates": 1,
+        "retainedCandidates": 1,
+        "privatePlanEntries": 1,
+        "bindings": [
+          {
+            "sourceOrdinal": 0,
+            "ordinal": 0,
+            "candidateId": "9e629a1afebdbbaa92ffa11b882dc075d6f909fa10f297c2d8dbe760da23af5e",
+            "semanticId": "71b4c9d1cb968d3240b50accfe8b4590b953f283afb1d2a2c2c395da8c3c5fd9"
+          }
+        ]
+      },
+      {
+        "label": "browser-warm",
+        "rawExtractionCandidates": 1,
+        "retainedCandidates": 1,
+        "privatePlanEntries": 1,
+        "bindings": [
+          {
+            "sourceOrdinal": 0,
+            "ordinal": 0,
+            "candidateId": "ae78ee1ef1bc5b5ad0a20ce9e1db0e24dd6cf8cac15ef9d9d9960b75272ff7d1",
+            "semanticId": "86380b441247f520d59c7be714cfe703832bf25f7a54dafc7538f951afefb698"
+          }
+        ]
+      },
+      {
+        "label": "cli-first",
+        "rawExtractionCandidates": 1,
+        "retainedCandidates": 1,
+        "privatePlanEntries": 1,
+        "bindings": [
+          {
+            "sourceOrdinal": 0,
+            "ordinal": 0,
+            "candidateId": "d41965fac16b3ae78babd0e7da5fc8d4b893820eba87b4d475948f9bd751d2bf",
+            "semanticId": "348b731d2e292cf3b9e2ca263551bbc393aabd656bf2b0cd1a7eb68714b105b4"
+          }
+        ]
+      },
+      {
+        "label": "cli-warm",
+        "rawExtractionCandidates": 1,
+        "retainedCandidates": 1,
+        "privatePlanEntries": 1,
+        "bindings": [
+          {
+            "sourceOrdinal": 0,
+            "ordinal": 0,
+            "candidateId": "4f9c524bb0d66feecf4de112dc7c13781ba7721c3d4e89685ccf0f35a61eea5b",
+            "semanticId": "d5592c6efdb04d7dbce27cbd927d0b7ebf9a40c40f9878c00d3cb9b855a6365d"
+          }
+        ]
+      }
+    ]
+  },
+  "ordinary": {
+    "verdict": "PASS",
+    "clientsClosed": true,
+    "retries": 0,
+    "newCaptureIntents": 2,
+    "recallCalls": 1,
+    "freshVerifications": 84,
+    "native": {
+      "captureCount": 2,
+      "traceRows": 4,
+      "nativeMessageRows": 4,
+      "eventCount": 4,
+      "sourceRefsSha256": "f1a5ce9f4689a48691b2e4c8746eff56966f2d5b506282a1201ff0f9e9713d7d",
+      "positiveCoralFact": true,
+      "assistantExternal": true,
+      "metadataMatches": true,
+      "currentGrant": true,
+      "nativeUsageAttempts": 6
+    },
+    "assertions": {
+      "freshEqualContentCreatesTwo": true,
+      "exactReplayNoNewCapture": true,
+      "changed_same_id": {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "protectedPayloadReturned": false
+      },
+      "contiguousReadinessThrough4": true,
+      "reader.capture": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "outsider.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "locked.new": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "locked.replay": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "lockedStatusReadAllowed": true,
+      "explicitAdminManualUnlockForDelete": true,
+      "deleted.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "revoked.new": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "demoOwnerGrantUntouched": true
+    },
+    "firstApiMs": 1288.784083,
+    "secondApiMs": 995.7724159999998,
+    "profileApiMs": 690.4933339999989,
+    "recallApiMs": 2544.141542000001,
+    "publicRecall": {
+      "itemCount": 5,
+      "contextBytes": 279,
+      "currentProfile": true,
+      "scopedPositivePreference": true,
+      "requestIdSha256": "eb97018e593f2bdd5a556ea58df8e9928751c2597521bbf68cad82de325245b1"
+    },
+    "recallNamedRpc": [
+      {
+        "kind": "mutation",
+        "method": "runtimeClient:session",
+        "phase": "public.recall",
+        "durationMs": 178.78633400000035,
+        "failed": false
+      },
+      {
+        "kind": "action",
+        "method": "runtimeMemory:recall",
+        "phase": "public.recall",
+        "durationMs": 2185.008750000001,
+        "failed": false
+      },
+      {
+        "kind": "mutation",
+        "method": "runtimeClient:session",
+        "phase": "public.recall",
+        "durationMs": 179.64012500000172,
+        "failed": false
+      }
+    ],
+    "rawPayloadRetained": false
+  },
+  "allAClientsClosed": true,
+  "narrowDiagnosisInvoked": false,
+  "additionalCallsAuthorizedToA": false,
+  "scopeLimits": [
+    "Exactly one four-proof and one separate ordinary scenario were invoked; zero helper retries.",
+    "Four-proof has eight current events, four positive user facts and eight matching vectors. Each of the four extracted user payloads retained one candidate: the native two-unequal-candidate branch was not exercised by these samples.",
+    "Six complete native usage attempts were verified for the two captures; one public recall was issued. This is not a tenant financial inventory or monetary charge assertion. Root owns finance/auth/tool/cleanup.",
+    "Four chat SLO samples remain FAIL; first-visible browser/CLI clocks differ from ordinary API and nested RPC intervals.",
+    "Previous K24 AMBIGUOUS_EXTRACTION_SLOT and QA failures remain preserved; this successor does not relabel them."
+  ],
+  "slo": {
+    "targetMs": 1000,
+    "allFourFailed": true,
+    "browserAfterPaintMs": [
+      6215,
+      3884.1
+    ],
+    "cliFirstStdoutMs": [
+      7249.5095,
+      10243.8343
+    ]
+  }
+}

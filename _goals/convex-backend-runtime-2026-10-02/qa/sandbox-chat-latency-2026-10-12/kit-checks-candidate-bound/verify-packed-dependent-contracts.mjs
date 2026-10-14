@@ -9,7 +9,7 @@ import vm from "node:vm";
 import { build } from "esbuild";
 const q = path.dirname(new URL(import.meta.url).pathname);
 const kit = "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14";
-const sha = "PENDING_COMMITTED_SOURCE_GO";
+const sha = "6f5d31fc920c3ac06512348ebe79d955ccd92e92";
 assert.match(sha, /^[a-f0-9]{40}$/, 'Root accepted commit GO required');
 const receipt = JSON.parse(fs.readFileSync(path.join(kit, "image/archives/manifest.json"), "utf8"));
 assert.equal(receipt.sourceCommit, sha);

@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-14T18:03:22.053Z",
+  "target": {
+    "sessionId": "493abde6-26c5-43bf-a882-4ade9b610af6",
+    "name": "amiable-hare-169",
+    "id": 6173196,
+    "sourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+    "imageId": "sha256:6d2f2aaa2a785ed8ad7b622814473501589e58f9d75b7ed660aabc27ca7aeda8"
+  },
+  "verdict": "PASS",
+  "exitCode": 0,
+  "allAClientsClosed": true,
+  "freshVerifications": 67,
+  "retries": 0,
+  "newCaptureIntents": 1,
+  "recallCalls": 0,
+  "native": {
+    "captureCount": 1,
+    "traceRows": 2,
+    "nativeMessageRows": 2,
+    "eventCount": 2,
+    "sourceRefsSha256": "9915f878444eb8940ded9c7d8755665c1d2a157062fb10e960cd286b9c6eccea",
+    "positiveDessertFact": true,
+    "assistantExternal": true,
+    "metadataMatches": true,
+    "currentGrant": true,
+    "nativeUsageAttempts": 4
+  },
+  "coverage": {
+    "rawCandidates": 3,
+    "retainedCandidates": 3,
+    "unequalSameSlotPairs": [
+      [
+        0,
+        1
+      ]
+    ],
+    "privatePlanPresent": true,
+    "paidResolverCalls": 1,
+    "resolverBindings": [
+      {
+        "semanticId": "6777ca8aa1214a575fad51339b9f1fcd85e9783d89aca14fd9ab4218a43846d5",
+        "matchedOrdinal": 1
+      }
+    ],
+    "candidates": [
+      {
+        "ordinal": 0,
+        "sourceOrdinal": 0,
+        "candidateId": "40e0db7ecce004cc7d194a5170aa81db37d9868059af1084f871d8a908f45f36",
+        "slotHash": "7846320933aa79ab6de04d7a495e55df0af997b8d1333425d23ff85e6dd84f59",
+        "candidateHash": "9a5809b80d6430decf493377968dd45ddeccf61ea56258d972e5b5513c3f28d9",
+        "semanticId": "08d7309052e1e51e480bd7cdc01a919438eac4ff10b18613e98e40be5e16f3c0"
+      },
+      {
+        "ordinal": 1,
+        "sourceOrdinal": 1,
+        "candidateId": "1c1622eb0ded87d2f1454a7a912b1e3d31cc0207a045be20cd286871e94e75cd",
+        "slotHash": "7846320933aa79ab6de04d7a495e55df0af997b8d1333425d23ff85e6dd84f59",
+        "candidateHash": "6b1806beb6e73aebcef0c2316eb72757d2e000651ebdf9ed7a2656a9f8d02b36",
+        "semanticId": "6777ca8aa1214a575fad51339b9f1fcd85e9783d89aca14fd9ab4218a43846d5"
+      },
+      {
+        "ordinal": 2,
+        "sourceOrdinal": 2,
+        "candidateId": "59245eaf1feb8f77cb2806a50da542234f6cf77c2e26646c9bdb40cbe1830067",
+        "slotHash": "b05a411bc6281e0265adfa19ab2b85387b17e1dc6d72345e92134b7a9f8fbc90",
+        "candidateHash": "827a56e08a171fc650dc62e088143a2ed6c95c38dfafe91ab020490f79863482",
+        "semanticId": "97814b27e3588c6f673e8c970d6698f76b933f11f0ce8fb8d7b226c399aa4eb7"
+      }
+    ],
+    "fullPrivatePlanCoverage": true,
+    "planDecisions": [
+      {
+        "ordinal": 0,
+        "action": "ADD",
+        "targetIsNull": true
+      },
+      {
+        "ordinal": 1,
+        "action": "ADD",
+        "targetIsNull": true
+      },
+      {
+        "ordinal": 2,
+        "action": "ADD",
+        "targetIsNull": true
+      }
+    ],
+    "deterministicInitialAdd": true,
+    "allResolverCallsBound": true
+  },
+  "observedStatus": {
+    "memoryStatus": "complete",
+    "factsThrough": 2,
+    "vectorsThrough": 2
+  },
+  "tenantBefore": {
+    "limitUnits": 10000000,
+    "reservedUnits": 0,
+    "settledUnits": 0,
+    "uncertainUnits": 4000000,
+    "activeConcurrency": 0,
+    "remainingUnits": 6000000,
+    "chargesUnknown": true
+  },
+  "apiMs": 2431.811709,
+  "refs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-native-unequal-candidate-capture-1792000896011-df08f8c4-43e3-4966-a5c4-3684ebaca77e.json",
+      "sha256": "0058040948a5cd03c224d92b312dcff09ad8b63dbe07a4c605ee766e47dd5ce0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-native-unequal-candidate-capture.mjs",
+      "sha256": "39518407cbd0f39dfc09f48bbf4eae33209628fce10ff52c95e627d4ae9700ea"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-unequal-capture-invocation-v1.log",
+      "sha256": "60f53e611f9840b1d29a6cba518e5f5d7791d2feff7a7e7c51ab4daaa6d1fe21"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-unequal-capture-invocation-v1-exit.json",
+      "sha256": "576a078d1e11f7e45e1598ee5a64f1dfe294946b830e45fde0a8c52b2aeff919"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-native-ordinary-memory.mjs",
+      "sha256": "a6d3fe8fd83c3159257254dd15df0e11cc171599caef5fbd8a6a029cda9776fc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-ordinary-memory-pins.mjs",
+      "sha256": "544eda072b84c5968dfca1ac98ebf78f2a5a804fec03bc5b660b7f8dcfbf5497"
+    }
+  ],
+  "scope": "One fresh explicit two-dessert preference exchange in a dedicated owned QA space. Original target/artifact/installedSDK, budget,12sRPC/30soperation/readiness/table,256row bounds and canonical/provenance/profile/usage assertions retained. Two-message/one-capture expectations deliberately match this separately authorized one-intent case; original four-proof/ordinary helpers remain unchanged.",
+  "limits": [
+    "Native extractor naturally produced3 candidates, including2 unequal same-slot candidates; no forced model output, shape escalation, state injection or retry.",
+    "Exactly1 qualified paid facts.resolve call matched ordinal1. Ordinal0 and different-slot ordinal2 used original deterministic ADD; no claim of2 paid resolver calls.",
+    "Three private plan entries returned ADD; the helper checked full extraction/binding coverage and completed native facts stage. No UPDATE/SUPERSEDE-on-new-in-plan-target case was exercised.",
+    "Four native complete usage/terminal attachments were checked: one extraction, one resolver and two vector operations; financial charge remains unknown.",
+    "This supplemental native source/branch coverage is separate from the fixed4latency samples, all of which remain under1sFAIL.",
+    "Existing K24 failure evidence and K25 earlier PASS receipts are unchanged; no subsequent read-only diagnosis was needed."
+  ]
+}

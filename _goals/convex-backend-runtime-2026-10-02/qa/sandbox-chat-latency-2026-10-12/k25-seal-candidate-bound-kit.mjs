@@ -44,9 +44,11 @@ const review = await fs.readFile(reviewPath);
 const verdict = JSON.parse(await fs.readFile(path.join(qa, 'k25-repair-independent-review.json')));
 assert.equal(verdict.verdict, 'PASS');
 assert.equal(verdict.sourceOnly, true);
-assert.equal(verdict.nativeAcceptance, false);
-assert.equal(Object.keys(verdict.verifiedPacket.groups.core).length, 61);
-assert.equal(verdict.verifiedPacket.sha256, sha(await fs.readFile(path.join(qa,verdict.verifiedPacket.path))));
+assert.equal(verdict.fullGoalAcceptance, false);
+assert.equal(verdict.nativeCandidateStatus, 'NOT_RUN');
+assert.deepEqual(verdict.breakingFindings, []);
+assert.equal(Object.keys(verdict.verifiedInputs.hashes.core).length, 61);
+assert.equal(verdict.verifiedInputs.packetSha256, sha(await fs.readFile(path.join(qa,verdict.verifiedInputs.packet))));
 
 const approvalPath = path.join(base, 'procedure-approval.json');
 const originalApproval = await fs.readFile(approvalPath);
