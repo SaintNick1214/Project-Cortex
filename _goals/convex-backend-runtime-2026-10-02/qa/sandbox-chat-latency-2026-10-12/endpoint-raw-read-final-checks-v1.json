@@ -1,0 +1,61 @@
+{
+  "sourceBaseline": "6156ea97aa8776accee52879176cdcd12e802d89",
+  "explicitOffline": true,
+  "selectedSuites": [
+    "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+    "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+    "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+    "tests/unit/runtimeAgent/turn-action.test.ts",
+    "tests/unit/runtimeAgent/tool-context.test.ts",
+    "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+    "tests/unit/runtimeAgent/turn-workflow.test.ts",
+    "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+    "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+    "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+    "tests/unit/runtimeAuth/authority.test.ts",
+    "tests/unit/runtimeAuth/provisioning.test.ts",
+    "tests/unit/runtimeTranscript/managed.test.ts",
+    "tests/unit/runtimeTranscript/contracts.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtime/profile-policy-selection.test.ts",
+    "tests/unit/runtime/model-policy-model-drift.test.ts",
+    "tests/unit/runtime/gateway-backend.test.ts",
+    "tests/unit/runtime/gateway-dispatch.test.ts",
+    "tests/unit/runtime/gateway-terminal-composition.test.ts",
+    "tests/unit/runtimeMemory/repository.test.ts",
+    "tests/unit/runtimeMemory/profiles.test.ts",
+    "tests/unit/runtimeMemory/public-boundary.test.ts"
+  ],
+  "reusedPassingSuites": [
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "tests/unit/runtimeAgent/model-owner.test.ts",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts"
+  ],
+  "reusedReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-focused-v1.json",
+  "checks": [
+    {
+      "name": "root-types-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 2,
+      "signal": null,
+      "elapsedMs": 10894.269417,
+      "before": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "59f4e2f3924eda5a1d8362dff9efe33034daa0d669ca98a30af154a216b6a321"
+      },
+      "after": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "59f4e2f3924eda5a1d8362dff9efe33034daa0d669ca98a30af154a216b6a321"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-root-types-final.log"
+    }
+  ]
+}

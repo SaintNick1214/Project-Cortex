@@ -18,8 +18,13 @@ const runtime = await import("../../../convex-dev/runtimeAgent");
 const client = await import("../../../convex-dev/runtimeClient");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 type Admission = { version: 1; run: RuntimeRun; start: RuntimeStartResult };
+const initialTrace = process.env.CORTEX_RUNTIME_LATENCY_TRACE;
 beforeEach(() => { installMockRoot(); });
-afterEach(() => { jest.restoreAllMocks(); });
+afterEach(() => {
+  if (initialTrace === undefined) delete process.env.CORTEX_RUNTIME_LATENCY_TRACE;
+  else process.env.CORTEX_RUNTIME_LATENCY_TRACE = initialTrace;
+  jest.restoreAllMocks();
+});
 async function fixture(options: { maxContextTokens?: number } = {}) {
   const f = await transcriptFixture(options), original = f.ctx.runMutation.bind(f.ctx);
   const calls: { name: string; args: unknown }[] = [];
@@ -49,6 +54,39 @@ function afterWorkflow(f: Awaited<ReturnType<typeof fixture>>, change: () => voi
   return reached;
 }
 describe("combined native run admission", () => {
+  it("opt-in submit/start/get mutation spans preserve exact registered result and transactional effects", async () => {
+    const f = await fixture(), rollback = new Error("REFERENCE_ROLLBACK"); let expected: Admission | undefined, after: unknown;
+    delete process.env.CORTEX_RUNTIME_LATENCY_TRACE;
+    await expect(f.transaction(async () => { expected = await f.admit(); after = f.snapshot(); throw rollback; })).rejects.toBe(rollback);
+    process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
+    const output = jest.spyOn(console, "log").mockImplementation(() => {}), now = jest.spyOn(performance, "now");
+    let tick = 100; now.mockImplementation(() => ++tick);
+    const actual = await f.admit(); expect(actual).toEqual(expected); expect(f.snapshot()).toEqual(after);
+    const spans = output.mock.calls.map(([value]) => JSON.parse(value as string) as { phase: string; durationMs?: number });
+    expect(spans.filter(row => row.phase.startsWith("admission.")).map(row => row.phase)).toEqual([
+      "admission.submit.begin", "admission.submit.end", "admission.start.begin", "admission.start.end", "admission.get.begin", "admission.get.end",
+    ]);
+    expect(spans.filter(row => row.phase.startsWith("admission.") && row.phase.endsWith(".end"))).toEqual([
+      expect.objectContaining({ phase: "admission.submit.end", durationMs: 1 }),
+      expect.objectContaining({ phase: "admission.start.end", durationMs: expect.any(Number) }),
+      expect.objectContaining({ phase: "admission.get.end", durationMs: 1 }),
+    ]);
+    expect(spans.find(row => row.phase === "admission.start.end")!.durationMs).toBeGreaterThanOrEqual(1);
+    expect(JSON.stringify(spans)).not.toContain(f.request().parts[0]!.text);
+    expect(JSON.stringify(actual)).not.toContain("durationMs");
+    expect(f.effects.saves).toBe(1); expect(f.workflows()).toHaveLength(1);
+  });
+  it("an enabled failed start span preserves original failure and complete parent rollback", async () => {
+    const f = await fixture(), before = f.snapshot(), failure = new Error("ORIGINAL_WORKFLOW_FAILURE");
+    const reached = afterWorkflow(f, () => { throw failure; });
+    process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1";
+    const output = jest.spyOn(console, "log").mockImplementation(() => {});
+    await expect(f.admit()).rejects.toBe(failure); expect(reached.value).toBe(true); expect(f.snapshot()).toEqual(before);
+    expect(output.mock.calls.map(([value]) => JSON.parse(value as string).phase).filter((phase: string) => phase.startsWith("admission."))).toEqual([
+      "admission.submit.begin", "admission.submit.end", "admission.start.begin", "admission.start.failed",
+    ]);
+    expect(output.mock.calls.flat().join()).not.toContain(failure.message);
+  });
   it("directly composes the original submit/start/get bodies with exact selectors and one durable attempt/account", async () => {
     const f = await fixture(), request = f.request();
     const result = await f.admit(request, { tenantId: "tenant-a", memorySpaceId: "space-a", streaming: false });

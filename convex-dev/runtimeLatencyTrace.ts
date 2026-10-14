@@ -14,3 +14,38 @@ export function traceRuntimePhase(runId: string, attemptNumber: number, phase: s
     durationMs: metadata.durationMs, bytes: metadata.bytes, status: metadata.status };
   console.log(JSON.stringify({ runId: correlation(runId), attemptNumber, phase, at: Date.now(), ...fields }));
 }
+
+function mutationClock(): number | undefined {
+  // Do not touch the clock in ordinary execution or Workflow's deterministic environment.
+  if (typeof process === "undefined" || process.env.CORTEX_RUNTIME_LATENCY_TRACE !== "1") return undefined;
+  try {
+    if (typeof performance === "undefined") return undefined;
+    const value = performance.now();
+    return Number.isFinite(value) ? value : undefined;
+  } catch { return undefined; }
+}
+function mutationDuration(start: number | undefined): RuntimeLatencyMetadata {
+  if (start === undefined) return {};
+  const end = mutationClock();
+  const durationMs = end === undefined ? undefined : end - start;
+  return durationMs !== undefined && Number.isFinite(durationMs) && durationMs >= 0 ? { durationMs } : {};
+}
+
+/** Prospective native-mutation diagnostics only: queries have a fixed performance clock.
+ * Never use these timings for guards, budgets, return values or persisted state.
+ * Trace-output failures retain traceRuntimePhase's existing enabled failure behavior. */
+export async function traceRuntimeMutationSpan<T>(runId: string, attemptNumber: number, phase: string,
+  execute: () => Promise<T>): Promise<T> {
+  if (typeof process === "undefined" || process.env.CORTEX_RUNTIME_LATENCY_TRACE !== "1") return await execute();
+  traceRuntimePhase(runId, attemptNumber, `${phase}.begin`);
+  const start = mutationClock();
+  let result: T;
+  try { result = await execute(); }
+  catch (error) {
+    traceRuntimePhase(runId, attemptNumber, `${phase}.failed`, mutationDuration(start));
+    throw error;
+  }
+  // Keep trace-output failures separate from failures of the original product callback.
+  traceRuntimePhase(runId, attemptNumber, `${phase}.end`, mutationDuration(start));
+  return result;
+}

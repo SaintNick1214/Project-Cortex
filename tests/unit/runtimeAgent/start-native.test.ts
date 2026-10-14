@@ -195,3 +195,57 @@ it("preparation writer invalidation preserves original late revocation rejection
   jest.spyOn(f.db, "insert").mockImplementation(async (table, value) => { const id = await insert(table, value); if (table === "runtimeAgentOperations") { reached = true; f.grant.revokedAt = clock; } return id; });
   await expect(f.call(runtime.prepareModelOperation, { ...args, ordinal: 0 })).rejects.toThrow("FORBIDDEN"); expect(reached).toBe(true); expect(stored(f)).toEqual(before);
 });
+
+// New opt-in diagnostics: the original eighteen contract assertions above remain unchanged.
+async function withTraceFlag<T>(enabled: boolean, call: () => Promise<T>): Promise<T> {
+  const before = process.env.CORTEX_RUNTIME_LATENCY_TRACE;
+  if (enabled) process.env.CORTEX_RUNTIME_LATENCY_TRACE = "1"; else delete process.env.CORTEX_RUNTIME_LATENCY_TRACE;
+  try { return await call(); } finally {
+    if (before === undefined) delete process.env.CORTEX_RUNTIME_LATENCY_TRACE; else process.env.CORTEX_RUNTIME_LATENCY_TRACE = before;
+  }
+}
+function startSpans(output: { mock: { calls: readonly (readonly unknown[])[] } }) {
+  return output.mock.calls.flatMap(([value]) => {
+    if (typeof value !== "string" || !value.startsWith("{")) return [];
+    const row = JSON.parse(value) as { phase?: string; runId?: string; attemptNumber?: number; durationMs?: number };
+    return row.phase?.startsWith("start.") ? [row] : [];
+  });
+}
+it("opt-in claim/Workflow spans preserve the real installed initial journal, result, writes and duplicate-start behavior", async () => {
+  const control = await fixture(); const expected = await withTraceFlag(false, () => control.start());
+  const expectedState = stored(control), expectedEntries = clone(control.entries);
+  const output = jest.spyOn(console, "log").mockImplementation(() => {}), f = await fixture();
+  const actual = await withTraceFlag(true, () => f.start());
+  expect(actual.result).toEqual(expected.result); expect(stored(f)).toEqual(expectedState); expect(f.entries).toEqual(expectedEntries);
+  const spans = startSpans(output); expect(spans.map(row => row.phase)).toEqual([
+    "start.claimNext.begin", "start.claimNext.end", "start.workflow.begin", "start.workflow.end",
+  ]);
+  expect(spans.map(row => row.attemptNumber)).toEqual([0, 0, 1, 1]);
+  for (const row of spans) { expect(row.runId).toBe(actual.run.runId); if (row.phase?.endsWith(".end")) {
+    expect(Number.isFinite(row.durationMs)).toBe(true); expect(row.durationMs).toBeGreaterThanOrEqual(0);
+  } else expect(row.durationMs).toBeUndefined(); }
+  await withTraceFlag(true, () => f.call(runtime.start, { runId: actual.run.runId })); expect(startSpans(output)).toEqual(spans);
+  expect(f.starts).toHaveLength(1); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+  for (const secret of ["HIDDEN instructions", "PROVIDER_SECRET", "Hello world!"]) expect(JSON.stringify(output.mock.calls)).not.toContain(secret);
+});
+it("native start diagnostics stay absent without opt-in while the original installed journal still queues one Action", async () => {
+  const output = jest.spyOn(console, "log").mockImplementation(() => {}), f = await fixture();
+  const { owned } = await withTraceFlag(false, () => f.start());
+  expect(startSpans(output)).toEqual([]); expect(owned.workflowId).toBeDefined();
+  expect(f.entries.at(-1)!.step).toMatchObject({ functionType: "action", inProgress: true }); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+});
+it("opt-in claim failure retains the exact original rejection and rollback without Workflow start or retry", async () => {
+  const f = await fixture(), run = await f.run(), before = stored(f), original = f.ctx.runMutation.bind(f.ctx), failure = Error("PRIVATE_CLAIM_FAILURE"), output = jest.spyOn(console, "log").mockImplementation(() => {}); let claims = 0;
+  f.ctx.runMutation = (async (ref, args) => { if (functionName(ref) === "runs:claimNext") { claims++; throw failure; } return original(ref, args); }) as MutationCtx["runMutation"];
+  await expect(withTraceFlag(true, () => f.call(runtime.start, { runId: run.runId }))).rejects.toBe(failure);
+  expect(claims).toBe(1); expect(stored(f)).toEqual(before); expect(f.starts).toEqual([]);
+  expect(startSpans(output).map(row => row.phase)).toEqual(["start.claimNext.begin", "start.claimNext.failed"]);
+  expect(JSON.stringify(output.mock.calls)).not.toContain(failure.message);
+});
+it("opt-in Workflow failure retains the installed journal failure and complete parent rollback without paid dispatch", async () => {
+  const f = await fixture({ journalFailure: true }), run = await f.run(), before = stored(f), output = jest.spyOn(console, "log").mockImplementation(() => {});
+  await expect(withTraceFlag(true, () => f.call(runtime.start, { runId: run.runId }))).rejects.toThrow("CONTROLLED_INITIAL_JOURNAL_FAILURE");
+  expect(stored(f)).toEqual(before); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+  expect(startSpans(output).map(row => row.phase)).toEqual(["start.claimNext.begin", "start.claimNext.end", "start.workflow.begin", "start.workflow.failed"]);
+  expect(JSON.stringify(output.mock.calls)).not.toContain("CONTROLLED_INITIAL_JOURNAL_FAILURE");
+});

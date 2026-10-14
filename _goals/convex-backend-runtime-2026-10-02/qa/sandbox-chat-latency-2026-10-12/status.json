@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K17 nativefunctionalproof/cleanupPASS;0/4latencyFAIL;nextmeasuredreadbatchinprogress",
+  "phase": "Endpoint scopes and admission timers ONEindependentreviewPASS4.0;source100%;committingforfreshpackaging",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T02:39:31.290Z",
+  "updatedAt": "2026-10-14T03:56:52.556Z",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -901,5 +901,19 @@
       "browser": "browser/k17-timing-console.json",
       "docs": "docs-k17-performance-render-receipt.json"
     }
+  },
+  "currentSourceBatch": {
+    "name": "endpoint-scope-admission-timing",
+    "implementationPercent": 100,
+    "affectedVerificationPercent": 100,
+    "independentReview": "PASS4.0 source/test/docsONLY zero breakingfindings",
+    "nativeQualified": false,
+    "liveSpeedClaim": false,
+    "originalBroadScopeGate": "FAIL1121/1123;unchangedtool-context60stimeout+follow-oncountfailure retained",
+    "isolatedUnchangedToolContext": "PASS4/4 in2.266s;causeoforiginalfailureUNKNOWN",
+    "finalTimingAffectedGate": "PASS379/13/0skip",
+    "goalPercent": 50,
+    "review": "endpoint-scope-admission-timing-joint-review.md",
+    "sourceAcceptancePercent": 100
   }
 }

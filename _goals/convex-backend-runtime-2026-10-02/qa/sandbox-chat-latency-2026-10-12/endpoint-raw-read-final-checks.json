@@ -1,0 +1,242 @@
+{
+  "sourceBaseline": "6156ea97aa8776accee52879176cdcd12e802d89",
+  "explicitOffline": true,
+  "selectedSuites": [
+    "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+    "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+    "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+    "tests/unit/runtimeAgent/turn-action.test.ts",
+    "tests/unit/runtimeAgent/tool-context.test.ts",
+    "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+    "tests/unit/runtimeAgent/turn-workflow.test.ts",
+    "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+    "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+    "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+    "tests/unit/runtimeAuth/authority.test.ts",
+    "tests/unit/runtimeAuth/provisioning.test.ts",
+    "tests/unit/runtimeTranscript/managed.test.ts",
+    "tests/unit/runtimeTranscript/contracts.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtime/profile-policy-selection.test.ts",
+    "tests/unit/runtime/model-policy-model-drift.test.ts",
+    "tests/unit/runtime/gateway-backend.test.ts",
+    "tests/unit/runtime/gateway-dispatch.test.ts",
+    "tests/unit/runtime/gateway-terminal-composition.test.ts",
+    "tests/unit/runtimeMemory/repository.test.ts",
+    "tests/unit/runtimeMemory/profiles.test.ts",
+    "tests/unit/runtimeMemory/public-boundary.test.ts"
+  ],
+  "reusedPassingSuites": [
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "tests/unit/runtimeAgent/model-owner.test.ts",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts"
+  ],
+  "reusedReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-focused-v1.json",
+  "checks": [
+    {
+      "name": "root-types-final-v2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 13987.071666,
+      "before": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "after": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-root-types-final-v2.log"
+    },
+    {
+      "name": "backend-types-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 666918.033375,
+      "before": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "after": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-backend-types-final.log"
+    },
+    {
+      "name": "lint-types-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 17395.69004200003,
+      "before": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "after": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-lint-types-final.log"
+    },
+    {
+      "name": "scoped-lint-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeModelPolicy.ts",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 14963.206833999953,
+      "before": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "after": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-scoped-lint-final.log"
+    },
+    {
+      "name": "discovery-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+        "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-action.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+        "tests/unit/runtimeAgent/turn-workflow.test.ts",
+        "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+        "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+        "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+        "tests/unit/runtimeAuth/authority.test.ts",
+        "tests/unit/runtimeAuth/provisioning.test.ts",
+        "tests/unit/runtimeTranscript/managed.test.ts",
+        "tests/unit/runtimeTranscript/contracts.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/profile-policy-selection.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtime/gateway-backend.test.ts",
+        "tests/unit/runtime/gateway-dispatch.test.ts",
+        "tests/unit/runtime/gateway-terminal-composition.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/profiles.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "--listTests",
+        "--json",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 258.5594999999739,
+      "before": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "after": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-discovery-final.log",
+      "discoveredSuites": 23
+    },
+    {
+      "name": "affected-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+        "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-action.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+        "tests/unit/runtimeAgent/turn-workflow.test.ts",
+        "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+        "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+        "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+        "tests/unit/runtimeAuth/authority.test.ts",
+        "tests/unit/runtimeAuth/provisioning.test.ts",
+        "tests/unit/runtimeTranscript/managed.test.ts",
+        "tests/unit/runtimeTranscript/contracts.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/profile-policy-selection.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtime/gateway-backend.test.ts",
+        "tests/unit/runtime/gateway-dispatch.test.ts",
+        "tests/unit/runtime/gateway-terminal-composition.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/profiles.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-affected-final.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "signal": null,
+      "elapsedMs": 517338.8842499999,
+      "before": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "after": {
+        "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+        "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-affected-final.log"
+    }
+  ]
+}

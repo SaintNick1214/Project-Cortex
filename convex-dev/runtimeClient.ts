@@ -10,6 +10,7 @@ import { semanticHash } from "../src/domain/profile";
 import { getHandler, submitHandler } from "./runs";
 import { transcriptDenied } from "./runtimeTranscript";
 import { createAuthorityReadScope } from "./runtimeAuth";
+import { traceRuntimeMutationSpan } from "./runtimeLatencyTrace";
 
 type Selectors = { tenantId?: string; memorySpaceId?: string };
 
@@ -18,11 +19,14 @@ type Selectors = { tenantId?: string; memorySpaceId?: string };
 export async function submitAndStartHandler(ctx: MutationCtx, args: Selectors & { request: unknown; streaming?: boolean }) {
   const selectors = { ...(args.tenantId === undefined ? {} : { tenantId: args.tenantId }),
     ...(args.memorySpaceId === undefined ? {} : { memorySpaceId: args.memorySpaceId }) };
-  const submitted = await submitHandler(ctx, { ...selectors, request: args.request });
-  const start = await startHandler(ctx, { ...selectors, runId: submitted.runId, streaming: args.streaming ?? true });
+  const submitted = await traceRuntimeMutationSpan("submit-and-start", 0, "admission.submit",
+    () => submitHandler(ctx, { ...selectors, request: args.request }));
+  const start = await traceRuntimeMutationSpan(submitted.runId, submitted.attemptNumber, "admission.start",
+    () => startHandler(ctx, { ...selectors, runId: submitted.runId, streaming: args.streaming ?? true }));
   // Preserve the old SDK start's read permission and immutable-handle check without
   // another client round trip. A mismatch rolls back admission and Workflow insertion.
-  const run = await getHandler(ctx, { ...selectors, runId: submitted.runId });
+  const run = await traceRuntimeMutationSpan(submitted.runId, start.attemptNumber, "admission.get",
+    () => getHandler(ctx, { ...selectors, runId: submitted.runId }));
   if (start.runId !== submitted.runId || start.attemptNumber !== run.attemptNumber
     || run.runId !== submitted.runId || run.conversationId !== submitted.conversationId
     || run.agentId !== submitted.agentId || run.agentVersion !== submitted.agentVersion

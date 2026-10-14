@@ -43,7 +43,7 @@ import { contextSourcePermission } from "./runtimeContextWitnessSchema";
 import { registerCompletedToolSource } from "./runtimeIngestion";
 import { contextBoundary, readIndexedContextAvailability, readIndexedSourceAtCutoff, readPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
 import type { ContextBoundary } from "./runtimeMemoryContext";
-import { traceRuntimePhase } from "./runtimeLatencyTrace";
+import { traceRuntimePhase, traceRuntimeMutationSpan } from "./runtimeLatencyTrace";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { recallMemory } from "./runtimeMemoryServices";
 import { executeServerTool, NATIVE_TOOL_NAMES, semanticToolName, serverTools, serverToolSourceLineage, validateToolInput } from "./runtimeAgentTools";
@@ -165,7 +165,7 @@ async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, args: At
   return { run: row, threadId: conversation.threadId, snapshot, definition: definition.definition, execution: owned,
     messages: [...messages, ...currentMessages] };
 }
-export const hydrateExecution = internalQuery({ args: agentAttempt, handler: async (ctx, args) => await executionContext(ctx, args) });
+export const hydrateExecution = internalQuery({ args: agentAttempt, handler: async (ctx, args) => await executionContext(createAuthorityReadScope(ctx, { nativeTranscript: true }), args) });
 /** Agent hydration precedes the unchanged policy body in one fresh native read snapshot. */
 async function resolveModelOperationHandler(ctx: QueryCtx, args: Attempt & { runBudgetId: string }) {
   const current = await executionContext(ctx, attemptArgs(args));
@@ -216,7 +216,8 @@ async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityRefer
     .eq("memorySpaceId", reference.memorySpaceId!).eq("runId", row.runId).eq("attemptNumber", row.attemptNumber)).take(2));
   if (old) return { runId: row.runId, attemptNumber: old.attemptNumber, state: old.state };
   traceRuntimePhase(row.runId, row.attemptNumber, "claim.begin");
-  const claimed = await ctx.runMutation(refs.claim, { reference, conversationId: row.conversationId, leaseMs: 300_000 });
+  const claimed = await traceRuntimeMutationSpan(row.runId, row.attemptNumber, "start.claimNext",
+    async () => await ctx.runMutation(refs.claim, { reference, conversationId: row.conversationId, leaseMs: 300_000 }));
   traceRuntimePhase(row.runId, claimed && "attemptNumber" in claimed ? claimed.attemptNumber : row.attemptNumber, "claim.end");
   if (!claimed) return { runId: row.runId, attemptNumber: row.attemptNumber, state: "queued" as const };
   // claimNext checks the indexed head. A future request must never start another run under its identity.
@@ -230,8 +231,9 @@ async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityRefer
   const id = await ctx.db.insert("runtimeAgentExecutions", { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, ...attempt,
     state: "ready", streaming, nextOutputSequence: 0, nextModelStep: 0, toolCount: 0,
     sourceWitnesses: [], mediaJobReferences: [], savedMessageIds: [], savedMessagePins: [], createdAt: now, updatedAt: now });
-  const workflowId = await workflow.start(ctx, freshWorkflow, attempt,
-    { startAsync: false, onComplete: freshWorkflowComplete, context: attempt });
+  const workflowId = await traceRuntimeMutationSpan(row.runId, claimed.attemptNumber, "start.workflow",
+    async () => await workflow.start(ctx, freshWorkflow, attempt,
+      { startAsync: false, onComplete: freshWorkflowComplete, context: attempt }));
   const started = await ctx.db.get("runtimeAgentExecutions", id);
   if (!started || started.workflowId !== undefined && started.workflowId !== workflowId) transcriptDenied();
   await ctx.db.patch("runtimeAgentExecutions", id, { workflowId });
@@ -854,7 +856,8 @@ export const admitPreparedModelOperation = internalMutation({ args: { ...agentAt
   requestCanonical: v.string(), snapshotCanonical: v.string(), bindingCanonical: v.string() },
   handler: (ctx, args) => admitPreparedModelOperationHandler(createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }), args) });
 
-export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v.array(v.any()) }, handler: async (ctx, args) => {
+export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v.array(v.any()) }, handler: async (nativeCtx, args) => {
+  const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true });
   const current = await executionContext(ctx, args); if (args.parts.length > 64) transcriptDenied("INVALID_INPUT");
   const tools = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", args.reference.tenantId).eq("memorySpaceId", args.reference.memorySpaceId!)
     .eq("runId", args.runId).eq("attemptNumber", args.attemptNumber).eq("kind", "tool")).take(33);

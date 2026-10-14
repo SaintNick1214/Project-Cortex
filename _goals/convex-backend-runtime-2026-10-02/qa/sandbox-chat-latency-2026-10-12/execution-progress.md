@@ -52,3 +52,11 @@ Four fixed replies COMPLETE within the original 30,000ms deadline, with no paid 
 ### 2026-10-14T02:39:31.290Z — K17 native proof and cleanup complete
 
 All8 native events/current facts/vectors/usage/provenance/authority and43 freshmanagement verifications PASS; slots0/allreleased with UNKNOWN ceilings, notknown charges. Exact database/container/private4dirs freshABSENT; Basic0/launcher130. Original4latencyfailures retained; no paidretry. Nativeproof/cleanup milestone100%, source/packaging100%, SLO0%, goal2/4 (50%). Savedanalysis and next measured endpoint read batch continue; final audit incomplete.
+
+### 2026-10-14T03:48:18.646Z — Coherent endpoint-scope/admission-timing source batch
+
+Implementation and affected-check milestone100%; one independent review pending. Fresh native invocations reuse raw reads in hydrateExecution/recordOutput/markVisible while preserving all predicates/writer invalidation; finalDelivery excluded and byte-identical. Default-off mutation timers measure original submission/start/get/claim/Workflow callbacks without affecting guards/state. Final379/13/0skip timing regressions, types/lint/build/actualcontracts passed. Original scope broadgate1121/1123FAIL remains; only unchanged failedtool-context suite separately4/4PASS in2.266s, causeUNKNOWN. No native performance claim or qualification yet. SLO0%, goal2/4 (50%).
+
+### 2026-10-14T03:56:52.556Z — One joint independent source/test/docs review PASS4.0
+
+Reviewer separate from both authors approved the frozen four production/four test paths and latest K17 website performance source/build/render, zero breakingfindings. Original1121/1123FAIL, separate isolated4/4PASS, wrongPATHNode26lint receipt and correctedNode24/npm12lint0/237warnings remain explicit. Source acceptance100%; native timings/speed unqualified, installedSLO0%, latencygoal50%. Next steps: incremental source commit, immutable package/image, fixed hosted browser/CLI pair measurement, cleanup and saved analysis.

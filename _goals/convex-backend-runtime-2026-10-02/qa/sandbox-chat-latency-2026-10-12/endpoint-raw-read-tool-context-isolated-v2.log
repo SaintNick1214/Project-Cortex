@@ -1,0 +1,72 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:13694) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/tool-context.test.ts
+  ✓ dynamic recall records exact source witnesses and threads the primary native operation into the same run budget (36 ms)
+  ✓ a revision between the consumed fact read and witness collection withholds context after the single embedding (19 ms)
+  ✓ a tombstone between the consumed fact read and witness collection withholds context after the single embedding (37 ms)
+  ✓ deferred current-attempt denial precedes a secondary model call and repository effects (14 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.1s | 4/4 passed | /tests/unit/runtimeAgent/tool-context.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 1.6%) - a tombstone between the consumed fact read and witness collection withholds context after the single embedding
+    /tests/unit/runtimeAgent/tool-context.test.ts
+
+ 2. [32m✓[0m    0.04s ( 1.6%) - dynamic recall records exact source witnesses and threads the primary native operation into the same run budget
+    /tests/unit/runtimeAgent/tool-context.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.8%) - a revision between the consumed fact read and witness collection withholds context after the single embedding
+    /tests/unit/runtimeAgent/tool-context.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.6%) - deferred current-attempt denial precedes a secondary model call and repository effects
+    /tests/unit/runtimeAgent/tool-context.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.11s (4.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.27s
+  Test suites:        1
+  Individual tests:   4
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        2.266 s, estimated 403 s
+Ran all test suites within paths "tests/unit/runtimeAgent/tool-context.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-tool-context-isolated-v2.json

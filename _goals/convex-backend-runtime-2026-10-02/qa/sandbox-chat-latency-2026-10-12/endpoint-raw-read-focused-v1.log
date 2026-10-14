@@ -1,0 +1,247 @@
+(node:12882) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts (6.885 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"endpoint-raw-read-count","name":"hydrateExecution","reference":{"authority":66,"transcript":2,"policyMetadata":2},"scoped":{"authority":16,"transcript":1,"policyMetadata":2}}
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:122:11
+
+    console.info
+      {"type":"endpoint-raw-read-count","name":"recordOutput","reference":{"authority":66,"transcript":2,"policyMetadata":2},"scoped":{"authority":16,"transcript":1,"policyMetadata":2}}
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:122:11
+
+    console.info
+      {"type":"endpoint-raw-read-count","name":"markVisible","reference":{"authority":100,"transcript":2,"policyMetadata":11},"scoped":{"authority":16,"transcript":1,"policyMetadata":9}}
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:122:11
+
+  ● visibility preserves current control denial even when every monotone flag is unchanged
+
+    TypeError: Cannot set properties of undefined (setting 'revokedAt')
+
+      149 |   const f = await fixture(), { registration, args } = await entry(f, "markVisible"); await f.call(registration, args);
+      150 |   if (fault === "qualification") f.db.table("runtimeModelQualifications")[0].revokedAt = clock;
+    > 151 |   if (fault === "control") f.db.table("runtimeModelControls")[0].revokedAt = clock;
+          |                                                                           ^
+      152 |   if (fault === "account") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      153 |   if (fault === "duplicate") f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:duplicate" });
+      154 |   const before = state(f); enabled = false; const expected = await rejection(f, registration, args); enabled = true;
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:151:75
+
+PASS tests/unit/runtimeMemory/vector-delivery-batch.test.ts (5.648 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"facts","acceptedEntryScope":true,"unscopedAuthReads":50,"scopedAuthReads":20,"nonAuthReadWriteOrderEntries":4}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"vectors","acceptedEntryScope":true,"unscopedAuthReads":52,"scopedAuthReads":22,"nonAuthReadWriteOrderEntries":22}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"delivery","acceptedEntryScope":false,"unscopedAuthReads":223,"scopedAuthReads":223,"nonAuthReadWriteOrderEntries":34}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"profile","acceptedEntryScope":true,"unscopedAuthReads":28,"scopedAuthReads":18,"nonAuthReadWriteOrderEntries":9}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+PASS tests/unit/runtimeAgent/execution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     6.9s | 25/26 passed | /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+  ✅     5.6s | 36/36 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+  ✅     2.6s | 33/33 passed | /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ✅     2.0s | 86/86 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     1.4s | 21/21 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.22s ( 6.5%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 2. [32m✓[0m    1.08s ( 5.7%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [32m✓[0m    0.69s ( 3.7%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [32m✓[0m    0.10s ( 0.5%) - original delivery outcome and failure precedence does not move profile initialization ahead of an absent or ambiguous canonical row
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 5. [32m✓[0m    0.10s ( 0.5%) - original delivery outcome and failure precedence matches one/many unchanged vectors with no application or financial effect
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 6. [32m✓[0m    0.09s ( 0.5%) - fresh source denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+ 7. [32m✓[0m    0.09s ( 0.5%) - fresh source-owner denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+ 8. [32m✓[0m    0.09s ( 0.5%) - fresh source-tombstone denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+ 9. [32m✓[0m    0.09s ( 0.5%) - fresh transcript denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+10. [32m✓[0m    0.09s ( 0.5%) - fresh lease denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+11. [32m✓[0m    0.09s ( 0.5%) - fresh cancel denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+12. [32m✓[0m    0.09s ( 0.5%) - fresh grant denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+13. [32m✓[0m    0.09s ( 0.5%) - fresh epoch denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+14. [32m✓[0m    0.09s ( 0.5%) - fresh conversation denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+15. [32m✓[0m    0.09s ( 0.5%) - fresh principal denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+16. [32m✓[0m    0.09s ( 0.5%) - fresh definition denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+17. [32m✓[0m    0.09s ( 0.5%) - snapshot-local exact profile/budget initialization checks 10 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+18. [32m✓[0m    0.07s ( 0.4%) - markVisible preserves real result/state/non-raw read and writer order with fewer duplicate raw reads
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+19. [32m✓[0m    0.07s ( 0.4%) - visibility's unchanged monotone update does no writes only after the original complete current guards
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+20. [32m✓[0m    0.07s ( 0.3%) - per-source delivery lifetimes and native budget fences retains native ingestion lease fence (expired=false) inside current profile selection
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 4.48s (23.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      18.77s
+  Test suites:        5
+  Individual tests:   197
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       1 failed, 201 passed, 202 total
+Snapshots:   0 total
+Time:        18.77 s
+Ran all test suites within paths "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts", "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts", "tests/unit/runtimeMemory/authority-scope-entries.test.ts", "tests/unit/runtimeMemory/vector-delivery-batch.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-focused-v1.json

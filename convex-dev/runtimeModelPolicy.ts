@@ -784,7 +784,8 @@ export async function checkpointHandler(ctx: MutationCtx, args: Infer<typeof _ch
   return { dispatchPermit: true as const, dispatchIdentity: attempt.dispatchIdentity, snapshot, requestCanonical: canonical(validated.request) };
 }
 export const checkpoint = internalMutation({ args: checkpointArgs, handler: (ctx, args) => checkpointHandler(createAuthorityReadScope(ctx), args) });
-export const markVisible = internalMutation({ args: { ...attemptArgs, ...visibilityFields }, handler: async (ctx, args) => {
+export const markVisible = internalMutation({ args: { ...attemptArgs, ...visibilityFields }, handler: async (nativeCtx, args) => {
+  const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
   const { attempt, operation } = await attemptContext(ctx, args.attemptId);
   await currentOperation(ctx, args.reference, operation);
   if (attempt.state !== "dispatch_pending" && attempt.state !== "uncertain") fail("POLICY_DENIED");

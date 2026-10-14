@@ -1,0 +1,678 @@
+(node:13340) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts (62.724 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"endpoint-raw-read-count","name":"hydrateExecution","reference":{"authority":66,"transcript":2,"policyMetadata":2},"scoped":{"authority":16,"transcript":1,"policyMetadata":2}}
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:125:11
+
+    console.info
+      {"type":"endpoint-raw-read-count","name":"recordOutput","reference":{"authority":66,"transcript":2,"policyMetadata":2},"scoped":{"authority":16,"transcript":1,"policyMetadata":2}}
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:125:11
+
+    console.info
+      {"type":"endpoint-raw-read-count","name":"markVisible","reference":{"authority":100,"transcript":2,"policyMetadata":11},"scoped":{"authority":16,"transcript":1,"policyMetadata":9}}
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:125:11
+
+PASS tests/unit/runtime/gateway-terminal-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/model-policy-admission.test.ts (5.201 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/turn-action.test.ts (5.276 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/turn-native-composition.test.ts (5.293 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/gateway-dispatch.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"native-transcript-read-count","name":"prepareTurnModel","referenceReads":32,"optimizedReads":9}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:52:149
+
+    console.info
+      {"type":"native-transcript-read-count","name":"prepareResolvedModelOperation","referenceReads":16,"optimizedReads":3}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:52:149
+
+    console.info
+      {"type":"native-transcript-read-count","name":"admitPreparedModelOperation","referenceReads":12,"optimizedReads":3}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:69:423)
+
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/gateway-backend.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/turn-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeTranscript/managed.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/runtimeAgent/tool-context.test.ts (402.866 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● dynamic recall records exact source witnesses and threads the primary native operation into the same run budget
+
+    thrown: "Exceeded timeout of 60000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 60000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+          36 |   return { f, source, ctx, binding, afterFacts: (fn: () => void) => { afterFacts = fn; } };
+          37 | }
+        > 38 | it("dynamic recall records exact source witnesses and threads the primary native operation into the same run budget", async () => {
+             | ^
+          39 |   const { source, ctx, binding } = await setup();
+          40 |   const result = await executeServerTool(ctx, binding, "memory.recall", { text: "preferred drink", limit: 2 });
+          41 |   expect(result.result).toMatchObject({ context: expect.stringContaining("green tea"), profileId: DEFAULT_EMBEDDING_PROFILE.profileId });
+
+          at tests/unit/runtimeAgent/tool-context.test.ts:38:1
+
+  ● a revision between the consumed fact read and witness collection withholds context after the single embedding
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 2
+
+      51 |   // Transcript currentness (including a mismatched source revision) is an authority fence.
+      52 |   await expect(executeServerTool(ctx, binding, "memory.recall", { text: "preferred drink", limit: 2 })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    > 53 |   expect(embed).toHaveBeenCalledTimes(1); expect(binding.writeSource).not.toHaveBeenCalled(); expect(binding.commitDerived).not.toHaveBeenCalled();
+         |                 ^
+      54 | });
+      55 | it("deferred current-attempt denial precedes a secondary model call and repository effects", async () => {
+      56 |   const { ctx, binding } = await setup(); binding.checkCurrent.mockImplementation(async () => { throw new Error("CANCELLED"); });
+
+      at tests/unit/runtimeAgent/tool-context.test.ts:53:17
+
+PASS tests/unit/runtime/profile-policy-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/repository.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/profiles.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeTranscript/contracts.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/authority.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🔴 LONG SUITES (>2 minutes) - Optimization candidates:
+--------------------------------------------------------------------------------
+  ❌   402.9s | 2/4 passed | /tests/unit/runtimeAgent/tool-context.test.ts
+
+🟡 MEDIUM SUITES (30s - 2 min):
+--------------------------------------------------------------------------------
+  ✅    62.7s | 26/26 passed | /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.3s | 30/30 passed | /tests/unit/runtimeAgent/turn-native-composition.test.ts
+  ✅     5.3s | 12/12 passed | /tests/unit/runtimeAgent/turn-action.test.ts
+  ✅     5.2s | 193/193 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     4.0s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+  ✅     4.0s | 201/201 passed | /tests/unit/runtime/gateway-terminal-composition.test.ts
+  ✅     3.7s | 9/9 passed | /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+  ✅     3.4s | 57/57 passed | /tests/unit/runtime/model-policy-model-drift.test.ts
+  ✅     3.3s | 45/45 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ✅     2.9s | 28/28 passed | /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ✅     2.8s | 31/31 passed | /tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ✅     2.5s | 5/5 passed | /tests/unit/runtimeAgent/turn-workflow.test.ts
+  ✅     2.2s | 101/101 passed | /tests/unit/runtime/gateway-dispatch.test.ts
+  ✅     1.7s | 12/12 passed | /tests/unit/runtime/profile-policy-selection.test.ts
+  ✅     1.4s | 12/12 passed | /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ✅     1.4s | 13/13 passed | /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ✅     0.5s | 176/176 passed | /tests/unit/runtimeMemory/public-boundary.test.ts
+  ✅     0.3s | 37/37 passed | /tests/unit/runtimeMemory/repository.test.ts
+  ✅     0.3s | 17/17 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+  ✅     0.3s | 14/14 passed | /tests/unit/runtimeMemory/profiles.test.ts
+  ✅     0.2s | 31/31 passed | /tests/unit/runtimeTranscript/contracts.test.ts
+  ✅     0.2s | 54/54 passed | /tests/unit/runtimeAuth/authority.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m  401.16s (77.6%) - dynamic recall records exact source witnesses and threads the primary native operation into the same run budget
+    /tests/unit/runtimeAgent/tool-context.test.ts
+
+ 2. [32m✓[0m   52.02s (10.1%) - hydrateExecution rereads its second private pass after an interleaved actual component writer
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+ 3. [32m✓[0m    1.61s ( 0.3%) - original terminal capture and attachment share a single persistence deadline the default window accommodates capture retry latency plus attachment without another inference
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 4. [32m✓[0m    1.34s ( 0.3%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 5. [32m✓[0m    1.01s ( 0.2%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 6. [32m✓[0m    1.01s ( 0.2%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 7. [32m✓[0m    0.42s ( 0.1%) - one empty turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 8. [32m✓[0m    0.31s ( 0.1%) - one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 9. [32m✓[0m    0.29s ( 0.1%) - prepareTurnModel retains exact original output/writes with fewer official raw reads
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+10. [32m✓[0m    0.27s ( 0.1%) - native context+preparation+two resolutions equal original handler outcomes with warning=false
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+11. [32m✓[0m    0.26s ( 0.1%) - compact root loops hash compiled provenance once per install/active-root invocation, never once per qualification row
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+12. [32m✓[0m    0.26s ( 0.1%) - native context+preparation+two resolutions equal original handler outcomes with warning=true
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+13. [32m✓[0m    0.26s ( 0.0%) - one final_only turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+14. [32m✓[0m    0.25s ( 0.0%) - tool result returns to Workflow ownership without finalization or title work
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+15. [32m✓[0m    0.24s ( 0.0%) - lost Action acknowledgement after completed operation rejects a duplicate, then original reconciliation finalizes exactly once
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+16. [32m✓[0m    0.24s ( 0.0%) - component completion/Core finish gap stays reconcilable without another model or duplicate ingestion
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+17. [32m✓[0m    0.23s ( 0.0%) - stale transcript after completed model operation cannot register/finalize obsolete assistant output
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+18. [32m✓[0m    0.21s ( 0.0%) - markVisible preserves real result/state/non-raw read and writer order with fewer duplicate raw reads
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+19. [32m✓[0m    0.21s ( 0.0%) - fresh grant denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+20. [32m✓[0m    0.20s ( 0.0%) - fresh principal denial matches the original hydration/output/visibility handlers and rolls back
+    /tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 461.81s (89.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      516.92s
+  Test suites:        23
+  Individual tests:   978
+  Long suites (>2m):  1
+  Medium suites:      1
+  Short suites (<30s): 21
+
+  ⚠️  1 tests hit timeout (60s)
+     Fixing these could save ~60s
+════════════════════════════════════════════════════════════════════════════════
+
+
+Summary of all failing tests
+FAIL tests/unit/runtimeAgent/tool-context.test.ts (402.866 s)
+  ● dynamic recall records exact source witnesses and threads the primary native operation into the same run budget
+
+    thrown: "Exceeded timeout of 60000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 60000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+          36 |   return { f, source, ctx, binding, afterFacts: (fn: () => void) => { afterFacts = fn; } };
+          37 | }
+        > 38 | it("dynamic recall records exact source witnesses and threads the primary native operation into the same run budget", async () => {
+             | ^
+          39 |   const { source, ctx, binding } = await setup();
+          40 |   const result = await executeServerTool(ctx, binding, "memory.recall", { text: "preferred drink", limit: 2 });
+          41 |   expect(result.result).toMatchObject({ context: expect.stringContaining("green tea"), profileId: DEFAULT_EMBEDDING_PROFILE.profileId });
+
+          at tests/unit/runtimeAgent/tool-context.test.ts:38:1
+
+  ● a revision between the consumed fact read and witness collection withholds context after the single embedding
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 2
+
+      51 |   // Transcript currentness (including a mismatched source revision) is an authority fence.
+      52 |   await expect(executeServerTool(ctx, binding, "memory.recall", { text: "preferred drink", limit: 2 })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    > 53 |   expect(embed).toHaveBeenCalledTimes(1); expect(binding.writeSource).not.toHaveBeenCalled(); expect(binding.commitDerived).not.toHaveBeenCalled();
+         |                 ^
+      54 | });
+      55 | it("deferred current-attempt denial precedes a secondary model call and repository effects", async () => {
+      56 |   const { ctx, binding } = await setup(); binding.checkCurrent.mockImplementation(async () => { throw new Error("CANCELLED"); });
+
+      at tests/unit/runtimeAgent/tool-context.test.ts:53:17
+
+
+Test Suites: 1 failed, 22 passed, 23 total
+Tests:       2 failed, 1121 passed, 1123 total
+Snapshots:   0 total
+Time:        516.933 s
+Ran all test suites within paths "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts", "tests/unit/runtimeAgent/checkpoint-composition.test.ts", "tests/unit/runtimeAgent/turn-native-composition.test.ts", "tests/unit/runtimeAgent/turn-action.test.ts", "tests/unit/runtimeAgent/tool-context.test.ts", "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts", "tests/unit/runtimeAgent/turn-workflow.test.ts", "tests/unit/runtimeAuth/authority-read-scope.test.ts", "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts", "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts", "tests/unit/runtimeAuth/authority.test.ts", "tests/unit/runtimeAuth/provisioning.test.ts", "tests/unit/runtimeTranscript/managed.test.ts", "tests/unit/runtimeTranscript/contracts.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/profile-policy-selection.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/runtime/gateway-dispatch.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeMemory/profiles.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-affected-final.json

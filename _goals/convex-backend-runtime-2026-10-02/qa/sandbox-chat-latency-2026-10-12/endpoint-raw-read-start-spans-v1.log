@@ -1,0 +1,143 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:14364) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"preparation-authority-fixture-count","unscoped":192,"scoped":28}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:189:11)
+
+PASS tests/unit/runtimeAgent/start-native.test.ts
+  ✓ real immediate start sees the inserted execution, journals the inline prefix, and queues the ordinary turn Action before returning its ID (36 ms)
+  ✓ in-progress fresh journal replay keeps one durable paid Action and never executes it in the parent mutation (22 ms)
+  ✓ strict readiness still journals the original bounded sleep before context or model scheduling (23 ms)
+  ✓ official early completion binds the verified document then runs the original strict callback with a consistent failed admission (29 ms)
+  ✓ the unchanged legacy callback still rejects an unattached ID under the installed component completion contract (20 ms)
+  ✓ fresh completion refuses forged handler without binding or completion effects (18 ms)
+  ✓ fresh completion refuses forged callback without binding or completion effects (18 ms)
+  ✓ fresh completion refuses forged attempt without binding or completion effects (17 ms)
+  ✓ fresh completion refuses forged context without binding or completion effects (18 ms)
+  ✓ fresh completion refuses forged result without binding or completion effects (16 ms)
+  ✓ fresh completion refuses forged generation without binding or completion effects (16 ms)
+  ✓ fresh completion refuses forged document-id without binding or completion effects (16 ms)
+  ✓ fresh completion refuses forged pending without binding or completion effects (17 ms)
+  ✓ fresh completion refuses forged execution-state without binding or completion effects (16 ms)
+  ✓ fresh completion refuses forged attached-id without binding or completion effects (16 ms)
+  ✓ a parent journal failure rolls claim/execution/Workflow work back without paid dispatch, then fresh retry starts once (19 ms)
+  ✓ prepareModelOperation's fresh scope retains exact original results/non-authority order and clears after operation writes (53 ms)
+  ✓ preparation writer invalidation preserves original late revocation rejection and complete rollback (44 ms)
+  ✓ opt-in claim/Workflow spans preserve the real installed initial journal, result, writes and duplicate-start behavior (32 ms)
+  ✓ native start diagnostics stay absent without opt-in while the original installed journal still queues one Action (14 ms)
+  ✓ opt-in claim failure retains the exact original rejection and rollback without Workflow start or retry (10 ms)
+  ✓ opt-in Workflow failure retains the installed journal failure and complete parent rollback without paid dispatch (14 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.5s | 22/22 passed | /tests/unit/runtimeAgent/start-native.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.1%) - prepareModelOperation's fresh scope retains exact original results/non-authority order and clears after operation writes
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.9%) - preparation writer invalidation preserves original late revocation rejection and complete rollback
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.8%) - real immediate start sees the inserted execution, journals the inline prefix, and queues the ordinary turn Action before returning its ID
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.7%) - opt-in claim/Workflow spans preserve the real installed initial journal, result, writes and duplicate-start behavior
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.6%) - official early completion binds the verified document then runs the original strict callback with a consistent failed admission
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.5%) - strict readiness still journals the original bounded sleep before context or model scheduling
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.5%) - in-progress fresh journal replay keeps one durable paid Action and never executes it in the parent mutation
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.4%) - the unchanged legacy callback still rejects an unattached ID under the installed component completion contract
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.4%) - a parent journal failure rolls claim/execution/Workflow work back without paid dispatch, then fresh retry starts once
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+10. [32m✓[0m    0.02s ( 0.4%) - fresh completion refuses forged handler without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+11. [32m✓[0m    0.02s ( 0.4%) - fresh completion refuses forged callback without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+12. [32m✓[0m    0.02s ( 0.4%) - fresh completion refuses forged context without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+13. [32m✓[0m    0.02s ( 0.4%) - fresh completion refuses forged attempt without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+14. [32m✓[0m    0.02s ( 0.4%) - fresh completion refuses forged pending without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+15. [32m✓[0m    0.02s ( 0.3%) - fresh completion refuses forged result without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+16. [32m✓[0m    0.02s ( 0.3%) - fresh completion refuses forged generation without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+17. [32m✓[0m    0.02s ( 0.3%) - fresh completion refuses forged document-id without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+18. [32m✓[0m    0.02s ( 0.3%) - fresh completion refuses forged execution-state without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+19. [32m✓[0m    0.02s ( 0.3%) - fresh completion refuses forged attached-id without binding or completion effects
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+20. [32m✓[0m    0.01s ( 0.3%) - native start diagnostics stay absent without opt-in while the original installed journal still queues one Action
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.46s (9.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.64s
+  Test suites:        1
+  Individual tests:   22
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       22 passed, 22 total
+Snapshots:   0 total
+Time:        4.646 s
+Ran all test suites within paths "tests/unit/runtimeAgent/start-native.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/endpoint-raw-read-start-spans-v1.json

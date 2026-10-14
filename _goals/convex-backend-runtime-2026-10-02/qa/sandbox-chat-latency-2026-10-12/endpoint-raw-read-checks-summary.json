@@ -1,0 +1,145 @@
+{
+  "sourceFreeze": "endpoint-raw-read-freeze.json",
+  "sourceScopeTypes": [
+    {
+      "name": "root-types-final-v2",
+      "exitCode": 0,
+      "log": "endpoint-raw-read-root-types-final-v2.log"
+    },
+    {
+      "name": "backend-types-final",
+      "exitCode": 0,
+      "log": "endpoint-raw-read-backend-types-final.log"
+    },
+    {
+      "name": "lint-types-final",
+      "exitCode": 0,
+      "log": "endpoint-raw-read-lint-types-final.log"
+    },
+    {
+      "name": "scoped-lint-final",
+      "exitCode": 0,
+      "log": "endpoint-raw-read-scoped-lint-final.log"
+    }
+  ],
+  "initialFocused": {
+    "exitCode": 1,
+    "passed": 201,
+    "failed": 1,
+    "total": 202,
+    "suites": 5,
+    "reason": "New fixture looked up nonexistent runtimeModelControls; corrected to actual runtimeModelPolicies; original receipt retained."
+  },
+  "initialTypes": {
+    "exitCode": 2,
+    "reason": "New fixture context/union narrowing; two raw receipts retained; fixed without any or flag suppression."
+  },
+  "dependencyGate": {
+    "exitCode": 1,
+    "passed": 1121,
+    "failed": 2,
+    "total": 1123,
+    "suites": 23,
+    "skipped": 0,
+    "todo": 0,
+    "originalStatus": "FAIL retained",
+    "newScopeSuite": {
+      "passed": 26,
+      "failed": 0
+    },
+    "reason": "Unchanged tool-context suite timed out after60s; its later single-embedding assertion observed2 calls. Cause unconfirmed; original failed suite402.866s."
+  },
+  "separateIsolatedFailedSuite": {
+    "exitCode": 0,
+    "passed": 4,
+    "total": 4,
+    "suites": 1,
+    "skipped": 0,
+    "elapsedSeconds": 2.266,
+    "reason": "Initial synchronous Jest child had exited; only failed suite rerun; no source/assertion/deadline change. This path does not call the three modified registrations."
+  },
+  "reusedFocusedPassingSuites": {
+    "passed": 176,
+    "total": 176,
+    "suites": 4,
+    "skipped": 0
+  },
+  "installedWorkflowInstrumentation": {
+    "exitCode": 0,
+    "passed": 22,
+    "total": 22,
+    "suites": 1,
+    "skipped": 0,
+    "todo": 0
+  },
+  "combinedTypesBuildContracts": {
+    "root-types-v2": {
+      "exitCode": 0,
+      "log": "cloud-admission-mutation-timing-root-types-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "backend-types-v2": {
+      "exitCode": 0,
+      "log": "cloud-admission-mutation-timing-backend-types-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lint-types-v1": {
+      "exitCode": 0,
+      "log": "cloud-admission-mutation-timing-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "scoped-lint-v1": {
+      "exitCode": 0,
+      "log": "cloud-admission-mutation-timing-scoped-lint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build-v1": {
+      "exitCode": 0,
+      "log": "cloud-admission-mutation-timing-build-v1.log",
+      "sha256": "e7382997eb49a123485712851b5b5a29492291d6adc155936bae3947fb85d884"
+    },
+    "contracts-v1": {
+      "exitCode": 0,
+      "log": "cloud-admission-mutation-timing-contracts-v1.log",
+      "sha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf"
+    }
+  },
+  "rootLint": {
+    "exitCode": 0,
+    "warnings": 237,
+    "errors": 0,
+    "log": "endpoint-raw-read-joint-root-lint-v2.log",
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "pinnedNodeFirstInPATH": true,
+    "originalWrongPATHRunRetained": "endpoint-raw-read-joint-root-lint.log",
+    "originalWrongPATHStatus": "Unqualified toolchain; not used as pinned PASS"
+  },
+  "rawReceipts": {
+    "endpoint-raw-read-focused-v1.json": {
+      "sha256": "664b4c9f3299bceb9c540bc70c9ae6937885e5337111ee2cd8d117e092fe1286"
+    },
+    "endpoint-raw-read-root-types-v1.log": {
+      "sha256": "15d23bc7884716b2536006480dcdaea6f5798253e89e89daca7b381f6ff81386"
+    },
+    "endpoint-raw-read-root-types-final.log": {
+      "sha256": "1cb9ede48281caf43f0abf3c9cf07ed65f69da087d6ce2aaed3bc5ebf2e1521a"
+    },
+    "endpoint-raw-read-affected-final.json": {
+      "sha256": "2465a395da386c98da2097e3008ee08f4b03ceb68e205d9282f0c7882755ccce"
+    },
+    "endpoint-raw-read-tool-context-isolated-v2.json": {
+      "sha256": "905ed21e3fc82d56231b56b4ca9152bb9851e633909e47af9040c56d25e2bd3e"
+    },
+    "endpoint-raw-read-start-spans-v1.json": {
+      "sha256": "d3be263f18ad7f24e1dffab9c7cb6581792da51cd4bd469874f2dbf9e84bcef2"
+    },
+    "endpoint-raw-read-joint-root-lint.log": {
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d"
+    },
+    "endpoint-raw-read-joint-root-lint-v2.log": {
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d"
+    }
+  },
+  "remainingNativeRequirement": "Fresh installed disposable qualification and real latency measurements; no native speed or completion accepted from these controlled checks."
+}

@@ -1,0 +1,175 @@
+{
+  "verdict": "PASS",
+  "scope": "One independent coherent source/test/docs review: three endpoint raw-read opt-ins and prospective mutation admission/start timing.",
+  "policy": "Acceptance policy v2: requirements/tests/completeness >=4; code/pattern >=3; no breaking findings.",
+  "baseline": "6156ea97aa8776accee52879176cdcd12e802d89",
+  "qaOnlyHead": "cce2b7aa435d8c2cfc082c38e635833bf13aaed4",
+  "dimensions": {
+    "requirements": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4,
+  "breakingFindings": [],
+  "importantFindings": [],
+  "currentFrozenFiles": {
+    "convex-dev/runtimeAgent.ts": "6cbde575a009d9ed1368e2fd6fd0791092e6c2ba2eb24447c8403be2ce3508aa",
+    "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+    "convex-dev/runtimeClient.ts": "a6fd5c2f00c13cb439c82674540da07dc00cfc8e72f7c82be1b7318109a0f743",
+    "convex-dev/runtimeLatencyTrace.ts": "8fee2317e14653d54da71dd914a0d2befc42629af9e554f9cfc652119c60ac49",
+    "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db",
+    "tests/unit/runtimeAgent/start-native.test.ts": "97a80efa8fc00ce3ec4639d7ac2f49ea802c82a8bb7c901bf707c31ea56acfff",
+    "tests/unit/runtime/latency-trace.test.ts": "3f5f4979983fe14685131c7ea5b628927542eaf7976b694572e3a1ae355381fa",
+    "tests/unit/client-runtime/admission-native.test.ts": "3e40635a16587d5d752c944f0777c4875aacb2e4dbb9c61e99d1920a43324574"
+  },
+  "packetHashes": {
+    "endpoint-raw-read-source-report.md": "cd5884c53e888f5a1e3b5d99ff61222267413b03e2c3742e78c8c7ce97f81f70",
+    "endpoint-raw-read-freeze.json": "b568ef10a5857307a5f37d9c05e8807eca9acbfae2977e29700170686000d6eb",
+    "endpoint-raw-read-final-equivalence.json": "00fc6222cb0f1f50a5c12f3e866e1a85f7bbb2d76045f5f0bafbda692f35ba1b",
+    "endpoint-raw-read-checks-summary.json": "83fe9e8689b75cbe98f696dbd32ac4c915ca936c70f81736c53f67323def07bf",
+    "cloud-admission-mutation-timing-source-report.md": "ebdcaae976b2a9e1ca1e34214faae36790feb47fe7794c663cd924771366c873",
+    "cloud-admission-mutation-timing-final-receipt.json": "0d9ebbb142ae54661006bf8174671af21852cc53d7ba44dec54db18907188c39",
+    "cloud-admission-mutation-timing-freeze.json": "292ff142b4ca9b267e9fe1515bb9b0feec44a246c907a1ead4731588363c4b65",
+    "docs-k17-performance-render-receipt.json": "7a2a35626d6fee52017a177b347e2f1c8fcf54cc63450464e27ec7959bf4a5b6"
+  },
+  "checks": {
+    "sourceHashesBeforeAfterMatch": true,
+    "frozenRawReceiptHashesMatch": true,
+    "timingGate": {
+      "status": "PASS",
+      "tests": 379,
+      "suites": 13,
+      "skipped": 0,
+      "todo": 0
+    },
+    "originalDependencyGate": {
+      "status": "FAIL",
+      "passed": 1121,
+      "failed": 2,
+      "total": 1123,
+      "suites": 23,
+      "skipped": 0,
+      "todo": 0,
+      "timeoutMs": 60000,
+      "cause": "UNKNOWN",
+      "relabelled": false
+    },
+    "isolatedUnchangedToolSuite": {
+      "status": "PASS",
+      "tests": 4,
+      "suites": 1,
+      "elapsedSeconds": 2.266,
+      "skipped": 0,
+      "todo": 0,
+      "originalAssertionsAndDeadlineUnchanged": true
+    },
+    "sensitiveCoverage": {
+      "distinctCases": 1299,
+      "suites": 27,
+      "assembledFromScopedReceipts": true,
+      "singleGreenBroadRun": false,
+      "countsNotAdditiveWithTimingGate": true
+    },
+    "newScopeSuite": {
+      "status": "PASS",
+      "tests": 26
+    },
+    "reusedPassingSuites": {
+      "tests": 176,
+      "suites": 4,
+      "status": "PASS"
+    },
+    "installedWorkflowLibraryFixture": {
+      "status": "PASS",
+      "tests": 22,
+      "originalCases": 18,
+      "newCases": 4,
+      "hostedEvidence": false
+    },
+    "finalFinite": "Joint root/backend types, lint types, scoped ESLint, one shared build and actual packed root/runtime/graph/browser/consumer/backend contracts exit 0.",
+    "rootLint": {
+      "status": "PASS",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "errors": 0,
+      "warnings": 237,
+      "wrongPathNode26Receipt": "UNQUALIFIED, retained"
+    },
+    "initialFocused": {
+      "status": "FAIL",
+      "passed": 201,
+      "failed": 1,
+      "total": 202,
+      "reason": "New fixture addressed the wrong control table; corrected without functional assertion changes."
+    },
+    "initialTypes": {
+      "status": "FAIL",
+      "exit": 2,
+      "reason": "New fixture/context/union narrowing; original receipts retained."
+    }
+  },
+  "applicabilityClosure": {
+    "toolContextBaselineByteEqual": true,
+    "toolContextSha256": "d40c1d5d71973ba4ec2e1ee3eb1680ecc18c25346f5830dffee24dfab8a43a67",
+    "toolPath": "Unchanged tool-authority/memory path invokes none of hydrateExecution, recordOutput or markVisible; mutation timing wrappers are outside this path.",
+    "lateCountFailure": "Original timeout is followed by an embedding-count assertion observing two calls; causation is not assigned.",
+    "scope": "Separate unchanged isolated 4/4 receipt accepted for the bounded behavior review; original broad failure remains unresolved history, not a green run."
+  },
+  "invariants": {
+    "onlyThreeEndpointActivations": true,
+    "rawReaderImplementationUnchanged": true,
+    "finalDeliveryByteEqualAndUnscoped": true,
+    "allPredicatesRecomputed": true,
+    "exactRawKeysDetachedBoundsInvalidationAndNoCrossInvocationReuse": true,
+    "noSourceOrDecisionCache": true,
+    "originalGuardErrorReadWriteReturnOrderRetained": true,
+    "originalV1ThroughV5AndCallbacksRetained": true,
+    "noBudgetDeadlineReplayProviderApiOrFinancialMutationChange": true,
+    "timingDefaultOffNoClock": true,
+    "timingMissingClockOmitsDuration": true,
+    "timingCallbackOnceOnNormalPaths": true,
+    "existingEnabledTraceOutputFailureBehavior": "Propagates. Begin-log failure executes zero callbacks; end/failure-log failure executes one. A failed trace can supersede the callback error. No transparency claim for broken enabled trace output.",
+    "timingPayloadsAndErrorsNotLogged": true
+  },
+  "documentation": {
+    "repository": "backend-runtime-docs",
+    "path": "docs-site/docs/architecture/performance.mdx",
+    "sha256": "bfe6739bd5f518d1c966869c822f1aaa96931142ead7fa27d8e0a1de6faac9f3",
+    "otherSixAcceptedMdxHashesUnchanged": true,
+    "buildExit": 0,
+    "actualIabSavedDomAndPixelsReviewed": true,
+    "warnings": 0,
+    "warningsSampleCap": 100,
+    "tabClosed": true,
+    "previewStoppedWithCtrlC": true,
+    "previewServerExit": 1,
+    "previewPortAbsent": true,
+    "priorFailuresAndUnavailableTimingPreserved": true,
+    "serviceGuarantee": false
+  },
+  "limits": {
+    "currentBatchHostedQualification": false,
+    "currentBatchNativeReadReductionMeasured": false,
+    "currentBatchMutationTimingMeasured": false,
+    "currentBatchSpeedAcceptance": false,
+    "priorK17Source": "6156ea97aa8776accee52879176cdcd12e802d89",
+    "priorK17": {
+      "nativeEventsPassed": 8,
+      "latencyPass": 0,
+      "latencyFail": 4,
+      "cleanup": "ABSENT"
+    },
+    "latencyGoalPercent": 50,
+    "fullGoalAccepted": false,
+    "nonbreakingDebt": [
+      "Unknown cause of the preserved broad tool-suite timeout/count failure.",
+      "237 existing root lint warnings.",
+      "Enabled trace-output failures retain the existing propagating behavior."
+    ],
+    "nextBoundary": "Fresh installed disposable qualification and actual latency/timing measurements.",
+    "judgeActions": "Source, tests, raw receipts, saved docs render and official documentation reviewed; no tests/builds/services/inference/Git/Proofs/product edits performed."
+  },
+  "officialRuntimeSource": "https://docs.convex.dev/functions/runtimes"
+}
