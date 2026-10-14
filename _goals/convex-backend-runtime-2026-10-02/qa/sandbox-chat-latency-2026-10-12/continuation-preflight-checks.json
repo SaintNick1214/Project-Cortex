@@ -1,0 +1,193 @@
+{
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "offline": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9"
+  },
+  "jest": [
+    {
+      "file": "continuation-preflight-focused-v1.json",
+      "sha256": "88fbda3849c8954ec9634536934580aad7850d9b1ac2661ebe4545774ffe69a5",
+      "exit": 1,
+      "tests": 41,
+      "passed": 32,
+      "failed": 9,
+      "skipped": 0,
+      "suites": 3,
+      "discovered": [
+        "tests/unit/runtime/agent-request-preflight.test.ts",
+        "tests/unit/runtimeAgent/direct-action.test.ts",
+        "tests/unit/runtimeAgent/direct-workflow.test.ts"
+      ]
+    },
+    {
+      "file": "continuation-preflight-gateway-v2.json",
+      "sha256": "26251d5d3babc75bac40f997b794da2b20796bfe2794b6640e0d6bd27fee7277",
+      "exit": 1,
+      "tests": 13,
+      "passed": 6,
+      "failed": 7,
+      "skipped": 0,
+      "suites": 1,
+      "discovered": [
+        "tests/unit/runtime/agent-request-preflight.test.ts"
+      ]
+    },
+    {
+      "file": "continuation-preflight-gateway-v3.json",
+      "sha256": "0dd17c647c19fd0487506d36256f5c1f64f78b122399ad9a44ad95f5b232b346",
+      "exit": 0,
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 1,
+      "discovered": [
+        "tests/unit/runtime/agent-request-preflight.test.ts"
+      ]
+    },
+    {
+      "file": "continuation-preflight-native-v1.json",
+      "sha256": "19223882741cd7503d073fdada3dffd4e7c1764ba67b8c29135f5caa3c39dc69",
+      "exit": 1,
+      "tests": 41,
+      "passed": 40,
+      "failed": 1,
+      "skipped": 0,
+      "suites": 2,
+      "discovered": [
+        "tests/unit/runtimeAgent/direct-action.test.ts",
+        "tests/unit/runtimeAgent/request-preflight.test.ts"
+      ]
+    },
+    {
+      "file": "continuation-preflight-new-v2.json",
+      "sha256": "0c517ba913b03d006c899c2e13fe09b910a04687bef896c916d691cd23eb6189",
+      "exit": 0,
+      "tests": 31,
+      "passed": 31,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 3,
+      "discovered": [
+        "tests/unit/runtimeAgent/request-preflight.test.ts",
+        "tests/unit/runtimeAgent/request-preflight-workflow.test.ts",
+        "tests/unit/runtime/agent-request-preflight.test.ts"
+      ]
+    },
+    {
+      "file": "continuation-preflight-focused-v3.json",
+      "sha256": "75203039992a5da0c074ba30dfaf583b43b7954067cd6162cd36c464e1c875fa",
+      "exit": 1,
+      "tests": 61,
+      "passed": 59,
+      "failed": 2,
+      "skipped": 0,
+      "suites": 5,
+      "discovered": [
+        "tests/unit/runtimeAgent/direct-action.test.ts",
+        "tests/unit/runtimeAgent/request-preflight.test.ts",
+        "tests/unit/runtimeAgent/direct-workflow.test.ts",
+        "tests/unit/runtime/agent-request-preflight.test.ts",
+        "tests/unit/runtimeAgent/request-preflight-workflow.test.ts"
+      ]
+    },
+    {
+      "file": "continuation-preflight-corrected-v4.json",
+      "sha256": "c5e544fe7b0297c54c9f76a854456705ad431457c0dc5ac9748e2484ac51cb8f",
+      "exit": 0,
+      "tests": 31,
+      "passed": 31,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 2,
+      "discovered": [
+        "tests/unit/runtimeAgent/request-preflight.test.ts",
+        "tests/unit/runtime/agent-request-preflight.test.ts"
+      ]
+    },
+    {
+      "file": "continuation-preflight-affected-v1.json",
+      "sha256": "d1d8e9c788942f5af18f7b94ece8d923fe6dd1a62ee02e4f096d1e5dbda332e5",
+      "exit": 1,
+      "tests": 1196,
+      "passed": 1190,
+      "failed": 6,
+      "skipped": 0,
+      "suites": 31,
+      "discovered": [
+        "tests/unit/runtimeAgent/direct-action.test.ts",
+        "tests/unit/runtime/gateway-terminal-composition.test.ts",
+        "tests/unit/runtimeAgent/request-preflight.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+        "tests/unit/runtimeAgent/context-source-composition.test.ts",
+        "tests/unit/runtimeAgent/context-routing.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+        "tests/unit/runtimeAgent/context-latency.test.ts",
+        "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeAgent/turn-action.test.ts",
+        "tests/unit/runtime/gateway-dispatch.test.ts",
+        "tests/unit/runtimeAgent/context-policy-read.test.ts",
+        "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+        "tests/unit/runtime/profile-policy-selection.test.ts",
+        "tests/unit/runtimeAgent/start-native.test.ts",
+        "tests/unit/runtimeAgent/context-source-batch.test.ts",
+        "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+        "tests/unit/runtimeAgent/inline-barrier.test.ts",
+        "tests/unit/runtimeAgent/direct-workflow.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtime/gateway-backend.test.ts",
+        "tests/unit/runtimeAgent/resolution-composition.test.ts",
+        "tests/unit/runtime/agent-request-preflight.test.ts",
+        "tests/unit/runtimeAgent/request-preflight-workflow.test.ts",
+        "tests/unit/runtimeAgent/turn-workflow.test.ts"
+      ]
+    }
+  ],
+  "other": [
+    {
+      "file": "continuation-preflight-backend-types-v1.log",
+      "exit": 2,
+      "scope": "three closed-projection cast/library setup errors; preserved",
+      "sha256": "65f9c72cefc2c5737b0b7768ca2e946f8da2aa9b23d30aa345c4cae28e65fc69"
+    },
+    {
+      "file": "continuation-preflight-backend-types-v2.log",
+      "exit": 2,
+      "scope": "one validated tool-part cast error; preserved",
+      "sha256": "bacbf2c54d06259508bf12ab797c3ba1737f19556cb0842321036b5cb2156ccd"
+    },
+    {
+      "file": "continuation-preflight-backend-types-v3.log",
+      "exit": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "continuation-preflight-root-types-v1.log",
+      "exit": 2,
+      "scope": "two own fixture invoke port types plus four other-author test types; corrected, successor shared root types pending",
+      "sha256": "2d2af6c02339a8a7a6b5c62ccc400a61189a4f581a5958bb97c1e55896085cab"
+    },
+    {
+      "file": "continuation-preflight-scoped-lint-v1.log",
+      "exit": 0,
+      "errors": 0,
+      "warnings": 1,
+      "sha256": "934a52b73e4f8a355fd1452641b01f5f6d0bb58638aa4248a3ff2d7cb81417fa"
+    },
+    {
+      "file": "continuation-preflight-scoped-lint-v2.log",
+      "exit": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "status": "Own implementation/new tests pass. Original1190/1196 affected gate remains FAIL; six other-author schema/head/profile-read applicability updates and ONE joint successor gate are pending."
+}

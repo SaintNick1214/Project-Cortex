@@ -131,6 +131,8 @@ it("metadata overflow conservatively retains ordinary retrieval", async () => {
   for (let index = 2; index <= 1026; index++) f.db.seed("runtimeIngestionEvents", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId,
     ownerPrincipalId: f.reference.principalId, sequence: index, eligibility: "superseded", lineage: { sourceId: `overflow:${index}`, sourceEventId: `overflow:${index}`, sourceRevision: 1 } });
   f.db.table("runtimeIngestionScopes")[0].sequence = 1026;
+  // Manually seeded events advance both authoritative sequence records.
+  f.db.table("runtimeIngestionSequenceHeads")[0].sequence = 1026;
   expect(await f.call(context.indexedContextAvailability, { ...probe, cutoff: 1026 })).toMatchObject({ empty: false });
 });
 it("stale profile readiness cannot be bypassed by empty exclusions", async () => {
@@ -229,6 +231,8 @@ it("bounded metadata overflow from the actual combined read still reaches origin
   for (let index = 2; index <= 1026; index++) f.db.seed("runtimeIngestionEvents", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId,
     ownerPrincipalId: f.reference.principalId, sequence: index, eligibility: "superseded", lineage: { sourceId: `overflow:${index}`, sourceEventId: `overflow:${index}`, sourceRevision: 1 } });
   f.db.table("runtimeIngestionScopes")[0].sequence = 1026;
+  // Manually seeded events advance both authoritative sequence records.
+  f.db.table("runtimeIngestionSequenceHeads")[0].sequence = 1026;
   const { attempt } = await f.start();
   expect(await f.call(runtime.contextInputs, attempt)).toMatchObject({ kind: "ready", pending: { completeness: "complete" }, availability: { empty: false } });
   const reached = observeGovernedRetrieval(f);

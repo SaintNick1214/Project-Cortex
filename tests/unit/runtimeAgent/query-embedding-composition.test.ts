@@ -106,8 +106,8 @@ it("actual Gateway query plus fresh native parent makes one paid-peer call and r
   expect(f.calls.filter(n => n === "runtimeAgentQueryEmbedding:admit")).toHaveLength(1);
   expect(f.calls.filter(n => n === "runtimeModelPolicy:checkpoint")).toHaveLength(1);
   expect(f.calls.filter(n => n === "runtimeModelPolicy:resolve")).toEqual([]);
-  // Readiness in the native preflight, fresh vector search and final delivery retain their independent profile checks.
-  expect(f.calls.filter(n => n === "runtimeModelPolicy:embeddingProfile")).toHaveLength(3);
+  // Native preflight executes the original profile/readiness helper locally; fresh vector search and delivery retain two independent RPCs.
+  expect(f.calls.filter(n => n === "runtimeModelPolicy:embeddingProfile")).toHaveLength(2);
   expect(f.calls.indexOf("runtimeModelPolicy:captureTerminalEvidence")).toBeLessThan(f.calls.indexOf("runtimeModelPolicy:attachTerminalResult"));
   expect(f.db.table("runtimeModelAttempts")).toMatchObject([{ state: "uncertain", slotReleased: true, resultAttachmentState: "attached" }]);
   expect(f.effects.saves).toBe(1);

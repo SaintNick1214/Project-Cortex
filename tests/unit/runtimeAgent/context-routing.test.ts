@@ -153,7 +153,9 @@ it("metadata overflow routes conservatively at the original bounded 1025-row cap
   const f = await fixture(); await f.prior(); f.db.table("runtimeIngestionEvents")[0].eligibility = "superseded";
   for (let index = 2; index <= 1026; index++) f.db.seed("runtimeIngestionEvents", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId,
     ownerPrincipalId: f.reference.principalId, sequence: index, eligibility: "superseded", lineage: { sourceId: `overflow:${index}`, sourceEventId: `overflow:${index}`, sourceRevision: 1 } });
-  f.db.table("runtimeIngestionScopes")[0].sequence = 1026; const { args } = await f.start(), before = state(f), reads = observeReads(f);
+  f.db.table("runtimeIngestionScopes")[0].sequence = 1026;
+  // Manually seeded events advance both authoritative sequence records.
+  f.db.table("runtimeIngestionSequenceHeads")[0].sequence = 1026; const { args } = await f.start(), before = state(f), reads = observeReads(f);
   expect(await f.call(runtime.prepareRoutedContext, args)).toEqual({ state: "NEEDS_ACTION" }); expect(state(f)).toEqual(before);
   expect(reads.filter(read => read.table === "runtimeIngestionEvents")).toEqual([{ table: "runtimeIngestionEvents", limit: 1025, count: 1025 }]);
   expect(reads.some(read => read.table === "runtimeMemoryVectorGenerations")).toBe(false);

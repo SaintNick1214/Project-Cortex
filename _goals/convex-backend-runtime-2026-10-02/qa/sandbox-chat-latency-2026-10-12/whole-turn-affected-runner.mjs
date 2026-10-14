@@ -1,0 +1,13 @@
+import fs from "node:fs";
+import path from "node:path";
+import {spawnSync} from "node:child_process";
+const R=process.cwd(), Q=path.join(R,"_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12");
+const old=JSON.parse(fs.readFileSync(path.join(Q,"continuation-preflight-affected-v1.json"),"utf8"));
+const paths=new Set(old.testResults.map(r=>r.name));
+for(const dir of ["runtimeIngestion","runtimeMemory","runtimeTranscript"]) for(const name of fs.readdirSync(path.join(R,"tests/unit",dir))) if(name.endsWith(".test.ts")) paths.add(path.join(R,"tests/unit",dir,name));
+const args=["--experimental-vm-modules",path.join(R,"node_modules/jest/bin/jest.js"),"--runTestsByPath",...paths,"--runInBand","--watchman=false","--forceExit=false","--json",`--outputFile=${path.join(Q,"whole-turn-affected-v1.json")}`];
+fs.writeFileSync(path.join(Q,"whole-turn-affected-v1-inputs.json"),JSON.stringify({node:process.version,executable:process.execPath,paths:[...paths],args,sourceBaseline:"126231a0102936998837dd14a64a77d2b4d09785"},null,2)+"\n");
+const log=fs.openSync(path.join(Q,"whole-turn-affected-v1.log"),"w");
+const result=spawnSync(process.execPath,args,{cwd:R,env:{...process.env,CORTEX_TEST_ENV_MODE:"explicit",CONVEX_URL:"http://127.0.0.1:9"},stdio:["ignore",log,log]});fs.closeSync(log);
+const receipt={exitCode:result.status,signal:result.signal,error:result.error?.message,paths:paths.size};
+fs.writeFileSync(path.join(Q,"whole-turn-affected-v1-exit.json"),JSON.stringify(receipt,null,2)+"\n");console.log(JSON.stringify(receipt));process.exitCode=result.status??1;

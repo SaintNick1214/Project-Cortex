@@ -35,17 +35,19 @@ import { recheckAuthority, createAuthorityReadScope, freshNativeTranscriptReads,
 import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
 import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
 import { admitHandler, checkpointHandler, resolveHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
-import { createAgentGatewayCancellationBridge, createGovernedGatewayModel, assertGatewayReservedRequest, GatewayDispatchError } from "./runtimeGateway";
+import { createAgentGatewayCancellationBridge, createGovernedGatewayModel, assertGatewayReservedRequest, GatewayDispatchError, preflightAgentModelRequest } from "./runtimeGateway";
 import { createActionMemoryRepository } from "./runtimeMemoryRepository";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sourceContent, commitDerivedInput } from "./runtimeMemorySchema";
 import { contextSourcePermission } from "./runtimeContextWitnessSchema";
 import { registerCompletedToolSource } from "./runtimeIngestion";
-import { contextBoundary, readIndexedContextAvailability, readIndexedSourceAtCutoff, readPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
+import { contextBoundary, readIndexedContextAvailability, readIndexedSourceAtCutoff, readPendingContext, readEmptyPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
 import type { ContextBoundary } from "./runtimeMemoryContext";
 import { traceRuntimePhase, traceRuntimeMutationSpan } from "./runtimeLatencyTrace";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { recallMemory } from "./runtimeMemoryServices";
+import type { AgentRecallSelection } from "./runtimeAgentRecall";
+import { boundedRefusal, throwRefusal } from "./runtimeAgentQueryEmbedding";
 import { recallAgentMemory } from "./runtimeAgentQueryEmbedding";
 import { executeServerTool, NATIVE_TOOL_NAMES, semanticToolName, serverTools, serverToolSourceLineage, validateToolInput } from "./runtimeAgentTools";
 import { projectNativeOutputParts } from "./runtimeOutputProjection";
@@ -75,7 +77,7 @@ const freshWorkflow = ref<"mutation", { args: Attempt }, string>("mutation", "ru
 const freshWorkflowComplete = ref<"mutation", WorkflowCompletion, null>("mutation", "runtimeAgent:onInitialWorkflowComplete");
 const directAction = ref<"action", Attempt, null>("action", "runtimeAgent:executeDirectV6");
 const directRetirement = ref<"mutation", Attempt, null>("mutation", "runtimeAgent:retireDirectV6");
-const toolContinuation = ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeToolsV6");
+const toolContinuation = ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeToolsV7");
 const refs = {
   claim: ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string; leaseMs: number }, { runId: string; attemptNumber: number; leaseVersion: number } | { runId: string; failureCode: string } | null>("mutation", "runs:claimNext"),
   hydrate: ref<"query", Attempt, Awaited<ReturnType<typeof executionContext>>>("query", "runtimeAgent:hydrateExecution"),
@@ -87,8 +89,10 @@ const refs = {
   interruptDirect: ref<"mutation", Attempt, null>("mutation", "runtimeAgent:interruptDirect"),
   prepareTurnModel: ref<"mutation", Attempt, Awaited<ReturnType<typeof prepareTurnModelHandler>>>("mutation", "runtimeAgent:prepareTurnModel"),
   prepareResolvedModelOperation: ref<"mutation", Attempt & { ordinal: number }, Awaited<ReturnType<typeof prepareResolvedModelOperationHandler>>>("mutation", "runtimeAgent:prepareResolvedModelOperation"),
+  prepareResolvedModelCandidate: ref<"mutation", Attempt & { ordinal: number }, PreparedModelCandidate>("mutation", "runtimeAgent:prepareResolvedModelCandidate"),
   admitPreparedModelOperation: ref<"mutation", Attempt & { operationId: string; ordinal: number; requestCanonical: string; snapshotCanonical: string; bindingCanonical: string }, GatewayAdmissionCheckpoint>("mutation", "runtimeAgent:admitPreparedModelOperation"),
   turn: ref<"action", Attempt & { ordinal: number }, StepResult>("action", "runtimeAgent:turnStepV5"),
+  preflightTurn: ref<"action", Attempt & { ordinal: number }, StepResult>("action", "runtimeAgent:turnStepV7"),
   contextInputs: ref<"query", Attempt, Awaited<ReturnType<typeof contextInputsHandler>>>("query", "runtimeAgent:contextInputs"),
   contextSource: ref<"query", ContextSourceArgs, Awaited<ReturnType<typeof contextSourceHandler>>>("query", "runtimeAgent:contextSource"),
   contextSourceBatch: ref<"query", ContextSourceBatchArgs, Awaited<ReturnType<typeof contextSourceBatchHandler>>>("query", "runtimeAgent:contextSourceBatch"),
@@ -180,7 +184,7 @@ async function resolveModelOperationHandler(ctx: QueryCtx, args: Attempt & { run
   return await resolveHandler(ctx, { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId });
 }
 export const resolveModelOperation = internalQuery({ args: { ...agentAttempt, runBudgetId: v.string() }, handler: (ctx, args) => resolveModelOperationHandler(createAuthorityReadScope(ctx, { nativeTranscript: true }), args) });
-async function contextInputsHandler(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt) {
+async function contextInputsHandler(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt, stableEmpty = false) {
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
   const scope = { tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! };
@@ -188,7 +192,7 @@ async function contextInputsHandler(ctx: Pick<QueryCtx, "db" | "runQuery">, args
   const boundary = { conversationId: current.snapshot.conversationId, runId: args.runId, queueSequence: current.snapshot.queueSequence,
     anchor: { order: current.snapshot.anchor.order, stepOrder: current.snapshot.anchor.stepOrder } };
   const represented = current.snapshot.messages.map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId }));
-  const pending = await readPendingContext(ctx, { reference: args.reference, cutoff, alreadyRepresented: represented,
+  const pending = await (stableEmpty ? readEmptyPendingContext : readPendingContext)(ctx, { reference: args.reference, cutoff, alreadyRepresented: represented,
     maxBytes: Math.min(16_384, current.definition.context.maxContextTokens), boundary, runBudgetId: current.run.runBudgetId });
   const inputs = { current, scope, boundary, represented, pending };
   const barrier = current.definition.context.barrier ?? { deadlineMs: 30_000, onFailure: "fail" as const };
@@ -486,7 +490,7 @@ export const executeTurnV5 = workflow.define({ args: agentAttempt, returns: v.nu
   }
   throw new Error("TOOL_STEP_LIMIT");
 } });
-async function saveContextHandler(ctx: MutationCtx, args: Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string }) {
+export async function saveContextHandler(ctx: MutationCtx, args: Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string }) {
   const current = await executionContext(ctx, args); if (current.execution.contextCanonical !== undefined) transcriptDenied("INVALID_STATE");
   if (utf8Bytes(args.context) > Math.min(16_384, current.definition.context.maxContextTokens) || args.witnesses.length > 32) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
   await checkWitnesses(ctx, args, args.witnesses);
@@ -504,6 +508,18 @@ async function saveContextHandler(ctx: MutationCtx, args: Attempt & { context: s
 }
 export const saveContext = internalMutation({ args: { ...agentAttempt, context: v.string(), witnesses: v.array(sourceWitness),
   completeness: v.union(v.literal("complete"), v.literal("incomplete")), failureCode: v.optional(v.string()), emptyIndexedProfileId: v.optional(v.string()) }, handler: saveContextHandler });
+/** Original context commit survives a later candidate-preparation refusal. */
+export async function saveAndPrepareContextHandler(ctx: MutationCtx, args: Parameters<typeof saveContextHandler>[1]) {
+  await saveContextHandler(ctx, args);
+  try {
+    const prepared = await ctx.runMutation(ref<"mutation", Attempt & { ordinal: number }, PreparedModelCandidate>("mutation", "runtimeAgent:prepareResolvedModelCandidate"),
+      { ...attemptArgs(args), ordinal: 0 });
+    return { kind: "prepared" as const, prepared };
+  } catch (error) { return { kind: "refused" as const, refusal: boundedRefusal(error) }; }
+}
+export const saveAndPrepareContext = internalMutation({ args: { ...agentAttempt, context: v.string(), witnesses: v.array(sourceWitness),
+  completeness: v.union(v.literal("complete"), v.literal("incomplete")), failureCode: v.optional(v.string()), emptyIndexedProfileId: v.optional(v.string()) },
+  handler: saveAndPrepareContextHandler });
 async function startContextHandler(ctx: MutationCtx, args: Attempt) {
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== undefined) transcriptDenied("INTERRUPTED_REQUIRES_RECONCILIATION");
@@ -550,7 +566,7 @@ export const contextSource = internalQuery({ args: { reference: runtimeAuthority
 
 /** One branch, original ordered guards and immediate witness merge. Retained
  * witnesses are conflict bookkeeping only; they cannot authorize a source. */
-async function contextSourceBatchHandler(ctx: QueryCtx, args: ContextSourceBatchArgs) {
+export async function contextSourceBatchHandler(ctx: QueryCtx, args: ContextSourceBatchArgs) {
   if (args.items.length > 100 || args.witnesses.length > 200 || args.priorWitnesses.length > 100) transcriptDenied("INVALID_INPUT");
   const witnesses = new Map(args.witnesses.map(witness => [witness.sourceId, witness]));
   const priorWitnesses = new Map(args.priorWitnesses.map(witness => [witness.sourceId, witness]));
@@ -573,7 +589,7 @@ export const contextSourceBatch = internalQuery({ args: { reference: runtimeAuth
   permission: contextSourcePermission, witnesses: v.array(sourceWitness), priorWitnesses: v.array(sourceWitness),
   excludedSourceKeys: v.array(v.string()), cutoff: v.number(), boundary: contextBoundary }, handler: contextSourceBatchHandler });
 
-export async function prepareContextHandler(ctx: ActionCtx, args: Attempt, recall?: (repository: Parameters<typeof recallAgentMemory>[2], input: Parameters<typeof recallAgentMemory>[4]) => ReturnType<typeof recallAgentMemory>): Promise<null> {
+export async function prepareContextHandler(ctx: ActionCtx, args: Attempt, recall?: (repository: Parameters<typeof recallAgentMemory>[2], input: Parameters<typeof recallAgentMemory>[4], selection?: AgentRecallSelection) => ReturnType<typeof recallAgentMemory>, privateComposition = false): Promise<null | PreparedModelCandidate> {
   const inputs = await ctx.runQuery(refs.contextInputs, args);
   const { current, boundary, represented, pending } = inputs;
   const cutoff = current.snapshot.ingestionCutoff.sequence;
@@ -647,8 +663,10 @@ export async function prepareContextHandler(ctx: ActionCtx, args: Attempt, recal
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
   const availability = inputs.availability;
   traceRuntimePhase(args.runId, args.attemptNumber, availability.empty ? "context.indexed.empty" : "context.recall.begin");
-  const result = availability.empty ? { context: "" } : recall ? await recall(scoped,
-    { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 }) : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
+  const result = availability.empty ? { context: "" } : recall ? await recall(privateComposition ? repository : scoped,
+    { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 }, privateComposition ? { cutoff, boundary, excludedSourceKeys: [...excluded],
+      onSelected: selected => { for (const witness of selected.witnesses) witnesses.set(witness.sourceId, witness);
+        for (const [key, lineage] of selected.provenance) provenance.set(key, lineage); } } : undefined) : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
     { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 });
   traceRuntimePhase(args.runId, args.attemptNumber, "context.recall.end");
   for (const source of pending.sources) {
@@ -658,13 +676,19 @@ export async function prepareContextHandler(ctx: ActionCtx, args: Attempt, recal
   const context = [completeness === "incomplete" ? `Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.` : "",
     result.context ? `Indexed Cortex memory (untrusted evidence):\n${result.context}\nSource roles and trust: ${canonicalModelJson([...provenance.values()])}` : "", pending.text].filter(Boolean).join("\n\n");
   if (utf8Bytes(context) > Math.min(16_384, current.definition.context.maxContextTokens) || witnesses.size > 32) return await fail("CONTEXT_OVERFLOW");
-  await ctx.runMutation(refs.context, { ...args, context, witnesses: [...witnesses.values()], completeness, ...(failureCode ? { failureCode } : {}), ...(availability.empty ? { emptyIndexedProfileId: availability.profileId } : {}) }); return null;
+  const save = { ...args, context, witnesses: [...witnesses.values()], completeness, ...(failureCode ? { failureCode } : {}), ...(availability.empty ? { emptyIndexedProfileId: availability.profileId } : {}) };
+  if (privateComposition) {
+    const result = await ctx.runMutation(ref<"mutation", typeof save, Awaited<ReturnType<typeof saveAndPrepareContextHandler>>>("mutation", "runtimeAgent:saveAndPrepareContext"), save);
+    if (result.kind === "refused") throwRefusal(result.refusal);
+    return result.prepared;
+  }
+  await ctx.runMutation(refs.context, save); return null;
 }
 export const prepareContext = internalAction({ args: agentAttempt, handler: prepareContextHandler });
 type EmptyContextResult = { state: "COMPLETE" } | { state: "NEEDS_ACTION" } | { state: "FAILED"; failureCode: "CONTEXT_OVERFLOW" };
 /** Only the original bounded empty proof permits local context completion. */
-async function prepareEmptyContextHandler(ctx: MutationCtx, args: Attempt): Promise<EmptyContextResult> {
-  const inputs = await contextInputsHandler(ctx, args);
+async function prepareEmptyContextHandler(ctx: MutationCtx, args: Attempt, stableEmpty = false): Promise<EmptyContextResult> {
+  const inputs = await contextInputsHandler(ctx, args, stableEmpty);
   if (inputs.kind === "pending_overflow") return { state: "FAILED", failureCode: "CONTEXT_OVERFLOW" };
   if (!inputs.availability.empty) return { state: "NEEDS_ACTION" };
   const { current, pending, availability } = inputs;
@@ -685,7 +709,7 @@ async function prepareEmptyContextHandler(ctx: MutationCtx, args: Attempt): Prom
 }
 export const prepareEmptyContext = internalMutation({ args: agentAttempt, handler: (ctx, args) => prepareEmptyContextHandler(createAuthorityReadScope(ctx), args) });
 /** Metadata can request the original Action, never certify an empty context. */
-async function prepareRoutedContextHandler(ctx: MutationCtx, args: Attempt): Promise<EmptyContextResult> {
+async function prepareRoutedContextHandler(ctx: MutationCtx, args: Attempt, stableEmpty = false): Promise<EmptyContextResult> {
   ctx = createAuthorityReadScope(ctx, { policyMetadata: true });
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
@@ -703,7 +727,7 @@ async function prepareRoutedContextHandler(ctx: MutationCtx, args: Attempt): Pro
   if (events.length > 1024 || events.some(event => event.eligibility === "eligible" && !represented.has(contextSourceKey(scope, event.lineage)))) {
     return { state: "NEEDS_ACTION" };
   }
-  return await prepareEmptyContextHandler(ctx, args);
+  return await prepareEmptyContextHandler(ctx, args, stableEmpty);
 }
 export const prepareRoutedContext = internalMutation({ args: agentAttempt, handler: prepareRoutedContextHandler });
 
@@ -792,6 +816,37 @@ async function prepareResolvedModelOperationHandler(ctx: MutationCtx, args: Atte
 }
 export const prepareResolvedModelOperation = internalMutation({ args: { ...agentAttempt, ordinal: v.number() },
   handler: (ctx, args) => prepareResolvedModelOperationHandler(createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }), args) });
+export type PreparedModelCandidate = { state: "completed"; resultCanonical: string } | {
+  state: "started"; current: Awaited<ReturnType<typeof executionContext>>; op: Awaited<ReturnType<typeof beginOperationHandler>>;
+  initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>;
+  requestPreflight: true;
+};
+function preflightModelCandidate(current: Awaited<ReturnType<typeof executionContext>>, args: Attempt & { ordinal: number }, op: { semanticId: string },
+  initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>, governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>) {
+  return preflightAgentModelRequest({ messages: current.messages, context: current.execution.contextCanonical ?? "", instructions: current.definition.instructions.text,
+    tools: current.definition.tools.map(tool => NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]),
+    maxOutputTokens: Math.min(initialResolution.snapshot.limits.outputTokens, initialResolution.dispatchEvidence.resultBound.maximumOutputTokens) }, governedResolution,
+    { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId, semanticId: op.semanticId, ordinal: args.ordinal });
+}
+/** Fresh paths validate the complete supported native request before starting an
+ * operation. Both resolutions remain proposals; admission/checkpoint stay fresh.
+ * Unsupported shapes retain the original SDK/native validation path. */
+export async function prepareResolvedModelCandidateHandler(ctx: MutationCtx, args: Attempt & { ordinal: number }): Promise<PreparedModelCandidate> {
+  const attempt = attemptArgs(args), current = await executionContext(ctx, attempt);
+  const completed = await completedModelStepHandler(ctx, { ...attempt, ordinal: args.ordinal });
+  if (completed !== null) return { state: "completed", resultCanonical: completed };
+  const requestCanonical = canonicalModelJson({ messages: current.messages, context: current.execution.contextCanonical ?? "", instructions: current.definition.instructions });
+  const op = await beginOperationHandler(ctx, { ...attempt, ordinal: args.ordinal, kind: "model", requestCanonical });
+  if (op.state === "complete" && op.resultCanonical) return { state: "completed", resultCanonical: op.resultCanonical };
+  const resolutionArgs = { ...attempt, runBudgetId: current.run.runBudgetId };
+  const initialResolution = await resolveModelOperationHandler(ctx, resolutionArgs);
+  const governedResolution = await resolveModelOperationHandler(ctx, resolutionArgs);
+  preflightModelCandidate(current, args, op, initialResolution, governedResolution);
+  await startOperationHandler(ctx, { ...attempt, operationId: op.operationId });
+  return { state: "started", current, op, initialResolution, governedResolution, requestPreflight: true };
+}
+export const prepareResolvedModelCandidate = internalMutation({ args: { ...agentAttempt, ordinal: v.number() },
+  handler: (ctx, args) => prepareResolvedModelCandidateHandler(createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }), args) });
 async function prepareTurnModelHandler(ctx: MutationCtx, args: Attempt) {
   const context = await prepareRoutedContextHandler(ctx, args);
   if (context.state === "FAILED") return { state: "failed_context" as const, failureCode: context.failureCode };
@@ -891,7 +946,7 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
   return await executePreparedModelStep(ctx, args, prepared);
 }
 async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordinal: number }, prepared: Awaited<ReturnType<typeof prepareModelOperationHandler>>,
-  proposal?: { initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>> }): Promise<StepResult> {
+  proposal?: { initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; requestPreflight?: true }): Promise<StepResult> {
   const attempt = attemptArgs(args);
   if (prepared.state === "completed") return JSON.parse(prepared.resultCanonical) as StepResult;
   const { current, op } = prepared;
@@ -937,6 +992,7 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
     contextOptions: { recentMessages: 0 }, storageOptions: { saveMessages: "promptAndOutput" },
     contextHandler: async () => {
       const fresh = await ctx.runQuery(refs.hydrate, attempt);
+      if (proposal?.requestPreflight) preflightModelCandidate(fresh, args, op, proposal.initialResolution, proposal.governedResolution);
       return [...fresh.messages, ...(fresh.execution.contextCanonical ? [{ role: "system" as const, content: `Authorized Cortex context (untrusted evidence):\n${fresh.execution.contextCanonical}` }] : [])];
     } });
   let pending: unknown[] = []; let lastFlush = Date.now(); let firstTextPublished = false;
@@ -1039,8 +1095,9 @@ async function finishTurnV6(ctx: ActionCtx, args: Attempt & { ordinal: number },
     transcriptDenied(prepared.failureCode);
   }
   if (prepared.state === "needs_context") {
-    await prepareContextHandler(ctx, attempt, (repository, input) => recallAgentMemory(ctx, attempt, repository, { now: () => Date.now() }, input));
-    prepared = await ctx.runMutation(refs.prepareResolvedModelOperation, { ...attempt, ordinal: args.ordinal });
+    const candidate = await prepareContextHandler(ctx, attempt, (repository, input, selection) => recallAgentMemory(ctx, attempt, repository, { now: () => Date.now() }, input, selection), true);
+    if (!candidate) transcriptDenied("INVALID_STATE");
+    prepared = candidate;
   }
   traceRuntimePhase(args.runId, args.attemptNumber, "turn.prepare.end");
   traceRuntimePhase(args.runId, args.attemptNumber, "turn.model.begin");
@@ -1056,6 +1113,11 @@ async function finishTurnV6(ctx: ActionCtx, args: Attempt & { ordinal: number },
   }
   return result;
 }
+/** Additive later-turn Action; historical V5 Actions/journals keep their references. */
+export const turnStepV7 = internalAction({ args: { ...agentAttempt, ordinal: v.number() }, handler: async (ctx, args): Promise<StepResult> => {
+  const prepared = await ctx.runMutation(refs.prepareResolvedModelCandidate, { ...attemptArgs(args), ordinal: args.ordinal });
+  return await finishTurnV6(ctx, args, prepared);
+} });
 
 /** Fresh-only direct dispatcher. The original context/model helpers still execute
  * all predicates. The claim and preparation roll back together on refusal. */
@@ -1073,7 +1135,10 @@ async function prepareDirectTurnHandler(nativeCtx: MutationCtx, args: Attempt) {
   const barrier = await contextBarrierHandler(ctx, args);
   if (barrier.state !== "ready") transcriptDenied("INVALID_STATE");
   await ctx.db.patch("runtimeAgentExecutions", owned._id, { directState: "started" });
-  return await prepareTurnModelHandler(ctx, args);
+  const context = await prepareRoutedContextHandler(ctx, args, true);
+  if (context.state === "FAILED") return { state: "failed_context" as const, failureCode: context.failureCode };
+  if (context.state === "NEEDS_ACTION") return { state: "needs_context" as const };
+  return await prepareResolvedModelCandidateHandler(ctx, { ...args, ordinal: 0 });
 }
 export const prepareDirectTurn = internalMutation({ args: agentAttempt, handler: prepareDirectTurnHandler });
 
@@ -1162,6 +1227,27 @@ export const executeToolsV6 = workflow.define({ args: agentAttempt, returns: v.n
   if (!canonical) throw new Error("RECONCILIATION_INCOMPLETE");
   for (let ordinal = 0; ordinal < 33; ordinal++) {
     const result = ordinal === 0 ? JSON.parse(canonical) as StepResult : await step.runAction(refs.turn, { ...args, ordinal }, { name: `context and model turn ${ordinal}`, retry: false });
+    if (result.final) { if (ordinal === 0) throw new Error("INVALID_MODEL_OUTPUT"); return null; }
+    if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
+    for (const call of result.calls) {
+      const op = await step.runMutation(refs.begin, { ...args, kind: "tool", ordinal,
+        requestCanonical: call.inputCanonical, toolCallId: call.toolCallId, toolName: call.toolName });
+      if (op.state === "waiting_approval") {
+        await step.runMutation(refs.waiting, { ...args, operationId: op.operationId });
+        await step.awaitEvent({ name: op.operationId, validator: v.literal("approved") });
+      }
+      await step.runAction(refs.tool, { ...args, ordinal, call }, { retry: false, name: `server tool ${call.toolName}` });
+    }
+  }
+  throw new Error("TOOL_STEP_LIMIT");
+} });
+
+/** Fresh continuations use early bounded request preflight; the V6 journal above is retained. */
+export const executeToolsV7 = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
+  const canonical = await step.runQuery(ref<"query", Attempt & { ordinal: number }, string | null>("query", "runtimeAgent:completedModelStep"), { ...args, ordinal: 0 });
+  if (!canonical) throw new Error("RECONCILIATION_INCOMPLETE");
+  for (let ordinal = 0; ordinal < 33; ordinal++) {
+    const result = ordinal === 0 ? JSON.parse(canonical) as StepResult : await step.runAction(refs.preflightTurn, { ...args, ordinal }, { name: `context and model turn ${ordinal}`, retry: false });
     if (result.final) { if (ordinal === 0) throw new Error("INVALID_MODEL_OUTPUT"); return null; }
     if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
     for (const call of result.calls) {

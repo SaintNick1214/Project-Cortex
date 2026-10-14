@@ -40,6 +40,15 @@ export async function readScopeCutoff(ctx: ReadCtx, reference: RuntimeAuthorityR
   return { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, sequence: row?.sequence ?? 0,
     factsThrough: row?.factsThrough ?? 0, vectorsThrough: row?.vectorsThrough ?? 0, vectorProfileThrough: row?.vectorProfileThrough ?? {}, graphThrough: row?.graphThrough ?? 0 };
 }
+/** Fresh-install stable cutoff. Absent heads retain the original reader; no backfill. */
+export async function readScopeSequence(ctx: ReadCtx, reference: RuntimeAuthorityReference) {
+  await new ConvexMemoryRepository(ctx, reference, "read").recheckAuthority();
+  const head = await ctx.db.query("runtimeIngestionSequenceHeads").withIndex("by_scope", q => q.eq("tenantId", reference.tenantId)
+    .eq("memorySpaceId", reference.memorySpaceId!)).unique();
+  if (!head) return { ...(await readScopeCutoff(ctx, reference)), stable: false as const };
+  if (!Number.isSafeInteger(head.sequence) || head.sequence < 0) ingestionDenied("INGESTION_CONFLICT");
+  return { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, sequence: head.sequence, stable: true as const };
+}
 export async function eventById(ctx: ReadCtx, reference: RuntimeAuthorityReference, eventId: string) {
   return exactOne(await ctx.db.query("runtimeIngestionEvents").withIndex("by_event", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!).eq("eventId", eventId)).take(2));
@@ -118,6 +127,14 @@ export async function enqueueSourceEvent(ctx: MutationCtx, reference: RuntimeAut
   const sequence = (scope?.sequence ?? 0) + 1; if (!Number.isSafeInteger(sequence)) ingestionDenied("SEQUENCE_EXHAUSTED");
   if (scope) await ctx.db.patch("runtimeIngestionScopes", scope._id, { sequence, version: scope.version + 1, updatedAt: now });
   else await ctx.db.insert("runtimeIngestionScopes", { tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, sequence, factsThrough: 0, vectorsThrough: 0, graphThrough: 0, version: 1, updatedAt: now });
+  const head = await ctx.db.query("runtimeIngestionSequenceHeads").withIndex("by_scope", q => q.eq("tenantId", source.tenantId)
+    .eq("memorySpaceId", source.memorySpaceId)).unique();
+  if (head) {
+    if (!scope || head.sequence !== sequence - 1) ingestionDenied("INGESTION_CONFLICT");
+    await ctx.db.patch("runtimeIngestionSequenceHeads", head._id, { sequence });
+  } else if (!scope) {
+    await ctx.db.insert("runtimeIngestionSequenceHeads", { tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, version: 1, sequence });
+  }
   const eligibility = origin.eligibility ?? (source.lineage.role === "tool" ? "awaiting_tool" : "eligible");
   const value = { version: 1 as const, tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, eventId, identityCanonical,
     ownerPrincipalId: source.ownerPrincipalId, sequence, lineage: source.lineage, contentHash: source.contentHash,

@@ -1,0 +1,47 @@
+{
+  "schema": "cortex.qa-auth-close-diagnostic.preparation.v2",
+  "status": "PREPARED_OFFLINE_NOT_SERVICE_RUN",
+  "observedAt": "2026-10-14T07:33:11.425404+00:00",
+  "previousPreparation": "k11-auth-close-diagnostic-preparation.json",
+  "selectedKit": "manual-sandbox-latency-whole-path-2026-10-14",
+  "deadlineMs": 4000,
+  "rpcDeadlineMs": 4000,
+  "expectedCodesUnchanged": true,
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "productAuthChanges": 0,
+  "originalExpiredFailure": "K11 AUTHENTICATION_TIMEOUT FAIL preserved",
+  "checks": {
+    "privacyTests": 12,
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0
+  },
+  "prospectiveBaseline": "Installed SDK content must match the exact member of SHA-pinned immutable SDK archive; no historical staging identity claim",
+  "transport": "Original Node24.15 global native WebSocket subclass; public close metadata only, no altered transport callback or auth classifier",
+  "executeOnly": "Fresh exact owned READY K20 target and accepted source/image/archive pins. No invocation before those prerequisites.",
+  "files": [
+    {
+      "path": "k20-auth-close-diagnostic-readonly.mjs",
+      "bytes": 25779,
+      "sha256": "d91772f3bb99f7830ff30d05cfbf0c51125cad2f762bc6ae5b8ba822651fa27c",
+      "priorSharedGuardExport": {
+        "sha256": "80cd9c0728fc9448590516163b1200959ef46f492388ed6c63b32ab11a68d9d6",
+        "bytes": 25646,
+        "reason": "Single explicitly authorized exported context alias; original auth cases unchanged; no service invocation or repeat of unchanged12privacy tests"
+      }
+    },
+    {
+      "path": "k20-auth-close-diagnostic-privacy.test.mjs",
+      "bytes": 10025,
+      "sha256": "23cec3a0925907cf1f7abfa755b727ff537399fff9993278ee17a43e7c71b529"
+    },
+    {
+      "path": "k20-auth-close-diagnostic-privacy-v1.log",
+      "bytes": 1359,
+      "sha256": "2ae7b7dac7bc12ecd479763a828801541ee7d88671dfc80fd5b23d8757749951"
+    }
+  ],
+  "sharedGuardExport": "createK20DiagnosticContext"
+}

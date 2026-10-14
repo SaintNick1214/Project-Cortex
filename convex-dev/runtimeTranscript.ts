@@ -24,7 +24,7 @@ import { readNativeTranscriptMessages, recheckAuthority } from "./runtimeAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
-import { enqueueSourceEvent, retireSourceEvents, readScopeCutoff } from "./runtimeIngestion";
+import { enqueueSourceEvent, retireSourceEvents, readScopeSequence } from "./runtimeIngestion";
 
 // Official generated component projection; this does not expose component functions publicly.
 export const agentComponent = (components as unknown as { agent: AgentComponent }).agent;
@@ -339,7 +339,7 @@ export async function captureCutoff(ctx: ReadCtx, conversation: ManagedConversat
     if (!result.continueCursor || result.continueCursor === cursor) transcriptDenied("TRANSCRIPT_CONFLICT"); cursor = result.continueCursor;
   } while (true);
   if (complete && !inputPins.every(pin => pins.some(p => p.nativeMessageId === pin.nativeMessageId))) transcriptDenied("STALE_TRANSCRIPT");
-  const ingestion = await readScopeCutoff(ctx, run.authorityReference);
+  const ingestion = await readScopeSequence(ctx, run.authorityReference);
   const graph = await ctx.db.query("runtimeGraphScopes").withIndex("by_scope", q => q.eq("tenantId", conversation.tenantId).eq("memorySpaceId", conversation.memorySpaceId)).unique();
   const snapshot: CutoffV1 = { version: 1, conversationId: conversation.conversationId, threadId: conversation.threadId,
     conversationEpoch: conversation.epoch, historyRevision: executionRevision(conversation), queueSequence: run.queueSequence,

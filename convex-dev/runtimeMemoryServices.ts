@@ -125,7 +125,13 @@ export async function finishRecallFromEmbedding(
     vectors = await repository.searchVectors(query, input.limit);
     facts = await repository.listFacts({ limit: input.limit });
   }
-  const vectorItems: RecallItem[] = vectors.map((match) => ({ type: "memory", id: match.chunk.chunkId,
+  const vectorItems = vectorRecallItems(vectors);
+  await repository.recheckAuthority();
+  return await completeRecallDelivery({ clock, finalDelivery: repository.finalDelivery?.bind(repository) }, input, profile.profileId, vectorItems, facts);
+}
+/** Exact original projection; private native parents avoid returning vector/source bodies. */
+export function vectorRecallItems(vectors: readonly VectorMatch[]): RecallItem[] {
+  return vectors.map((match) => ({ type: "memory", id: match.chunk.chunkId,
     content: match.chunk.text, score: match.score, source: "vector", memory: {
       _id: match.vector.vectorId, memoryId: match.chunk.chunkId, tenantId: match.source.tenantId,
       memorySpaceId: match.source.memorySpaceId, userId: match.source.ownerPrincipalId, content: match.chunk.text,
@@ -134,14 +140,18 @@ export async function finishRecallFromEmbedding(
       importance: 50, tags: [], version: match.source.lineage.sourceRevision, previousVersions: [],
       createdAt: match.source.createdAt, updatedAt: match.source.createdAt, accessCount: 0,
     }, graphContext: { connectedEntities: [] } }));
-  await repository.recheckAuthority();
+}
+/** Original rank/expiry/format tail after the current read predicate has executed. */
+export async function completeRecallDelivery(adapters: { clock: MemoryDomainAdapters["clock"]; finalDelivery?: MemoryDomainAdapters["repository"]["finalDelivery"] },
+  input: { limit: number }, profileId: string, vectorItems: RecallItem[], facts: readonly DerivedFact[]) {
+  const { clock } = adapters;
   const items = rankResults(deduplicateResults([...vectorItems, ...facts.map((fact) => factToRecallItem(fact, "facts", 0.7))]), clock).slice(0, input.limit);
-  const delivery = await repository.finalDelivery?.();
+  const delivery = await adapters.finalDelivery?.();
   const expiresAt = delivery?.deliveryExpiresAt;
   // Actions have a real clock across RPC awaits. Never deliver a response whose
   // actual grant/consumed source deadline elapsed while its final RPC returned.
   if (expiresAt !== undefined && (!Number.isFinite(expiresAt) || clock.now() >= expiresAt)) memoryError("FORBIDDEN", "Recall delivery authority expired");
-  return { items, context: formatForLLM(items, clock), profileId: profile.profileId, ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
+  return { items, context: formatForLLM(items, clock), profileId, ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
 }
 
 /** One current source, one new profile-specific generation. No history scan,

@@ -101,7 +101,7 @@ it("direct claim/preparation equals the original prefix and V5 preparation outco
     await invoke(runtime.startContext, f.ctx, args); expect(await invoke(runtime.contextBarrier, f.ctx, args)).toMatchObject({ state: "ready" });
     original = await invoke(runtime.prepareTurnModel, f.ctx, args); throw stop;
   })).rejects.toBe(stop); expect(state(f)).toEqual(before);
-  expect(await f.call(runtime.prepareDirectTurn, args)).toEqual(original); expect(providerCalls).toBe(0); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+  expect(await f.call(runtime.prepareDirectTurn, args)).toEqual({ ...original as object, requestPreflight: true }); expect(providerCalls).toBe(0); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
   const completed = state(f); expect(await f.call(runtime.prepareDirectTurn, args)).toEqual({ state: "duplicate" }); expect(state(f)).toEqual(completed);
 });
 it.each(["grant", "transcript", "cancel", "lease", "source", "source-tombstone", "definition", "qualification", "budget"])("V6 prepared prompt cannot authorize %s changed before fresh atomic admission", async fault => {
@@ -136,7 +136,7 @@ it.each(["finishOperation", "finalize"])("a %s lost acknowledgement reconciles o
 });
 it("completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model", async () => {
   const f = await fixture(true), args = await f.start(); mode = "tool"; await direct(f, args);
-  expect(workflows).toMatchObject([{ name: "runtimeAgent:executeToolsV6", args, options: { startAsync: true, context: args } }]);
+  expect(workflows).toMatchObject([{ name: "runtimeAgent:executeToolsV7", args, options: { startAsync: true, context: args } }]);
   expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ directState: "continuation", workflowId: "workflow:direct-tools" });
   const before = state(f); await f.call(runtime.attachDirectContinuation, args); expect(state(f)).toEqual(before); expect(workflows).toHaveLength(1); expect(providerCalls).toBe(1);
 });

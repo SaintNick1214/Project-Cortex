@@ -1,0 +1,446 @@
+{
+  "observedAt": "2026-10-14T07:24:55.719161+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "author": "root",
+  "sourceBaseline": "148123454",
+  "implementationPercent": 100,
+  "focusedTests": {
+    "exit": 0,
+    "tests": 14,
+    "passed": 14,
+    "skipped": 0
+  },
+  "affectedTests": {
+    "exit": 0,
+    "tests": 154,
+    "passed": 154,
+    "suites": 8,
+    "skipped": 0
+  },
+  "typesExit": 0,
+  "scopedLintExit": 0,
+  "catalogAssemblyExit": 0,
+  "catalogTests": {
+    "exit": 0,
+    "tests": 24,
+    "passed": 24,
+    "skipped": 0
+  },
+  "historicalCatalogEntriesUnchanged": 13,
+  "historicalTrackedPayloadChanges": 0,
+  "newTemplateVersion": "1.4.2",
+  "newCatalogVersion": "1.3.2",
+  "files": [
+    {
+      "path": "packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx",
+      "bytes": 24699,
+      "sha256": "7df6d1ebad16898e8a9e2a39fb8b194620fb719b44eb19185bc5032b74814a4a"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts",
+      "bytes": 12690,
+      "sha256": "5f7c331e5513028b02e4dea7767e9bec8db9ad6013aa6d435a1e1209abeb5a52"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package.json",
+      "bytes": 2462,
+      "sha256": "44a0daa8fc945c1df86fefb567b73c201b16d63f96067aeeaef716c35f8edca3"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package-lock.json",
+      "bytes": 356899,
+      "sha256": "141357b3648bc0acfa1c79dbf5e1d96d31d2fd1342bf4ce9d2a007d788761346"
+    },
+    {
+      "path": "packages/cortex-templates/package.json",
+      "bytes": 854,
+      "sha256": "1c30dd86cd88f0697d97f37612e22a7fd0c43636027061e3ebe605241c2aa73d"
+    },
+    {
+      "path": "packages/cortex-templates/catalog.json",
+      "bytes": 293580,
+      "sha256": "9097a29db60531b6aca020efb5657fcf9093f219567b22d259b6ed5e01f4bc98"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 365996,
+      "sha256": "af3f19b87ceccce3296b80454ba27c956053e9d97b34a8e04c15eff1d6c68c77"
+    }
+  ],
+  "newPayloadFiles": [
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/.env.local.example",
+      "bytes": 1004,
+      "sha256": "61037dc94013d677cc64433807f99cc4eda38c2f9d84b142918f3fab8ac8725f"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/README.md",
+      "bytes": 9018,
+      "sha256": "5b261b1dc1c796405e48f6ce496a6d77aacc583d66784163b00d07cb6a941ee7"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/__catalog_files/1862ac4bbbc5192d4bf562161df66ea547ed3e67173100656ab606ae9797db2b.bin",
+      "bytes": 288,
+      "sha256": "1862ac4bbbc5192d4bf562161df66ea547ed3e67173100656ab606ae9797db2b"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/__catalog_files/a623595b8f8a6e4a956e172613f52dd1f1634c4b0bb776ed42b93f77a867ac57.bin",
+      "bytes": 323,
+      "sha256": "a623595b8f8a6e4a956e172613f52dd1f1634c4b0bb776ed42b93f77a867ac57"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/auth/check/route.ts",
+      "bytes": 218,
+      "sha256": "e429cff3f74e6503b912b13d521b8b97adcb46d2e4f8b6eed49f9d9c7230b5bb"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/auth/login/route.ts",
+      "bytes": 217,
+      "sha256": "c99b435fb3efa81d3ce0da107b5d80ff3dea3dc8e13afc0afae232741ae9dd52"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/auth/logout/route.ts",
+      "bytes": 196,
+      "sha256": "539d053eea357416b3e3f722c8e0de13df1d73d6a6b74513980a47a8e652541d"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/auth/register/route.ts",
+      "bytes": 220,
+      "sha256": "308ade87785823f2e4f5ff4e59cdd7821af0feb02a05e7fbef681bdf875f0697"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/auth/setup/route.ts",
+      "bytes": 217,
+      "sha256": "6cd81ca60af8eca25d157e4598ecf37d86a3687d5a0fa630026726900bd4299a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/chat/route.ts",
+      "bytes": 347,
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/chat-v6/route.ts",
+      "bytes": 347,
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/conversations/route.ts",
+      "bytes": 3911,
+      "sha256": "d0e29dabe5cc0f539172b0d81ba329673e74fa24af625a6eb82ae34455ae3acc"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/facts/route.ts",
+      "bytes": 1353,
+      "sha256": "95f10a2e3f09ab4945eb0e39b989101e8cabb53ea7775e7a36a01257742a3310"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/health/route.ts",
+      "bytes": 450,
+      "sha256": "eab2bed0a3c7524d91aa522c5dd0131df9a0fec7feac5dd0400ff5918bcc0c45"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/api/memories/route.ts",
+      "bytes": 1357,
+      "sha256": "a966ebe98f872fc16f5de9dc42924e480e13faeedd6e9622c23c41cc77ada7c7"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/globals.css",
+      "bytes": 7310,
+      "sha256": "34db202072857a3793209c4511f8ee3bedcf9f3169fbe6166842d02c1444bc77"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/layout.tsx",
+      "bytes": 428,
+      "sha256": "b8b67b5ef61796b6746cbf2cb6384c92ef02e88ff306a1a1332b9e8733cca94c"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/app/page.tsx",
+      "bytes": 151,
+      "sha256": "3554bddaecbfbd4926a670831cf1f93e9694b5f6ce442e4d44f1b3eec17f5156"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/AdminSetup.tsx",
+      "bytes": 5838,
+      "sha256": "2d255fd92f719965bb33a918f2aef6cb823832f92623a55213286d5a009694b6"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/AuthProvider.tsx",
+      "bytes": 4197,
+      "sha256": "66af257670c6fe4cf64f7aa33860f7fa7605d642db317ee3090d66cd136af47d"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/ChatHistorySidebar.tsx",
+      "bytes": 12321,
+      "sha256": "d6bcfe5050feb2ac47333710417602521b11865a2a437e05642f456c464315d3"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/ChatInterface.tsx",
+      "bytes": 12840,
+      "sha256": "d4e34868bfc75da8a9eb96719a0745966fefdade763f56a790be44e9de6faee2"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/ConvexClientProvider.tsx",
+      "bytes": 627,
+      "sha256": "87f9bb72178597019a61a4240bb99002bb3804481f2156b848de2f942570ad3f"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/DataPreview.tsx",
+      "bytes": 1692,
+      "sha256": "49d8fa241e15615adcf2df207c60ba7cfa41ec894e41657d4a16ff77f12d698f"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/HealthStatus.tsx",
+      "bytes": 6840,
+      "sha256": "4fc8f16178189802186f8d010515002512c5af8256c0a790f8352c6a27a452c7"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/LayerCard.tsx",
+      "bytes": 7661,
+      "sha256": "bb7ac429d5d331f4bc49929ae2ec15cfba7802f1002400527e2c91cb520fedcb"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/LayerFlowDiagram.tsx",
+      "bytes": 6637,
+      "sha256": "56456a2ffb09ae1fdbfe991eafab531258f1a84fd75a5e2ed4f2d8707d00844a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/LoginScreen.tsx",
+      "bytes": 7172,
+      "sha256": "26792f483b5006f45e4caa167bcf0e288e749417ac1c681ee10c4de361afae04"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/MemorySpaceSwitcher.tsx",
+      "bytes": 3166,
+      "sha256": "6a5c51914086189c0834bdbd8c78000fba6956fe173c36b915122811382b3a31"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/RuntimeMediaPanel.tsx",
+      "bytes": 14958,
+      "sha256": "3fde171c5e09fc98db9c6075e8821bf0e8841dca34acddd139d6d0e3e6c38c97"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/components/RuntimeQuickstart.tsx",
+      "bytes": 24699,
+      "sha256": "7df6d1ebad16898e8a9e2a39fb8b194620fb719b44eb19185bc5032b74814a4a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app/accounts.ts",
+      "bytes": 4068,
+      "sha256": "4d056054e3c8383ddec6f2cae6b8234b6b06b09b5a66001f80912eb8fa7a09d7"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app/authState.ts",
+      "bytes": 333,
+      "sha256": "d5dbe3a0b526f5901555d5b1bf1dfa3052f98fe847f0d438da5367588a1e339d"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app/conversations.ts",
+      "bytes": 1754,
+      "sha256": "d8e3cd255b7de80db7fd69de5bfa293afd50e522511d6fbd710afb77e2293e1f"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app/facts.ts",
+      "bytes": 2884,
+      "sha256": "fdeaec714ffd6684b7c23d9078757083e645089be82ab136806166b82006026a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app/health.ts",
+      "bytes": 307,
+      "sha256": "ca1e6b2232df06cb13c900910bfddb674183e3df77728c83a48286b26e7f0f78"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app/memories.ts",
+      "bytes": 2359,
+      "sha256": "8501e2249e0cbaa1a373a3b593fd8e1f8f495318d5972567c440d9bbd37b72ce"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app/scope.ts",
+      "bytes": 544,
+      "sha256": "e741ca1aa09aae370f70b7d8108538356ae05189be6d941d3d01aaa851cd0861"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app/sessions.ts",
+      "bytes": 2442,
+      "sha256": "1a53cc5fe224b47813ddc09bfafa3a24178c56ae27222fbcb7214b6d7a30002f"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app/users.ts",
+      "bytes": 2170,
+      "sha256": "654aa204f958af166bae2a61c01ccc469e6ad4b650d7a42568d308bf27a47fa6"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/app.schema.ts",
+      "bytes": 1522,
+      "sha256": "b20f419bbbb72a10d5e6db07a3b899d3c54725400576cf14511abc8f2a668ff7"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/schema.ts",
+      "bytes": 285,
+      "sha256": "8cff280e44cebd2c049a95023c05f7f26d219c5565690db3fd4137f67496d401"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/convex/sdk.registration.ts",
+      "bytes": 246,
+      "sha256": "d1b457ec7ebe9ca8383eec0475df432e2562f78afa4776f194792920f154f6ee"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/eslint.config.mjs",
+      "bytes": 762,
+      "sha256": "8f8b4e29d8375a81afeaa2f99ba183c123190dbe6148f6d462a82acae17d6c1e"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/jest.config.js",
+      "bytes": 1880,
+      "sha256": "e05b3fb5491249837b57d8728e24f939c738ef7b8c560bccd10ebae90083c8a3"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/lib/agents/memory-agent.ts",
+      "bytes": 3258,
+      "sha256": "2dcbbadf9a7669f158e470714dc92b47d2a918fa2d36c1b5d6e0d77febe455d6"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/lib/animations.ts",
+      "bytes": 2480,
+      "sha256": "a026207d0af02b5457e15cc68aafae2f3a68719389a2ce02898f35e7fdca1afd"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/lib/app-auth.ts",
+      "bytes": 12784,
+      "sha256": "73f931fc564c38fa3557d0202397b08a1ba36538f29514ff306b7bd099c106db"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/lib/chat-latency.ts",
+      "bytes": 2788,
+      "sha256": "03620311c96ec7d2ea2723ee3572d580b45703619546b2f0b4d3f04f68c9f8b1"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/lib/chat.ts",
+      "bytes": 10828,
+      "sha256": "7a7ac91bc9ece1efc81ff5d8d6385070392202f30f4353fb8129429f32ef3b20"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/lib/cortex.ts",
+      "bytes": 4173,
+      "sha256": "c87b6511e95e73a1ee92dc9808b881f8db8833989cc8f523a9fbb600298d1f37"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/lib/layer-tracking.ts",
+      "bytes": 1219,
+      "sha256": "92af032bfb7d3ef45821c92fd3e3eb7a739304e2ba36071424619325d79a977a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/lib/password.ts",
+      "bytes": 3134,
+      "sha256": "19556262a01122d421fb48e05654d8703d8287a60a5ea1353cbcf7a4fdabe763"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/lib/versions.ts",
+      "bytes": 1077,
+      "sha256": "542b3a30ccb15b9617d8670459ea6cf3a40e6d930e27b1e1a0b2ad4947f23e91"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/next.config.js",
+      "bytes": 1543,
+      "sha256": "27395536288d13b1dba2da99f6a4922619577e951700b7a0f81ac88287a6882a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/package.json",
+      "bytes": 1990,
+      "sha256": "666c43b5fd7d440bf9971a05f2e3cd7b0317505984dc0733bc9b84b3cab50e6a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/postcss.config.js",
+      "bytes": 72,
+      "sha256": "8fa4b01f6633f478ec8ea70633058c85858e2298649cf0aee711362e5bce7b7a"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tailwind.config.js",
+      "bytes": 836,
+      "sha256": "6ddbd5544143d268e884b6019f93157cfdab722453fa8c287039a41baf30bc9d"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/test-api.mjs",
+      "bytes": 8973,
+      "sha256": "4ead2a2bf6f4416ac89d66a088f450e5d2d858bb8e6dfa7d99558041040bf099"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/e2e/chat-memory-flow.test.ts",
+      "bytes": 16663,
+      "sha256": "b34b7889b1de7ecd3b0630afa5d8cb03d2ac329abb14617f6a55e14eca771414"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/helpers/convex-registration.ts",
+      "bytes": 317,
+      "sha256": "9f2faf6c4f9f6769ec9808054e06bd2e4adc9a5a0d4cb04e9561bbb4265fa551"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/helpers/mock-cortex.ts",
+      "bytes": 7566,
+      "sha256": "86af7adef64c9cc54f6311fbf6a5e9b4dd8d846271483cfd67f36b8dc09de299"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/helpers/private-db.ts",
+      "bytes": 2416,
+      "sha256": "e5d89aa2d950623e5c62538766da9690326f3c74f879ef40c6bb6edb96aab368"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/helpers/server-only.ts",
+      "bytes": 100,
+      "sha256": "c6518d8537a546eafa1f63f74334f0f386bccd8b6c05d3bbb61fb1ffe6fd30e4"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/helpers/setup.ts",
+      "bytes": 1299,
+      "sha256": "d6ac591dc18de8e12aa81bd2510c06bc44a0f1a2ceef1603848badd437bcd4b8"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/integration/auth.test.ts",
+      "bytes": 9150,
+      "sha256": "814e157b0d5cd46d3935c1eba25dc8286bb4676ce6792e05fb8e8f9a15e50205"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/integration/conversations.test.ts",
+      "bytes": 14208,
+      "sha256": "b31705dd2d26cb364400a3f50be3e97bf20423cc2611f63dde1b25d27a1df413"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/unit/chat-latency.test.ts",
+      "bytes": 4828,
+      "sha256": "ff8a0087d6d13a9e815aa21b2c1c3a793bd8b63cf508c15ae7817272cb905833"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/unit/password.test.ts",
+      "bytes": 8099,
+      "sha256": "c24ec6ee02f9a7d3b88cae6d3f2c0cb9305b838f4c820456809a22b40e0d6fda"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/unit/private-auth.test.ts",
+      "bytes": 7484,
+      "sha256": "fdd54d612c3e5bb494497df2a96f3490096e70fbeab2aeaca83dc30102cd8662"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/unit/private-backend.test.ts",
+      "bytes": 6285,
+      "sha256": "10b0265cfd07c08f563910c9e9c4e366bcc1dc49cdd3d44d681cccd32a886b8d"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/unit/private-chat.test.ts",
+      "bytes": 11395,
+      "sha256": "e6312af2b39c9b6cb6449bab4a1da3b6d2c801074b83e19da7f1dabe7d2d4cfb"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tests/unit/runtime-observation.test.ts",
+      "bytes": 12690,
+      "sha256": "5f7c331e5513028b02e4dea7767e9bec8db9ad6013aa6d435a1e1209abeb5a52"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.2/tsconfig.json",
+      "bytes": 687,
+      "sha256": "fd7bb7026f9df876a7e302bd0accdcd5cebcfe5b8ccd1763d2289ba3229c01b9"
+    }
+  ],
+  "nativeBrowserQualified": false,
+  "independentAcceptance": "pending ONE coherent batch review",
+  "goalPercent": 50,
+  "sourceSemantics": "Transport protects live status/approval/output. Drained terminal or failed stream starts persistent retained-response authorization/memory guard. Full100cursorpage does not hand off. New run/reconnect resets handoff; disconnect/signout release observers. Every original authority/principal/source/postsession fence unchanged."
+}

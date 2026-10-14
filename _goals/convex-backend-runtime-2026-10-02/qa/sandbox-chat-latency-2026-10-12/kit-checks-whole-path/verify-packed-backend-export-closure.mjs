@@ -1,0 +1,80 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { createRequire } from 'node:module';
+const r='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion', q=path.dirname(new URL(import.meta.url).pathname);
+const ts=createRequire(path.join(r,'package.json'))('typescript');
+const kit='/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-whole-path-2026-10-14';
+const commit='SOURCE_COMMIT_UNREADY';
+assert.match(commit,/^[a-f0-9]{40}$/,'Root accepted commit GO required');
+const artifact=JSON.parse(fs.readFileSync(path.join(q,'artifact-receipt.json')));
+const manifest=JSON.parse(fs.readFileSync(path.join(kit,'staging',commit,'dist/backend/v1/manifest.json')));
+const archive=path.join(kit,'artifacts',commit,artifact.packages.find(p=>p.role==='sdk').filename);
+const digest=b=>createHash('sha256').update(b).digest('hex');
+function exportsOf(text,name) {
+ const ast=ts.createSourceFile(name,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS); const names=[];
+ for(const statement of ast.statements) {
+  if(!statement.modifiers?.some(m=>m.kind===ts.SyntaxKind.ExportKeyword)) continue;
+  if(ts.isVariableStatement(statement)) for(const d of statement.declarationList.declarations) {assert(ts.isIdentifier(d.name)); names.push(d.name.text);}
+  else if(statement.name && ts.isIdentifier(statement.name)) names.push(statement.name.text);
+ }
+ return names;
+}
+function declarationsOf(text,name) {
+ const ast=ts.createSourceFile(name,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const names=[]; const endpoints=[];
+ for(const statement of ast.statements) {
+  if(statement.name&&ts.isIdentifier(statement.name))names.push(statement.name.text);
+  if(ts.isVariableStatement(statement))for(const d of statement.declarationList.declarations) {
+   if(!ts.isIdentifier(d.name))continue; names.push(d.name.text);
+   if(d.initializer&&ts.isCallExpression(d.initializer)) {
+    const called=d.initializer.expression.getText(ast);
+    if(['query','mutation','action','internalQuery','internalMutation','internalAction','httpAction','workflow.define'].includes(called))endpoints.push({name:d.name.text,registeredAs:called});
+   }
+  }
+ }
+ return {ast,names,endpoints};
+}
+const paths=['convex-dev/runtimeTranscript.ts','convex-dev/runtimeAgent.ts','convex-dev/runtimeAuth.ts','convex-dev/runtimeMemoryRepository.ts','convex-dev/runtimeLatencyTrace.ts','convex-dev/runtimeModelPolicy.ts','convex-dev/runtimeClient.ts','convex-dev/runtimeMemory.ts','convex-dev/runtimeAgentQueryEmbedding.ts','convex-dev/runtimeMemoryGateway.ts','convex-dev/runtimeMemoryServices.ts','convex-dev/runtimeGateway.ts','convex-dev/runtimeIngestion.ts','convex-dev/runtimeIngestionSchema.ts','convex-dev/runtimeMemoryContext.ts','convex-dev/runtimeAgentRecall.ts'];
+const files=paths.map(sourcePath=>{
+ const row=manifest.files.find(f=>f.sourcePath===sourcePath); assert(row);
+ const committed=execFileSync('git',['show',commit+':'+sourcePath],{cwd:r,maxBuffer:2*1024*1024});
+ const packed=execFileSync('tar',['-xOf',archive,'package/dist/backend/v1/'+row.path],{maxBuffer:2*1024*1024});
+ assert.equal(digest(committed),row.sourceSha256); assert.equal(digest(packed),row.sha256);
+ const names=exportsOf(packed.toString(),row.path); assert.deepEqual(names,exportsOf(committed.toString(),sourcePath));
+ const current=declarationsOf(committed.toString(),sourcePath),packedDeclarations=declarationsOf(packed.toString(),row.path);
+ assert.deepEqual(packedDeclarations.endpoints,current.endpoints);
+ const expectedAdditions=sourcePath==='convex-dev/runtimeAgent.ts'?[{name:'saveAndPrepareContext',registeredAs:'internalMutation'},{name:'prepareResolvedModelCandidate',registeredAs:'internalMutation'},{name:'turnStepV7',registeredAs:'internalAction'},{name:'executeToolsV7',registeredAs:'workflow.define'}]:sourcePath==='convex-dev/runtimeAgentRecall.ts'?[{name:'prepareReads',registeredAs:'internalQuery'},{name:'readMatches',registeredAs:'internalQuery'}]:[];
+ const namesOfAdditions=expectedAdditions.map(e=>e.name);
+ if(sourcePath!=='convex-dev/runtimeAgentRecall.ts'){
+  const historical=execFileSync('git',['show','126231a0102936998837dd14a64a77d2b4d09785:'+sourcePath],{cwd:r,maxBuffer:2*1024*1024});
+  assert.deepEqual(current.endpoints.filter(e=>!namesOfAdditions.includes(e.name)),declarationsOf(historical.toString(),sourcePath).endpoints);
+ }
+ assert.deepEqual(current.endpoints.filter(e=>namesOfAdditions.includes(e.name)),expectedAdditions);
+ if(sourcePath==='convex-dev/runtimeAgent.ts'){assert(packedDeclarations.names.includes('contextSourceBatchHandler'));assert(packed.toString().includes('items.length > 100')&&packed.toString().includes('priorWitnesses.length > 100')&&packed.toString().includes('witnesses.length > 200'));}
+ if(sourcePath==='convex-dev/runtimeAgentQueryEmbedding.ts'){assert(names.includes('recallAgentMemory'));assert(packed.toString().includes('ctx.runMutation(checkpointRef'));assert(packed.toString().includes('finishRecallFromEmbedding'));}
+ if(sourcePath==='convex-dev/runtimeLatencyTrace.ts') { assert(names.includes('traceRuntimeMutationSpan'));assert(packed.toString().includes('typeof process === "undefined"')&&packed.toString().includes('performance.now()')&&packed.toString().includes('Number.isFinite(durationMs)')); }
+ if(sourcePath==='convex-dev/runtimeAgent.ts') {assert(packed.toString().includes('executionContext(createAuthorityReadScope(ctx, { nativeTranscript: true }), args)')); assert(packed.toString().includes('handler: async (nativeCtx, args)'));assert(packed.toString().includes('"start.claimNext"')&&packed.toString().includes('"start.workflow"'));}
+ if(sourcePath==='convex-dev/runtimeModelPolicy.ts') {assert(packed.toString().includes('const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });'));}
+ if(sourcePath==='convex-dev/runtimeClient.ts') for(const phase of ['admission.submit','admission.start','admission.get'])assert(packed.toString().includes(phase));
+ if(sourcePath==='convex-dev/runtimeAuth.ts') {
+  for(const name of ['readNativeTranscriptMessages','freshNativeTranscriptReads','NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES','NATIVE_TRANSCRIPT_READ_SCOPE_MAX_BYTES'])assert(names.includes(name),name);
+  assert(packedDeclarations.names.includes('createNativeTranscriptReader'));
+  for(const [name,value] of [['NATIVE_TRANSCRIPT_READ_SCOPE_MAX_ENTRIES',16],['NATIVE_TRANSCRIPT_READ_SCOPE_MAX_BYTES',250000]]) {
+   let initializer;
+   for(const statement of packedDeclarations.ast.statements)if(ts.isVariableStatement(statement))for(const d of statement.declarationList.declarations)if(d.name.getText()===name)initializer=d.initializer;
+   assert(initializer&&ts.isNumericLiteral(initializer));assert.equal(Number(initializer.text),value);
+  }
+ }
+ if(sourcePath==='convex-dev/runtimeAuth.ts') for(const name of ['createAuthorityReadScope','readDeploymentPolicyRows','readQualificationRows','freshPolicyMetadataReads']) assert(names.includes(name),name);
+ if(sourcePath==='convex-dev/runtimeAgent.ts') for(const name of ['executeTurn','executeTurnV2','executeTurnV3','executeTurnV4','prepareRoutedContext','prepareEmptyContext','contextSource','contextSourceBatch','resolveModelOperation','admitModelOperation','onInitialWorkflowComplete','executeTurnV5','prepareTurnModel','prepareResolvedModelOperation','admitPreparedModelOperation','turnStepV5','turnStepV5Handler','prepareDirectTurn','attachDirectContinuation','interruptDirect','executeDirectV6','retireDirectV6','executeToolsV6','prepareResolvedModelCandidate','saveAndPrepareContext','turnStepV7','executeToolsV7']) assert(names.includes(name),name);
+ if(sourcePath==='convex-dev/runtimeAgentRecall.ts') {for(const name of ['prepareReads','prepareReadsHandler','readMatches','readMatchesHandler','finishAgentRecall']) assert(names.includes(name),name);for(const text of ['contextSourceBatchHandler','captureRecallFact','captureRecallVectors','completeRecallDelivery','memoryReferences.finalDelivery']) assert(packed.toString().includes(text),text);}
+ if(sourcePath==='convex-dev/runtimeGateway.ts') {assert(names.includes('preflightAgentModelRequest'));for(const text of ['traceModelBounds(binding, s, request, stage)','validateModelRequest(s, request)','gateway.model.bounds']) assert(packed.toString().includes(text),text);}
+ if(sourcePath==='convex-dev/runtimeIngestionSchema.ts') assert(packed.toString().includes('runtimeIngestionSequenceHeads: defineTable')&&packed.toString().includes('by_owner_sequence'));
+ return {sourcePath,outputPath:row.path,sourceSha256:row.sourceSha256,packedOutputSha256:row.sha256,exportNames:names,exactCommittedExportsPreserved:true,registeredEndpoints:current.endpoints,registeredEndpointDelta:expectedAdditions};
+});
+const receipt={sourceCommit:commit,files,rawAuthorityFactoryExportPresent:true,allHistoricalAndNewAgentParentsPresent:true,actualV5ParentAndTurnExportsPresent:true,actualFreshSdkArchive:true,actualTranscriptReaderExportsAndPrivateFactoryPresent:true,transcriptReaderBounds:{entries:16,bytes:250000},registeredEndpointAdditions:'Four additive V7/preflight/context Agent endpoints and two private recall query endpoints; every126231 historical endpoint preserved',serviceCalls:0};
+fs.writeFileSync(path.join(q,'packed-backend-export-closure.json'),JSON.stringify(receipt,null,2)+'\n');
+console.log(JSON.stringify({sourceCommit:commit,checkedChangedBackendRoots:files.length,allExportsPreserved:true}));

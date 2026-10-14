@@ -118,6 +118,8 @@ it.each(["eligible_index", "metadata_overflow", "pending_overflow_warn"])("%s ne
     for (let index = 2; index <= 1026; index++) f.db.seed("runtimeIngestionEvents", { tenantId: f.reference.tenantId, memorySpaceId: f.reference.memorySpaceId,
       ownerPrincipalId: f.reference.principalId, sequence: index, eligibility: "superseded", lineage: { sourceId: `overflow:${index}`, sourceEventId: `overflow:${index}`, sourceRevision: 1 } });
     f.db.table("runtimeIngestionScopes")[0].sequence = 1026;
+  // Manually seeded events advance both authoritative sequence records.
+  f.db.table("runtimeIngestionSequenceHeads")[0].sequence = 1026;
   } else {
     for (let index = 0; index < (mode === "pending_overflow_warn" ? 33 : 1); index++) {
       const source = await f.source(`Unrepresented eligible evidence ${index}`, `indexed:${index}`); await ingestion.enqueueSourceEvent(f.ctx, f.reference, source);

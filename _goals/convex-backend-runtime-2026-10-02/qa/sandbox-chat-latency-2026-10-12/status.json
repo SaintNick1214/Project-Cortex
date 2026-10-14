@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K19 native evidence complete; four latency FAIL and supplemental continuation FAIL; coherent whole-path repair pending",
+  "phase": "V7 independent source/test/docs PASS4.0; local commit and fresh immutable packaging next; hosted unqualified",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T07:09:59.240926+00:00",
+  "updatedAt": "2026-10-14T08:37:59.125823+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -1056,5 +1056,74 @@
     },
     "nativeSLOQualified": false,
     "delayChain": "cloud-k19-four-run-delay-chain.md"
+  },
+  "v7CoherentBatch": {
+    "ui": {
+      "implementationPercent": 100,
+      "affectedChecksPercent": 100,
+      "tests": "154/154/8suites/0skip",
+      "typesExit": 0,
+      "lintExit": 0,
+      "newTemplate": "vercel-ai-quickstart1.4.2/catalog1.3.2",
+      "historicalDescriptorsUnchanged": 13,
+      "freeze": "v7-ui-observation-freeze.json",
+      "nativeQualified": false
+    },
+    "backendWholePath": {
+      "state": "frozen",
+      "scope": "cloud-k19-whole-path-source-scope.md",
+      "nativeQualified": false,
+      "implementationPercent": 100,
+      "qualityPercent": 100,
+      "freeze": "whole-turn-source-freeze.json"
+    },
+    "continuationBound": {
+      "state": "frozen",
+      "sourceDiagnosis": "k19-continuation-bound-source-report.md",
+      "actualK19NumericField": "UNAVAILABLE",
+      "sameCapsRetained": true,
+      "functionalToolAcceptance": false,
+      "implementationPercent": 100,
+      "qualityPercent": 100,
+      "freeze": "continuation-preflight-freeze.json"
+    },
+    "independentReview": {
+      "percent": 100,
+      "verdict": "PASS4.0 source/test/docs ONLY",
+      "report": "v7-coherent-joint-review.md",
+      "breakingFindings": 0,
+      "hostedQualified": false
+    },
+    "goalPercent": 50,
+    "latencyPasses": 0,
+    "latencyTotal": 4,
+    "docs": {
+      "sourceBuildRenderPercent": 100,
+      "receipt": "docs-v7-coherent-freeze-receipt.json",
+      "published": false,
+      "correction": "docs-v7-version-fix-receipt-v2.json"
+    },
+    "sharedQuality": {
+      "percent": 100,
+      "receipt": "whole-turn-joint-quality-final-receipt.json",
+      "backendFiles": 159,
+      "tables": 73
+    },
+    "reviewPacket": "v7-coherent-joint-review-packet.json",
+    "kitPreparation": {
+      "percent": 100,
+      "receipt": "kit-checks-whole-path/preparation-receipt.json",
+      "builds": 0,
+      "packs": 0,
+      "images": 0,
+      "serviceCalls": 0,
+      "ready": false
+    },
+    "publicRecallDiagnosis": {
+      "percent": 100,
+      "report": "public-recall-vs-legacy-call-chain.md",
+      "measuredOnK20": false,
+      "privateChangesApply": false
+    }
   }
 }

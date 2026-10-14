@@ -32,9 +32,14 @@ const mockClient = {
 };
 class MockTransport {
   private observationStop = () => {};
+  onError = (_error: { code: string }) => {};
+  get run() { return mockHandle; }
   constructor(private options: { onRun: (handle: RuntimeRunHandle) => void; onObservation: (value: RuntimeObservation) => void }) {}
   start() { this.options.onRun(mockHandle); this.observationStop();
-    this.observationStop = mockClient.watchObservation(mockHandle, this.options.onObservation, () => {}, { finalOnly: false }); }
+    this.observationStop = mockClient.watchObservation(mockHandle, value => {
+      this.options.onObservation(value);
+      if (value.parts.length < 100 && ["complete", "failed", "cancelled"].includes(value.run.responseStatus)) this.observationStop();
+    }, error => { this.observationStop(); this.onError(error); }, { finalOnly: false }); }
   disconnect() { this.observationStop(); }
   approveTool = mockApproveTool;
   stopRun = mockCancel;
@@ -48,7 +53,8 @@ jest.mock("@cortexmemory/sdk/runtime", () => ({
 }));
 jest.mock("@cortexmemory/vercel-ai-provider/remote", () => ({ CortexRemoteTransport: class { constructor(options: ConstructorParameters<typeof MockTransport>[0]) { return new MockTransport(options); } } }));
 jest.mock("../../components/RuntimeMediaPanel", () => ({ RuntimeMediaPanel: () => null }));
-jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport, onError }: { transport: MockTransport; onError: (error: { code: string }) => void }) {
+  transport.onError = onError;
   const hooks: typeof React = jest.requireMock("react");
   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
   return { messages, setMessages, status: "ready", sendMessage: async () => {
@@ -69,7 +75,7 @@ async function connectAndSubmit() {
   fireEvent.change(screen.getByLabelText("Message", { exact: true }), { target: { value: "fixture request" } });
   fireEvent.click(screen.getByRole("button", { name: "Send" }));
   await screen.findByText("protected fixture reply");
-  await waitFor(() => expect(mockLanes.filter(value => value.active)).toHaveLength(2));
+  await waitFor(() => expect(mockLanes.filter(value => value.active)).toHaveLength(1));
   return view;
 }
 beforeEach(() => { mockLanes.length = 0; jest.clearAllMocks(); delete mockOptions.onAuthChange;
@@ -78,33 +84,34 @@ beforeEach(() => { mockLanes.length = 0; jest.clearAllMocks(); delete mockOption
 });
 afterEach(cleanup);
 
-test("two observers retain empty-page status and post-response memory updates without watchRun", async () => {
+test("one live observer hands off to a retained-response guard without losing empty-page status or later memory updates", async () => {
   await connectAndSubmit(); expect(mockClient.watchRun).not.toHaveBeenCalled();
-  expect(mockClient.watchObservation).toHaveBeenCalledTimes(2);
-  expect(mockLanes.map(value => value.finalOnly).sort()).toEqual([false, true]);
+  expect(mockClient.watchObservation).toHaveBeenCalledTimes(1);
+  expect(lane(true)).toBeUndefined();
   for (const responseStatus of ["queued", "running", "waiting_approval", "complete"] as const) {
-    emit(true, observation({ responseStatus }));
+    emit(false, observation({ responseStatus }));
     expect(screen.getByTestId("run-status").textContent).toContain("Response: " + responseStatus);
     expect(screen.getByTestId("run-status").textContent).toContain("Memory: pending");
   }
+  expect(lane(false)).toBeUndefined(); expect(lane(true).active).toBe(true);
   emit(true, observation({ responseStatus: "complete", memoryStatus: "complete" }));
   expect(screen.getByTestId("run-status").textContent).toContain("Memory: complete");
   expect(lane(true).active).toBe(true); expect(mockClient.watchObservation).toHaveBeenCalledTimes(2);
 });
-test("transport approvals and cancel remain reachable while final observer updates run metadata", async () => {
+test("the live observer retains approvals, cancellation and run metadata before terminal handoff", async () => {
   await connectAndSubmit(); const approval = { operationId: "operation", toolName: "remember", requestHash: "hash" };
   emit(false, observation({ responseStatus: "waiting_approval" }, [approval]));
-  emit(true, observation({ responseStatus: "waiting_approval" }));
+  expect(lane(true)).toBeUndefined();
   fireEvent.click(screen.getByRole("button", { name: "Approve remember" }));
   await waitFor(() => expect(mockApproveTool).toHaveBeenCalledWith(approval));
   fireEvent.click(screen.getByRole("button", { name: "Cancel run" }));
   await waitFor(() => expect(mockCancel).toHaveBeenCalledTimes(1));
-  emit(true, observation({ responseStatus: "cancelled", cancellationRequested: true }));
+  emit(false, observation({ responseStatus: "cancelled", cancellationRequested: true }));
   expect(screen.getByTestId("run-status").textContent).toContain("Response: cancelled");
   expect((screen.getByRole("button", { name: "Cancel run" }) as HTMLButtonElement).disabled).toBe(true);
 });
 test.each(["FORBIDDEN", "AUTHORITY_EXPIRED", "SESSION_CHANGED"])("continuous final denial %s clears private UI after response completion", async code => {
-  await connectAndSubmit(); emit(true, observation({ responseStatus: "complete" }));
+  await connectAndSubmit(); emit(false, observation({ responseStatus: "complete" }));
   const guard = lane(true); expect(guard.active).toBe(true);
   act(() => guard.deny({ code }));
   await waitFor(() => expect(screen.queryByText("protected fixture reply")).toBeNull());
@@ -112,17 +119,47 @@ test.each(["FORBIDDEN", "AUTHORITY_EXPIRED", "SESSION_CHANGED"])("continuous fin
   expect(screen.getByRole("alert").textContent).toBe(code); expect(mockClient.close).toHaveBeenCalledTimes(1);
   expect(mockLanes.every(value => !value.active)).toBe(true);
 });
-test("disconnect/reconnect and unmount release both owned observers", async () => {
+test("disconnect/reconnect and unmount release the current owned observer", async () => {
   const view = await connectAndSubmit(); const first = [...mockLanes];
   fireEvent.click(screen.getByRole("button", { name: "Disconnect observer" }));
   await waitFor(() => expect(mockLanes.filter(value => value.active)).toHaveLength(0));
   expect(first.every(value => value.close.mock.calls.length === 1)).toBe(true);
   fireEvent.click(screen.getByRole("button", { name: "Reconnect observer" }));
-  await waitFor(() => expect(mockLanes.filter(value => value.active)).toHaveLength(2));
-  expect(mockClient.watchRun).not.toHaveBeenCalled(); expect(mockClient.watchObservation).toHaveBeenCalledTimes(4);
-  emit(true, observation({ responseStatus: "running" }));
+  await waitFor(() => expect(mockLanes.filter(value => value.active)).toHaveLength(1));
+  expect(mockClient.watchRun).not.toHaveBeenCalled(); expect(mockClient.watchObservation).toHaveBeenCalledTimes(2);
+  emit(false, observation({ responseStatus: "running" }));
   view.unmount(); expect(mockLanes.every(value => !value.active)).toBe(true);
   expect(mockClient.close).toHaveBeenCalledTimes(1);
+});
+test.each(["FORBIDDEN", "AUTHORITY_EXPIRED", "SESSION_CHANGED"])("live delivery denial %s clears the private projection before any retained observer exists", async code => {
+  await connectAndSubmit(); expect(lane(true)).toBeUndefined();
+  act(() => lane(false).deny({ code }));
+  await waitFor(() => expect(screen.queryByText("protected fixture reply")).toBeNull());
+  expect(screen.queryByTestId("verified-scope")).toBeNull();
+  expect(mockLanes.every(value => !value.active)).toBe(true); expect(mockClient.close).toHaveBeenCalledTimes(1);
+});
+test("a terminal full cursor page keeps live delivery until the transport has drained it", async () => {
+  await connectAndSubmit();
+  const full = observation({ responseStatus: "complete" });
+  full.parts = Array.from({ length: 100 }, (_, index) => ({ sequence: index + 1, final: false, part: { type: "text-delta", text: "x" } }));
+  emit(false, full); expect(lane(false).active).toBe(true); expect(lane(true)).toBeUndefined();
+  emit(false, observation({ responseStatus: "complete" }));
+  expect(lane(false)).toBeUndefined(); expect(lane(true).active).toBe(true);
+});
+test("a non-authority stream failure hands retained private text to a continuing guard", async () => {
+  await connectAndSubmit(); act(() => lane(false).deny({ code: "TRANSPORT_ERROR" }));
+  expect(lane(false)).toBeUndefined(); expect(lane(true).active).toBe(true);
+  expect(screen.getByText("protected fixture reply")).toBeDefined();
+  emit(true, observation({ responseStatus: "complete", memoryStatus: "complete" }));
+  expect(screen.getByTestId("run-status").textContent).toContain("Memory: complete");
+  act(() => lane(true).deny({ code: "FORBIDDEN" }));
+  await waitFor(() => expect(screen.queryByText("protected fixture reply")).toBeNull());
+});
+test("the retained guard stays active if a later backend state moves beyond its terminal response", async () => {
+  await connectAndSubmit(); emit(false, observation({ responseStatus: "complete" }));
+  const retained = lane(true); emit(true, observation({ responseStatus: "running", attemptNumber: 2 }));
+  expect(retained.active).toBe(true); expect(lane(true)).toBe(retained);
+  expect(mockClient.watchObservation).toHaveBeenCalledTimes(2);
 });
 test("signout and verified-auth denial remove the private projection and subscriptions", async () => {
   await connectAndSubmit(); fireEvent.click(screen.getByRole("button", { name: "Sign out" }));

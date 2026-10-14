@@ -1,0 +1,462 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:36931) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✕ registered plan/matches reproduce original ordered selection, bindings and current delivery (28 ms)
+  ✕ real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference (15 ms)
+  ✕ native principal mismatch refuses without writes or a second lane (15 ms)
+  ✕ native lease mismatch refuses without writes or a second lane (16 ms)
+  ✕ native profile mismatch refuses without writes or a second lane (14 ms)
+  ✕ native cutoff mismatch refuses without writes or a second lane (14 ms)
+  ✕ native boundary mismatch refuses without writes or a second lane (13 ms)
+  ✕ native limit mismatch refuses without writes or a second lane (14 ms)
+  ✕ native request mismatch refuses without writes or a second lane (14 ms)
+  ✕ revocation between plan and matches is freshly refused (13 ms)
+  ✕ changed consumed fact payload is refused by the original fresh delivery predicate (12 ms)
+  ✕ withheld fact refusal waits for original vector source failure (12 ms)
+  ✕ duplicate/unknown candidates use original canonical hydration/drop semantics (13 ms)
+  ✕ deadline passing while final delivery returns still refuses on the actual Action clock (12 ms)
+
+  ● registered plan/matches reproduce original ordered selection, bindings and current delivery
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:70:13)
+
+  ● real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:83:13)
+
+  ● native principal mismatch refuses without writes or a second lane
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:90:13
+
+  ● native lease mismatch refuses without writes or a second lane
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:90:13
+
+  ● native profile mismatch refuses without writes or a second lane
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:90:13
+
+  ● native cutoff mismatch refuses without writes or a second lane
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:90:13
+
+  ● native boundary mismatch refuses without writes or a second lane
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:90:13
+
+  ● native limit mismatch refuses without writes or a second lane
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:90:13
+
+  ● native request mismatch refuses without writes or a second lane
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:90:13
+
+  ● revocation between plan and matches is freshly refused
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:101:13)
+
+  ● changed consumed fact payload is refused by the original fresh delivery predicate
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:105:13)
+
+  ● withheld fact refusal waits for original vector source failure
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:109:13)
+
+  ● duplicate/unknown candidates use original canonical hydration/drop semantics
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:117:13)
+
+  ● deadline passing while final delivery returns still refuses on the actual Action clock
+
+    Unexpected mutation runs:claimNext
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at convex-dev/runtimeAgent.ts:231:27
+      at traceRuntimeMutationSpan (convex-dev/runtimeLatencyTrace.ts:39:104)
+      at startExecution (convex-dev/runtimeAgent.ts:230:25)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:222:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at fixture (tests/unit/runtimeAgent/whole-recall-composition.test.ts:39:102)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:122:13)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.8s | 0/14 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.03s ( 0.6%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 2. [31m✗[0m    0.02s ( 0.3%) - native lease mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.3%) - real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 4. [31m✗[0m    0.01s ( 0.3%) - native principal mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [31m✗[0m    0.01s ( 0.3%) - native profile mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 6. [31m✗[0m    0.01s ( 0.3%) - native cutoff mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 7. [31m✗[0m    0.01s ( 0.3%) - native limit mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 8. [31m✗[0m    0.01s ( 0.3%) - native request mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [31m✗[0m    0.01s ( 0.3%) - native boundary mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [31m✗[0m    0.01s ( 0.3%) - revocation between plan and matches is freshly refused
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+11. [31m✗[0m    0.01s ( 0.3%) - duplicate/unknown candidates use original canonical hydration/drop semantics
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+12. [31m✗[0m    0.01s ( 0.2%) - changed consumed fact payload is refused by the original fresh delivery predicate
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+13. [31m✗[0m    0.01s ( 0.2%) - withheld fact refusal waits for original vector source failure
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [31m✗[0m    0.01s ( 0.2%) - deadline passing while final delivery returns still refuses on the actual Action clock
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.20s (4.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.90s
+  Test suites:        1
+  Individual tests:   14
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       14 failed, 14 total
+Snapshots:   0 total
+Time:        4.898 s
+Ran all test suites matching tests/unit/runtimeAgent/whole-recall-composition.test.ts.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

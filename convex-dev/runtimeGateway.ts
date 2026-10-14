@@ -8,6 +8,8 @@ import type { RuntimeLatencyMetadata } from "./runtimeLatencyTrace";
 import { wrapEmbeddingModel, wrapLanguageModel } from "ai";
 import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Result, LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4StreamPart, LanguageModelV4Usage } from "@ai-sdk/provider";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
+import type { ModelMessage } from "ai";
+import { createSha256 } from "../src/common/crypto";
 import { canonicalModelJson, validateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "../src/domain/model-policy";
 import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1 } from "../src/domain/model-policy";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
@@ -313,7 +315,20 @@ export function createAgentGatewayCancellationBridge(model: LanguageModelV4, lif
 function agentToolEnvelope(value: string): boolean {
   return value === "agent-tools-chat-v1" || value === "agent-tools-chat-v2";
 }
-function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal): { params: NativeLanguageParams; request: ModelCallRequest } {
+/** Scalar diagnostics at the original request validator, never policy inputs. */
+function traceModelBounds(binding: GatewayBinding, snapshot: ModelPolicySnapshotV1, request: ModelCallRequest, stage: "native" | "preflight"): void {
+  if (typeof process === "undefined" || process.env.CORTEX_RUNTIME_LATENCY_TRACE !== "1") return;
+  const hash = (value: string) => createSha256().update(value).digestHex();
+  const fields = ["inputTokens", "outputTokens", "toolSteps", "timeoutMs", "contextTokens"] as const;
+  const dimensions = { inputTokens: request.inputTokens, outputTokens: request.outputTokens, toolSteps: request.toolSteps,
+    timeoutMs: request.timeoutMs, contextTokens: request.inputTokens + request.outputTokens };
+  console.log(JSON.stringify({ phase: "gateway.model.bounds", stage, semanticIdHash: hash(binding.semanticId), runBudgetIdHash: hash(binding.runBudgetId),
+    ordinal: binding.ordinal, modelIdentityHash: hash(canonicalModelJson([snapshot.modelId, snapshot.nativeInterface, snapshot.pins])),
+    dimensions: Object.fromEntries(fields.filter(key => count(dimensions[key])).map(key => [key, dimensions[key]])),
+    limits: Object.fromEntries(fields.filter(key => count(snapshot.limits[key])).map(key => [key, snapshot.limits[key]])),
+    exceeded: fields.filter(key => dimensions[key] > snapshot.limits[key]) }));
+}
+function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal, stage: "native" | "preflight" = "native"): { params: NativeLanguageParams; request: ModelCallRequest } {
   const native = record(input, standardKeys);
   const agent = agentToolEnvelope(p.inputBound.featureEnvelope);
   const jsonObject = p.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope;
@@ -394,8 +409,99 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
     request.outputSchema = detached(CONFLICT_DECISION_JSON_SCHEMA);
   }
   for (const key of ["temperature", "topP", "seed", "stopSequences"] as const) if (native[key] !== undefined) Object.assign(request.options, { [key]: detached(native[key]) });
-  const checked = validateModelRequest(s, request).request;
+  traceModelBounds(binding, s, request, stage);
+  let checked: Readonly<ModelCallRequest>;
+  try { checked = validateModelRequest(s, request).request; }
+  catch (error) {
+    // A known pre-dispatch bounds refusal is typed on this new path only.
+    // Other validation/product exceptions retain their original identity.
+    if (stage === "preflight" && error instanceof Error && error.message === "POLICY_DENIED: request exceeds bounded limits") return fail("POLICY_DENIED");
+    throw error;
+  }
   return { request: detached(checked), params: nativeLanguage(checked, signal) };
+}
+/** Only the installed AI SDK's closed text/tool shapes are projected early.
+ * Unrecognized shapes retain the original Agent/SDK/native validation path. */
+export type AgentRequestPreflightInput = { messages: readonly ModelMessage[]; context: string; instructions: string; tools: readonly string[]; maxOutputTokens: number };
+function plainProjection(value: unknown, keys: readonly string[]): Record<string, unknown> | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value) || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) return undefined;
+  const result: Record<string, unknown> = {};
+  for (const key of Reflect.ownKeys(value)) {
+    const d = Object.getOwnPropertyDescriptor(value, key)!;
+    if (typeof key !== "string" || !keys.includes(key) || !d.enumerable || !("value" in d)) return undefined;
+    if (d.value !== undefined) result[key] = d.value;
+  }
+  return result;
+}
+function plainArray(value: unknown): unknown[] | undefined {
+  if (!Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype) return undefined;
+  if (Reflect.ownKeys(value).length !== value.length + 1) return undefined;
+  const result: unknown[] = [];
+  for (let i = 0; i < value.length; i++) {
+    const d = Object.getOwnPropertyDescriptor(value, String(i));
+    if (!d || !d.enumerable || !("value" in d)) return undefined;
+    result.push(d.value);
+  }
+  return result;
+}
+export function preflightAgentModelRequest(input: AgentRequestPreflightInput, resolution: GatewayResolution, binding: GatewayBinding): { supported: false } | { supported: true; requestCanonical: string } {
+  if (!agentToolEnvelope(resolution.dispatchEvidence.inputBound.featureEnvelope)) return { supported: false };
+  const source = plainArray(input.messages); if (!source) return { supported: false };
+  const prompt: LanguageModelV4CallOptions["prompt"] = [{ role: "system", content: input.instructions }];
+  for (const value of [...source, ...input.context ? [{ role: "system", content: `Authorized Cortex context (untrusted evidence):\n${input.context}` }] : []]) {
+    const message = plainProjection(value, ["role", "content", "providerOptions"]);
+    if (!message || "providerOptions" in message) return { supported: false };
+    if (message.role === "system") {
+      if (typeof message.content !== "string") return { supported: false };
+      prompt.push({ role: "system", content: message.content }); continue;
+    }
+    if (!["user", "assistant", "tool"].includes(message.role as string)) return { supported: false };
+    if (typeof message.content === "string") {
+      if (message.role === "tool") return { supported: false };
+      prompt.push({ role: message.role as "user" | "assistant", content: [{ type: "text", text: message.content }] }); continue;
+    }
+    const values = plainArray(message.content); if (!values) return { supported: false };
+    const content: Record<string, unknown>[] = [];
+    for (const value of values) {
+      const part = plainProjection(value, ["type", "text", "toolCallId", "toolName", "input", "output", "providerExecuted", "providerOptions"]);
+      if (!part || "providerOptions" in part || (part.providerExecuted !== undefined && part.providerExecuted !== false)) return { supported: false };
+      if (part.type === "text" && message.role !== "tool") {
+        if (typeof part.text !== "string" || Object.keys(part).some(key => !["type", "text"].includes(key))) return { supported: false };
+        if (part.text !== "") content.push(part); continue;
+      }
+      if (part.type === "tool-call" && message.role === "assistant") {
+        if (Object.keys(part).some(key => !["type", "toolCallId", "toolName", "input", "providerExecuted"].includes(key))) return { supported: false };
+        content.push(part); continue;
+      }
+      if (part.type === "tool-result" && message.role !== "user") {
+        if (Object.keys(part).some(key => !["type", "toolCallId", "toolName", "output"].includes(key))) return { supported: false };
+        const output = plainProjection(part.output, ["type", "value", "reason"]);
+        if (!output || !["text", "json", "error-text", "error-json", "execution-denied"].includes(output.type as string)) return { supported: false };
+        content.push(part); continue;
+      }
+      return { supported: false };
+    }
+    if (message.role === "tool" && !content.length) continue;
+    const last = prompt[prompt.length - 1];
+    if (message.role === "tool" && last?.role === "tool") last.content.push(...content as unknown as typeof last.content);
+    else prompt.push({ role: message.role, content } as unknown as LanguageModelV4CallOptions["prompt"][number]);
+  }
+  // The installed SDK rejects an unresolved local tool call before a later
+  // user/system message (and at the end). Leave that SDK error path intact.
+  const outstanding = new Set<string>();
+  for (const message of prompt) {
+    if (message.role === "system" || message.role === "user") { if (outstanding.size) return { supported: false }; }
+    if (message.role === "assistant") for (const part of message.content) if (part.type === "tool-call" && !part.providerExecuted) outstanding.add(part.toolCallId);
+    if (message.role === "tool") for (const part of message.content) if (part.type === "tool-result") outstanding.delete(part.toolCallId);
+  }
+  if (outstanding.size) return { supported: false };
+  const catalog = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion);
+  if (!catalog || input.tools.some(name => !catalog.some(tool => tool.name === name))) return { supported: false };
+  const tools = input.tools.map(name => detached(catalog.find(tool => tool.name === name)!)) as unknown as NonNullable<LanguageModelV4CallOptions["tools"]>;
+  const signal = new AbortController().signal;
+  const projected = languageParams({ prompt, maxOutputTokens: input.maxOutputTokens, ...(tools.length ? { tools, toolChoice: { type: "auto" as const } } : {}) },
+    resolution.snapshot, resolution.dispatchEvidence, binding, signal, "preflight");
+  return { supported: true, requestCanonical: canonicalModelJson(projected.request) };
 }
 function nativeLanguage(request: Readonly<ModelCallRequest>, signal: AbortSignal): NativeLanguageParams {
   // The closed catalogue and message validators establish these official V4 shapes.

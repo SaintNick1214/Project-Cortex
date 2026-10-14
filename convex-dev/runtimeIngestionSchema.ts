@@ -9,6 +9,9 @@ export const ingestionStageState = v.union(v.literal("pending"), v.literal("runn
   v.literal("failed"), v.literal("unknown"), v.literal("dead_letter"), v.literal("skipped"));
 const scope = { tenantId: v.string(), memorySpaceId: v.string() };
 export const runtimeIngestionTables = {
+  // Created only with a new scope. Progress writers never touch this sequence head.
+  runtimeIngestionSequenceHeads: defineTable({ ...scope, version: v.literal(1), sequence: v.number() })
+    .index("by_scope", ["tenantId", "memorySpaceId"]),
   runtimeIngestionScopes: defineTable({ ...scope, sequence: v.number(), factsThrough: v.number(), vectorsThrough: v.number(),
     graphThrough: v.number(), graphProfileThrough: v.optional(v.record(v.string(), v.number())), vectorProfileThrough: v.optional(v.record(v.string(), v.number())), version: v.number(), updatedAt: v.number() }).index("by_scope", ["tenantId", "memorySpaceId"]),
   runtimeIngestionEvents: defineTable({ ...scope, version: v.literal(1), eventId: v.string(), identityCanonical: v.string(),

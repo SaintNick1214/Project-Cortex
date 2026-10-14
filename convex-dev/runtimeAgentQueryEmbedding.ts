@@ -17,6 +17,8 @@ import { admitHandler, readCurrentEmbeddingProfile, resolveHandler, MODEL_LEDGER
 import { assertGatewayReservedRequest, GatewayDispatchError } from "./runtimeGateway";
 import type { GatewayAdmissionCheckpoint, GatewayBinding, GatewayCheckpoint, GatewayResolution } from "./runtimeGateway";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
+import { finishAgentRecall } from "./runtimeAgentRecall";
+import type { AgentRecallSelection } from "./runtimeAgentRecall";
 import { assertMemoryRequestId, finishRecallFromEmbedding } from "./runtimeMemoryServices";
 
 export type AgentQueryEmbeddingAttempt = { reference: RuntimeAuthorityReference; runId: string; attemptNumber: number; leaseVersion: number };
@@ -31,7 +33,7 @@ function checkedInput(input: Input): string {
   if (!Number.isSafeInteger(input.limit) || input.limit < 1 || input.limit > 100) memoryError("INVALID_INPUT", "Limit must be between 1 and 100");
   return normalizeSourceText(input.text);
 }
-async function currentQuery(ctx: Pick<QueryCtx, "db" | "runQuery">, args: NativeArgs) {
+export async function currentQuery(ctx: Pick<QueryCtx, "db" | "runQuery">, args: NativeArgs) {
   const text = checkedInput(args.input), current = await executionContext(ctx, args);
   const userText = current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
@@ -57,7 +59,8 @@ function gatewayResolution(value: Awaited<ReturnType<typeof resolveHandler>>): G
 /** Every original preflight predicate executes here, in original memory order. */
 export async function prepareAgentQueryEmbeddingHandler(ctx: QueryCtx, args: NativeArgs) {
   const { current, text } = await currentQuery(ctx, args);
-  const repository = new ConvexMemoryRepository(ctx, args.reference, "read");
+  const repository = new ConvexMemoryRepository(ctx, args.reference, "read", undefined, { now: () => Date.now() },
+    (key, runBudgetId) => readCurrentEmbeddingProfile(ctx, args.reference, key, runBudgetId));
   await repository.recheckAuthority();
   await repository.assertReadAuthority();
   // Original resolveProfile checks authority independently before profile selection.
@@ -73,9 +76,9 @@ export async function prepareAgentQueryEmbeddingHandler(ctx: QueryCtx, args: Nat
 export const prepare = internalQuery({ args: { ...attemptArgs, input: inputArgs }, handler: (ctx, args) =>
   prepareAgentQueryEmbeddingHandler(createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }), args) });
 
-type Refusal = { kind: "convex"; data: { version: number; code: string; message?: string; retryable?: boolean; outcome?: string } }
+export type Refusal = { kind: "convex"; data: { version: number; code: string; message?: string; retryable?: boolean; outcome?: string } }
   | { kind: "gateway"; code: string } | { kind: "error"; message: string } | { kind: "unknown" };
-function boundedRefusal(error: unknown): Refusal {
+export function boundedRefusal(error: unknown): Refusal {
   // Refusal serialization must never throw and roll back a committed reservation.
   // Inspect only bounded own data fields; getters/proxies are not evidence.
   try {
@@ -107,7 +110,7 @@ function boundedRefusal(error: unknown): Refusal {
   } catch { /* An opaque failure still leaves the original reservation committed. */ }
   return { kind: "unknown" };
 }
-function throwRefusal(refusal: Refusal): never {
+export function throwRefusal(refusal: Refusal): never {
   if (refusal.kind === "convex") throw new ConvexError(refusal.data);
   if (refusal.kind === "gateway") throw new GatewayDispatchError(refusal.code);
   if (refusal.kind === "error") throw new Error(refusal.message);
@@ -143,7 +146,7 @@ export const admit = internalMutation({ args: { ...attemptArgs, input: inputArgs
 const prepareRef = makeFunctionReference("runtimeAgentQueryEmbedding:prepare") as unknown as FunctionReference<"query", "internal", NativeArgs, Awaited<ReturnType<typeof prepareAgentQueryEmbeddingHandler>>>;
 const admitRef = makeFunctionReference("runtimeAgentQueryEmbedding:admit") as unknown as FunctionReference<"mutation", "internal", AdmitArgs, AdmissionResult>;
 /** V6 only. No no-op authorization callbacks, public recall changes, inference retries or memory writer. */
-export async function recallAgentMemory(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, repository: MemoryRepository, clock: DomainClock, input: Input) {
+export async function recallAgentMemory(ctx: ActionCtx, attempt: AgentQueryEmbeddingAttempt, repository: MemoryRepository, clock: DomainClock, input: Input, selection?: AgentRecallSelection) {
   const proposal = await ctx.runQuery(prepareRef, { ...attempt, input });
   const model = createGatewayMemoryModel(ctx, repository, { runBudgetId: proposal.binding.runBudgetId,
     queryEmbedding: { binding: proposal.binding, requestCanonical: canonicalModelJson(proposal.request), resolutions: proposal.resolutions,
@@ -158,6 +161,7 @@ export async function recallAgentMemory(ctx: ActionCtx, attempt: AgentQueryEmbed
       },
     } });
   const result = await model.embed(proposal.request);
+  if (selection) return await finishAgentRecall(ctx, attempt, clock, input, proposal.profile, result, selection);
   return await finishRecallFromEmbedding({ repository, clock }, { text: normalizeSourceText(input.text), limit: input.limit },
     { profile: proposal.profile, runBudgetId: proposal.binding.runBudgetId }, result);
 }

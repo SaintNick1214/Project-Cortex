@@ -14,7 +14,7 @@ import type { Doc } from "./_generated/dataModel";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { ConvexMemoryRepository, isMemoryResourceDenied } from "./runtimeMemoryRepository";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
-import { ingestionDenied, readEventCurrent, readScopeCutoff } from "./runtimeIngestion";
+import { ingestionDenied, readEventCurrent, readScopeCutoff, readScopeSequence } from "./runtimeIngestion";
 import { readGraphProgress, refreshGraphWatermarks } from "./runtimeGraph";
 
 type ReadCtx = Pick<QueryCtx, "db" | "runQuery">;
@@ -136,7 +136,7 @@ export async function readIndexedContextAvailability(ctx: ReadCtx, args: { refer
   boundedCutoff(args.cutoff);
   if (args.excludedSourceKeys.length > 1032) ingestionDenied("INVALID_INPUT");
   const repository = new ConvexMemoryRepository(ctx, args.reference, "read"), authority = await repository.authority();
-  const scope = await readScopeCutoff(ctx, args.reference); if (args.cutoff > scope.sequence) ingestionDenied("INVALID_INPUT");
+  const scope = await readScopeSequence(ctx, args.reference); if (args.cutoff > scope.sequence) ingestionDenied("INVALID_INPUT");
   const profile = await readCurrentEmbeddingProfile(ctx, args.reference, "embedding.query", args.runBudgetId);
   // Preserve existing profile readiness semantics even when no inference runs.
   await repository.assertProfileReady(profile, args.runBudgetId);
@@ -162,6 +162,13 @@ export async function readPendingContext(ctx: ReadCtx, args: { reference: Runtim
   const scope = await readScopeCutoff(ctx, args.reference); if (args.cutoff > scope.sequence) ingestionDenied("INVALID_INPUT");
   const profile = await readCurrentEmbeddingProfile(ctx, args.reference, "embedding.query", args.runBudgetId);
   const after = Math.min(scope.factsThrough, scope.vectorProfileThrough[profile.profileId] ?? (profile.profileId === DEFAULT_EMBEDDING_PROFILE.profileId ? scope.vectorsThrough : 0), args.cutoff);
+  return await scanPendingContext(ctx, args, authority, scope, profile, after);
+}
+/** Same original scanner; callers establish current authority/profile/cutoff. */
+async function scanPendingContext(ctx: ReadCtx, args: { reference: RuntimeAuthorityReference; cutoff: number; alreadyRepresented: string[];
+  maxBytes: number; boundary?: ContextBoundary }, authority: Awaited<ReturnType<ConvexMemoryRepository["authority"]>>,
+  scope: { tenantId: string; memorySpaceId: string }, profile: typeof DEFAULT_EMBEDDING_PROFILE, after: number) {
+  const repository = new ConvexMemoryRepository(ctx, args.reference, "read");
   const represented = new Set(args.alreadyRepresented);
   const sources: PendingContextSource[] = []; let cursor = after; let scanned = 0; let exhausted = false;
   // Bound all metadata reads, including completed events behind an older hole.
@@ -201,6 +208,28 @@ export async function readPendingContext(ctx: ReadCtx, args: { reference: Runtim
     text: "", sources: [], sourceKeys: [], withheldCount: sources.length };
   return await planPendingContext({ scope, cutoff: args.cutoff, sources, alreadyRepresented: args.alreadyRepresented,
     maxSources: 32, maxBytes: args.maxBytes });
+}
+/** Only a current <=1024-row route with no unrepresented candidate may opt in.
+ * Scan from zero: every original eligibility/boundary predicate still executes.
+ * The old progress reader remains the fallback when no prospective head exists. */
+export async function readEmptyPendingContext(ctx: ReadCtx, args: Parameters<typeof readPendingContext>[1]) {
+  boundedCutoff(args.cutoff);
+  if (args.alreadyRepresented.length > 1000 || !Number.isSafeInteger(args.maxBytes) || args.maxBytes < 1 || args.maxBytes > 16_384) ingestionDenied("INVALID_INPUT");
+  const repository = new ConvexMemoryRepository(ctx, args.reference, "read"), authority = await repository.authority();
+  const scope = await readScopeSequence(ctx, args.reference);
+  if (!scope.stable) return await readPendingContext(ctx, args);
+  if (args.cutoff > scope.sequence) ingestionDenied("INVALID_INPUT");
+  const profile = await readCurrentEmbeddingProfile(ctx, args.reference, "embedding.query", args.runBudgetId);
+  const represented = new Set(args.alreadyRepresented);
+  const selected = authority.resourceAccess === "own"
+    ? ctx.db.query("runtimeIngestionEvents").withIndex("by_owner_sequence", q => q.eq("tenantId", scope.tenantId).eq("memorySpaceId", scope.memorySpaceId)
+      .eq("ownerPrincipalId", authority.principalId).lte("sequence", args.cutoff))
+    : ctx.db.query("runtimeIngestionEvents").withIndex("by_scope_sequence", q => q.eq("tenantId", scope.tenantId).eq("memorySpaceId", scope.memorySpaceId).lte("sequence", args.cutoff));
+  const events = await selected.take(1025);
+  if (events.length > 1024 || events.some(event => event.eligibility === "eligible" && !represented.has(contextSourceKey(scope, event.lineage)))) {
+    return await readPendingContext(ctx, args);
+  }
+  return await scanPendingContext(ctx, args, authority, scope, profile, 0);
 }
 export const pendingContext = internalQuery({ args: { reference: runtimeAuthorityReference, cutoff: v.number(),
   alreadyRepresented: v.array(v.string()), maxBytes: v.number(), runBudgetId: v.optional(v.string()), boundary: v.optional(contextBoundary) }, handler: async (ctx, args) => await readPendingContext(ctx, args) });

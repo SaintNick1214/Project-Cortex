@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "verdict": "PASS",
+  "scope": "ONE independent nonauthor V7 coherent source/test/docs gate only",
+  "reviewer": "parallel_policy_source_review",
+  "authors": {
+    "wholePath": "cloud_checkpoint_composition",
+    "preflight": "latency_backend_repair",
+    "UI/catalog/docs": "root"
+  },
+  "observedAt": "2026-10-14T08:36:13.559922+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "websiteRepository": "SaintNick1214/cortexmemory.dev",
+  "baseline": "14812345458c80dbaa1fb2a5838ac476f28ec808",
+  "productEquivalentBaseline": "126231a0102936998837dd14a64a77d2b4d09785",
+  "policy": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+    "version": 2,
+    "requirementsMinimum": 4,
+    "testMinimum": 4,
+    "completenessMinimum": 4,
+    "codeMinimum": 3,
+    "patternsMinimum": 3,
+    "breakingFindingsAllowed": 0
+  },
+  "scores": {
+    "requirementFulfillment": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "codeQuality": 4,
+    "patternAdherence": 4,
+    "average": 4
+  },
+  "breakingFindings": [],
+  "findings": [
+    {
+      "id": "D1",
+      "severity": "nonbreaking",
+      "status": "RESOLVED",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/getting-started/backend-runtime.mdx",
+      "line": 88,
+      "description": "Stale Vercel/catalog version sentence conflicted with current frozen selections. Corrected within same ongoing gate; rebuilt and compiled HTML verified.",
+      "receipt": "docs-v7-version-fix-receipt-v2.json",
+      "finalSha256": "be575b0f0f50038c99c78085e2833b42f6fc07a8e3387353675b9aa48ae11ac7"
+    }
+  ],
+  "frozenApplicability": {
+    "packet": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v7-coherent-joint-review-packet.json",
+    "packetSha256": "7e191f55caab300a8cb23871c37778cd45c0ecd89b8034aacb57d9dc3ade50ff",
+    "initialPacketSha256": "239a6ce9fda95ec31f4c58667013f08f71853b66034422c407d1ea339521bbf4",
+    "initialFileHashMatches": 110,
+    "initialReceiptHashMatches": 10,
+    "finalFileHashMatches": 110,
+    "finalReceiptHashMatches": 11,
+    "mismatches": [],
+    "changesDuringReview": "One root-owned docs version sentence and additive correction receipt/packet only; original docs freeze retained. No core product/test changes.",
+    "runtimeAgentSha256": "cfb6accd23baf0d1a24a0606f68e65fe90d53a708c368b85bda2824b48abb81f",
+    "runtimeGatewaySha256": "b78ff53464a59ac98589f2083c07946ef679450fe4616900b6a557bd2135ebf8",
+    "independentOriginalDeclarationComparisons": 24,
+    "unchangedDependencies": [
+      "runtimeAuth",
+      "runtimeModelPolicy",
+      "runtimeContextWitness",
+      "runtimeGatewayBackend",
+      "SDK client",
+      "remote transport"
+    ]
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "requirement": "Current authority, canonical transcript/source provenance and vector-first errors",
+      "status": "PASS",
+      "source": "runtimeAgentRecall.ts:42\u2013104 repeats currentQuery/executionContext, profile readiness/hydration, exact fact payload/source binding, unscoped original contextSourceBatchHandler and post-read authority. Both Promise.allSettled branches are owned; held fact refusal follows the complete vector branch. Original save/final-delivery witnesses remain.",
+      "evidence": "whole-recall-composition: native mismatch, inter-query revocation, duplicate/unknown hydration, payload/binding tamper, tombstone/expiry; context-source composition56 and source-batch25 cases passed."
+    },
+    {
+      "id": "R2",
+      "requirement": "Prospective stable sequence head, bounded empty route and original pending/strict barriers",
+      "status": "PASS",
+      "source": "runtimeIngestion.ts:43\u201352,130\u2013137 creates a head only with a new scope and advances it atomically; divergence refuses. runtimeMemoryContext.ts:157\u2013232 retains the original scanner and progress fallback. Only a <=1024-row no-candidate route scans from zero with unchanged2048/32/byte bounds. Strict refresh/progress/cutoff/deadline body remains.",
+      "evidence": "sequence-head11 successor cases cover no backfill, atomic conflict rollback, watermark independence, original-output differential, populated fallback, revocation and metadata overflow; existing route52/latency42/empty39/strict7 passed."
+    },
+    {
+      "id": "R3",
+      "requirement": "Financial, final-delivery, context-save and child rollback boundaries",
+      "status": "PASS",
+      "source": "finishAgentRecall retains separate original finalDelivery and real Action-clock expiry before saveAndPrepareContext. Agent:512\u2013518 saves first, invokes a registered nested candidate mutation, catches bounded refusal; child writes roll back while successful context survives. Original query-embedding admit/checkpoint, capture/attachment, visibility/output and conservative replay/UNKNOWN handlers remain.",
+      "evidence": "whole-recall22 successor cases include save failure/no child, actual candidate child writes then rollback, hostile error getters, consumed expiry. Original query-embedding36 and admission193 passed. No retry/refund/new intent added."
+    },
+    {
+      "id": "R4",
+      "requirement": "Complete request preflight against installed Agent/AI7/Gateway with guarded fallback",
+      "status": "PASS",
+      "source": "Agent:821\u2013848 derives current completed history/operation and both original resolution proposals; invokes unchanged start in one native mutation. Fresh original context hook repeats hydration and preflight before pending storage. Gateway:431\u2013512 supports closed text/tool shapes; unknown media/reasoning/provider/approval/legacy shapes and unresolved tool ordering retain original validation. Original bound/caps/full history are unchanged.",
+      "evidence": "Installed AI SDK five supported-shape canonical differentials; over-cap and unsupported-ordering cases. Actual installed Agent start executes product hook before pending storage.17 native-handler +15 SDK/Gateway +2 installed Workflow cases passed, zero skips."
+    },
+    {
+      "id": "R5",
+      "requirement": "Historical journals and reachable fresh ordinary/tool V7, strict V5",
+      "status": "PASS",
+      "source": "Independent AST comparison confirms24 original Agent/Gateway declaration bodies exact against148123454, including V1\u2013V5, executeToolsV6, execution/admission/finalization/callbacks. New V7 tool journal preserves approval/tool/retry:false layout and consumes completed ordinal0 rather than replaying provider. Built roots register both old and new exports.",
+      "evidence": "Installed Workflow interpreter compares old/fresh approval prefix, ordinal1 Action identity and retry:false; persisted refusal replays failure without dispatch. Built159 files/73 tables/2 components and actual packed contracts passed."
+    },
+    {
+      "id": "R6",
+      "requirement": "Opt-in scalar private diagnostics",
+      "status": "PASS",
+      "source": "Gateway:318\u2013330 emits only fixed dimensions/limits/exceeded labels, ordinal and hashed semantic/run/model identity; default off/process-absent paths emit nothing. Original native validation and exception behavior remains; only known early bounded refusal is typed on new path.",
+      "evidence": "SDK/Gateway privacy cases exclude private body/credential/raw IDs and assert exact field allowlist/default-off; no cap attribution inferred for old K19."
+    },
+    {
+      "id": "R7",
+      "requirement": "Single live UI observer, guarded terminal/error handoff and full-page draining",
+      "status": "PASS",
+      "source": "RuntimeQuickstart.tsx:167\u2013214 uses transport observation during live delivery, creates retained guard only after terminal page length<100 or stream error, and releases through existing disconnect/signout/denial cleanup. SDK observeInSession, independent post-I/O session, principal/scope/generation/source deadlines and remote transport are byte-identical to baseline.",
+      "evidence": "UI14 focused/154 affected in8 suites passed: authority denials before/after handoff, approval/cancel, disconnect/reconnect/unmount,100-entry terminal page drain, error-retained text and later backend state. Hosted browser qualification still pending."
+    },
+    {
+      "id": "R8",
+      "requirement": "Additive catalog and immutable historical payloads",
+      "status": "PASS",
+      "source": "Independent catalog comparison:13 old descriptors exact; one new vercel-ai-quickstart1.4.2 descriptor; catalog1.3.2. No tracked historical payload diff. Frozen new payload RuntimeQuickstart bytes equal canonical source; package manifests/locks select correct versions.",
+      "evidence": "Catalog24/24 receipt and assembly passed;110 frozen file hashes include catalog/new payload and website bytes. No registry publication claimed."
+    },
+    {
+      "id": "R9",
+      "requirement": "Accurate source-only docs, versions and measured failure boundaries",
+      "status": "PASS",
+      "source": "Seven MDX pages distinguish upcoming versions, public/private recall, four OUTER calls plus ANN/retained native children, separate delivery/save, unchanged bounds and K19 latency/tool failures. Reviewer identified stale backend-runtime version sentence; root corrected it to Basic1.4.1/Vercel1.4.2/catalog1.3.2 in this same review.",
+      "evidence": "Docs original build0 and3 actual rendered pages/no horizontal overflow/100-log warning-error sample0. Corrected sentence SHAbe575b0f... has affected rebuild0 plus actual compiled HTML version assertions; no new browser claim. Old navigation/projection failures remain."
+    },
+    {
+      "id": "R10",
+      "requirement": "Meaningful quality, failure history and frozen applicability",
+      "status": "PASS",
+      "source": "Read actual failure/assertion/discovery JSON, existing-test diffs and final shared logs. Original1766/1769/53 and1190/1196/31 remain FAIL. Targeted66/66/3 successor closes each remaining broad failure. Original bounds/timeouts preserved; fixture sequence heads/schema/count expectations reflect actual new architecture.",
+      "evidence": "Root/backend/lint types, scoped ESLint0 errors/0 warnings, SDK build and actual packed root/runtime/graph ESM+CJS/declaration/browser/backend consumers all exit0. All final110 file and11 receipt hashes verified; no independent suite/service rerun."
+    }
+  ],
+  "originalTaskMapping": {
+    "05": "Canonical identity/cutoff/edit/share/queue/replay preserved; captureCutoff changes only authoritative sequence reader; no transcript rewrite.",
+    "06": "Additive table/index, private internal registrations and actual packed backend closure; historical app descriptors/payloads preserved; no host/service install claim.",
+    "07": "Fresh ordinary direct execution, V7 approval/tools and strict/historical Workflow retained; fresh context, no paid replay, output/finalization/UNKNOWN fences preserved. Native successful tool final answer remains unaccepted.",
+    "08": "Atomic prospective capture head, eligible pending tails, unchanged contiguous barriers/stage jobs/revocation/tombstones and asynchronous memory; no backfill.",
+    "09": "Single guarded live UI observer with terminal/error retained guard, typed status/approvals and SDK fences; browser-safe actual packed consumers. New hosted UI/recall qualification pending."
+  },
+  "testEvidence": {
+    "originalBroad": {
+      "path": "whole-turn-affected-v1.json",
+      "sha256": "da16caa3b8a54fbc0a958c2d78a735d360e5d88ba4e7ca205a0a54f6f2a75a20",
+      "verdict": "FAIL",
+      "passed": 1766,
+      "total": 1769,
+      "suites": 53,
+      "skipped": 0,
+      "todo": 0
+    },
+    "originalAuthorAffected": {
+      "path": "continuation-preflight-affected-v1.json",
+      "sha256": "d1d8e9c788942f5af18f7b94ece8d923fe6dd1a62ee02e4f096d1e5dbda332e5",
+      "verdict": "FAIL",
+      "passed": 1190,
+      "total": 1196,
+      "suites": 31,
+      "skipped": 0
+    },
+    "targetedSuccessor": {
+      "path": "whole-turn-targeted-successor-v1.json",
+      "sha256": "9f5450a8d223403e3db8d1643ed650adba9becc4aa564f8bea76bfc4357b0181",
+      "verdict": "PASS",
+      "passed": 66,
+      "total": 66,
+      "suites": 3,
+      "skipped": 0,
+      "todo": 0
+    },
+    "newPreflightCases": 34,
+    "UI": {
+      "path": "v7-ui-affected-v1.json",
+      "passed": 154,
+      "total": 154,
+      "suites": 8,
+      "skipped": 0
+    },
+    "catalogCases": 24,
+    "countsOverlap": true,
+    "noAdditiveAggregateClaim": true,
+    "independentTestReruns": 0,
+    "independentServiceCalls": 0
+  },
+  "failureApplicability": {
+    "twoSequenceHeadStateFailures": "Parsed original Expected/Received values independently: only empty fixture-created table entries added; no removed table/nonempty row change. Successor compares all nonempty stored rows plus unchanged write count and original overflow result.",
+    "authorityScopeRegistrationFailure": "Original baseline already schedules direct-v6 for ordinary definitions. Corrected assertion retains exact scoped/unscoped effect differential and checks one direct schedule, zero Workflow starts.",
+    "earlierSixFailures": "Four manual-seed head inconsistencies repaired by synchronizing both authoritative records, schema inventory extended with exact by_scope table index, profile RPC expectation3\u21922 because original helper now executes locally. Original semantic refusal/outcome assertions remain.",
+    "otherFailures": "Earlier fixture/type/lint/native-boundary/npm-path/navigation/projection failures retained; no relabeling."
+  },
+  "qualityReceipt": {
+    "path": "whole-turn-joint-quality-final-receipt.json",
+    "sha256": "f89d7c888c69864180a409c9dad993d40ff9ba3da448d636ddbc44a340129e11",
+    "allSixSelectedChecksExit": 0,
+    "logsHashVerified": true,
+    "backendFiles": 159,
+    "tables": 73,
+    "components": 2
+  },
+  "debt": [
+    "Retained native message/profile/model-preparation child calls, separate visibility/output and charge/attachment boundaries remain. Four is an outer RPC count; no milliseconds saving inferred.",
+    "Capture still reads/patches runtimeIngestionScopes, and populated pending routes retain progress reads; stable head does not eliminate all contention.",
+    "Controlled transactional DB/component peers and installed SDK/Workflow interpreter cases are source evidence, not a hosted Convex transaction/performance result."
+  ],
+  "nativeLimitations": [
+    "K19 latency0/4under1000ms",
+    "K19 supplemental tool effectSUCCEEDED but finalanswerFAIL boundedlimit; exactnumericfieldUNAVAILABLE",
+    "expiredsignedJWT timeoutFAIL",
+    "new whole-path/source UI not hostedqualified",
+    "generic public recall unmodified; one separate probe prepared notinvoked",
+    "GitHub unavailable, no remote delivery",
+    "final independent audit pending"
+  ],
+  "sourceAccepted": true,
+  "hostedQualified": false,
+  "toolFunctionalAccepted": false,
+  "nativeSLOAccepted": false,
+  "fullGoalAccepted": false,
+  "goalPercent": 50,
+  "permittedNextStep": "Packaging and fresh installed native qualification under root authorization; no package release, deployment, GitHub delivery or full-goal acceptance granted by this verdict."
+}

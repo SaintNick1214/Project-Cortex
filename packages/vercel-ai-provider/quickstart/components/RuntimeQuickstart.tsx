@@ -140,6 +140,7 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
   const [prompt, setPrompt] = useState("");
   const [handle, setHandle] = useState<RuntimeRunHandle | null>(null);
   const [run, setRun] = useState<RuntimeRun | null>(null);
+  const [retainedRunId, setRetainedRunId] = useState<string | null>(null);
   const [approvals, setApprovals] = useState<RuntimeToolApproval[]>([]);
   const [tools, setTools] = useState<Record<string, string>>({});
   const [runId, setRunId] = useState("");
@@ -164,9 +165,12 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
     },
   }), []);
   const transport = useMemo(() => new CortexRemoteTransport({ client: connection.client, agentId, agentVersion,
-    onRun: value => { latency.bind(value.runId); setHandle(value); setRunId(value.runId); setTools({}); setMediaRefs({}); },
+    onRun: value => { latency.bind(value.runId); setHandle(value); setRunId(value.runId); setRun(null); setRetainedRunId(null); setTools({}); setMediaRefs({}); },
     onObservation: (value: RuntimeObservation) => {
       setRun(value.run); setApprovals(value.approvals);
+      // The transport already protects live delivery. Hand its drained terminal
+      // response to a continuing guard for retained text and later memory status.
+      if (value.parts.length < 100 && ["complete", "failed", "cancelled"].includes(value.run.responseStatus)) setRetainedRunId(value.run.runId);
       setTools(old => {
         const next = { ...old };
         for (const entry of value.parts) if (entry.part.type === "tool") next[entry.part.toolCallId] = `${entry.part.name}: ${entry.part.phase}`;
@@ -183,6 +187,9 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
   }, onError: caught => {
     latency.failed();
     setError(errorCode(caught));
+    // A failed stream may leave previously delivered private text on screen.
+    // Keep that projection guarded even when no terminal page was delivered.
+    setRetainedRunId(transport.run?.runId ?? null);
     if (["FORBIDDEN", "UNAUTHENTICATED", "SESSION_CHANGED", "AUTHORITY_CHANGED", "AUTHORITY_EXPIRED", "AUTHENTICATION_TIMEOUT", "AUTH_TOKEN_FETCH_FAILED", "RPC_DEADLINE_EXCEEDED", "CLIENT_CLOSED"].includes(errorCode(caught))) onDenied(caught);
   } });
   const setMessages = chat.setMessages;
@@ -200,11 +207,11 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }:
     return () => { active = false; };
   }, [connection.client]);
   useEffect(() => {
-    if (!handle || disconnected) return;
+    if (!handle || disconnected || retainedRunId !== handle.runId) return;
     // Keep final delivery authorization reactive after response completion and while memory catches up.
     const stopDelivery = connection.client.watchObservation(handle, value => setRun(value.run), deny, { finalOnly: true });
     return () => { stopDelivery(); };
-  }, [connection.client, handle, disconnected, deny]);
+  }, [connection.client, handle, disconnected, retainedRunId, deny]);
   async function submit(event: FormEvent) {
     event.preventDefault(); if (!prompt.trim()) return;
     setError(null); setDisconnected(false); const text = prompt; setPrompt("");

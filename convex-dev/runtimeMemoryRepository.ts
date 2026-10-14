@@ -97,7 +97,8 @@ export class ConvexMemoryRepository {
   readonly scope: TrustedMemoryScope;
   constructor(private readonly ctx: Pick<QueryCtx, "db"> & Partial<Pick<QueryCtx, "runQuery">> & Partial<Pick<MutationCtx, "scheduler">>, private readonly reference: RuntimeAuthorityReference,
     private readonly capability: "read" | "write", private readonly writer?: MutationCtx["db"],
-    private readonly clock: DomainClock = { now: () => Date.now() }) {
+    private readonly clock: DomainClock = { now: () => Date.now() },
+    private readonly profileReader?: (key: "embedding.memory" | "embedding.query", runBudgetId?: string) => Promise<EmbeddingProfile>) {
     this.scope = memoryScope(reference);
   }
   async authority(resource?: RuntimeResource, capability = this.capability): Promise<RuntimeAuthority> {
@@ -142,6 +143,7 @@ export class ConvexMemoryRepository {
     return { source, created: true };
   }
   async selectedProfile(key: "embedding.memory" | "embedding.query", runBudgetId?: string): Promise<EmbeddingProfile> {
+    if (this.profileReader) return await this.profileReader(key, runBudgetId);
     if (!this.ctx.runQuery) memoryError("POLICY_NOT_CONFIGURED", "Native profile policy reader is required");
     return this.ctx.runQuery(memoryReferences.profile, { reference: this.reference, operationKey: key, ...(runBudgetId ? { runBudgetId } : {}) });
   }
@@ -433,6 +435,26 @@ function stripVector(row: Doc<"runtimeMemoryVectors">): DerivedVector {
 }
 
 /** Action reads/mutations cross ctx through internal registrations, never a ConvexClient. */
+/** Original recall binding capture; no authority decision or persistent cache. */
+export function captureRecallSource(target: MemoryDeliveryBindings, source: SourceContent, permission: "canViewFacts" | "canViewMemories") {
+    const next = { sourceId: source.lineage.sourceId, sourceEventId: source.lineage.sourceEventId,
+      sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, ownerPrincipalId: source.ownerPrincipalId, permission };
+    if (!target.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(next))) target.sources.push(next);
+}
+export async function captureRecallFact(target: MemoryDeliveryBindings, fact: DerivedFact, source: SourceContent | null) {
+  if (!source || !sameReference(source.lineage, fact.lineage) || canonicalMemoryValue(source.lineage) !== canonicalMemoryValue(fact.lineage)
+    || source.ownerPrincipalId !== fact.ownerPrincipalId) memoryError("STALE_SOURCE", "Recalled fact source changed during read");
+  captureRecallSource(target, source, "canViewFacts");
+  const next = { factId: fact.factId, payloadHash: await semanticHash(canonicalMemoryValue(fact)) };
+  if (!target.facts.some(value => value.factId === next.factId && value.payloadHash === next.payloadHash)) target.facts.push(next);
+}
+export async function captureRecallVectors(target: MemoryDeliveryBindings, matches: readonly VectorMatch[], profile: EmbeddingProfile, pin: { runBudgetId?: string }) {
+  for (const match of matches) {
+    captureRecallSource(target, match.source, "canViewMemories");
+    target.vectors.push({ vectorId: match.vector.vectorId, profile, ...pin,
+      payloadHash: await semanticHash(canonicalMemoryValue(match.vector)), chunkHash: await semanticHash(canonicalMemoryValue(match.chunk)) });
+  }
+}
 export function createActionMemoryRepository(
   ctx: Pick<ActionCtx, "runQuery" | "runMutation" | "vectorSearch">,
   reference: RuntimeAuthorityReference, capability: "read" | "write",
@@ -440,20 +462,11 @@ export function createActionMemoryRepository(
   const scope = memoryScope(reference);
   const args = { reference, capability };
   const bindings: MemoryDeliveryBindings = { sources: [], facts: [], vectors: [] };
-  const captureSource = (target: MemoryDeliveryBindings, source: SourceContent, permission: "canViewFacts" | "canViewMemories") => {
-    const next = { sourceId: source.lineage.sourceId, sourceEventId: source.lineage.sourceEventId,
-      sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, ownerPrincipalId: source.ownerPrincipalId, permission };
-    if (!target.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(next))) target.sources.push(next);
-  };
   const listFacts = async (query: FactQuery, target: MemoryDeliveryBindings) => {
     const facts = await ctx.runQuery(memoryReferences.listFacts, { ...args, capability: "read", query });
     for (const fact of facts) {
       const source = await ctx.runQuery(memoryReferences.getSource, { ...args, capability: "read", sourceId: fact.lineage.sourceId });
-      if (!source || !sameReference(source.lineage, fact.lineage) || canonicalMemoryValue(source.lineage) !== canonicalMemoryValue(fact.lineage)
-        || source.ownerPrincipalId !== fact.ownerPrincipalId) memoryError("STALE_SOURCE", "Recalled fact source changed during read");
-      captureSource(target, source, "canViewFacts");
-      const next = { factId: fact.factId, payloadHash: await semanticHash(canonicalMemoryValue(fact)) };
-      if (!target.facts.some(value => value.factId === next.factId && value.payloadHash === next.payloadHash)) target.facts.push(next);
+      await captureRecallFact(target, fact, source);
     }
     return facts;
   };
@@ -472,11 +485,7 @@ export function createActionMemoryRepository(
     });
     // A second internal query rechecks revocation and canonical source currentness after search.
     const matches = await ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, profile: query.profile, ...pin, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) });
-    for (const match of matches) {
-      captureSource(target, match.source, "canViewMemories");
-      target.vectors.push({ vectorId: match.vector.vectorId, profile: query.profile, ...pin,
-        payloadHash: await semanticHash(canonicalMemoryValue(match.vector)), chunkHash: await semanticHash(canonicalMemoryValue(match.chunk)) });
-    }
+    await captureRecallVectors(target, matches, query.profile, pin);
     return matches;
   };
   const repository: MemoryRepository & Required<Pick<MemoryRepository, "stageRecallReads">> = {

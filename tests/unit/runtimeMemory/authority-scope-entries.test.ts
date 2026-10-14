@@ -129,7 +129,10 @@ it("standalone checkpoint preserves no-paid-retry transition and all non-auth op
 });
 it("combined admission passes the scoped writer through original helpers and preserves exact non-auth effect ordering", async () => {
   const f = await setup(0); await differential(f, client.submitAndStart, { request: f.request(), streaming: false });
-  expect(f.db.table("runtimeRunAttempts")).toHaveLength(1); expect(f.db.table("runtimeAgentExecutions")).toHaveLength(1); expect(f.scheduled.filter(item => item.name === "test:workflow")).toHaveLength(1);
+  expect(f.db.table("runtimeRunAttempts")).toHaveLength(1); expect(f.db.table("runtimeAgentExecutions")).toHaveLength(1);
+  expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ executionMode: "direct-v6", directState: "scheduled" });
+  expect(f.scheduled.filter(item => item.name === "runtimeAgent:executeDirectV6")).toHaveLength(1);
+  expect(f.scheduled.filter(item => item.name === "test:workflow")).toHaveLength(0);
 });
 async function observationFixture() {
   const f = await setup(0), value = await f.call<{ run: ReturnType<typeof runs.publicRun> }>(client.submitAndStart, { request: f.request() });
