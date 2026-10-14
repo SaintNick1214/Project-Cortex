@@ -1,0 +1,55 @@
+{
+  "observedAt": "2026-10-14T02:08:27.133Z",
+  "scope": "NORMAL_REVIEWED_SOURCE_AND_ARTIFACT_PIN_INTEGRATION",
+  "digest": "c2ca51b68186678b669c7154d04a4cdc6adbf282942550e9fe919848b6d53b49",
+  "artifacts": {
+    "imageId": "sha256:fda79d598f57bade27dfdf442e3ef299084406420e3840b2a200b11a514d6218",
+    "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
+    "packages": [
+      "sdk",
+      "cli",
+      "provider",
+      "catalog"
+    ]
+  },
+  "image": {
+    "imageId": "sha256:fda79d598f57bade27dfdf442e3ef299084406420e3840b2a200b11a514d6218",
+    "tag": "cortex-sandbox-progress-source-batch:20261013",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "0984bb31-6ee3-49eb-a880-a5954c1738af",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "0984bb31-6ee3-49eb-a880-a5954c1738af",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-progress-source-batch-2026-10-13",
+      "dev.cortex.manual-sandbox.source": "6156ea97aa8776accee52879176cdcd12e802d89"
+    },
+    "size": 821460676,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false,
+    "id": "sha256:fda79d598f57bade27dfdf442e3ef299084406420e3840b2a200b11a514d6218",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-progress-source-batch-2026-10-13",
+    "identity": {
+      "version": 1,
+      "id": "0984bb31-6ee3-49eb-a880-a5954c1738af",
+      "ownerUid": 501,
+      "ownerGid": 20
+    }
+  },
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "priorApprovalSha256": "8127ca358d900b22411aec1c1f57260a12d1c0ebcec2c30e9f278fc2c6522265",
+  "oldImageExactCleanupRetained": "sha256:b6348f112d76399d79c1b2bdd10ec1499cb9b70291e297192496a27199b1748b",
+  "sourceSubstitution": "Reviewed ingestion semantic progress publication and ordered source-witness query batching; historical V1-V5, original guards, strict barriers, approvals, fresh billable admission, deadlines, accounting and no-retry controls retained",
+  "serviceCalls": 0,
+  "paidCalls": 0
+}

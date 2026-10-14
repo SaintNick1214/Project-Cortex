@@ -1,0 +1,54 @@
+{
+  "status": "PREPARED_UNREADY_NO_SERVICE_GO",
+  "collectorPreparationMilestonePercent": 100,
+  "ready": false,
+  "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
+  "files": [
+    {
+      "original": "capture-k16-cli-timing.mjs",
+      "originalSha256": "7a47a50180330bdd76404e954cdc89c0852a7c5c7eb21cbbcc6b606d7cd13f2b",
+      "new": "capture-k17-cli-timing.mjs",
+      "newSha256": "4e2e0103c4214eada6a6979c6f11cdc254ce3a2ac5d67f722998ea3dd4dc0e76"
+    },
+    {
+      "original": "capture-k16-financial-metadata.mjs",
+      "originalSha256": "b0231357b76513355047570a6b15b0924468daf0be4c320abceb08cfeb9d7a5c",
+      "new": "capture-k17-financial-metadata.mjs",
+      "newSha256": "96ad1a17e5bb04c87a75023540270a1d94cfb8afc8e3da3e2ba52f79a66e70af"
+    },
+    {
+      "original": "capture-k16-run-chain.mjs",
+      "originalSha256": "1f1e99b21083bb4daaef734e6ae10d6afec860e2ccfefe55394d5b17844f48c2",
+      "new": "capture-k17-run-chain.mjs",
+      "newSha256": "f75b72add6b9415ee6fbb7169be7b63dfe636d11d9e293db7512737fee1d9673"
+    },
+    {
+      "original": "service-log-snapshot-k16.mjs",
+      "originalSha256": "7c492365f24473d854acb4597c58b82257be5e86dad9e6193f2df7e7ff253780",
+      "new": "service-log-snapshot-k17.mjs",
+      "newSha256": "677aa8a84ad1ef5ef8b1a0cc257f27b2591ff488276d8ab5c8d4476817ab9ac5"
+    },
+    {
+      "original": "verify-k16-cleanup.mjs",
+      "originalSha256": "b949209f1a08a534b5af36a33f6e7dabb22c4dc2d79389cdf6f6e3768d386b92",
+      "new": "verify-k17-cleanup.mjs",
+      "newSha256": "6bb3f32800358618d70ee57ad0271a763e1fbe2f56c5c6aeaa8b7d39927ff1c2"
+    },
+    {
+      "original": "verify-k16-four-run-memory-readonly.mjs",
+      "originalSha256": "cba4ce47b15b5d2b33b2084d0386f5db973184f439a5f044c1feb540e9847313",
+      "new": "verify-k17-four-run-memory-readonly.mjs",
+      "newSha256": "558f9dd781c0e60a260f2629a43309e78226def562b2af6568165a5e5df57f09"
+    },
+    {
+      "original": "k16-collector-pins.mjs",
+      "originalSha256": "f09dc83892e9d1eb1047295a31c5502c026b5b9620d0763fff45560419f476c1",
+      "new": "k17-collector-pins.mjs",
+      "newSha256": "4c3866dc0942513b471ffef85ec67ddb65286bf15f9ad8bf0cac7b929e0edf15"
+    }
+  ],
+  "copiedArchiveEvidenceOrDependencyTrees": 0,
+  "servicesCalled": 0,
+  "credentialsRead": 0,
+  "assertionsAndCaps": "Original 1000 executions, 16MiB native log response, 256 rows per table, 30s waits and all-four/fresh-exact-target/finance/cleanup guards preserved; only generation names/pins/markers and native name recognition changed"
+}

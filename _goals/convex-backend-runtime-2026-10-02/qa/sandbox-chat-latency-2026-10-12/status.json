@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "Combined ingestion/context source/test/docs review PASS4.0;committing for K17 packaging",
+  "phase": "K17 nativefunctionalproof/cleanupPASS;0/4latencyFAIL;nextmeasuredreadbatchinprogress",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T01:57:35.962283+00:00",
+  "updatedAt": "2026-10-14T02:39:31.290Z",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -58,20 +58,20 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "sessionId": "c530728c-fdc2-4876-8690-13317e55ef8d",
-    "generation": "K16",
+    "sessionId": "2b6876d8-e68b-4cb1-9a9e-6eee05c07245",
+    "generation": "K17",
     "state": "ABSENT",
-    "database": "charming-rabbit-938",
-    "deploymentId": 6153416,
-    "expiresAt": 1792544402587,
-    "webPort": 3124,
+    "database": "impartial-dodo-83",
+    "deploymentId": 6154753,
+    "expiresAt": 1792548541228,
+    "webPort": 3148,
     "nativeSLOQualified": false,
     "backendTraceEnabled": true,
     "startupQualificationMethodsPassed": 8,
     "browserSignedOutAndClosedBeforeCLI": true,
     "cliProcessExit": 0,
     "launcherProcessExit": 130,
-    "cleanupReceipt": "k16-cleanup-final.json"
+    "cleanupReceipt": "k17-cleanup-final.json"
   },
   "actualSamples": {
     "generation": "K11",
@@ -109,9 +109,10 @@
     ]
   },
   "pendingRepairs": [
-    "Measured single-native-transaction duplicate-read investigation without guard changes",
-    "ExpiredJWT officialcallback timeout source investigation without raiseddeadline",
-    "Cloud under1000ms and final independent audit remain incomplete"
+    "Measured fresh endpoint raw-read reuse, preserving original current fences",
+    "Initial admission child-operation attribution from saved K17 metadata",
+    "ExpiredJWT timeout failure remains unresolved",
+    "Cloud under1000ms and final independent audit incomplete"
   ],
   "refinements": [
     {
@@ -478,8 +479,8 @@
         "pass": 8,
         "fail": 2,
         "failures": [
-          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
-          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
+          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
+          "invalidsignature→AUTHENTICATION_TIMEOUT"
         ],
         "noAccessDelivered": true,
         "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
@@ -513,8 +514,8 @@
       "priorAuthenticationExpectedCodeFailures": {
         "generation": "K9",
         "failures": [
-          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
-          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
+          "expired valid signature → AUTHENTICATION_TIMEOUT",
+          "invalid signature → AUTHENTICATION_TIMEOUT"
         ],
         "notRerun": true
       },
@@ -536,7 +537,7 @@
       },
       "toolInclusiveSupplement": {
         "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
-        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
         "originalGenericFailPreserved": true
       }
     }
@@ -877,5 +878,28 @@
     "docsSourceBuildRenderPercent": 100,
     "review": "ingestion-context-source-joint-review.md",
     "verdict": "SOURCE ONLY PASS4.0 no breaking findings"
+  },
+  "k17ObservedSamples": {
+    "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
+    "browserFirstAfterPaintMs": 6796.200000047684,
+    "browserWarmAfterPaintMs": 6149,
+    "cliFirstStdoutAcknowledgedMs": 10531.912421,
+    "cliWarmFirstStdoutAcknowledgedMs": 14391.614923000001,
+    "originalDeadlineMs": 30000,
+    "allFourReplies": "COMPLETE",
+    "subsecondPasses": 0,
+    "subsecondFailures": 4,
+    "actualReadiness": "facts/vectors8/8",
+    "strictNativeProof": "PASS all8events/currentauthority/nativeusage/provenance;43freshchecks",
+    "cleanup": "FreshABSENT",
+    "paidRetry": false,
+    "receipts": {
+      "memory": "k17-memory-native-v2-four-run-verification-1791944879240.json",
+      "finance": "k17-financial-metadata-1791944881326.json",
+      "cleanup": "k17-cleanup-final.json",
+      "cli": "k17-cli-pure-timing.json",
+      "browser": "browser/k17-timing-console.json",
+      "docs": "docs-k17-performance-render-receipt.json"
+    }
   }
 }

@@ -1,0 +1,75 @@
+{
+  "status": "LOCAL_IMMUTABLE_PACKAGING_COMPLETE",
+  "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-progress-source-batch-2026-10-13",
+  "kitIdentity": {
+    "version": 1,
+    "id": "0984bb31-6ee3-49eb-a880-a5954c1738af",
+    "ownerUid": 501,
+    "ownerGid": 20
+  },
+  "imageId": "sha256:fda79d598f57bade27dfdf442e3ef299084406420e3840b2a200b11a514d6218",
+  "imageTag": "cortex-sandbox-progress-source-batch:20261013",
+  "archiveManifestSha256": "4d157dcb5ede22f036248a749af3c2d622f35b0fc10daea3943281ac3823d162",
+  "backendManifestSha256": "dc22cb4d58c8871137b37cb2705fcc14a8d04378e6a330bf0c2a6f8267869e32",
+  "candidateDigest": "66627584f672be4667b8c8e8dc160a9552a8b92f7c6effe54d6c8e31ebcbccec",
+  "packages": [
+    {
+      "role": "sdk",
+      "name": "@cortexmemory/sdk",
+      "version": "0.39.0",
+      "filename": "cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "e3fc94fb39e47c9cf4840a8c57e4e1ceae4d8f5b66779f1cfbfccd34f29ad57f",
+      "bytes": 1599652,
+      "files": 317
+    },
+    {
+      "role": "cli",
+      "name": "@cortexmemory/cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "bytes": 538578,
+      "files": 451
+    },
+    {
+      "role": "provider",
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+      "bytes": 77673,
+      "files": 18
+    },
+    {
+      "role": "catalog",
+      "name": "@cortexmemory/templates",
+      "version": "1.3.1",
+      "filename": "cortexmemory-templates-1.3.1.tgz",
+      "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970",
+      "bytes": 1708644,
+      "files": 1727
+    }
+  ],
+  "backend": {
+    "files": 157,
+    "tables": 72,
+    "components": 2
+  },
+  "threeIsolatedBuilds": 1,
+  "fourPacks": 1,
+  "imageBuilds": 1,
+  "allPackedChecksExitZero": true,
+  "contractFailures": 0,
+  "scratchDirectoriesRemaining": [],
+  "currentSourceAndStagingHashesMatch": true,
+  "changedSourceFiles": [
+    "convex-dev/runtimeAgent.ts",
+    "convex-dev/runtimeIngestion.ts"
+  ],
+  "servicesStarted": 0,
+  "runtimeContainersStarted": 0,
+  "paidCalls": 0,
+  "liveQualification": false,
+  "sourceOrLauncherOrGitWrites": false
+}

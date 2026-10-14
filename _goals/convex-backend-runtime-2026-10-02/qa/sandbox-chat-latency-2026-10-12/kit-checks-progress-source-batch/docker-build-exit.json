@@ -1,0 +1,27 @@
+{
+  "command": [
+    "docker",
+    "build",
+    "--platform",
+    "linux/arm64",
+    "--tag",
+    "cortex-sandbox-progress-source-batch:20261013",
+    "--build-arg",
+    "SANDBOX_UID=501",
+    "--build-arg",
+    "SANDBOX_GID=20",
+    "--label",
+    "dev.cortex.manual-sandbox=0984bb31-6ee3-49eb-a880-a5954c1738af",
+    "--label",
+    "dev.cortex.manual-sandbox.path=/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-progress-source-batch-2026-10-13",
+    "--label",
+    "dev.cortex.manual-sandbox.source=6156ea97aa8776accee52879176cdcd12e802d89",
+    "--iidfile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-progress-source-batch/docker-image-id.txt",
+    "--progress",
+    "plain",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-progress-source-batch-2026-10-13/image"
+  ],
+  "exitCode": 0,
+  "runtimeContainersStarted": 0
+}
