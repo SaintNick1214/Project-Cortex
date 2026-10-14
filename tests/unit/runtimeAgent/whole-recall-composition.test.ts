@@ -7,6 +7,7 @@ import type { EmbeddingProfile } from "../../../src/domain/profile";
 import { DEFAULT_EMBEDDING_PROFILE as profile, semanticHash } from "../../../src/domain/profile";
 import { prepareSourceContent, processingIdentityKey } from "../../../src/domain/sources";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
+import type { ContextSourceWitness } from "../../../src/domain/context-witness";
 import type { DerivedFact } from "../../../src/domain/contracts";
 import { mergeContextWitness } from "../../../src/domain/context-witness";
 import { assertNativeArgs } from "./native-arguments";
@@ -19,6 +20,7 @@ const { runs, clock, definitions, clone } = await import("../runtimeTranscript/f
 const agent = await import("../../../convex-dev/runtimeAgent");
 const whole = await import("../../../convex-dev/runtimeAgentRecall");
 const queryEmbedding = await import("../../../convex-dev/runtimeAgentQueryEmbedding");
+const { createV8AuthorityReadScope } = await import("../../../convex-dev/runtimeAuth");
 const memory = await import("../../../convex-dev/runtimeMemory");
 const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = await import("../../../convex-dev/runtimeMemoryRepository");
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
@@ -438,4 +440,139 @@ it("same-snapshot parents reuse raw control rows only; mutable read order and al
  expect(mutableQueries(parentInitialQueries)).toEqual(mutableQueries(originalInitialQueries));expect(mutableQueries(parentTailQueries)).toEqual(mutableQueries(originalTailQueries));
  expect(parentInitial.length).toBeLessThan(originalInitial.length);expect(parentTail.length).toBeLessThan(originalTail.length);expect(wholeState(f)).toEqual(before);
  console.info(JSON.stringify({type:"k25-private-read-parent-counts",kind:"controlled-original-handlers",initial:{oldGets:originalInitial.length,newGets:parentInitial.length,oldQueries:originalInitialQueries.length,newQueries:parentInitialQueries.length},tail:{oldGets:originalTail.length,newGets:parentTail.length,oldQueries:originalTailQueries.length,newQueries:parentTailQueries.length},mutableReadSequencesEqual:true,applicationWrites:0,cloudLatency:"UNAVAILABLE"}));
+});
+
+
+/** Real source validators traverse a diamond or disjoint ancestry on every call.
+ * Only physical named raw reads may collapse; no traversal verdict is retained. */
+async function ancestryFixture(shared: boolean) {
+  const f = await fixture(true);
+  const witness = (source: Awaited<ReturnType<typeof f.source>>): ContextSourceWitness => ({
+    sourceId: source.lineage.sourceId, sourceEventId: source.lineage.sourceEventId,
+    sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash,
+    permissions: ["canViewMemories", "canViewFacts"],
+  });
+  const leaves = [];
+  for (let index = 0; index < (shared ? 1 : 3); index++) {
+    leaves.push(await f.source(`Bounded graph leaf ${index}`, `graph-leaf-${index}`));
+  }
+  const roots: ContextSourceWitness[] = [];
+  for (let index = 0; index < 3; index++) {
+    const branch = await f.source(`Bounded graph branch ${index}`, `graph-branch-${index}`);
+    const row = f.db.table("runtimeMemorySources").find(value => value._id && (value.lineage as { sourceId: string }).sourceId === branch.lineage.sourceId)!;
+    row.contextSourceWitnesses = [witness(leaves[shared ? 0 : index]!)]; roots.push(witness(branch));
+  }
+  const sourceId = f.db.table("runtimeMemoryVectors")[0]!.sourceId;
+  const top = f.db.table("runtimeMemorySources").find(value => (value.lineage as { sourceId: string }).sourceId === sourceId)!;
+  top.contextSourceWitnesses = roots;
+  const topLineage = top.lineage as ContextSourceWitness;
+  const topWitness: ContextSourceWitness = { sourceId: topLineage.sourceId, sourceEventId: topLineage.sourceEventId, sourceRevision: topLineage.sourceRevision,
+    contentHash: top.contentHash as string, permissions: ["canViewMemories", "canViewFacts"] };
+  f.db.table("runtimeAgentExecutions")[0]!.sourceWitnesses = [topWitness];
+  return { ...f, get grant() { return f.grant; }, top, roots, leaves, topWitness };
+}
+type GraphRead = { method: string; table: string; id?: string; index?: string; keys?: unknown[]; terminal?: string; family: boolean; phase: string; documents: number };
+function instrumentGraphReads(f: Fixture) {
+  const query = f.db.query.bind(f.db), get = f.db.get.bind(f.db), reads: GraphRead[] = [];
+  let phase = "read";
+  const namedFamily = () => /readManaged(?:SourceRows|ConversationRows|TranscriptBridgeRows|SourceRunRows)/.test(new Error().stack ?? "");
+  jest.spyOn(f.db, "get").mockImplementation(async (table, id) => {
+    const row = await get(table, id); reads.push({ method: "get", table, id, family: false, phase, documents: row ? 1 : 0 }); return row;
+  });
+  jest.spyOn(f.db, "query").mockImplementation(table => {
+    const record: GraphRead = { method: "query", table, family: namedFamily(), phase, keys: [], documents: 0 };
+    reads.push(record); const builder = query(table), withIndex = builder.withIndex.bind(builder), take = builder.take.bind(builder), unique = builder.unique.bind(builder);
+    builder.withIndex = (index, callback) => { record.index = index; return withIndex(index, q => {
+      if (!q || typeof q !== "object") throw Error("Expected native query builder");
+      const traced: object = new Proxy(q, { get(target, key) {
+        const fn: unknown = Reflect.get(target, key, target); if (typeof fn !== "function") return fn;
+        return (...args: unknown[]) => { record.keys!.push([String(key), ...args]); const value: unknown = Reflect.apply(fn, target, args); return value === target ? traced : value; };
+      } }); return callback(traced);
+    }); };
+    builder.take = async n => { record.terminal = `take:${n}`; const rows = await take(n); record.documents = rows.length; return rows; };
+    builder.unique = async () => { record.terminal = "unique"; const row = await unique(); record.documents = row ? 1 : 0; return row; };
+    return builder;
+  });
+  const check = ConvexMemoryRepository.prototype.checkDelivery;
+  jest.spyOn(ConvexMemoryRepository.prototype, "checkDelivery").mockImplementation(async function (this: InstanceType<typeof ConvexMemoryRepository>, ...args) {
+    phase = "final"; return await check.apply(this, args);
+  });
+  return { reads, clear: () => { reads.length = 0; phase = "read"; } };
+}
+const graphReadIdentity = ({ method, table, id, index, keys, terminal, phase }: GraphRead) => ({ method, table, id, index, keys, terminal, phase });
+const originalMutableReads = (reads: GraphRead[]) => reads.filter(row => !row.family && !row.table.startsWith("runtimeAuth")
+  && !["runtimeModelPolicies", "runtimeModelQualifications"].includes(row.table)).map(graphReadIdentity);
+it.each([true, false])("V8 real shared=%s ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads", async shared => {
+  const f = await ancestryFixture(shared), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan }, before = wholeState(f);
+  const observed = instrumentGraphReads(f), originalScope = createV8AuthorityReadScope(f.ctx);
+  const read = await whole.readMatchesHandler(f.ctx, args, 8, originalScope);
+  const delivery = await whole.finalDeliveryV8Handler(f.ctx, { reference: f.reference, bindings: read.bindings }, originalScope);
+  const original = clone(observed.reads); observed.clear();
+  expect(await f.call(whole.readMatchesAndDeliveryV8, args)).toEqual({ read, delivery });
+  const optimized = clone(observed.reads), originalGraph = original.filter(row => row.family), optimizedGraph = optimized.filter(row => row.family);
+  expect(originalGraph.length).toBeGreaterThan(20); expect(optimizedGraph.length).toBeLessThan(originalGraph.length / 2);
+  expect(originalMutableReads(optimized)).toEqual(originalMutableReads(original));
+  for (const phase of ["read", "final"]) {
+    const first = new Map(originalGraph.filter(row => row.phase === phase).map(row => [JSON.stringify(graphReadIdentity(row)), graphReadIdentity(row)]));
+    expect(optimizedGraph.filter(row => row.phase === phase).map(graphReadIdentity)).toEqual([...first.values()]);
+  }
+  expect(optimized.filter(row => row.phase === "final" && row.table === "runtimeAuthGrants").length).toBeGreaterThan(0);
+  expect(wholeState(f)).toEqual(before);
+  console.info(JSON.stringify({ type: "k26-controlled-source-parent-reads", shared, original: { queries: original.length,
+    graphQueries: originalGraph.length, graphDocuments: originalGraph.reduce((n, row) => n + row.documents, 0) }, optimized: {
+    queries: optimized.length, graphQueries: optimizedGraph.length, graphDocuments: optimizedGraph.reduce((n, row) => n + row.documents, 0) },
+    mutableReadSequenceEqual: true, applicationWrites: 0, nativeLatency: "UNAVAILABLE" }));
+});
+it.each(["ancestor-hash", "ancestor-tombstone", "ancestor-duplicate", "revoked", "expiry"])("new graph parent preserves original %s refusal and complete state", async fault => {
+  const f = await ancestryFixture(true), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan };
+  const leaf = f.db.table("runtimeMemorySources").find(row => (row.lineage as { sourceId: string }).sourceId === f.leaves[0]!.lineage.sourceId)!;
+  if (fault === "ancestor-hash") leaf.contentHash = "a".repeat(64);
+  if (fault === "ancestor-tombstone") leaf.tombstonedAt = clock;
+  if (fault === "ancestor-duplicate") f.db.seed("runtimeMemorySources", { ...leaf, _id: "duplicate-graph-leaf" });
+  if (fault === "revoked") f.grant.revokedAt = clock;
+  if (fault === "expiry") f.grant.expiresAt = clock;
+  const before = wholeState(f), originalScope = createV8AuthorityReadScope(f.ctx);
+  const original = () => whole.readMatchesHandler(f.ctx, args, 8, originalScope);
+  expect(await failureValue(() => f.call(whole.readMatchesAndDeliveryV8, args))).toEqual(await failureValue(original)); expect(wholeState(f)).toEqual(before);
+});
+it.each(["edit", "revoke"])("final resource boundary freshly sees a late %s after graph retention and cannot commit context", async fault => {
+  const f = await ancestryFixture(true), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan };
+  const leaf = f.db.table("runtimeMemorySources").find(row => (row.lineage as { sourceId: string }).sourceId === f.leaves[0]!.lineage.sourceId)!;
+  const read = whole.readMatchesHandler;
+  // A controlled late read boundary, not a native concurrent transaction claim.
+  const delivery = ConvexMemoryRepository.prototype.checkDelivery;
+  jest.spyOn(ConvexMemoryRepository.prototype, "checkDelivery").mockImplementation(async function (this: InstanceType<typeof ConvexMemoryRepository>, ...values) {
+    if (fault === "edit") leaf.contentHash = "a".repeat(64); else f.grant.revokedAt = clock;
+    return await delivery.apply(this, values);
+  });
+  const saved = clone(f.db.table("runtimeAgentExecutions")[0]), writes = f.db.writes;
+  const combined = await f.call<Awaited<ReturnType<typeof whole.readMatchesAndDeliveryV8Handler>>>(whole.readMatchesAndDeliveryV8, args);
+  expect(combined.refusal).toBeDefined(); expect(f.db.writes).toBe(writes); expect(f.db.table("runtimeAgentExecutions")[0]).toEqual(saved);
+  const scope = createV8AuthorityReadScope(f.ctx); await expect(read(f.ctx, args, 8, scope)).rejects.toThrow("FORBIDDEN");
+});
+
+it.each([true, false])("save/candidate shared=%s ancestry reduces reads inside each fresh child while keeping exact writes and state", async shared => {
+  const f = await ancestryFixture(shared), save = { ...f.attempt, context: "", entries: [], witnesses: [f.topWitness], completeness: "complete" as const };
+  const before = { ...wholeState(f), sequence: f.db.sequence }, observed = instrumentGraphReads(f), nativeMutation = f.ctx.runMutation;
+  const restore = () => { f.db.rows = clone(before.rows); f.db.writes = before.writes; f.db.sequence = before.sequence;
+    Object.assign(f.native, clone(before.native)); Object.assign(f.effects, before.effects); f.scheduled.splice(0, f.scheduled.length, ...clone(before.scheduled)); };
+  // K25's exact child helper/body under its original graph-disabled V8 scope.
+  f.ctx.runMutation = (async (reference, args) => {
+    if (getFunctionName(reference) === "runtimeAgent:prepareResolvedModelCandidateV8") {
+      return f.transaction(() => agent.prepareResolvedModelCandidateV8Handler(createV8AuthorityReadScope(f.ctx), args as Parameters<typeof agent.prepareResolvedModelCandidateV8Handler>[1]));
+    }
+    return nativeMutation.call(f.ctx, reference, args);
+  }) as MutationCtx["runMutation"];
+  const original = await f.transaction(() => agent.saveAndPrepareContextV8Handler(createV8AuthorityReadScope(f.ctx), save));
+  const originalAfter = wholeState(f), originalReads = clone(observed.reads); restore(); observed.clear(); f.ctx.runMutation = nativeMutation;
+  const actual = await f.call(agent.saveAndPrepareContextV8, save), actualReads = clone(observed.reads);
+  expect(actual).toEqual(original); expect(wholeState(f)).toEqual(originalAfter);
+  expect(originalMutableReads(actualReads)).toEqual(originalMutableReads(originalReads));
+  const originalGraph = originalReads.filter(row => row.family), actualGraph = actualReads.filter(row => row.family);
+  expect(actualGraph.length).toBeLessThan(originalGraph.length / 2);
+  expect(actual).toMatchObject({ kind: "prepared", prepared: { state: "started" } });
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+  console.info(JSON.stringify({ type: "k26-controlled-save-candidate-reads", shared, original: {
+    total: originalReads.length, graphQueries: originalGraph.length }, optimized: { total: actualReads.length, graphQueries: actualGraph.length },
+    exactStateAndMutableReadSequenceEqual: true, independentChild: true, billableAttempts: 0, nativeLatency: "UNAVAILABLE" }));
 });

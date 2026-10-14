@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "status": "PREPARED_ONLY_NOT_INVOKED",
+  "node": "v24.15.0",
+  "rows": [
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-four-run-memory-readonly.mjs",
+      "originalSha256": "464b9725bd2e6718fe0930fa20deb82f1008c303e6716bae5b36070fe165a5d0",
+      "successor": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-four-run-memory-readonly.mjs",
+      "sha256": "4cb8033c435671bf1b2ee70c6e61d66608988f839270b1edc2cf341335ee8e4f",
+      "syntaxExitCode": 0,
+      "changes": [
+        "K25/k25 phase/control names to K26/k26",
+        "Fresh managed-source kit path where used",
+        "B-owned collector imports use K26_PINS/requireK26ReadyPins contract"
+      ],
+      "allOtherBytesMechanical": true
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-native-ordinary-memory.mjs",
+      "originalSha256": "a6d3fe8fd83c3159257254dd15df0e11cc171599caef5fbd8a6a029cda9776fc",
+      "successor": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-native-ordinary-memory.mjs",
+      "sha256": "9bb786166d8469d483c106c2673192081163f92cd4b7e49ef7dc7a45dacee9ab",
+      "syntaxExitCode": 0,
+      "changes": [
+        "K25/k25 phase/control names to K26/k26",
+        "Fresh managed-source kit path where used",
+        "B-owned collector imports use K26_PINS/requireK26ReadyPins contract"
+      ],
+      "allOtherBytesMechanical": true
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-ordinary-memory-pins.mjs",
+      "originalSha256": "544eda072b84c5968dfca1ac98ebf78f2a5a804fec03bc5b660b7f8dcfbf5497",
+      "successor": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-ordinary-memory-pins.mjs",
+      "sha256": "537c6b0dae49639e1212c5fd72470c98601c04a0b947bf199448a8bdaf07b4f9",
+      "syntaxExitCode": 0,
+      "changes": [
+        "K25/k25 phase/control names to K26/k26",
+        "Fresh managed-source kit path where used",
+        "B-owned collector imports use K26_PINS/requireK26ReadyPins contract"
+      ],
+      "allOtherBytesMechanical": true
+    }
+  ],
+  "pinsOwner": "B k26-collector-pins.mjs; exactREADY/source/image/target/orderedIDs remain pending",
+  "originalAssertionsRetained": true,
+  "originalDeadlines": {
+    "readinessMs": 30000,
+    "rpcMs": 12000,
+    "authenticationMs": 4000,
+    "systemQueryMs": 30000,
+    "maxRows": 256
+  },
+  "plannedCalls": {
+    "fourProofReadOnly": 1,
+    "ordinaryCaptureIntents": 2,
+    "ordinaryPublicRecall": 1,
+    "paidRetries": 0
+  },
+  "sourceEdits": 0,
+  "serviceCalls": 0,
+  "builds": 0,
+  "packs": 0,
+  "imageBuilds": 0,
+  "diagnosticPrepared": false
+}

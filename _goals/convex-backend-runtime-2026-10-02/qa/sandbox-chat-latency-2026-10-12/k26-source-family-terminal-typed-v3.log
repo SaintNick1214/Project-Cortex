@@ -1,0 +1,113 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:31863) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":true,"original":{"total":73,"authority":24,"graph":18},"optimized":{"total":59,"authority":24,"graph":4},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:268:13
+
+  console.info
+    {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":true,"original":{"total":69,"authority":24,"graph":18},"optimized":{"total":55,"authority":24,"graph":4},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:268:13
+
+  console.info
+    {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":false,"original":{"total":77,"authority":28,"graph":18},"optimized":{"total":65,"authority":28,"graph":6},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:268:13
+
+  console.info
+    {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":false,"original":{"total":73,"authority":28,"graph":18},"optimized":{"total":61,"authority":28,"graph":6},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:268:13
+
+PASS tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ✓ both independent V8 terminal mutations retain only raw shared=true graph rows with exact accounting/read order (183 ms)
+  ✓ both independent V8 terminal mutations retain only raw shared=false graph rows with exact accounting/read order (140 ms)
+  ○ skipped new terminal ports are internal, exact-shape and retain two separately committed mutations
+  ○ skipped real capture handler keeps exact effects/mutable read order and reduces raw authority reads
+  ○ skipped real attach handler keeps exact effects/mutable read order and reduces raw authority reads
+  ○ skipped fresh revoked before capture cannot suppress incurred charge and closes private attachment identically
+  ○ skipped fresh expired before capture cannot suppress incurred charge and closes private attachment identically
+  ○ skipped fresh principal-version before capture cannot suppress incurred charge and closes private attachment identically
+  ○ skipped fresh scope-epoch before capture cannot suppress incurred charge and closes private attachment identically
+  ○ skipped fresh tombstone before capture cannot suppress incurred charge and closes private attachment identically
+  ○ skipped fresh cancelled before capture cannot suppress incurred charge and closes private attachment identically
+  ○ skipped fresh lease before capture cannot suppress incurred charge and closes private attachment identically
+  ○ skipped fresh stale-transcript before capture cannot suppress incurred charge and closes private attachment identically
+  ○ skipped capture commit survives fresh revoked attachment refusal; no financial replay or private resurrection
+  ○ skipped capture commit survives fresh expired attachment refusal; no financial replay or private resurrection
+  ○ skipped capture commit survives fresh policy attachment refusal; no financial replay or private resurrection
+  ○ skipped capture commit survives fresh budget attachment refusal; no financial replay or private resurrection
+  ○ skipped capture commit survives fresh wrong-principal attachment refusal; no financial replay or private resurrection
+  ○ skipped capture commit survives fresh wrong-scope attachment refusal; no financial replay or private resurrection
+  ○ skipped capture commit survives fresh malformed-result attachment refusal; no financial replay or private resurrection
+  ○ skipped UNKNOWN capture remains conservative, releases the slot once and never creates a retry advantage
+  ○ skipped dispatch receipt refusal has exact legacy error order and zero partial writes
+  ○ skipped malformed receipt refusal has exact legacy error order and zero partial writes
+  ○ skipped model receipt refusal has exact legacy error order and zero partial writes
+  ○ skipped proof receipt refusal has exact legacy error order and zero partial writes
+  ○ skipped opaque capture failure rolls its own partial writes back without changing earlier accounting
+  ○ skipped opaque attach failure rolls its own partial writes back without changing earlier accounting
+  ○ skipped the private nonserialized context selector changes only two terminal ports, preserving default generic calls and native this
+  ○ skipped fresh edit in retained ancestry closes attachment while preserving the incurred capture
+  ○ skipped fresh tombstone in retained ancestry closes attachment while preserving the incurred capture
+  ○ skipped fresh revoked in retained ancestry closes attachment while preserving the incurred capture
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.6s | 2/2 passed | /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.18s ( 4.9%) - both independent V8 terminal mutations retain only raw shared=true graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 2. [32m✓[0m    0.14s ( 3.8%) - both independent V8 terminal mutations retain only raw shared=false graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.32s (8.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.71s
+  Test suites:        1
+  Individual tests:   2
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       29 skipped, 2 passed, 31 total
+Snapshots:   0 total
+Time:        3.71 s
+Ran all test suites within paths "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-source-family-terminal-typed-v3.json

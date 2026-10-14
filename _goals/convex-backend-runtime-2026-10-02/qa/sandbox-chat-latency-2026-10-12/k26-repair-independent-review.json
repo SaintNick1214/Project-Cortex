@@ -1,0 +1,468 @@
+{
+  "verdict": "PASS",
+  "observedAt": "2026-10-14T18:28:48.412386+00:00",
+  "reviewer": "parallel_policy_source_review (nonauthor)",
+  "reviewCount": 1,
+  "baseline": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+  "sourceOnly": true,
+  "nativeCandidateStatus": "NOT_RUN",
+  "fullGoalAcceptance": false,
+  "latencyAcceptance": false,
+  "followUpGoalPercent": 50,
+  "scores": {
+    "requirements": 4,
+    "tests": 4,
+    "completeness": 4,
+    "code": 3,
+    "patterns": 4,
+    "average": 3.8
+  },
+  "breakingFindings": [],
+  "requirements": [
+    {
+      "id": "closed-raw-source-families",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAuth.ts:66",
+      "assessment": "Only source/conversation/bridge/origin-run raw rows, exact original indexed take2 queries. Key includes family/tenant/space/exactID. Detached copies,512 entries/1,000,000bytes, uncached overflow and no error/decision/traversal/crossRPC retention."
+    },
+    {
+      "id": "all-current-predicates-and-order",
+      "result": "PASS",
+      "source": "convex-dev/runtimeDataAuth.ts:209",
+      "assessment": "Four raw query substitutions only. Original duplicate/currentness/owner/grant/hash/revision/epoch/retention/ancestry/cutoff/permission/deadline predicates rerun. Existing per-traversal verification behavior unchanged; new graph layer stores rows only."
+    },
+    {
+      "id": "native-owner-and-graph-only-views",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAuth.ts:93",
+      "assessment": "Private same-native-owner check; foreign/unbranded returns original context. Source branches share graph reader and writer invalidation, without authority/policy/native-message brands. Original uncacheable authority/nonfamily read order is retained."
+    },
+    {
+      "id": "write-error-inflight-and-child-invalidation",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAuth.ts:280",
+      "assessment": "Graph cleared before/after every writer including retainedV8state/finance, failures, fluent writes and child mutations. In-flight reads bypass retention; graph epoch rejects late fills. Original receiver and independent child rollback preserved; fresh invocation has fresh reader."
+    },
+    {
+      "id": "v8-entry-only-and-final-fences",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAgentRecall.ts:149; convex-dev/runtimeAgent.ts:1832",
+      "assessment": "Private V8 opt-ins only. Final original resource pass resets graph; raw root-source reload and final native authority remain uncacheable. Fresh save/model/source checks and callback fallback/Action expiry retain original sequence and child boundaries."
+    },
+    {
+      "id": "separate-terminal-money-and-replay",
+      "result": "PASS",
+      "source": "convex-dev/runtimeModelPolicy.ts:1182",
+      "assessment": "Only two V8 scope options changed; capture/attachment retain original separate durable bodies, validators, accounting after revocation, UNKNOWN liability/slot release, no refund/replay and fresh attachment denial."
+    },
+    {
+      "id": "actual-k25-v8-comparison-and-meaningful-tests",
+      "result": "PASS source",
+      "source": "tests/unit/runtimeAgent/whole-recall-composition.test.ts:505; tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:250",
+      "assessment": "Controls construct real K25V8 graph-disabled scopes, excluding previous generic authority gains. Exact data/state and nonfamily read order, final epoch, ancestor edits/tombstones/duplicates/revocation/expiry, original late two-getter/save/callback/rollback negatives retained."
+    },
+    {
+      "id": "bounded-contracts-docs-and-native-limits",
+      "result": "PASS source",
+      "source": "docs-site/docs/architecture/performance.mdx:10",
+      "assessment": "No candidate pruning/ranking/witness/count/cap/SDK/UI change;4recent/4memories/4facts/4pending/16assembled and canonicalperrow retained. Public docs show K25scoped success,0/4SLO and in-progress/unqualified raw-read repair. No new native or C7 backing-evidence acceptance."
+    }
+  ],
+  "verifiedInputs": {
+    "packet": "k26-repair-review-packet-v1.json",
+    "packetSha256": "98ed49acf3d33cdb35fd0c511a92c59273c8fe4e25bee54b9d94551834234747",
+    "hashes": {
+      "core": {
+        "convex-dev/runtimeAgent.ts": "697c6dd22bed3d382c374a2eb01b2a3282109d2c70943dea076e9fceb3860b3d",
+        "convex-dev/runtimeAgentRecall.ts": "a940b26695edde613339876f7c7802c4b2bde52027d4fd073a921d9f42bbb287",
+        "convex-dev/runtimeAuth.ts": "d8be2c9c1c45540eabd64dd3bbb41d772eef97d38afe65a96087b75e7f7c79e7",
+        "convex-dev/runtimeDataAuth.ts": "12d64473b6d0b2d6f2ef15657bb34cc130e3687e4997e641fe4076fcf8bf8765",
+        "convex-dev/runtimeModelPolicy.ts": "c27dc6d4407f22f68c6d7a371978c921ad5b86a7c2e1ebec69194252858257dc",
+        "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts": "78892fd7b2b85488de9a0778f442e0613378af4f56d31a3050e26101570273b0",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "deaec4922c56dcd03bce33989946c3eaf71a8f23b0bb4aaba325ea91e740574a",
+        "tests/unit/runtimeAuth/managed-source-read-scope.test.ts": "67d78ccb96a680fc0907052efbd0c623cd6d3d420e299468b0c239d1615ef4bb"
+      },
+      "proofs": {
+        "SANDBOX.md": "1863432c8d059dbb65cb58b9496d59d13b564025fd137ce8cdd93181bc7a3ac9"
+      },
+      "website": {
+        "docs-site/docs/api-reference/memory-operations.mdx": "9b5b7c5f779b0154ed0bfc81a99291daa1245ff5a5a7c4d42306bdba95e726dc",
+        "docs-site/docs/api-reference/runtime-client.mdx": "e0a65d10340d45496bc1dbf208d28d27c88d953010ef9f17e0d5758cf500f136",
+        "docs-site/docs/architecture/model-policy.mdx": "311a540aa65acf8f7e75ec922f8e75dd7e667d7c0cb3629b9b754c8179e91f8a",
+        "docs-site/docs/architecture/performance.mdx": "c43d05bebbd72b49051ffd02d3bb035bb17d08d6465efd31e1f1e54b8690e13b",
+        "docs-site/docs/core-features/memory-orchestration.mdx": "7c25b167bff2846389f1403d092ae373b8b8d3387836ab4eafd7de8f71556a0b",
+        "docs-site/docs/getting-started/backend-runtime.mdx": "5e1cf3fa198e0ec58a8755adfa221aad59570d1bfc762b486638791722f56423",
+        "docs-site/docs/getting-started/five-minute-quickstart.mdx": "ca2a8d0c230f904c3d2d2684efc1076c4005a50a08aa36326606dd0a27b084a0",
+        "docs-site/docs/getting-started/installation.mdx": "53b9b12ceb170883b9d42c9e9f6418346b7b7ae7499d20fa768c7157b213a5cd",
+        "docs-site/docs/reference/cheat-sheet.mdx": "686a6414a43033c518ba1506775e69a2bb6fc815fa0fa01c8027c1eb94fbcc83",
+        "docs-site/docs/tools/cli-reference.mdx": "8dc647e752e14123e82039d535395ed262537c8ad8aa19f8bfd8695d13ac954f"
+      },
+      "evidence": {
+        "k26-managed-source-freeze.json": "9b60371b2604ba57d766f75323e7ed38522cbc49bd4277310dd8f34e4d1d63dc",
+        "k26-managed-source-report.md": "1b48b5a0f307964c0af149f6f4c5806ca1795ca64a9fe0c243f25a367cf48469",
+        "k26-managed-source-equivalence.json": "64ec2fede05db304587356eea96b534302b9c0737b0ba14dcd352b34daa80f32",
+        "k26-managed-source-affected-v1.json": "35c94b3b143e52a1fcbee4e8e056b70e7791adae154ce3add2b6c66989be80a1",
+        "k26-source-family-integration-freeze.json": "5ca54518b7cbd8fb0b0c28668ac290cf941ad19fa63734ec5cfe89aab1beb259",
+        "k26-source-family-equivalence.json": "18ba80fe73922ffbd86679352aa1286e09305749f568ee65998b786578ed1c48",
+        "k26-source-family-integration-v2.json": "10940162273124843ab91a86d7656c82df756456c3180896832b8ec69d1736d3",
+        "k26-source-family-save-v1.json": "03e988d27b5eb247a290ea3b67e8404b6c6dea40ee4cd37efcdd972096051366",
+        "k26-source-family-dependencies-v1.json": "325b23c4822e7a0da9e1348d876675899c024cb20183a5df514c4d4c38cd1d4a",
+        "k26-source-family-terminal-typed-v3.json": "27f46fcb1ddaf09d0ec39ea5e997c0bde343203ca11b42016f5a0646a1eab102",
+        "k26-repair-joint-quality-final-receipt-v1.json": "80fad87448a91b9bb99a9b1f011203ea4dd01a46c58bdaa60effa8638be05618",
+        "docs-k25-public-final-receipt-v3.json": "3f0d88e74834c2fe5c4c50132808728649809a1cc443d29f18976875999a6f90",
+        "k25-four-run-critical-path-readonly.json": "e2d484df643be675c325311dbe0b91d0067f1cd567282c13796852495f5d65b1",
+        "k25-cleanup-final.json": "001a62138c8dc5a8fab79aa7a6e3dd8b1a21a3cb0e277daf91b1800c7a0474ed"
+      }
+    },
+    "roots": {
+      "coreRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "proofsRoot": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+      "websiteRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs"
+    },
+    "counts": {
+      "core": 8,
+      "proofs": 1,
+      "website": 10,
+      "evidence": 14
+    },
+    "supplementalEvidence": {
+      "k26-source-family-integration-report.md": "e0ba1d977a847fa433118c866eab45fa4aa2ca18f820c6a2d9d1de4b1d3c2b4a",
+      "k26-source-family-integration-checks.json": "ad6361167f4e70d550d6456b265ea05ffb5ed005f58ad759815a621618f7029c"
+    },
+    "mismatches": [],
+    "verifiedInitiallyAndFinally": true
+  },
+  "rawTestReceipts": [
+    {
+      "path": "k26-managed-source-focused-v1.json",
+      "sha256": "6fd1dfb252dab1198d8236f05350ef5bceb0d008fd8dbc78b407e69220a5526a",
+      "status": "FAIL",
+      "tests": 27,
+      "passed": 26,
+      "failed": 1,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 1,
+      "failedCases": [
+        "closed invocation-local managed-source raw rows actual shared/distinct ancestor traversals preserve results and non-graph order with fewer physical rows"
+      ]
+    },
+    {
+      "path": "k26-managed-source-affected-v1.json",
+      "sha256": "35c94b3b143e52a1fcbee4e8e056b70e7791adae154ce3add2b6c66989be80a1",
+      "status": "PASS",
+      "tests": 272,
+      "passed": 272,
+      "failed": 0,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 10,
+      "failedCases": []
+    },
+    {
+      "path": "k26-source-family-integration-v1.json",
+      "sha256": "91b1dbfa3c64766ff47b98c74cc3288e5708bcc900f5cf9832d7c5d86083970e",
+      "status": "FAIL",
+      "tests": 165,
+      "passed": 156,
+      "failed": 9,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 3,
+      "failedCases": [
+        "V8 real shared=true ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads",
+        "V8 real shared=false ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads",
+        "new graph parent preserves original ancestor-hash refusal and complete state",
+        "new graph parent preserves original ancestor-tombstone refusal and complete state",
+        "new graph parent preserves original ancestor-duplicate refusal and complete state",
+        "new graph parent preserves original revoked refusal and complete state",
+        "new graph parent preserves original expiry refusal and complete state",
+        "final resource boundary freshly sees a late edit after graph retention and cannot commit context",
+        "final resource boundary freshly sees a late revoke after graph retention and cannot commit context"
+      ]
+    },
+    {
+      "path": "k26-source-family-integration-v2.json",
+      "sha256": "10940162273124843ab91a86d7656c82df756456c3180896832b8ec69d1736d3",
+      "status": "PASS",
+      "tests": 109,
+      "passed": 109,
+      "failed": 0,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 2,
+      "failedCases": []
+    },
+    {
+      "path": "k26-source-family-save-v1.json",
+      "sha256": "03e988d27b5eb247a290ea3b67e8404b6c6dea40ee4cd37efcdd972096051366",
+      "status": "PASS",
+      "tests": 80,
+      "passed": 80,
+      "failed": 0,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 1,
+      "failedCases": []
+    },
+    {
+      "path": "k26-source-family-dependencies-v1.json",
+      "sha256": "325b23c4822e7a0da9e1348d876675899c024cb20183a5df514c4d4c38cd1d4a",
+      "status": "PASS",
+      "tests": 132,
+      "passed": 132,
+      "failed": 0,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 7,
+      "failedCases": []
+    },
+    {
+      "path": "k26-source-family-terminal-typed-v3.json",
+      "sha256": "27f46fcb1ddaf09d0ec39ea5e997c0bde343203ca11b42016f5a0646a1eab102",
+      "status": "PASS",
+      "tests": 31,
+      "passed": 2,
+      "failed": 0,
+      "pendingOrFiltered": 29,
+      "todo": 0,
+      "suites": 1,
+      "failedCases": []
+    }
+  ],
+  "applicability": {
+    "countsOverlapNotAdditive": true,
+    "managedSourceActual": {
+      "tests": 272,
+      "suites": 10,
+      "skipped": 0,
+      "aggregateInvocation": true
+    },
+    "sourceFamilyFullPassingUnion": {
+      "tests": 299,
+      "files": 10,
+      "aggregateInvocation": false,
+      "latestFullPerFile": {
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-source-composition.test.ts": {
+          "receipt": "k26-source-family-integration-v1.json",
+          "passed": 56,
+          "failed": 0,
+          "pending": 0
+        },
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts": {
+          "receipt": "k26-source-family-integration-v2.json",
+          "passed": 31,
+          "failed": 0,
+          "pending": 0
+        },
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/whole-recall-composition.test.ts": {
+          "receipt": "k26-source-family-save-v1.json",
+          "passed": 80,
+          "failed": 0,
+          "pending": 0
+        },
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/direct-action.test.ts": {
+          "receipt": "k26-source-family-dependencies-v1.json",
+          "passed": 28,
+          "failed": 0,
+          "pending": 0
+        },
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/query-embedding-composition.test.ts": {
+          "receipt": "k26-source-family-dependencies-v1.json",
+          "passed": 47,
+          "failed": 0,
+          "pending": 0
+        },
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/bounded-context-v8.test.ts": {
+          "receipt": "k26-source-family-dependencies-v1.json",
+          "passed": 21,
+          "failed": 0,
+          "pending": 0
+        },
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": {
+          "receipt": "k26-source-family-dependencies-v1.json",
+          "passed": 7,
+          "failed": 0,
+          "pending": 0
+        },
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-source-batch.test.ts": {
+          "receipt": "k26-source-family-dependencies-v1.json",
+          "passed": 25,
+          "failed": 0,
+          "pending": 0
+        },
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts": {
+          "receipt": "k26-source-family-dependencies-v1.json",
+          "passed": 2,
+          "failed": 0,
+          "pending": 0
+        },
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/request-preflight-workflow.test.ts": {
+          "receipt": "k26-source-family-dependencies-v1.json",
+          "passed": 2,
+          "failed": 0,
+          "pending": 0
+        }
+      }
+    },
+    "terminalFullAndSelected": {
+      "fullReceipt": "k26-source-family-integration-v2.json",
+      "fullPassing": 31,
+      "subsequentReceipt": "k26-source-family-terminal-typed-v3.json",
+      "selectedPassed": 2,
+      "filtered": 29,
+      "notFreshFullPass": true
+    },
+    "originalFailures": "A26/27 and owned receiver type failure; B156/165 plus four owned type failures remain preserved. Fixture/source-ID and erased type corrections retain substantive assertions/deadlines.",
+    "control": "Actual K25 graph-disabled V8 scope; previous generic-to-V8 authority gains excluded"
+  },
+  "controlledCounts": {
+    "readGraphShared": [
+      135,
+      8
+    ],
+    "readGraphDistinct": [
+      135,
+      12
+    ],
+    "saveGraphShared": [
+      198,
+      16
+    ],
+    "saveGraphDistinct": [
+      198,
+      24
+    ],
+    "capturePhysicalShared": [
+      73,
+      59
+    ],
+    "capturePhysicalDistinct": [
+      77,
+      65
+    ],
+    "attachPhysicalShared": [
+      69,
+      55
+    ],
+    "attachPhysicalDistinct": [
+      73,
+      61
+    ],
+    "nativePerformanceProof": false
+  },
+  "quality": {
+    "receipt": "k26-repair-joint-quality-final-receipt-v1.json",
+    "driverExitCode": 0,
+    "checks": [
+      {
+        "check": "root-types",
+        "exitCode": 0,
+        "exitReceipt": "k26-repair-joint-root-types-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k26-repair-joint-root-types-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "check": "backend-types",
+        "exitCode": 0,
+        "exitReceipt": "k26-repair-joint-backend-types-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k26-repair-joint-backend-types-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "check": "lint-types",
+        "exitCode": 0,
+        "exitReceipt": "k26-repair-joint-lint-types-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k26-repair-joint-lint-types-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "check": "scoped-lint",
+        "exitCode": 0,
+        "exitReceipt": "k26-repair-joint-scoped-lint-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k26-repair-joint-scoped-lint-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "check": "build",
+        "exitCode": 0,
+        "exitReceipt": "k26-repair-joint-build-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k26-repair-joint-build-v1.log",
+        "logSha256": "d6c73676b44396112c1a11486cdff9fd07c08f4ca42ece92a1ce322b7019db76"
+      },
+      {
+        "check": "packed-contracts",
+        "exitCode": 0,
+        "exitReceipt": "k26-repair-joint-packed-contracts-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k26-repair-joint-packed-contracts-v1.log",
+        "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+      }
+    ],
+    "currentEightInputsUnchanged": true,
+    "backendSourceFiles": 170,
+    "tables": 78,
+    "components": 2,
+    "toolchain": {
+      "directProcessesNode": "24.15.0",
+      "npm": "12.2.0",
+      "nestedNpmScriptShellNode": "26.10.0 observed default PATH; satisfies declared Node>=24.15.0; not claimed pinned24",
+      "futureIsolatedPackaging": "must use pinned24 PATH"
+    }
+  },
+  "docs": {
+    "receipt": "docs-k25-public-final-receipt-v3.json",
+    "allTenHashesMatch": true,
+    "buildExit": 0,
+    "buildLogSha256": "bd9f5992975d7e9d28cf94ced7935d58c3d38aec0c05bb2c9c37244e23aa03a0",
+    "render": "docs-k25-public-render-v3.json",
+    "unpublished": true,
+    "uncommitted": true,
+    "serverClosed": true,
+    "historicalPagePreserved": "k25-performance-before-concise-public-docs.mdx"
+  },
+  "nativeLimits": {
+    "precedingK25ScopedFunctional": "Actual selected ordinary memory, external capture/auth/tool/strict and one-shot unequal candidate outcomes only",
+    "precedingSloPassed": 0,
+    "precedingSloTotal": 4,
+    "browserSeconds": [
+      6.22,
+      3.88
+    ],
+    "cliSeconds": [
+      7.25,
+      10.24
+    ],
+    "newK26Native": "NOT_RUN",
+    "precedingCleanup": "independentlyABSENT k25-cleanup-final.json; launcher child exitUNKNOWN retained",
+    "C7MissingBacking": "Historical evidence gap retained; this source gate provides no new backing-data native acceptance",
+    "graph": "optional/unqualified",
+    "nativeDocumentAttributionOrSpeedGuarantee": false
+  },
+  "nonbreakingDebt": [
+    "Four raw-family classifications/private native owner+view rules need maintenance for future writers and validators.",
+    "Raw origin-run metadata must retain separate unconditional graph invalidation; no mutable account/authority decisions may be added.",
+    "Controlled counts do not establish native899/905-document attribution or speed."
+  ],
+  "reviewerActions": {
+    "productEdits": 0,
+    "testReruns": 0,
+    "buildsOrPacks": 0,
+    "serviceCalls": 0,
+    "inferenceCalls": 0,
+    "gitOperations": 0,
+    "writes": [
+      "k26-repair-independent-review.md",
+      "k26-repair-independent-review.json"
+    ]
+  },
+  "markdown": {
+    "path": "k26-repair-independent-review.md",
+    "sha256": "024b9b12a9d6295fb2b8a769e86e917807a840a2d982d2d06330741aa38e0cdf"
+  }
+}

@@ -1,0 +1,226 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:31416) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"whole-recall-physical-query-count","kind":"controlled-handler","outerCalls":["runtimeAgentRecall:prepareReads","runtimeAgentRecall:readMatches","runtimeMemory:finalDelivery"],"physicalQueries":{"runtimeAgentRecall:prepareReads":1,"_reference/childComponent/agent/messages/getMessagesByIds":4,"runtimeAgentRecall:readMatches":1,"runtimeModelPolicy:embeddingProfile":1},"embeddingProfileBeforeDelivery":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:109:11)
+
+  console.info
+    {"type":"k25-private-read-parent-counts","kind":"controlled-original-handlers","initial":{"oldGets":6,"newGets":3,"oldQueries":238,"newQueries":219},"tail":{"oldGets":39,"newGets":36,"oldQueries":158,"newQueries":139},"mutableReadSequencesEqual":true,"applicationWrites":0,"cloudLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:442:10)
+
+  console.info
+    {"type":"k26-controlled-source-parent-reads","shared":true,"original":{"queries":684,"graphQueries":135,"graphDocuments":135},"optimized":{"queries":557,"graphQueries":8,"graphDocuments":8},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:521:11
+
+  console.info
+    {"type":"k26-controlled-source-parent-reads","shared":false,"original":{"queries":688,"graphQueries":135,"graphDocuments":135},"optimized":{"queries":565,"graphQueries":12,"graphDocuments":12},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:521:11
+
+  console.info
+    {"type":"k26-controlled-save-candidate-reads","shared":true,"original":{"total":389,"graphQueries":198},"optimized":{"total":207,"graphQueries":16},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:575:11
+
+  console.info
+    {"type":"k26-controlled-save-candidate-reads","shared":false,"original":{"total":397,"graphQueries":198},"optimized":{"total":223,"graphQueries":24},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:575:11
+
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts (6.479 s)
+  ✓ registered plan/matches reproduce original ordered selection, bindings and current delivery (81 ms)
+  ✓ real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference (46 ms)
+  ✓ native principal mismatch refuses without writes or a second lane (29 ms)
+  ✓ native lease mismatch refuses without writes or a second lane (24 ms)
+  ✓ native profile mismatch refuses without writes or a second lane (25 ms)
+  ✓ native cutoff mismatch refuses without writes or a second lane (24 ms)
+  ✓ native boundary mismatch refuses without writes or a second lane (24 ms)
+  ✓ native limit mismatch refuses without writes or a second lane (20 ms)
+  ✓ native request mismatch refuses without writes or a second lane (22 ms)
+  ✓ revocation between plan and matches is freshly refused (27 ms)
+  ✓ changed consumed fact payload is refused by the original fresh delivery predicate (32 ms)
+  ✓ withheld fact refusal waits for original vector source failure (33 ms)
+  ✓ duplicate/unknown candidates use original canonical hydration/drop semantics (33 ms)
+  ✓ deadline passing while final delivery returns still refuses on the actual Action clock (20 ms)
+  ✓ changed native read proposal payload is refused without partial context (32 ms)
+  ✓ changed native read proposal source-binding is refused without partial context (32 ms)
+  ✓ changed native read proposal extra-hit is refused without partial context (27 ms)
+  ✓ late source tombstone is fenced before any private context commit (31 ms)
+  ✓ expired consumed fact is still rejected by fresh finalDelivery (32 ms)
+  ✓ save success survives actual candidate child writes followed by refusal; child partial state rolls back (42 ms)
+  ✓ save failure never invokes candidate child and rolls back all its own state (21 ms)
+  ✓ unknown hostile child errors cannot undo the original saved context or invoke diagnostic getters (21 ms)
+  ✓ V8 private read/delivery lane equals the original handlers and removes the nested profile handoff (61 ms)
+  ✓ V8 principal refusal still exercises the actual registered guard (22 ms)
+  ✓ V8 lease refusal still exercises the actual registered guard (23 ms)
+  ✓ V8 profile refusal still exercises the actual registered guard (24 ms)
+  ✓ V8 cutoff refusal still exercises the actual registered guard (23 ms)
+  ✓ V8 boundary refusal still exercises the actual registered guard (23 ms)
+  ✓ V8 limit refusal still exercises the actual registered guard (23 ms)
+  ✓ V8 request refusal still exercises the actual registered guard (23 ms)
+  ✓ V8 endpoints reject a historical snapshot rather than applying the new mode to its journal (29 ms)
+  ✓ V8 final fact fence returns the same original failure with zero writes (37 ms)
+  ✓ V8 final source fence returns the same original failure with zero writes (37 ms)
+  ✓ V8 final profile fence returns the same original failure with zero writes (47 ms)
+  ✓ V8 final revocation fence returns the same original failure with zero writes (36 ms)
+  ✓ V8 final budget fence returns the same original failure with zero writes (38 ms)
+  ✓ V8 final tombstone fence returns the same original failure with zero writes (36 ms)
+  ✓ V8 final expiry fence returns the same original failure with zero writes (36 ms)
+  ✓ V8 delivery still uses raw final authority after consumed resource and hash awaits (41 ms)
+  ✓ V8 context/preflight parent equals both original registered read handlers with zero effects (115 ms)
+  ✓ context parent principal preserves original refusal precedence and complete state (29 ms)
+  ✓ context parent lease preserves original refusal precedence and complete state (30 ms)
+  ✓ context parent revoked preserves original refusal precedence and complete state (26 ms)
+  ✓ context parent expired preserves original refusal precedence and complete state (27 ms)
+  ✓ context parent profile preserves original refusal precedence and complete state (33 ms)
+  ✓ context parent budget preserves original refusal precedence and complete state (29 ms)
+  ✓ context parent pending-first preserves original refusal precedence and complete state (27 ms)
+  ✓ context parent historical preserves original refusal precedence and complete state (34 ms)
+  ✓ private assembler consumes the native preflight proposal without a second preparation handoff (84 ms)
+  ✓ an unsupported/custom context callback retains its original three arguments and ports (48 ms)
+  ✓ new read/delivery parent returns exact original match and delivery data with zero application writes (56 ms)
+  ✓ read/delivery principal returns the same original first refusal without partial effects (32 ms)
+  ✓ read/delivery lease returns the same original first refusal without partial effects (35 ms)
+  ✓ read/delivery profile returns the same original first refusal without partial effects (42 ms)
+  ✓ read/delivery cutoff returns the same original first refusal without partial effects (35 ms)
+  ✓ read/delivery boundary returns the same original first refusal without partial effects (35 ms)
+  ✓ read/delivery request returns the same original first refusal without partial effects (35 ms)
+  ✓ read/delivery oversize returns the same original first refusal without partial effects (36 ms)
+  ✓ read/delivery revocation returns the same original first refusal without partial effects (32 ms)
+  ✓ read/delivery source returns the same original first refusal without partial effects (47 ms)
+  ✓ read/delivery tombstone returns the same original first refusal without partial effects (43 ms)
+  ✓ read/delivery facts returns the same original first refusal without partial effects (45 ms)
+  ✓ read/delivery fact-refusal returns the same original first refusal without partial effects (44 ms)
+  ✓ private synchronous selection removes one outer handoff while arbitrary callbacks retain the original fresh delivery route (62 ms)
+  ✓ unbranded callback revocation is still checked after callback and callback failure precedes final delivery (47 ms)
+  ✓ private parent preserves foreign error identity and real Action deadline refusal after returned delivery (54 ms)
+  ✓ recognized final refusal waits for synchronous selection and original ranking failure precedence (48 ms)
+  ✓ shared native parent keeps the final raw revocation fence and fresh save rechecks after return (53 ms)
+  ✓ same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal (139 ms)
+  ✓ V8 real shared=true ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads (167 ms)
+  ✓ V8 real shared=false ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads (143 ms)
+  ✓ new graph parent preserves original ancestor-hash refusal and complete state (37 ms)
+  ✓ new graph parent preserves original ancestor-tombstone refusal and complete state (38 ms)
+  ✓ new graph parent preserves original ancestor-duplicate refusal and complete state (37 ms)
+  ✓ new graph parent preserves original revoked refusal and complete state (34 ms)
+  ✓ new graph parent preserves original expiry refusal and complete state (34 ms)
+  ✓ final resource boundary freshly sees a late edit after graph retention and cannot commit context (41 ms)
+  ✓ final resource boundary freshly sees a late revoke after graph retention and cannot commit context (48 ms)
+  ✓ save/candidate shared=true ancestry reduces reads inside each fresh child while keeping exact writes and state (137 ms)
+  ✓ save/candidate shared=false ancestry reduces reads inside each fresh child while keeping exact writes and state (138 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     6.5s | 80/80 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.17s ( 2.5%) - V8 real shared=true ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 2. [32m✓[0m    0.14s ( 2.2%) - V8 real shared=false ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 3. [32m✓[0m    0.14s ( 2.1%) - same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 4. [32m✓[0m    0.14s ( 2.1%) - save/candidate shared=false ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.14s ( 2.1%) - save/candidate shared=true ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 6. [32m✓[0m    0.12s ( 1.7%) - V8 context/preflight parent equals both original registered read handlers with zero effects
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 7. [32m✓[0m    0.08s ( 1.3%) - private assembler consumes the native preflight proposal without a second preparation handoff
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 8. [32m✓[0m    0.08s ( 1.2%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [32m✓[0m    0.06s ( 0.9%) - private synchronous selection removes one outer handoff while arbitrary callbacks retain the original fresh delivery route
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.06s ( 0.9%) - V8 private read/delivery lane equals the original handlers and removes the nested profile handoff
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+11. [32m✓[0m    0.06s ( 0.8%) - new read/delivery parent returns exact original match and delivery data with zero application writes
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+12. [32m✓[0m    0.05s ( 0.8%) - private parent preserves foreign error identity and real Action deadline refusal after returned delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+13. [32m✓[0m    0.05s ( 0.8%) - shared native parent keeps the final raw revocation fence and fresh save rechecks after return
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [32m✓[0m    0.05s ( 0.7%) - an unsupported/custom context callback retains its original three arguments and ports
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+15. [32m✓[0m    0.05s ( 0.7%) - recognized final refusal waits for synchronous selection and original ranking failure precedence
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+16. [32m✓[0m    0.05s ( 0.7%) - final resource boundary freshly sees a late revoke after graph retention and cannot commit context
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+17. [32m✓[0m    0.05s ( 0.7%) - V8 final profile fence returns the same original failure with zero writes
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+18. [32m✓[0m    0.05s ( 0.7%) - read/delivery source returns the same original first refusal without partial effects
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+19. [32m✓[0m    0.05s ( 0.7%) - unbranded callback revocation is still checked after callback and callback failure precedes final delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+20. [32m✓[0m    0.05s ( 0.7%) - real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.62s (24.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.59s
+  Test suites:        1
+  Individual tests:   80
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       80 passed, 80 total
+Snapshots:   0 total
+Time:        6.595 s, estimated 8 s
+Ran all test suites within paths "tests/unit/runtimeAgent/whole-recall-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-source-family-save-v1.json

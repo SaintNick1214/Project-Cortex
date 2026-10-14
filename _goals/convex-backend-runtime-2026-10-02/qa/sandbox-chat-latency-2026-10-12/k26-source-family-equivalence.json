@@ -1,0 +1,32 @@
+{
+  "baselineSourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+  "preimage": "Existing accepted immutable K25 kit source, no copied files",
+  "checks": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "oldSha256": "b209850e583ebd2e638e37bf33829e5461a165a244286bb3269e815948485328",
+      "currentSha256": "697c6dd22bed3d382c374a2eb01b2a3282109d2c70943dea076e9fceb3860b3d",
+      "inverseMatchesEntireOriginalFile": true,
+      "managedScopeOptIns": 8,
+      "allowedMasks": "V8 entry opt-ins only"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "oldSha256": "0612738bc0af651c69bd2d49557fbf5e05f2e7a89dfd114790aa3175b873bb0c",
+      "currentSha256": "c27dc6d4407f22f68c6d7a371978c921ad5b86a7c2e1ebec69194252858257dc",
+      "inverseMatchesEntireOriginalFile": true,
+      "managedScopeOptIns": 2,
+      "allowedMasks": "V8 entry opt-ins only"
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "oldSha256": "797a4c453d7e91f934d8a174b4d9f2c55926f1e91514456ddf24d3b27c5ffdba",
+      "currentSha256": "a940b26695edde613339876f7c7802c4b2bde52027d4fd073a921d9f42bbb287",
+      "inverseMatchesEntireOriginalFile": true,
+      "managedScopeOptIns": 4,
+      "allowedMasks": "V8 entry opt-ins, graph-only native source view, explicit fresh graph boundary"
+    }
+  ],
+  "all": true,
+  "meaning": "Original predicates/handler bodies/order/validators/registration names byte-identical after explicit raw reader activation masks; this is source equivalence, not native performance"
+}

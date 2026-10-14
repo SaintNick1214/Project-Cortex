@@ -49,6 +49,59 @@ const authorityReadScope: unique symbol = Symbol("cortex.native-authority-read-s
 const policyMetadataReadScope: unique symbol = Symbol("cortex.native-policy-metadata-read-scope");
 const nativeTranscriptReadScope: unique symbol = Symbol("cortex.native-transcript-read-scope");
 const v8ReadScope: unique symbol = Symbol("cortex.native-v8-read-scope");
+const managedSourceReadScope: unique symbol = Symbol("cortex.native-managed-source-read-scope");
+const nativeReadScopeOwner: unique symbol = Symbol("cortex.native-read-scope-owner");
+interface ManagedSourceReader {
+  sources(tenantId: string, memorySpaceId: string, sourceId: string): Promise<Doc<"runtimeMemorySources">[]>;
+  conversations(tenantId: string, memorySpaceId: string, conversationId: string): Promise<Doc<"runtimeConversations">[]>;
+  bridges(tenantId: string, memorySpaceId: string, nativeMessageId: string): Promise<Doc<"runtimeTranscriptMessages">[]>;
+  runs(tenantId: string, memorySpaceId: string, runId: string): Promise<Doc<"runtimeRuns">[]>;
+  fresh(): void;
+}
+type ManagedSourceContext = Pick<QueryCtx, "db"> & { [managedSourceReadScope]?: ManagedSourceReader };
+export const MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES = 512;
+export const MANAGED_SOURCE_READ_SCOPE_MAX_BYTES = 1_000_000;
+/** Closed raw graph queries only. Their callers retain duplicate/currentness,
+ * permission and recursive traversal checks on every logical read. */
+export async function readManagedSourceRows(ctx: Pick<QueryCtx, "db">, tenantId: string, memorySpaceId: string, sourceId: string): Promise<Doc<"runtimeMemorySources">[]> {
+  const reader = (ctx as ManagedSourceContext)[managedSourceReadScope];
+  return reader ? await reader.sources(tenantId, memorySpaceId, sourceId)
+    : await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("lineage.sourceId", sourceId)).take(2);
+}
+export async function readManagedConversationRows(ctx: Pick<QueryCtx, "db">, tenantId: string, memorySpaceId: string, conversationId: string): Promise<Doc<"runtimeConversations">[]> {
+  const reader = (ctx as ManagedSourceContext)[managedSourceReadScope];
+  return reader ? await reader.conversations(tenantId, memorySpaceId, conversationId)
+    : await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("conversationId", conversationId)).take(2);
+}
+export async function readManagedTranscriptBridgeRows(ctx: Pick<QueryCtx, "db">, tenantId: string, memorySpaceId: string, nativeMessageId: string): Promise<Doc<"runtimeTranscriptMessages">[]> {
+  const reader = (ctx as ManagedSourceContext)[managedSourceReadScope];
+  return reader ? await reader.bridges(tenantId, memorySpaceId, nativeMessageId)
+    : await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("nativeMessageId", nativeMessageId)).take(2);
+}
+export async function readManagedSourceRunRows(ctx: Pick<QueryCtx, "db">, tenantId: string, memorySpaceId: string, runId: string): Promise<Doc<"runtimeRuns">[]> {
+  const reader = (ctx as ManagedSourceContext)[managedSourceReadScope];
+  return reader ? await reader.runs(tenantId, memorySpaceId, runId)
+    : await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("runId", runId)).take(2);
+}
+/** Explicit original source-fence boundary; never clears or caches a decision. */
+export function freshManagedSourceReads<Ctx>(ctx: Ctx): Ctx {
+  (ctx as ManagedSourceContext)[managedSourceReadScope]?.fresh();
+  return ctx;
+}
+/** Same native owner only. Share raw graph rows and writer invalidation while
+ * the original source branch keeps uncached authority/policy/message reads. */
+export function withManagedSourceReads<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, parent: Ctx): Ctx {
+  const reader = (parent as ManagedSourceContext)[managedSourceReadScope];
+  const owner = (parent as Ctx & { [nativeReadScopeOwner]?: Ctx })[nativeReadScopeOwner];
+  if (!reader || owner !== ctx) return ctx;
+  const view = { ...ctx, db: parent.db };
+  for (const name of ["runQuery", "runMutation"] as const) {
+    const value: unknown = Reflect.get(parent, name);
+    if (typeof value === "function") Object.defineProperty(view, name, { enumerable: true, value });
+  }
+  Object.defineProperty(view, managedSourceReadScope, { value: reader });
+  return view;
+}
 type NativeMessageReference = AgentComponent["messages"]["getMessagesByIds"];
 interface NativeTranscriptReader {
   read(reference: NativeMessageReference, messageIds: string[], invoke: () => Promise<(MessageDoc | null)[]>): Promise<(MessageDoc | null)[]>;
@@ -149,13 +202,17 @@ export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: 
 }
 /** Opt-in native V8 transaction only. No derived decision or mutable account/run
  * row is retained; every original predicate continues to execute. */
-export function createV8AuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx): Ctx {
-  if ((ctx as Ctx & { [v8ReadScope]?: true })[v8ReadScope]) return ctx;
-  return createRawReadScope(ctx, { policyMetadata: true, nativeTranscript: true }, true);
+export function createV8AuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options?: { managedSources: true }): Ctx {
+  if ((ctx as Ctx & { [v8ReadScope]?: true })[v8ReadScope]
+    && (!options?.managedSources || (ctx as ManagedSourceContext)[managedSourceReadScope])) return ctx;
+  return createRawReadScope(ctx, { policyMetadata: true, nativeTranscript: true, ...options }, true);
 }
-function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options: { policyMetadata?: true; nativeTranscript?: true } | undefined, v8: boolean): Ctx {
+function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options: { policyMetadata?: true; nativeTranscript?: true; managedSources?: true } | undefined, v8: boolean): Ctx {
   const values = new Map<string, unknown>();
   const metadata = new Map<string, unknown>();
+  const graph = new Map<string, unknown>();
+  let graphBytes = 0, graphEpoch = 0;
+  const freshGraph = () => { graph.clear(); graphBytes = 0; graphEpoch++; };
   // Nested helper scopes share only this explicitly opted-in parent reader.
   // Native child RPC contexts never receive the symbol through serialized args.
   const nativeTranscript = (ctx as NativeTranscriptContext)[nativeTranscriptReadScope] ?? (options?.nativeTranscript ? createNativeTranscriptReader() : undefined);
@@ -188,6 +245,16 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
     if (!writers && epoch === started && metadataEpoch === freshness && metadata.size < POLICY_METADATA_READ_SCOPE_MAX_ENTRIES) metadata.set(key, value);
     return cloneAuthorityValue(value);
   };
+  const readGraph = async <T>(family: string, args: readonly string[], invoke: () => Promise<T>): Promise<T> => {
+    const key = authorityReadKey(family, args), started = graphEpoch;
+    if (!writers && graph.has(key)) return cloneAuthorityValue(graph.get(key)) as T;
+    const value = cloneAuthorityValue(await invoke());
+    if (!writers && graphEpoch === started && !graph.has(key) && graph.size < MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES) {
+      const bytes = nativeTranscriptBytes(value) + new TextEncoder().encode(key).length;
+      if (graphBytes + bytes <= MANAGED_SOURCE_READ_SCOPE_MAX_BYTES) { graph.set(key, value); graphBytes += bytes; }
+    }
+    return cloneAuthorityValue(value);
+  };
   // Explicit native tables only. State writes affect none of the retained raw
   // families. Financial writes retain authority alone: accounts/operations/
   // attempts are never cached, and policy/message rows are freshly read.
@@ -208,7 +275,9 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
     return state ? "all" : "authority";
   };
   const writing = async (invoke: () => unknown, retained?: "all" | "authority"): Promise<unknown> => {
-    const boundary = () => { if (retained) { epoch++; if (retained === "authority") freshMetadata(); } else invalidate(); };
+    // Even a previously proven control-only writer can change an origin run.
+    // Graph values never use the authority/policy writer-retention exemption.
+    const boundary = () => { freshGraph(); if (retained) { epoch++; if (retained === "authority") freshMetadata(); } else invalidate(); };
     boundary(); writers++; nativeTranscript?.beginWrite(retained === "all");
     try { return await invoke(); } finally { writers--; nativeTranscript?.endWrite(retained === "all"); boundary(); }
   };
@@ -240,6 +309,7 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
       : (...args: unknown[]) => Reflect.apply(value, ctx, args) as unknown });
   }
   Object.defineProperty(scoped, authorityReadScope, { value: reader });
+  Object.defineProperty(scoped, nativeReadScopeOwner, { value: (ctx as Ctx & { [nativeReadScopeOwner]?: Ctx })[nativeReadScopeOwner] ?? ctx });
   if (v8) Object.defineProperty(scoped, v8ReadScope, { value: true });
   if (nativeTranscript) Object.defineProperty(scoped, nativeTranscriptReadScope, { value: nativeTranscript });
   if (options?.policyMetadata) Object.defineProperty(scoped, policyMetadataReadScope, { value: {
@@ -248,6 +318,17 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
       await ctx.db.query("runtimeModelQualifications").withIndex("by_receipt", q => q.eq("receiptId", receiptId).eq("version", revision)).take(2)),
     fresh: freshMetadata,
   } satisfies PolicyMetadataReader });
+  if (v8 && options?.managedSources) Object.defineProperty(scoped, managedSourceReadScope, { value: {
+    sources: (tenantId: string, memorySpaceId: string, sourceId: string) => readGraph("source", [tenantId, memorySpaceId, sourceId], async () =>
+      await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("lineage.sourceId", sourceId)).take(2)),
+    conversations: (tenantId: string, memorySpaceId: string, conversationId: string) => readGraph("conversation", [tenantId, memorySpaceId, conversationId], async () =>
+      await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("conversationId", conversationId)).take(2)),
+    bridges: (tenantId: string, memorySpaceId: string, nativeMessageId: string) => readGraph("bridge", [tenantId, memorySpaceId, nativeMessageId], async () =>
+      await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("nativeMessageId", nativeMessageId)).take(2)),
+    runs: (tenantId: string, memorySpaceId: string, runId: string) => readGraph("run", [tenantId, memorySpaceId, runId], async () =>
+      await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("runId", runId)).take(2)),
+    fresh: freshGraph,
+  } satisfies ManagedSourceReader });
   return scoped;
 }
 

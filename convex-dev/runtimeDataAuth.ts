@@ -13,7 +13,8 @@ import { assertSourceLineage } from "../src/domain/sources";
 import { contextWitnessPermissions } from "../src/domain/context-witness";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
 import { canonicalModelJson } from "../src/domain/model-policy";
-import { assertResourceScope, createAuthorityReader, recheckAuthority, requireAuthority, resolveAuthority, resolveAuthorityReference } from "./runtimeAuth";
+import { assertResourceScope, createAuthorityReader, recheckAuthority, requireAuthority, resolveAuthority, resolveAuthorityReference,
+  readManagedSourceRows, readManagedConversationRows, readManagedTranscriptBridgeRows, readManagedSourceRunRows } from "./runtimeAuth";
 import type { AuthorityReader, GrantRecord } from "./runtimeAuth";
 
 export type ScopedDataAuthority = RuntimeAuthority & { memorySpaceId: string; memorySpaceEpoch: number };
@@ -220,21 +221,18 @@ async function checkManagedSource(ctx: ReadCtx, reference: RuntimeAuthorityRefer
   }
   const origin = source.transcriptOrigin;
   if (!origin) return await managedCachedSourcesAreCurrent(ctx, reference, source, source.contextSourceWitnesses ?? [], traversal);
-  const conversations = await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", source.tenantId)
-    .eq("memorySpaceId", source.memorySpaceId).eq("conversationId", origin.conversationId)).take(2);
+  const conversations = await readManagedConversationRows(ctx, source.tenantId, source.memorySpaceId, origin.conversationId);
   const conversation = conversations.length === 1 ? conversations[0] : undefined;
   if (!conversation || conversation.tombstonedAt !== undefined || conversation.epoch !== origin.conversationEpoch
     || (conversation.retentionUntil !== undefined && Date.now() >= conversation.retentionUntil)) return false;
-  const bridges = await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", source.tenantId)
-    .eq("memorySpaceId", source.memorySpaceId).eq("nativeMessageId", origin.nativeMessageId)).take(2);
+  const bridges = await readManagedTranscriptBridgeRows(ctx, source.tenantId, source.memorySpaceId, origin.nativeMessageId);
   const bridge = bridges.length === 1 ? bridges[0] : undefined;
   if (!bridge || bridge.tombstonedAt !== undefined || !bridge.approved || bridge.conversationId !== conversation.conversationId
     || bridge.ownerPrincipalId !== source.ownerPrincipalId || bridge.sourceId !== source.lineage.sourceId
     || bridge.sourceEventId !== source.lineage.sourceEventId || bridge.revision !== source.lineage.sourceRevision
     || bridge.role !== source.lineage.role || bridge.sourceContentHash !== source.contentHash) return false;
   if (bridge.runId) {
-    const runs = await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", source.tenantId)
-      .eq("memorySpaceId", source.memorySpaceId).eq("runId", bridge.runId!)).take(2);
+    const runs = await readManagedSourceRunRows(ctx, source.tenantId, source.memorySpaceId, bridge.runId);
     if (runs.length !== 1 || runs[0].tombstonedAt !== undefined || runs[0].conversationEpoch !== conversation.epoch) return false;
   }
   if (!await artifactDependenciesAreCurrent(ctx, reference, bridge.artifactContextWitnesses ?? [], traversal)) return false;
@@ -257,8 +255,7 @@ async function managedCachedSourcesAreCurrent(ctx: ReadCtx, reference: RuntimeAu
   source: Doc<"runtimeMemorySources">, witnesses: readonly ContextSourceWitness[], traversal: ManagedSourceTraversal): Promise<boolean> {
   if (witnesses.length > 32) dataDenied("CONTEXT_LIMIT_EXCEEDED");
   for (const witness of witnesses) {
-    const linked = await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", source.tenantId)
-      .eq("memorySpaceId", source.memorySpaceId).eq("lineage.sourceId", witness.sourceId)).take(2);
+    const linked = await readManagedSourceRows(ctx, source.tenantId, source.memorySpaceId, witness.sourceId);
     const original = linked.length === 1 ? linked[0] : undefined;
     if (!original || original.tombstonedAt !== undefined || original.lineage.sourceEventId !== witness.sourceEventId
       || original.lineage.sourceRevision !== witness.sourceRevision || original.contentHash !== witness.contentHash) return false;

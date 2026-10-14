@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "K25 scopedfunctional/nativeunequalPASS,0/4SLO; independentcleanupABSENT. K26 sourcegraphraw-read repair active.",
+  "phase": "K26 source/test/docs independentlyPASS; fresh committed packaging next",
   "complete": 2,
   "total": 4,
   "percent": 50,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T18:07:26.407341+00:00",
+  "updatedAt": "2026-10-14T18:29:45.554240+00:00",
   "metricVersion": 2,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -1593,5 +1593,13 @@
     "reservationCeilingsUnits": 7100000,
     "actualCharges": "UNKNOWN",
     "cleanup": "Independent exact resourcesABSENT"
+  },
+  "k26": {
+    "sourceImplementationPercent": 100,
+    "sourceIndependentAcceptance": "PASS3.8 sourceonly; nativeNOT_RUN",
+    "nativeCandidateStatus": "NOT_RUN",
+    "jointQuality": "6/6PASS driver0",
+    "reviewPacket": "k26-repair-review-packet-v1.json",
+    "priorNative": "K25 0/4 under1000ms preserved"
   }
 }

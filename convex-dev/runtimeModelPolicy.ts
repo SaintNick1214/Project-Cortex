@@ -1179,7 +1179,7 @@ const terminalCaptureArgs = { attemptId: v.id("runtimeModelAttempts"), dispatchI
 export const captureTerminalEvidence = internalMutation({ args: terminalCaptureArgs, handler: captureTerminalEvidenceHandler });
 /** Compiled private V8 producers opt in without adding an access gate before accounting. */
 export const captureTerminalEvidenceV8 = internalMutation({ args: terminalCaptureArgs,
-  handler: (ctx, args) => captureTerminalEvidenceHandler(createV8AuthorityReadScope(ctx), args) });
+  handler: (ctx, args) => captureTerminalEvidenceHandler(createV8AuthorityReadScope(ctx, { managedSources: true }), args) });
 /** Private delivery is independently fenced by exact current original authority. Closed never reopens. */
 export async function attachTerminalResultHandler(ctx: MutationCtx, args: { reference: RuntimeAuthorityReference; attemptId: Id<"runtimeModelAttempts">; evidenceId: string; privateResultCanonical: string }) {
   const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, snapshot } = state;
@@ -1206,7 +1206,7 @@ const terminalAttachmentArgs = { ...attemptArgs, evidenceId: v.string(), private
 export const attachTerminalResult = internalMutation({ args: terminalAttachmentArgs, handler: attachTerminalResultHandler });
 /** A new native invocation repeats the original independent private-result fence. */
 export const attachTerminalResultV8 = internalMutation({ args: terminalAttachmentArgs,
-  handler: (ctx, args) => attachTerminalResultHandler(createV8AuthorityReadScope(ctx), args) });
+  handler: (ctx, args) => attachTerminalResultHandler(createV8AuthorityReadScope(ctx, { managedSources: true }), args) });
 /** Positive canonical retirement evidence; absence alone is never deployment authority. */
 async function retiredScope(ctx: ReadCtx, operation: Operation) {
   const reader = createAuthorityReader(ctx);

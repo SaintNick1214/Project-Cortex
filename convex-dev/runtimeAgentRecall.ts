@@ -20,7 +20,7 @@ import { contextBoundary } from "./runtimeMemoryContext";
 import type { ContextBoundary } from "./runtimeMemoryContext";
 import { readCurrentEmbeddingProfile } from "./runtimeModelPolicy";
 import { internalQuery, internalMutation } from "./_generated/server";
-import { createAuthorityReadScope, createV8AuthorityReadScope } from "./runtimeAuth";
+import { createAuthorityReadScope, createV8AuthorityReadScope, withManagedSourceReads, freshManagedSourceReads } from "./runtimeAuth";
 import { contextSourceBatchHandler } from "./runtimeAgent";
 import { currentQuery, boundedRefusal, throwRefusal } from "./runtimeAgentQueryEmbedding";
 import type { AgentQueryEmbeddingAttempt } from "./runtimeAgentQueryEmbedding";
@@ -58,13 +58,14 @@ async function currentRead(ctx: QueryCtx, args: Args, expectedVersion?: 8) {
     (key, runBudgetId) => readCurrentEmbeddingProfile(ctx, args.reference, key, runBudgetId)) };
 }
 export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args, expectedVersion?: 8) {
-  const ctx = expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
+  const ctx = expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx, { managedSources: true }) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
   const { current, repository } = await currentRead(ctx, args, expectedVersion);
+  const sourceCtx = expectedVersion === 8 ? withManagedSourceReads(nativeCtx, ctx) : nativeCtx;
   const [vector, facts] = await Promise.allSettled([
     (async () => { const authority = await repository.authority(undefined, "read");
       await repository.assertProfileReady(args.profile, current.run.runBudgetId); return { resourceAccess: authority.resourceAccess }; })(),
     (async (): Promise<FactPlan> => { const values = await repository.listFacts({ limit: args.input.limit }), bindings = emptyBindings();
-      for (const fact of values) await captureRecallFact(bindings, fact, await new ConvexMemoryRepository(nativeCtx, args.reference, "read").getSource(fact.lineage.sourceId));
+      for (const fact of values) await captureRecallFact(bindings, fact, await new ConvexMemoryRepository(sourceCtx, args.reference, "read").getSource(fact.lineage.sourceId));
       return { kind: "ready", facts: values, bindings }; })(),
   ]);
   if (vector.status === "rejected") throw vector.reason;
@@ -75,11 +76,13 @@ export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args, expec
 export const prepareReads = internalQuery({ args: nativeArgs, handler: prepareReadsHandler });
 
 export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }, expectedVersion?: 8, invocationScope?: QueryCtx) {
-  const ctx = invocationScope ?? (expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true }));
+  const ctx = invocationScope ?? (expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx, { managedSources: true }) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true }));
   const { current, repository } = await currentRead(ctx, args, expectedVersion), bindings = emptyBindings();
+  // Share only raw ancestry rows. These source fences retain uncached authority.
+  const sourceCtx = expectedVersion === 8 ? withManagedSourceReads(nativeCtx, ctx) : nativeCtx;
   const matches = await repository.hydrateVectors(args.hits, args.profile, current.run.runBudgetId);
   await captureRecallVectors(bindings, matches, args.profile, { runBudgetId: current.run.runBudgetId });
-  const selectedVectors = await contextSourceBatchHandler(nativeCtx, { reference: args.reference, ...args.selection, permission: "canViewMemories",
+  const selectedVectors = await contextSourceBatchHandler(sourceCtx, { reference: args.reference, ...args.selection, permission: "canViewMemories",
     witnesses: [], priorWitnesses: [], items: matches.map(match => ({ sourceId: match.source.lineage.sourceId,
       expected: { sourceEventId: match.source.lineage.sourceEventId, sourceRevision: match.source.lineage.sourceRevision, contentHash: match.source.contentHash } })) });
   // A fact refusal is delivered only after the original complete vector source branch.
@@ -96,7 +99,7 @@ export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hit
       && /^[a-f0-9]{64}$/.test(value.contentHash))) memoryError("INVALID_INPUT", "Fact plan lost its source binding");
   }
   if (canonicalMemoryValue(expectedFacts) !== canonicalMemoryValue(factBindings.facts)) memoryError("INVALID_INPUT", "Fact plan payload binding changed");
-  const selectedFacts = await contextSourceBatchHandler(nativeCtx, { reference: args.reference, ...args.selection, permission: "canViewFacts",
+  const selectedFacts = await contextSourceBatchHandler(sourceCtx, { reference: args.reference, ...args.selection, permission: "canViewFacts",
     witnesses: [], priorWitnesses: selectedVectors.witnesses,
     items: facts.map(fact => ({ sourceId: fact.lineage.sourceId, expected: { sourceEventId: fact.lineage.sourceEventId, sourceRevision: fact.lineage.sourceRevision } })) });
   const witnesses = new Map(selectedVectors.witnesses.map(value => [value.sourceId, value]));
@@ -143,7 +146,9 @@ export const readMatchesV8 = internalQuery({ args: { ...nativeArgs, hits: v.arra
 /** Same consumed-row predicates and final unscoped grant/deadline fence. Only
  * the original profile helper executes locally instead of in a child query. */
 export async function finalDeliveryV8Handler(nativeCtx: MutationCtx, args: { reference: AgentQueryEmbeddingAttempt["reference"]; bindings: MemoryDeliveryBindings }, invocationScope?: MutationCtx) {
-  const ctx = invocationScope ?? createV8AuthorityReadScope(nativeCtx);
+  const ctx = invocationScope ?? createV8AuthorityReadScope(nativeCtx, { managedSources: true });
+  // The original final resource pass begins with fresh raw ancestry rows.
+  freshManagedSourceReads(ctx);
   return await new ConvexMemoryRepository(ctx, args.reference, "read", undefined, { now: () => Date.now() },
     (key, runBudgetId) => readCurrentEmbeddingProfile(ctx, args.reference, key, runBudgetId)).checkDelivery(args.bindings, nativeCtx);
 }
@@ -156,7 +161,7 @@ const deliveryV8Ref = makeFunctionReference("runtimeAgentRecall:finalDeliveryV8"
  * the raw native context; only trusted raw control readers share this snapshot.
  * Defer delivery refusal so Action selection/ranking retain their precedence. */
 export async function readMatchesAndDeliveryV8Handler(nativeCtx: MutationCtx, args: Parameters<typeof readMatchesHandler>[1]) {
-  const ctx = createV8AuthorityReadScope(nativeCtx);
+  const ctx = createV8AuthorityReadScope(nativeCtx, { managedSources: true });
   const read = await readMatchesHandler(nativeCtx, args, 8, ctx);
   try { return { read, delivery: await finalDeliveryV8Handler(nativeCtx, { reference: args.reference, bindings: read.bindings }, ctx) }; }
   catch (error) {

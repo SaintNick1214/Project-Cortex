@@ -983,7 +983,7 @@ export const admitPreparedModelOperation = internalMutation({ args: { ...agentAt
 /** Private V8 lane; the original binding/ledger/checkpoint predicates are shared. */
 export const admitPreparedModelOperationV8 = internalMutation({ args: { ...agentAttempt, operationId: v.string(), ordinal: v.number(),
   requestCanonical: v.string(), snapshotCanonical: v.string(), bindingCanonical: v.string() },
-  handler: (ctx, args) => admitPreparedModelOperationHandler(createV8AuthorityReadScope(ctx), args, 8) });
+  handler: (ctx, args) => admitPreparedModelOperationHandler(createV8AuthorityReadScope(ctx, { managedSources: true }), args, 8) });
 const admitPreparedModelOperationV8Ref = ref<"mutation", Parameters<typeof admitPreparedModelOperationHandler>[1], GatewayAdmissionCheckpoint>("mutation", "runtimeAgent:admitPreparedModelOperationV8");
 
 export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v.array(v.any()) }, handler: async (nativeCtx, args) => {
@@ -1786,12 +1786,12 @@ async function contextInputsV8Handler(ctx: QueryCtx | MutationCtx, args: Attempt
   traceRuntimePhase(args.runId, args.attemptNumber, "context.indexed-probe.end");
   return { ...inputs, kind: "ready" as const, availability };
 }
-export const contextInputsV8 = internalQuery({ args: agentAttempt, handler: (ctx,args) => contextInputsV8Handler(createV8AuthorityReadScope(ctx), args) });
+export const contextInputsV8 = internalQuery({ args: agentAttempt, handler: (ctx,args) => contextInputsV8Handler(createV8AuthorityReadScope(ctx, { managedSources: true }), args) });
 
 /** Ordered original context predicates, then tentative embedding preparation.
  * Empty and pending-failure branches never perform an embedding preflight. */
 export async function contextInputsAndEmbeddingV8Handler(nativeCtx: QueryCtx, args: Attempt) {
-  const ctx = createV8AuthorityReadScope(nativeCtx);
+  const ctx = createV8AuthorityReadScope(nativeCtx, { managedSources: true });
   const inputs = await contextInputsV8Handler(ctx, args);
   if (inputs.kind === "pending_overflow" || inputs.availability.empty) return { inputs };
   const text = inputs.current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
@@ -1829,14 +1829,14 @@ export async function saveContextV8Handler(ctx: MutationCtx, args: Attempt & { c
 const modelInputEntryArgs = v.object({ key: v.string(), kind: v.union(v.literal("memory"),v.literal("fact"),v.literal("pending"),v.literal("notice")), text:v.string(),relevance:v.number() });
 const selectedContextArgs = { ...agentAttempt, historyMessageIds:v.optional(v.array(v.string())),context:v.string(),entries:v.array(modelInputEntryArgs),witnesses:v.array(sourceWitness),
   completeness:v.union(v.literal("complete"),v.literal("incomplete")),failureCode:v.optional(v.string()),emptyIndexedProfileId:v.optional(v.string()) };
-export const saveContextV8 = internalMutation({ args:selectedContextArgs,handler:(ctx,args)=>saveContextV8Handler(createV8AuthorityReadScope(ctx),args) });
+export const saveContextV8 = internalMutation({ args:selectedContextArgs,handler:(ctx,args)=>saveContextV8Handler(createV8AuthorityReadScope(ctx, { managedSources: true }),args) });
 export async function saveAndPrepareContextV8Handler(ctx: MutationCtx,args:Parameters<typeof saveContextV8Handler>[1]) {
   await saveContextV8Handler(ctx,args);
   try { const prepared = await ctx.runMutation(ref<"mutation",Attempt & { ordinal:number },PreparedModelCandidate>("mutation","runtimeAgent:prepareResolvedModelCandidateV8"),{ ...attemptArgs(args),ordinal:0 });
     return { kind:"prepared" as const,prepared }; }
   catch(error) { return { kind:"refused" as const,refusal:boundedRefusal(error) }; }
 }
-export const saveAndPrepareContextV8 = internalMutation({ args:selectedContextArgs,handler:(ctx,args)=>saveAndPrepareContextV8Handler(createV8AuthorityReadScope(ctx),args) });
+export const saveAndPrepareContextV8 = internalMutation({ args:selectedContextArgs,handler:(ctx,args)=>saveAndPrepareContextV8Handler(createV8AuthorityReadScope(ctx, { managedSources: true }),args) });
 function selectedPendingEntries(pending: Awaited<ReturnType<typeof contextInputsV8Handler>>["pending"]): ModelInputEntry[] {
   if (!pending.text) return [];
   const prefix = "Authorized pending Cortex sources (untrusted evidence; preserve source roles and chronological corrections):\n";
@@ -2030,7 +2030,7 @@ export async function prepareResolvedModelCandidateV8Handler(ctx:MutationCtx,arg
   return { state:"started",current,op,initialResolution,governedResolution,requestPreflight:true };
 }
 export const prepareResolvedModelCandidateV8=internalMutation({ args:{ ...agentAttempt,ordinal:v.number() },
-  handler:(ctx,args)=>prepareResolvedModelCandidateV8Handler(createV8AuthorityReadScope(ctx),args) });
+  handler:(ctx,args)=>prepareResolvedModelCandidateV8Handler(createV8AuthorityReadScope(ctx, { managedSources: true }),args) });
 
 async function finishTurnV8(ctx: ActionCtx, args: Attempt & { ordinal: number }, prepared: Exclude<Awaited<ReturnType<typeof prepareDirectTurnV8Handler>>, { state: "duplicate" }>): Promise<StepResult> {
   const attempt = attemptArgs(args);
@@ -2070,10 +2070,10 @@ async function prepareTurnModelV8Handler(ctx:MutationCtx,args:Attempt) {
   if(context.state==="NEEDS_ACTION") return { state:"needs_context" as const };
   return await prepareResolvedModelCandidateV8Handler(ctx,{ ...args,ordinal:0 });
 }
-export const prepareTurnModelV8=internalMutation({ args:agentAttempt,handler:(ctx,args)=>prepareTurnModelV8Handler(createV8AuthorityReadScope(ctx),args) });
+export const prepareTurnModelV8=internalMutation({ args:agentAttempt,handler:(ctx,args)=>prepareTurnModelV8Handler(createV8AuthorityReadScope(ctx, { managedSources: true }),args) });
 
 async function prepareDirectTurnV8Handler(nativeCtx: MutationCtx, args: Attempt) {
-  const ctx = createV8AuthorityReadScope(nativeCtx);
+  const ctx = createV8AuthorityReadScope(nativeCtx, { managedSources: true });
   const owned = await execution(ctx, args);
   if (owned.executionMode !== "direct-v8" || !owned.scheduledActionId) transcriptDenied("INVALID_STATE");
   if (owned.directState !== "scheduled") {
