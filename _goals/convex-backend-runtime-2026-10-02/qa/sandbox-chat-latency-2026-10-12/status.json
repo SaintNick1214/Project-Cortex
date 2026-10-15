@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "DIRECT_CANDIDATE_BROWSER_CLIENT_QUALIFICATION",
+  "phase": "BUDGET_REPAIR_SOURCE_ACCEPTED_INSTALLATION_PENDING",
   "complete": 4,
   "total": 6,
   "percent": 66.7,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-15T03:47:46.991Z",
+  "updatedAt": "2026-10-15T06:29:08.284845+00:00",
   "metricVersion": 3,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -74,39 +74,39 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "state": "CLEANED",
-    "sessionId": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
-    "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
-    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-direct-2026-10-14",
+    "state": "READY",
+    "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+    "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-compact-2026-10-15",
     "target": {
-      "id": 6184997,
-      "name": "fine-chickadee-10",
+      "id": 6186053,
+      "name": "striped-toad-620",
       "kind": "cloud",
       "teamId": 325340,
       "projectId": 3200658,
-      "reference": "dev/cortex-sandbox-c6a1903b-d656-4e15-806f-4f92defb0bf0",
+      "reference": "dev/cortex-sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
       "deploymentType": "dev",
       "isDefault": false,
-      "expiresAt": 1792636452715,
-      "deploymentUrl": "https://fine-chickadee-10.convex.cloud",
+      "expiresAt": 1792641462436,
+      "deploymentUrl": "https://striped-toad-620.convex.cloud",
       "disposable": true,
       "serverExpiryVerified": true
     },
     "container": {
-      "name": "cortex-sandbox-c6a1903b-d656-4e15-806f-4f92defb0bf0",
-      "imageId": "sha256:de7b73132cd6af5cdb5b4286283f5ef48a626eb75adc33006c3308865b333447",
+      "name": "cortex-sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
+      "imageId": "sha256:1ec4c11c232bedd2a16443061f3da0cddec35c18b2788da81a326b6fd45b6a19",
       "labels": {
-        "dev.cortex.disposable-sandbox": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
-        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/c6a1903b-d656-4e15-806f-4f92defb0bf0"
+        "dev.cortex.disposable-sandbox": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/c371f9bb-831d-44e3-95a2-bfe43f48d946"
       },
-      "id": "d356690038f4b8f7de35425dfaea804353ddae4d39215243c7ab8b49d9c36777"
+      "id": "10dcf204dffe947715a0bfa12253b067ef47cbef8f32a40e6c33490972542adf"
     },
     "ports": {
-      "web": 3326,
-      "basic": 3327
+      "web": 3428,
+      "basic": 3429
     },
-    "launcherPid": 71456,
-    "rootExecSession": 52865,
+    "launcherPid": 14964,
+    "rootExecSession": 29454,
     "startupFixedQualification": "8/8ACTUAL_PASS",
     "startupBatch": {
       "actualSuccessfulMethods": 8,
@@ -115,29 +115,27 @@
       "activeConcurrency": 0,
       "aggregateUsdComplete": false,
       "perRunHumanReview": false,
-      "procedureApprovalDigest": "0582db9f24bf770090fa081630e4077b6c54539183fd696059895faedec0e08d",
+      "procedureApprovalDigest": "36a00deea314c80eb1ac9906cd2b54989ddd0642814f82d0aab9f89a42f26017",
       "immutableProcedureReviewedBeforeRun": true,
       "freshActualOutcomes": true,
       "oldQualificationDatesReused": false
     },
-    "startupBatchSha256": "d1ade277e7c857ef29a74e8af633db9b2ba7a771efea47126270e982826bceae",
-    "runtimeReadySha256": "7773610d80cf5bf8e896b1b15874bd31b944d336d894aed0ab884545d986b0e8",
+    "startupBatchSha256": "6f6c6bdaeac5567ace5636efae6485e22e2b5f8b1cd84e3030e5c33035c29e46",
+    "startupStrictEmptyQuestion": true,
+    "startupExtractionSha256": "5ef5e3701e75e3ed4140ae27972667c38be18ddbb25944f954304232d9510547",
+    "runtimeReadySha256": "603878d3753bc16185a91ce3e630fda3bdcfeb57e494b28e306ba778c21936dd",
     "managedDefaultProfile": true,
     "capabilities": {
       "inputSelectionVersion": 2,
       "memoryEffortPolicyVersion": 1
     },
     "healthStatus": 200,
-    "readyAt": "2026-10-15T02:42:11.635Z",
+    "readyAt": "2026-10-15T04:01:30.455Z",
     "effortProfileRuntimeAcceptance": false,
-    "manifestSha256": "d13d8f35da717b84aad3e7d637ed6e63636e5d4e9d7fa26faedac54b1a4abf66",
-    "backendManifestSha256": "c5d5341860fa804895964f361b1ed5db7b4abf4438f6bbf4f13db61df832c712",
-    "cleanup": {
-      "directLauncherExit": 130,
-      "receipt": "memory-effort-direct-native-cleanup-1792034728868.json",
-      "freshAbsenceChecks": 21,
-      "cloudContainerPrivateFilesAndProcessesAbsent": true
-    }
+    "manifestSha256": "3a4dba7d1dba126aded60b281cee03147f9e87a5072e8f4f78d6e645836ed22d",
+    "backendManifestSha256": "35c0de9a7a5875185d0ef6394c99c988d916ddbaca682ea6663223e5570655cf",
+    "backendFileCount": 174,
+    "modelCalls": 0
   },
   "actualSamples": {
     "generation": "K21",
@@ -565,8 +563,8 @@
         "pass": 8,
         "fail": 2,
         "failures": [
-          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
-          "invalidsignature→AUTHENTICATION_TIMEOUT"
+          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
+          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
         ],
         "noAccessDelivered": true,
         "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
@@ -600,8 +598,8 @@
       "priorAuthenticationExpectedCodeFailures": {
         "generation": "K9",
         "failures": [
-          "expired valid signature → AUTHENTICATION_TIMEOUT",
-          "invalid signature → AUTHENTICATION_TIMEOUT"
+          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
+          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
         ],
         "notRerun": true
       },
@@ -623,7 +621,7 @@
       },
       "toolInclusiveSupplement": {
         "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
-        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
         "originalGenericFailPreserved": true
       }
     }
@@ -2422,9 +2420,9 @@
   "entireMirror": {
     "remote": "entire",
     "repository": "cortex-memory/cortex",
-    "continuationHead": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+    "continuationHead": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
     "pushExit": 0,
-    "pushResult": "Branch advanced f87d79a26 to064e21be1",
+    "pushResult": "064e21be1 to e9a9fb7bd",
     "fetchedDev": "46013de5919a72ecdbf55d02486aaaa7994cb79f",
     "devAncestor": true,
     "currentSdkCliProvider": "0.39.0",
@@ -2929,7 +2927,7 @@
     "total": 5,
     "percent": 100,
     "independentReview": "PASS_SOURCE_ONLY_4.0",
-    "hostedQualification": "NOT_RUN",
+    "hostedQualification": "CURRENT_BROWSER_RETRIEVAL_FAILURE",
     "repairs": [
       {
         "name": "literal fact eligibility",
@@ -2970,12 +2968,208 @@
       "providerUnit": 312,
       "providerMockedIntegration": 74,
       "docsBuild": 0
-    }
+    },
+    "commit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+    "push": "ENTIRE_CONFIRMED"
   },
   "metricName": "Modified memory-effort and hosted-latency follow-up",
   "baseGoalHistory": {
     "receipt": "../video-deferral-2026-10-11/status.json",
     "nonVideoScopePreviouslyAccepted": true,
     "currentChangedSourceFinalAcceptance": false
+  },
+  "previousDirectCandidateEnvironment": {
+    "state": "CLEANED",
+    "sessionId": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+    "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-direct-2026-10-14",
+    "target": {
+      "id": 6184997,
+      "name": "fine-chickadee-10",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-c6a1903b-d656-4e15-806f-4f92defb0bf0",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1792636452715,
+      "deploymentUrl": "https://fine-chickadee-10.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    "container": {
+      "name": "cortex-sandbox-c6a1903b-d656-4e15-806f-4f92defb0bf0",
+      "imageId": "sha256:de7b73132cd6af5cdb5b4286283f5ef48a626eb75adc33006c3308865b333447",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/c6a1903b-d656-4e15-806f-4f92defb0bf0"
+      },
+      "id": "d356690038f4b8f7de35425dfaea804353ddae4d39215243c7ab8b49d9c36777"
+    },
+    "ports": {
+      "web": 3326,
+      "basic": 3327
+    },
+    "launcherPid": 71456,
+    "rootExecSession": 52865,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "0582db9f24bf770090fa081630e4077b6c54539183fd696059895faedec0e08d",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "d1ade277e7c857ef29a74e8af633db9b2ba7a771efea47126270e982826bceae",
+    "runtimeReadySha256": "7773610d80cf5bf8e896b1b15874bd31b944d336d894aed0ab884545d986b0e8",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T02:42:11.635Z",
+    "effortProfileRuntimeAcceptance": false,
+    "manifestSha256": "d13d8f35da717b84aad3e7d637ed6e63636e5d4e9d7fa26faedac54b1a4abf66",
+    "backendManifestSha256": "c5d5341860fa804895964f361b1ed5db7b4abf4438f6bbf4f13db61df832c712",
+    "cleanup": {
+      "directLauncherExit": 130,
+      "receipt": "memory-effort-direct-native-cleanup-1792034728868.json",
+      "freshAbsenceChecks": 21,
+      "cloudContainerPrivateFilesAndProcessesAbsent": true
+    }
+  },
+  "compactCandidate": {
+    "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+    "packaging": "PASS",
+    "launcherIntegration": "PASS",
+    "launcherOfflineChecks": 131,
+    "offlineCheckComposition": "117 selected local/lifecycle/framing/qualification plus14 remaining cloud/runtime-token; zero skips, natural exits0; not one invocation",
+    "strictFirstNativeQualification": "jsonExtract ACTUAL_PASS1/8",
+    "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+    "targetId": 6186053,
+    "imageId": "sha256:1ec4c11c232bedd2a16443061f3da0cddec35c18b2788da81a326b6fd45b6a19",
+    "procedureDigest": "36a00deea314c80eb1ac9906cd2b54989ddd0642814f82d0aab9f89a42f26017",
+    "nativeAcceptance": false,
+    "sloAcceptance": false,
+    "startup": "8/8ACTUAL_PASS",
+    "startupStrictQuestion": true,
+    "actualRuntime": "CURRENT_BROWSER_RETRIEVAL_FAILURE_REPAIR_IN_PROGRESS",
+    "browser": {
+      "receipt": "memory-effort-compact-browser-summary.json",
+      "executed": 7,
+      "correct": 6,
+      "memoryComplete": 7,
+      "withinTarget": 5,
+      "initialSixExecuted": 6,
+      "initialSixTimingPercent": 83.3,
+      "crossConversationCorrect": false,
+      "overallGoalPercent": 66.7
+    },
+    "state": "CLEANED",
+    "nativeContinuation": "SCOPED_PASS",
+    "nativeContinuationReceipt": "memory-effort-compact-native-continuation-report.json",
+    "finalEvaluation": "memory-effort-compact-final-evaluation.json",
+    "cleanup": {
+      "directLauncherExit": 130,
+      "receipt": "memory-effort-compact-native-cleanup-1792039305148.json",
+      "checks": 21,
+      "targetContainerPrivateFilesAndOwnedProcessesAbsent": true,
+      "ownedChatServerAlsoAbsent": true,
+      "userDocs3367Untouched": true
+    }
+  },
+  "rankedCandidate": {
+    "sourceCommit": "9973b498e5d076457367b285858729917830e51a",
+    "sourceReview": "PASS4.0",
+    "review": "memory-effort-ranked-combined-review.json",
+    "independentTests": {
+      "passed": 286,
+      "total": 286,
+      "suites": 11,
+      "skipped": 0,
+      "naturalExit": 0
+    },
+    "build": "PASS",
+    "packedBrowserContracts": "PASS",
+    "entirePush": "PASS",
+    "packaging": "PASS",
+    "freshHostedAcceptance": false,
+    "sloAcceptance": false,
+    "previousLiveFailuresRetained": true,
+    "launcherIntegration": "PASS",
+    "launcherOfflineChecks": 132,
+    "launcherCheckComposition": "79 passed in initial run;2 failed suite loads due missing TSX loader;53/53 in only those suites after corrected loader; original failure retained;zero skips",
+    "procedureDigest": "5cff516c5690e16a126b6382e272a04adf33d88c42a5148df13410be2b16f552",
+    "imageId": "sha256:6496488d276cb624f9134a0126970637c0e582e38fb260867b0f537e2584240c",
+    "state": "CLEANED_KNOWN_RUNTIME_FAILURES_RETAINED",
+    "sessionId": "50567f65-1574-42bd-8941-00cd1c1ed581",
+    "rootExecSession": 9102,
+    "target": "lovely-herring-793",
+    "targetId": 6187093,
+    "launcherPid": 41960,
+    "containerId": "5a8f6de92327e1c8dbe4706ffa989e0cbd8a70d5eeafd0c9b79611e80f609ffc",
+    "startup": "8/8ACTUAL_PASS",
+    "startupStrictEmptyQuestion": true,
+    "traceReadback": 1,
+    "nativeAcceptance": "512checks actual + cancellededit strict4/4; allnativeclientsclosed",
+    "browserNewRunIntents": 6,
+    "chatInstalledBuild": "CODEGEN_FULL_TYPES_PRODUCTION_BUILD_PASS",
+    "nativeReceipt": "memory-effort-ranked-native-actual-outcome.json",
+    "browserObserved": 6,
+    "browserCorrect": 5,
+    "browserTimingMet": 3,
+    "browserSummary": "memory-effort-ranked-browser-summary.json",
+    "chatActualReply": "Correctapricot/response+memorycomplete; same-runbuttonsreconnect; phone393nooverflow; no paintinstrumentation",
+    "chatOwnedProcessCleanup": "memory-effort-ranked-cli-chat-cleanup.json",
+    "latestQuietSnapshot": "memory-effort-ranked-final-snapshot-1792042930034.json",
+    "knownFailures": [
+      "Fastrecent3156.6ms exceeds3000",
+      "Normalindexed6422.1ms exceeds6000",
+      "Fastcross5511.5ms incorrect:785msdeadlineclearedallselectedentries"
+    ],
+    "cleanup": "memory-effort-ranked-native-cleanup-1792044103579.json",
+    "cleanupChecks": 21,
+    "launcherExitCode": 130,
+    "finalSnapshot": "memory-effort-ranked-final-snapshot-1792043947059.json",
+    "allTargetAttempts": 71,
+    "allTargetUnknownLiabilityMicroUsd": 9000000,
+    "activeSlots": 0,
+    "reservedUnits": 0,
+    "cliCorrect": 2,
+    "cliWithinTarget": 0,
+    "cliFirstPrintedMs": [
+      7783.394129,
+      6794.940419
+    ],
+    "cliReport": "memory-effort-ranked-cli-report.md"
+  },
+  "rankedRepairInProgress": {
+    "state": "INDEPENDENT_SOURCE_PASS4.0_ZERO_BREAKING",
+    "rawRunLookup": "existing invocationlocal exactrawread reuse; allpredicates/fencesunchanged",
+    "deadline": "preserve alreadyvalidatedevidence afterinflightRPC and propagateoriginalworkdeadline; neverextendbudget",
+    "independentReview": "memory-effort-budget-combined-review.json",
+    "installedRetest": "PENDING_MATERIAL_CHANGED_CANDIDATE",
+    "noPaidRetries": true,
+    "interruption": "memory-effort-budget-interrupted-checks.json"
+  },
+  "budgetCandidate": {
+    "state": "SOURCE_ACCEPTED_PENDING_COMMIT_AND_FRESH_INSTALLATION",
+    "baseCommit": "9973b498e5d076457367b285858729917830e51a",
+    "sourceFiles": 11,
+    "independentReview": "PASS4.0",
+    "independentTests": 494,
+    "independentSuites": 14,
+    "skips": 0,
+    "naturalExit": 0,
+    "build": "memory-effort-budget-root-build2.json",
+    "contracts": "memory-effort-budget-root-contracts1.json",
+    "sloAcceptance": false,
+    "actualInstalledQualification": "PENDING"
   }
 }

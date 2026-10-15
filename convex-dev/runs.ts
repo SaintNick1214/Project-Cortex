@@ -17,7 +17,7 @@ import { bindTrustedBudget } from "./runtimeModelPolicy";
 import { readCurrentExecutableDefinition } from "./agentDefinitions";
 import { agentComponent, approveRegisteredMessage, bridgeFor, captureCutoff, captureSelectedCutoff, checkConversation, conversationById, createManagedConversation, executionRevision,
   hydrateCutoff, registerMessages, requireConversation, singleTranscript, transcriptDenied } from "./runtimeTranscript";
-import { recheckAuthority } from "./runtimeAuth";
+import { readManagedSourceRunRows, recheckAuthority } from "./runtimeAuth";
 import { stageStatus } from "./runtimeTranscriptSchema";
 import { readRunMemoryPublication, retireCancelledUnapprovedInputs } from "./runtimeIngestion";
 import { holdForegroundIngestion, releaseForegroundIngestion } from "./runtimeIngestionPriority";
@@ -30,8 +30,9 @@ const recoverOwnedRef = internalMutationRef<{ reference: RuntimeAuthorityReferen
 const cancelBudgetRef = internalMutationRef<{ reference: RuntimeAuthorityReference; runBudgetId: string }, unknown>("runtimeModelPolicy:cancelBudget");
 const cancelAgentBudgetRef = internalMutationRef<{ reference: RuntimeAuthorityReference; runId: string }, unknown>("runtimeModelPolicy:cancelAgentBudget");
 async function runById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, runId: string) {
-  return singleTranscript(await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", reference.tenantId)
-    .eq("memorySpaceId", reference.memorySpaceId!).eq("runId", runId)).take(2));
+  // Only raw rows share an owning native snapshot; every caller's current
+  // predicates still run, and run/unknown writers invalidate the reader.
+  return singleTranscript(await readManagedSourceRunRows(ctx, reference.tenantId, reference.memorySpaceId!, runId));
 }
 /** Metadata access and safe retirement only; it grants no executable definition,
  * model admission, continuation or output attachment. */

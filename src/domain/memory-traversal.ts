@@ -7,11 +7,13 @@ export interface MemoryEvidenceEdge { node: MemoryEvidenceNode; relationship: "s
 export interface MemoryEvidencePage { edges: MemoryEvidenceEdge[]; cursor: string | null; unavailableStages?: string[]; work?: number }
 /** BFS over actual bounded adjacency. Membership/hydration rows never add depth. */
 export async function traverseMemoryEvidence(input: {
-  seeds: readonly MemoryEvidenceNode[]; policy: EffectiveMemoryEffortPolicy; now(): number;
+  seeds: readonly MemoryEvidenceNode[]; policy: EffectiveMemoryEffortPolicy; now(): number; startedAt?: number;
   cancelled?(): boolean | Promise<boolean>;
   expand(node: MemoryEvidenceNode, cursor: string | null, limit: number): Promise<MemoryEvidencePage>;
 }) {
-  const start = input.now(), trace = emptyMemoryEffortTrace(input.policy), seen = new Map<string, MemoryEvidenceNode>();
+  if(input.startedAt!==undefined&&(!Number.isFinite(input.startedAt)||input.startedAt<0))throw new Error("INVALID_INPUT: invalid retrieval work start");
+  const enteredAt = input.now(), start = input.policy.evidenceRankingVersion!==1||input.startedAt === undefined ? enteredAt : Math.min(enteredAt, input.startedAt);
+  const trace = emptyMemoryEffortTrace(input.policy), seen = new Map<string, MemoryEvidenceNode>();
   const queue: MemoryEvidenceNode[] = [], selected: MemoryEvidenceNode[] = [];
   let work = 0,candidateBytes=0;
   const unitsFor=(node:MemoryEvidenceNode)=>new TextEncoder().encode(JSON.stringify({content:node.item.content,key:node.key,depth:node.depth,path:node.path})).length;
@@ -23,15 +25,18 @@ export async function traverseMemoryEvidence(input: {
     if(candidateBytes+bytes>input.policy.maxCandidateBytes){stop("work");return;}candidateBytes+=bytes;
     const next = { ...node, depth, path }; seen.set(node.key, next); queue.push(next); trace.reachedDepth = Math.max(trace.reachedDepth, depth);
   };
-  for (const seed of input.seeds.slice(0,input.policy.maxWork).sort((a,b) => (input.policy.evidenceRankingVersion===1?Number(!!b.literalPropertyPriority)-Number(!!a.literalPropertyPriority):0)
-    || b.item.score-a.item.score || a.key.localeCompare(b.key))) {
-    if (++work > input.policy.maxWork) { stop("work"); break; } add(seed, 1, [seed.key]);
-  }
   const bounded = async () => {
     if (await input.cancelled?.()) { stop("cancellation"); return true; }
     if (input.now() - start >= input.policy.retrievalDeadlineMs) { stop("deadline"); return true; }
     if (work >= input.policy.maxWork) { stop("work"); return true; } return false;
   };
+  for (const seed of input.seeds.slice(0,input.policy.maxWork).sort((a,b) => (input.policy.evidenceRankingVersion===1?Number(!!b.literalPropertyPriority)-Number(!!a.literalPropertyPriority):0)
+    || b.item.score-a.item.score || a.key.localeCompare(b.key))) {
+    if (input.policy.evidenceRankingVersion===1&&await bounded()) break;
+    if (++work > input.policy.maxWork) { stop("work"); break; } add(seed, 1, [seed.key]);
+  }
+  // An empty/retired frontier must still report a spent inherited work budget.
+  if (input.policy.evidenceRankingVersion===1&&!queue.length) await bounded();
   for (let index=0; index<queue.length; index++) {
     if (await bounded()) break;
     const node = queue[index]!;

@@ -491,9 +491,11 @@ it("shared native parent keeps the final raw revocation fence and fresh save rec
 });
 
 it("same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal",async()=>{
- const f=await fixture(true),get=f.db.get.bind(f.db),query=f.db.query.bind(f.db),seen:{table:string;id:string}[]=[],queries:{table:string;index?:string}[]=[];
+ const f=await fixture(true),get=f.db.get.bind(f.db),query=f.db.query.bind(f.db),seen:{table:string;id:string}[]=[],queries:{table:string;index?:string;keys:unknown[];limit?:number}[]=[];
  jest.spyOn(f.db,"get").mockImplementation(async(table,id)=>{seen.push({table,id});return await get(table,id);});
- jest.spyOn(f.db,"query").mockImplementation(table=>{const record:{table:string;index?:string}={table};queries.push(record);const builder=query(table),withIndex=builder.withIndex.bind(builder);builder.withIndex=(index,callback)=>{record.index=index;return withIndex(index,callback);};return builder;});
+ jest.spyOn(f.db,"query").mockImplementation(table=>{const record:typeof queries[number]={table,keys:[]};queries.push(record);const builder=query(table),withIndex=builder.withIndex.bind(builder),take=builder.take.bind(builder);
+  builder.withIndex=(index,callback)=>{record.index=index;return withIndex(index,q=>{if(q===null||typeof q!=="object")throw Error("Expected original index query object");const traced=new Proxy(q,{get(target,key){const value:unknown=Reflect.get(target,key,target);if(typeof value!=="function")return value;return(...args:unknown[])=>{record.keys.push([String(key),...args]);const result:unknown=Reflect.apply(value,target,args);return result===target?traced:result;};}});return callback(traced);});};
+  builder.take=async limit=>{record.limit=limit;return await take(limit);};return builder;});
  const before=wholeState(f);
  const inputs=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>["inputs"]>(agent.contextInputsV8,f.attempt);
  const proposal=await f.call(queryEmbedding.prepareV8,{...f.attempt,input:f.input});const originalInitial=[...seen],originalInitialQueries=[...queries];seen.length=0;queries.length=0;
@@ -504,8 +506,16 @@ it("same-snapshot parents reuse raw control rows only; mutable read order and al
  expect(await f.call(whole.readMatchesAndDeliveryV8,args)).toEqual({read,delivery});const parentTail=[...seen],parentTailQueries=[...queries];
  const mutable=(reads:typeof seen)=>reads.filter(row=>!row.table.startsWith("runtimeAuth") && !["runtimeModelPolicies","runtimeModelQualifications"].includes(row.table));
  expect(mutable(parentInitial)).toEqual(mutable(originalInitial));expect(mutable(parentTail)).toEqual(mutable(originalTail));
- const mutableQueries=(reads:typeof queries)=>reads.filter(row=>!row.table.startsWith("runtimeAuth") && !["runtimeModelPolicies","runtimeModelQualifications","runtimeAgentDefinitions"].includes(row.table) && !(row.table==="runtimeTranscriptMessages"&&row.index==="by_native"));
+ // Only this exact bounded raw run index joins the existing retainable rows.
+ // All other run indexes, mutable reads and every source/authority guard remain.
+ const rawRun=(row:typeof queries[number])=>row.table==="runtimeRuns"&&row.index==="by_scoped_id";
+ const mutableQueries=(reads:typeof queries)=>reads.filter(row=>!row.table.startsWith("runtimeAuth") && !["runtimeModelPolicies","runtimeModelQualifications","runtimeAgentDefinitions"].includes(row.table) && !(row.table==="runtimeTranscriptMessages"&&row.index==="by_native")&&!rawRun(row));
  expect(mutableQueries(parentInitialQueries)).toEqual(mutableQueries(originalInitialQueries));expect(mutableQueries(parentTailQueries)).toEqual(mutableQueries(originalTailQueries));
+ const identities=(reads:typeof queries)=>[...new Set(reads.filter(rawRun).map(row=>JSON.stringify(row)))].sort();
+ expect(identities(parentInitialQueries)).toEqual(identities(originalInitialQueries));expect(identities(parentTailQueries)).toEqual(identities(originalTailQueries));
+ expect(parentInitialQueries.filter(rawRun).length).toBeLessThan(originalInitialQueries.filter(rawRun).length);
+ expect(parentTailQueries.filter(rawRun).length).toBeLessThanOrEqual(originalTailQueries.filter(rawRun).length);
+ expect([...parentInitialQueries,...parentTailQueries].filter(rawRun).every(row=>row.limit===2)).toBe(true);
  expect(parentInitial.length).toBeLessThan(originalInitial.length);expect(parentTail.length).toBeLessThan(originalTail.length);expect(wholeState(f)).toEqual(before);
  console.info(JSON.stringify({type:"k25-private-read-parent-counts",kind:"controlled-original-handlers",initial:{oldGets:originalInitial.length,newGets:parentInitial.length,oldQueries:originalInitialQueries.length,newQueries:parentInitialQueries.length},tail:{oldGets:originalTail.length,newGets:parentTail.length,oldQueries:originalTailQueries.length,newQueries:parentTailQueries.length},mutableReadSequencesEqual:true,applicationWrites:0,cloudLatency:"UNAVAILABLE"}));
 });

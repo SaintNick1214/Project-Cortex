@@ -48,23 +48,28 @@ async function fixture(){
  return {...f,get grant(){return f.grant;},attempt,run,calls,state,restore};
 }
 function instrument(f:Awaited<ReturnType<typeof fixture>>){
- const query=f.db.query.bind(f.db),get=f.db.get.bind(f.db),reads:{method:string;table:string;id?:string;index?:string;keys?:unknown[];documents:number}[]=[];
+ const query=f.db.query.bind(f.db),get=f.db.get.bind(f.db),reads:{method:string;table:string;id?:string;index?:string;keys?:unknown[];limit?:number;documents:number}[]=[];
  jest.spyOn(f.db,"get").mockImplementation(async(table,id)=>{const row=await get(table,id);reads.push({method:"get",table,id,documents:row?1:0});return row;});
  jest.spyOn(f.db,"query").mockImplementation(table=>{
-   const record={method:"query",table,index:undefined as string|undefined,keys:[] as unknown[],documents:0};reads.push(record);const builder=query(table),withIndex=builder.withIndex.bind(builder),take=builder.take.bind(builder),unique=builder.unique.bind(builder);
+   const record={method:"query",table,index:undefined as string|undefined,keys:[] as unknown[],limit:undefined as number|undefined,documents:0};reads.push(record);const builder=query(table),withIndex=builder.withIndex.bind(builder),take=builder.take.bind(builder),unique=builder.unique.bind(builder);
    builder.withIndex=(index,callback)=>{record.index=index;return withIndex(index,q=>{if(q===null||typeof q!=="object")throw Error("Expected original index query object");const traced=new Proxy(q,{get(target,key){const value:unknown=Reflect.get(target,key,target);if(typeof value!=="function")return value;return(...args:unknown[])=>{record.keys.push([String(key),...args]);const result:unknown=Reflect.apply(value,target,args);return result===target?traced:result;};}});return callback(traced);});};
-   builder.take=async n=>{const rows=await take(n);record.documents=rows.length;return rows;};builder.unique=async()=>{const row=await unique();record.documents=row?1:0;return row;};return builder;
+   builder.take=async n=>{record.limit=n;const rows=await take(n);record.documents=rows.length;return rows;};builder.unique=async()=>{const row=await unique();record.documents=row?1:0;return row;};return builder;
  });
  const retained=(table:string)=>table.startsWith("runtimeAuth")||table==="runtimeModelPolicies"||table==="runtimeModelQualifications"||table==="runtimeAgentDefinitions";
- return{reads,clear:()=>{reads.length=0;},counts:()=>({total:reads.length,authority:reads.filter(value=>value.table.startsWith("runtimeAuth")).length}),
-   stateReads:()=>clone(reads.filter(value=>!retained(value.table)&&!(value.table==="runtimeTranscriptMessages"&&value.index==="by_native")))};
+ // The control run now uses the existing exact raw graph reader. Only this
+ // bounded index may be reused; other run indexes and financial rows stay fresh.
+ const rawRun=(value:typeof reads[number])=>value.method==="query"&&value.table==="runtimeRuns"&&value.index==="by_scoped_id";
+ return{reads,clear:()=>{reads.length=0;},counts:()=>({total:reads.length,authority:reads.filter(value=>value.table.startsWith("runtimeAuth")).length,controlRuns:reads.filter(rawRun).length}),
+   runIdentities:()=>[...new Set(reads.filter(rawRun).map(({documents:_documents,...value})=>JSON.stringify(value)))].sort(),
+   stateReads:()=>clone(reads.filter(value=>!retained(value.table)&&!rawRun(value)&&!(value.table==="runtimeTranscriptMessages"&&value.index==="by_native")))};
 }
 it("actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups",async()=>{
  const f=await fixture(),before=f.state(),observed=instrument(f);enabled=false;
- const original=await f.call(agent.prepareDirectTurnV8,f.attempt),after=f.state(),control=observed.counts(),nonControl=observed.stateReads();
+ const original=await f.call(agent.prepareDirectTurnV8,f.attempt),after=f.state(),control=observed.counts(),nonControl=observed.stateReads(),runIdentities=observed.runIdentities();
  f.restore(before);observed.clear();enabled=true;
  const optimized=await f.call(agent.prepareDirectTurnV8,f.attempt);
  expect(optimized).toEqual(original);expect(f.state()).toEqual(after);expect(observed.stateReads()).toEqual(nonControl);
+ expect(observed.runIdentities()).toEqual(runIdentities);expect(observed.counts().controlRuns).toBeLessThan(control.controlRuns);
  expect(observed.counts().authority).toBeLessThan(control.authority);expect(observed.counts().total).toBeLessThan(control.total);
  console.info(JSON.stringify({type:"controlled-v8-preparation-read-count",original:control,optimized:observed.counts(),nativeProof:false}));
 });
@@ -87,9 +92,10 @@ async function admission(f:Awaited<ReturnType<typeof fixture>>){
 }
 it("financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read",async()=>{
  const f=await fixture(),args=await admission(f),before=f.state(),observed=instrument(f);enabled=false;
- const original=await f.call<GatewayAdmissionCheckpoint>(agent.admitPreparedModelOperationV8,args),after=f.state(),control=observed.counts(),nonControl=observed.stateReads();
+ const original=await f.call<GatewayAdmissionCheckpoint>(agent.admitPreparedModelOperationV8,args),after=f.state(),control=observed.counts(),nonControl=observed.stateReads(),runIdentities=observed.runIdentities();
  f.restore(before);observed.clear();enabled=true;const actual=await f.call<GatewayAdmissionCheckpoint>(agent.admitPreparedModelOperationV8,args);
  expect(actual).toEqual(original);expect(f.state()).toEqual(after);expect(observed.stateReads()).toEqual(nonControl);
+ expect(observed.runIdentities()).toEqual(runIdentities);expect(observed.counts().controlRuns).toBeLessThan(control.controlRuns);
  expect(actual).toMatchObject({admission:{status:"reserved"},permit:{dispatchPermit:true}});
  expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);expect(observed.counts().authority).toBeLessThan(control.authority);
  console.info(JSON.stringify({type:"controlled-v8-financial-read-count",original:control,optimized:observed.counts(),nativeProof:false}));

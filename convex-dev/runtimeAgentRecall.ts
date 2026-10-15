@@ -1,6 +1,6 @@
 import { sufficientDirectFactLookup, directFactTraversalCompatible, directFactTraversalComplete, DIRECT_FACT_RECALL_ROUTE } from "../src/domain/memory-direct-recall";
 import type { MemoryEffortRequest } from "../src/domain/memory-effort";
-import { traverseConvexMemory,factEvidenceNode,sourceEvidenceNode } from "./runtimeMemoryTraversal";
+import { traverseConvexMemory,factEvidenceNode,sourceEvidenceNode,createMemoryRetrievalWorkClock } from "./runtimeMemoryTraversal";
 import { memoryEffortRequest } from "./runtimeMemorySchema";
 /** Private ordinary Agent read pipeline. Proposals never establish current authority. */
 import { makeFunctionReference } from "convex/server";
@@ -32,6 +32,7 @@ import { ConvexMemoryRepository, captureRecallFact, captureRecallVectors, canoni
   memoryReferences, vectorOwnerScopeKey, vectorScopeKey } from "./runtimeMemoryRepository";
 import type { MemoryDeliveryBindings } from "./runtimeMemoryRepository";
 import { completeRecallDelivery, vectorRecallItems } from "./runtimeMemoryServices";
+import { traceRuntimePhase } from "./runtimeLatencyTrace";
 
 type Input = { text: string; requestId: string; limit: number;memory?:MemoryEffortRequest };
 type Selection = { cutoff: number; boundary: ContextBoundary; excludedSourceKeys: string[] };
@@ -42,12 +43,14 @@ const privateInlineSelection = Symbol("private-inline-agent-selection");
 export function withPrivateInlineAgentSelection(selection: AgentRecallSelection): AgentRecallSelection {
   return Object.defineProperty({ ...selection }, privateInlineSelection, { value: true });
 }
-type Args = AgentQueryEmbeddingAttempt & { input: Input; profile: EmbeddingProfile; selection: Selection };
+// Private elapsed-work origin only; it grants no authority and cannot enlarge
+// the current server policy. Omission keeps historical callers valid.
+type Args = AgentQueryEmbeddingAttempt & { input: Input; profile: EmbeddingProfile; selection: Selection; retrievalStartedAt?:number };
 type FactPlan = { kind: "ready"; facts: DerivedFact[]; bindings: MemoryDeliveryBindings;candidateWorkBound?:true } | { kind: "refused"; refusalCanonical: string };
 const emptyBindings = (): MemoryDeliveryBindings => ({ sources: [], facts: [], vectors: [] });
 const selectionArgs = v.object({ cutoff: v.number(), boundary: contextBoundary, excludedSourceKeys: v.array(v.string()) });
 const inputArgs = v.object({ text: v.string(), requestId: v.string(), limit: v.number(),memory:v.optional(memoryEffortRequest) });
-const nativeArgs = { ...agentAttempt, input: inputArgs, profile: embeddingProfile, selection: selectionArgs };
+const nativeArgs = { ...agentAttempt, input: inputArgs, profile: embeddingProfile, selection: selectionArgs, retrievalStartedAt:v.optional(v.number()) };
 const factPlanArgs = v.union(v.object({ kind: v.literal("ready"), facts: v.array(derivedFact), bindings: memoryDeliveryBindings,candidateWorkBound:v.optional(v.literal(true)) }),
   v.object({ kind: v.literal("refused"), refusalCanonical: v.string() }));
 
@@ -79,7 +82,7 @@ export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args, expec
 }
 export const prepareReads = internalQuery({ args: nativeArgs, handler: prepareReadsHandler });
 
-export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }, expectedVersion?: 8, invocationScope?: QueryCtx, directFacts = false, inspectFact?:(fact:DerivedFact)=>void) {
+export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }, expectedVersion?: 8, invocationScope?: QueryCtx, directFacts = false, inspectFact?:(fact:DerivedFact)=>void,workClock=createMemoryRetrievalWorkClock()) {
   const ctx = invocationScope ?? (expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx, { managedSources: true }) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true }));
   const { current, repository } = await currentRead(ctx, args, expectedVersion), bindings = emptyBindings();
   // Only this exact native owner shares raw rows across source traversals.
@@ -123,7 +126,7 @@ export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hit
     for(const next of selected.witnesses){const merged=mergeContextWitness(witnesses.get(next.sourceId),next);if(!merged)memoryError("STALE_CONTEXT","Traversal source changed");witnesses.set(next.sourceId,merged);}
     for(const [key,lineage] of selected.provenance)provenance.set(key,lineage);
     return selected.selectedIndexes.length===1;
-  },inspectFact,args.input.text):undefined;
+  },inspectFact,args.input.text,args.retrievalStartedAt,workClock):undefined;
   if(effortResult){
     for(const stage of [...(args.factPlan.candidateWorkBound?["direct-fact-candidate-work-bound"]:[]),...(args.hits.length===args.input.limit?["direct-vector-candidate-work-bound"]:[])]){
       if(!effortResult.memoryEffort.unavailableStages.includes(stage))effortResult.memoryEffort.unavailableStages.push(stage);
@@ -204,7 +207,7 @@ export async function finishAgentRecallV8(ctx: ActionCtx, attempt: AgentQueryEmb
   validateModelEmbeddings(result, profile, 1);
   if(startedAt===undefined&&input.memory!==undefined)startedAt=clock.now();
   const { onSelected, ...scope } = selection;
-  const args = { ...attempt, input, profile, selection: scope };
+  const args = { ...attempt, input, profile, selection: scope, ...(startedAt===undefined?{}:{retrievalStartedAt:startedAt}) };
   const plan = await ctx.runQuery(prepareV8Ref, args);
   const hits = await ctx.vectorSearch("runtimeMemoryVectors", profile.indexName === LARGE_EMBEDDING_PROFILE.indexName ? "by_large_embedding_v1" : "by_default_embedding_v1", {
     vector: [...result.vectors[0]!], limit: input.limit,
@@ -229,17 +232,23 @@ export async function finishAgentRecallV8(ctx: ActionCtx, attempt: AgentQueryEmb
 /** Effort-aware V8 only: scoped native facts, existing real source traversal and
  * final raw delivery predicates. No model proposal, reservation or vector query. */
 export async function readDirectAgentRecallV8Handler(nativeCtx: QueryCtx, args: Args) {
+  const workClock=createMemoryRetrievalWorkClock();
   const ctx=createV8AuthorityReadScope(nativeCtx,{managedSources:true});
   const {current,repository}=await currentRead(ctx,args,8);
   if(current.snapshot.version!==8||current.snapshot.inputSelection.version!==2)return undefined;
   const candidates=await repository.searchFactCandidates(args.input.text,args.input.limit);
-  if(!sufficientDirectFactLookup(args.input.text,candidates,Date.now()))return undefined;
+  const sufficient=sufficientDirectFactLookup(args.input.text,candidates,Date.now());
+  traceRuntimePhase(args.runId,args.attemptNumber,`context.direct.candidates.${candidates.candidateWorkBound?"work-bound":sufficient?"sufficient":"insufficient"}`,{selectedFacts:candidates.facts.length});
+  if(!sufficient)return undefined;
   const bindings=emptyBindings();
   for(const fact of candidates.facts)await captureRecallFact(bindings,fact,await repository.getSource(fact.lineage.sourceId,"canViewFacts"));
   let compatible=true;
-  const read=await readMatchesHandler(nativeCtx,{...args,hits:[],factPlan:{kind:"ready",facts:candidates.facts,bindings}},8,ctx,true,fact=>{compatible=compatible&&directFactTraversalCompatible(candidates.facts[0]!,[fact]);});
-  if(!read.effortResult?.items.some(item=>item.type==="fact"))return undefined;
-  if(!compatible||!directFactTraversalComplete(read.effortResult.memoryEffort))return undefined;
+  const read=await readMatchesHandler(nativeCtx,{...args,hits:[],factPlan:{kind:"ready",facts:candidates.facts,bindings}},8,ctx,true,fact=>{compatible=compatible&&directFactTraversalCompatible(candidates.facts[0]!,[fact]);},workClock);
+  const trace=read.effortResult?.memoryEffort,hasFact=!!read.effortResult?.items.some(item=>item.type==="fact");
+  const complete=trace!==undefined&&directFactTraversalComplete(trace);
+  traceRuntimePhase(args.runId,args.attemptNumber,`context.direct.traversal.${!hasFact?"no-fact":!compatible?"conflict":!complete?"partial":"ready"}`,{selectedFacts:trace?.entriesByKind.fact,selectedMemories:trace?.entriesByKind.memory,durationMs:trace?.durationMs});
+  for(const reason of trace?.stopReasons??[])traceRuntimePhase(args.runId,args.attemptNumber,`context.direct.stop.${reason}`);
+  if(!hasFact||!compatible||!complete||!read.effortResult)return undefined;
   read.effortResult.memoryEffort.retrievalRoute=DIRECT_FACT_RECALL_ROUTE;
   const delivery=await finalDeliveryV8Handler(nativeCtx,{reference:args.reference,bindings:read.bindings},ctx);
   return {read,delivery,profileId:args.profile.profileId};

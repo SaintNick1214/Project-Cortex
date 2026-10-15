@@ -1,0 +1,81 @@
+{
+  "status": "FOUR_OWNED_FILES_FROZEN_AFFECTED_CHECKS_PASS_PENDING_COMBINED_REVIEW",
+  "frozenAt": "2026-10-15T05:59:11.257931+00:00",
+  "baseCommit": "9973b498e5d076457367b285858729917830e51a",
+  "hashes": {
+    "convex-dev/runs.ts": "b4fb8141c5ce43302e199850c34a42b02dd8d08d8dba3b8bbc887296151d86bb",
+    "tests/unit/runtimeRuns/raw-run-read-reuse.test.ts": "4d3761575036d795feeb15643b8d7eed717caeb6c9e6920973caa86fbd493495",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "fc2ef43f5ddaf520487df3dc3a2830aed5cbade27a9224cf3448c21bf0bdcc9f",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "ab31c928e901151e3a7b82a4585e2a9d21168fc03caea7afee76bc282fb13c7a"
+  },
+  "priorReport": "memory-effort-ranked-raw-run-report.json",
+  "preservedExternalRed": "memory-effort-ranked-deadline-affected-v2.jest.json",
+  "additionalRepair": "Only whole-recall exact runtimeRuns/by_scoped_id classification becomes retainable; original auth/source/other mutable ordering and state assertions remain. Instrumentation now compares exact index keys/limit identities and proves reduced initial raw reads.",
+  "latestChecks": {
+    "whole": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-raw-run-whole-result.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "durationSeconds": 37.156028375029564,
+      "timedOut": false,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-raw-run-whole.log"
+    },
+    "types3": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "durationSeconds": 42.64302049996331,
+      "timedOut": false,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-raw-run-types3.log"
+    },
+    "lint3": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runs.ts",
+        "tests/unit/runtimeRuns/raw-run-read-reuse.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--max-warnings=0",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "durationSeconds": 15.304093707934953,
+      "timedOut": false,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-raw-run-lint3.log"
+    }
+  },
+  "wholeSuite": {
+    "passed": 108,
+    "failed": 0,
+    "skips": 0,
+    "naturalExit": true
+  },
+  "ownedComposedCoverage": {
+    "tests": 289,
+    "suites": 7,
+    "provenance": "Original four green suites + latest two repaired suites + whole recall rerun. No claim every suite was rerun together."
+  },
+  "services": 0,
+  "models": 0,
+  "builds": 0
+}

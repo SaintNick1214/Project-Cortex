@@ -148,7 +148,7 @@ export function vectorRecallItems(vectors: readonly VectorMatch[]): RecallItem[]
 }
 /** Original rank/expiry/format tail after the current read predicate has executed. */
 export async function completeRecallDelivery(adapters: { clock: MemoryDomainAdapters["clock"]; finalDelivery?: MemoryDomainAdapters["repository"]["finalDelivery"] },
-  input: { limit: number }, profileId: string, vectorItems: RecallItem[], facts: readonly DerivedFact[], effortResult?:{items:RecallItem[];memoryEffort:MemoryEffortTrace;retrievalDeadlineMs:number},effortStartedAt?:number) {
+  input: { limit: number }, profileId: string, vectorItems: RecallItem[], facts: readonly DerivedFact[], effortResult?:{items:RecallItem[];memoryEffort:MemoryEffortTrace;retrievalDeadlineMs:number;retainValidatedOnDeadline?:true},effortStartedAt?:number) {
   const { clock } = adapters;
   let items = effortResult?.items ?? rankResults(deduplicateResults([...vectorItems, ...facts.map((fact) => factToRecallItem(fact, "facts", 0.7))]), clock).slice(0, input.limit);
   const delivery = await adapters.finalDelivery?.();
@@ -159,7 +159,11 @@ export async function completeRecallDelivery(adapters: { clock: MemoryDomainAdap
   if(effortResult&&effortStartedAt!==undefined) {
     effortResult.memoryEffort.durationMs=Math.max(0,clock.now()-effortStartedAt);
     if(effortResult.memoryEffort.durationMs>=effortResult.retrievalDeadlineMs){
-      items=[];effortResult.memoryEffort.selected=0;effortResult.memoryEffort.selectedInputUnits=0;effortResult.memoryEffort.entriesByKind={memory:0,fact:0,pending:0,history:0};
+      // Retrieval expiry stops exploration, not delivery of already selected
+      // evidence. The independent authority/consumed-source expiry above still
+      // rejects delivery. Historical snapshots without the private ranking pin
+      // keep their original all-or-nothing interpretation.
+      if(!effortResult.retainValidatedOnDeadline){items=[];effortResult.memoryEffort.selected=0;effortResult.memoryEffort.selectedInputUnits=0;effortResult.memoryEffort.entriesByKind={memory:0,fact:0,pending:0,history:0};}
       effortResult.memoryEffort.stopReasons=[...new Set([...effortResult.memoryEffort.stopReasons,"deadline" as const])];
     }
   }

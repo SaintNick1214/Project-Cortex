@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-15T06:23:39.606870+00:00",
+  "originalExecSession": 17129,
+  "joinResult": "Unknown process id after resumed toolsession",
+  "observedExecutingBuildChildren": false,
+  "checks": [
+    {
+      "label": "root-build1",
+      "log": "memory-effort-budget-root-build1.log",
+      "logExists": true,
+      "terminalReceiptPresent": false,
+      "exitCode": null,
+      "verdict": "INCOMPLETE_NO_TERMINAL_RECEIPT"
+    },
+    {
+      "label": "docs-build1",
+      "log": "memory-effort-budget-docs-build1.log",
+      "logExists": true,
+      "terminalReceiptPresent": false,
+      "exitCode": null,
+      "verdict": "INCOMPLETE_NO_TERMINAL_RECEIPT"
+    }
+  ],
+  "scope": "Original partiallogs retained. No completed childexit receipt, so original fullbuild results UNKNOWN; restartonlyunfinishedchecks, not resourcefailure retry."
+}

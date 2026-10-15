@@ -10,6 +10,17 @@ import { literalPropertyEvidence } from "../src/domain/memory-direct-recall";
 import { ConvexMemoryRepository, captureRecallFact, captureRecallSource,isMemoryResourceDenied,canonicalMemoryValue,memoryError } from "./runtimeMemoryRepository";
 import type { MemoryDeliveryBindings } from "./runtimeMemoryRepository";
 
+export function createMemoryRetrievalWorkClock() {
+  // Capture at the native handler boundary, before its source/hydration awaits.
+  // Each invocation gets its own performance origin; only epoch start crosses RPCs.
+  const startedAt=Date.now(),origin=performance.now();
+  return {startedAt,now:()=>{
+    const elapsed=performance.now()-origin;
+    if(!Number.isFinite(origin)||!Number.isFinite(elapsed)||elapsed<0)memoryError("INVALID_STATE","Invalid retrieval work clock");
+    return startedAt+elapsed;
+  }};
+}
+
 export function factEntityKeys(fact: Pick<DerivedFact,"subject"|"object"|"entities"|"relations">): string[] {
   // Exact canonical labels only; no substring, invented conversation or fuzzy links.
   return [...new Set([fact.subject,fact.object,...(fact.entities??[]).map(value=>value.name),...(fact.relations??[]).flatMap(value=>[value.subject,value.object])]
@@ -29,7 +40,17 @@ export function sourceEvidenceNode(source:SourceContent,score=.65):MemoryEvidenc
     lineage:source.lineage,item:{type:"memory",id:source.lineage.sourceId,content:source.content,score,source:"graph-expanded"} };
 }
 export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemoryRepository, seeds:MemoryEvidenceNode[], policy:EffectiveMemoryEffortPolicy,
-  bindings:MemoryDeliveryBindings, eligible?:(node:MemoryEvidenceNode)=>Promise<boolean>, inspectFact?:(fact:DerivedFact)=>void, literalQuery?:string) {
+  bindings:MemoryDeliveryBindings, eligible?:(node:MemoryEvidenceNode)=>Promise<boolean>, inspectFact?:(fact:DerivedFact)=>void, literalQuery?:string, retrievalStartedAt?:number,
+  workClock=createMemoryRetrievalWorkClock()) {
+  // Transaction Date.now is the authority/expiry clock and remains untouched.
+  // Only elapsed work uses performance: it advances in mutations but is fixed
+  // in queries, where candidate/work limits still bound an in-flight read.
+  // Translate this invocation's local origin once; never compare performance
+  // origins across RPCs or restart the Action's inherited retrieval budget.
+  if(retrievalStartedAt!==undefined&&(!Number.isFinite(retrievalStartedAt)||retrievalStartedAt<0))memoryError("INVALID_INPUT","Invalid retrieval work start");
+  const now=policy.evidenceRankingVersion===1?workClock.now:()=>Date.now();
+  const startedAt=policy.evidenceRankingVersion===1?Math.min(workClock.startedAt,retrievalStartedAt??workClock.startedAt):undefined;
+  const expired=()=>startedAt!==undefined&&now()-startedAt>=policy.retrievalDeadlineMs;
   const authority=await repository.authority(undefined,"read"), scope=repository.scope;
   async function optionalMemorySource(sourceId:string){
     try{return await repository.getSource(sourceId,"canViewMemories");}
@@ -38,30 +59,36 @@ export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemory
   let candidateBytes=0,candidateBound=false;
   const candidateBindings=new Map<string,MemoryDeliveryBindings>(),candidateNodes=new Map<string,MemoryEvidenceNode>();
   async function bind(node:MemoryEvidenceNode):Promise<boolean> {
+    if(expired())return false;
     if(!candidateNodes.has(node.key)){
       const bytes=new TextEncoder().encode(JSON.stringify(node)).length;
       if(candidateBytes+bytes>policy.maxCandidateBytes){candidateBound=true;return false;}candidateBytes+=bytes;
     }
     if(eligible&&!await eligible(node))return false;
+    if(expired())return false;
     const source=node.item.type==="fact"?await repository.getSource(node.lineage.sourceId,"canViewFacts"):await optionalMemorySource(node.lineage.sourceId);if(!source)return false;
     const selectedBindings:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]};
     if(canonicalMemoryValue(source.lineage)!==canonicalMemoryValue(node.lineage))memoryError("STALE_SOURCE","Traversal seed source changed");
+    if(expired())return false;
     if(node.item.type==="fact") {const fact=await repository.getFact(node.item.id);if(!fact)return false;
       if(canonicalMemoryValue(fact)!==canonicalMemoryValue(node.item.fact))memoryError("STALE_SOURCE","Traversal seed fact changed");
+      if(expired())return false;
       if(policy.evidenceRankingVersion===1&&literalQuery!==undefined&&literalPropertyEvidence(literalQuery,fact,Date.now()))node.literalPropertyPriority=true;
       inspectFact?.(fact);await captureRecallFact(selectedBindings,fact,source);}
     else captureRecallSource(selectedBindings,source,"canViewMemories");
     candidateBindings.set(node.key,selectedBindings);if(!candidateNodes.has(node.key))candidateNodes.set(node.key,node);
     return true;
   }
-  const accepted:MemoryEvidenceNode[]=[];for(const node of seeds.slice(0,Math.max(1,Math.floor(policy.maxWork/4))))if(await bind(node))accepted.push(node);
-  const result=await traverseMemoryEvidence({seeds:accepted,policy,now:()=>Date.now(),expand:async(node,cursor,limit):Promise<MemoryEvidencePage>=>{
+  const accepted:MemoryEvidenceNode[]=[];for(const node of seeds.slice(0,Math.max(1,Math.floor(policy.maxWork/4)))){if(expired())break;if(await bind(node))accepted.push(node);}
+  const result=await traverseMemoryEvidence({seeds:accepted,policy,now,...(startedAt===undefined?{}:{startedAt}),expand:async(node,cursor,limit):Promise<MemoryEvidencePage>=>{
     await repository.recheckAuthority();
     const edges:MemoryEvidencePage["edges"]=[];const unavailableStages:string[]=[];
+    if(expired())return {edges,cursor:null,work:1};
     // One phase per page; entity membership key and cursor are private traversal state.
     const state=cursor?JSON.parse(cursor) as {phase:number;key:number;cursor:string|null}:{phase:0,key:0,cursor:null};
     const fact=node.item.type==="fact"?await repository.getFact(node.item.id):null;
     if(node.item.type==="fact"&&!fact)return {edges,cursor:null,work:1};
+    if(expired())return {edges,cursor:null,work:1};
     if(state.phase===0&&fact){
       const source=await optionalMemorySource(fact.lineage.sourceId);
       if(source){const next=sourceEvidenceNode(source,node.item.score*.98);if(await bind(next))edges.push({node:next,relationship:"supporting-source"});}
@@ -69,9 +96,10 @@ export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemory
     }
     if(node.item.type==="memory") {
       const source=await optionalMemorySource(node.lineage.sourceId);if(!source)return {edges,cursor:null,work:1};
+      if(expired())return {edges,cursor:null,work:1};
       const rows=await ctx.db.query("facts").withIndex("by_runtime_source_fact",q=>{const range=q.eq("tenantId",scope.tenantId).eq("memorySpaceId",scope.memorySpaceId)
         .eq("lineage.sourceId",source.lineage.sourceId).eq("lineage.sourceRevision",source.lineage.sourceRevision);return state.cursor===null?range:range.gt("factId",state.cursor);}).take(limit);
-      for(const row of rows){const current=await repository.currentFact(row,authority);if(current){inspectFact?.(current);const next=factEvidenceNode(current,node.item.score*.98);if(await bind(next))edges.push({node:next,relationship:"derived-fact"});}}
+      for(const row of rows){if(expired())break;const current=await repository.currentFact(row,authority);if(current){inspectFact?.(current);const next=factEvidenceNode(current,node.item.score*.98);if(await bind(next))edges.push({node:next,relationship:"derived-fact"});}}
       return {edges,cursor:rows.length<limit?null:JSON.stringify({phase:0,key:0,cursor:rows[rows.length-1]!.factId}),work:rows.length};
     }
     const keys=factEntityKeys(fact!);if(keys.length>64)unavailableStages.push("entity-projection-work-bound");
@@ -82,6 +110,7 @@ export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemory
     const rows=await selected.take(limit);
     if(!rows.length)unavailableStages.push("entity-projection-unavailable");
     for(const link of rows){
+      if(expired())break;
       const current=await repository.getFact(link.factId);
       if(!current||current.version!==link.factVersion||current.lineage.sourceId!==link.sourceId||current.lineage.sourceEventId!==link.sourceEventId||current.lineage.sourceRevision!==link.sourceRevision
         ||!factEntityKeys(current).includes(entityKey))continue;
@@ -105,5 +134,5 @@ export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemory
     if(field==="facts")for(const value of incoming as MemoryDeliveryBindings["facts"])if(!bindings.facts.some(old=>old.factId===value.factId))bindings.facts.push(value);
   }
   if((candidateBound||seeds.length>Math.max(1,Math.floor(policy.maxWork/4)))&&!result.trace.stopReasons.includes("work"))result.trace.stopReasons.push("work");
-  return {retrievalDeadlineMs:policy.retrievalDeadlineMs,itemLineages:result.nodes.map(node=>[`${node.item.type}:${node.item.id}`,node.lineage] as [string,typeof node.lineage]),items:result.nodes.map(node=>({...node.item,retrieval:{depth:node.depth!,path:node.path!}})),memoryEffort:result.trace};
+  return {retrievalDeadlineMs:policy.retrievalDeadlineMs,...(policy.evidenceRankingVersion===1?{retainValidatedOnDeadline:true as const}:{}),itemLineages:result.nodes.map(node=>[`${node.item.type}:${node.item.id}`,node.lineage] as [string,typeof node.lineage]),items:result.nodes.map(node=>({...node.item,retrieval:{depth:node.depth!,path:node.path!}})),memoryEffort:result.trace};
 }

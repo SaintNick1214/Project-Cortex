@@ -2,7 +2,7 @@ import { sufficientDirectFactLookup, directFactTraversalCompatible, directFactTr
 import type { DerivedFact } from "../src/domain/contracts";
 import type { MemoryEffortRequest } from "../src/domain/memory-effort";
 import { resolveMemoryEffortPolicy,memoryEffortCandidateLimit } from "../src/domain/memory-effort";
-import { traverseConvexMemory,factEvidenceNode,sourceEvidenceNode } from "./runtimeMemoryTraversal";
+import { traverseConvexMemory,factEvidenceNode,sourceEvidenceNode,createMemoryRetrievalWorkClock } from "./runtimeMemoryTraversal";
 import { memoryEffortRequest } from "./runtimeMemorySchema";
 import { publicRecallBudgetRequest } from "./runtimeMemoryServices";
 /** Original public recall preparation in one fresh native snapshot. */
@@ -31,6 +31,7 @@ import type {GatewayBinding,GatewayResolution,GatewayCheckpoint,GatewayAdmission
 import {createGatewayMemoryModel} from './runtimeMemoryGateway';
 import {boundedRefusal,throwRefusal} from './runtimeMemoryRefusal';
 import type {Refusal} from './runtimeMemoryRefusal';
+import {traceRuntimePhase} from './runtimeLatencyTrace';
 type Input={text:string;requestId:string;limit:number;memory?:MemoryEffortRequest};
 type Args={reference:RuntimeAuthorityReference;runBudgetId:string;input:Input};
 const args={reference:runtimeAuthorityReference,runBudgetId:v.string(),input:v.object({text:v.string(),requestId:v.string(),limit:v.number(),memory:v.optional(memoryEffortRequest)})};
@@ -92,9 +93,10 @@ export const publicRecallPreparation=makeFunctionReference('runtimeMemoryQuery:p
 const admitRef=makeFunctionReference('runtimeMemoryQuery:admit') as unknown as FunctionReference<'mutation','internal',AdmitArgs,Admission>;
 /** Public native read parents only. No model proposal grants retrieval authority.
  * Keep ANN outside Convex queries and ranking before the independent final mutation. */
-type ReadArgs=Args&{profile:EmbeddingProfile};
+// Private Action epoch, not a client deadline/policy or a delivery authority proof.
+type ReadArgs=Args&{profile:EmbeddingProfile;retrievalStartedAt?:number};
 function directLimit(input:Input){return input.memory===undefined?input.limit:Math.min(input.limit,memoryEffortCandidateLimit(resolveMemoryEffortPolicy(input.memory)));}
-const readArgs={...args,profile:embeddingProfile};
+const readArgs={...args,profile:embeddingProfile,retrievalStartedAt:v.optional(v.number())};
 function readRepository(ctx:QueryCtx,a:ReadArgs) {
   assertMemoryRequestId(a.input.requestId);
   if(!Number.isSafeInteger(a.input.limit)||a.input.limit<1||a.input.limit>100)memoryError('INVALID_INPUT','Limit must be between 1 and 100');
@@ -108,7 +110,7 @@ export async function prepareRecallReadsHandler(nativeCtx:QueryCtx,a:ReadArgs) {
   return {resourceAccess:authority.resourceAccess};
 }
 export const prepareReads=internalQuery({args:readArgs,handler:prepareRecallReadsHandler});
-export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hits:{id:Id<'runtimeMemoryVectors'>;score:number}[]},directFacts?:{facts:DerivedFact[];candidateWorkBound:boolean},inspectFact?:(fact:DerivedFact)=>void) {
+export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hits:{id:Id<'runtimeMemoryVectors'>;score:number}[]},directFacts?:{facts:DerivedFact[];candidateWorkBound:boolean},inspectFact?:(fact:DerivedFact)=>void,workClock=createMemoryRetrievalWorkClock()) {
   const ctx=createMemorySourceReadScope(nativeCtx),repository=readRepository(ctx,a);
   const bindings:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]};
   const sourceCtx=withNativeSnapshotReads(nativeCtx,ctx);
@@ -137,7 +139,7 @@ export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hi
   }
   // Original post-staged authority fence remains raw and current.
   await new ConvexMemoryRepository(nativeCtx,a.reference,'read').recheckAuthority();
-  const effortResult=a.input.memory===undefined?undefined:await traverseConvexMemory(sourceCtx,repository,[...matches.map(match=>({...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!})),...facts.map(fact=>factEvidenceNode(fact,directFacts?1:undefined))],resolveMemoryEffortPolicy(a.input.memory),bindings,undefined,inspectFact,a.input.text);
+  const effortResult=a.input.memory===undefined?undefined:await traverseConvexMemory(sourceCtx,repository,[...matches.map(match=>({...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!})),...facts.map(fact=>factEvidenceNode(fact,directFacts?1:undefined))],resolveMemoryEffortPolicy(a.input.memory),bindings,undefined,inspectFact,a.input.text,a.retrievalStartedAt,workClock);
   if(effortResult)for(const stage of [...(factRead.value.candidateWorkBound?["direct-fact-candidate-work-bound"]:[]),...(a.hits.length===directLimit(a.input)?["direct-vector-candidate-work-bound"]:[])]){
     if(!effortResult.memoryEffort.unavailableStages.includes(stage))effortResult.memoryEffort.unavailableStages.push(stage);
     if(!effortResult.memoryEffort.stopReasons.includes("work"))effortResult.memoryEffort.stopReasons.push("work");
@@ -166,34 +168,40 @@ export async function finishPublicRecall(ctx:ActionCtx,a:ReadArgs,embedded:Await
       ?q.eq('scopeProfileOwnerKey',vectorOwnerScopeKey(scope.tenantId,scope.memorySpaceId,a.profile.profileId,scope.principalId))
       :q.eq('scopeProfileKey',vectorScopeKey(scope.tenantId,scope.memorySpaceId,a.profile.profileId)),
   });
-  const read=await ctx.runQuery(readMatchesRef,{...a,hits:hits.map(hit=>({id:hit._id,score:hit._score}))});
+  const read=await ctx.runQuery(readMatchesRef,{...a,...(startedAt===undefined?{}:{retrievalStartedAt:startedAt}),hits:hits.map(hit=>({id:hit._id,score:hit._score}))});
   return await completeRecallDelivery({clock,finalDelivery:async()=>await ctx.runMutation(finalRecallDeliveryRef,{reference:a.reference,bindings:read.bindings})},
     a.input,a.profile.profileId,read.vectorItems,read.facts,read.effortResult,startedAt);
 }
 /** A direct miss is a discovery decision only. Errors propagate, and fallback
  * keeps the exact original governed embedding operation/financial boundaries. */
-export async function readDirectPublicRecallHandler(nativeCtx:QueryCtx,a:Args){
+export async function readDirectPublicRecallHandler(nativeCtx:QueryCtx,a:Args&{retrievalStartedAt?:number}){
+  const workClock=createMemoryRetrievalWorkClock();
   if(a.input.memory===undefined)return null;
   const ctx=createMemorySourceReadScope(nativeCtx),selected=await binding(ctx,a);
   const repository=readRepository(ctx,{...a,profile:selected.profile});
   await repository.assertReadAuthority();await repository.assertProfileReady(selected.profile,a.runBudgetId);
   const candidates=await repository.searchFactCandidates(a.input.text,directLimit(a.input));
-  if(!sufficientDirectFactLookup(a.input.text,candidates,Date.now()))return null;
+  const sufficient=sufficientDirectFactLookup(a.input.text,candidates,Date.now());
+  traceRuntimePhase(a.runBudgetId,1,`recall.direct.candidates.${candidates.candidateWorkBound?'work-bound':sufficient?'sufficient':'insufficient'}`,{selectedFacts:candidates.facts.length});
+  if(!sufficient)return null;
   let compatible=true;
-  const read=await readRecallMatchesHandler(nativeCtx,{...a,profile:selected.profile,hits:[]},candidates,fact=>{compatible=compatible&&directFactTraversalCompatible(candidates.facts[0]!,[fact]);});
-  if(!read.effortResult?.items.some(item=>item.type==='fact'))return null;
-  if(!compatible||!directFactTraversalComplete(read.effortResult.memoryEffort))return null;
+  const read=await readRecallMatchesHandler(nativeCtx,{...a,profile:selected.profile,hits:[]},candidates,fact=>{compatible=compatible&&directFactTraversalCompatible(candidates.facts[0]!,[fact]);},workClock);
+  const trace=read.effortResult?.memoryEffort,hasFact=!!read.effortResult?.items.some(item=>item.type==='fact');
+  const complete=trace!==undefined&&directFactTraversalComplete(trace);
+  traceRuntimePhase(a.runBudgetId,1,`recall.direct.traversal.${!hasFact?'no-fact':!compatible?'conflict':!complete?'partial':'ready'}`,{selectedFacts:trace?.entriesByKind.fact,selectedMemories:trace?.entriesByKind.memory,durationMs:trace?.durationMs});
+  for(const reason of trace?.stopReasons??[])traceRuntimePhase(a.runBudgetId,1,`recall.direct.stop.${reason}`);
+  if(!hasFact||!compatible||!complete||!read.effortResult)return null;
   const delivery=await finalRecallDeliveryHandler(nativeCtx,{reference:a.reference,bindings:read.bindings});
   return {read,delivery,profileId:selected.profile.profileId};
 }
-export const directReads=internalQuery({args,handler:readDirectPublicRecallHandler});
-const directReadsRef=makeFunctionReference('runtimeMemoryQuery:directReads') as unknown as FunctionReference<'query','internal',Args,Awaited<ReturnType<typeof readDirectPublicRecallHandler>>>;
+export const directReads=internalQuery({args:{...args,retrievalStartedAt:v.optional(v.number())},handler:readDirectPublicRecallHandler});
+const directReadsRef=makeFunctionReference('runtimeMemoryQuery:directReads') as unknown as FunctionReference<'query','internal',Parameters<typeof readDirectPublicRecallHandler>[1],Awaited<ReturnType<typeof readDirectPublicRecallHandler>>>;
 /** Budget creation/capture/attachment keep their original independent committed boundaries. */
 export async function recallPublicMemory(ctx:ActionCtx,reference:RuntimeAuthorityReference,repository:MemoryRepository,runBudgetId:string,input:Input,proposal:Awaited<ReturnType<typeof preparePublicRecallHandler>>) {
   if(proposal.kind==='refused')return throwRefusal(proposal.refusal);
   const native={reference,runBudgetId,input};
   if(input.memory!==undefined){
-    const startedAt=Date.now(),direct=await ctx.runQuery(directReadsRef,native);
+    const startedAt=Date.now(),direct=await ctx.runQuery(directReadsRef,{...native,retrievalStartedAt:startedAt});
     if(direct)return await completeRecallDelivery({clock:{now:()=>Date.now()},finalDelivery:async()=>direct.delivery},input,direct.profileId,direct.read.vectorItems,direct.read.facts,direct.read.effortResult,startedAt);
   }
   const model=createGatewayMemoryModel(ctx,repository,{runBudgetId,queryEmbedding:{binding:proposal.binding,requestCanonical:canonicalModelJson(proposal.request),resolutions:proposal.resolutions,
