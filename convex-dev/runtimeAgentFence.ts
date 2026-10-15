@@ -10,7 +10,7 @@ import { comparePosition } from "../src/domain/transcript";
 import { activeAttempt, currentRun } from "./runs";
 import { agentComponent, canonicalMessageHash, checkNativeMediaReferences, executionRevision, hydratePrivateCutoff, singleTranscript, transcriptDenied } from "./runtimeTranscript";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
-import { recheckAuthority } from "./runtimeAuth";
+import { recheckAuthority, readV8AgentExecutionRows, readV8AgentToolRows } from "./runtimeAuth";
 import { NATIVE_TOOL_NAMES_V2 as NATIVE_TOOL_NAMES } from "../src/domain/agent-tools";
 
 /** Internal automatic-title witness, never accepted from a public/model request. */
@@ -21,8 +21,7 @@ export async function guardAgentRunBudget(ctx: Pick<QueryCtx, "db" | "runQuery">
   // Standalone memory/model budgets retain their original policy contract.
   if (!run?.executionRequested) return;
   if (canonicalModelJson(run.authorityReference) !== canonicalModelJson(reference)) transcriptDenied("POLICY_DENIED");
-  const owned = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", run.tenantId)
-    .eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId).eq("attemptNumber", run.attemptNumber)).take(2));
+  const owned = singleTranscript(await readV8AgentExecutionRows(ctx, run.tenantId, run.memorySpaceId, run.runId, run.attemptNumber));
   if (!owned || !run.snapshotCanonical || canonicalModelJson(owned.reference) !== canonicalModelJson(reference)) transcriptDenied("INVALID_STATE");
   const args = { reference, runId: run.runId, attemptNumber: run.attemptNumber, leaseVersion: owned.leaseVersion };
   const snapshot = JSON.parse(run.snapshotCanonical) as CutoffV1;
@@ -62,15 +61,14 @@ export async function guardAgentRunBudget(ctx: Pick<QueryCtx, "db" | "runQuery">
     for (let i = 0; i < ids.length; i++) {
       const message = messages[i]; const pin = owned.savedMessagePins?.find(item => item.id === ids[i]);
       if (!message || message._id !== ids[i] || message.threadId !== current.conversation.threadId || message.status !== "success"
-        || !pin || pin.order !== message.order || pin.stepOrder !== message.stepOrder || pin.canonicalContentHash !== await canonicalMessageHash(message)
+        || !pin || pin.order !== message.order || pin.stepOrder !== message.stepOrder || pin.canonicalContentHash !== await canonicalMessageHash(message, ctx)
         || message.order !== snapshot.anchor.order || comparePosition(message, snapshot.anchor) <= 0) transcriptDenied("STALE_TRANSCRIPT");
       await checkNativeMediaReferences(ctx, reference, message);
     }
   }
   await checkContextSourceWitnesses(ctx, reference, owned.sourceWitnesses);
   await checkArtifactContextWitnesses(ctx, reference, owned.artifactContextWitnesses ?? []);
-  const tools = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", run.tenantId)
-    .eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId).eq("attemptNumber", run.attemptNumber).eq("kind", "tool")).take(33);
+  const tools = await readV8AgentToolRows(ctx, run.tenantId, run.memorySpaceId, run.runId, run.attemptNumber);
   if (tools.length > 32) transcriptDenied("TOOL_STEP_LIMIT");
   for (const tool of tools.filter(row => row.state === "started")) {
     const definition = current.definition.definition.tools.find(item => NATIVE_TOOL_NAMES[item.toolId as keyof typeof NATIVE_TOOL_NAMES] === tool.toolName);

@@ -16,8 +16,24 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
   async start() { return "workflow:whole-recall"; }
 } }));
 let nativeSnapshotReads = true;
+let controlReuse = true;
+const controlPredicates: unknown[] = [];
 const originalAuth = await import("../../../convex-dev/runtimeAuth");
 jest.unstable_mockModule("../../../convex-dev/runtimeAuth", () => ({ ...originalAuth,
+  readV8AgentExecutionRows: async (...args: Parameters<typeof originalAuth.readV8AgentExecutionRows>) => {
+    controlPredicates.push(["execution", ...args.slice(1)]);
+    return originalAuth.readV8AgentExecutionRows(controlReuse ? args[0] : { ...args[0] }, args[1], args[2], args[3], args[4]);
+  },
+  readV8AgentToolRows: async (...args: Parameters<typeof originalAuth.readV8AgentToolRows>) => {
+    controlPredicates.push(["tools", ...args.slice(1)]);
+    return originalAuth.readV8AgentToolRows(controlReuse ? args[0] : { ...args[0] }, args[1], args[2], args[3], args[4]);
+  },
+  hashV8CanonicalBytes: async (ctx: Parameters<typeof originalAuth.hashV8CanonicalBytes>[0], bytes: string) => {
+    controlPredicates.push(["sha256", bytes]); return originalAuth.hashV8CanonicalBytes(controlReuse ? ctx : undefined, bytes);
+  },
+  recheckAuthority: async (...args: Parameters<typeof originalAuth.recheckAuthority>) => {
+    controlPredicates.push(["authority", args[1], args[2]]); return originalAuth.recheckAuthority(...args);
+  },
   readTenantPolicyRows:async(ctx:Parameters<typeof originalAuth.readTenantPolicyRows>[0],tenantId:string)=>nativeSnapshotReads
     ?originalAuth.readTenantPolicyRows(ctx,tenantId):ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active",q=>q.eq("scope","tenant").eq("tenantId",tenantId).eq("active",true)).take(65),
   readExecutableDefinitionRows:async(ctx:Parameters<typeof originalAuth.readExecutableDefinitionRows>[0],tenantId:string,memorySpaceId:string,agentId:string,version:number)=>nativeSnapshotReads
@@ -40,7 +56,7 @@ const memory = await import("../../../convex-dev/runtimeMemory");
 const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = await import("../../../convex-dev/runtimeMemoryRepository");
 const {replaceFactEntityLinks}=await import("../../../convex-dev/runtimeMemoryTraversal");
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
-beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; });
+beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; controlReuse = true; controlPredicates.length = 0; });
 afterEach(() => { jest.restoreAllMocks(); });
 async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number,directLookup:boolean|"fruit"=false,repeatedQuestions=0,linkedConflict=false,observedProjections:boolean|"contradiction"|"canonical-mismatch"|"singleton"=false,observedQuery?:string,requestedMaxEntries?:number) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
@@ -511,6 +527,7 @@ it("shared native parent keeps the final raw revocation fence and fresh save rec
 });
 
 it("same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal",async()=>{
+ controlReuse=false; // Isolate the original snapshot-parent retention mechanism.
  const f=await fixture(true),get=f.db.get.bind(f.db),query=f.db.query.bind(f.db),seen:{table:string;id:string}[]=[],queries:{table:string;index?:string;keys:unknown[];limit?:number}[]=[];
  jest.spyOn(f.db,"get").mockImplementation(async(table,id)=>{seen.push({table,id});return await get(table,id);});
  jest.spyOn(f.db,"query").mockImplementation(table=>{const record:typeof queries[number]={table,keys:[]};queries.push(record);const builder=query(table),withIndex=builder.withIndex.bind(builder),take=builder.take.bind(builder);
@@ -601,6 +618,32 @@ const graphReadIdentity = ({ method, table, id, index, keys, terminal, phase }: 
 const rootUniqueReads = (reads: GraphRead[]) => reads.filter(row => row.family && row.table === "runtimeMemorySources" && row.terminal === "unique");
 const originalMutableReads = (reads: GraphRead[]) => reads.filter(row => !row.family && !row.table.startsWith("runtimeAuth")
   && !["runtimeModelPolicies", "runtimeModelQualifications", "runtimeAgentDefinitions"].includes(row.table)).map(graphReadIdentity);
+it("whole registered recall and save/candidate retain exact guards/model/state with raw control and digest reuse", async () => {
+  const f = await fixture(true, true), observed = instrumentGraphReads(f);
+  const state = () => clone({ rows: f.db.rows, writes: f.db.writes, sequence: f.db.sequence, native: f.native, effects: f.effects, scheduled: f.scheduled });
+  const restore = (value: ReturnType<typeof state>) => { f.db.rows = clone(value.rows); f.db.writes = value.writes; f.db.sequence = value.sequence;
+    Object.assign(f.native, clone(value.native)); Object.assign(f.effects, value.effects); f.scheduled.splice(0, f.scheduled.length, ...clone(value.scheduled)); };
+  const perform = () => agent.prepareContextV8Handler(f.action, f.attempt, (_repository, input, selection) => {
+    if (!selection) throw Error("Expected private recall selection");
+    return whole.finishAgentRecallV8(f.action, f.attempt, { now: () => clock }, input, profile,
+      { profile, vectors: [Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0)] }, selection, clock);
+  }, true);
+  const candidate = (row: GraphRead) => row.index === "by_attempt" && (row.table === "runtimeAgentExecutions"
+    || row.table === "runtimeAgentOperations" && row.keys?.some(key => Array.isArray(key) && key[1] === "kind" && key[2] === "tool"));
+  const digest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle), crypto = jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(digest);
+  const before = state(); controlPredicates.length = 0; controlReuse = false;
+  const expected = await perform(), after = state(), reads = clone(observed.reads), predicates = clone(controlPredicates), oldDigests = crypto.mock.calls.length;
+  restore(before); observed.clear(); controlPredicates.length = 0; crypto.mockClear(); controlReuse = true;
+  expect(await perform()).toEqual(expected); expect(state()).toEqual(after); expect(controlPredicates).toEqual(predicates);
+  expect(observed.reads.filter(row => !candidate(row))).toEqual(reads.filter(row => !candidate(row)));
+  const builders = (values: GraphRead[]) => values.map(({ documents: _documents, terminal: _terminal, ...row }) => row);
+  expect(builders(observed.reads)).toEqual(builders(reads));
+  const physical = (values: GraphRead[]) => values.filter(row => candidate(row) && row.terminal).length;
+  expect(physical(observed.reads)).toBeLessThan(physical(reads)); expect(crypto.mock.calls.length).toBeLessThan(oldDigests);
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+  console.info(JSON.stringify({ type: "controlled-whole-recall-control-reuse", oldControlReads: physical(reads), newControlReads: physical(observed.reads),
+    oldDigests, newDigests: crypto.mock.calls.length, exactOutputStatePredicatesAndOtherReads: true, hostedLatency: "NOT_RUN" }));
+});
 it.each([true, false])("V8 real shared=%s ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads", async shared => {
   const f = await ancestryFixture(shared), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan }, before = wholeState(f);
   const observed = instrumentGraphReads(f), originalScope = createV8AuthorityReadScope(f.ctx);
@@ -690,6 +733,7 @@ function k26GraphScope(ctx: MutationCtx) {
 }
 const uniqueRawReads = (reads: GraphRead[]) => [...new Set(reads.map(row => JSON.stringify(graphReadIdentity(row))))].sort();
 it.each([true, false])("K27 incremental K26 read/delivery comparison shared=%s retains all outcomes and raw identities", async shared => {
+  controlReuse = false; // Keep this historical raw-family comparison isolated.
   // This historical comparison keeps the K27 graph-only source view on both sides.
   nativeSnapshotReads = false;
   const f = await ancestryFixture(shared), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan }, before = wholeState(f);
@@ -709,6 +753,7 @@ it.each([true, false])("K27 incremental K26 read/delivery comparison shared=%s r
     optimized: { total: optimized.length, documents: optimized.reduce((n,r)=>n+r.documents,0) }, uniqueRawIdentitySetEqual: true, applicationWrites: 0, nativeLatency: "UNAVAILABLE" }));
 });
 it.each([true, false])("K27 incremental K26 atomic save/candidate comparison shared=%s preserves state and complete native readset", async shared => {
+  controlReuse = false; // Full control/hash behavior is compared separately above.
   const f = await ancestryFixture(shared), save = { ...f.attempt, context: "", entries: [], witnesses: [f.topWitness], completeness: "complete" as const };
   const before = { ...wholeState(f), sequence: f.db.sequence }, observed = instrumentGraphReads(f), callsBefore = f.calls.length;
   const restore = () => { f.db.rows = clone(before.rows); f.db.writes = before.writes; f.db.sequence = before.sequence;

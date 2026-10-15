@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "verdict": "PASS",
+  "reviewer": "fresh non-author independent source/test reviewer",
+  "scope": "Source acceptance of one coherent 11-file batch only; not final goal, hosted latency, installed native qualification, or live title quality acceptance.",
+  "repository": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "0d9199622f5f70af9604c07d2d4ac07c8c9f6bcd",
+  "coherentManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-coherent-source-hashes.json",
+  "coherentManifestSha256": "88bd2a56b2efa4df88b06658ca925792f04d733dc3731cbd04fe8ca587455161",
+  "policy": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+  "policyVersion": 2,
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "minimumScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 3,
+    "testQuality": 4,
+    "patternAdherence": 3,
+    "completeness": 4
+  },
+  "minimumAverage": 3.6,
+  "unresolvedBreakingFindings": [],
+  "findings": [],
+  "requirementsReview": [
+    {
+      "requirement": "Exact private V8 owner activation; public/default/V7/native/source views remain original-read",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:64-89",
+        "convex-dev/runtimeAuth.ts:177-201",
+        "convex-dev/runtimeAuth.ts:478-486",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts:24-38",
+        "memory-effort-control-independent-owner-probes.log"
+      ],
+      "reachability": "Only explicit private V8 native scopes receive the own nonserialized symbols and self-bound reader. Spreads, inherited/copy descriptors, fake same-description symbols and db replacement cannot reuse it."
+    },
+    {
+      "requirement": "Only original raw by_attempt execution take(2) and by_attempt kind=tool take(33) results retained",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:71-83",
+        "convex-dev/runtimeAgent.ts:127-135",
+        "convex-dev/runtimeAgentFence.ts:24-82",
+        "convex-dev/runtimeTranscript.ts:481-497"
+      ],
+      "reachability": "Original query/index/equality builders run on every logical call. singleTranscript, lease/reference/state/source/tool/budget predicates remain in their original caller and order; financial/model/by_operation reads are unchanged."
+    },
+    {
+      "requirement": "Raw cloning, absence/duplicate/cardinality semantics and shared 512-entry/1,000,000-byte caps",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:100-101",
+        "convex-dev/runtimeAuth.ts:292-300",
+        "convex-dev/runtimeAuth.ts:402-410",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts:32-47",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts:75-79",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts:94-102"
+      ],
+      "reachability": "Cache entries include key bytes, detached values and distinct operation identities. Saturation takes the original query/digest fallback; no result truncation is introduced."
+    },
+    {
+      "requirement": "Invalidate controls and hashes before/after all original writes, including pending/failed/unknown/fluent/component writes and late results",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:435-476",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts:47-74",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts:85-102",
+        "node_modules/convex/src/server/impl/database_impl.ts:138-218"
+      ],
+      "reachability": "All installed native writer methods, fluent table writer methods and runMutation are fenced. New families are evicted independently of other-family retention; writers suppress hits/population and graphEpoch rejects late population."
+    },
+    {
+      "requirement": "Exact canonical byte SHA-256 success reuse only; canonicalization and validation/comparisons remain current",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:85-89",
+        "convex-dev/runtimeAuth.ts:402-410",
+        "convex-dev/runtimeAuth.ts:481-485",
+        "convex-dev/runtimeTranscript.ts:109-114",
+        "convex-dev/runtimeTranscript.ts:431-438",
+        "convex-dev/runtimeAgent.ts:207-218",
+        "tests/unit/runtimeAgent/v8-control-read-composition.test.ts:120-138"
+      ],
+      "reachability": "Only completed digest strings are stored by exact string key. Errors and in-flight promises are never stored. Every call still creates canonical bytes from its current input and performs the original digest comparison; wrapped message/revision changes reject with original rollback."
+    },
+    {
+      "requirement": "Registered empty/recent/selected-source/whole recall on/off preserves body/output/state/effects/ordered predicates and noncandidate reads",
+      "met": true,
+      "evidence": [
+        "tests/unit/runtimeAgent/v8-control-read-composition.test.ts:96-138",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts:621-646",
+        "memory-effort-control-independent-retry-jest.json",
+        "memory-effort-control-independent-retry-tests.log"
+      ],
+      "reachability": "Actual registered handlers are invoked through fixture native argument checks. All five inline empty-save candidate reads and four by_operation reads remain physical. Exact body, full state/native effects and original noncandidate read sequence are asserted."
+    },
+    {
+      "requirement": "Historical tests retain assertions; isolate only new helpers in old mechanism comparisons, no production bypass",
+      "met": true,
+      "evidence": [
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:9-19",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:39-40",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts:18-37",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts:59-60"
+      ],
+      "reachability": "Exactly four preparation cases and five parameterized whole-recall cases opt out of only the new private helper reuse; all prior assertions remain. Defaults reset before each test; other 13 preparation cases and new differential cases exercise both mechanisms. No production disable option was added."
+    },
+    {
+      "requirement": "Title-only source framing and topic instruction in actual governed serialized provider body; other content and parser/caps/account behavior preserved",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeContentGateway.ts:33-46",
+        "src/domain/content.ts:44-60",
+        "tests/unit/runtimeContent/jobs.test.ts:44-56",
+        "tests/unit/runtimeContent/jobs.test.ts:147-198",
+        "tests/unit/runtimeContent/jobs.test.ts:124-136"
+      ],
+      "reachability": "Standalone, automatic and artifact secondary title requests use a single JSON source data value. Official installed provider serialization matches the governed ledger request. Non-title primary source and system text stay unchanged, title parser is byte-for-byte unchanged, assembled-byte and governed cost/output limits remain. Fixed offline response does not establish live model quality."
+    }
+  ],
+  "sourceHashesBefore": {
+    "convex-dev/runtimeAgent.ts": "7124156cc8befefa9d498ab98cd3f7013f101688ae3360ff02c11e213f87d5ba",
+    "convex-dev/runtimeAgentFence.ts": "daaadfc6772a2ebaaf2c76bd3fd76c29cc35e564b32ca14756c4087240a558a2",
+    "convex-dev/runtimeAuth.ts": "b830ece95b342f505b7e81000d2bd675d6dac1caa923f7e3ed78075e7dfb28b6",
+    "convex-dev/runtimeContentGateway.ts": "2352a9da5d5dd4478db00ca67d1fa3e121683d800b31f8bdc3d2593310efd5f9",
+    "convex-dev/runtimeTranscript.ts": "e30f192a7e0a30e3704b34cdc6a6b4631b7c040b28c15a0dd009f190ed65ae13",
+    "src/domain/content.ts": "29c8e74297230b23f2c339b76f53fe2363de6919574da56ecb22855b363c4b7c",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "fdb13617a303b2fd336717a35aa6ba5c4019b1f1338d328b61085f5b70ecd9bf",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "8423001d50964c517e9501cf4bc35fd4d53135686becd74d6544b3b3aa5cd598",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "b5e55d0f47fc35774779354320bdb5b9376791350d6a6e5e5de6210b64d325e1",
+    "tests/unit/runtimeContent/jobs.test.ts": "7ca171c32df55f632c14cda77df121bd8b76bfa909d122b24533b509223b5032",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "47beb46ba5005ee68648da9660fded91408be61e82fb1574ed4e2d5a33bb12ad"
+  },
+  "sourceHashesFinal": {
+    "convex-dev/runtimeAgent.ts": "7124156cc8befefa9d498ab98cd3f7013f101688ae3360ff02c11e213f87d5ba",
+    "convex-dev/runtimeAgentFence.ts": "daaadfc6772a2ebaaf2c76bd3fd76c29cc35e564b32ca14756c4087240a558a2",
+    "convex-dev/runtimeAuth.ts": "b830ece95b342f505b7e81000d2bd675d6dac1caa923f7e3ed78075e7dfb28b6",
+    "convex-dev/runtimeContentGateway.ts": "2352a9da5d5dd4478db00ca67d1fa3e121683d800b31f8bdc3d2593310efd5f9",
+    "convex-dev/runtimeTranscript.ts": "e30f192a7e0a30e3704b34cdc6a6b4631b7c040b28c15a0dd009f190ed65ae13",
+    "src/domain/content.ts": "29c8e74297230b23f2c339b76f53fe2363de6919574da56ecb22855b363c4b7c",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "fdb13617a303b2fd336717a35aa6ba5c4019b1f1338d328b61085f5b70ecd9bf",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "8423001d50964c517e9501cf4bc35fd4d53135686becd74d6544b3b3aa5cd598",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "b5e55d0f47fc35774779354320bdb5b9376791350d6a6e5e5de6210b64d325e1",
+    "tests/unit/runtimeContent/jobs.test.ts": "7ca171c32df55f632c14cda77df121bd8b76bfa909d122b24533b509223b5032",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "47beb46ba5005ee68648da9660fded91408be61e82fb1574ed4e2d5a33bb12ad"
+  },
+  "sourceHashesMatchManifest": true,
+  "sourceHashReceipts": [
+    "memory-effort-control-independent-hashes-before.json",
+    "memory-effort-control-independent-hashes-after.json"
+  ],
+  "independentChecks": {
+    "focusedTests": {
+      "status": "PASS",
+      "passed": 238,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 5,
+      "forceExit": false,
+      "naturalExit": true,
+      "exitCode": 0,
+      "durationSeconds": 28.808850049972534,
+      "receipt": "memory-effort-control-independent-retry-tests-receipt.json",
+      "raw": "memory-effort-control-independent-retry-tests.log",
+      "result": "memory-effort-control-independent-retry-jest.json"
+    },
+    "typecheck": {
+      "name": "typecheck",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "durationSeconds": 12.78059697151184,
+      "exitCode": 0,
+      "output": "memory-effort-control-independent-typecheck.log"
+    },
+    "changed11FileLint": {
+      "name": "lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--report-unused-disable-directives",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentFence.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeContentGateway.ts",
+        "convex-dev/runtimeTranscript.ts",
+        "src/domain/content.ts",
+        "tests/unit/runtimeAgent/v8-control-read-composition.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeContent/jobs.test.ts",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "durationSeconds": 6.761685848236084,
+      "exitCode": 0,
+      "output": "memory-effort-control-independent-lint.log"
+    },
+    "ownershipAndIdentityProbes": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--import",
+        "tsx",
+        "--input-type=module",
+        "-"
+      ],
+      "stdinSource": "memory-effort-control-independent-owner-probes.mjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "durationSeconds": 0.14786887168884277,
+      "output": "memory-effort-control-independent-owner-probes.log"
+    },
+    "whitespace": {
+      "status": "PASS",
+      "exitCode": 0,
+      "raw": "memory-effort-control-independent-diff-check.log"
+    }
+  },
+  "controlledObservations": [
+    {
+      "type": "controlled-v8-agent-control-reads",
+      "shape": {
+        "pairs": 0,
+        "effort": "normal"
+      },
+      "oldExecution": 25,
+      "newExecution": 9,
+      "oldCandidate": 34,
+      "newCandidate": 13,
+      "oldDigests": 302,
+      "newDigests": 242,
+      "saveViewReads": 5,
+      "exactOutputStatePredicatesBuilders": true,
+      "hostedLatency": "NOT_RUN"
+    },
+    {
+      "type": "controlled-v8-agent-control-reads",
+      "shape": {
+        "pairs": 1,
+        "effort": "fast"
+      },
+      "oldExecution": 25,
+      "newExecution": 9,
+      "oldCandidate": 34,
+      "newCandidate": 13,
+      "oldDigests": 446,
+      "newDigests": 284,
+      "saveViewReads": 5,
+      "exactOutputStatePredicatesBuilders": true,
+      "hostedLatency": "NOT_RUN"
+    },
+    {
+      "type": "controlled-v8-agent-control-reads",
+      "shape": {
+        "pairs": 2,
+        "effort": "normal"
+      },
+      "oldExecution": 25,
+      "newExecution": 9,
+      "oldCandidate": 34,
+      "newCandidate": 13,
+      "oldDigests": 590,
+      "newDigests": 302,
+      "saveViewReads": 5,
+      "exactOutputStatePredicatesBuilders": true,
+      "hostedLatency": "NOT_RUN"
+    },
+    {
+      "type": "controlled-whole-recall-control-reuse",
+      "oldControlReads": 45,
+      "newControlReads": 11,
+      "oldDigests": 412,
+      "newDigests": 327,
+      "exactOutputStatePredicatesAndOtherReads": true,
+      "hostedLatency": "NOT_RUN"
+    }
+  ],
+  "versions": {
+    "node": "24.15.0",
+    "typescript": "6.0.3",
+    "eslint": "10.11.0",
+    "jest": "30.5.2",
+    "convex": "1.46.0",
+    "ai": "7.0.127",
+    "openaiCompatible": "3.0.14",
+    "convexAgent": "0.7.3"
+  },
+  "preservedFailures": [
+    {
+      "receipt": "memory-effort-control-independent-tests-receipt.json",
+      "raw": "memory-effort-control-independent-tests.log",
+      "exitCode": 1,
+      "testsExecuted": 0,
+      "reason": "First independent invocation lacked CONVEX_URL; tests/env.ts exits at setup. No inherited URL and neither dotenv file exists. A corrected explicit dummy URL/minimal environment run passed. Watchman recrawl warning retained; no Watchman setting was changed."
+    },
+    {
+      "receipt": "memory-effort-control-read-targeted-first.jest.json",
+      "passed": 806,
+      "failed": 9,
+      "scope": "Author historical old-mechanism comparisons, retained without relabeling. Source/test diff verifies narrow new-helper isolation, with all old assertion bodies preserved."
+    },
+    {
+      "receipt": "memory-effort-title-framing-report.json",
+      "scope": "Historical title report status/type failures refer to the then-concurrent test draft. Current frozen-source independent tsc passes; historical report remains unchanged."
+    }
+  ],
+  "limitations": [
+    "No services, deployments, credentials, paid inference, live model quality, browser or hosted latency were exercised.",
+    "Independent test gate selected the five changed/new test files only (238 assertions); the unchanged broad suite was not rerun. Author reported broader 863/21 result remains distinct supporting evidence.",
+    "SDK build and package contracts are coordinator-owned and were not rerun by this reviewer.",
+    "Title body tests use the official provider and actual governed ledger with fixed offline terminal output; real model response quality remains for actual installed qualification.",
+    "Source review is not final goal or latency acceptance."
+  ],
+  "actions": {
+    "sourceEdits": 0,
+    "gitMutations": 0,
+    "readOnlyGitCommandsUsed": [
+      "status --short",
+      "rev-parse HEAD",
+      "diff HEAD",
+      "diff --stat",
+      "diff --check"
+    ],
+    "deploys": 0,
+    "serviceCalls": 0,
+    "modelCalls": 0,
+    "secretReads": 0,
+    "productionChanges": 0,
+    "unrelatedRepositoryChanges": 0
+  },
+  "recommendation": "Accept this frozen source/test batch. Continue the coordinator-owned installed/native non-video and hosted latency/title qualification; no fix or additional preparation-review loop is required for source acceptance.",
+  "finishedAt": "2026-10-15T11:07:44.404545+00:00"
+}

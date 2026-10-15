@@ -6,6 +6,7 @@ import type { FunctionReference, UserIdentity } from "convex/server";
 import { internalMutation, internalQuery } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
+import { semanticHash } from "../src/domain/profile";
 import type {
   RuntimeActorKind, RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement,
   RuntimeCapability, RuntimeResource, RuntimeResourceAccess, RuntimeResourceType,
@@ -52,6 +53,41 @@ const v8ReadScope: unique symbol = Symbol("cortex.native-v8-read-scope");
 const managedSourceReadScope: unique symbol = Symbol("cortex.native-managed-source-read-scope");
 const managedSourceValidationScope: unique symbol = Symbol("cortex.native-managed-source-validation-scope");
 const nativeReadScopeOwner: unique symbol = Symbol("cortex.native-read-scope-owner");
+const agentControlReadScope: unique symbol = Symbol("cortex.native-agent-control-read-scope");
+interface AgentControlReader {
+  owner: object;
+  db: QueryCtx["db"];
+  execution(args: readonly string[], invoke: () => Promise<Doc<"runtimeAgentExecutions">[]>): Promise<Doc<"runtimeAgentExecutions">[]>;
+  tools(args: readonly string[], invoke: () => Promise<Doc<"runtimeAgentOperations">[]>): Promise<Doc<"runtimeAgentOperations">[]>;
+  hash(bytes: string): Promise<string>;
+}
+function ownAgentControlReader(ctx: Pick<QueryCtx, "db">): AgentControlReader | undefined {
+  const reader = Object.getOwnPropertyDescriptor(ctx, agentControlReadScope)?.value as AgentControlReader | undefined;
+  return Object.getOwnPropertyDescriptor(ctx, v8ReadScope)?.value === true && reader?.owner === ctx && reader.db === ctx.db ? reader : undefined;
+}
+/** Construct the original query before retaining only its raw terminal result.
+ * The reader belongs to this exact returned V8 context; views and RPCs cannot
+ * inherit it. Every caller still checks duplicates, lease, state and authority. */
+export async function readV8AgentExecutionRows(ctx: Pick<QueryCtx, "db">, tenantId: string, memorySpaceId: string, runId: string, attemptNumber: number): Promise<Doc<"runtimeAgentExecutions">[]> {
+  const query = ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", tenantId)
+    .eq("memorySpaceId", memorySpaceId).eq("runId", runId).eq("attemptNumber", attemptNumber));
+  const reader = ownAgentControlReader(ctx);
+  return reader && Number.isSafeInteger(attemptNumber) && !Object.is(attemptNumber, -0) ? await reader.execution([tenantId, memorySpaceId, runId, String(attemptNumber)], () => query.take(2)) : await query.take(2);
+}
+/** Only the original bounded tool-budget list; model/financial/operation-ID
+ * queries retain their original physical reads. */
+export async function readV8AgentToolRows(ctx: Pick<QueryCtx, "db">, tenantId: string, memorySpaceId: string, runId: string, attemptNumber: number): Promise<Doc<"runtimeAgentOperations">[]> {
+  const query = ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", tenantId)
+    .eq("memorySpaceId", memorySpaceId).eq("runId", runId).eq("attemptNumber", attemptNumber).eq("kind", "tool"));
+  const reader = ownAgentControlReader(ctx);
+  return reader && Number.isSafeInteger(attemptNumber) && !Object.is(attemptNumber, -0) ? await reader.tools([tenantId, memorySpaceId, runId, String(attemptNumber)], () => query.take(33)) : await query.take(33);
+}
+/** Callers still canonicalize the actual current value and compare the digest
+ * on every check. Only successful SHA-256 of these exact bytes is retained. */
+export async function hashV8CanonicalBytes(ctx: Pick<QueryCtx, "db"> | undefined, bytes: string): Promise<string> {
+  const reader = ctx && ownAgentControlReader(ctx);
+  return reader ? await reader.hash(bytes) : await semanticHash(bytes);
+}
 interface ManagedSourceReader {
   sources(tenantId: string, memorySpaceId: string, sourceId: string): Promise<Doc<"runtimeMemorySources">[]>;
   sourceUnique?(tenantId: string, memorySpaceId: string, sourceId: string): Promise<Doc<"runtimeMemorySources"> | null>;
@@ -300,12 +336,19 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
   const metadata = new Map<string, unknown>();
   const executableMetadata = new Map<string, unknown>();
   let executableMetadataBytes = 0;
-  type GraphFamily = "source" | "conversation" | "bridge" | "run";
+  type GraphFamily = "source" | "conversation" | "bridge" | "run" | "agentExecution" | "agentTool" | "sha256";
   const graph = new Map<string, { family: GraphFamily; value: unknown; bytes: number }>();
   let graphBytes = 0, graphEpoch = 0;
   const freshGraph = (family?: GraphFamily) => {
     if (family === undefined) { graph.clear(); graphBytes = 0; }
     else for (const [key, entry] of graph) if (entry.family === family) { graph.delete(key); graphBytes -= entry.bytes; }
+    graphEpoch++;
+  };
+  const freshAgentControls = () => { freshGraph("agentExecution"); freshGraph("agentTool"); freshGraph("sha256"); };
+  const freshManagedGraph = () => {
+    for (const [key, entry] of graph) if (entry.family !== "agentExecution" && entry.family !== "agentTool" && entry.family !== "sha256") {
+      graph.delete(key); graphBytes -= entry.bytes;
+    }
     graphEpoch++;
   };
   // Nested helper scopes share only this explicitly opted-in parent reader.
@@ -369,7 +412,8 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
   // Explicit native tables only. State writes retain authority/policy/message
   // rows; origin-run writes separately evict raw run rows. Financial writers
   // retain authority and the managed graph, but freshly read policy/messages.
-  // Mutable accounts, operations and attempts are never cached.
+  // Financial accounts/model operations/attempts are never cached. The two
+  // private Agent control lists below are evicted on every writer boundary.
   type WriteRetention = { reads: "all" | "authority"; graph: "all" | "except-run" };
   const retention = (method: string, args: unknown[]): WriteRetention | undefined => {
     if (!v8 || typeof args[0] !== "string") return undefined;
@@ -394,6 +438,9 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
     // Advance the epoch even for retained families so late reads never populate
     // across a writer. Unknown or failed writers clear the complete raw graph.
     const boundary = () => {
+      // These mutable raw rows may change on any writer surface. Retain none
+      // across a write, including writes that preserve other raw families.
+      freshAgentControls();
       if (!retained) freshGraph(); else if (retained.graph === "except-run") freshGraph("run"); else graphEpoch++;
       if (retained) { epoch++; if (retained.reads === "authority") freshMetadata(); } else invalidate();
     };
@@ -431,6 +478,12 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
   Object.defineProperty(scoped, authorityReadScope, { value: reader });
   Object.defineProperty(scoped, nativeReadScopeOwner, { value: (ctx as Ctx & { [nativeReadScopeOwner]?: Ctx })[nativeReadScopeOwner] ?? ctx });
   if (v8) Object.defineProperty(scoped, v8ReadScope, { value: true });
+  if (v8) Object.defineProperty(scoped, agentControlReadScope, { value: {
+    owner: scoped, db: scoped.db,
+    execution: (args, invoke) => readGraph("agentExecution", args, invoke, "agent.execution.by_attempt.take2"),
+    tools: (args, invoke) => readGraph("agentTool", args, invoke, "agent.tools.by_attempt.take33"),
+    hash: bytes => readGraph("sha256", [bytes], () => semanticHash(bytes), "sha256.exact-bytes"),
+  } satisfies AgentControlReader });
   if (nativeTranscript) Object.defineProperty(scoped, nativeTranscriptReadScope, { value: nativeTranscript });
   if (options?.policyMetadata) Object.defineProperty(scoped, policyMetadataReadScope, { value: {
     deploymentRows: () => readMetadata("deployment", async () => await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", q => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65)),
@@ -457,7 +510,7 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
       await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("nativeMessageId", nativeMessageId)).take(2)),
     runs: (tenantId: string, memorySpaceId: string, runId: string) => readGraph("run", [tenantId, memorySpaceId, runId], async () =>
       await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("runId", runId)).take(2)),
-    fresh: freshGraph,
+    fresh: freshManagedGraph,
   } satisfies ManagedSourceReader });
   }
   return scoped;

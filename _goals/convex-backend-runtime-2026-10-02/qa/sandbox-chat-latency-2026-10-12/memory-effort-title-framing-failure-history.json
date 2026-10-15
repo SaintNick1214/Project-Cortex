@@ -1,0 +1,46 @@
+{
+  "baseCommit": "0d9199622f5f70af9604c07d2d4ac07c8c9f6bcd",
+  "baseJobsSha256": "9400812fd6f41b65e39e0970d312256f9987819b4767a6ecff75b96f805b3f25",
+  "beforeHashes": [
+    {
+      "path": "convex-dev/runtimeContentGateway.ts",
+      "sha256": "b2eb0f7b667d8b7c5e7b68f722d29fbd1ab152b2faf40577b5585fb36963cf5a",
+      "bytes": 4643
+    },
+    {
+      "path": "src/domain/content.ts",
+      "sha256": "78bc59e3964365494270639f4da7347c35349f14a14a3d1b905ea1931ec7ab9c",
+      "bytes": 5180
+    },
+    {
+      "path": "tests/unit/runtimeContent/jobs.test.ts",
+      "sha256": "9400812fd6f41b65e39e0970d312256f9987819b4767a6ecff75b96f805b3f25",
+      "bytes": 36907
+    }
+  ],
+  "staleAssertions": [
+    {
+      "line": 144,
+      "text": "  expect(workflows).toHaveLength(2);"
+    },
+    {
+      "line": 232,
+      "text": "  expect(workflows).toHaveLength(2);"
+    }
+  ],
+  "reason": "The legacy transcript fixture already schedules one executeDirectV6 action and one separate title Workflow at base0d919962. The original two-Workflow counts were stale. Root authorized replacing them with exact direct action reference/payload/one execution plus exact single title Workflow reference/payload. No scheduler source changed.",
+  "receipts": [
+    "memory-effort-title-framing-red.log",
+    "memory-effort-title-framing-red2-execution.json",
+    "memory-effort-title-framing-red2.jest.json",
+    "memory-effort-title-framing-green-execution.json",
+    "memory-effort-title-framing-green.jest.json",
+    "memory-effort-title-framing-green2-execution.json",
+    "memory-effort-title-framing-green2.jest.json"
+  ],
+  "preflight": "First red invocation exited from tests/env.ts because no CONVEX_URL was set; no tests ran. Subsequent explicit offline fixture URL did not contact a service.",
+  "red": "Three provider-body regressions failed on original weak system/raw prompt. Existing parser constraint test passed.",
+  "green": "Two new test assertions incorrectly expected top-level terminalOutcome; corrected to actual terminalEvidenceCanonical confirmed outcome plus exact attached private result, usage, UNKNOWN and released-slot accounting. Two unchanged baseline scheduler counts also failed.",
+  "green2": "Only the two stale scheduler-count assertions failed. Original logs and Jest outcomes retained.",
+  "final": "One authorized semantic scheduler-assertion correction followed by full affected suite44/44, zero skips, forceExit=false and natural exit0."
+}

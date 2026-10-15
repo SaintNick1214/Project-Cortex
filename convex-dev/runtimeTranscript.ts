@@ -21,7 +21,7 @@ import { boundedIdentifier, clientRequestKey, comparePosition, normalizeTextSubm
 import type { CutoffV1, CutoffV8, ExecutionCutoff, MessagePin, PublicTranscriptMessage } from "../src/domain/transcript";
 import { dataAuthorityReference, managedConversationAccess, requireDataAuthority, recheckDataAuthority } from "./runtimeDataAuth";
 import type { ScopedDataAuthority } from "./runtimeDataAuth";
-import { readNativeTranscriptMessages, recheckAuthority, readManagedTranscriptBridgeRows } from "./runtimeAuth";
+import { readNativeTranscriptMessages, recheckAuthority, readManagedTranscriptBridgeRows, readV8AgentExecutionRows, hashV8CanonicalBytes } from "./runtimeAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
@@ -106,11 +106,11 @@ function content(message: MessageDoc) {
   // A non-text native message is not implicitly factual or publicly executable.
   return { role, parts };
 }
-async function contentHash(message: MessageDoc): Promise<string> { return await semanticHash(canonicalModelJson(content(message))); }
+async function contentHash(message: MessageDoc, ctx?: Pick<QueryCtx, "db">): Promise<string> { return await hashV8CanonicalBytes(ctx, canonicalModelJson(content(message))); }
 /** Private model history is the canonical Agent message, never the public text projection. */
-export async function canonicalMessageHash(message: MessageDoc): Promise<string> {
+export async function canonicalMessageHash(message: MessageDoc, ctx?: Pick<QueryCtx, "db">): Promise<string> {
   if (!message.message) transcriptDenied("STALE_TRANSCRIPT");
-  return await semanticHash(canonicalModelJson(message.message));
+  return await hashV8CanonicalBytes(ctx, canonicalModelJson(message.message));
 }
 export function privateModelMessage(message: MessageDoc): ModelMessage {
   const native = message.message;
@@ -124,7 +124,7 @@ export async function verifyMessage(ctx: ReadCtx, conversation: ManagedConversat
   if (!native || bridge.tombstonedAt !== undefined || bridge.conversationId !== conversation.conversationId
     || bridge.tenantId !== conversation.tenantId || bridge.memorySpaceId !== conversation.memorySpaceId
     || native.threadId !== conversation.threadId || native._id !== bridge.nativeMessageId
-    || comparePosition(native, bridge) !== 0 || native.message?.role !== bridge.role || await contentHash(native) !== bridge.contentHash) transcriptDenied("STALE_TRANSCRIPT");
+    || comparePosition(native, bridge) !== 0 || native.message?.role !== bridge.role || await contentHash(native, ctx) !== bridge.contentHash) transcriptDenied("STALE_TRANSCRIPT");
   return native;
 }
 async function sourceWrite(ctx: MutationCtx, conversation: ManagedConversation, bridge: Pick<Doc<"runtimeTranscriptMessages">,
@@ -188,7 +188,7 @@ export async function registerMessages(ctx: MutationCtx, conversation: ManagedCo
     if (typed.role === "tool" && !options.trustedToolMessages) transcriptDenied("TRANSCRIPT_CONFLICT");
     const event = `transcript:${conversation.conversationId}:${message._id}`;
     const text = typed.parts.map(part => part.text).join("\n");
-    const hash = await contentHash(message); const sourceHash = await semanticHash(text.trim() ? normalizeSourceText(text) : "");
+    const hash = await contentHash(message, ctx); const sourceHash = await semanticHash(text.trim() ? normalizeSourceText(text) : "");
     const mediaJobReferences = await checkNativeMediaReferences(ctx, reference, message);
     const artifactContextWitnesses = [...new Map([...(options.artifactContextWitnesses ?? []), ...await nativeArtifactWitnesses(ctx, reference, message)].map(witness => [canonicalModelJson(witness), witness])).values()];
     await checkArtifactContextWitnesses(ctx, reference, artifactContextWitnesses);
@@ -313,7 +313,7 @@ export async function captureCutoff(ctx: ReadCtx, conversation: ManagedConversat
     if (native.status !== "success") transcriptDenied("STALE_TRANSCRIPT");
     inputPins.push({ nativeMessageId: native._id, order: native.order, stepOrder: native.stepOrder,
       sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash,
-      canonicalContentHash: await canonicalMessageHash(native) });
+      canonicalContentHash: await canonicalMessageHash(native, ctx) });
   }
   inputPins.sort(comparePosition); const anchor = inputPins[inputPins.length - 1]!;
   let cursor: string | null = null; let scanned = 0; let bytes = 0; const pins: MessagePin[] = []; const positions = new Set<string>();
@@ -336,7 +336,7 @@ export async function captureCutoff(ctx: ReadCtx, conversation: ManagedConversat
       if (bytes > maxContextTokens || scanned > 1000) { complete = false; break; }
       pins.push({ nativeMessageId: native._id, order: native.order, stepOrder: native.stepOrder,
         sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash,
-        canonicalContentHash: await canonicalMessageHash(native) });
+        canonicalContentHash: await canonicalMessageHash(native, ctx) });
     }
     if (!complete || result.isDone) break;
     if (!result.continueCursor || result.continueCursor === cursor) transcriptDenied("TRANSCRIPT_CONFLICT"); cursor = result.continueCursor;
@@ -375,7 +375,7 @@ export async function captureSelectedCutoff(ctx: ReadCtx, conversation: ManagedC
     if (native.status !== "success") transcriptDenied("STALE_TRANSCRIPT");
     inputPins.push({ nativeMessageId: native._id, order: native.order, stepOrder: native.stepOrder,
       sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash,
-      canonicalContentHash: await canonicalMessageHash(native) });
+      canonicalContentHash: await canonicalMessageHash(native, ctx) });
   }
   inputPins.sort(comparePosition); const anchor = inputPins[inputPins.length - 1]!;
   const pins: MessagePin[] = [...inputPins], ids = new Set(inputPins.map(pin => pin.nativeMessageId));
@@ -410,7 +410,7 @@ export async function captureSelectedCutoff(ctx: ReadCtx, conversation: ManagedC
       const position = canonicalModelJson([native.order, native.stepOrder]); if (positions.has(position)) transcriptDenied("TRANSCRIPT_CONFLICT");
       positions.add(position); ids.add(native._id);
       pins.push({ nativeMessageId: native._id, order: native.order, stepOrder: native.stepOrder, sourceEventId: bridge.sourceEventId,
-        sourceRevision: bridge.revision, contentHash: bridge.contentHash, canonicalContentHash: await canonicalMessageHash(native) });
+        sourceRevision: bridge.revision, contentHash: bridge.contentHash, canonicalContentHash: await canonicalMessageHash(native, ctx) });
     }
   }
   if(effort&&candidates.length===scanLimit&&pins.length<historyCeiling)recentStopReason="work";
@@ -422,7 +422,7 @@ export async function captureSelectedCutoff(ctx: ReadCtx, conversation: ManagedC
     anchor, messages: pins.sort(comparePosition), ingestionCutoff: { scopeIdentity: canonicalModelJson([conversation.tenantId, conversation.memorySpaceId]),
       sequence: ingestion.sequence, graphSequence: graph?.sequence ?? 0, requiredStages }, capturedAuthorityReference: run.authorityReference,
     completeness: pins.length > policy.maxMessages ? "incomplete" : "complete",
-    inputSelection: { version: policy.version, ...(recentStopReason?{recentStopReason}:{}),...(policy.version===2 ? {effort:JSON.parse(run.memoryEffortCanonical!) as EffectiveMemoryEffortPolicy}:{}), policy, policyHash: await semanticHash(canonicalModelJson(policy)),
+    inputSelection: { version: policy.version, ...(recentStopReason?{recentStopReason}:{}),...(policy.version===2 ? {effort:JSON.parse(run.memoryEffortCanonical!) as EffectiveMemoryEffortPolicy}:{}), policy, policyHash: await hashV8CanonicalBytes(ctx, canonicalModelJson(policy)),
       mandatoryMessageIds: [...run.inputMessageIds], coverage: "selected" } };
   if (utf8Bytes(canonicalModelJson(snapshot)) > 180_000) transcriptDenied("CONTEXT_INCOMPLETE");
   return snapshot;
@@ -432,7 +432,7 @@ export async function hydrateSelectedCutoff(ctx: ReadCtx, conversation: ManagedC
   if (snapshot.version !== 8 || !snapshot.inputSelection) transcriptDenied("STALE_TRANSCRIPT");
   const policy = modelInputPolicy(snapshot.inputSelection.policy);
   if (snapshot.version !== 8 || snapshot.inputSelection.version !== policy.version || snapshot.inputSelection.coverage !== "selected"
-    || snapshot.inputSelection.policyHash !== await semanticHash(canonicalModelJson(policy)) || snapshot.messages.length > policy.maxMessages
+    || snapshot.inputSelection.policyHash !== await hashV8CanonicalBytes(ctx, canonicalModelJson(policy)) || snapshot.messages.length > policy.maxMessages
     || canonicalModelJson(snapshot.inputSelection.mandatoryMessageIds) !== canonicalModelJson(run.inputMessageIds)
     || !snapshot.inputSelection.mandatoryMessageIds.every(id => snapshot.messages.some(pin => pin.nativeMessageId === id))) transcriptDenied("STALE_TRANSCRIPT");
   return await hydratePrivateCutoff(ctx, conversation, run, snapshot);
@@ -453,7 +453,7 @@ export async function hydrateCutoff(ctx: ReadCtx, conversation: ManagedConversat
       if (!bridge || !bridge.approved || bridge.sourceEventId !== pin.sourceEventId || bridge.revision !== pin.sourceRevision
         || bridge.contentHash !== pin.contentHash || comparePosition(bridge, pin) !== 0) transcriptDenied("STALE_TRANSCRIPT");
       const checked = await verifyMessage(ctx, conversation, bridge, native[i]);
-      if (pin.canonicalContentHash !== undefined && await canonicalMessageHash(checked) !== pin.canonicalContentHash) transcriptDenied("STALE_TRANSCRIPT");
+      if (pin.canonicalContentHash !== undefined && await canonicalMessageHash(checked, ctx) !== pin.canonicalContentHash) transcriptDenied("STALE_TRANSCRIPT");
       await checkNativeMediaReferences(ctx, run.authorityReference, checked);
       await checkArtifactContextWitnesses(ctx, run.authorityReference, bridge.artifactContextWitnesses ?? []);
       result.push(content(checked));
@@ -470,7 +470,7 @@ export async function hydratePrivateCutoff(ctx: ReadCtx, conversation: ManagedCo
     const messages = await nativeById(ctx, pins.map(pin => pin.nativeMessageId));
     for (let i = 0; i < pins.length; i++) {
       const message = messages[i];
-      if (!message || !pins[i].canonicalContentHash || await canonicalMessageHash(message) !== pins[i].canonicalContentHash) transcriptDenied("STALE_TRANSCRIPT");
+      if (!message || !pins[i].canonicalContentHash || await canonicalMessageHash(message, ctx) !== pins[i].canonicalContentHash) transcriptDenied("STALE_TRANSCRIPT");
       // Private tool results remain native history, but their injected memory is
       // source-attributed by the server execution that saved them. A later turn
       // must not resurrect stale recalled context merely because its bytes match.
@@ -481,8 +481,7 @@ export async function hydratePrivateCutoff(ctx: ReadCtx, conversation: ManagedCo
       const label = message.agentName?.match(/^cortex:(.+):([1-9]\d*):(\d+)$/);
       const ownerRunId = bridge?.runId ?? label?.[1]; const ownerAttempt = bridge?.attemptNumber ?? (label ? Number(label[2]) : undefined);
       if (ownerRunId && ownerAttempt !== undefined) {
-        const owner = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", conversation.tenantId)
-          .eq("memorySpaceId", conversation.memorySpaceId).eq("runId", ownerRunId).eq("attemptNumber", ownerAttempt)).take(2));
+        const owner = singleTranscript(await readV8AgentExecutionRows(ctx, conversation.tenantId, conversation.memorySpaceId, ownerRunId, ownerAttempt));
         // Task05 manual/non-Agent outputs have no private Agent context owner.
         if (label && !owner) transcriptDenied("STALE_CONTEXT");
         const manuallyRevised = bridge && bridge.revision > 1 && message.message?.role !== "tool"
@@ -586,7 +585,7 @@ export async function reviseMessage(ctx: MutationCtx, args: { conversationId: st
   } else {
     const parts = normalizeTextSubmit({ version: 1, agentId: "manual", agentVersion: 1, clientRequestId: "manual", parts: args.parts }).userInput.parts;
     const changed = await ctx.runMutation(agentComponent.messages.updateMessage, { messageId: args.messageId, patch: { message: { role: bridge.role, content: parts } } });
-    const hash = await contentHash(changed); const sourceHash = await semanticHash(normalizeSourceText(parts.map(part => part.text).join("\n")));
+    const hash = await contentHash(changed, ctx); const sourceHash = await semanticHash(normalizeSourceText(parts.map(part => part.text).join("\n")));
     await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { revision, contentHash: hash, sourceContentHash: sourceHash, contextSourceWitnesses: undefined, artifactContextWitnesses: undefined, assetVersionIds: undefined, actorReference: reference, updatedAt: now });
     await sourceWrite(ctx, conversation, { ...bridge, revision, sourceContentHash: sourceHash }, parts.map(part => part.text).join("\n"));
   }

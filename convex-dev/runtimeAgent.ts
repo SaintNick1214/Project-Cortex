@@ -43,7 +43,7 @@ import { currentRun, currentControlRun, activeAttempt, publicRunCurrent, claimNe
 import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, hydrateSelectedCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
-import { recheckAuthority, createMemorySourceReadScope, createAuthorityReadScope, createV8AuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads, withNativeSnapshotReads } from "./runtimeAuth";
+import { recheckAuthority, createMemorySourceReadScope, createAuthorityReadScope, createV8AuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads, withNativeSnapshotReads, readV8AgentExecutionRows, hashV8CanonicalBytes } from "./runtimeAuth";
 import { createBackendGatewayComposition, withV8GatewayTerminalPorts } from "./runtimeGatewayBackend";
 import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
 import { admitHandler, checkpointHandler, resolveHandler, readCurrentEmbeddingProfile, attachTerminalResultHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
@@ -125,8 +125,7 @@ const refs = {
 };
 function attemptName(args: Attempt, ordinal: number): string { return `cortex:${args.runId}:${args.attemptNumber}:${ordinal}`; }
 async function execution(ctx: Pick<QueryCtx, "db">, args: Attempt) {
-  const row = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", args.reference.tenantId)
-    .eq("memorySpaceId", args.reference.memorySpaceId!).eq("runId", args.runId).eq("attemptNumber", args.attemptNumber)).take(2));
+  const row = singleTranscript(await readV8AgentExecutionRows(ctx, args.reference.tenantId, args.reference.memorySpaceId!, args.runId, args.attemptNumber));
   if (!row || row.leaseVersion !== args.leaseVersion || canonicalModelJson(row.reference) !== canonicalModelJson(args.reference)) transcriptDenied();
   return row;
 }
@@ -185,7 +184,7 @@ export async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, a
     for (let index = 0; index < saved.length; index++) {
       const message = saved[index]; const pin = owned.savedMessagePins?.find(item => item.id === owned.savedMessageIds[i + index]);
       if (!message || message.status !== "success" || message.threadId !== conversation.threadId
-        || message._id !== owned.savedMessageIds[i + index] || !pin || pin.order !== message.order || pin.stepOrder !== message.stepOrder || pin.canonicalContentHash !== await canonicalMessageHash(message)
+        || message._id !== owned.savedMessageIds[i + index] || !pin || pin.order !== message.order || pin.stepOrder !== message.stepOrder || pin.canonicalContentHash !== await canonicalMessageHash(message, ctx)
         || message.order !== snapshot.anchor.order || comparePosition(message, snapshot.anchor) <= 0) transcriptDenied("STALE_TRANSCRIPT");
       await checkNativeMediaReferences(ctx, args.reference, message);
       currentMessages.push(privateModelMessage(message));
@@ -207,7 +206,7 @@ export async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, a
   let selectedMessages = messageEntries, projectedExecution = owned;
   if (snapshot.version === 8 && owned.modelInputSelection?.ordinal === owned.nextModelStep) {
     const selection = owned.modelInputSelection;
-    if (selection.policyHash !== snapshot.inputSelection.policyHash || selection.hash !== await semanticHash(canonicalModelJson({ ordinal: selection.ordinal,
+    if (selection.policyHash !== snapshot.inputSelection.policyHash || selection.hash !== await hashV8CanonicalBytes(ctx, canonicalModelJson({ ordinal: selection.ordinal,
       messageIds: selection.messageIds, entryKeys: selection.entryKeys, policyHash: selection.policyHash }))
       || new Set(selection.messageIds).size !== selection.messageIds.length || new Set(selection.entryKeys).size !== selection.entryKeys.length
       || messageEntries.some(value => value.mandatory && !selection.messageIds.includes(value.id))
@@ -927,7 +926,7 @@ export const finishOperation = internalMutation({ args: { ...agentAttempt, opera
   if (ids.length > 1000) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
   const pins = new Map((current.execution.savedMessagePins ?? []).map(pin => [pin.id, pin]));
   for (const message of messages) if (message) {
-    const pin = { id: message._id, order: message.order, stepOrder: message.stepOrder, canonicalContentHash: await canonicalMessageHash(message) };
+    const pin = { id: message._id, order: message.order, stepOrder: message.stepOrder, canonicalContentHash: await canonicalMessageHash(message, ctx) };
     const prior = pins.get(message._id); if (prior && prior.canonicalContentHash !== pin.canonicalContentHash) transcriptDenied("STALE_TRANSCRIPT");
     pins.set(pin.id, pin);
   }
@@ -1641,7 +1640,7 @@ export const reconcile = mutation({ args: selector, handler: async (ctx, args) =
   const ids = recovered.map(message => message._id);
   await ctx.db.patch("runtimeAgentOperations", last._id, { state: "complete", nativeMessageIds: ids, endedAt: Date.now() });
   const pins = new Map((owned.savedMessagePins ?? []).map(pin => [pin.id, pin]));
-  for (const message of recovered) pins.set(message._id, { id: message._id, order: message.order, stepOrder: message.stepOrder, canonicalContentHash: await canonicalMessageHash(message) });
+  for (const message of recovered) pins.set(message._id, { id: message._id, order: message.order, stepOrder: message.stepOrder, canonicalContentHash: await canonicalMessageHash(message, ctx) });
   await ctx.db.patch("runtimeAgentExecutions", owned._id, { savedMessageIds: [...new Set([...owned.savedMessageIds, ...ids])], savedMessagePins: [...pins.values()], state: "finalizing", updatedAt: Date.now() });
   return await finalizeExecution(ctx, attemptWithFinal(attempt, ids), true);
 } });
@@ -2157,7 +2156,7 @@ export async function prepareResolvedModelCandidateV8Handler(ctx:MutationCtx,arg
     await ctx.db.patch("runtimeRuns",current.run._id,{memoryEffortTraceCanonical:canonicalModelJson(trace)});
   }
   const selection={ ordinal:args.ordinal,messageIds:selected.messageIds,entryKeys:selected.entryKeys,policyHash:current.snapshot.inputSelection.policyHash };
-  await ctx.db.patch("runtimeAgentExecutions",current.execution._id,{ modelInputSelection:{ ...selection,hash:await semanticHash(canonicalModelJson(selection)) } });
+  await ctx.db.patch("runtimeAgentExecutions",current.execution._id,{ modelInputSelection:{ ...selection,hash:await hashV8CanonicalBytes(ctx,canonicalModelJson(selection)) } });
   current=await executionContext(ctx,attempt);
   const requestCanonical=canonicalModelJson({ messages:current.messages,context:current.execution.contextCanonical ?? "",instructions:current.definition.instructions });
   const op=await beginOperationHandler(ctx,{ ...attempt,ordinal:args.ordinal,kind:"model",requestCanonical });

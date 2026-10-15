@@ -33,7 +33,10 @@ export async function processContentStageHandler(ctx: ActionCtx, args: { jobId: 
   try {
     if (!("doGenerate" in governed.model)) throw new GatewayDispatchError("CAPABILITY_UNAVAILABLE");
     const intent = job.stage === "title" ? "title" : job.intent;
-    const prompt = job.stage === "title" ? job.prompt : `${job.prompt}${document ? `\n\nPinned document:\n${document}` : ""}`;
+    const source = job.stage === "title" ? job.prompt : `${job.prompt}${document ? `\n\nPinned document:\n${document}` : ""}`;
+    // Title source can itself be a question or hostile instruction. Serialize it
+    // as one data value rather than letting it masquerade as the title task.
+    const prompt = intent === "title" ? JSON.stringify({ source }) : source;
     // Bound the actual assembled prompt. No truncation or silently omitted source.
     if (new TextEncoder().encode(prompt).length > CONTENT_MAX_INPUT_BYTES + CONTENT_MAX_OUTPUT_BYTES + 32) throw new GatewayDispatchError("CONTENT_INPUT_TOO_LARGE");
     let text: string;

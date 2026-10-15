@@ -6,10 +6,15 @@ import type {GatewayAdmissionCheckpoint,GatewayResolution} from "../../../convex
 import {canonicalModelJson} from "../../../src/domain/model-policy";
 import {contextSourceKey} from "../../../src/domain/memory-context";
 import {assertNativeArgs} from "./native-arguments";
-let enabled=true,snapshotReads=true;
+let enabled=true,snapshotReads=true,isolateNewControls=false;
 let atSnapshot:((nativeCtx:MutationCtx,parent:MutationCtx)=>void)|undefined;
 const auth=await import("../../../convex-dev/runtimeAuth");
 jest.unstable_mockModule("../../../convex-dev/runtimeAuth",()=>({...auth,
+  // Isolate the older authority/metadata/transcript retention comparison.
+  // The new control/hash family has its own registered full-output/read oracle.
+  readV8AgentExecutionRows:(...args:Parameters<typeof auth.readV8AgentExecutionRows>)=>auth.readV8AgentExecutionRows(isolateNewControls?{...args[0]}:args[0],args[1],args[2],args[3],args[4]),
+  readV8AgentToolRows:(...args:Parameters<typeof auth.readV8AgentToolRows>)=>auth.readV8AgentToolRows(isolateNewControls?{...args[0]}:args[0],args[1],args[2],args[3],args[4]),
+  hashV8CanonicalBytes:(ctx:Parameters<typeof auth.hashV8CanonicalBytes>[0],bytes:string)=>auth.hashV8CanonicalBytes(isolateNewControls?undefined:ctx,bytes),
   readTenantPolicyRows:async(ctx:Parameters<typeof auth.readTenantPolicyRows>[0],tenantId:string)=>snapshotReads
     ?auth.readTenantPolicyRows(ctx,tenantId):ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active",q=>q.eq("scope","tenant").eq("tenantId",tenantId).eq("active",true)).take(65),
   readExecutableDefinitionRows:async(ctx:Parameters<typeof auth.readExecutableDefinitionRows>[0],tenantId:string,memorySpaceId:string,agentId:string,version:number)=>snapshotReads
@@ -31,7 +36,7 @@ const {ingestionFixture,installIngestionMockRoot,invoke}=await import("../runtim
 const {definitions,runs,ledger,clone,clock}=await import("../runtimeTranscript/fixture");
 const agent=await import("../../../convex-dev/runtimeAgent");
 const context=await import("../../../convex-dev/runtimeMemoryContext");
-beforeEach(()=>{installIngestionMockRoot();enabled=true;snapshotReads=true;atSnapshot=undefined;});afterEach(()=>{jest.restoreAllMocks();});
+beforeEach(()=>{installIngestionMockRoot();enabled=true;snapshotReads=true;isolateNewControls=false;atSnapshot=undefined;});afterEach(()=>{jest.restoreAllMocks();});
 async function fixture(){
  const f=await ingestionFixture(),oldMutation=f.ctx.runMutation.bind(f.ctx),oldQuery=f.ctx.runQuery.bind(f.ctx),calls:string[]=[];
  const resolve=(name:string)=>name.startsWith("runtimeAgent:")?agent[name.split(":")[1] as keyof typeof agent]:name.startsWith("runs:")?runs[name.split(":")[1] as keyof typeof runs]:undefined;
@@ -64,6 +69,7 @@ function instrument(f:Awaited<ReturnType<typeof fixture>>){
    stateReads:()=>clone(reads.filter(value=>!retained(value.table)&&!rawRun(value)&&!(value.table==="runtimeTranscriptMessages"&&value.index==="by_native")))};
 }
 it("actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups",async()=>{
+ isolateNewControls=true;
  const f=await fixture(),before=f.state(),observed=instrument(f);enabled=false;
  const original=await f.call(agent.prepareDirectTurnV8,f.attempt),after=f.state(),control=observed.counts(),nonControl=observed.stateReads(),runIdentities=observed.runIdentities();
  f.restore(before);observed.clear();enabled=true;
@@ -89,6 +95,7 @@ it("three opt-in preparation spans preserve exact native output, state and read 
  }finally{if(initial===undefined)delete process.env.CORTEX_RUNTIME_LATENCY_TRACE;else process.env.CORTEX_RUNTIME_LATENCY_TRACE=initial;}
 });
 it("profile availability composes the original helper without changing its repeated current checks",async()=>{
+ isolateNewControls=true;
  const f=await fixture();await f.call(agent.startContext,f.attempt);const current=await agent.executionContext(f.ctx,f.attempt);
  const args={reference:f.reference,cutoff:current.snapshot.ingestionCutoff.sequence,excludedSourceKeys:current.snapshot.messages.map(pin=>contextSourceKey({tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!},{...pin,sourceId:pin.sourceEventId})),
    runBudgetId:current.run.runBudgetId,boundary:{conversationId:current.snapshot.conversationId,runId:f.attempt.runId,queueSequence:current.snapshot.queueSequence,anchor:current.snapshot.anchor}};
@@ -106,6 +113,7 @@ async function admission(f:Awaited<ReturnType<typeof fixture>>){
    bindingCanonical:canonicalModelJson({reference:f.reference,operationKey:"agent.respond",runBudgetId:prepared.current.run.runBudgetId,semanticId:prepared.op.semanticId,ordinal:0})};
 }
 it("financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read",async()=>{
+ isolateNewControls=true;
  const f=await fixture(),args=await admission(f),before=f.state(),observed=instrument(f);enabled=false;
  const original=await f.call<GatewayAdmissionCheckpoint>(agent.admitPreparedModelOperationV8,args),after=f.state(),control=observed.counts(),nonControl=observed.stateReads(),runIdentities=observed.runIdentities();
  f.restore(before);observed.clear();enabled=true;const actual=await f.call<GatewayAdmissionCheckpoint>(agent.admitPreparedModelOperationV8,args);
@@ -127,6 +135,7 @@ it.each(["budget","revocation","lease","binding","body"])("current %s still reje
 
 
 it("K29 exact-owner direct empty parent reruns save predicates with identical outcome/state and fewer raw rereads",async()=>{
+ isolateNewControls=true;
  const f=await fixture(),before=f.state(),observed=instrument(f),queryPort=f.ctx.runQuery.bind(f.ctx),components:string[]=[];
  f.ctx.runQuery=(async(ref,args)=>{let name='component';try{name=getFunctionName(ref);}catch{/* controlled official component identity */}components.push(name);return queryPort(ref,args);}) as MutationCtx['runQuery'];
  snapshotReads=false;const expected=await f.call(agent.prepareDirectTurnV8,f.attempt),after=f.state(),baseline=clone(observed.reads),baselineComponents=[...components];
