@@ -1,0 +1,143 @@
+{
+  "status": "DOCS_UPDATED_TYPECHECK_BUILD_PASS",
+  "hostedSourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "docsRepository": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+  "docsHead": "66661d7fbe2b21a1a02ef79070363ccc962f1daf",
+  "files": [
+    {
+      "path": "docs-site/docs/architecture/performance.mdx",
+      "sha256": "37e988496e256a9465415d65c6f0890e4e6946c253e199befe21941895cb8588",
+      "bytes": 61787
+    },
+    {
+      "path": "docs-site/docs/core-features/memory-orchestration.mdx",
+      "sha256": "7cf98f1a94fe66eef145a9f63036f72b6ffb0fe6372ff394ac2bbe9166f1aaca",
+      "bytes": 21365
+    }
+  ],
+  "changedSinceTaskStart": [
+    "docs-site/docs/architecture/performance.mdx",
+    "docs-site/docs/core-features/memory-orchestration.mdx"
+  ],
+  "unrelatedDirtyFilesPreserved": 14,
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-actual-outcomes.json",
+      "sha256": "052f450c5f65097791278e2ef29279864245017d491c38e3fefd32333426b5ea",
+      "bytes": 6496
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-full-chain.md",
+      "sha256": "859bae9e3c1f4b6fdbe40cb2e3bc2bcffad64a115814e261f0c48e372652a726",
+      "bytes": 27790
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-full-chain.json",
+      "sha256": "f4ad3876a104743de014663d88db627c83bf7bcaf75d8c67b843761870a6bf05",
+      "bytes": 872611
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-browser-summary.json",
+      "sha256": "6baa2cb51f00c93f540d655d7091b22c31fd68edafef74011998f78d67fd0fbe",
+      "bytes": 15879
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-cli-iris-1792059317098.json",
+      "sha256": "89b495008a6b16c8be050a2b135d52035693ab778590d785e5577e5fa7673e88",
+      "bytes": 41049
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-native-regression-1792058195328.json",
+      "sha256": "bc34917164eb253656d180c9e4f7daf1f05343858071a08dad4e4d94981812f6",
+      "bytes": 210900
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-runtime-readback-1792059539784.json",
+      "sha256": "f812c3132e29a3f51d155587c6e9741cb282e400e80fa5a643bc2dcb9ab8a93f",
+      "bytes": 304062
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-cleanup-1792059703133.json",
+      "sha256": "8fe42e03c36e85c3e2462c061f0ee4dc15512d528e51ad822ab349d285d9dbb2",
+      "bytes": 2367
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-chat-ui.json",
+      "sha256": "46e4d893cc24e9334dcd9e96c16bb29012f2cf72ab4f7f50f54d06af91937217",
+      "bytes": 1290
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-chat-install-report.json",
+      "sha256": "1b13ecb419d1e3c7cecb03448fe1325433d9d20c1447e2a8643c2f24cb93a3ef",
+      "bytes": 52283
+    }
+  ],
+  "results": [
+    {
+      "name": "typecheck",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "startedAt": "2026-10-15T10:28:21.093Z",
+      "finishedAt": "2026-10-15T10:28:22.320Z",
+      "elapsedMs": 1226.032959,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "naturalExit": true,
+      "logPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-docs-update-typecheck.log",
+      "logSha256": "648ee3fb548ae8a329105211d8b160704032869f8b9546cd1e86949a6427ab0d",
+      "executions": 1
+    },
+    {
+      "name": "build",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "startedAt": "2026-10-15T10:28:22.321Z",
+      "finishedAt": "2026-10-15T10:28:26.947Z",
+      "elapsedMs": 4625.747791,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "naturalExit": true,
+      "logPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-docs-update-build.log",
+      "logSha256": "d69ae3d4ae203bc0b75ce578cd40d39d720af5704bd0aa55711bbd03d9f60629",
+      "executions": 1
+    }
+  ],
+  "coverage": {
+    "browser": "4/6 timings; both Fast misses; 5/5 recall answers correct",
+    "cli": "2/2 correct; 0/2 Normal timings",
+    "chat": "install/codegen/full types/production build and correct reply/reconnect/phone functional; no numeric SLO; misleading separate title retained",
+    "native": "current651 checks with four semantic query embeddings; separate zero-inference 2/4/8/12 topology; strict facts/vectors4/4 in7304.627041ms",
+    "grammar": "singleton browser direct route does not qualify new two-candidate grammar or retained late-prefix branch",
+    "accounting": "66 unique operations/66 first attempts;8.5M UNKNOWN remains charged;tenant mirrors excluded",
+    "readback": "277 checks/9 selected runs stable;no unmet checks",
+    "cleanup": "21 absence checks;controlled SIGTERM launcher130/Chat143",
+    "historical": "3875 and all earlier scoped observations retained;663 is historical;deferred video and other incomplete coverage remain explicit",
+    "next": "First-answer publication source candidate work in progress;no promised latency saving;4/6 milestones and SLO not accepted"
+  },
+  "publication": "UNPUBLISHED_UNCOMMITTED",
+  "productImplementation": false,
+  "additionalReviewLoop": false,
+  "browserServerOrServiceCalls": 0,
+  "gitMutations": 0,
+  "finishedAt": "2026-10-15T10:28:26.977Z",
+  "nonfatalCheckNotices": [
+    "Docusaurus 3.9.2 update notice",
+    "Browserslist caniuse-lite data is 11 months old"
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-15T10:22:23.576048+00:00",
+  "status": "FUNCTIONAL_CHECKS_PASS_LATENCY_NOT_ACCEPTED_CLEANED",
+  "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "sessionId": "e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+  "targetId": 6191473,
+  "targetName": "agile-mink-589",
+  "goalMilestones": {
+    "complete": 4,
+    "total": 6,
+    "percent": 66.7,
+    "metric": "Expanded follow-up milestone acceptance; source/native/individual samples do not close installed timing gate"
+  },
+  "review": {
+    "verdict": "PASS4.0",
+    "breakingFindings": 0,
+    "tests": 617,
+    "suites": 14,
+    "skips": 0,
+    "artifact": "memory-effort-canonical-independent-review.json"
+  },
+  "browser": [
+    {
+      "label": "normal-seed",
+      "runId": "run:6f2cad371ec2736d04c018799c771f30ff2d5a36b10bcd859d53fe6de1ed5cad",
+      "targetMs": 6000,
+      "firstAfterPaintMs": 2957.0999999996275,
+      "withinTarget": true,
+      "answerMarkerPresent": null,
+      "responseComplete": true,
+      "memoryComplete": true
+    },
+    {
+      "label": "fast-recent",
+      "runId": "run:cf72d2db0c4c3c56558f0fbc55d4888487b125634a609a62cc62e0f6ffd0bfd0",
+      "targetMs": 3000,
+      "firstAfterPaintMs": 3362.9000000003725,
+      "withinTarget": false,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true
+    },
+    {
+      "label": "normal-indexed",
+      "runId": "run:2fc7fc803ddac3c431851f9afd880b2bf30f161ad896f5d0ad99d77f11ccfbb4",
+      "targetMs": 6000,
+      "firstAfterPaintMs": 3694.5,
+      "withinTarget": true,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true
+    },
+    {
+      "label": "high",
+      "runId": "run:10d7188b0335fccb6cc9d256599a89cb3fdede9708a51d73143bfbb0c26969bb",
+      "targetMs": 8000,
+      "firstAfterPaintMs": 3810.9000000003725,
+      "withinTarget": true,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true
+    },
+    {
+      "label": "max",
+      "runId": "run:3a1ed683e2f07b2a5b8cbfbe1ec6e3c12d96b6b8b8aff776e0c1bfa3b9fb5452",
+      "targetMs": 30000,
+      "firstAfterPaintMs": 4010.7999999988824,
+      "withinTarget": true,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true
+    },
+    {
+      "label": "fast-cross",
+      "runId": "run:8d27d0b7d37f7b3d1c94c7dac3212b6b2d62e0527e9236a94f9ea0c8a580d27c",
+      "targetMs": 3000,
+      "firstAfterPaintMs": 3976.5999999996275,
+      "withinTarget": false,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true
+    }
+  ],
+  "browserTiming": {
+    "passed": 4,
+    "total": 6
+  },
+  "browserRecall": {
+    "correct": 5,
+    "total": 5
+  },
+  "cli": [
+    {
+      "runId": "run:444d1f21b459713040a7e98a56caa3bab8510b906f64532a453afbdce4b0f2b2",
+      "firstStdoutMs": 7406.520377000001,
+      "targetMs": 6000,
+      "functionalPass": true,
+      "timingPass": false
+    },
+    {
+      "runId": "run:6d510e474343d1b32e64f7ab0935370d0b333dfbc1aebc4d8eaf38326a689209",
+      "firstStdoutMs": 6477.751836000003,
+      "targetMs": 6000,
+      "functionalPass": true,
+      "timingPass": false
+    }
+  ],
+  "chat": {
+    "genuineInstall": true,
+    "codegen": true,
+    "types": true,
+    "productionBuild": true,
+    "correctIris": true,
+    "reconnectSameRun": true,
+    "phone393": true,
+    "numericSLO": "NOT_MEASURED",
+    "misleadingAutomaticTitle": "Your favorite flower is unknown to me.",
+    "artifact": "memory-effort-canonical-chat-ui.json"
+  },
+  "native": {
+    "checks": 651,
+    "topologyHops": [
+      2,
+      4,
+      8,
+      12
+    ],
+    "strictFactVector4of4Ms": 7304.627041,
+    "publicModes": "All4 semantic with one actual query embedding each",
+    "artifact": "memory-effort-canonical-native-regression-1792058195328.json",
+    "threeSameLineageProjection": "NOT_COVERED"
+  },
+  "freshReadback": {
+    "checks": 277,
+    "unmet": [],
+    "selectedRuns": 9,
+    "stable": true,
+    "status": "VERIFIED_SELECTED_SNAPSHOT_NO_OBSERVED_FAILURE",
+    "artifact": "memory-effort-canonical-runtime-readback-1792059539784.json"
+  },
+  "finance": {
+    "allTarget": {
+      "distinctOperations": 66,
+      "distinctAttempts": 66,
+      "unknownLiabilityUnits": 8500000,
+      "settledUnits": 0,
+      "reservedUnits": 0,
+      "activeConcurrency": 0,
+      "attemptsFirstOnly": true,
+      "attemptStates": {
+        "uncertain": 66
+      },
+      "aggregateUsdComplete": false,
+      "rule": "Distinct operation/attempt rows across this exact disposable target; run liabilities summed once; tenant mirrors excluded."
+    },
+    "manualTenant": {
+      "tenantSha256": "e12dd04e9e4e654442ce9c07362477f83636ff0e5b10ee305029486b9b054d2c",
+      "runAccountCount": 38,
+      "runTotals": {
+        "settledUnits": 0,
+        "uncertainUnits": 5800000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0
+      },
+      "mirroredTenant": {
+        "limitUnits": 10000000,
+        "concurrencyLimit": 2,
+        "settledUnits": 0,
+        "uncertainUnits": 5800000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0
+      },
+      "remainingUnits": 4200000,
+      "minimumProspectiveUnits": 0,
+      "operationCount": 58,
+      "attemptCount": 58,
+      "allTargetQuiet": true,
+      "rule": "Unique manual-tenant run-account totals are reconciled with mirrored tenant control totals; mirrors are never added again. UNKNOWN remains charged; cancellation is no refund."
+    },
+    "unknownCostIsNotRefund": true,
+    "tenantMirrorsNotAdded": true
+  },
+  "cleanup": {
+    "status": "ABSENT",
+    "checks": 21,
+    "launcherOriginalExit": 130,
+    "chatServerControlledExit": 143,
+    "artifact": "memory-effort-canonical-cleanup-1792059703133.json"
+  },
+  "notCovered": [
+    "Current ordinary approved/cancelled tools not supplied; c258 actual cases remain historical.",
+    "No current numeric Chat first-visible timing.",
+    "Singleton browser facts did not exercise new two-candidate grammar or retained late-prefix branch.",
+    "Historical3875 CLI independent native field remains NOT_COVERED.",
+    "Historical C7 missing backing/custody/transport remains unresolved; no claim repaired."
+  ],
+  "next": "Optimize measured shared protected native work without removing freshness/accounting fences; one coherent independent source review, fresh installed runtime timing, then final audit only if all original required criteria pass."
+}

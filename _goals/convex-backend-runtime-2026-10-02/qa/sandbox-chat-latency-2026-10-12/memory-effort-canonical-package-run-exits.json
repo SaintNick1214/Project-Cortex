@@ -1,0 +1,106 @@
+{
+  "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "rows": [
+    {
+      "name": "write-controls",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-builder.mjs",
+        "--write-controls",
+        "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-root-sdk-snapshot.json",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-coherent-source-hashes.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 13361.166333,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-write-controls.log",
+      "logSha256": "2834be53a77da0e94fbc64ac9c2807adddecd4eceed048875ba5680df5bbacb2",
+      "naturalExit": true
+    },
+    {
+      "name": "sdk-pack-and-reuse",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-canonical-2026-10-15/prepare.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 19824.663208,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-sdk-pack-and-reuse.log",
+      "logSha256": "63b70382190bed1c4a5a6d62cdfcf100e8fd6c7dc703a3b8d3980964de957438",
+      "naturalExit": true
+    },
+    {
+      "name": "host-cli-import",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-host-cli.mjs",
+        "07f669e35cc3221c0411d1e4dfd790e4b95aa54d"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 186.00879200000054,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-host-cli-import.log",
+      "logSha256": "13cbe284a0335c797f7c5f55c86ec6e00b640cd8a2e1a731c3ca365079ad50b0",
+      "naturalExit": true
+    },
+    {
+      "name": "packed-consumers",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-checks/run-consumers.mjs",
+        "v1"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 11794.692083000002,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-packed-consumers.log",
+      "logSha256": "9f1c6db76059d0dff29eedad48feeadc3eec555ef5847ffa47f9d3a43af11f5e",
+      "naturalExit": true
+    },
+    {
+      "name": "docker-image",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-checks/build-image.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 14641.560082999997,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-docker-image.log",
+      "logSha256": "3a77f03948bb6fbb55b0aca45b9c6cc48484d464829d30270d3751ed3bfc55ae",
+      "naturalExit": true
+    },
+    {
+      "name": "image-files",
+      "command": [
+        "python3",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-image-contents.py",
+        "sha256:ee14fa15560b789a5720b4b645fc99aa05c05c7915a803936be7e6a5f2168657",
+        "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-canonical-2026-10-15/image/archives/manifest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1822.012499999997,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-image-files.log",
+      "logSha256": "2e562b205ec9b7ca473c6846177b8769287a1252d77252d0ad805af6b8855eab",
+      "naturalExit": true
+    }
+  ],
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "launcherChanged": false
+}

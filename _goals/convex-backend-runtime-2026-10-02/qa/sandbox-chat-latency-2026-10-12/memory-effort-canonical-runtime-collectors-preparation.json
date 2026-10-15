@@ -1,0 +1,258 @@
+{
+  "version": 1,
+  "status": "PREPARED_WAITING_FOR_ROOT_EXPLICIT_GO",
+  "sourceCommitFromPackageProposal": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "imageIdFromPackageProposal": "sha256:ee14fa15560b789a5720b4b645fc99aa05c05c7915a803936be7e6a5f2168657",
+  "actualTargetRead": false,
+  "liveQualification": "NOT_RUN",
+  "node": "v24.15.0",
+  "nodeExecutable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12",
+  "checks": [
+    {
+      "file": "memory-effort-canonical-cli-iris-collector.mjs",
+      "syntax": {
+        "command": "node --check memory-effort-canonical-cli-iris-collector.mjs",
+        "exitCode": 0
+      },
+      "localPreflight": {
+        "command": "node memory-effort-canonical-cli-iris-collector.mjs --local-preflight",
+        "exitCode": 0,
+        "observed": {
+          "status": "PREPARED_WAITING_FOR_ROOT_PINS_AND_GO",
+          "sourceCommit": "PENDING_EXPLICIT_PROSPECTIVE_COMMIT",
+          "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+          "readyPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-environment-ready.json",
+          "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-canonical-2026-10-15",
+          "requiredPins": [
+            "--ready",
+            "--session",
+            "--source",
+            "--image",
+            "--target-id",
+            "--launcher-pid",
+            "--launcher-exec",
+            "--kit",
+            "--manifest",
+            "--manifest-sha256",
+            "--review",
+            "--review-sha256"
+          ],
+          "optionalTracePin": "--trace",
+          "serviceCalls": 0,
+          "modelCalls": 0,
+          "sessionReads": 0,
+          "privateKeyReads": 0,
+          "liveQualification": "NOT_RUN",
+          "priorNative663": "HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE",
+          "original3875FastFailure": "PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS",
+          "syntheticThreeProjectionProof": "NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT",
+          "turns": [
+            {
+              "effort": "normal",
+              "memoryOmitted": true,
+              "text": "My favorite flower is iris. Acknowledge it in one brief sentence."
+            },
+            {
+              "effort": "normal",
+              "memoryOmitted": true,
+              "text": "What is my favorite flower?"
+            }
+          ],
+          "originalDeadlineMs": 30000,
+          "source": "installed Basic npm start; one persistent CLI transport",
+          "goVariable": "CORTEX_MEMORY_EFFORT_CANONICAL_CLI_IRIS_GO=1",
+          "financeReceiptVariable": "CORTEX_MEMORY_EFFORT_CANONICAL_CLI_FINANCE_RECEIPT",
+          "minimumHeadroom": 1300000,
+          "dockerCalls": 0
+        }
+      }
+    },
+    {
+      "file": "memory-effort-canonical-finance.mjs",
+      "syntax": {
+        "command": "node --check memory-effort-canonical-finance.mjs",
+        "exitCode": 0
+      },
+      "localPreflight": {
+        "command": "node memory-effort-canonical-finance.mjs --local-preflight",
+        "exitCode": 0,
+        "observed": {
+          "status": "PREPARED_WAITING_FOR_ROOT_PINS_AND_GO",
+          "sourceCommit": "PENDING_EXPLICIT_PROSPECTIVE_COMMIT",
+          "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+          "readyPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-environment-ready.json",
+          "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-canonical-2026-10-15",
+          "requiredPins": [
+            "--ready",
+            "--session",
+            "--source",
+            "--image",
+            "--target-id",
+            "--launcher-pid",
+            "--launcher-exec",
+            "--kit",
+            "--manifest",
+            "--manifest-sha256",
+            "--review",
+            "--review-sha256"
+          ],
+          "optionalTracePin": "--trace",
+          "serviceCalls": 0,
+          "modelCalls": 0,
+          "sessionReads": 0,
+          "privateKeyReads": 0,
+          "liveQualification": "NOT_RUN",
+          "priorNative663": "HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE",
+          "original3875FastFailure": "PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS",
+          "syntheticThreeProjectionProof": "NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT",
+          "collector": "QUIET_FINANCE_READ_ONLY",
+          "goVariable": "CORTEX_MEMORY_EFFORT_CANONICAL_FINANCE_GO=1",
+          "minimumBeforeUnits": 1300000,
+          "optionalCancelledCaseArgument": "--cancelled-case Q/memory-effort-canonical-cli-cancelled-case.json",
+          "cancellationCoverageWithoutCase": "NOT_SUPPLIED",
+          "tablePageCap": 256
+        }
+      }
+    },
+    {
+      "file": "memory-effort-canonical-service-log-snapshot.mjs",
+      "syntax": {
+        "command": "node --check memory-effort-canonical-service-log-snapshot.mjs",
+        "exitCode": 0
+      },
+      "localPreflight": {
+        "command": "node memory-effort-canonical-service-log-snapshot.mjs --local-preflight",
+        "exitCode": 0,
+        "observed": {
+          "status": "PREPARED_WAITING_FOR_ROOT_PINS_AND_GO",
+          "sourceCommit": "PENDING_EXPLICIT_PROSPECTIVE_COMMIT",
+          "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+          "readyPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-environment-ready.json",
+          "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-canonical-2026-10-15",
+          "requiredPins": [
+            "--ready",
+            "--session",
+            "--source",
+            "--image",
+            "--target-id",
+            "--launcher-pid",
+            "--launcher-exec",
+            "--kit",
+            "--manifest",
+            "--manifest-sha256",
+            "--review",
+            "--review-sha256"
+          ],
+          "optionalTracePin": "--trace",
+          "serviceCalls": 0,
+          "modelCalls": 0,
+          "sessionReads": 0,
+          "privateKeyReads": 0,
+          "liveQualification": "NOT_RUN",
+          "priorNative663": "HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE",
+          "original3875FastFailure": "PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS",
+          "syntheticThreeProjectionProof": "NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT",
+          "capturePhases": [
+            "before-turns",
+            "browser-pre-run",
+            "browser-post-run",
+            "browser-post-pair",
+            "cli-pre-run",
+            "cli-post-run",
+            "cli-post-pair",
+            "public-post-run",
+            "public-post-ordinary",
+            "supplemental-post-run"
+          ],
+          "goVariable": "CORTEX_MEMORY_EFFORT_CANONICAL_CAPTURE_GO=<phase>",
+          "officialLogGetLimit": 1,
+          "deadlineMs": 30000,
+          "byteLimit": 16777216,
+          "executionLimit": 1000
+        }
+      }
+    },
+    {
+      "file": "memory-effort-canonical-runtime-readback.mjs",
+      "syntax": {
+        "command": "node --check memory-effort-canonical-runtime-readback.mjs",
+        "exitCode": 0
+      },
+      "localPreflight": {
+        "command": "node memory-effort-canonical-runtime-readback.mjs --local-preflight",
+        "exitCode": 0,
+        "observed": {
+          "status": "PREPARED_WAITING_FOR_ROOT_PINS_AND_GO",
+          "sourceCommit": "PENDING_EXPLICIT_PROSPECTIVE_COMMIT",
+          "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+          "readyPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-environment-ready.json",
+          "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-canonical-2026-10-15",
+          "requiredPins": [
+            "--ready",
+            "--session",
+            "--source",
+            "--image",
+            "--target-id",
+            "--launcher-pid",
+            "--launcher-exec",
+            "--kit",
+            "--manifest",
+            "--manifest-sha256",
+            "--review",
+            "--review-sha256"
+          ],
+          "optionalTracePin": "--trace",
+          "serviceCalls": 0,
+          "modelCalls": 0,
+          "sessionReads": 0,
+          "privateKeyReads": 0,
+          "liveQualification": "NOT_RUN",
+          "priorNative663": "HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE",
+          "original3875FastFailure": "PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS",
+          "syntheticThreeProjectionProof": "NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT",
+          "collector": "FINAL_READ_ONLY_ACTUAL_SELECTION",
+          "requiredRunFields": [
+            "runId",
+            "label",
+            "purpose"
+          ],
+          "ordinaryRunFields": [
+            "canonicalInput",
+            "expectedEffort"
+          ],
+          "recallAnswerMarkerRequired": true,
+          "seedAnswerMarkerOptional": true,
+          "latencyAcceptance": "NOT_EVALUATED_USE_ORIGINAL_MONOTONIC_RECEIPTS",
+          "selectionArgument": "--selection Q/memory-effort-canonical-final-selection.json",
+          "goVariable": "CORTEX_MEMORY_EFFORT_CANONICAL_FINAL_SNAPSHOT_GO=1",
+          "tablePageCap": 256,
+          "tableDeadlineMs": 30000
+        }
+      }
+    }
+  ],
+  "actions": {
+    "serviceCalls": 0,
+    "modelCalls": 0,
+    "sessionReads": 0,
+    "privateKeyReads": 0,
+    "dockerCalls": 0,
+    "builds": 0,
+    "packs": 0,
+    "productEdits": 0,
+    "proofsEdits": 0,
+    "websiteEdits": 0,
+    "judges": 0
+  },
+  "preserved": {
+    "canonicalPinHelper": true,
+    "canonicalSourceFreezer": true,
+    "independentReview": true,
+    "officialThreeProjectors": true,
+    "originalDeadlineMs": 30000,
+    "originalC258SeedExit1": true,
+    "original3875FastFailure": true
+  },
+  "next": "Root supplies full exact pins, own phase GO, shared READY/TRACE/NATIVE GO and actual selected IDs. No collector actual call is authorized to this subagent."
+}

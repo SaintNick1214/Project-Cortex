@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--import",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+    "--test",
+    "sandbox-env/local.test.mjs",
+    "sandbox-env/lifecycle.test.mjs",
+    "sandbox-env/cloud-runtime-tokens.test.mjs",
+    "sandbox-env/framing.test.mjs",
+    "sandbox-env/cloud-runtime.test.mjs",
+    "sandbox-env/qualification.test.mjs"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+  "exitCode": 0,
+  "naturalExit": true,
+  "elapsedMs": 1088,
+  "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-launcher-tests.log",
+  "logSha256": "4640493505c054e909aff8ec6565045aceb326f81d767a38bc1f95cad13401d6",
+  "services": 0,
+  "modelCalls": 0,
+  "concreteCorrection": "Use real TSX loader needed by source-importing test files; original missing-loader83pass2failure retained."
+}

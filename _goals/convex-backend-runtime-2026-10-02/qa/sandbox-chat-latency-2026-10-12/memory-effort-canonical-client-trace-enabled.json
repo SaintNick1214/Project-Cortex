@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-15T09:54:20.954Z",
+  "sessionId": "e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+  "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "targetId": 6191473,
+  "phase": "READY",
+  "reason": "Enable opt-in scalar instrumentation before any measured turn; original launcher was started without trace env. No app source or model intent changed.",
+  "rows": [
+    {
+      "app": "basic",
+      "key": "CORTEX_RUNTIME_LATENCY_TRACE",
+      "value": 1,
+      "beforeSha256": "4896ee5df1bb1384199b9b3c83fdcff01bd3a196550eb44b8a29bd60b29e8e92",
+      "afterSha256": "e2dcaabd275e8fd3538a52e45b7144031cfb4f3f3b26da8da82bf5079fcb2ce0",
+      "mode": "0600"
+    },
+    {
+      "app": "demo",
+      "key": "NEXT_PUBLIC_CORTEX_LATENCY_TRACE",
+      "value": 1,
+      "beforeSha256": "fb1425dd47ee22d051054b61caf821c6b685d4db8d3e902f33e964c484277012",
+      "afterSha256": "70050584f770660513a85a8c7afc28794c5b57046a3e7b41f09304f2f5cc3420",
+      "mode": "0600"
+    }
+  ],
+  "modelCalls": 0
+}

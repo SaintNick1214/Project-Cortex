@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "sessionId": "e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+  "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "runs": [
+    {
+      "runId": "run:6f2cad371ec2736d04c018799c771f30ff2d5a36b10bcd859d53fe6de1ed5cad",
+      "label": "browser-normal-seed",
+      "purpose": "seed",
+      "canonicalInput": "My favorite fruit is apricot.",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "browser"
+    },
+    {
+      "runId": "run:cf72d2db0c4c3c56558f0fbc55d4888487b125634a609a62cc62e0f6ffd0bfd0",
+      "label": "browser-fast-recent",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "fast",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:2fc7fc803ddac3c431851f9afd880b2bf30f161ad896f5d0ad99d77f11ccfbb4",
+      "label": "browser-normal-indexed",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:10d7188b0335fccb6cc9d256599a89cb3fdede9708a51d73143bfbb0c26969bb",
+      "label": "browser-high",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "high",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:3a1ed683e2f07b2a5b8cbfbe1ec6e3c12d96b6b8b8aff776e0c1bfa3b9fb5452",
+      "label": "browser-max",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "max",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:8d27d0b7d37f7b3d1c94c7dac3212b6b2d62e0527e9236a94f9ea0c8a580d27c",
+      "label": "browser-fast-cross",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "fast",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:444d1f21b459713040a7e98a56caa3bab8510b906f64532a453afbdce4b0f2b2",
+      "label": "cli-normal-seed",
+      "purpose": "seed",
+      "canonicalInput": "My favorite flower is iris. Acknowledge it in one brief sentence.",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "cli"
+    },
+    {
+      "runId": "run:6d510e474343d1b32e64f7ab0935370d0b333dfbc1aebc4d8eaf38326a689209",
+      "label": "cli-normal-recall",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite flower?",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "cli",
+      "answerMarker": "iris"
+    },
+    {
+      "runId": "run:6efc5073626e8c579a2f0f510eba9c3853bddf7d8433bc261566023387d6e360",
+      "label": "chat-normal-recall",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite flower? Reply in one brief sentence.",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "chat",
+      "answerMarker": "iris"
+    }
+  ],
+  "regressions": [
+    {
+      "label": "actual-native-canonical",
+      "tenantId": "sandbox-e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+      "memorySpaceId": "qa-effort-canonical-capture-2a592ded-b66c-480a-a58b-d8c3cb4470db",
+      "receipt": "memory-effort-canonical-native-regression-1792058195328.json",
+      "intentionallyFenced": true
+    }
+  ],
+  "limits": "Actual9 ordinary selected runs. No current approved tool/cancel case supplied; earlier c258 cases remain historical, not this selection. Current native651 is a separate receipt and intentionally fenced scope."
+}
