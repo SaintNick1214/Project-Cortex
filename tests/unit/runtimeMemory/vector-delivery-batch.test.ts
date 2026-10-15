@@ -1,3 +1,4 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 /** Real registered delivery/profile handlers with controlled persisted/component ports.
  * No services, managed ANN, inference or native OCC claim. The reference below
  * retains the pre-batch delivery algorithm for differential failure/order checks.
@@ -9,9 +10,9 @@ import type { MemoryDeliveryBindings } from "../../../convex-dev/runtimeMemoryRe
 import type { SourceContent } from "../../../src/domain/contracts";
 import type { EmbeddingProfile } from "../../../src/domain/profile";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
-import { DEFAULT_EMBEDDING_PROFILE as small, LARGE_EMBEDDING_PROFILE as large, semanticHash } from "../../../src/domain/profile";
-import { prepareSourceContent, processingIdentityKey } from "../../../src/domain/sources";
-import { canonicalModelJson } from "../../../src/domain/model-policy";
+const { DEFAULT_EMBEDDING_PROFILE: small, LARGE_EMBEDDING_PROFILE: large, semanticHash } = await import("../../../src/domain/profile");
+const { prepareSourceContent, processingIdentityKey } = await import("../../../src/domain/sources");
+const { canonicalModelJson } = await import("../../../src/domain/model-policy");
 const { installIngestionMockRoot, transcriptFixture, ledger, clock } = await import("../runtimeTranscript/fixture");
 const { ConvexMemoryRepository, canonicalMemoryValue, memoryError: nativeMemoryError, memoryScope } = await import("../../../convex-dev/runtimeMemoryRepository");
 const memoryError: (code: string, message: string) => never = nativeMemoryError;
@@ -310,10 +311,10 @@ describe("per-source delivery lifetimes and native budget fences", () => {
     });
   it("rechecks final authority after the last per-vector hash without returning partial payload", async () => {
     for (const original of [true, false]) {
-      const f = await setup(), before = storedState(f), digest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
+      const f = await setup(), before = storedState(f), digest = semanticHashDigest.digest.bind(semanticHashDigest);
       const { _id: _id, _creationTime: _time, ...lastChunk } = f.db.table("runtimeMemoryChunks")[2]!;
       const finalChunkInput = canonicalMemoryValue(lastChunk); let revocations = 0;
-      const spy = jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (...args) => {
+      const spy = jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (...args) => {
         const result = await digest(...args);
         if (new TextDecoder().decode(args[1]) === finalChunkInput) { f.grant.revokedAt = clock; revocations++; }
         return result;
@@ -332,10 +333,10 @@ describe("per-source delivery lifetimes and native budget fences", () => {
     for (const original of [true, false]) {
       jest.spyOn(Date, "now").mockReturnValue(clock);
       const f = await setup(); shareVectorSource(f, 0, clock + 1);
-      const before = storedState(f), digest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
+      const before = storedState(f), digest = semanticHashDigest.digest.bind(semanticHashDigest);
       const { _id: _id, _creationTime: _time, ...lastChunk } = f.db.table("runtimeMemoryChunks")[2]!;
       let advances = 0;
-      const spy = jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (...args) => {
+      const spy = jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (...args) => {
         const result = await digest(...args);
         if (new TextDecoder().decode(args[1]) === canonicalMemoryValue(lastChunk)) {
           jest.spyOn(Date, "now").mockReturnValue(clock + 2); advances++;

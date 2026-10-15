@@ -1,11 +1,12 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 /** Offline native-handler fixtures. This fake database does NOT prove Convex OCC/isolation/rollback. */
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import type { Doc, Id } from "../../../convex-dev/_generated/dataModel";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "../../../convex-dev/runtimeModelPolicyBootstrap";
 import type { ModelCallRequest, TrustedModelPolicyRecord } from "../../../src/domain/model-policy";
-import { canonicalModelJson } from "../../../src/domain/model-policy";
-import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
+const { canonicalModelJson } = await import("../../../src/domain/model-policy");
+const { DEFAULT_EMBEDDING_PROFILE, semanticHash } = await import("../../../src/domain/profile");
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
 const trustedBootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
@@ -219,12 +220,12 @@ describe("immutable charge-only coexistence and defensive privacy", () => {
   it("forced equal initial and final digests cannot mask differing canonical observations", async () => {
     const { f, a } = await prepared(); const initial = charge(f, a, null, { actualModel: "foreign/model" }); await capture(f, a, initial);
     const initialHash = f.attempt(a.attemptId).terminalEvidenceHash!, badInitial = charge(f, a, null, { actualModel: "different/model" });
-    const digest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
-    const spy = jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, data) => new TextDecoder().decode(data as ArrayBuffer) === badInitial ? Uint8Array.from(Buffer.from(initialHash, "hex")).buffer : await digest(algorithm, data));
-    await denied(f, () => capture(f, a, badInitial)); spy.mockRestore();
+    const digest = semanticHashDigest.digest.bind(semanticHashDigest); let forcedInitial = 0, forcedFinal = 0;
+    const spy = jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (algorithm, data) => { if (new TextDecoder().decode(data as ArrayBuffer) === badInitial) { forcedInitial++; return Uint8Array.from(Buffer.from(initialHash, "hex")).buffer; } return await digest(algorithm, data); });
+    await denied(f, () => capture(f, a, badInitial)); expect(forcedInitial).toBe(1); spy.mockRestore();
     const final = charge(f, a, "0.000150", { actualModel: "foreign/model" }); await capture(f, a, final); const hash = f.attempt(a.attemptId).receiptHash!, badFinal = charge(f, a, "0.000151", { actualModel: "foreign/model" });
-    jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, data) => new TextDecoder().decode(data as ArrayBuffer) === badFinal ? Uint8Array.from(Buffer.from(hash, "hex")).buffer : await digest(algorithm, data));
-    await denied(f, () => capture(f, a, badFinal)); guarded(f, a, 150);
+    jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (algorithm, data) => { if (new TextDecoder().decode(data as ArrayBuffer) === badFinal) { forcedFinal++; return Uint8Array.from(Buffer.from(hash, "hex")).buffer; } return await digest(algorithm, data); });
+    await denied(f, () => capture(f, a, badFinal)); expect(forcedFinal).toBe(1); guarded(f, a, 150);
   });
   it.each(["pending", "attached"] as const)("inconsistent %s observations deny attachment/replay despite false flags; legacy private bytes survive", async (marker) => {
     for (const location of ["initialModel", "finalModel", "attemptModel", "initialInput", "finalOutput"]) {

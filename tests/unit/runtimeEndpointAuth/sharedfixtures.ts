@@ -1,13 +1,14 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 /** Actual Convex registrations under a transaction-aware in-memory database fixture.
  * This exercises handler selection/mutation, not a substitute for deployed subscriptions/transactions.
  */
 import { getFunctionName } from "convex/server";
 import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
 import type { RuntimeAuthority, RuntimeCapability, RuntimeResourceAccess } from "../../../src/auth/verified";
-import { authorize, provision, recheck } from "../../../convex-dev/runtimeAuth";
-import * as memories from "../../../convex-dev/memories";
-import * as facts from "../../../convex-dev/facts";
-import { semanticHash } from "../../../src/domain/profile";
+const { authorize, provision, recheck } = await import("../../../convex-dev/runtimeAuth");
+const memories = await import("../../../convex-dev/memories");
+const facts = await import("../../../convex-dev/facts");
+const { semanticHash } = await import("../../../src/domain/profile");
 
 type Row = { _id: string; _creationTime: number; [key: string]: unknown };
 type Expr = (row: Row) => unknown;
@@ -156,23 +157,23 @@ export async function withFinalWriteHash<T>(h: ReturnType<typeof harness>, table
   onFinalHash: () => Promise<void>, operation: () => Promise<T>): Promise<T> {
   let readAdmitted = false; let hashes = 0;
   h.setAuthHook(async () => { if (h.db.attemptedWrites.some(write => write.startsWith(`patch:${table}/`))) readAdmitted = true; });
-  const digest = globalThis.crypto.subtle.digest;
-  globalThis.crypto.subtle.digest = async (algorithm, data) => {
+  const digest = semanticHashDigest.digest;
+  semanticHashDigest.digest = async (algorithm, data) => {
     if (readAdmitted && ++hashes === 2) await onFinalHash();
-    return await digest.call(globalThis.crypto.subtle, algorithm, data);
+    return await digest.call(semanticHashDigest, algorithm, data);
   };
-  try { return await operation(); } finally { globalThis.crypto.subtle.digest = digest; h.setAuthHook(undefined); }
+  try { return await operation(); } finally { semanticHashDigest.digest = digest; h.setAuthHook(undefined); }
 }
 
 /** Inject a real asynchronous crypto boundary while executing actual registered handlers. */
 export async function withSourceHashBoundary<T>(onHash: () => Promise<void>, operation: () => Promise<T>,
   select: (content: string) => boolean = () => true): Promise<void> {
-  const digest = globalThis.crypto.subtle.digest; let injected = false;
-  globalThis.crypto.subtle.digest = async (algorithm, data) => {
+  const digest = semanticHashDigest.digest; const injection = { done: false };
+  semanticHashDigest.digest = async (algorithm, data) => {
     const content = new TextDecoder().decode(data);
-    if (!injected && select(content)) { injected = true; await onHash(); }
-    return await digest.call(globalThis.crypto.subtle, algorithm, data);
+    if (!injection.done && select(content)) { injection.done = true; await onHash(); }
+    return await digest.call(semanticHashDigest, algorithm, data);
   };
-  try { await operation(); if (!injected) throw new Error("Source hash injection boundary was not reached"); }
-  finally { globalThis.crypto.subtle.digest = digest; }
+  try { await operation(); if (!injection.done) throw new Error("Source hash injection boundary was not reached"); }
+  finally { semanticHashDigest.digest = digest; }
 }

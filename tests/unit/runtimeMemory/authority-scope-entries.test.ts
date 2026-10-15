@@ -1,3 +1,4 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 /** Actual registered memory/policy/client bodies; controlled DB/component ports, no service/OCC/SLO proof. */
 import { afterEach, beforeEach, expect, it, jest } from "@jest/globals";
 import { getFunctionName, makeFunctionReference } from "convex/server";
@@ -6,9 +7,9 @@ import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
 import type { DerivedFact } from "../../../src/domain/contracts";
 import type { MemoryDeliveryBindings } from "../../../convex-dev/runtimeMemoryRepository";
-import { DEFAULT_EMBEDDING_PROFILE as profile, semanticHash } from "../../../src/domain/profile";
-import { prepareSourceContent, processingIdentityKey } from "../../../src/domain/sources";
-import { canonicalModelJson } from "../../../src/domain/model-policy";
+const { DEFAULT_EMBEDDING_PROFILE: profile, semanticHash } = await import("../../../src/domain/profile");
+const { prepareSourceContent, processingIdentityKey } = await import("../../../src/domain/sources");
+const { canonicalModelJson } = await import("../../../src/domain/model-policy");
 import { assertNativeArgs } from "../runtimeAgent/native-arguments";
 const actualAuth = await import("../../../convex-dev/runtimeAuth");
 let enabled = true;
@@ -156,7 +157,7 @@ it("observation entry preserves private projections, handle checks and original 
   expect(counts.scopedAuthReads).toBeLessThan(counts.unscopedAuthReads); const beforeScopes = scopes.length;
   const priorScope=scopes.at(-1);
   await f.call(client.observeEnvelope, { handle, limit: 10 }); expect(scopes.length).toBe(beforeScopes+1);expect(scopes.at(-1)).not.toBe(priorScope);
-  const beforeSession=scopes.length;await f.call(client.session,{});expect(scopes.length).toBe(beforeSession);
+  const beforeSession=scopes.length, priorSessionScope=scopes.at(-1);await f.call(client.session,{});expect(scopes.length).toBe(beforeSession+1);expect(scopes.at(-1)).not.toBe(priorSessionScope);
   f.grant.revokedAt = clock; await expect(f.call(client.session, {})).rejects.toThrow("FORBIDDEN"); await expect(f.call(client.observeEnvelope, { handle })).rejects.toThrow("FORBIDDEN");
 });
 it.each(["facts", "vectors", "delivery", "profile"])("new %s invocation freshly denies grant revocation rather than using a prior scope", async kind => {
@@ -219,10 +220,10 @@ it.each(["resolve", "embeddingProfile", "checkpoint"] as const)("a fresh standal
 });
 
 it("deferred finalDelivery retains its original uncached final revocation guard after the actual last vector/chunk hash", async () => {
-  const f = await setup(), before = stored(f), digest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
+  const f = await setup(), before = stored(f), digest = semanticHashDigest.digest.bind(semanticHashDigest);
   const { _id: _id, _creationTime: _time, ...chunk } = f.db.table("runtimeMemoryChunks").at(-1)!;
   const finalChunkInput = canonicalMemoryValue(chunk); let revocations = 0;
-  jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (...args) => {
+  jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (...args) => {
     const result = await digest(...args); if (new TextDecoder().decode(args[1]) === finalChunkInput) { f.grant.revokedAt = clock; revocations++; } return result;
   });
   await expect(f.call(memory.finalDelivery, { reference: f.reference, bindings: f.bindings })).rejects.toThrow("FORBIDDEN");

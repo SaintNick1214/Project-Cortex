@@ -687,6 +687,31 @@ function providerJSON(input: unknown): Record<string, unknown> | undefined {
     if (!value || typeof value !== "object" || Array.isArray(value)) return undefined; return value as Record<string, unknown>;
   } catch { return undefined; }
 }
+/** Conservative JSON-wire upper bound without copying ignored provider metadata.
+ * Oversize, opaque/accessor/cyclic or expensive objects retain the serial path. */
+function streamPartWireBytes(part: LanguageModelV4StreamPart, maximum: number): number | undefined {
+  let bytes = 0, visits = 0; const ancestors = new Set<object>();
+  const add = (amount: number) => { bytes += amount; return bytes <= maximum; };
+  const visit = (value: unknown, depth: number): boolean => {
+    if (++visits > 1024 || depth > 16) return false;
+    if (typeof value === "string") return add(value.length * 6 + 2); // Includes worst JSON escaping/UTF8.
+    if (value === null || value === undefined || typeof value === "boolean") return add(5);
+    if (typeof value === "number") return add(32);
+    if (typeof value !== "object" || ancestors.has(value)) return false;
+    const prototype: unknown = Object.getPrototypeOf(value);
+    if (prototype !== Object.prototype && prototype !== Array.prototype && prototype !== null) return false;
+    ancestors.add(value); if (!add(2)) return false;
+    if (Array.isArray(value) && !add(value.length * 5)) return false; // Sparse positions still serialize.
+    for (const key in value) {
+      if (++visits > 1024) return false;
+      const descriptor = Object.getOwnPropertyDescriptor(value, key);
+      if (!descriptor?.enumerable) continue;
+      if (!("value" in descriptor) || !add(key.length * 6 + 4) || !visit(descriptor.value, depth + 1)) return false;
+    }
+    ancestors.delete(value); return true;
+  };
+  try { return visit(part, 0) ? bytes : undefined; } catch { return undefined; }
+}
 export async function createGovernedGatewayModel(composition: GatewayComposition, inputBinding: GatewayBinding): Promise<{ model: LanguageModelV4 | EmbeddingModelV4; lifecycle: GatewayLifecycle }> {
   requireSink(composition);
   const started = Date.now(); const binding = detachedBinding(inputBinding); traceGateway(binding, "gateway.construct.begin");
@@ -978,12 +1003,79 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
       // response-header processing. Its internal HTTP stages remain opaque.
       traceGateway(binding, "gateway.native.stream.ready", { durationMs: Date.now() - nativeStarted });
       const reader = result.stream.getReader();
+      // The sole owned producer reads normalized parts, never applies authority,
+      // publication or terminal effects. Backpressure bounds retained wire bytes
+      // and entries. A larger original provider part uses a serial handoff:
+      // no new cap on previously ignored metadata or read-ahead past that part.
+      const queue: { part: LanguageModelV4StreamPart; bytes: number }[] = [];
+      const maximumQueuedBytes = 65536, maximumQueuedParts = 32;
+      let queuedBytes = 0, producerDone = false, producerStopped = false, producerFailed = false, producerError: unknown;
+      let serialPart: { part: LanguageModelV4StreamPart; taken: boolean } | undefined;
+      let wakeConsumer: (() => void) | undefined, wakeProducer: (() => void) | undefined;
+      const notifyConsumer = () => { const wake = wakeConsumer; wakeConsumer = undefined; wake?.(); };
+      const notifyProducer = () => { const wake = wakeProducer; wakeProducer = undefined; wake?.(); };
+      const takeQueued = () => { const item = queue.shift()!; queuedBytes -= item.bytes; notifyProducer(); return item.part; };
+      const producer = state.own(async () => {
+        try {
+          while (!producerStopped) {
+            while (!producerStopped && (queue.length >= maximumQueuedParts || queuedBytes >= maximumQueuedBytes)) await new Promise<void>(resolve => { wakeProducer = resolve; });
+            if (producerStopped) break;
+            const item = await state.observe("reader", () => reader.read());
+            if (item.done || producerStopped) break;
+            const bytes = streamPartWireBytes(item.value, maximumQueuedBytes);
+            if (bytes === undefined) {
+              while (!producerStopped && queue.length) await new Promise<void>(resolve => { wakeProducer = resolve; });
+              if (producerStopped) break;
+              serialPart = { part: item.value, taken: false }; notifyConsumer();
+              while (!producerStopped && serialPart) await new Promise<void>(resolve => { wakeProducer = resolve; });
+              continue;
+            }
+            while (!producerStopped && (queue.length >= maximumQueuedParts || queuedBytes + bytes > maximumQueuedBytes)) await new Promise<void>(resolve => { wakeProducer = resolve; });
+            if (producerStopped) break;
+            queue.push({ part: item.value, bytes }); queuedBytes += bytes; notifyConsumer();
+          }
+        } catch (error) { producerFailed = true; producerError = error; }
+        finally { producerDone = true; notifyConsumer(); }
+      });
+      const readPart = async (): Promise<Awaited<ReturnType<typeof reader.read>>> => {
+        // The next read acknowledges that the preceding serial part passed its
+        // original processing/visibility boundary, rather than just being read.
+        if (serialPart?.taken) { serialPart = undefined; notifyProducer(); }
+        while (!queue.length && !serialPart && !producerDone) await new Promise<void>(resolve => { wakeConsumer = resolve; });
+        if (queue.length) return { done: false, value: takeQueued() };
+        if (serialPart) { serialPart.taken = true; return { done: false, value: serialPart.part }; }
+        if (producerFailed) throw producerError; // Ordered after queued parts, including undefined rejection.
+        return { done: true, value: undefined };
+      };
       let firstPart = true, firstText = true;
       let observer: ReadableStreamDefaultController<LanguageModelV4StreamPart>; let observerClosed = false;
       const output = new ReadableStream<LanguageModelV4StreamPart>({ start(c) { observer = c; }, cancel() { observerClosed = true; } }, { highWaterMark: 64 });
       let text = ""; let deliveryError: GatewayDispatchError | undefined; let terminalReason: string | undefined; let rawTerminal: Record<string, unknown> | undefined; let id: string | undefined; let actualModel: string | undefined; let textStarted = false; let terminalAttempted = false;
       const toolInputs = new Map<string, { name: string; input: string; ended: boolean; complete: boolean }>();
       const toolCalls: AgentLanguageResultV1["content"] = [];
+      type Delta = Extract<LanguageModelV4StreamPart, { type: "text-delta" | "tool-input-delta" }>;
+      const sameDelta = (a: Delta, b: LanguageModelV4StreamPart): b is Delta => {
+        if (b.type !== a.type || b.id !== a.id) return false;
+        try {
+          utf8(b.delta);
+          if (canonicalModelJson(a.providerMetadata ?? null) !== canonicalModelJson(b.providerMetadata ?? null)) return false;
+          // An overflowing or invalid later part stays an ordered barrier: do
+          // not hide it inside a valid prefix or weaken the original bound.
+          const bytes = a.type === "text-delta" ? utf8(text + a.delta + b.delta)
+            : utf8(text) + [...toolInputs.values()].reduce((sum, tool) => sum + utf8(tool.input), 0) + utf8(a.delta + b.delta);
+          return bytes <= state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes / 6;
+        } catch { return false; }
+      };
+      const transparentRaw = (part: LanguageModelV4StreamPart): boolean => {
+        if (part.type !== "raw" || terminalReason !== undefined) return false;
+        const raw = providerJSON(part.rawValue), choices = raw?.choices;
+        const choice = Array.isArray(choices) && choices.length === 1 ? providerJSON(choices[0]) : undefined;
+        // The official provider interleaves a private raw record before each
+        // delta. Only already-validated identical identity with no terminal,
+        // usage or error can cross a batch. Every other part remains a barrier.
+        return !!raw && !("error" in raw) && raw.id === id && raw.model === actualModel && typeof id === "string" && typeof actualModel === "string"
+          && (raw.usage === undefined || raw.usage === null) && !!choice && (choice.finish_reason === undefined || choice.finish_reason === null);
+      };
       const drain = async (): Promise<void> => {
         const interrupted = () => { deliveryError ??= new GatewayDispatchError("STREAM_INTERRUPTED"); if (!observerClosed) { observerClosed = true; observer!.error(deliveryError); } };
         const emit = (part: LanguageModelV4StreamPart) => {
@@ -996,8 +1088,20 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
         if (state.controller.signal.aborted) interrupted();
         try {
           while (true) {
-            const item = await state.observe("reader", () => reader.read()); if (item.done) break; const part = item.value;
+            const item = await readPart(); if (item.done) break; let part = item.value;
             if (firstPart) { firstPart = false; traceGateway(binding, "gateway.native.stream.first-part", { durationMs: Date.now() - nativeStarted }); }
+            // Never wait for lookahead or delay the first text. While its fresh
+            // visibility ACK is pending, the bounded producer can fill the next
+            // batch. Tool start/end/call, IDs, metadata and terminal/error parts
+            // retain their exact ordering and their original delivery fences.
+            if (part.type === "tool-input-delta" || (part.type === "text-delta" && !firstText)) {
+              while (queue.length) {
+                const next = queue[0]!.part;
+                if (transparentRaw(next)) { takeQueued(); continue; }
+                if (!sameDelta(part, next)) break;
+                takeQueued(); part = { ...part, delta: part.delta + next.delta };
+              }
+            }
             if (part.type === "raw") {
               const raw = providerJSON(part.rawValue); if (!raw || "error" in raw) continue;
               if (typeof raw.id === "string") { if (id && id !== raw.id) fail("UNQUALIFIED_TERMINAL"); id = raw.id; }
@@ -1089,7 +1193,11 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
           }
           if (!observerClosed) { observerClosed = true; observer!.error(error instanceof GatewayDispatchError ? error : new GatewayDispatchError("STREAM_INTERRUPTED")); }
           throw error instanceof GatewayDispatchError ? error : new GatewayDispatchError("STREAM_INTERRUPTED");
-        } finally { state.endLifetime(); state.controller.signal.removeEventListener("abort", interrupted); await state.cleanup(() => reader.cancel()); reader.releaseLock(); }
+        } finally {
+          state.endLifetime(); state.controller.signal.removeEventListener("abort", interrupted);
+          producerStopped = true; serialPart = undefined; notifyProducer(); await state.cleanup(() => reader.cancel());
+          await producer; queue.length = 0; queuedBytes = 0; reader.releaseLock();
+        }
       };
       // Explicitly retained/joined task; never an unbounded tee. Attach rejection handler immediately
       // so delayed owner complete() cannot create an unhandled rejection; complete still rejects.

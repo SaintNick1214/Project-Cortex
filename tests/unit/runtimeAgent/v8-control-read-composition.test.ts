@@ -1,3 +1,4 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 /** Actual registered preparations with raw reuse disabled/enabled; no service or speed claim. */
 import {afterEach,beforeEach,expect,it,jest} from '@jest/globals';
 import {getFunctionName,makeFunctionReference} from 'convex/server';
@@ -94,7 +95,7 @@ function observe(f:Awaited<ReturnType<typeof directFixture>>|Awaited<ReturnType<
 }
 it.each([{pairs:0,effort:'normal'},{pairs:1,effort:'fast'},{pairs:2,effort:'normal'}])('registered empty/recent $pairs/$effort retains exact model body/state/predicate/query-builder order',async shape=>{
  const initial=process.env.CORTEX_RUNTIME_LATENCY_TRACE;process.env.CORTEX_RUNTIME_LATENCY_TRACE='1';try{
- const f=await directFixture(shape.pairs,shape.effort),seen=observe(f),before=f.state(),digest=globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle),crypto=jest.spyOn(globalThis.crypto.subtle,'digest').mockImplementation(digest);reuse=false;
+ const f=await directFixture(shape.pairs,shape.effort),seen=observe(f),before=f.state(),digest=semanticHashDigest.digest.bind(semanticHashDigest),crypto=jest.spyOn(semanticHashDigest,'digest').mockImplementation(digest);reuse=false;
  const expected=await f.call(agent.prepareDirectTurnV8,f.attempt),after=f.state(),old=clone(seen.reads),builders=clone(seen.builders),logical=clone(predicates),oldDigests=crypto.mock.calls.length;f.restore(before);seen.clear();crypto.mockClear();reuse=true;
  const actual=await f.call(agent.prepareDirectTurnV8,f.attempt);expect(actual).toEqual(expected);expect(f.state()).toEqual(after);expect(predicates).toEqual(logical);expect(seen.builders).toEqual(builders);
  expect(crypto.mock.calls.length).toBeLessThan(oldDigests);

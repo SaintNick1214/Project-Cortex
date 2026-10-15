@@ -1,12 +1,13 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 /** Offline native-handler fixtures. This fake database does NOT prove Convex OCC/isolation/rollback. */
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import type { Doc, Id } from "../../../convex-dev/_generated/dataModel";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "../../../convex-dev/runtimeModelPolicyBootstrap";
 import type { ModelCallRequest, TrustedModelPolicyRecord } from "../../../src/domain/model-policy";
-import { canonicalModelJson, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "../../../src/domain/model-policy";
-import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
-import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
+const { canonicalModelJson, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } = await import("../../../src/domain/model-policy");
+const { FACTS_JSON_SCHEMA } = await import("../../../src/domain/extraction");
+const { DEFAULT_EMBEDDING_PROFILE, semanticHash } = await import("../../../src/domain/profile");
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
 const trustedBootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
@@ -252,9 +253,10 @@ describe("native private policy ledger — offline logic only", () => {
   it("forced account-key hash collisions compare the complete trusted binding tuple", async () => {
     const f = fixture(); await f.install(); const b = await f.bind(); const before = f.db.writes;
     const collision = Uint8Array.from(Buffer.from(b.runBudgetId, "hex")).buffer;
-    jest.spyOn(globalThis.crypto.subtle, "digest").mockResolvedValue(collision);
+    const collisionProbe = jest.spyOn(semanticHashDigest, "digest").mockResolvedValue(collision);
     await expect(f.bind("different-request-id")).rejects.toThrow();
     await expect(f.invoke("ensureBudget", { reference: f.reference, operationKey: "conversation.title", requestId: "request", requestCanonical: canonicalModelJson({ text: "hello" }) })).rejects.toThrow();
+    expect(collisionProbe).toHaveBeenCalled();
     expect(f.db.writes).toBe(before); expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(2);
   });
   it("derives actual normalized input and full trusted ceiling, overriding untrusted estimates", async () => {
@@ -973,12 +975,12 @@ describe("trusted terminal capture and current private attachment", () => {
   it("forced digest equality never admits conflicting final canonical bytes", async () => {
     const { f, a } = await admitted(); await f.checkpoint(a); const first = await capture(f, a, charge(f, a)), final = charge(f, a, "0.000150"); await capture(f, a, final);
     const conflicting = charge(f, a, "0.000151"), finalHash = f.attempt(a.attemptId).receiptHash!;
-    const original = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
-    jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, data) => {
-      if (new TextDecoder().decode(data as ArrayBuffer) === conflicting) return Uint8Array.from(Buffer.from(finalHash, "hex")).buffer;
+    const original = semanticHashDigest.digest.bind(semanticHashDigest); let forced = 0;
+    jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (algorithm, data) => {
+      if (new TextDecoder().decode(data as ArrayBuffer) === conflicting) { forced++; return Uint8Array.from(Buffer.from(finalHash, "hex")).buffer; }
       return await original(algorithm, data);
     });
-    await unchanged(f, () => capture(f, a, conflicting));
+    await unchanged(f, () => capture(f, a, conflicting)); expect(forced).toBe(1);
     expect(await capture(f, a, charge(f, a))).toMatchObject({ evidenceId: first.evidenceId, settledCostUnits: 150 });
   });
   it("only two new registrations are internal and the ledger still has exactly five tables/eleven indexes", () => {
@@ -1027,13 +1029,13 @@ describe("terminal attachment closure and strict monetary truth", () => {
   it("forced initial hash equality cannot replace immutable initial nonmoney facts", async () => {
     const { f, a, args, data, encoded } = await prepared(null); const initialHash = f.attempt(a.attemptId).terminalEvidenceHash!;
     const conflicting = canonicalModelJson({ ...data, receiptId: "other-terminal" });
-    const original = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
-    jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, bytes) => {
-      if (new TextDecoder().decode(bytes as ArrayBuffer) === conflicting) return Uint8Array.from(Buffer.from(initialHash, "hex")).buffer;
+    const original = semanticHashDigest.digest.bind(semanticHashDigest); let forced = 0;
+    jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (algorithm, bytes) => {
+      if (new TextDecoder().decode(bytes as ArrayBuffer) === conflicting) { forced++; return Uint8Array.from(Buffer.from(initialHash, "hex")).buffer; }
       return await original(algorithm, bytes);
     });
     const before = JSON.stringify([...f.db.rows]), writes = f.db.writes;
-    await expect(f.invoke("captureTerminalEvidence", { ...args, receiptCanonical: conflicting })).rejects.toThrow();
+    await expect(f.invoke("captureTerminalEvidence", { ...args, receiptCanonical: conflicting })).rejects.toThrow(); expect(forced).toBe(1);
     expect(JSON.stringify([...f.db.rows])).toBe(before); expect(f.db.writes).toBe(writes); expect(f.attempt(a.attemptId).terminalEvidenceCanonical).toBe(encoded);
   });
   it("known usage additions are allowed only with complete money and absent facts never erase existing known values", async () => {
@@ -1377,8 +1379,8 @@ it("compact root loops hash compiled provenance once per install/active-root inv
   const unused = Array.from({ length: 24 }, (_, index) => ({ ...root.qualifications[0]!, receiptId: `unused:${index}`, modelId: `fixture/unused-${index}` }));
   root = { ...root, qualifications: [...root.qualifications, ...unused], dispatchEvidence: [...root.dispatchEvidence,
     ...unused.map(qualification => ({ ...root.dispatchEvidence[0]!, receiptId: qualification.receiptId, modelId: qualification.modelId }))] };
-  const f = fixture(), encoded = canonicalModelJson(root), digest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle); let hashes = 0;
-  jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, data) => {
+  const f = fixture(), encoded = canonicalModelJson(root), digest = semanticHashDigest.digest.bind(semanticHashDigest); let hashes = 0;
+  jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (algorithm, data) => {
     if (new TextDecoder().decode(data as ArrayBuffer) === encoded) hashes++; return await digest(algorithm, data);
   });
   await f.install(); expect(f.db.table("runtimeModelQualifications")).toHaveLength(25); expect(hashes).toBe(1);

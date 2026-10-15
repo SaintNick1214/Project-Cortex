@@ -1,8 +1,9 @@
+import "../semantic-hash-probe";
 import { describe, expect, it, jest } from "@jest/globals";
-import * as facts from "../../../convex-dev/facts";
-import * as memories from "../../../convex-dev/memories";
-import { semanticHash } from "../../../src/domain/profile";
-import { factStoreArgs, forbidden, harness, memoryStoreArgs, withFinalWriteHash, withSourceHashBoundary } from "./sharedfixtures";
+const facts = await import("../../../convex-dev/facts");
+const memories = await import("../../../convex-dev/memories");
+const { semanticHash } = await import("../../../src/domain/profile");
+const { factStoreArgs, forbidden, harness, memoryStoreArgs, withFinalWriteHash, withSourceHashBoundary } = await import("./sharedfixtures");
 import type { Doc } from "../../../convex-dev/_generated/dataModel";
 import type { DerivedFact } from "../../../src/domain/contracts";
 

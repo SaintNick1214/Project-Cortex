@@ -9,6 +9,7 @@ import { canonicalModelJson, resolveModelPolicy, validateModelRequest, MEMORY_JS
 import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
 import type { ModelCallRequest } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
+import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
 import type { RuntimeAuthorityReference } from "../../../src/auth/verified";
 const server = await import("convex/server");
@@ -596,5 +597,209 @@ describe("C2 replay and final stream output eligibility", () => {
     h.lifecycle.cancel(); release.resolve(); const later: LanguageModelV4StreamPart[] = [];
     try { for (;;) { const part = await reader.read(); if (part.done) break; later.push(part.value); } } catch { /* Local output is closed. */ }
     await h.lifecycle.complete().catch(() => undefined); expect(later).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.events.filter((x) => x === "attach")).toHaveLength(1); expect(f.count()).toBe(1);
+  });
+});
+
+/** Offline native peers only: no provider/network/credential lookup. */
+function coalescingFixture(tool = false) {
+  const f = fixture();
+  if (tool) {
+    f.r.snapshot = { ...f.r.snapshot, capabilities: ["text", "tools"], allowedTools: AGENT_NATIVE_TOOLS.map(value => value.name),
+      pins: { ...f.r.snapshot.pins, toolRegistryVersion: AGENT_TOOL_REGISTRY_VERSION } };
+    f.r.dispatchEvidence = { ...f.r.dispatchEvidence,
+      inputBound: { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" },
+      toolContract: { registryVersion: AGENT_TOOL_REGISTRY_VERSION, toolsCanonical: canonicalModelJson(AGENT_NATIVE_TOOLS), maximumToolCalls: 4 } };
+  }
+  const input = tool ? { ...params(), tools: JSON.parse(JSON.stringify(AGENT_NATIVE_TOOLS)) as LanguageModelV4CallOptions["tools"], toolChoice: { type: "tool" as const, toolName: "memory_recall" } } : params();
+  const privateRaw = (): LanguageModelV4StreamPart => ({ type: "raw", rawValue: { id: "convex-receipt", model: f.r.snapshot.modelId, choices: [{ delta: {}, finish_reason: null }] } });
+  const terminal = (): LanguageModelV4StreamPart => ({ type: "raw", rawValue: { ...raw(), choices: [{ finish_reason: tool ? "tool_calls" : "stop" }] } });
+  const call = { type: "tool-call" as const, toolCallId: "call-one", toolName: "memory_recall", input: '{"limit":2,"text":"hello"}' };
+  const parts: LanguageModelV4StreamPart[] = tool ? [privateRaw(), { type: "tool-input-start", id: "call-one", toolName: "memory_recall" },
+    { type: "tool-input-delta", id: "call-one", delta: '{"limit":2,' }, privateRaw(), { type: "tool-input-delta", id: "call-one", delta: '"text":' },
+    privateRaw(), { type: "tool-input-delta", id: "call-one", delta: '"hello"}' }, { type: "tool-input-end", id: "call-one" }, call, terminal()]
+    : [privateRaw(), { type: "text-delta", id: "t", delta: "a" }, privateRaw(), { type: "text-delta", id: "t", delta: "b" }, privateRaw(), { type: "text-delta", id: "t", delta: "c" }, terminal()];
+  return { ...f, input, privateRaw, terminal, call, parts };
+}
+
+describe("bounded owned text and tool-input delta coalescing", () => {
+  it.each([false, true])("coalesces queued official-style raw-interleaved deltas, tool=%s, preserving terminal/accounting and barriers", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(), loaded = gate<void>();
+    let pulls = 0, visibility = 0; const prior = f.composition.ledger.markVisible;
+    f.composition.ledger.markVisible = async args => { visibility++; const ack = await prior(args); if (visibility === 1) { entered.resolve(); await release.promise; } return ack; };
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (pulls < f.parts.length) c.enqueue(f.parts[pulls++]!); else { loaded.resolve(); c.close(); } } }) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await loaded.promise;
+    expect(f.receipts).toEqual([]); expect(f.attachmentAttempts).toEqual([]); // Read-ahead cannot settle early.
+    release.resolve(); const output = await collected; await h.lifecycle.complete();
+    const deltas = output.filter(part => part.type === (tool ? "tool-input-delta" : "text-delta"));
+    expect(deltas.map(part => "delta" in part ? part.delta : "")).toEqual(tool ? [f.call.input] : ["a", "bc"]);
+    expect(visibility).toBe(tool ? 4 : 2); // A fresh ACK for every actual emitted piece.
+    expect(output.map(part => part.type)).toEqual(tool ? ["tool-input-start", "tool-input-delta", "tool-input-end", "tool-call", "finish"] : ["text-start", "text-delta", "text-delta", "text-end", "finish"]);
+    expect(JSON.parse(f.accounting.attached!)).toEqual(tool ? { version: 1, kind: "language", content: [f.call], finishReason: "tool-calls" } : { text: "abc" });
+    expect(f.receipts).toHaveLength(1); expect(f.accounting.settledUnits).toBe(500); expect(f.accounting.activeSlots).toBe(0);
+    expect(h.lifecycle.pendingWork()).toEqual({ authority: 0, capture: 0, settlement: 0, native: 0, reader: 0, cleanup: 0 });
+  });
+  it("publishes first text without waiting for another provider part", async () => {
+    const f = coalescingFixture(), next = gate<void>(); let pulls = 0;
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ async pull(c) {
+      if (pulls++ === 0) c.enqueue({ type: "text-delta", id: "t", delta: "a" });
+      else { await next.promise; c.enqueue(f.terminal()); c.close(); }
+    } }) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), reader = result.stream.getReader();
+    expect((await reader.read()).value).toEqual({ type: "text-start", id: "governed-text" });
+    expect((await reader.read()).value).toEqual({ type: "text-delta", id: "governed-text", delta: "a" });
+    expect(f.receipts).toEqual([]); next.resolve(); while (!(await reader.read()).done) { /* Drain finish. */ } await h.lifecycle.complete();
+  });
+  it.each(["id", "metadata", "malformed-raw"])("keeps %s as a coalescing barrier", async barrier => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let calls = 0; const prior = f.composition.ledger.markVisible;
+    const b: LanguageModelV4StreamPart = { type: "text-delta", id: "t", delta: "b", ...(barrier === "metadata" ? { providerMetadata: { peer: { value: 1 } } } : {}) };
+    const c: LanguageModelV4StreamPart = { type: "text-delta", id: barrier === "id" ? "other" : "t", delta: "c", ...(barrier === "metadata" ? { providerMetadata: { peer: { value: 2 } } } : {}) };
+    f.parts.splice(3, 4, b, ...(barrier === "malformed-raw" ? [{ type: "raw" as const, rawValue: { id: "convex-receipt", model: f.r.snapshot.modelId, choices: [null] } }] : []), c, f.terminal());
+    f.model.doStream = async () => ({ stream: f.streamParts(f.parts) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); release.resolve(); const output = await collected;
+    if (barrier === "malformed-raw") await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "STREAM_INTERRUPTED" }); else await h.lifecycle.complete();
+    expect(output.filter(p => p.type === "text-delta").map(p => p.delta)).toEqual(barrier === "malformed-raw" ? ["a", "b"] : ["a", "b", "c"]); expect(calls).toBe(barrier === "malformed-raw" ? 2 : 3);
+  });
+  it.each([false, true])("fresh financial revocation rejects the queued batch, tool=%s", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(); let calls = 0, budgetCancelled = false; const prior = f.composition.ledger.markVisible;
+    f.model.doStream = async () => ({ stream: f.streamParts(f.parts) });
+    f.composition.ledger.markVisible = async args => { calls++; if (calls === 2) { entered.resolve(); await release.promise; } if (budgetCancelled) throw new Error("financial budget cancelled"); return prior(args); };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), reader = result.stream.getReader();
+    expect((await reader.read()).value?.type).toBe(tool ? "tool-input-start" : "text-start");
+    if (!tool) expect((await reader.read()).value).toMatchObject({ type: "text-delta", delta: "a" });
+    await entered.promise; budgetCancelled = true; release.resolve(); const tail: LanguageModelV4StreamPart[] = [];
+    try { for (;;) { const item = await reader.read(); if (item.done) break; tail.push(item.value); } } catch { /* Owner reports the typed denial. */ }
+    await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" });
+    expect(tail).toEqual([]); expect(f.attachments).toEqual([]); expect(f.receipts).toHaveLength(1);
+  });
+  it.each([false, true])("abort during the first ACK emits no output with a full queued tail, tool=%s", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(); const prior = f.composition.ledger.markVisible;
+    f.model.doStream = async () => ({ stream: f.streamParts(f.parts) });
+    f.composition.ledger.markVisible = async args => { const ack = await prior(args); entered.resolve(); await release.promise; return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); h.lifecycle.cancel(); release.resolve(); expect(await collected).toEqual([]);
+    await h.lifecycle.complete().catch(() => undefined); expect(f.receipts).toHaveLength(1); expect(f.attachments).toEqual([]);
+  });
+  it("bounds read-ahead entries and joins the producer after backpressure", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let pulls = 0, calls = 0; const prior = f.composition.ledger.markVisible;
+    const parts: LanguageModelV4StreamPart[] = [...Array.from({ length: 100 }, () => ({ type: "text-delta" as const, id: "t", delta: "x" })), f.terminal()];
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (pulls < parts.length) c.enqueue(parts[pulls++]!); else c.close(); } }) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(pulls).toBeGreaterThan(3); expect(pulls).toBeLessThanOrEqual(35);
+    release.resolve(); const output = await collected; await h.lifecycle.complete();
+    expect(output.filter(p => p.type === "text-delta").map(p => p.delta).join("")).toBe("x".repeat(100)); expect(f.receipts).toHaveLength(1); expect(h.lifecycle.pendingWork().reader).toBe(0);
+  });
+});
+
+describe("coalesced stream ordering and original bounds", () => {
+  it("keeps interleaved tool IDs and differing metadata separate without changing completed calls", async () => {
+    const f = coalescingFixture(true), entered = gate<void>(), release = gate<void>(); let calls = 0; const prior = f.composition.ledger.markVisible;
+    const other = { ...f.call, toolCallId: "call-two" };
+    const parts: LanguageModelV4StreamPart[] = [f.privateRaw(), { type: "tool-input-start", id: "call-one", toolName: "memory_recall" },
+      { type: "tool-input-start", id: "call-two", toolName: "memory_recall" },
+      { type: "tool-input-delta", id: "call-one", delta: '{"limit":2,' }, { type: "tool-input-delta", id: "call-two", delta: f.call.input },
+      { type: "tool-input-delta", id: "call-one", delta: '"text":', providerMetadata: { peer: { value: 1 } } },
+      { type: "tool-input-delta", id: "call-one", delta: '"hello"}', providerMetadata: { peer: { value: 2 } } },
+      { type: "tool-input-end", id: "call-two" }, other, { type: "tool-input-end", id: "call-one" }, f.call, f.terminal()];
+    f.model.doStream = async () => ({ stream: f.streamParts(parts) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); release.resolve(); const output = await collected; await h.lifecycle.complete();
+    expect(output.filter(p => p.type === "tool-input-delta").map(p => [p.id, p.delta])).toEqual([["call-one", '{"limit":2,'], ["call-two", f.call.input], ["call-one", '"text":'], ["call-one", '"hello"}']]);
+    expect(output.filter(p => p.type === "tool-call")).toEqual([other, f.call]); expect(JSON.parse(f.accounting.attached!).content).toEqual([other, f.call]);
+  });
+  it("does not read ahead into terminal effects or merge across a raw terminal barrier", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let calls = 0; const prior = f.composition.ledger.markVisible;
+    f.parts.splice(4, 0, f.terminal());
+    f.model.doStream = async () => ({ stream: f.streamParts(f.parts) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(f.receipts).toEqual([]); expect(f.attachments).toEqual([]); release.resolve();
+    const output = await collected; await h.lifecycle.complete(); expect(output.filter(p => p.type === "text-delta").map(p => p.delta)).toEqual(["a", "b", "c"]); expect(f.receipts).toHaveLength(1);
+  });
+  it("observes upstream rejection only after its queued valid prefix and never fabricates a terminal", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(), failed = gate<void>(); let index = 0, calls = 0; const prior = f.composition.ledger.markVisible;
+    const prefix = f.parts.slice(0, -1);
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (index < prefix.length) c.enqueue(prefix[index++]!); else { c.error(new Error("upstream failure")); failed.resolve(); } } }) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await failed.promise; release.resolve(); const output = await collected;
+    await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "STREAM_INTERRUPTED" });
+    expect(output.filter(p => p.type === "text-delta").map(p => p.delta)).toEqual(["a", "bc"]); expect(f.receipts).toEqual([]); expect(f.attachments).toEqual([]); expect(f.accounting.uncertainUnits).toBe(10000);
+  });
+  it("retains the original private-result bound when a later delta would overflow a batch", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let calls = 0; const prior = f.composition.ledger.markVisible;
+    f.model.doStream = async () => ({ stream: f.streamParts([f.privateRaw(), { type: "text-delta", id: "t", delta: "a" },
+      { type: "text-delta", id: "t", delta: "x".repeat(9998) }, { type: "text-delta", id: "t", delta: "yy" }, f.terminal()]) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); release.resolve(); const output = await collected;
+    await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" });
+    expect(output.filter(p => p.type === "text-delta").map(p => p.delta).join("")).toBe("a" + "x".repeat(9998)); expect(f.receipts).toHaveLength(1); expect(f.attachments).toEqual([]);
+  });
+  it("applies byte backpressure before the entry limit and preserves all later text", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let pulls = 0, calls = 0; const prior = f.composition.ledger.markVisible;
+    const padding = Array.from({ length: 30 }, (): LanguageModelV4StreamPart => ({ type: "raw", rawValue: { id: "convex-receipt", model: f.r.snapshot.modelId, choices: [{ delta: {}, finish_reason: null }], padding: "p".repeat(8192) } }));
+    const parts: LanguageModelV4StreamPart[] = [f.privateRaw(), { type: "text-delta", id: "t", delta: "a" }, ...padding, { type: "text-delta", id: "t", delta: "b" }, f.terminal()];
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (pulls < parts.length) c.enqueue(parts[pulls++]!); else c.close(); } }) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(pulls).toBeGreaterThan(3); expect(pulls).toBeLessThanOrEqual(12); release.resolve();
+    const output = await collected; await h.lifecycle.complete(); expect(output.filter(p => p.type === "text-delta").map(p => p.delta).join("")).toBe("ab"); expect(f.receipts).toHaveLength(1);
+  });
+});
+
+describe("official compatible provider coalescing parity (injected fetch only)", () => {
+  it.each([false, true])("preserves actual normalized SSE and one exact dispatch, tool=%s", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(); let calls = 0, fetches = 0; const prior = f.composition.ledger.markVisible;
+    const fragments = tool ? ['{"limit":2,', '"text":', '"hello"}'] : ["a", "b", "c"];
+    const chunks = fragments.map((text, index) => ({ id: "convex-receipt", model: f.r.snapshot.modelId, choices: [{ index: 0, delta: tool
+      ? { tool_calls: [{ index: 0, ...(index === 0 ? { id: "call-one", type: "function", function: { name: "memory_recall", arguments: text } } : { function: { arguments: text } }) }] }
+      : { content: text }, finish_reason: null }] }));
+    const terminalChunk = { id: "convex-receipt", model: f.r.snapshot.modelId, choices: [{ index: 0, delta: {}, finish_reason: tool ? "tool_calls" : "stop" }], usage: raw().usage };
+    const provider = createOpenAICompatible({ name: "convexGateway", baseURL: "https://offline.invalid/v1", fetch: async () => {
+      fetches++; return new Response([...chunks, terminalChunk].map(chunk => "data: " + JSON.stringify(chunk) + "\n\n").join("") + "data: [DONE]\n\n", { headers: { "content-type": "text/event-stream" } });
+    } });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(provider(f.r.snapshot.modelId), f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(f.receipts).toEqual([]); release.resolve(); const output = await collected; await h.lifecycle.complete();
+    expect(output.filter(p => p.type === (tool ? "tool-input-delta" : "text-delta")).map(p => "delta" in p ? p.delta : "")).toEqual(tool ? [f.call.input] : ["a", "bc"]);
+    expect(output.filter(p => p.type === "tool-call")).toEqual(tool ? [f.call] : []); expect(calls).toBe(tool ? 4 : 2); expect(fetches).toBe(1);
+    expect(f.receipts).toHaveLength(1); expect(f.accounting.activeSlots).toBe(0); expect(tokenLookup).not.toHaveBeenCalled();
+  });
+});
+
+describe("original single-part compatibility outside bounded read-ahead", () => {
+  it.each([false, true])("serially accepts original10000-UTF8 boundary with >64KiB metadata, tool=%s", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(); let index = 0, calls = 0; const prior = f.composition.ledger.markVisible;
+    const available = 10000 - new TextEncoder().encode('{"limit":2,"text":""}').byteLength;
+    const largeCall = { ...f.call, input: JSON.stringify({ limit: 2, text: "日".repeat(Math.floor(available / 3)) + "x".repeat(available % 3) }) };
+    const delta: LanguageModelV4StreamPart = tool ? { type: "tool-input-delta", id: "call-one", delta: largeCall.input, providerMetadata: { peer: { ignored: "m".repeat(100000) } } }
+      : { type: "text-delta", id: "t", delta: "x".repeat(10000), providerMetadata: { peer: { ignored: "m".repeat(100000) } } };
+    const parts: LanguageModelV4StreamPart[] = tool ? [f.privateRaw(), { type: "tool-input-start", id: "call-one", toolName: "memory_recall" }, delta, { type: "tool-input-end", id: "call-one" }, largeCall, f.terminal()]
+      : [f.privateRaw(), delta, f.terminal()];
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (index < parts.length) c.enqueue(parts[index++]!); else c.close(); } }) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === (tool ? 2 : 1)) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(index).toBeLessThanOrEqual(tool ? 4 : 3); expect(f.receipts).toEqual([]); release.resolve();
+    const output = await collected; await h.lifecycle.complete();
+    const delivered = output.find(p => p.type === (tool ? "tool-input-delta" : "text-delta"));
+    expect(delivered && "delta" in delivered ? delivered.delta : undefined).toBe(delta.delta); expect(new TextEncoder().encode(delta.delta).byteLength).toBe(10000);
+    expect(JSON.stringify(output)).not.toContain("ignored"); expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+  });
+  it.each(["bigint", "cycle", "getter"])("retains original ignored %s metadata behavior without serializing or reading it", async kind => {
+    const f = coalescingFixture(); let getterReads = 0;
+    const opaque: Record<string, unknown> = kind === "bigint" ? { value: 1n } : {};
+    if (kind === "cycle") opaque.self = opaque;
+    if (kind === "getter") Object.defineProperty(opaque, "value", { enumerable: true, get() { getterReads++; throw new Error("ignored getter must not execute"); } });
+    const delta: LanguageModelV4StreamPart = { type: "text-delta", id: "t", delta: "b" };
+    Object.defineProperty(delta, "providerMetadata", { enumerable: true, value: opaque });
+    const ignoredRaw: LanguageModelV4StreamPart = { type: "raw", rawValue: { unrelated: opaque } };
+    f.model.doStream = async () => ({ stream: f.streamParts([f.privateRaw(), delta, ignoredRaw, f.terminal()]) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), output = await collectParts(result.stream);
+    await h.lifecycle.complete(); expect(output.filter(p => p.type === "text-delta").map(p => p.delta)).toEqual(["b"]); expect(getterReads).toBe(0); expect(f.receipts).toHaveLength(1);
   });
 });

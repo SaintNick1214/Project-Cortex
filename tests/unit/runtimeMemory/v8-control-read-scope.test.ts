@@ -1,11 +1,13 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 /** Raw rows only: original query builders/cardinality, explicit V8 owner, no service. */
 import {afterEach,expect,it,jest} from '@jest/globals';
 import {makeFunctionReference} from 'convex/server';
+import {createHash,webcrypto} from 'node:crypto';
 import type {MutationCtx} from '../../../convex-dev/_generated/server';
 import {fixture} from '../runtimeMetadataAuth/fixture';
-import {createAuthorityReadScope,createMemorySourceReadScope,createV8AuthorityReadScope,withNativeSnapshotReads,withManagedSourceReads,
- readV8AgentExecutionRows,readV8AgentToolRows,readManagedSourceRows,hashV8CanonicalBytes,MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES,MANAGED_SOURCE_READ_SCOPE_MAX_BYTES} from '../../../convex-dev/runtimeAuth';
-import {semanticHash} from '../../../src/domain/profile';
+const {createAuthorityReadScope,createMemorySourceReadScope,createV8AuthorityReadScope,withNativeSnapshotReads,withManagedSourceReads,
+ readV8AgentExecutionRows,readV8AgentToolRows,readManagedSourceRows,hashV8CanonicalBytes,MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES,MANAGED_SOURCE_READ_SCOPE_MAX_BYTES} = await import('../../../convex-dev/runtimeAuth');
+const {semanticHash} = await import('../../../src/domain/profile');
 afterEach(()=>{jest.restoreAllMocks();});
 function setup(){
  const f=fixture({space:'space-a'}),execution=f.db.seed('runtimeAgentExecutions',{tenantId:'tenant-a',memorySpaceId:'space-a',runId:'run',attemptNumber:1,state:'ready',leaseVersion:1}),tool=f.db.seed('runtimeAgentOperations',{tenantId:'tenant-a',memorySpaceId:'space-a',runId:'run',attemptNumber:1,kind:'tool',state:'prepared'});
@@ -73,14 +75,14 @@ it('shares the existing bounded entry/byte budget with source rows',async()=>{
  f.execution.payload='x'.repeat(MANAGED_SOURCE_READ_SCOPE_MAX_BYTES);const fresh=createV8AuthorityReadScope({...f.ctx}),before=f.takes.length;await f.exec(fresh);await f.exec(fresh);expect(f.takes.length-before).toBe(2);
 });
 it('retains only the exact successful SHA-256 bytes on the exact owner, with all other lanes fresh',async()=>{
- const f=setup(),digest=globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle),spy=jest.spyOn(globalThis.crypto.subtle,'digest').mockImplementation(digest);
+ const f=setup(),digest=semanticHashDigest.digest.bind(semanticHashDigest),spy=jest.spyOn(semanticHashDigest,'digest').mockImplementation(digest);
  const bytes='{"message":"current"}',expected=await semanticHash(bytes);spy.mockClear();expect(await hashV8CanonicalBytes(f.scope,bytes)).toBe(expected);expect(await hashV8CanonicalBytes(f.scope,bytes)).toBe(expected);expect(spy).toHaveBeenCalledTimes(1);
  await hashV8CanonicalBytes(f.scope,bytes+' ');expect(spy).toHaveBeenCalledTimes(2);
  for(const ctx of [undefined,f.ctx,createAuthorityReadScope(f.ctx),createMemorySourceReadScope(f.ctx),{...f.scope},Object.create(f.scope),withNativeSnapshotReads(f.ctx,f.scope)]){const start=spy.mock.calls.length;await hashV8CanonicalBytes(ctx,bytes);await hashV8CanonicalBytes(ctx,bytes);expect(spy.mock.calls.length-start).toBe(2);}
  const fresh=createV8AuthorityReadScope({...f.ctx});await hashV8CanonicalBytes(fresh,bytes);expect(spy.mock.calls.length).toBe(17);
 });
 it.each(['insert','patch','replace','delete','component','failed'] as const)('exact-byte hash is cold after every %s writer',async method=>{
- const f=setup(),digest=globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle),spy=jest.spyOn(globalThis.crypto.subtle,'digest').mockImplementation(digest);
+ const f=setup(),digest=semanticHashDigest.digest.bind(semanticHashDigest),spy=jest.spyOn(semanticHashDigest,'digest').mockImplementation(digest);
  const scope=method==='component'?createV8AuthorityReadScope({...f.ctx,runMutation:async()=>null} as MutationCtx):f.scope;
  await hashV8CanonicalBytes(scope,'current');await hashV8CanonicalBytes(scope,'current');expect(spy).toHaveBeenCalledTimes(1);
  if(method==='component')await scope.runMutation(makeFunctionReference<'mutation'>('hash:child'),{});
@@ -91,12 +93,22 @@ it.each(['insert','patch','replace','delete','component','failed'] as const)('ex
  await hashV8CanonicalBytes(scope,'current');expect(spy).toHaveBeenCalledTimes(2);
 });
 it('failed/parallel/late digests cannot populate across a pending writer and the shared byte/entry caps apply',async()=>{
- const f=setup(),digest=globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle),error=Error('ORIGINAL_DIGEST_FAILURE');let fail=true,release!:()=>void,entered!:()=>void;
+ const f=setup(),digest=semanticHashDigest.digest.bind(semanticHashDigest),error=Error('ORIGINAL_DIGEST_FAILURE');let fail=true,release!:()=>void,entered!:()=>void;
  const gate=new Promise<void>(r=>release=r),started=new Promise<void>(r=>entered=r);let pause=false;
- const spy=jest.spyOn(globalThis.crypto.subtle,'digest').mockImplementation(async(...args)=>{if(fail)throw error;const result=await digest(...args);if(pause){pause=false;entered();await gate;}return result;});
+ const spy=jest.spyOn(semanticHashDigest,'digest').mockImplementation(async(...args)=>{if(fail)throw error;const result=await digest(...args);if(pause){pause=false;entered();await gate;}return result;});
  await expect(hashV8CanonicalBytes(f.scope,'x')).rejects.toBe(error);await expect(hashV8CanonicalBytes(f.scope,'x')).rejects.toBe(error);fail=false;pause=true;const late=hashV8CanonicalBytes(f.scope,'x');await started;
  await hashV8CanonicalBytes(f.scope,'x');await f.scope.db.patch('runtimeAgentExecutions',f.execution._id as never,{state:'unknown'});release();await late;await hashV8CanonicalBytes(f.scope,'x');expect(spy).toHaveBeenCalledTimes(5);
  const fresh=createV8AuthorityReadScope({...f.ctx},{managedSources:true});for(let i=0;i<MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES;i++)await readManagedSourceRows(fresh,'tenant-a','space-a',`missing:${i}`);
  const before=spy.mock.calls.length;await hashV8CanonicalBytes(fresh,'overflow');await hashV8CanonicalBytes(fresh,'overflow');expect(spy.mock.calls.length-before).toBe(2);
  const oversized=createV8AuthorityReadScope({...f.ctx}),large='x'.repeat(MANAGED_SOURCE_READ_SCOPE_MAX_BYTES),count=spy.mock.calls.length;await hashV8CanonicalBytes(oversized,large);await hashV8CanonicalBytes(oversized,large);expect(spy.mock.calls.length-count).toBe(2);
+});
+
+it('default promise probe preserves leading UTF-8 BOM bytes against independent hashes',async()=>{
+ for(const value of ['\ufeff','\ufeffcanonical source','\ufeff🧠\r\nsource']){
+  const bytes=new TextEncoder().encode(value),expected=createHash('sha256').update(bytes).digest('hex');
+  const old=Buffer.from(await webcrypto.subtle.digest('SHA-256',bytes)).toString('hex');
+  expect(Buffer.from(await semanticHashDigest.digest('SHA-256',bytes)).toString('hex')).toBe(expected);
+  expect(await semanticHash(value)).toBe(expected);expect(old).toBe(expected);
+  expect(expected).not.toBe(createHash('sha256').update(value.slice(1),'utf8').digest('hex'));
+ }
 });

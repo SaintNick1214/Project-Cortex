@@ -1,15 +1,16 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 /** Original native handlers with transactional DB/component peers; no service or speed claim. */
 import { afterEach, beforeEach, expect, it, jest } from "@jest/globals";
 import { getFunctionName, getFunctionAddress } from "convex/server";
 import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
 import type { EmbeddingProfile } from "../../../src/domain/profile";
-import { DEFAULT_EMBEDDING_PROFILE as profile, semanticHash } from "../../../src/domain/profile";
-import { prepareSourceContent, processingIdentityKey } from "../../../src/domain/sources";
-import { canonicalModelJson } from "../../../src/domain/model-policy";
+const { DEFAULT_EMBEDDING_PROFILE: profile, semanticHash } = await import("../../../src/domain/profile");
+const { prepareSourceContent, processingIdentityKey } = await import("../../../src/domain/sources");
+const { canonicalModelJson } = await import("../../../src/domain/model-policy");
 import type { ContextSourceWitness } from "../../../src/domain/context-witness";
 import type { DerivedFact } from "../../../src/domain/contracts";
-import { mergeContextWitness } from "../../../src/domain/context-witness";
+const { mergeContextWitness } = await import("../../../src/domain/context-witness");
 import { assertNativeArgs } from "./native-arguments";
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(input: { handler: unknown }) { return { _handler: input.handler }; }
@@ -630,7 +631,7 @@ it("whole registered recall and save/candidate retain exact guards/model/state w
   }, true);
   const candidate = (row: GraphRead) => row.index === "by_attempt" && (row.table === "runtimeAgentExecutions"
     || row.table === "runtimeAgentOperations" && row.keys?.some(key => Array.isArray(key) && key[1] === "kind" && key[2] === "tool"));
-  const digest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle), crypto = jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(digest);
+  const digest = semanticHashDigest.digest.bind(semanticHashDigest), crypto = jest.spyOn(semanticHashDigest, "digest").mockImplementation(digest);
   const before = state(); controlPredicates.length = 0; controlReuse = false;
   const expected = await perform(), after = state(), reads = clone(observed.reads), predicates = clone(controlPredicates), oldDigests = crypto.mock.calls.length;
   restore(before); observed.clear(); controlPredicates.length = 0; crypto.mockClear(); controlReuse = true;

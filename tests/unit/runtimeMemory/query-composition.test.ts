@@ -1,3 +1,4 @@
+import {semanticHashDigest} from "../semantic-hash-probe";
 /** Original policy/Gateway/DB handlers; only external provider and native DB ports controlled. */
 import {afterEach,beforeEach,it,expect,jest} from '@jest/globals';
 import {getFunctionName} from 'convex/server';
@@ -6,8 +7,8 @@ import type {Id} from '../../../convex-dev/_generated/dataModel';
 import type {EmbeddingModelV4} from '@ai-sdk/provider';
 import type {DerivedFact} from '../../../src/domain/contracts';
 import type {MutationCtx,ActionCtx} from '../../../convex-dev/_generated/server';
-import {canonicalModelJson} from '../../../src/domain/model-policy';
-import {DEFAULT_EMBEDDING_PROFILE as profile} from '../../../src/domain/profile';
+const {canonicalModelJson}=await import('../../../src/domain/model-policy');
+const {DEFAULT_EMBEDDING_PROFILE:profile}=await import('../../../src/domain/profile');
 let calls=0,embeddingAdvanceMs=0;
 const native=jest.fn<(id:string)=>EmbeddingModelV4>(id=>({specificationVersion:'v4',modelId:id,provider:'convexGateway.embedding',maxEmbeddingsPerCall:1,supportsParallelCalls:false,
   doEmbed:async()=>{calls++;if(embeddingAdvanceMs)jest.spyOn(Date,"now").mockReturnValue(clock+embeddingAdvanceMs);return {embeddings:[Array.from({length:1536},(_,i)=>i===0?1:0)],warnings:[],response:{body:{id:'controlled-public-query',model:'text-embedding-3-small',data:[{index:0,object:'embedding'}],usage:{prompt_tokens:1}}}};}}));
@@ -270,6 +271,8 @@ function publicReadLog(f:Awaited<ReturnType<typeof fixture>>){
 const publicReadIdentity=({method,table,id,index,keys,terminal}:PublicRead)=>({method,table,id,index,keys,terminal});
 const publicMutableReads=(reads:PublicRead[])=>reads.filter(row=>!row.managed&&!row.table.startsWith('runtimeAuth')&&!['runtimeModelPolicies','runtimeModelQualifications','runtimeAgentDefinitions'].includes(row.table)).map(publicReadIdentity);
 it('K29 actual public read pipeline matches a773 result/readset/state while sharing exact-owner raw rows',async()=>{
+ // STATIC historical mechanism comparison: retain WebCrypto's async boundary for the original global physical-read order assertion.
+ jest.spyOn(semanticHashDigest,'digest').mockImplementation((algorithm,data)=>globalThis.crypto.subtle.digest(algorithm,data));
  const f=await populatedPublicFixture(true),observed=publicReadLog(f),result={profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]};
  const before=f.state();nativeSnapshotReads=false;f.rpc.length=0;
  const expected=await query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>clock});
@@ -281,7 +284,19 @@ it('K29 actual public read pipeline matches a773 result/readset/state while shar
  expect(identities(reads)).toEqual(identities(baseline));expect(reads.length).toBeLessThan(baseline.length);
  expect(f.rpc).toEqual(['runtimeMemoryQuery:prepareReads','runtimeMemoryQuery:readMatches','runtimeMemoryQuery:finalRecallDelivery']);
  const count=(values:PublicRead[])=>({calls:values.length,documents:values.reduce((n,row)=>n+row.documents,0),authority:values.filter(row=>row.table.startsWith('runtimeAuth')).length});
- console.info(JSON.stringify({type:'k29-current-a773-public-read-pipeline',baseline:count(baseline),actual:count(reads),exactResultStateAndMutableReadOrder:true,providerCalls:0,nativeLatency:'NOT_RUN'}));
+ console.info(JSON.stringify({type:'k29-current-a773-public-read-pipeline',hashBoundary:'HISTORICAL_WEBCRYPTO_ASYNC_STATIC_MECHANISM',baseline:count(baseline),actual:count(reads),exactResultStateAndMutableReadOrder:true,providerCalls:0,nativeLatency:'NOT_RUN'}));
+});
+it('current fast hash preserves actual public recall output, state, effects and complete read identities across K29 reuse',async()=>{
+ const f=await populatedPublicFixture(true),observed=publicReadLog(f),result={profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]};
+ const before=f.state();nativeSnapshotReads=false;f.rpc.length=0;
+ const expected=await query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>clock}),baseline=clone(observed.reads),oldCalls=[...f.rpc];
+ observed.clear();nativeSnapshotReads=true;f.rpc.length=0;
+ const actual=await query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>clock}),reads=clone(observed.reads);
+ expect(actual).toEqual(expected);expect(actual.items).toHaveLength(6);expect(f.state()).toEqual(before);expect(calls).toBe(0);expect(f.rpc).toEqual(oldCalls);
+ const identities=(values:PublicRead[])=>[...new Set(values.map(row=>JSON.stringify(publicReadIdentity(row))))].sort();
+ expect(identities(reads)).toEqual(identities(baseline));expect(reads.length).toBeLessThan(baseline.length);
+ expect(f.rpc).toEqual(['runtimeMemoryQuery:prepareReads','runtimeMemoryQuery:readMatches','runtimeMemoryQuery:finalRecallDelivery']);
+ // The synchronous hash changes interleaving of independent parallel hydration branches; no global physical-read ordering claim here.
 });
 it.each(['revision','tombstone','revoked','expired','profile','foreign'])(
  'K29 actual public snapshot view preserves a773 %s result/refusal and no effects',async fault=>{

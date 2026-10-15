@@ -1,3 +1,5 @@
+import { createSha256 } from "../common/crypto";
+
 /** Exact supported configurations. Catalogue membership is not model qualification. */
 export interface EmbeddingProfile {
   readonly profileId: string;
@@ -67,14 +69,14 @@ export function assertEmbeddingVector(
 }
 
 /**
- * SHA-256 over UTF-8, available in browser and default Convex via WebCrypto.
+ * Portable SHA-256 over the exact UTF-8 bytes, shared with canonical evidence hashing.
  * Hashes are lookup keys, not authorization or proof of equality: repositories must
  * compare the canonical identity/content before reusing an idempotency receipt.
  * A collision is an IDEMPOTENCY_CONFLICT, never permission to overwrite another source.
  */
 export async function semanticHash(value: string): Promise<string> {
-  const digest = await globalThis.crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  const bytes = new TextEncoder().encode(value);
+  return createSha256().update(bytes).digestHex();
 }
 
 export interface TextWindow {

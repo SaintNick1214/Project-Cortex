@@ -1,0 +1,121 @@
+(node:81138) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts
+PASS tests/unit/runtimeEndpointAuth/memory.test.ts
+PASS tests/unit/runtimeEndpointAuth/facts.test.ts
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+PASS tests/unit/runtimeMemory/authority-scope-entries.test.ts
+PASS tests/unit/runtimeWorkerAuth/graph.test.ts
+PASS tests/unit/runtimeAgent/v8-control-read-composition.test.ts
+PASS tests/unit/runtimeMemory/v8-control-read-scope.test.ts
+PASS tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts (10.382 s)
+PASS tests/unit/runtimeMemory/vector-delivery-batch.test.ts (5.932 s)
+PASS tests/unit/runtimeMemory/query-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    10.4s | 141/141 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✅     5.9s | 38/38 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+  ✅     4.7s | 96/96 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+  ✅     4.4s | 198/198 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     3.8s | 33/33 passed | /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ✅     2.3s | 11/11 passed | /tests/unit/runtimeAgent/v8-control-read-composition.test.ts
+  ✅     1.7s | 118/118 passed | /tests/unit/runtimeEndpointAuth/memory.test.ts
+  ✅     1.6s | 57/57 passed | /tests/unit/runtime/model-policy-model-drift.test.ts
+  ✅     1.4s | 111/111 passed | /tests/unit/runtimeEndpointAuth/facts.test.ts
+  ✅     1.0s | 88/88 passed | /tests/unit/runtimeWorkerAuth/graph.test.ts
+  ✅     0.9s | 10/10 passed | /tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+  ✅     0.8s | 26/26 passed | /tests/unit/runtimeMemory/v8-control-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.25s ( 3.2%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 2. [32m✓[0m    1.11s ( 2.8%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [32m✓[0m    0.69s ( 1.8%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [32m✓[0m    0.32s ( 0.8%) - whole registered recall and save/candidate retain exact guards/model/state with raw control and digest reuse
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.22s ( 0.6%) - actual Fast Agent retains the current literal conflict discovered at depth2 beyond a bounded direct fact page
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 6. [32m✓[0m    0.20s ( 0.5%) - registered empty/recent 0/normal retains exact model body/state/predicate/query-builder order
+    /tests/unit/runtimeAgent/v8-control-read-composition.test.ts
+
+ 7. [32m✓[0m    0.19s ( 0.5%) - registered empty/recent 2/normal retains exact model body/state/predicate/query-builder order
+    /tests/unit/runtimeAgent/v8-control-read-composition.test.ts
+
+ 8. [32m✓[0m    0.19s ( 0.5%) - LSR-1 Agent unstructured canonical-mismatch refuses direct source proof and invokes the original governed semantic fallback once
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [32m✓[0m    0.18s ( 0.5%) - LSR-1 Agent unstructured contradiction refuses direct source proof and invokes the original governed semantic fallback once
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.18s ( 0.5%) - registered empty/recent 1/fast retains exact model body/state/predicate/query-builder order
+    /tests/unit/runtimeAgent/v8-control-read-composition.test.ts
+
+11. [32m✓[0m    0.18s ( 0.5%) - Fast cross-conversation exact property ranking pin=true retains eligible answer evidence with four repeated-question vectors
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+12. [32m✓[0m    0.18s ( 0.5%) - Fast cross-conversation exact property ranking pin=false retains eligible answer evidence with four repeated-question vectors
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+13. [32m✓[0m    0.16s ( 0.4%) - Agent native composition proves all three observed projections and the exact canonical source without an embedding proposal or call
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [32m✓[0m    0.16s ( 0.4%) - Agent native parent proves both actual explicit favorite-property projections without preparing or invoking semantic embedding
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+15. [32m✓[0m    0.16s ( 0.4%) - direct V8 native parent uses actual indexed facts and depth2 source without preparing or billing an embedding
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+16. [32m✓[0m    0.16s ( 0.4%) - Agent one-hit parent uses a canonical proof before real adjacency finds the compatible value projection
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+17. [32m✓[0m    0.15s ( 0.4%) - same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+18. [32m✓[0m    0.13s ( 0.3%) - K27 incremental K26 read/delivery comparison shared=false retains all outcomes and raw identities
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+19. [32m✓[0m    0.13s ( 0.3%) - K29 same-snapshot private parents shared=false match a773 values/readset/state with fewer physical reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+20. [32m✓[0m    0.12s ( 0.3%) - K29 same-snapshot private parents shared=true match a773 values/readset/state with fewer physical reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 6.06s (15.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      38.95s
+  Test suites:        12
+  Individual tests:   786
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 12
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 12 passed, 12 total
+Tests:       927 passed, 927 total
+Snapshots:   0 total
+Time:        38.949 s
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-stream-hash-independent-oracles-jest.json

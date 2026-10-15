@@ -1,0 +1,30 @@
+{
+  "name": "independent gateway and real semantic hash parity",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runTestsByPath",
+    "tests/unit/runtime/gateway-dispatch.test.ts",
+    "tests/unit/runtime/gateway-terminal-composition.test.ts",
+    "tests/unit/runtime/gateway-backend.test.ts",
+    "tests/unit/domain/semantic-hash.test.ts",
+    "--runInBand",
+    "--forceExit=false",
+    "--watchman=false",
+    "--silent",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-stream-hash-independent-gateway-jest.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "PATH": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:/usr/bin:/bin",
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "https://offline.invalid",
+    "LANG": "en_US.UTF-8"
+  },
+  "exit": 0,
+  "seconds": 15.650704145431519,
+  "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-stream-hash-independent-gateway.log",
+  "forceExit": false
+}

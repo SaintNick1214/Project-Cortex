@@ -1,8 +1,9 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 import { describe, expect, it } from "@jest/globals";
-import * as memories from "../../../convex-dev/memories";
-import * as facts from "../../../convex-dev/facts";
-import { harness, forbidden } from "./sharedfixtures";
-import { semanticHash } from "../../../src/domain/profile";
+const memories = await import("../../../convex-dev/memories");
+const facts = await import("../../../convex-dev/facts");
+const { harness, forbidden } = await import("./sharedfixtures");
+const { semanticHash } = await import("../../../src/domain/profile");
 
 describe("retained linked and bulk preeffect admissions", () => {
   it.each(["immutable-version", "immutable-control", "mutable-owner", "mutable-control", "conversation-anchor", "peer-version"] as const)(
@@ -18,8 +19,8 @@ describe("retained linked and bulk preeffect admissions", () => {
         : mode === "peer-version" ? { factsRef: { factId: "peer", version: 1 } }
         : { conversationRef: { conversationId: "linked", messageIds: ["anchor"] } };
       await h.seedData("memories", owner, "first", links); await h.seedData("memories", owner, "second");
-      const before = structuredClone(h.db.rows); let injected = false; const digest = crypto.subtle.digest;
-      crypto.subtle.digest = async (algorithm, data) => {
+      const before = structuredClone(h.db.rows); let injected = false; const digest = semanticHashDigest.digest;
+      semanticHashDigest.digest = async (algorithm, data) => {
         if (!injected && new TextDecoder().decode(data).includes("private second")) {
           injected = true;
           if (mode === "immutable-version") await h.db.patch(immutable, { version: 2 });
@@ -29,10 +30,10 @@ describe("retained linked and bulk preeffect admissions", () => {
           else await h.db.insert("runtimeAuthTombstones", { tenantId: owner.tenantId, memorySpaceId: owner.memorySpaceId,
             resourceType: "source", resourceId: mode === "immutable-control" ? "immutable:record:linked" : "mutable:record:linked", deletedAt: Date.now() });
         }
-        return await digest.call(crypto.subtle, algorithm, data);
+        return await digest.call(semanticHashDigest, algorithm, data);
       };
       try { await expect(h.invoke(memories.list, { memorySpaceId: "space-a" })).rejects.toMatchObject(forbidden); }
-      finally { crypto.subtle.digest = digest; }
+      finally { semanticHashDigest.digest = digest; }
       expect(injected).toBe(true); expect(h.db.rows).toEqual(before);
     });
 
@@ -60,12 +61,12 @@ describe("retained linked and bulk preeffect admissions", () => {
       ? { conversationRef: { conversationId: "linked", messageIds: ["anchor"] } }
       : { sourceRef: { conversationId: "linked", messageIds: ["anchor"] } });
     await h.seedData(kind === "memory" ? "memories" : "facts", owner, "second");
-    const before = structuredClone(h.db.rows); const query = h.db.query.bind(h.db); const digest = crypto.subtle.digest;
+    const before = structuredClone(h.db.rows); const query = h.db.query.bind(h.db); const digest = semanticHashDigest.digest;
     let hashes = 0; let secondHashes = 0; let afterLastHash = false; let injected = false; let hashesAtInjection = 0;
-    crypto.subtle.digest = async (algorithm, data) => {
+    semanticHashDigest.digest = async (algorithm, data) => {
       hashes++;
       if (new TextDecoder().decode(data).includes("private second") && ++secondHashes === 2) afterLastHash = true;
-      return await digest.call(crypto.subtle, algorithm, data);
+      return await digest.call(semanticHashDigest, algorithm, data);
     };
     h.db.query = table => {
       const selection = query(table); const unique = selection.unique.bind(selection);
@@ -79,7 +80,7 @@ describe("retained linked and bulk preeffect admissions", () => {
       return selection;
     };
     try { await expect(h.invoke(kind === "memory" ? memories.list : facts.list, { memorySpaceId: "space-a" })).rejects.toMatchObject(forbidden); }
-    finally { crypto.subtle.digest = digest; }
+    finally { semanticHashDigest.digest = digest; }
     expect(injected).toBe(true); expect(hashes).toBe(hashesAtInjection); expect(h.db.rows).toEqual(before);
   });
 });
