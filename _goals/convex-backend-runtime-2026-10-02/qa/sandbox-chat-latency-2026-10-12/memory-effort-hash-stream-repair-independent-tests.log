@@ -1,0 +1,111 @@
+(node:88329) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/domain/semantic-hash-standalone.test.ts
+PASS tests/unit/runtime/model-policy-admission.test.ts
+PASS tests/unit/runtimeEndpointAuth/memory.test.ts
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+PASS tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+PASS tests/unit/runtimeMemory/v8-control-read-scope.test.ts
+PASS tests/unit/domain/semantic-hash.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.6s | 198/198 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     2.0s | 1/1 passed | /tests/unit/domain/semantic-hash-standalone.test.ts
+  ✅     1.7s | 118/118 passed | /tests/unit/runtimeEndpointAuth/memory.test.ts
+  ✅     1.6s | 57/57 passed | /tests/unit/runtime/model-policy-model-drift.test.ts
+  ✅     1.0s | 10/10 passed | /tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+  ✅     1.0s | 26/26 passed | /tests/unit/runtimeMemory/v8-control-read-scope.test.ts
+  ✅     0.3s | 26/26 passed | /tests/unit/domain/semantic-hash.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.11s ( 0.9%) - actual profile loads as an isolated policy-preflight mjs with no common sibling and preserves exact hash bytes
+    /tests/unit/domain/semantic-hash-standalone.test.ts
+
+ 2. [32m✓[0m    0.07s ( 0.6%) - compact root loops hash compiled provenance once per install/active-root invocation, never once per qualification row
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 3. [32m✓[0m    0.06s ( 0.5%) - immutable charge-only coexistence and defensive privacy inconsistent attached observations deny attachment/replay despite false flags; legacy private bytes survive
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 4. [32m✓[0m    0.06s ( 0.5%) - immutable charge-only coexistence and defensive privacy inconsistent pending observations deny attachment/replay despite false flags; legacy private bytes survive
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.3%) - native JSON-object admission and financial guards (offline handlers) capture cannot deliver extraction merely because money is known without complete usage
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.2%) - truthful first model drift is charge only charges full synthetic 0.000040 independently of selected identity and closes output
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.2%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.2%) - compact compiled root provenance — actual original ledger handlers full and compact handlers have identical resolve/admit/permit/visibility/settlement/replay outputs and counters
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.2%) - failed/parallel/late digests cannot populate across a pending writer and the shared byte/entry caps apply
+    /tests/unit/runtimeMemory/v8-control-read-scope.test.ts
+
+10. [32m✓[0m    0.02s ( 0.2%) - native JSON-object admission and financial guards (offline handlers) legacy-settle cannot deliver extraction merely because money is known without complete usage
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+11. [32m✓[0m    0.02s ( 0.2%) - native JSON-object admission and financial guards (offline handlers) over-output terminal conserves UNKNOWN, slots and replay disposition
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+12. [32m✓[0m    0.02s ( 0.2%) - native JSON-object admission and financial guards (offline handlers) valid terminal conserves UNKNOWN, slots and replay disposition
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+13. [32m✓[0m    0.02s ( 0.2%) - native JSON-object admission and financial guards (offline handlers) over-input terminal conserves UNKNOWN, slots and replay disposition
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+14. [32m✓[0m    0.02s ( 0.2%) - truthful first model drift is charge only original guarded successors, child and confirmed rejection fallback cannot launder model drift
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+15. [32m✓[0m    0.02s ( 0.1%) - shared unknown observation transition and bounded receipt identities settle unknown model/token violations retain all liability, release genuine lifetime once and withhold
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+16. [32m✓[0m    0.02s ( 0.1%) - shared unknown observation transition and bounded receipt identities reconcileDeploymentLiability unknown model/token violations retain all liability, release genuine lifetime once and withhold
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+17. [32m✓[0m    0.02s ( 0.1%) - native JSON-object admission and financial guards (offline handlers) missing-input terminal conserves UNKNOWN, slots and replay disposition
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+18. [32m✓[0m    0.02s ( 0.1%) - native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+19. [32m✓[0m    0.02s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries fallback expiry denies same-attempt replay and checkpoint without releasing its existing reservation
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+20. [32m✓[0m    0.02s ( 0.1%) - trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.65s (5.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      12.34s
+  Test suites:        7
+  Individual tests:   362
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 7
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 7 passed, 7 total
+Tests:       436 passed, 436 total
+Snapshots:   0 total
+Time:        12.339 s
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-independent-jest.json

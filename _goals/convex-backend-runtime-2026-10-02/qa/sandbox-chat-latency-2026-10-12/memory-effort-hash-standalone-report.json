@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "status": "AUTHOR_CHECKS_PASS_FROZEN",
+  "sourceBaseParentReported": "b366e46ab81cd555f76a958859708f48e3ba5a98",
+  "failedInstallParentReported": {
+    "status": "FAILED_BEFORE_STARTUP_QUALIFICATION_AUTO_CLEANED",
+    "sessionId": "6cde9472-246b-4a02-ba2a-54c86db9d8f6",
+    "targetId": 6194822,
+    "deploymentName": "sensible-mongoose-451",
+    "rootExecSession": 98777,
+    "exit": 1,
+    "failure": "host/.sandbox-policy-preflight/profile.mjs relative ../common/crypto cannot resolve. Source review/build PASS was not installed PASS."
+  },
+  "diagnosis": {
+    "producer": "P/sandbox-env/qualification.mjs:36-50 loadModelPolicy syntax-only transcompiles exactly profile/assets/media_schemas/extraction/model_policy, rewrites only known ./ siblings and zod. No ../common graph is copied.",
+    "caller": "P/sandbox-env/runtime.mjs:161-162 calls producer on installed _cortex/shared/domain into host/.sandbox-policy-preflight. Final policy also uses prepared.domain at:355.",
+    "additiveCli": "R/packages/cortex-cli/src/utils/runtime-backend.ts selects dist/backend/v1/manifest.json additive current runtime. R/scripts/backend/build-distribution.mjs maps src/domain/profile.ts\u2192_cortex/shared/domain/profile.ts and model-policy.ts\u2192model_policy.ts; manifest dependencies includes fast-sha2561.3.0, forwarded as requiredDependencies in init/additive-backend.ts:358. Legacy template-backend table is not this current additive graph.",
+    "hostDependency": "P/sandbox-env/templates/native-package-lock.json already declares/locks fast-sha2561.3.0. No dependency/version/Proofs edits."
+  },
+  "fix": "Replace relative common helper import with direct bare Hash from already-declared fast-sha2561.3.0; same explicit TextEncoder bytes and lowercase64hex, async Promise API. No other product files changed.",
+  "regression": {
+    "path": "tests/unit/domain/semantic-hash-standalone.test.ts",
+    "mechanism": "Actual source read, exact producer TS transpileModule ES2022 settings, isolated owned temporary .sandbox-policy-preflight/profile.mjs under R with no common sibling, actual Node ESM subprocess import and no mock resolver/import. Temp files always removed.",
+    "parity": "10 byte inputs including empty/abc/BOM/Unicode/unpaired surrogate/padding/32768/180000/million-a; every output equals independent Node crypto and exact former WebCrypto, preserves Promise API.",
+    "beforeFailure": "memory-effort-hash-standalone-before-red.jest.json natural1,1caseFAIL with exact ERR_MODULE_NOT_FOUND ../common/crypto on unchanged profile81cc.",
+    "initialHarnessFailure": "memory-effort-hash-standalone-before.jest.json natural1 preserved: child import failure occurred before consuming1.3M stdin and surfaced EPIPE. Minimal test program correction consumes input before importing; actual import failure then recorded separately, before any product edit."
+  },
+  "checks": {
+    "after": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-semantic-hash-test.config.mjs",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/domain/semantic-hash-standalone.test.ts",
+        "tests/unit/domain/semantic-hash.test.ts",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+        "tests/unit/runtimeEndpointAuth/memory.test.ts",
+        "tests/unit/runtimeEndpointAuth/facts.test.ts",
+        "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+        "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-standalone-after.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 21.35420298576355,
+      "forceExit": false,
+      "testTarget": "explicit dead local127.0.0.1:9"
+    },
+    "types": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 10.895318984985352
+    },
+    "lint": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/profile.ts",
+        "tests/unit/domain/semantic-hash-standalone.test.ts",
+        "--max-warnings=0",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 4.594742059707642
+    },
+    "diff": {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/domain/profile.ts",
+        "tests/unit/domain/semantic-hash-standalone.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "readOnly": true
+    }
+  },
+  "testCounts": {
+    "numTotalTestSuites": 9,
+    "numPassedTestSuites": 9,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 616,
+    "numPassedTests": 616,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "sourceManifest": {
+    "path": "memory-effort-hash-standalone-source-hashes.json",
+    "sha256": "f5894d8694114febe631f27258441f7bb04456c6d6cde399519360588753a43f",
+    "files": {
+      "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+      "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866"
+    },
+    "stableAtReport": true
+  },
+  "limits": "No new author build/pack/deploy/services/models/P mutations/Git mutation. Parent owns justified rebuild/pack and exact install qualification; prior failures and prior pre-repair PASS remain scoped. No hosted savings/SLO claim."
+}

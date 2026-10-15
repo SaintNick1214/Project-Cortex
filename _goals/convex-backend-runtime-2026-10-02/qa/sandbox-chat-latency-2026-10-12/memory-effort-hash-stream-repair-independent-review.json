@@ -1,0 +1,324 @@
+{
+  "version": 1,
+  "at": "2026-10-15T12:58:24.617348+00:00",
+  "reviewer": "stream_hash_independent_review",
+  "role": "independent non-author bounded source/test repair reviewer",
+  "verdict": "PASS",
+  "acceptanceScope": "The two changed files in the19-file frozen coherent repair manifest only, with prior17 exact-file source acceptance inherited. Not installed acceptance, latency proof or goal completion.",
+  "policy": "Acceptance-policy v2 minima: requirements/tests/completeness>=4,code/pattern>=3,average>=3.6,zero unresolved breaking findings. One coherent repair review; no meta or custody judges.",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "b366e46ab81cd555f76a958859708f48e3ba5a98",
+  "manifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-coherent-source-hashes.json",
+    "sha256": "2a2f5b8ce9a789913dd8b4f732a4a78d57a08f1051703ea5db8388c2b5f67c73",
+    "frozenFiles": 19
+  },
+  "sourceHashesBefore": {
+    "convex-dev/runtimeGateway.ts": "3bdc339a7da20a15577159127c2b65c6f33f43c40ee258a5b8a0ec012cff1bc1",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "5ed014b4b81a787aa60364e76ff4586eb86d17e073f6bf60b0cfe94bf9543c9a",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "sourceHashesAfter": {
+    "convex-dev/runtimeGateway.ts": "3bdc339a7da20a15577159127c2b65c6f33f43c40ee258a5b8a0ec012cff1bc1",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "5ed014b4b81a787aa60364e76ff4586eb86d17e073f6bf60b0cfe94bf9543c9a",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "allSourcesStable": true,
+  "changedFiles": [
+    "src/domain/profile.ts",
+    "tests/unit/domain/semantic-hash-standalone.test.ts"
+  ],
+  "inherited17": [
+    "convex-dev/runtimeGateway.ts",
+    "tests/unit/domain/semantic-hash.test.ts",
+    "tests/unit/runtime/gateway-dispatch.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtime/model-policy-model-drift.test.ts",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts",
+    "tests/unit/semantic-hash-probe.ts"
+  ],
+  "inherited17ExactlyMatchPriorReview": true,
+  "priorAcceptedSourceReview": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-stream-hash-independent-review.json",
+    "sha256": "0a7f4dd0a2a154f23e38d8b7f249c77a4d6afcb57c9ecdc5644134cbe9aff332",
+    "verdict": "PASS_SOURCE_ONLY",
+    "independentSuites": 16,
+    "independentCases": 1323,
+    "scopeLimitation": "Did not execute the isolated installed policy preflight. The later real failure is retained; previous source review is not relabeled installed PASS."
+  },
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "unresolvedBreakingFindings": [],
+  "unresolvedNonbreakingFindings": [],
+  "requirementsReview": {
+    "actualStandaloneDependency": "Read exact permitted P/sandbox-env/qualification.mjs:36-50 and runtime.mjs:161-162. The actual loader transpiles only profile/assets/media_schemas/extraction/model_policy with ES2022 settings into a host .sandbox-policy-preflight directory; it never copies ../common/crypto. Direct bare fast-sha256 removes the observed missing relative import. No P edit.",
+    "exactHashSemantics": "profile still uses explicit TextEncoder bytes and the same fast-sha256 Hash implementation used by createSha256. Lowercase64hex and async Promise API retained. Independent Node crypto/former WebCrypto parity and coercion/error cases pass.",
+    "dependencyAndHostCompatibility": "Root package already pins fast-sha2561.3.0. build-distribution.mjs:197 includes pkg.dependencies in manifest.dependencies; additive-backend.ts:358 carries requiredDependencies and honors configured functions directory. No dependency, installer, convex.json/custom-functions or distribution producer source change in this repair.",
+    "regressionQuality": "New test reads actual current profile.ts, syntax-only transpiles with actual ES2022 settings, creates isolated .sandbox-policy-preflight/profile.mjs with no common sibling, then uses native Node ESM in a joined subprocess. Ten hash inputs match independent Node and former WebCrypto. No module resolver mock or product-source substitution. Finally removes the owned temp directory.",
+    "securityRegression": "Independent model-policy admission/model-drift, v8 exact-owner cache and endpoint memory/retained-witness suites preserve active collision, promise failure, late-write/revocation/expiry and financial result guards. No JWT/HMAC/auth/currentness/budget policy changes."
+  },
+  "independentChecks": {
+    "tests": {
+      "name": "standalone actual Node import plus exact parity and active security fault suites",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/domain/semantic-hash-standalone.test.ts",
+        "tests/unit/domain/semantic-hash.test.ts",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtimeEndpointAuth/memory.test.ts",
+        "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--silent",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-independent-jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "PATH": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:/usr/bin:/bin",
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "https://offline.invalid",
+        "LANG": "en_US.UTF-8"
+      },
+      "exit": 0,
+      "seconds": 12.644022226333618,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-independent-tests.log",
+      "forceExit": false
+    },
+    "types": {
+      "name": "independent types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "seconds": 8.33434009552002,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-independent-types.log"
+    },
+    "lint": {
+      "name": "independent lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/profile.ts",
+        "tests/unit/domain/semantic-hash-standalone.test.ts",
+        "--max-warnings=0",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "seconds": 3.0883660316467285,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-independent-lint.log"
+    }
+  },
+  "jestResults": {
+    "success": true,
+    "numTotalTestSuites": 7,
+    "numPassedTestSuites": 7,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0,
+    "numTotalTests": 436,
+    "numPassedTests": 436,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "perSuite": [
+      {
+        "path": "tests/unit/domain/semantic-hash-standalone.test.ts",
+        "cases": 1,
+        "status": "passed"
+      },
+      {
+        "path": "tests/unit/runtime/model-policy-admission.test.ts",
+        "cases": 198,
+        "status": "passed"
+      },
+      {
+        "path": "tests/unit/runtimeEndpointAuth/memory.test.ts",
+        "cases": 118,
+        "status": "passed"
+      },
+      {
+        "path": "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "cases": 57,
+        "status": "passed"
+      },
+      {
+        "path": "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+        "cases": 10,
+        "status": "passed"
+      },
+      {
+        "path": "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+        "cases": 26,
+        "status": "passed"
+      },
+      {
+        "path": "tests/unit/domain/semantic-hash.test.ts",
+        "cases": 26,
+        "status": "passed"
+      }
+    ]
+  },
+  "independentTotals": {
+    "suites": 7,
+    "passedCases": 436,
+    "failedCases": 0,
+    "skippedCases": 0,
+    "todoCases": 0,
+    "naturalExit": true,
+    "forceExit": false
+  },
+  "whitespace": {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "src/domain/profile.ts",
+      "tests/unit/domain/semantic-hash-standalone.test.ts"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exit": 0,
+    "seconds": 0.07882094383239746,
+    "output": "",
+    "readOnly": true
+  },
+  "unchangedConfigurationCheck": {
+    "command": [
+      "git",
+      "diff",
+      "--name-only",
+      "b366e46ab81cd555f76a958859708f48e3ba5a98",
+      "--",
+      "package.json",
+      "convex.json",
+      "scripts/backend",
+      "packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "packages/cortex-cli/src/utils/runtime-backend.ts"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exit": 0,
+    "output": "",
+    "readOnly": true
+  },
+  "standaloneTemporaryDirectoriesRemaining": [],
+  "toolVersions": {
+    "node": {
+      "path": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "version": "24.15.0"
+    },
+    "npm": "12.2.0",
+    "typescript": "6.0.3",
+    "eslint": "10.11.0",
+    "jest": "30.5.2",
+    "ts-jest": "29.4.14",
+    "fast-sha256": "1.3.0"
+  },
+  "preservedFailures": {
+    "actualInstall": {
+      "receipt": "memory-effort-hash-stream-launch-failure.json",
+      "sourceCommit": "b366e46ab81cd555f76a958859708f48e3ba5a98",
+      "sessionId": "6cde9472-246b-4a02-ba2a-54c86db9d8f6",
+      "targetId": 6194822,
+      "rootExecSession": 98777,
+      "originalExecJoinedExit": 1,
+      "observedFailure": "Cannot find module host/common/crypto imported from host/.sandbox-policy-preflight/profile.mjs",
+      "startupQualification": "NOT_REACHED",
+      "actualStartupDispatches": 0,
+      "cleanupScope": "Launcher recorded CLEANED; reviewer made no service absence call.",
+      "result": "FAIL_RETAINED"
+    },
+    "initialRegressionHarness": {
+      "receipt": "memory-effort-hash-standalone-before.jest.json",
+      "result": "FAIL_RETAINED",
+      "cause": "EPIPE because failed child import preceded large stdin consumption; test program order repaired before product edit."
+    },
+    "beforeRepairRed": {
+      "receipt": "memory-effort-hash-standalone-before-red.jest.json",
+      "result": "FAIL_RETAINED",
+      "cases": 1,
+      "failure": "ERR_MODULE_NOT_FOUND ../common/crypto on original81cc profile source.",
+      "executedByReviewer": false
+    }
+  },
+  "noFull1323RerunReason": "Exactly17 prior reviewed files unchanged; production repair only replaces the relative wrapper import with the same already-declared Hash class. New native import regression, full direct parity and relevant active security negatives all passed; no new failure warrants broadening.",
+  "limits": [
+    "Actual full installed loadModelPolicy graph/startup was not executed by reviewer; exact loader seam was statically inspected and the observed profile edge exercised by real local Node ESM.",
+    "Root must rebuild/package the repaired source and qualify a fresh installed session. Existing b366 dist/build/source PASS cannot certify this repair installation.",
+    "No model/service calls, paid inference, installed speed or hosted SLO proof.",
+    "Prior original install and test failures remain failures.",
+    "Custom timing reporter undercounts362; raw Jest436 is authoritative."
+  ],
+  "reviewerActions": {
+    "productOrTestEdits": 0,
+    "builds": 0,
+    "packs": 0,
+    "deploys": 0,
+    "models": 0,
+    "services": 0,
+    "credentialReads": 0,
+    "gitMutations": 0,
+    "proofsEdits": 0,
+    "proofsReads": "Only explicitly permitted exact qualification.mjs/runtime.mjs seam reads.",
+    "writes": "Only authorized Q independent review/check artifacts; owned test temp files were created and removed by the approved regression."
+  }
+}

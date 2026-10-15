@@ -1,4 +1,4 @@
-import { createSha256 } from "../common/crypto";
+import { Hash } from "fast-sha256";
 
 /** Exact supported configurations. Catalogue membership is not model qualification. */
 export interface EmbeddingProfile {
@@ -76,7 +76,7 @@ export function assertEmbeddingVector(
  */
 export async function semanticHash(value: string): Promise<string> {
   const bytes = new TextEncoder().encode(value);
-  return createSha256().update(bytes).digestHex();
+  return Array.from(new Hash().update(bytes).digest(), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 export interface TextWindow {

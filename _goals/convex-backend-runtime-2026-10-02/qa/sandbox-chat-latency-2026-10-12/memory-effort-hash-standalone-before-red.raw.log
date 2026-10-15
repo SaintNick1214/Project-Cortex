@@ -1,0 +1,89 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:87770) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/domain/semantic-hash-standalone.test.ts
+  ✕ actual profile loads as an isolated policy-preflight mjs with no common sibling and preserves exact hash bytes (78 ms)
+
+  ● actual profile loads as an isolated policy-preflight mjs with no common sibling and preserves exact hash bytes
+
+    Actual isolated profile import/hash failed: node:internal/modules/esm/resolve:271
+        throw new ERR_MODULE_NOT_FOUND(
+              ^
+
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.semantic-hash-standalone-41l7hp/common/crypto' imported from /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.semantic-hash-standalone-41l7hp/.sandbox-policy-preflight/profile.mjs
+
+      28 |     });
+      29 |     expect(result.error).toBeUndefined(); expect(result.signal).toBeNull();
+    > 30 |     if (result.status !== 0) throw new Error(`Actual isolated profile import/hash failed: ${result.stderr}`);
+         |                                    ^
+      31 |     const hashes: unknown = JSON.parse(result.stdout);
+      32 |     const node = values.map(value => createHash("sha256").update(value, "utf8").digest("hex"));
+      33 |     const previous = await Promise.all(values.map(async value => Buffer.from(await webcrypto.subtle.digest("SHA-256", new TextEncoder().encode(value))).toString("hex")));
+
+      at ModuleJob.link (node:internal/modules/esm/module_job:252:17) {
+        code: 'ERR_MODULE_NOT_FOUND',
+        url: 'file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.semantic-hash-standalone-41l7hp/common/crypto'
+      }
+      Node.js v24.15.0
+      at Object.<anonymous> (tests/unit/domain/semantic-hash-standalone.test.ts:30:36)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.1s | 0/1 passed | /tests/unit/domain/semantic-hash-standalone.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.08s ( 3.6%) - actual profile loads as an isolated policy-preflight mjs with no common sibling and preserves exact hash bytes
+    /tests/unit/domain/semantic-hash-standalone.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.08s (3.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.17s
+  Test suites:        1
+  Individual tests:   1
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        2.166 s, estimated 3 s
+Ran all test suites within paths "tests/unit/domain/semantic-hash-standalone.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-standalone-before-red.jest.json

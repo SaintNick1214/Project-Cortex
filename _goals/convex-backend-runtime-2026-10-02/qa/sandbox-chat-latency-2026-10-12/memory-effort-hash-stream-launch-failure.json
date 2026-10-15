@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-15T12:50:38.957019+00:00",
+  "sourceCommit": "b366e46ab81cd555f76a958859708f48e3ba5a98",
+  "sessionId": "6cde9472-246b-4a02-ba2a-54c86db9d8f6",
+  "launcherPid": 87313,
+  "rootExecSession": 98777,
+  "originalExecJoinedExit": 1,
+  "phase": "CLEANED",
+  "target": {
+    "id": 6194822,
+    "name": "sensible-mongoose-451",
+    "kind": "cloud",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-6cde9472-246b-4a02-ba2a-54c86db9d8f6",
+    "deploymentType": "dev",
+    "isDefault": false,
+    "expiresAt": 1792673289139,
+    "deploymentUrl": "https://sensible-mongoose-451.convex.cloud",
+    "disposable": true,
+    "serverExpiryVerified": true
+  },
+  "container": null,
+  "observedFailure": "Cannot find module host/common/crypto imported from host/.sandbox-policy-preflight/profile.mjs",
+  "cleanup": "Original launcher reports exact owned database/container absent; fresh independent absence check pending",
+  "startupQualification": {
+    "status": "NOT_REACHED",
+    "actualStartupDispatches": 0,
+    "basis": "Exact runtime.mjs161 domain-load failure precedes host-prepared return/deployment and qualification dispatch; receipts stop after host installation/pricing reads.",
+    "receiptNames": [
+      "cleanup-final.json",
+      "cloud-created.json",
+      "cloud-delete-intent.json",
+      "cloud-deleted.json",
+      "cloud-verified-1792068489893.json",
+      "cloud-verified-1792068490007.json",
+      "cloud-verified-1792068490130.json",
+      "cloud-verified-1792068490237.json",
+      "current-primary-pricing.json",
+      "docker-cleanup.json",
+      "docker-find-owned.json",
+      "docker-image-preflight.json",
+      "host-additive-install.json",
+      "host-native-install.json",
+      "local-preflight.json",
+      "procedure-preflight.json",
+      "toolchain-npm.json"
+    ]
+  },
+  "retryPolicy": "No unchanged launcher rerun; repair real standalone profile dependency then new reviewed artifact/new session",
+  "preservedReceiptsDirectory": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/6cde9472-246b-4a02-ba2a-54c86db9d8f6/receipts",
+  "originalFailureRetained": true
+}
