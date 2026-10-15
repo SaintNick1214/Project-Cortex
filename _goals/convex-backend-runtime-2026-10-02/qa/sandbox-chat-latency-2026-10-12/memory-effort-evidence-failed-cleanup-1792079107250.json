@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "status": "ABSENT_PRE_READY_FAILED_LAUNCH",
+  "sessionId": "81e252eb-68ce-42b4-8329-1208c4b17ba3",
+  "sourceCommit": "73999057f6dc8541285a0440815848438ccc31fe",
+  "imageId": "sha256:4006bd6b40ebb0d8709c0d22bb1cca9bf40147818733228ca11f6e56072b7a15",
+  "targetId": 6198458,
+  "launcherPid": 38985,
+  "launcherExec": 64782,
+  "requiresReady": false,
+  "qualification": "FIRST_JSON_EXTRACT_CONFIRMED_OUTPUT_REJECTED_BY_FIXED_EMPTY_FACTS_VERIFIER;100000_UNKNOWN_LIABILITY;NO_RUNTIME_CONTAINER_OR_CHAT_MEASUREMENTS",
+  "priorStartupFailure": {
+    "confirmedOutputs": 1,
+    "verifiedStartupMethods": 0,
+    "unknownLiabilityUnits": 100000,
+    "liabilityState": "UNKNOWN",
+    "unit": "micro-USD",
+    "startupBatchCompleted": false,
+    "provenance": "Root supplied original private raw/ledger receipts; absence verifier does not reread model payload or infer refund"
+  },
+  "priorHelperSha256": "1e22545e728cee4999196b4d0adce1e558fbaf646f215b2053017ad168cdd4a1",
+  "priorHelperPreserved": "memory-effort-evidence-verify-failed-cleanup-before-81e252eb.mjs",
+  "modelCalls": 0,
+  "mutations": 0,
+  "cleanupActions": 0,
+  "managementGets": 2,
+  "dockerListings": 2,
+  "checks": [
+    "failed source and image match actual Root package proposal",
+    "exact owned CLEANED pre-READY session",
+    "exact failed disposable deployment identity",
+    "actual launcher PID absent",
+    "existing owned regular management login",
+    "fresh exact approved project",
+    "fresh failed cloud target absent",
+    "fresh exact Docker name absent",
+    "fresh exact Docker owner absent",
+    "owned private path absent issuerDir",
+    "owned private path absent secretsDir",
+    "owned private path absent workspace",
+    "owned private path absent backendDir",
+    "owned private path absent hostHome",
+    "owned private path absent tmp",
+    "owned private path absent deployKey"
+  ],
+  "startedAt": 1792079107250,
+  "launcher": {
+    "absent": true,
+    "joinedExit": "Root exec64782 naturally joined exit1; separate Root evidence, not inferred from PID absence"
+  },
+  "database": {
+    "status": "ABSENT",
+    "targetId": 6198458,
+    "targetName": "artful-condor-769",
+    "verifiedAt": 1792079107425
+  },
+  "container": {
+    "status": "ABSENT",
+    "name": "cortex-sandbox-81e252eb-68ce-42b4-8329-1208c4b17ba3",
+    "allocatedIdPresent": false,
+    "verifiedAt": 1792079109435
+  },
+  "privatePaths": {
+    "issuerDir": "ABSENT",
+    "secretsDir": "ABSENT",
+    "workspace": "ABSENT",
+    "backendDir": "ABSENT",
+    "hostHome": "ABSENT",
+    "tmp": "ABSENT",
+    "deployKey": "ABSENT"
+  },
+  "clientsClosed": true,
+  "finishedAt": 1792079109435
+}

@@ -60,6 +60,18 @@ export function buildSourceExtractionFramingV4(source: SourceContent): { system:
   };
 }
 
+/** Prospective v6 changes only the trusted extraction task. Evidence bytes,
+ * eligibility, fact schema and parsing retain the v4 contract. */
+export function buildSourceExtractionFramingV6(source: SourceContent): { system: string; prompt: string } {
+  const framing = buildSourceExtractionFramingV4(source);
+  // Strict json_schema already carries this exact schema natively. Remove only
+  // the trusted duplicate suffix in this new prompt, preserving source headroom.
+  const suffix = `\nValidation schema:\n${canonicalModelJson(FACTS_JSON_SCHEMA)}`;
+  if (!framing.system.endsWith(suffix)) memoryError("INVALID_INPUT", "Extraction framing schema suffix changed");
+  const system = framing.system.slice(0, -suffix.length).replace("validation schema below", "native response schema");
+  return { system: `${system}\n\nDurable facts need supported factual content, explicit or strongly implied. Questions/requests without factual content add no facts: do not record asking, questioning, or an unknown/absent preference. Retain facts inside requests or mixed with questions ("Please remember my tea is jasmine" asserts jasmine). A hypothetical answer or a user_assertion label is not factual evidence. Without supported facts return {"facts":[]}.`, prompt: framing.prompt };
+}
+
 export function createGatewayMemoryModel(
   ctx: BackendGatewayContext, repository: MemoryRepository, run: MemoryGatewayRun = {},
 ): MemoryModel {
@@ -162,7 +174,8 @@ export function createGatewayMemoryModel(
           // scoped current source, never interpret or trim the legacy user prompt.
           // The domain helper validates attribution/eligibility and retains its
           // extraction semantics; the user role carries quoted evidence only.
-          ({ system, prompt } = buildSourceExtractionFramingV4(call.sourceContent));
+          ({ system, prompt } = jsonSchema && call.resolution.snapshot.pins.promptVersion === MEMORY_JSON_SCHEMA_CONTRACT.promptVersion
+            ? buildSourceExtractionFramingV6(call.sourceContent) : buildSourceExtractionFramingV4(call.sourceContent));
         }
         const result = await (call.model as LanguageModelV4).doGenerate({
           prompt: [{ role: "system", content: system },

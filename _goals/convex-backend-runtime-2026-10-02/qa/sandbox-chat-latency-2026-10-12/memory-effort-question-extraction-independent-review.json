@@ -1,0 +1,425 @@
+{
+  "role": "fresh independent non-author reviewer",
+  "verdict": "PASS",
+  "reviewScope": "One coherent source/test/config batch only; not installed/model/latency/final goal approval",
+  "createdAt": "2026-10-15T16:03:37.203808+00:00",
+  "baseCommit": "73999057f6dc8541285a0440815848438ccc31fe",
+  "dimensionScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "averageScore": 4.0,
+  "acceptancePolicy": "Goal acceptance-policy.md v2: requirements/tests/completeness >=4, code/pattern >=3, average>=3.6, zero breaking",
+  "unresolvedBreakingFindings": 0,
+  "findings": [],
+  "allSourcesStable": true,
+  "sourceHashesBefore": {
+    "convex-dev/runtimeAgentRecall.ts": "32c24c9cb2081ca2cc83170ee0745c0d4415f8478f829535ca88d575b9c2b0f8",
+    "convex-dev/runtimeAuth.ts": "2a6620d44cfd3167fdb71b220662780f84d806f0072c3732206204bcd3aab167",
+    "convex-dev/runtimeGateway.ts": "3bdc339a7da20a15577159127c2b65c6f33f43c40ee258a5b8a0ec012cff1bc1",
+    "convex-dev/runtimeMemoryGateway.ts": "9d7fae9a6909522eded620eea6ef51490537441962d355c6062ed56e8593e4f2",
+    "convex-dev/runtimeMemoryQuery.ts": "28ac320c60be6d0cc181c320e1c1e0925a18711da99597550c10890c40ce0332",
+    "convex-dev/runtimeMemoryRepository.ts": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0",
+    "convex-dev/runtimeModelPolicy.ts": "d77e06cf03354d95790dfd84cee1711256995558379f3edfefaf7fa38240a2a3",
+    "convex-dev/runtimeTranscript.ts": "45a488673dcd0a4bb06e23b9c00f32736f9676437aed4fe223a61e17832fe593",
+    "package-lock.json": "7b8539717c90c6da3f4df8fc90adb8904f57ae9676213d6d7d8c1bcf555bd52a",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example": "6f21cf2c1e55f78b46d7ad034e8ac94f2c2db9b1dc0db6fa8b16d2c9a832e8d2",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx": "1d5c59d7805521dca96458de0d7e9d993383b22cb227652bbcdc69647762c89b",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/lib/chat-latency.ts": "f97e7883b3baf2c48fde7dec84574cdb8588b71e1d4b75103eb64c39717e23ea",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/package.json": "bd056eb5c61a4b3a4729f43d1b19281b4ba1ed72ca4bf0821146fb0ddd73efe7",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/chat-latency.test.ts": "a60ffc1f62e41f4242e06d4e121fa66dcaf921dab32a6d235fe1ee9ea09c6d62",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts": "4896d2735600df9a6f862379d89099fe262872431e2eea1d61033bcb98e42479",
+    "packages/cortex-templates/catalog.json": "3593ffae0ced7bc8aa78ca628ef91c40e5cc9e1ae579c4dfb102d4e0ae0eb4b1",
+    "packages/cortex-templates/package.json": "41e3664564825b86d11a866fcdc28d78aa47a77ac62f495ad04779f3d4ba28be",
+    "scripts/install-ci-demo.mjs": "2c12b11304adeec84a41d972e3db1c9db98f4972a73b757fa590ff6281718e1f",
+    "scripts/install-ci-demo.test.mjs": "360f6688b093c396f7f811edbedaf28a699363926aa7fa44fa48174f0f351019",
+    "src/domain/memory-direct-recall.ts": "70b4bd5fd8d018fc8ddde4bf5876c7b7a129684eae438ad55cf5c775f5ed2658",
+    "src/domain/memory-effort.ts": "72e5488e5ed0136ee79b18b281b44c5dc8192c24c27f3bb8d9b1ff672a883a27",
+    "src/domain/model-policy.ts": "1fa700f5f6a693ebb328c5778abe42ff9c1f3437ee401293c12628582fdf7eda",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/memory-gateway.test.ts": "aa744c3a68481a701a6e625881c68850aceb6d2b93144a69231623fbacbc782f",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtime/strict-json-schema.test.ts": "d089ffa93ed551aa1db4cc24e1a775c8e868d670c20d22ce0e1cce736001c7b1",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "b0f3dda317457590ac99939ba17bce7a669050c6db95d2b23d2c4bd315aae326",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "147c76e394f27a06c44c01fcc7016d1137f613436d936d67b8505402e95a9d1e",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "0f1d3165f47ea493d99196f8d441ddc2cecb7baf3a1a39f7360ae0f50e769a9a",
+    "tests/unit/runtimeMemory/literal-question-source-proof.test.ts": "0d63dd88a3113eba6676f2b74499b83062313426b6d5c939900a034066cedcff",
+    "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts": "86500aaccd645a9930ef88e336a75a28030238109095df8fb541d9836dcd86cc",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "sourceHashesObservedAtReviewStart": {
+    "convex-dev/runtimeAgentRecall.ts": "32c24c9cb2081ca2cc83170ee0745c0d4415f8478f829535ca88d575b9c2b0f8",
+    "convex-dev/runtimeAuth.ts": "2a6620d44cfd3167fdb71b220662780f84d806f0072c3732206204bcd3aab167",
+    "convex-dev/runtimeGateway.ts": "c38aa178d6fa6c1dd8e876f75d8f56539a39d417f5fb461bf55203929f8cd539",
+    "convex-dev/runtimeMemoryGateway.ts": "79b765048dfda96bc141425f9365200dd09fea8bc54b3e115652e5da79b94ede",
+    "convex-dev/runtimeMemoryQuery.ts": "28ac320c60be6d0cc181c320e1c1e0925a18711da99597550c10890c40ce0332",
+    "convex-dev/runtimeMemoryRepository.ts": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0",
+    "convex-dev/runtimeModelPolicy.ts": "91c6cd4f969ed5f813d5790d1f4ba15ff19fc8252663dc406a6efd458b788263",
+    "convex-dev/runtimeTranscript.ts": "45a488673dcd0a4bb06e23b9c00f32736f9676437aed4fe223a61e17832fe593",
+    "package-lock.json": "7b8539717c90c6da3f4df8fc90adb8904f57ae9676213d6d7d8c1bcf555bd52a",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example": "6f21cf2c1e55f78b46d7ad034e8ac94f2c2db9b1dc0db6fa8b16d2c9a832e8d2",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx": "1d5c59d7805521dca96458de0d7e9d993383b22cb227652bbcdc69647762c89b",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/lib/chat-latency.ts": "f97e7883b3baf2c48fde7dec84574cdb8588b71e1d4b75103eb64c39717e23ea",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/package.json": "bd056eb5c61a4b3a4729f43d1b19281b4ba1ed72ca4bf0821146fb0ddd73efe7",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/chat-latency.test.ts": "a60ffc1f62e41f4242e06d4e121fa66dcaf921dab32a6d235fe1ee9ea09c6d62",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts": "4896d2735600df9a6f862379d89099fe262872431e2eea1d61033bcb98e42479",
+    "packages/cortex-templates/catalog.json": "3593ffae0ced7bc8aa78ca628ef91c40e5cc9e1ae579c4dfb102d4e0ae0eb4b1",
+    "packages/cortex-templates/package.json": "41e3664564825b86d11a866fcdc28d78aa47a77ac62f495ad04779f3d4ba28be",
+    "scripts/install-ci-demo.mjs": "2c12b11304adeec84a41d972e3db1c9db98f4972a73b757fa590ff6281718e1f",
+    "scripts/install-ci-demo.test.mjs": "360f6688b093c396f7f811edbedaf28a699363926aa7fa44fa48174f0f351019",
+    "src/domain/memory-direct-recall.ts": "70b4bd5fd8d018fc8ddde4bf5876c7b7a129684eae438ad55cf5c775f5ed2658",
+    "src/domain/memory-effort.ts": "72e5488e5ed0136ee79b18b281b44c5dc8192c24c27f3bb8d9b1ff672a883a27",
+    "src/domain/model-policy.ts": "b8998009df29681d931b165ff87c82d30058599c240713c940947ec48f701fdb",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/memory-gateway.test.ts": "af98a0948aab36072512004aa80e45123836c7005309be279a92b3e738894305",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtime/strict-json-schema.test.ts": "35f2aa9b0824bc980194fe17a145b96eb6e6faf69eeb8162460720490603eda2",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "b0f3dda317457590ac99939ba17bce7a669050c6db95d2b23d2c4bd315aae326",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "147c76e394f27a06c44c01fcc7016d1137f613436d936d67b8505402e95a9d1e",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "0f1d3165f47ea493d99196f8d441ddc2cecb7baf3a1a39f7360ae0f50e769a9a",
+    "tests/unit/runtimeMemory/literal-question-source-proof.test.ts": "0d63dd88a3113eba6676f2b74499b83062313426b6d5c939900a034066cedcff",
+    "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts": "86500aaccd645a9930ef88e336a75a28030238109095df8fb541d9836dcd86cc",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "sourceHashesAfter": {
+    "convex-dev/runtimeAgentRecall.ts": "32c24c9cb2081ca2cc83170ee0745c0d4415f8478f829535ca88d575b9c2b0f8",
+    "convex-dev/runtimeAuth.ts": "2a6620d44cfd3167fdb71b220662780f84d806f0072c3732206204bcd3aab167",
+    "convex-dev/runtimeGateway.ts": "c38aa178d6fa6c1dd8e876f75d8f56539a39d417f5fb461bf55203929f8cd539",
+    "convex-dev/runtimeMemoryGateway.ts": "79b765048dfda96bc141425f9365200dd09fea8bc54b3e115652e5da79b94ede",
+    "convex-dev/runtimeMemoryQuery.ts": "28ac320c60be6d0cc181c320e1c1e0925a18711da99597550c10890c40ce0332",
+    "convex-dev/runtimeMemoryRepository.ts": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0",
+    "convex-dev/runtimeModelPolicy.ts": "91c6cd4f969ed5f813d5790d1f4ba15ff19fc8252663dc406a6efd458b788263",
+    "convex-dev/runtimeTranscript.ts": "45a488673dcd0a4bb06e23b9c00f32736f9676437aed4fe223a61e17832fe593",
+    "package-lock.json": "7b8539717c90c6da3f4df8fc90adb8904f57ae9676213d6d7d8c1bcf555bd52a",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example": "6f21cf2c1e55f78b46d7ad034e8ac94f2c2db9b1dc0db6fa8b16d2c9a832e8d2",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx": "1d5c59d7805521dca96458de0d7e9d993383b22cb227652bbcdc69647762c89b",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/lib/chat-latency.ts": "f97e7883b3baf2c48fde7dec84574cdb8588b71e1d4b75103eb64c39717e23ea",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/package.json": "bd056eb5c61a4b3a4729f43d1b19281b4ba1ed72ca4bf0821146fb0ddd73efe7",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/chat-latency.test.ts": "a60ffc1f62e41f4242e06d4e121fa66dcaf921dab32a6d235fe1ee9ea09c6d62",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts": "4896d2735600df9a6f862379d89099fe262872431e2eea1d61033bcb98e42479",
+    "packages/cortex-templates/catalog.json": "3593ffae0ced7bc8aa78ca628ef91c40e5cc9e1ae579c4dfb102d4e0ae0eb4b1",
+    "packages/cortex-templates/package.json": "41e3664564825b86d11a866fcdc28d78aa47a77ac62f495ad04779f3d4ba28be",
+    "scripts/install-ci-demo.mjs": "2c12b11304adeec84a41d972e3db1c9db98f4972a73b757fa590ff6281718e1f",
+    "scripts/install-ci-demo.test.mjs": "360f6688b093c396f7f811edbedaf28a699363926aa7fa44fa48174f0f351019",
+    "src/domain/memory-direct-recall.ts": "70b4bd5fd8d018fc8ddde4bf5876c7b7a129684eae438ad55cf5c775f5ed2658",
+    "src/domain/memory-effort.ts": "72e5488e5ed0136ee79b18b281b44c5dc8192c24c27f3bb8d9b1ff672a883a27",
+    "src/domain/model-policy.ts": "b8998009df29681d931b165ff87c82d30058599c240713c940947ec48f701fdb",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/memory-gateway.test.ts": "af98a0948aab36072512004aa80e45123836c7005309be279a92b3e738894305",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtime/strict-json-schema.test.ts": "35f2aa9b0824bc980194fe17a145b96eb6e6faf69eeb8162460720490603eda2",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "b0f3dda317457590ac99939ba17bce7a669050c6db95d2b23d2c4bd315aae326",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "147c76e394f27a06c44c01fcc7016d1137f613436d936d67b8505402e95a9d1e",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "0f1d3165f47ea493d99196f8d441ddc2cecb7baf3a1a39f7360ae0f50e769a9a",
+    "tests/unit/runtimeMemory/literal-question-source-proof.test.ts": "0d63dd88a3113eba6676f2b74499b83062313426b6d5c939900a034066cedcff",
+    "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts": "86500aaccd645a9930ef88e336a75a28030238109095df8fb541d9836dcd86cc",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "manifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-coherent-source-hashes.json",
+    "sha256": "269beee28ba475a5cc9e853dd7d99450bd3c0ed03b07b25ae42bdd6744d0af00",
+    "fileCount": 47
+  },
+  "externalP": {
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f"
+  },
+  "externalPBefore": {
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f"
+  },
+  "externalPAfter": {
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f"
+  },
+  "preservedP": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs",
+      "sha256": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "sha256": "254dbd8579980d971e425027d45bcbf2c4f631c10467d9841dea697c7c24ffc6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.test.mjs",
+      "sha256": "64de94cc03bc7ec549f7b5a56bce9d7df52bce0a2ef93643a694d469dc33d148"
+    }
+  ],
+  "preservedPBefore": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs",
+      "sha256": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "sha256": "254dbd8579980d971e425027d45bcbf2c4f631c10467d9841dea697c7c24ffc6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.test.mjs",
+      "sha256": "64de94cc03bc7ec549f7b5a56bce9d7df52bce0a2ef93643a694d469dc33d148"
+    }
+  ],
+  "preservedPAfter": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs",
+      "sha256": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "sha256": "254dbd8579980d971e425027d45bcbf2c4f631c10467d9841dea697c7c24ffc6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.test.mjs",
+      "sha256": "64de94cc03bc7ec549f7b5a56bce9d7df52bce0a2ef93643a694d469dc33d148"
+    }
+  ],
+  "requirements": [
+    {
+      "requirement": "Prospective v6 rejects unsupported question/request activity while retaining explicit/strongly implied facts, factual requests, mixed sources and relations",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryGateway.ts:65-72",
+        "tests/unit/runtime/memory-gateway.test.ts:223-252"
+      ],
+      "limit": "Controlled outputs verify framing/roundtrip; actual model semantic correctness remains pending."
+    },
+    {
+      "requirement": "Preserve historical V4 framing, JSON_OBJECT-v5 and explicit JSON_SCHEMA-v5 canonical/wire identity",
+      "met": true,
+      "evidence": [
+        "src/domain/model-policy.ts:18-45",
+        "tests/unit/runtime/memory-gateway.test.ts:204-208,263-278",
+        "tests/unit/runtime/strict-json-schema.test.ts:89-95",
+        "memory-effort-question-extraction-independent-review-static-verification.json"
+      ],
+      "limit": null
+    },
+    {
+      "requirement": "Retain official native strict schema, nine required fields, bounds8192/16384/512/100000, zero retry/tools/fallback controls",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryGateway.ts:69-72,177-188",
+        "src/domain/model-policy.ts:410-427",
+        "convex-dev/runtimeGateway.ts:249-261",
+        "convex-dev/runtimeModelPolicy.ts:584-596",
+        "tests/unit/runtime/strict-json-schema.test.ts:68-119"
+      ],
+      "limit": null
+    },
+    {
+      "requirement": "Only exact current schema-v6 pin selects new production framer; default probe/envelope uses same helper",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryGateway.ts:177-178",
+        "P/sandbox-env/templates/manualQualificationProbe.ts:14,43-47",
+        "P/sandbox-env/templates/qualification-envelopes.json:143-169",
+        "P/sandbox-env/framing.test.mjs:109-122"
+      ],
+      "limit": null
+    },
+    {
+      "requirement": "Do not filter model output or weaken exact empty-facts qualification",
+      "met": true,
+      "evidence": [
+        "tests/unit/runtime/memory-gateway.test.ts:254-261",
+        "P/sandbox-env/framing.test.mjs:287-303",
+        "P/sandbox-env/qualification.mjs:162-166",
+        "preservedP hashes unchanged"
+      ],
+      "limit": null
+    },
+    {
+      "requirement": "Remove only duplicate trusted textual schema in v6 without source headroom loss",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryGateway.ts:65-72",
+        "tests/unit/runtime/memory-gateway.test.ts:210-221",
+        "memory-effort-question-extraction-input-bounds.json"
+      ],
+      "limit": "Serialized body headroom is covered; no latency inference is made."
+    }
+  ],
+  "testReceipts": [
+    {
+      "name": "core",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/strict-json-schema.test.ts",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--cache=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-independent-review-core-results.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "versions": {
+        "node": "v24.15.0",
+        "npm": "12.2.0"
+      },
+      "offlineEnvironment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "GRAPH_TESTING_ENABLED": "false",
+        "credentialVariablesRemoved": true
+      },
+      "exitCode": 0,
+      "naturalExit": true,
+      "timedOut": false,
+      "elapsedMs": 7743.022,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-independent-review-core.log",
+      "logSha256": "edb7939ca2db25ea11449ef63056ba54357bf7358326333505e083895ec7f5d0",
+      "counts": {
+        "suites": 2,
+        "tests": 151,
+        "passed": 151,
+        "failed": 0,
+        "skipped": 0,
+        "todo": 0,
+        "perSuite": {
+          "memory-gateway.test.ts": 130,
+          "strict-json-schema.test.ts": 21
+        }
+      },
+      "resultsPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-independent-review-core-results.json",
+      "resultsSha256": "1b137bdb9e3489970eabb696f45372e85b91e8f5a11119ef3732b6f796605c77"
+    },
+    {
+      "name": "proofs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--import",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "framing.test.mjs",
+        "qualification.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env",
+      "versions": {
+        "node": "v24.15.0",
+        "npm": "12.2.0"
+      },
+      "offlineEnvironment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "GRAPH_TESTING_ENABLED": "false",
+        "credentialVariablesRemoved": true
+      },
+      "exitCode": 0,
+      "naturalExit": true,
+      "timedOut": false,
+      "elapsedMs": 880.145,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-independent-review-proofs.log",
+      "logSha256": "3273a6d70b5a4fd90baf7c2330f9053ac3da2edf6fae591c7f1b1c698d9881ae",
+      "counts": {
+        "tests": 54,
+        "passed": 54,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "selectedFiles": [
+          "framing.test.mjs",
+          "qualification.test.mjs"
+        ]
+      }
+    }
+  ],
+  "independentTests": {
+    "core": 151,
+    "proofs": 54,
+    "total": 205,
+    "skipped": 0,
+    "allNaturalExit0": true
+  },
+  "staticVerification": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-independent-review-static-verification.json",
+  "retainedAuthorEvidence": {
+    "typecheck": "memory-effort-question-extraction-types-final.json",
+    "lint": "memory-effort-question-extraction-lint-final.json",
+    "earlierFullAffectedLint": "memory-effort-question-extraction-lint.json",
+    "buildAndContracts": "memory-effort-question-extraction-root-checks.json",
+    "rootBuildMs": 25151.221834,
+    "rootContractsMs": 1925.4593749999985,
+    "logHashesChecked": true,
+    "rerun": false
+  },
+  "historicalFailuresPreserved": [
+    "First author core runner exit1 before suite results because explicit offline environment omitted.",
+    "Author four-suite run:395/397 pass, two new assertion mistakes; failures and raw outputs retained. Corrections assert legacy projection serialization order and snapshot+request canonical identity.",
+    "Original739 hosted startup: first jsonExtract returned question-derived observation; launch81e252eb-68ce-42b4-8329-1208c4b17ba3 failure and100000 UNKNOWN remain. No paid retry by reviewer."
+  ],
+  "coverageLimits": [
+    "All independent checks use controlled native/backend ports and mocked fetch; zero services/models/install/build/pack/GitHub calls by reviewer.",
+    "No model semantic correctness, installed consumer outcome, actual3/6/8/30s target or final audit approval is inferred.",
+    "Prior accepted source closure retained without re-auditing original17tasks or rerunning unchanged prior412backend/18Chat/installer work.",
+    "Author four-suite coverage is a398 distinct per-suite union after corrections, never a single four-suite green run."
+  ],
+  "pending": [
+    "Fresh installed native v6 extraction qualification and actual effort/profile outcomes",
+    "Hosted latency targetsFast3s/Normal6s/High8s/Max30s",
+    "Cleanup and final independent audit; GitHub external delivery remains unavailable"
+  ],
+  "goalProgress": {
+    "milestonesComplete": 4,
+    "milestonesTotal": 6,
+    "percentage": 66.7,
+    "advancedByThisReview": false
+  },
+  "recommendation": "Accept this frozen source/config batch for the next authorized installed qualification. Preserve all real failure/UNKNOWN records; do not promote live/latency/final status from this review."
+}

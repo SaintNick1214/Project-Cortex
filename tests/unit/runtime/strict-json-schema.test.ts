@@ -4,7 +4,7 @@ import { describe, expect, it } from "@jest/globals";
 import Ajv from "ajv";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { ModelCallRequest, ModelPolicySnapshotV1 } from "../../../src/domain/model-policy";
-import { canonicalModelJson, MEMORY_JSON_OBJECT_CONTRACT, MEMORY_JSON_SCHEMA_CONTRACT as contract,
+import { canonicalModelJson, MEMORY_JSON_OBJECT_CONTRACT, MEMORY_JSON_SCHEMA_CONTRACT as contract, MEMORY_JSON_SCHEMA_V5_CONTRACT,
   memoryJsonObjectRequestBody, memoryJsonSchemaRequestBody, memoryJsonSchemaInputBound,
   validateModelRequest } from "../../../src/domain/model-policy";
 import { FACTS_JSON_SCHEMA, FACTS_NATIVE_JSON_SCHEMA_V1 } from "../../../src/domain/extraction";
@@ -61,7 +61,8 @@ describe("separately pinned native strict extraction schema", () => {
     };
     inspect(FACTS_NATIVE_JSON_SCHEMA_V1);
     expect(Object.isFrozen(contract.responseFormat.schema)).toBe(true);
-    expect(contract.promptVersion).toBe(MEMORY_JSON_OBJECT_CONTRACT.promptVersion);
+    expect(MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion).toBe(MEMORY_JSON_OBJECT_CONTRACT.promptVersion);
+    expect(contract).toEqual({ ...MEMORY_JSON_SCHEMA_V5_CONTRACT, promptVersion: "memory-extraction-assertions-prompt-v6" });
     expect(contract.boundRevision).not.toBe(MEMORY_JSON_OBJECT_CONTRACT.boundRevision);
   });
   it("matches the installed official compatible V4 strict wire including every schema byte in its bound", async () => {
@@ -84,6 +85,14 @@ describe("separately pinned native strict extraction schema", () => {
     expect(checked.request.responseFormat).toEqual(contract.responseFormat);
     expect(checked.canonical).toContain('"name":"cortex_facts_v1"');
     expect(checked.request.outputSchema).toEqual(FACTS_JSON_SCHEMA);
+  });
+  it("continues to validate the historical schema-v5 identity without changing its canonical request", () => {
+    const { snapshot, request } = fixture();
+    const legacyRequest = { ...request, promptVersion: MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion };
+    const legacySnapshot = { ...snapshot, pins: { ...snapshot.pins, promptVersion: MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion } };
+    expect(validateModelRequest(legacySnapshot, legacyRequest).canonical).toBe(canonicalModelJson({ snapshot: legacySnapshot, request: legacyRequest }));
+    expect(() => validateModelRequest(snapshot, legacyRequest)).toThrow("request changed pinned versions");
+    expect(() => validateModelRequest(legacySnapshot, request)).toThrow("request changed pinned versions");
   });
   it.each(["name", "schema", "json-object", "extra", "tools", "retry", "prompt", "semantic-schema", "output", "input", "interface", "operation", "old-bound"])
     ("rejects changed %s instead of falling through to JSON-object or plain output", kind => {

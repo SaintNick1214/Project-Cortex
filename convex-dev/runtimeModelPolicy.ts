@@ -13,7 +13,7 @@ import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
 import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../src/domain/conflicts";
-import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, MEMORY_JSON_SCHEMA_CONTRACT, memoryJsonSchemaInputBound } from "../src/domain/model-policy";
+import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, MEMORY_JSON_SCHEMA_CONTRACT, MEMORY_JSON_SCHEMA_V5_CONTRACT, memoryJsonSchemaInputBound } from "../src/domain/model-policy";
 import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord, TrustedModelPolicyContext } from "../src/domain/model-policy";
 import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
@@ -587,7 +587,8 @@ export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, requ
     if (proof.inputBound.featureEnvelope !== MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_SCHEMA_CONTRACT.inputRule
       || proof.inputBound.revision !== 1 || proof.boundRevision !== MEMORY_JSON_SCHEMA_CONTRACT.boundRevision
       || proof.nativeInterface !== "chat" || proof.modelId !== MEMORY_JSON_SCHEMA_CONTRACT.modelId
-      || request.promptVersion !== MEMORY_JSON_SCHEMA_CONTRACT.promptVersion || request.schemaVersion !== MEMORY_JSON_SCHEMA_CONTRACT.schemaVersion
+      || (request.promptVersion !== MEMORY_JSON_SCHEMA_CONTRACT.promptVersion && request.promptVersion !== MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion)
+      || request.schemaVersion !== MEMORY_JSON_SCHEMA_CONTRACT.schemaVersion
       || request.toolRegistryVersion !== MEMORY_JSON_SCHEMA_CONTRACT.toolRegistryVersion || !request.responseFormat
       || canonical(request.responseFormat) !== canonical(MEMORY_JSON_SCHEMA_CONTRACT.responseFormat) || canonical(request.outputSchema) !== canonical(FACTS_JSON_SCHEMA)
       || request.tools.length || request.toolChoice || request.toolSteps || request.media || request.profile || request.batch

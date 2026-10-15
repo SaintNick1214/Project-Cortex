@@ -29,13 +29,20 @@ export const MEMORY_JSON_OBJECT_CONTRACT = Object.freeze({
 } as const);
 /** Prospective successor: only a separately observed qualification can select
  * this wire format. The v5 source prompt and facts-v1 parser are unchanged. */
-export const MEMORY_JSON_SCHEMA_CONTRACT = freeze({
+export const MEMORY_JSON_SCHEMA_V5_CONTRACT = freeze({
   ...MEMORY_JSON_OBJECT_CONTRACT,
   featureEnvelope: "memory-extract-json-schema-v1",
   inputRule: "memory-json-schema-chat-utf8-v1",
   boundRevision: "memory-json-schema-8192-512-v1",
   responseFormat: { type: "json" as const,
     schema: JSON.parse(JSON.stringify(FACTS_NATIVE_JSON_SCHEMA_V1)) as Record<string, unknown>, name: "cortex_facts_v1" },
+} as const);
+/** Prospective assertion-only prompt successor. The official wire schema and its
+ * measured bounds are unchanged; historical schema-v5 policies retain v4 framing.
+ * This pin still needs its own actual extraction qualification. */
+export const MEMORY_JSON_SCHEMA_CONTRACT = freeze({
+  ...MEMORY_JSON_SCHEMA_V5_CONTRACT,
+  promptVersion: "memory-extraction-assertions-prompt-v6",
 } as const);
 export const MODEL_OPERATION_REGISTRY = Object.freeze(Object.fromEntries(MODEL_OPERATION_KEYS.map((key) => [key, Object.freeze({
   key,
@@ -404,9 +411,11 @@ function validateRequest(snapshot: ModelPolicySnapshotV1, input: unknown, diagno
   }
   const jsonSchema = snapshot.pins.boundRevision === MEMORY_JSON_SCHEMA_CONTRACT.boundRevision;
   if (jsonSchema) {
+    const contract = snapshot.pins.promptVersion === MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion
+      ? MEMORY_JSON_SCHEMA_V5_CONTRACT : MEMORY_JSON_SCHEMA_CONTRACT;
     if (snapshot.operationKey !== "memory.extract" || snapshot.nativeInterface !== "chat"
       || snapshot.modelId !== MEMORY_JSON_SCHEMA_CONTRACT.modelId
-      || snapshot.pins.promptVersion !== MEMORY_JSON_SCHEMA_CONTRACT.promptVersion
+      || snapshot.pins.promptVersion !== contract.promptVersion
       || snapshot.pins.schemaVersion !== MEMORY_JSON_SCHEMA_CONTRACT.schemaVersion
       || snapshot.pins.toolRegistryVersion !== MEMORY_JSON_SCHEMA_CONTRACT.toolRegistryVersion
       || canonicalModelJson(request.responseFormat) !== canonicalModelJson(MEMORY_JSON_SCHEMA_CONTRACT.responseFormat)

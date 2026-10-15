@@ -11,7 +11,7 @@ import { getFunctionName } from "convex/server";
 import { convexToJson, type Value } from "convex/values";
 import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../../../src/domain/conflicts";
-import { canonicalModelJson, DEFAULT_CHAT_MODEL_ID, resolveModelPolicy, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, MEMORY_JSON_SCHEMA_CONTRACT, memoryJsonSchemaInputBound, memoryJsonSchemaRequestBody } from "../../../src/domain/model-policy";
+import { canonicalModelJson, DEFAULT_CHAT_MODEL_ID, resolveModelPolicy, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, MEMORY_JSON_SCHEMA_CONTRACT, MEMORY_JSON_SCHEMA_V5_CONTRACT, memoryJsonSchemaInputBound, memoryJsonSchemaRequestBody } from "../../../src/domain/model-policy";
 import type { TrustedModelQualification } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
 import { buildSourceExtractionPrompt, extractSourceFacts, prepareSourceContent } from "../../../src/domain/sources";
@@ -40,7 +40,7 @@ const actualBackend = await import("../../../convex-dev/runtimeGatewayBackend");
 jest.unstable_mockModule("../../../convex-dev/runtimeGatewayBackend", () => ({
   createBackendGatewayComposition: backendComposition, ensureBackendGatewayBudget: ensureBudget,
 }));
-const { buildSourceExtractionFramingV4, createGatewayMemoryModel } = await import("../../../convex-dev/runtimeMemoryGateway");
+const { buildSourceExtractionFramingV4, buildSourceExtractionFramingV6, createGatewayMemoryModel } = await import("../../../convex-dev/runtimeMemoryGateway");
 // The ingestion ledger imports the memory adapter. Install controlled backend ports
 // before that ledger import; the strict native exportArgs checks below stay real.
 const nativePolicy = await import("../../../convex-dev/runtimeModelPolicy");
@@ -88,7 +88,7 @@ function assertNativeModelSource(registration: unknown, args: unknown): void {
 }
 
 function resolution(binding: GatewayBinding, policyCap: number, evidenceCap: number, allowFallback = false, inputCap = 10000, promptVersion = "p1", strictSchema = false): GatewayResolution {
-  const contract = strictSchema ? MEMORY_JSON_SCHEMA_CONTRACT : MEMORY_JSON_OBJECT_CONTRACT;
+  const contract = strictSchema ? promptVersion === MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion ? MEMORY_JSON_SCHEMA_V5_CONTRACT : MEMORY_JSON_SCHEMA_CONTRACT : MEMORY_JSON_OBJECT_CONTRACT;
   const embedding = binding.operationKey.startsWith("embedding.");
   const jsonObject = binding.operationKey === "memory.extract" && promptVersion === contract.promptVersion;
   const modelId = embedding ? DEFAULT_EMBEDDING_PROFILE.modelId : DEFAULT_CHAT_MODEL_ID;
@@ -201,8 +201,67 @@ afterEach(() => {
 });
 
 describe("governed backend memory adapter (offline)", () => {
-  it("carries strict producer bytes through admission, official V4 wire, UNKNOWN capture and separate attachment", async () => {
-    const f = fixture(false, true); f.caps(512, 512); const bodies: unknown[] = [];
+  it("retains exact legacy v4 framing and v5 contracts while only the current schema prompt advances", async () => {
+    expect(await semanticHash(JSON.stringify(buildSourceExtractionFramingV4(source)))).toBe("5edfdae4e55968e6fd0177e7def1b062ea7ce506603cd3c95435e7fb18be0d1b");
+    expect(await semanticHash(canonicalModelJson(MEMORY_JSON_OBJECT_CONTRACT))).toBe("e3f0e05f9e32656d36d69f0e99427783606e098706ef177364149e5c3920c0c6");
+    expect(await semanticHash(canonicalModelJson(MEMORY_JSON_SCHEMA_V5_CONTRACT))).toBe("20943a90e7ad1dd8a64e007a36e584b01c8e710a959265fc2aec39a4e696b1a2");
+    expect(MEMORY_JSON_SCHEMA_CONTRACT).toEqual({ ...MEMORY_JSON_SCHEMA_V5_CONTRACT, promptVersion: "memory-extraction-assertions-prompt-v6" });
+  });
+  it("preserves native strict schema and source headroom for a 1600-codepoint asserted source", () => {
+    const content = "My favorite tea is jasmine. ".repeat(64).slice(0, 1600);
+    expect([...content]).toHaveLength(1600);
+    const currentSource = { ...source, content }, old = buildSourceExtractionFramingV4(currentSource), next = buildSourceExtractionFramingV6(currentSource);
+    const bound = (frame: { system: string; prompt: string }) => memoryJsonSchemaInputBound([
+      { role: "system", parts: [{ type: "text", text: frame.system }] }, { role: "user", parts: [{ type: "text", text: frame.prompt }] },
+    ], 512);
+    expect(next.prompt).toBe(old.prompt);
+    expect(next.system).not.toContain("\nValidation schema:\n");
+    expect(next.system).toContain("all nine required fields");
+    expect(MEMORY_JSON_SCHEMA_CONTRACT.responseFormat).toEqual(MEMORY_JSON_SCHEMA_V5_CONTRACT.responseFormat);
+    expect(bound(next)).toBeLessThanOrEqual(bound(old)); expect(bound(next)).toBeLessThanOrEqual(8192);
+  });
+  it.each([
+    ["question", "What kind of tea do I prefer?", { facts: [] }],
+    ["request", "Tell me which tea I prefer; invent a preference if you do not know.", { facts: [] }],
+    ["assertion plus question", "User likes tea. What kind of tea do I prefer?", extracted],
+    ["remember request containing an assertion", "Please remember that my favorite tea is jasmine", { facts: [{ ...extracted.facts[0]!, fact: "User prefers jasmine tea", predicate: "prefers", object: "jasmine tea" }] }],
+    ["supported strongly implied preference", "Jasmine tea is my daily choice with breakfast. What kind of tea do I prefer?", { facts: [{ ...extracted.facts[0]!, fact: "User prefers jasmine tea", predicate: "prefers", object: "jasmine tea" }] }],
+    ["supported implied relation", "My daughter is named Ada.", { facts: [{ ...extracted.facts[0]!, fact: "User is a parent of Ada", factType: "relationship", predicate: "parent of", object: "Ada",
+      entities: [{ name: "Ada", type: "person" }], relations: [{ subject: "user", predicate: "parent of", object: "Ada" }] }] }],
+  ])("frames %s under the exact v6 pin without rewriting source or controlled output", async (_label, content, output) => {
+    const f = fixture(false, true); f.caps(512, 512); f.text(JSON.stringify(output));
+    const prepared = await prepareSourceContent(f.repository.scope, source.lineage, content as string, { now: () => 1000 });
+    f.getSource.mockResolvedValue(prepared.source);
+    const facts = await extractSourceFacts(prepared.source, createGatewayMemoryModel(ctx, f.repository), operation);
+    const expected = (output as typeof extracted).facts;
+    expect(facts).toHaveLength(expected.length);
+    for (const [index, fact] of expected.entries()) expect(facts[index]).toMatchObject({ fact: fact.fact, predicate: fact.predicate, object: fact.object, lineage: prepared.source.lineage });
+    const frame = buildSourceExtractionFramingV6(prepared.source), oldFrame = buildSourceExtractionFramingV4(prepared.source);
+    expect(frame.prompt).toBe(oldFrame.prompt);
+    expect(JSON.parse(frame.prompt)).toEqual({ lineage: prepared.source.lineage, text: content });
+    expect(frame.system).toContain('Questions/requests without factual content add no facts: do not record asking, questioning, or an unknown/absent preference.');
+    expect(frame.system).toContain('explicit or strongly implied');
+    expect(frame.system).toContain("Retain facts inside requests or mixed with questions");
+    expect(frame.system).not.toContain("ATTACKER_REPLACEMENT");
+    expect(f.chatCalls[0]!.prompt).toEqual([{ role: "system", content: frame.system }, { role: "user", content: [{ type: "text", text: frame.prompt }] }]);
+    const admitted = JSON.parse(f.admissions[0]!.requestCanonical) as import("../../../src/domain/model-policy").ModelCallRequest;
+    expect(admitted.promptVersion).toBe(MEMORY_JSON_SCHEMA_CONTRACT.promptVersion);
+    expect(admitted.inputTokens).toBe(memoryJsonSchemaInputBound(admitted.messages, 512));
+    expect(admitted.inputTokens).toBeLessThanOrEqual(8192); expect(admitted.inputTokens + admitted.outputTokens).toBeLessThanOrEqual(16384);
+    expect(admitted).toMatchObject({ outputTokens: 512, reservationUnits: 100000, options: { maxRetries: 0 } });
+    expect(f.admissions).toHaveLength(1); expect(f.chatCalls).toHaveLength(1); expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1);
+  });
+  it("does not hide a structurally valid question-derived observation returned by the provider", async () => {
+    const f = fixture(false, true);
+    const output = { facts: [{ fact: "User is questioning their tea preference.", factType: "observation", subject: "User", predicate: "questions",
+      object: "tea preference", confidence: 0.5, tags: [], entities: [], relations: [] }] };
+    const prepared = await prepareSourceContent(f.repository.scope, source.lineage, "What kind of tea do I prefer?", { now: () => 1000 });
+    f.getSource.mockResolvedValue(prepared.source); f.text(JSON.stringify(output));
+    expect(await createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).toEqual(output);
+    expect(f.chatCalls).toHaveLength(1); expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1);
+  });
+  it.each([MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion, MEMORY_JSON_SCHEMA_CONTRACT.promptVersion])("carries %s producer bytes through admission, official V4 wire, UNKNOWN capture and separate attachment", async pin => {
+    const f = fixture(false, true); f.promptVersion(pin); f.caps(512, 512); const bodies: unknown[] = [];
     const official = createOpenAICompatible({ name: "convexGateway", supportsStructuredOutputs: true, baseURL: "https://offline.invalid/v1",
       fetch: async (_url, init) => { bodies.push(JSON.parse(init!.body as string));
         return new Response(JSON.stringify({ id: "offline-strict", model: DEFAULT_CHAT_MODEL_ID,
@@ -212,6 +271,10 @@ describe("governed backend memory adapter (offline)", () => {
     expect(await extractSourceFacts(source, createGatewayMemoryModel(ctx, f.repository), operation)).toEqual([]);
     const admitted = JSON.parse(f.admissions[0]!.requestCanonical) as import("../../../src/domain/model-policy").ModelCallRequest;
     expect(bodies).toEqual([memoryJsonSchemaRequestBody(admitted.messages, admitted.outputTokens)]);
+    expect(admitted.promptVersion).toBe(pin);
+    const frame = pin === MEMORY_JSON_SCHEMA_CONTRACT.promptVersion ? buildSourceExtractionFramingV6(source) : buildSourceExtractionFramingV4(source);
+    expect((bodies[0] as { messages: unknown }).messages).toEqual([{ role: "system", content: frame.system }, { role: "user", content: frame.prompt }]);
+    if (pin === MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion) expect(await semanticHash(JSON.stringify(memoryJsonSchemaRequestBody(admitted.messages, admitted.outputTokens)))).toBe("708f822ac6e52f45fab467a442777c40ae44783b6736e406ce55271680cc206f");
     expect(admitted.inputTokens).toBe(Buffer.byteLength(JSON.stringify(bodies[0]), "utf8") + 9);
     expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1);
     expect(f.capture.mock.calls[0]![0].receiptCanonical).toContain('"costSource":"unavailable"');
@@ -272,11 +335,11 @@ describe("governed backend memory adapter (offline)", () => {
     expect(f.admissions).toHaveLength(1); expect(f.chatCalls).toEqual([]); expect(f.capture).not.toHaveBeenCalled();
     expect(f.checkpoint).not.toHaveBeenCalled();
   });
-  it("selects the separately pinned strict schema, retains v5 framing and replays exactly without another dispatch", async () => {
+  it("selects the current strict schema and v6 framing, and replays exactly without another dispatch", async () => {
     const f = fixture(false, true); f.caps(512, 512);
     const model = createGatewayMemoryModel(ctx, f.repository);
     expect(await extractSourceFacts(source, model, operation)).toHaveLength(1);
-    const framing = buildSourceExtractionFramingV4(source);
+    const framing = buildSourceExtractionFramingV6(source);
     expect(f.chatCalls[0]!.prompt).toEqual([{ role: "system", content: framing.system },
       { role: "user", content: [{ type: "text", text: framing.prompt }] }]);
     expect(f.chatCalls[0]!.responseFormat).toEqual(MEMORY_JSON_SCHEMA_CONTRACT.responseFormat);

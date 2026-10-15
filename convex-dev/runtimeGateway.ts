@@ -11,7 +11,7 @@ import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Res
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { ModelMessage } from "ai";
 import { createSha256 } from "../src/common/crypto";
-import { canonicalModelJson, validateModelRequest, checkModelRequestInputBounds, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, MEMORY_JSON_SCHEMA_CONTRACT, memoryJsonSchemaInputBound } from "../src/domain/model-policy";
+import { canonicalModelJson, validateModelRequest, checkModelRequestInputBounds, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, MEMORY_JSON_SCHEMA_CONTRACT, MEMORY_JSON_SCHEMA_V5_CONTRACT, memoryJsonSchemaInputBound } from "../src/domain/model-policy";
 import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1, ModelRequestInputOverflow } from "../src/domain/model-policy";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
 import type { QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
@@ -250,7 +250,8 @@ function proofFor(resolution: GatewayResolution, now: number): void {
     || s.pins.boundRevision === MEMORY_JSON_SCHEMA_CONTRACT.boundRevision) {
     if (s.operationKey !== "memory.extract" || s.nativeInterface !== "chat" || s.modelId !== MEMORY_JSON_SCHEMA_CONTRACT.modelId
       || p.inputBound.featureEnvelope !== MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || p.inputBound.ruleId !== MEMORY_JSON_SCHEMA_CONTRACT.inputRule
-      || s.pins.promptVersion !== MEMORY_JSON_SCHEMA_CONTRACT.promptVersion || s.pins.boundRevision !== MEMORY_JSON_SCHEMA_CONTRACT.boundRevision
+      || (s.pins.promptVersion !== MEMORY_JSON_SCHEMA_CONTRACT.promptVersion && s.pins.promptVersion !== MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion)
+      || s.pins.boundRevision !== MEMORY_JSON_SCHEMA_CONTRACT.boundRevision
       || s.pins.schemaVersion !== MEMORY_JSON_SCHEMA_CONTRACT.schemaVersion || s.pins.toolRegistryVersion !== MEMORY_JSON_SCHEMA_CONTRACT.toolRegistryVersion
       || s.allowedOptions.length || s.allowedTools.length || s.capabilities.includes("tools") || s.fallbackCandidates.length
       || s.limits.inputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumInputTokens || s.limits.contextTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumContextTokens
