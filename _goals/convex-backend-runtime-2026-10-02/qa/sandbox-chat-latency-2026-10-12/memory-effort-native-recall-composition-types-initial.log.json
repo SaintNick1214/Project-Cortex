@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "originalPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-types-initial.log",
+  "originalSha256": "b7a75165b9816109407d2789279973b0789980b718d10b200b00feb5c29003bb",
+  "encoding": "utf8",
+  "bytes": 755,
+  "content": "tests/unit/runtimeAgent/query-embedding-composition.test.ts(332,88): error TS2345: Argument of type '{ tools: never[]; options: { maxRetries: number; }; promptVersion: string; schemaVersion: string; extractionVersion: string; toolRegistryVersion: string; semanticId: string; childCallId: string; ... 6 more ...; reservationUnits: number; }' is not assignable to parameter of type 'Readonly<{ semanticId: string; childCallId: string; texts: string[]; inputTokens: number; outputTokens: number; toolSteps: number; timeoutMs: number; reservationUnits: number; promptVersion: string; ... 11 more ...; batch?: { ...; } | undefined; }>'.\n  The types of 'options.maxRetries' are incompatible between these types.\n    Type 'number' is not assignable to type '0'.\n"
+}

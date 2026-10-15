@@ -1,0 +1,141 @@
+{
+  "reviewerRole": "independent non-author",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--runTestsByPath",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+    "--testNamePattern",
+    "approved native tool composition|parent-bound native tool preparation|tool checkpoint|revocation after one tool embedding|fresh tool final delivery",
+    "--runInBand",
+    "--watchman=false",
+    "--forceExit=false",
+    "--cache=false",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-native-controls-jest.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npmDeclared": "npm@12.2.0",
+  "npmActual": "12.2.0",
+  "environment": {
+    "minimalCredentialFree": true,
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "https://offline.invalid"
+  },
+  "code": 0,
+  "signal": null,
+  "error": null,
+  "naturalExit": true,
+  "elapsedMs": 9418,
+  "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-native-controls.log",
+  "logSha256": "4dfdbf5a0851d8b0599fd2f99e72ad6f9b901df8144491823100b21ccba3301b",
+  "result": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-native-controls-jest.json",
+  "resultSha256": "32fd70585b824e8b45365d74b0bd065b4975a6b7c0f81ed75d87331d77ecf2f7",
+  "counts": {
+    "suites": 1,
+    "passedSuites": 1,
+    "totalDiscovered": 64,
+    "passed": 15,
+    "failed": 0,
+    "pending": 49,
+    "todo": 0,
+    "selected": 15,
+    "unselectedByExplicitNameFilter": 49
+  },
+  "selected": [
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "approved native tool composition retains exact result/witnesses and primary account, then replays without another embedding",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "parent-bound native tool preparation rejects changed input without dispatch or ledger effects",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "parent-bound native tool preparation rejects changed budget without dispatch or ledger effects",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "parent-bound native tool preparation rejects changed parent without dispatch or ledger effects",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "parent-bound native tool preparation rejects changed lease without dispatch or ledger effects",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "parent-bound native tool preparation rejects changed approval without dispatch or ledger effects",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "parent-bound native tool preparation rejects changed cancel without dispatch or ledger effects",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "parent-bound native tool preparation rejects changed revocation without dispatch or ledger effects",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "tool checkpoint known refusal retains reservation, rolls back child writes and dispatches nothing",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "tool checkpoint partial-write refusal retains reservation, rolls back child writes and dispatches nothing",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "revocation after one tool embedding retains UNKNOWN accounting but withholds attachment and all context",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "fresh tool final delivery refuses cancel after validated native reads",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "fresh tool final delivery refuses source-revision after validated native reads",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "fresh tool final delivery refuses source-tombstone after validated native reads",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "name": "fresh tool final delivery refuses expiry after validated native reads",
+      "status": "passed",
+      "failureMessages": []
+    }
+  ],
+  "services": 0,
+  "models": 0
+}

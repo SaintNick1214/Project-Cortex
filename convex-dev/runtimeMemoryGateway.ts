@@ -94,12 +94,13 @@ export function createGatewayMemoryModel(
     if (key === "embedding.query" && run.queryEmbedding) {
       const proposal = run.queryEmbedding, binding = proposal.binding;
       if (ordinal !== 0 || binding.ordinal !== 0 || binding.operationKey !== key || binding.source !== undefined
-        || binding.parentOperationId !== undefined || binding.runBudgetId !== run.runBudgetId
+        || binding.parentOperationId !== run.parentOperationId || binding.runBudgetId !== run.runBudgetId
         || canonicalModelJson(binding.reference) !== canonicalModelJson(reference)
         || canonicalModelJson(request) !== proposal.requestCanonical) memoryError("POLICY_DENIED", "Query embedding proposal binding changed");
       const prepared = [...proposal.resolutions];
       const atomic = createBackendGatewayComposition(ctx, proposal.admitAndCheckpoint);
-      const expectedResolution = { reference: binding.reference, operationKey: binding.operationKey, runBudgetId: binding.runBudgetId };
+      const expectedResolution = { reference: binding.reference, operationKey: binding.operationKey, runBudgetId: binding.runBudgetId,
+        ...(binding.parentOperationId === undefined ? {} : { parentOperationId: binding.parentOperationId }) };
       const resolve: GatewayLedgerPort["resolve"] = async args => {
         if (canonicalModelJson(args) !== canonicalModelJson(expectedResolution)) memoryError("POLICY_DENIED", "Query embedding resolution binding changed");
         return prepared.shift() ?? await proposal.refresh();

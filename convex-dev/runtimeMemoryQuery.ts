@@ -17,7 +17,7 @@ import {runtimeAuthorityReference} from './runtimeAuthSchema';
 import {createAuthorityReadScope,createMemorySourceReadScope,withNativeSnapshotReads} from './runtimeAuth';
 import {canonicalModelJson} from '../src/domain/model-policy';
 import {normalizeSourceText,semanticHash} from '../src/domain/profile';
-import {ConvexMemoryRepository,memoryError,memoryScope,captureRecallVectors,captureRecallFact,vectorScopeKey,vectorOwnerScopeKey} from './runtimeMemoryRepository';
+import {ConvexMemoryRepository,createActionMemoryRepository,memoryError,memoryScope,captureRecallVectors,captureRecallFact,vectorScopeKey,vectorOwnerScopeKey} from './runtimeMemoryRepository';
 import type {MemoryDeliveryBindings} from './runtimeMemoryRepository';
 import {assertMemoryRequestId,completeRecallDelivery,vectorRecallItems} from './runtimeMemoryServices';
 import {validateModelEmbeddings} from '../src/domain/sources';
@@ -32,6 +32,10 @@ import {createGatewayMemoryModel} from './runtimeMemoryGateway';
 import {boundedRefusal,throwRefusal} from './runtimeMemoryRefusal';
 import type {Refusal} from './runtimeMemoryRefusal';
 import {traceRuntimePhase} from './runtimeLatencyTrace';
+import {activeToolContext} from './runtimeAgent';
+import {mergeContextWitness} from '../src/domain/context-witness';
+import type {ContextSourceWitness,ContextSourcePermission} from '../src/domain/context-witness';
+import {utf8Bytes} from '../src/domain/transcript';
 type Input={text:string;requestId:string;limit:number;memory?:MemoryEffortRequest};
 type Args={reference:RuntimeAuthorityReference;runBudgetId:string;input:Input};
 const args={reference:runtimeAuthorityReference,runBudgetId:v.string(),input:v.object({text:v.string(),requestId:v.string(),limit:v.number(),memory:v.optional(memoryEffortRequest)})};
@@ -43,10 +47,15 @@ async function binding(ctx:Pick<QueryCtx,'db'|'runQuery'>,a:Args) {
   const accounts=await ctx.db.query('runtimeBudgetAccounts').withIndex('by_run',q=>q.eq('runBudgetId',a.runBudgetId)).take(2);
   if(accounts.length!==1||accounts[0].requestCanonical!==canonicalModelJson(publicRecallBudgetRequest(text,a.input.limit,a.input.memory)))memoryError('POLICY_DENIED','Recall request binding changed');
   const profile=await readCurrentEmbeddingProfile(ctx,a.reference,'embedding.query',a.runBudgetId);
+  return await queryBinding(a,profile);
+}
+async function queryBinding(a:Args,profile:EmbeddingProfile,parentOperationId?:Id<'runtimeModelOperations'>) {
+  const text=normalizeSourceText(a.input.text);
   const operationId=`embedding.query:${JSON.stringify([a.reference.tenantId,a.reference.memorySpaceId,a.reference.principalId,a.input.requestId,profile.profileId])}`;
   const request:Parameters<MemoryModel['embed']>[0]={purpose:'embedding.query',operationId,policyVersion:profile.profileId,attempt:1,profile,texts:[text]};
   const semanticId=await semanticHash(canonicalModelJson([request.purpose,request.operationId,request.policyVersion]));
-  const selected:GatewayBinding={reference:a.reference,operationKey:'embedding.query',runBudgetId:a.runBudgetId,semanticId,ordinal:0};
+  const selected:GatewayBinding={reference:a.reference,operationKey:'embedding.query',runBudgetId:a.runBudgetId,semanticId,ordinal:0,
+    ...(parentOperationId===undefined?{}:{parentOperationId})};
   return {profile,request,binding:selected};
 }
 function resolution(value:Awaited<ReturnType<typeof resolveHandler>>):GatewayResolution {
@@ -74,6 +83,9 @@ const checkpoint=makeFunctionReference('runtimeModelPolicy:checkpointRecall') as
   {reference:RuntimeAuthorityReference;attemptId:Parameters<typeof assertGatewayReservedRequest>[0]['attemptId'];requestCanonical:string},GatewayCheckpoint>;
 export async function admitPublicRecallHandler(ctx:MutationCtx,a:AdmitArgs):Promise<Admission> {
   const selected=await binding(ctx,a);
+  return await admitSelectedRecall(ctx,a,selected);
+}
+async function admitSelectedRecall(ctx:MutationCtx,a:AdmitArgs,selected:Awaited<ReturnType<typeof queryBinding>>):Promise<Admission> {
   if(a.bindingCanonical!==canonicalModelJson(selected.binding))memoryError('POLICY_DENIED','Recall admission binding changed');
   let request:Record<string,unknown>;
   try{request=JSON.parse(a.requestCanonical) as Record<string,unknown>;}catch{return memoryError('INVALID_INPUT','Invalid recall embedding request');}
@@ -91,6 +103,107 @@ export const admit=internalMutation({args:{...args,bindingCanonical:v.string(),r
   handler:(ctx,a)=>admitPublicRecallHandler(createAuthorityReadScope(ctx,{policyMetadata:true}),a)});
 export const publicRecallPreparation=makeFunctionReference('runtimeMemoryQuery:prepare') as unknown as FunctionReference<'query','internal',Args,Awaited<ReturnType<typeof preparePublicRecallHandler>>>;
 const admitRef=makeFunctionReference('runtimeMemoryQuery:admit') as unknown as FunctionReference<'mutation','internal',AdmitArgs,Admission>;
+
+/** Private approved-tool selectors never substitute for its durable input,
+ * parent model, active attempt or approval actor. No public recall budget reuse. */
+type ToolRecallArgs=Args&{tool:{runId:string;attemptNumber:number;leaseVersion:number;operationId:string;parentOperationId:Id<'runtimeModelOperations'>}};
+const toolArgs={...args,tool:v.object({runId:v.string(),attemptNumber:v.number(),leaseVersion:v.number(),operationId:v.string(),parentOperationId:v.id('runtimeModelOperations')})};
+async function currentRecallTool(ctx:QueryCtx,a:ToolRecallArgs) {
+  const {parentOperationId,...attempt}=a.tool;
+  const {current,op}=await activeToolContext(ctx,{...attempt,reference:a.reference});
+  if(current.snapshot.version!==8||op.toolName!=='memory_recall'||a.input.memory!==undefined||a.input.requestId!==op.operationId
+    ||current.run.runBudgetId!==a.runBudgetId||!Number.isSafeInteger(a.input.limit)||a.input.limit<1||a.input.limit>10
+    ||canonicalModelJson(JSON.parse(op.requestCanonical))!==canonicalModelJson({text:a.input.text,limit:a.input.limit}))memoryError('POLICY_DENIED','Tool recall binding changed');
+  const models=await ctx.db.query('runtimeAgentOperations').withIndex('by_attempt',q=>q.eq('tenantId',current.run.tenantId)
+    .eq('memorySpaceId',current.run.memorySpaceId).eq('runId',current.run.runId).eq('attemptNumber',current.run.attemptNumber).eq('kind','model').eq('ordinal',op.ordinal)).take(2);
+  const parent=await ctx.db.get('runtimeModelOperations',parentOperationId);
+  if(models.length!==1||models[0].state!=='complete'||models[0].nativeModelOperationId!==parentOperationId
+    ||!parent||parent.runAccountId!==current.run.runAccountId||parent.operationKey!=='agent.respond'
+    ||canonicalModelJson(parent.reference)!==canonicalModelJson(a.reference))memoryError('POLICY_DENIED','Tool recall parent changed');
+}
+function toolRepository(ctx:QueryCtx,a:ToolRecallArgs) {
+  return new ConvexMemoryRepository(ctx,a.reference,'read',undefined,{now:()=>Date.now()},(key,id)=>readCurrentEmbeddingProfile(ctx,a.reference,key,id));
+}
+export async function prepareToolRecallHandler(nativeCtx:QueryCtx,a:ToolRecallArgs) {
+  const ctx=createMemorySourceReadScope(nativeCtx),repository=toolRepository(ctx,a);
+  assertMemoryRequestId(a.input.requestId);
+  await currentRecallTool(ctx,a);await repository.recheckAuthority();await repository.assertReadAuthority();
+  // Original resolveProfile recheck, profile readiness, prepare recheck and two
+  // Gateway resolutions still execute; only their Action RPC setup is removed.
+  await currentRecallTool(ctx,a);await repository.recheckAuthority();
+  const profile=await readCurrentEmbeddingProfile(ctx,a.reference,'embedding.query',a.runBudgetId);
+  await repository.assertProfileReady(profile,a.runBudgetId);
+  await currentRecallTool(ctx,a);await repository.recheckAuthority();
+  const selected=await queryBinding(a,profile,a.tool.parentOperationId);
+  const initial=resolution(await resolveHandler(ctx,selected.binding)),governed=resolution(await resolveHandler(ctx,selected.binding));
+  return {...selected,resolutions:[initial,governed] as const};
+}
+export const prepareToolRecall=internalQuery({args:toolArgs,handler:prepareToolRecallHandler});
+type ToolAdmitArgs=ToolRecallArgs&Pick<AdmitArgs,'bindingCanonical'|'requestCanonical'|'snapshotCanonical'>;
+export const admitToolRecall=internalMutation({args:{...toolArgs,bindingCanonical:v.string(),requestCanonical:v.string(),snapshotCanonical:v.string()},handler:async(nativeCtx,a):Promise<Admission>=>{
+  const ctx=createMemorySourceReadScope(nativeCtx);await currentRecallTool(ctx,a);
+  const profile=await readCurrentEmbeddingProfile(ctx,a.reference,'embedding.query',a.runBudgetId);
+  // The shared parent preserves the original reservation and child checkpoint
+  // rollback boundary. A checkpoint refusal never erases admitted liability.
+  return await admitSelectedRecall(ctx,a,await queryBinding(a,profile,a.tool.parentOperationId));
+}});
+type ToolReadArgs=ToolRecallArgs&{profile:EmbeddingProfile};
+const toolReadArgs={...toolArgs,profile:embeddingProfile};
+export const prepareToolReads=internalQuery({args:toolReadArgs,handler:async(nativeCtx,a)=>{
+  const ctx=createMemorySourceReadScope(nativeCtx);await currentRecallTool(ctx,a);
+  const repository=toolRepository(ctx,a),authority=await repository.authority(undefined,'read');
+  await repository.assertProfileReady(a.profile,a.runBudgetId);return {resourceAccess:authority.resourceAccess};
+}});
+export async function readToolMatchesHandler(nativeCtx:QueryCtx,a:ToolReadArgs&{hits:{id:Id<'runtimeMemoryVectors'>;score:number}[]}) {
+  const ctx=createMemorySourceReadScope(nativeCtx),sourceCtx=withNativeSnapshotReads(nativeCtx,ctx),repository=toolRepository(ctx,a);
+  await currentRecallTool(ctx,a);
+  const bindings:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]},witnesses=new Map<string,ContextSourceWitness>();
+  const remember=async(sourceId:string,expected:{sourceEventId:string;sourceRevision:number;contentHash?:string},permission:ContextSourcePermission)=>{
+    const source=await new ConvexMemoryRepository(sourceCtx,a.reference,'read').getSource(sourceId);
+    if(!source||source.lineage.sourceEventId!==expected.sourceEventId||source.lineage.sourceRevision!==expected.sourceRevision
+      ||expected.contentHash!==undefined&&source.contentHash!==expected.contentHash)memoryError('STALE_CONTEXT','Tool source changed');
+    const witness=mergeContextWitness(witnesses.get(sourceId),{sourceId,sourceEventId:source.lineage.sourceEventId,sourceRevision:source.lineage.sourceRevision,contentHash:source.contentHash,permissions:[permission]});
+    if(!witness)memoryError('STALE_CONTEXT','Tool source changed');witnesses.set(sourceId,witness);return source;
+  };
+  // The tool wrapper historically performs vectors and their witnesses before
+  // facts. Keep this order and all consumed-row bindings in the native parent.
+  const matches=await repository.hydrateVectors(a.hits,a.profile,a.runBudgetId);
+  await captureRecallVectors(bindings,matches,a.profile,{runBudgetId:a.runBudgetId});
+  for(const match of matches)await remember(match.source.lineage.sourceId,{...match.source.lineage,contentHash:match.source.contentHash},'canViewMemories');
+  await currentRecallTool(ctx,a);
+  const facts=await repository.listFacts({limit:a.input.limit});
+  for(const fact of facts)await captureRecallFact(bindings,fact,await remember(fact.lineage.sourceId,fact.lineage,'canViewFacts'));
+  await currentRecallTool(ctx,a);await new ConvexMemoryRepository(nativeCtx,a.reference,'read').recheckAuthority();
+  return {vectorItems:vectorRecallItems(matches),facts,bindings,witnesses:[...witnesses.values()]};
+}
+export const readToolMatches=internalQuery({args:{...toolReadArgs,hits:v.array(v.object({id:v.id('runtimeMemoryVectors'),score:v.number()}))},handler:readToolMatchesHandler});
+export const deliverToolRecall=internalMutation({args:{...toolArgs,bindings:memoryDeliveryBindings},handler:async(nativeCtx,a)=>{
+  const ctx=createMemorySourceReadScope(nativeCtx);await currentRecallTool(ctx,a);
+  return await toolRepository(ctx,a).checkDelivery(a.bindings,nativeCtx);
+}});
+const toolPrepareRef=makeFunctionReference('runtimeMemoryQuery:prepareToolRecall') as unknown as FunctionReference<'query','internal',ToolRecallArgs,Awaited<ReturnType<typeof prepareToolRecallHandler>>>;
+const toolAdmitRef=makeFunctionReference('runtimeMemoryQuery:admitToolRecall') as unknown as FunctionReference<'mutation','internal',ToolAdmitArgs,Admission>;
+const toolReadsRef=makeFunctionReference('runtimeMemoryQuery:prepareToolReads') as unknown as FunctionReference<'query','internal',ToolReadArgs,{resourceAccess:string}>;
+const toolMatchesRef=makeFunctionReference('runtimeMemoryQuery:readToolMatches') as unknown as FunctionReference<'query','internal',ToolReadArgs&{hits:{id:Id<'runtimeMemoryVectors'>;score:number}[]},Awaited<ReturnType<typeof readToolMatchesHandler>>>;
+const toolDeliveryRef=makeFunctionReference('runtimeMemoryQuery:deliverToolRecall') as unknown as FunctionReference<'mutation','internal',ToolRecallArgs&{bindings:MemoryDeliveryBindings},Awaited<ReturnType<ConvexMemoryRepository['checkDelivery']>>>;
+export async function recallToolMemory(ctx:ActionCtx,a:ToolRecallArgs,checkCurrent:()=>Promise<void>) {
+  await checkCurrent();const proposal=await ctx.runQuery(toolPrepareRef,a);
+  const repository=createActionMemoryRepository(ctx,a.reference,'read');
+  const model=createGatewayMemoryModel(ctx,repository,{runBudgetId:a.runBudgetId,parentOperationId:a.tool.parentOperationId,queryEmbedding:{
+    binding:proposal.binding,requestCanonical:canonicalModelJson(proposal.request),resolutions:proposal.resolutions,
+    refresh:async()=>{await checkCurrent();return (await ctx.runQuery(toolPrepareRef,a)).resolutions[1];},
+    admitAndCheckpoint:async request=>{await checkCurrent();const admitted=await ctx.runMutation(toolAdmitRef,{...a,requestCanonical:request.requestCanonical,snapshotCanonical:request.snapshotCanonical,bindingCanonical:canonicalModelJson({reference:request.reference,operationKey:request.operationKey,runBudgetId:request.runBudgetId,semanticId:request.semanticId,ordinal:request.ordinal,...(request.parentOperationId?{parentOperationId:request.parentOperationId}:{})})});if('refusal' in admitted)return throwRefusal(admitted.refusal);return admitted.result;},
+  }});
+  const embedded=await model.embed(proposal.request);validateModelEmbeddings(embedded,proposal.profile,1);
+  const readArgs={...a,profile:proposal.profile};await checkCurrent();const plan=await ctx.runQuery(toolReadsRef,readArgs);
+  const hits=await ctx.vectorSearch('runtimeMemoryVectors',proposal.profile.indexName===LARGE_EMBEDDING_PROFILE.indexName?'by_large_embedding_v1':'by_default_embedding_v1',{
+    vector:[...embedded.vectors[0]!],limit:a.input.limit,filter:q=>plan.resourceAccess==='own'?q.eq('scopeProfileOwnerKey',vectorOwnerScopeKey(a.reference.tenantId,a.reference.memorySpaceId!,proposal.profile.profileId,a.reference.principalId)):q.eq('scopeProfileKey',vectorScopeKey(a.reference.tenantId,a.reference.memorySpaceId!,proposal.profile.profileId)),
+  });
+  await checkCurrent();const read=await ctx.runQuery(toolMatchesRef,{...readArgs,hits:hits.map(hit=>({id:hit._id,score:hit._score}))});
+  const recalled=await completeRecallDelivery({clock:{now:()=>Date.now()},finalDelivery:async()=>{await checkCurrent();return await ctx.runMutation(toolDeliveryRef,{...a,bindings:read.bindings});}},a.input,proposal.profile.profileId,read.vectorItems,read.facts);
+  if(utf8Bytes(recalled.context)>8192||read.witnesses.length>32)memoryError('CONTEXT_LIMIT_EXCEEDED','Tool context exceeds bound');
+  return {result:{context:recalled.context,profileId:recalled.profileId},witnesses:read.witnesses};
+}
 /** Public native read parents only. No model proposal grants retrieval authority.
  * Keep ANN outside Convex queries and ranking before the independent final mutation. */
 // Private Action epoch, not a client deadline/policy or a delivery authority proof.

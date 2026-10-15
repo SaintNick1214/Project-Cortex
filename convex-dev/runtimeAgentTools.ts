@@ -64,6 +64,7 @@ export function validateToolInput(name: ServerToolName, input: unknown): ToolInp
 }
 export async function executeServerTool(ctx: ActionCtx, binding: { reference: RuntimeAuthorityReference; runBudgetId: string; operationId: string; parentOperationId?: Id<"runtimeModelOperations">;
   runAccountId?: Id<"runtimeBudgetAccounts">; conversationId?: string; witnesses?: ToolSourceWitness[];
+  nativeRecall?: (input: { text: string; limit: number }) => Promise<{ result: { context: string; profileId: string }; witnesses: ToolSourceWitness[] }>;
   checkCurrent: () => Promise<void>; writeSource: MemoryRepository["putSource"]; commitDerived: MemoryRepository["commitDerived"] },
   name: ServerToolName, input: unknown) {
   const value = validateToolInput(name, input);
@@ -85,6 +86,9 @@ export async function executeServerTool(ctx: ActionCtx, binding: { reference: Ru
     await binding.checkCurrent(); return { result, witnesses: [] as ToolSourceWitness[], artifactWitnesses: [await artifactMetadataWitness(result)] };
   }
   if (!("text" in value)) throw new Error("INVALID_TOOL_INPUT");
+  if (name === "memory.recall" && binding.nativeRecall) {
+    return await binding.nativeRecall({ text: value.text, limit: value.limit! });
+  }
   const base = createActionMemoryRepository(ctx, binding.reference, name === "memory.remember" ? "write" : "read");
   const witnesses = new Map<string, ToolSourceWitness>();
   const rememberSource = async (sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }, permission: ContextSourcePermission) => {

@@ -1,0 +1,281 @@
+{
+  "at": "2026-10-15T17:58:18.968Z",
+  "results": [
+    {
+      "name": "initial-positive",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-initial-positive.json",
+      "sha256": "651c9fcd91e79ed99024276cffc0bdce09ee5e9c50d93391c3a65e70da8ac443",
+      "exitCode": 1,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-initial-positive.log",
+      "logSha256": "a6ea455dd3beffc5d19c58a13e6b0c00f1f7bbfd45ea9368d39dd73bebc32f6b",
+      "logMatches": true,
+      "result": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-initial-positive-jest.json",
+      "resultSha256": "61bbeb384bacd695ffbdf09653d61c04e18e73ab0c8d2cd4a10f274268c956f7",
+      "counts": {
+        "suites": 1,
+        "passed": 0,
+        "failed": 1,
+        "pending": 49,
+        "todo": 0
+      },
+      "failures": [
+        {
+          "name": "approved native tool composition retains exact result/witnesses and primary account, then replays without another embedding",
+          "message": "ConvexError: {\"version\":1,\"code\":\"POLICY_DENIED\",\"message\":\"Agent definition control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at denied (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:34:9)\n    at registry (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:90:119)\n    at Function.handler [as _handler] (/Users/SaintNick/Docu"
+        }
+      ]
+    },
+    {
+      "name": "positive-corrected",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-positive-corrected.json",
+      "sha256": "f996e6c75db6854821b6cc282183a775db78d46b1a1035df15468cea12ed37d2",
+      "exitCode": 1,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-positive-corrected.log",
+      "logSha256": "966007afac58fca608fe75fff9d012302920a9dd90a134b08cc7ef762c27b251",
+      "logMatches": true,
+      "result": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-positive-corrected-jest.json",
+      "resultSha256": "cfda3ae210d92b498a0c7a06a3593519fa366af86c0698662cfec22420eaaafe",
+      "counts": {
+        "suites": 1,
+        "passed": 0,
+        "failed": 1,
+        "pending": 49,
+        "todo": 0
+      },
+      "failures": [
+        {
+          "name": "approved native tool composition retains exact result/witnesses and primary account, then replays without another embedding",
+          "message": "ConvexError: {\"version\":1,\"code\":\"INVALID_STATE\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:41:9)\n    at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:1544:180)\n    at invoke (/Users/SaintNick"
+        }
+      ]
+    },
+    {
+      "name": "types-initial",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-types-initial.json",
+      "sha256": "9917c35d8bd149f3b5549687b56cd1f948a53ad00ea32aa2dd66c5d1986fdaeb",
+      "exitCode": 2,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-types-initial.log",
+      "logSha256": "b7a75165b9816109407d2789279973b0789980b718d10b200b00feb5c29003bb",
+      "logMatches": true,
+      "resultSha256": null,
+      "counts": null
+    },
+    {
+      "name": "dependencies",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-dependencies.json",
+      "sha256": "acc7a6fa10336c41317d55ed59daa917f991a940c86fe64b326dce8661e3831d",
+      "exitCode": 1,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-dependencies.log",
+      "logSha256": "1bd28c6bed273625a41017e2612159979699aeb7fbf4f9ea6f325888aff43c6a",
+      "logMatches": true,
+      "result": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-dependencies-jest.json",
+      "resultSha256": "7ee2843280f9fb127dec2b7964ca8ed5b71e354034dc7d0b1503242345524650",
+      "counts": {
+        "suites": 4,
+        "passed": 258,
+        "failed": 1,
+        "pending": 0,
+        "todo": 0
+      },
+      "failures": [
+        {
+          "name": "the whole deferred tool path keeps exact native schemas and its primary model parent; completed tool replay performs no second effect",
+          "message": "Error: Unexpected query undefined\n    at Object.runQuery (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts:186:11)\n    at Object.f.ctx.runQuery (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts:71:18)\n    at Object.recheckAuthority (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtime"
+        }
+      ]
+    },
+    {
+      "name": "final-focused",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-focused.json",
+      "sha256": "596e5c2dc84c435eed22fe42fc866bf7d4c7a47142b9eca0a58b979ac0d9d9c8",
+      "exitCode": 0,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-focused.log",
+      "logSha256": "d6c6929c0bd30f8d80a09145acf74ca6f51632d470431dcc88f4eacf1d6bd2db",
+      "logMatches": true,
+      "result": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-focused-jest.json",
+      "resultSha256": "9ea4e616475d25d6de915fc497d637cba686b696c2a69ec6b8a8353fbd348dea",
+      "counts": {
+        "suites": 3,
+        "passed": 164,
+        "failed": 0,
+        "pending": 0,
+        "todo": 0
+      },
+      "failures": []
+    },
+    {
+      "name": "final-dependencies",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-dependencies.json",
+      "sha256": "2fb946ab41202c09f4fdde837f49cbf41bb7e3630e3dddc7118409aada41b4e5",
+      "exitCode": 0,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-dependencies.log",
+      "logSha256": "c85e22df87d9352db339c1e861a44904c7acb46583370bc452dc680f497caeb3",
+      "logMatches": true,
+      "result": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-dependencies-jest.json",
+      "resultSha256": "32041a56e9d55238b919c50c3ac1608c8bf11e99f4d94107d68d5af2bb05a40b",
+      "counts": {
+        "suites": 4,
+        "passed": 259,
+        "failed": 0,
+        "pending": 0,
+        "todo": 0
+      },
+      "failures": []
+    },
+    {
+      "name": "final-types",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-types.json",
+      "sha256": "18690417ba17195778b06847fba08089c3d045c88802b0db658405740ecf3c88",
+      "exitCode": 0,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-types.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "logMatches": true,
+      "resultSha256": null,
+      "counts": null
+    },
+    {
+      "name": "final-lint-types",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-lint-types.json",
+      "sha256": "956b945e7cc0abd2848b8a30700b21a662832130fb9353bd9002a5473308b216",
+      "exitCode": 0,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-lint-types.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "logMatches": true,
+      "resultSha256": null,
+      "counts": null
+    },
+    {
+      "name": "final-lint",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-lint.json",
+      "sha256": "9e153611e5efd8833bc384a1f4d2f346dd8c0f61203a105cd36e34b8248f6ed7",
+      "exitCode": 0,
+      "naturalExit": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-lint.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "logMatches": true,
+      "resultSha256": null,
+      "counts": null
+    },
+    {
+      "name": "memory-effort-native-recall-root-checks.json",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-root-checks.json",
+      "sha256": "7212b2ed76c5d72103a3f4c5a12b6277a85f5ec488e794c3d1bdc557ae96a3d6",
+      "results": [
+        {
+          "name": "build",
+          "command": [
+            "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+            "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+            "run",
+            "build"
+          ],
+          "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+          "code": 0,
+          "signal": null,
+          "naturalExit": true,
+          "elapsedMs": 29291,
+          "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-root-build.log",
+          "logSha256": "d01bd3a34a6f0e93b36d247cdf5768c537b2b9ea811ad11b1c2c76e3920d5436",
+          "logMatches": true
+        },
+        {
+          "name": "contracts",
+          "command": [
+            "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+            "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+            "run",
+            "test:contracts"
+          ],
+          "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+          "code": 0,
+          "signal": null,
+          "naturalExit": true,
+          "elapsedMs": 1996,
+          "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-root-contracts.log",
+          "logSha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf",
+          "logMatches": true
+        }
+      ]
+    },
+    {
+      "name": "memory-effort-native-recall-composition-docs-checks.json",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-docs-checks.json",
+      "sha256": "114a6cce8c6d4eab56f9656a086675baa4712056f6b0c0b5ac9c7ba960720e02",
+      "results": [
+        {
+          "name": "typecheck",
+          "command": [
+            "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+            "node_modules/typescript/bin/tsc",
+            "--noEmit"
+          ],
+          "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+          "exitCode": 0,
+          "signal": null,
+          "naturalExit": true,
+          "elapsedMs": 1227,
+          "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-docs-typecheck.log",
+          "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "logMatches": true
+        },
+        {
+          "name": "build",
+          "command": [
+            "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+            "node_modules/@docusaurus/core/bin/docusaurus.mjs",
+            "build"
+          ],
+          "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+          "exitCode": 0,
+          "signal": null,
+          "naturalExit": true,
+          "elapsedMs": 4937,
+          "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-docs-build.log",
+          "logSha256": "a51f1386fc780ed6279b6d3fb1880bc43c08bda16f66a81c865e1a5ffbe25806",
+          "logMatches": true
+        }
+      ]
+    },
+    {
+      "name": "retained-P-source-review",
+      "path": "memory-effort-catalog-launch-repair-independent-review.json",
+      "sha256": "8dec6dc703be8039d68cb07fa50103134c193758936734d43922972f064b94a4",
+      "verdict": "PASS",
+      "findings": [],
+      "independentTests": {
+        "total": 57,
+        "passed": 57,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "logMatches": true
+    },
+    {
+      "name": "retained-P-integrated-launcher-tests",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-integrated-launcher-tests.log",
+      "sha256": "e3ef23c327d274267541f468b289fe64fc78caeb4c3913217dde7f695d42b3e9",
+      "tail": [
+        "✔ failure diagnostic retains exact hashes and fixed classes without remote text or credentials (0.312ms)",
+        "ℹ tests 150",
+        "ℹ suites 0",
+        "ℹ pass 150",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0",
+        "ℹ todo 0",
+        "ℹ duration_ms 1046.410291",
+        ""
+      ]
+    }
+  ]
+}

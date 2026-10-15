@@ -10,15 +10,17 @@ import type { MemoryEffortTrace } from "../../../src/domain/memory-effort";
 import { assertNativeArgs } from "./native-arguments";
 
 let nativeCalls = 0;
+let embeddingFault: (() => Promise<void>) | undefined;
 const embeddingFactory = jest.fn<(id: string) => EmbeddingModelV4>(id => ({ specificationVersion: "v4", modelId: id,
   provider: "convexGateway.embedding", maxEmbeddingsPerCall: 1, supportsParallelCalls: false,
-  doEmbed: async () => { nativeCalls++; return { embeddings: [Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0)], warnings: [],
+  doEmbed: async () => { nativeCalls++; await embeddingFault?.(); return { embeddings: [Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0)], warnings: [],
     response: { body: { id: "controlled-query", model: "text-embedding-3-small", data: [{ index: 0, object: "embedding" }], usage: { prompt_tokens: 1 } } } }; },
 }));
 jest.unstable_mockModule("@convex-dev/ai-sdk-provider", () => ({ convexGateway: Object.assign(() => { throw Error("UNEXPECTED_CHAT"); }, { embeddingModel: embeddingFactory }) }));
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(input: { handler: unknown }) { return { _handler: input.handler }; }
   async start() { return "workflow:query-embedding"; }
+  async sendEvent() {}
 } }));
 const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
 const { ledger, runs, clone, clock, definitions } = await import("../runtimeTranscript/fixture");
@@ -26,16 +28,19 @@ const agent = await import("../../../convex-dev/runtimeAgent");
 const query = await import("../../../convex-dev/runtimeAgentQueryEmbedding");
 const memory = await import("../../../convex-dev/runtimeMemory");
 const wholeRecall = await import("../../../convex-dev/runtimeAgentRecall");
+const toolRecall = await import("../../../convex-dev/runtimeMemoryQuery");
+const agentTools = await import("../../../convex-dev/runtimeAgentTools");
 const { ConvexMemoryRepository, createActionMemoryRepository } = await import("../../../convex-dev/runtimeMemoryRepository");
 const { readCurrentEmbeddingProfile, resolveHandler } = await import("../../../convex-dev/runtimeModelPolicy");
 const { createGatewayMemoryModel } = await import("../../../convex-dev/runtimeMemoryGateway");
 const { recallMemory } = await import("../../../convex-dev/runtimeMemoryServices");
-beforeEach(() => { nativeCalls = 0; installIngestionMockRoot(); });
+beforeEach(() => { nativeCalls = 0; embeddingFault = undefined; installIngestionMockRoot(); });
 afterEach(() => { jest.restoreAllMocks(); });
-async function fixture(v8 = false, lowCapConflict = false) {
+async function fixture(v8 = false, lowCapConflict = false, withTool = false) {
   const f = await ingestionFixture(), oldQuery = f.ctx.runQuery.bind(f.ctx), oldMutation = f.ctx.runMutation.bind(f.ctx);
   const calls: string[] = [];
-  const names = { runtimeAgent: agent, runtimeAgentQueryEmbedding: query, runtimeAgentRecall: wholeRecall, runtimeModelPolicy: ledger, runtimeMemory: memory, runs };
+  let nativeFault: ((name: string) => Promise<void>) | undefined;
+  const names = { runtimeAgent: agent, runtimeAgentQueryEmbedding: query, runtimeAgentRecall: wholeRecall, runtimeMemoryQuery: toolRecall, runtimeModelPolicy: ledger, runtimeMemory: memory, runs };
   function registration(ref: Parameters<typeof getFunctionName>[0]) {
     let name = ""; try { name = getFunctionName(ref); } catch { return undefined; }
     const [module, method] = name.split(":");
@@ -44,11 +49,12 @@ async function fixture(v8 = false, lowCapConflict = false) {
     return values[method] ? { name, value: values[method] } : undefined;
   }
   f.ctx.runQuery = (async (ref, args) => { const found = registration(ref); if (!found) return oldQuery(ref, args);
-    calls.push(found.name); assertNativeArgs(found.value, args); return invoke(found.value, f.ctx, args);
+    calls.push(found.name); assertNativeArgs(found.value, args); await nativeFault?.(found.name); return invoke(found.value, f.ctx, args);
   }) as MutationCtx["runQuery"];
   let checkpointFault: (() => Promise<void>) | undefined;
   f.ctx.runMutation = (async (ref, args) => { const found = registration(ref); if (!found) return oldMutation(ref, args);
     calls.push(found.name); assertNativeArgs(found.value, args);
+    await nativeFault?.(found.name);
     // Native nested mutation partial rollback is an explicit fixture transaction,
     // not an injected result that pretends the original handler ran.
     return f.transaction(async () => { if (["runtimeModelPolicy:checkpoint", "runtimeModelPolicy:checkpointRecall"].includes(found.name) && checkpointFault) await checkpointFault();
@@ -64,8 +70,9 @@ async function fixture(v8 = false, lowCapConflict = false) {
     }
     for(const event of f.db.table("runtimeIngestionEvents"))Object.assign(event,{factsState:"complete",vectorsState:"complete",vectorProfilesComplete:[profile.profileId]});
   }
+  if(withTool)f.grant.capabilities=[...f.grant.capabilities as string[],"tool"];
   const published=v8?await f.call<{agentId:string;version:number}>(definitions.publishVersion,{memorySpaceId:"space-a",clientMutationId:"v8-query-reader",expectedPreviousVersion:0,
-    definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:lowCapConflict?await definitions.executableRegistryHashV4():await definitions.executableRegistryHashV3(),handlerVersion:lowCapConflict?2:1,
+    definitionInput:{...f.definitionInput,...(withTool?{tools:[{toolId:"memory.recall",toolVersion:1,registryHash:await definitions.executableRegistryHashV3(),requiredCapability:"tool",approval:"explicit"}],policies:[{policyId:"tool-recall",version:1,rules:{limits:{toolSteps:4}}}]}:{}),context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:lowCapConflict?await definitions.executableRegistryHashV4():await definitions.executableRegistryHashV3(),handlerVersion:lowCapConflict?2:1,
       inputSelection:lowCapConflict?{version:2}:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}}}):undefined;
   const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: {...f.request(),...(lowCapConflict?{parts:[{type:"text" as const,text:"What is my favorite season?"}],memory:{effort:"fast" as const,maxEntries:1}}:{}),...(published?{agentId:published.agentId,agentVersion:published.version}:{})} });
   await f.call(agent.start, { runId: run.runId });
@@ -78,7 +85,7 @@ async function fixture(v8 = false, lowCapConflict = false) {
   const action = { ...f.ctx, vectorSearch: async () => [] } as unknown as ActionCtx;
   const state = () => clone({ rows: new Map([...f.db.rows].filter(([, rows]) => rows.length)), writes: f.db.writes, native: f.native, effects: f.effects, scheduled: f.scheduled });
   return { ...f, get grant() { return f.grant; }, attempt, input, repository, action, runBudgetId: current.run.runBudgetId, calls, state,
-    checkpointFault: (value: typeof checkpointFault) => { checkpointFault = value; } };
+    checkpointFault: (value: typeof checkpointFault) => { checkpointFault = value; }, nativeFault: (value: typeof nativeFault) => { nativeFault = value; } };
 }
 type Fixture = Awaited<ReturnType<typeof fixture>>;
 async function preparation(f: Fixture, v8 = false) { return f.call<Awaited<ReturnType<typeof query.prepareAgentQueryEmbeddingHandler>>>(v8 ? query.prepareV8 : query.prepare, { ...f.attempt, input: f.input }); }
@@ -313,4 +320,98 @@ it("actual Agent cap1 indexed conflict keeps the single governed semantic fallba
   expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({slotReleased:true,resultAttachmentState:"attached"});
   expect(f.calls.filter(name=>name==="runtimeAgentQueryEmbedding:admitV8")).toHaveLength(1);
   expect(f.calls.indexOf("runtimeModelPolicy:captureTerminalEvidenceV8")).toBeLessThan(f.calls.indexOf("runtimeModelPolicy:attachTerminalResultV8"));
+});
+
+/** Parent-bound tool recall: real Agent/approval/ledger handlers, controlled provider only. */
+async function approvedRecallFixture() {
+  const f=await fixture(true,false,true);
+  await f.call(agent.saveContext,{...f.attempt,context:"",witnesses:[],completeness:"complete"});
+  const model=await f.call<{operationId:string;semanticId:string}>(agent.beginOperation,{...f.attempt,kind:"model",ordinal:0,requestCanonical:"{}"});
+  await f.call(agent.startOperation,{...f.attempt,operationId:model.operationId});
+  const resolved=await f.call<Awaited<ReturnType<typeof resolveHandler>>>(ledger.resolve,{reference:f.reference,operationKey:"agent.respond",runBudgetId:f.runBudgetId});
+  const pins=resolved.snapshot.pins,request={semanticId:model.semanticId,childCallId:"controlled-parent",texts:["Hello world!"],messages:[{role:"user" as const,parts:[{type:"text" as const,text:"Hello world!"}]}],
+    inputTokens:1,outputTokens:20,toolSteps:0,timeoutMs:1000,reservationUnits:resolved.snapshot.costBound.maximumCostUnits,...pins,tools:[],options:{maxRetries:0 as const}};
+  const {priceRevision:_price,boundRevision:_bound,...nativeRequest}=request;
+  nativeRequest.inputTokens=ledger.deriveQualifiedInputBound(resolved.dispatchEvidence,nativeRequest);
+  const parent=await f.call<{operationId:import("../../../convex-dev/_generated/dataModel").Id<"runtimeModelOperations">}>(ledger.admit,{reference:f.reference,operationKey:"agent.respond",runBudgetId:f.runBudgetId,semanticId:model.semanticId,ordinal:0,requestCanonical:canonicalModelJson(nativeRequest)});
+  await f.call(agent.bindNativeOperation,{...f.attempt,operationId:model.operationId,nativeOperationId:parent.operationId});
+  const original=f.native.messages.get((f.db.table("runtimeRuns")[0].inputMessageIds as string[])[0])!;
+  const message={...original,_id:"native:recall-call",stepOrder:1,message:{role:"assistant",content:"controlled tool request"}};f.native.messages.set(message._id,message);
+  await f.call(agent.finishOperation,{...f.attempt,operationId:model.operationId,resultCanonical:"{}",nativeMessageIds:[message._id]});
+  const text="preferred drink",limit=2;
+  const tool=await f.call<{operationId:string}>(agent.beginOperation,{...f.attempt,kind:"tool",ordinal:0,toolCallId:"recall-call",toolName:"memory_recall",requestCanonical:canonicalModelJson({text,limit})});
+  // The real direct continuation owns a Workflow before deferred approval.
+  // Its controlled Workflow peer is not executed by this native ledger test.
+  await f.db.patch("runtimeAgentExecutions",f.db.table("runtimeAgentExecutions")[0]._id,{workflowId:"workflow:query-embedding"});
+  await f.call(agent.waitForApproval,{...f.attempt,operationId:tool.operationId});
+  await f.call(agent.approveTool,{runId:f.attempt.runId,operationId:tool.operationId,expectedRequestHash:await semanticHash(canonicalModelJson({text,limit}))});
+  await f.call(agent.startOperation,{...f.attempt,operationId:tool.operationId});
+  const source=await f.source("User prefers green tea","tool-recall-source");
+  const writer=new ConvexMemoryRepository(f.ctx,f.reference,"write",f.ctx.db);
+  await writer.commitDerived({source:source.lineage,identity:{...source.lineage,stage:"facts",semanticPolicyVersion:"controlled-tool"},facts:[{_id:"",factId:"native-tool-fact",fact:"User prefers green tea",subject:"user",predicate:"prefers",object:"green tea",factType:"preference",confidence:90,tags:[],entities:[],relations:[],sourceType:"manual",lineage:source.lineage,extractionPolicyVersion:"controlled-tool",version:1,createdAt:clock,updatedAt:clock,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!,ownerPrincipalId:f.reference.principalId}],expectedFactVersions:{"native-tool-fact":0}});
+  const args={reference:f.reference,runBudgetId:f.runBudgetId,input:{text,limit,requestId:tool.operationId},tool:{runId:f.attempt.runId,attemptNumber:f.attempt.attemptNumber,leaseVersion:f.attempt.leaseVersion,operationId:tool.operationId,parentOperationId:parent.operationId}};
+  const check=jest.fn(async()=>{await f.call(agent.checkActiveTool,{...f.attempt,operationId:tool.operationId});});
+  const binding={reference:f.reference,runBudgetId:f.runBudgetId,operationId:tool.operationId,parentOperationId:parent.operationId,nativeRecall:async(input:{text:string;limit:number})=>await toolRecall.recallToolMemory(f.action,{...args,input:{...input,requestId:tool.operationId}},check),checkCurrent:check,
+    writeSource:jest.fn(async()=>{throw Error("UNEXPECTED_WRITE");}),commitDerived:jest.fn(async()=>{throw Error("UNEXPECTED_WRITE");})};
+  f.calls.length=0;return {...f,args,binding,source,tool};
+}
+it("approved native tool composition retains exact result/witnesses and primary account, then replays without another embedding",async()=>{
+  const f=await approvedRecallFixture();
+  const result=await agentTools.executeServerTool(f.action,f.binding,"memory.recall",{text:f.args.input.text,limit:2});
+  expect(result.result).toMatchObject({context:expect.stringContaining("green tea"),profileId:profile.profileId});
+  expect(result.witnesses).toEqual([{sourceId:f.source.lineage.sourceId,sourceEventId:f.source.lineage.sourceEventId,sourceRevision:1,contentHash:f.source.contentHash,permissions:["canViewFacts"]}]);
+  expect(nativeCalls).toBe(1);expect(f.binding.checkCurrent).toHaveBeenCalled();expect(f.binding.writeSource).not.toHaveBeenCalled();expect(f.binding.commitDerived).not.toHaveBeenCalled();
+  expect(f.calls).toContain("runtimeMemoryQuery:prepareToolRecall");expect(f.calls).toContain("runtimeMemoryQuery:admitToolRecall");expect(f.calls).toContain("runtimeModelPolicy:checkpointRecall");
+  expect(f.calls).not.toContain("runtimeModelPolicy:embeddingProfile");expect(f.calls).not.toContain("runtimeMemory:readSource");
+  expect(f.calls.indexOf("runtimeModelPolicy:captureTerminalEvidence")).toBeLessThan(f.calls.indexOf("runtimeModelPolicy:attachTerminalResult"));
+  const child=f.db.table("runtimeModelOperations").find(row=>row.operationKey==="embedding.query")!;
+  expect(child).toMatchObject({parentOperationId:f.args.tool.parentOperationId,runAccountId:f.db.table("runtimeRuns")[0].runAccountId});
+  const attempts=f.db.table("runtimeModelAttempts").filter(row=>row.operationDocumentId===child._id);expect(attempts).toHaveLength(1);expect(attempts[0]).toMatchObject({state:"uncertain",slotReleased:true,resultAttachmentState:"attached"});
+  expect(await agentTools.executeServerTool(f.action,f.binding,"memory.recall",{text:f.args.input.text,limit:2})).toEqual(result);expect(nativeCalls).toBe(1);expect(f.db.table("runtimeModelAttempts").filter(row=>row.operationDocumentId===child._id)).toHaveLength(1);
+  const {nativeRecall:_native,...legacy}=f.binding;
+  expect(await agentTools.executeServerTool(f.action,legacy,"memory.recall",{text:f.args.input.text,limit:2})).toEqual(result);
+  expect(nativeCalls).toBe(1);expect(f.db.table("runtimeModelAttempts").filter(row=>row.operationDocumentId===child._id)).toHaveLength(1);
+});
+it.each(["input","budget","parent","lease","approval","cancel","revocation"])("parent-bound native tool preparation rejects changed %s without dispatch or ledger effects",async fault=>{
+  const f=await approvedRecallFixture(),args=structuredClone(f.args);
+  if(fault==="input")args.input.text+=" changed";
+  if(fault==="budget")args.runBudgetId="wrong-budget";
+  if(fault==="parent")args.tool.parentOperationId="runtimeModelOperations:foreign" as never;
+  if(fault==="lease")args.tool.leaseVersion++;
+  if(fault==="approval")delete f.db.table("runtimeAgentOperations").find(row=>row.operationId===f.tool.operationId)!.approvalActor;
+  if(fault==="cancel")f.db.table("runtimeRuns")[0].cancellationRequestedAt=clock;
+  if(fault==="revocation")f.grant.revokedAt=clock;
+  const before=f.state();await expect(f.call(toolRecall.prepareToolRecall,args)).rejects.toThrow();
+  expect(f.state()).toEqual(before);expect(nativeCalls).toBe(0);
+});
+it.each(["known","partial-write"])("tool checkpoint %s refusal retains reservation, rolls back child writes and dispatches nothing",async fault=>{
+  const f=await approvedRecallFixture();
+  f.checkpointFault(async()=>{if(fault==="partial-write")await f.db.patch("runtimeAuthGrants",f.grant._id,{revokedAt:clock});throw new ConvexError({code:"FORBIDDEN"});});
+  await expect(toolRecall.recallToolMemory(f.action,f.args,f.binding.checkCurrent)).rejects.toThrow("FORBIDDEN");
+  const child=f.db.table("runtimeModelOperations").find(row=>row.operationKey==="embedding.query")!;
+  expect(child).toBeDefined();expect(f.db.table("runtimeModelAttempts").find(row=>row.operationDocumentId===child._id)).toMatchObject({state:"reserved",slotReleased:false});
+  expect(f.db.table("runtimeAuthGrants")[0].revokedAt).toBeUndefined();expect(nativeCalls).toBe(0);
+  expect(f.calls).not.toContain("runtimeModelPolicy:captureTerminalEvidence");expect(f.calls).not.toContain("runtimeMemoryQuery:readToolMatches");
+});
+it("revocation after one tool embedding retains UNKNOWN accounting but withholds attachment and all context",async()=>{
+  const f=await approvedRecallFixture();embeddingFault=async()=>{f.grant.revokedAt=clock;};
+  await expect(toolRecall.recallToolMemory(f.action,f.args,f.binding.checkCurrent)).rejects.toThrow();
+  const child=f.db.table("runtimeModelOperations").find(row=>row.operationKey==="embedding.query")!;
+  expect(f.db.table("runtimeModelAttempts").find(row=>row.operationDocumentId===child._id)).toMatchObject({state:"uncertain",slotReleased:true,resultWithheld:true,resultAttachmentState:"closed"});
+  expect(nativeCalls).toBe(1);expect(f.calls).not.toContain("runtimeMemoryQuery:readToolMatches");
+  expect(f.db.table("runtimeBudgetAccounts").find(row=>row.runBudgetId===f.runBudgetId)!.uncertainUnits).toBeGreaterThan(0);
+});
+it.each(["cancel","source-revision","source-tombstone","expiry"])("fresh tool final delivery refuses %s after validated native reads",async fault=>{
+  const f=await approvedRecallFixture();let reached=false;
+  f.nativeFault(async name=>{if(name!=="runtimeMemoryQuery:deliverToolRecall")return;reached=true;
+    if(fault==="cancel")f.db.table("runtimeRuns")[0].cancellationRequestedAt=clock;
+    if(fault==="source-revision")f.db.table("runtimeMemorySources").find(row=>(row.lineage as {sourceId:string}).sourceId===f.source.lineage.sourceId)!.lineage={...f.source.lineage,sourceRevision:2};
+    if(fault==="source-tombstone")f.db.table("runtimeMemorySources").find(row=>(row.lineage as {sourceId:string}).sourceId===f.source.lineage.sourceId)!.tombstonedAt=clock;
+    if(fault==="expiry")f.grant.expiresAt=clock;
+  });
+  await expect(toolRecall.recallToolMemory(f.action,f.args,f.binding.checkCurrent)).rejects.toThrow();
+  expect(reached).toBe(true);expect(nativeCalls).toBe(1);expect(f.binding.writeSource).not.toHaveBeenCalled();expect(f.binding.commitDerived).not.toHaveBeenCalled();
+  const child=f.db.table("runtimeModelOperations").find(row=>row.operationKey==="embedding.query")!;
+  expect(f.db.table("runtimeModelAttempts").filter(row=>row.operationDocumentId===child._id)).toHaveLength(1);
+  expect(f.db.table("runtimeModelAttempts").find(row=>row.operationDocumentId===child._id)).toMatchObject({state:"uncertain",slotReleased:true,resultAttachmentState:"attached"});
 });

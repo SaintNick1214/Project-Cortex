@@ -61,6 +61,7 @@ import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { recallMemory } from "./runtimeMemoryServices";
 import type { AgentRecallSelection } from "./runtimeAgentRecall";
 import { withPrivateInlineAgentSelection } from "./runtimeAgentRecall";
+import { recallToolMemory } from "./runtimeMemoryQuery";
 import { boundedRefusal, throwRefusal } from "./runtimeAgentQueryEmbedding";
 import { recallAgentMemory, recallAgentMemoryV8, prepareAgentQueryEmbeddingHandler } from "./runtimeAgentQueryEmbedding";
 import type { AgentQueryEmbeddingProposal } from "./runtimeAgentQueryEmbedding";
@@ -1408,9 +1409,15 @@ export async function toolStepHandler(ctx: ActionCtx, args: Attempt & { ordinal:
   if (op.state === "complete") return null;
   await ctx.runMutation(ref<"mutation", Attempt & { operationId: string }, null>("mutation", "runtimeAgent:startOperation"), { ...attempt, operationId: op.operationId });
   const parent = await ctx.runQuery(ref<"query", Attempt & { ordinal: number }, import("./_generated/dataModel").Id<"runtimeModelOperations">>("query", "runtimeAgent:toolParent"), { ...attempt, ordinal: args.ordinal });
+  const checkCurrent = async () => { await ctx.runQuery(ref<"query", Attempt & { operationId: string }, null>("query", "runtimeAgent:checkActiveTool"), { ...attempt, operationId: op.operationId }); };
   const observed = await executeServerTool(ctx, { reference: args.reference, runBudgetId: current.run.runBudgetId, operationId: op.operationId,
     parentOperationId: parent, runAccountId: current.run.runAccountId, conversationId: current.run.conversationId, witnesses: current.execution.sourceWitnesses,
-    checkCurrent: async () => { await ctx.runQuery(ref<"query", Attempt & { operationId: string }, null>("query", "runtimeAgent:checkActiveTool"), { ...attempt, operationId: op.operationId }); },
+    ...(current.snapshot.version === 8 ? { nativeRecall: async (input: { text: string; limit: number }) => await recallToolMemory(ctx, {
+      reference: args.reference, runBudgetId: current.run.runBudgetId,
+      tool: { runId: args.runId, attemptNumber: args.attemptNumber, leaseVersion: args.leaseVersion, operationId: op.operationId, parentOperationId: parent },
+      input: { ...input, requestId: op.operationId },
+    }, checkCurrent) } : {}),
+    checkCurrent,
     writeSource: async source => await ctx.runMutation(ref<"mutation", Attempt & { operationId: string; source: import("../src/domain/contracts").SourceContent }, Awaited<ReturnType<import("../src/domain/contracts").MemoryRepository["putSource"]>>>("mutation", "runtimeAgent:writeToolSource"), { ...attempt, operationId: op.operationId, source }),
     commitDerived: async input => await ctx.runMutation(ref<"mutation", Attempt & { operationId: string; input: Parameters<import("../src/domain/contracts").MemoryRepository["commitDerived"]>[0] }, Awaited<ReturnType<import("../src/domain/contracts").MemoryRepository["commitDerived"]>>>("mutation", "runtimeAgent:writeToolDerived"), { ...attempt, operationId: op.operationId, input }),
   },
@@ -1434,10 +1441,13 @@ async function currentToolPermission(ctx: Pick<QueryCtx, "db">, args: Attempt, c
     await recheckAuthority(ctx, op.approvalActor, { capability: "admin", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
   }
 }
-export const checkActiveTool = internalQuery({ args: { ...agentAttempt, operationId: v.string() }, handler: async (ctx, args) => {
+export async function activeToolContext(ctx: QueryCtx, args: Attempt & { operationId: string }) {
   const current = await executionContext(ctx, args); const op = await operation(ctx, args, args.operationId);
   if (op.kind !== "tool" || op.state !== "started") transcriptDenied("TOOL_DENIED");
-  await currentToolPermission(ctx, args, current, op); return null;
+  await currentToolPermission(ctx, args, current, op); return { current, op };
+}
+export const checkActiveTool = internalQuery({ args: { ...agentAttempt, operationId: v.string() }, handler: async (ctx, args) => {
+  await activeToolContext(ctx, args); return null;
 } });
 async function toolWriteFence(ctx: MutationCtx, args: Attempt & { operationId: string }, sourceId: string) {
   const current = await executionContext(ctx, args); const op = await operation(ctx, args, args.operationId);
