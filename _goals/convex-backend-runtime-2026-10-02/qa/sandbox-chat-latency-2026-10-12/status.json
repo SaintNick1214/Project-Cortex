@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "BUDGET_REPAIR_SOURCE_ACCEPTED_INSTALLATION_PENDING",
+  "phase": "LITERAL_SOURCE_V2_ACCEPTED_PACKAGING_NEXT",
   "complete": 4,
   "total": 6,
   "percent": 66.7,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-15T06:29:08.284845+00:00",
+  "updatedAt": "2026-10-15T08:09:02.608908+00:00",
   "metricVersion": 3,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -74,39 +74,39 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "state": "READY",
-    "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
-    "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
-    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-compact-2026-10-15",
+    "state": "CLEANED",
+    "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-budget-2026-10-15",
     "target": {
-      "id": 6186053,
-      "name": "striped-toad-620",
+      "id": 6188142,
+      "name": "woozy-whale-679",
       "kind": "cloud",
       "teamId": 325340,
       "projectId": 3200658,
-      "reference": "dev/cortex-sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
+      "reference": "dev/cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
       "deploymentType": "dev",
       "isDefault": false,
-      "expiresAt": 1792641462436,
-      "deploymentUrl": "https://striped-toad-620.convex.cloud",
+      "expiresAt": 1792651810024,
+      "deploymentUrl": "https://woozy-whale-679.convex.cloud",
       "disposable": true,
       "serverExpiryVerified": true
     },
     "container": {
-      "name": "cortex-sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
-      "imageId": "sha256:1ec4c11c232bedd2a16443061f3da0cddec35c18b2788da81a326b6fd45b6a19",
+      "name": "cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+      "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
       "labels": {
-        "dev.cortex.disposable-sandbox": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
-        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/c371f9bb-831d-44e3-95a2-bfe43f48d946"
+        "dev.cortex.disposable-sandbox": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/75310545-3b70-46e5-884d-bcd2cc97e0e9"
       },
-      "id": "10dcf204dffe947715a0bfa12253b067ef47cbef8f32a40e6c33490972542adf"
+      "id": "31c0c259afbaa2a507f28cc35e8e843630e9744f5980f49c98b5adad4645e26d"
     },
     "ports": {
-      "web": 3428,
-      "basic": 3429
+      "web": 3390,
+      "basic": 3391
     },
-    "launcherPid": 14964,
-    "rootExecSession": 29454,
+    "launcherPid": 16003,
+    "rootExecSession": 53396,
     "startupFixedQualification": "8/8ACTUAL_PASS",
     "startupBatch": {
       "actualSuccessfulMethods": 8,
@@ -115,53 +115,71 @@
       "activeConcurrency": 0,
       "aggregateUsdComplete": false,
       "perRunHumanReview": false,
-      "procedureApprovalDigest": "36a00deea314c80eb1ac9906cd2b54989ddd0642814f82d0aab9f89a42f26017",
+      "procedureApprovalDigest": "319378726e5ceb92b35e28c24f798dbd0e949fe37af04d0199817c54ca4449b0",
       "immutableProcedureReviewedBeforeRun": true,
       "freshActualOutcomes": true,
       "oldQualificationDatesReused": false
     },
-    "startupBatchSha256": "6f6c6bdaeac5567ace5636efae6485e22e2b5f8b1cd84e3030e5c33035c29e46",
+    "startupBatchSha256": "99db18e3895d4330e3feb80007540293e02973fc74e83781cc0ddd06f106f884",
     "startupStrictEmptyQuestion": true,
-    "startupExtractionSha256": "5ef5e3701e75e3ed4140ae27972667c38be18ddbb25944f954304232d9510547",
-    "runtimeReadySha256": "603878d3753bc16185a91ce3e630fda3bdcfeb57e494b28e306ba778c21936dd",
+    "startupExtractionSha256": "de42cc7d0c501618d4cadf0a31a508af880f78aa96ec749a6be878da25e29cc7",
+    "runtimeReadySha256": "243d568c530ddc2af2f4727b40c26081a6cce126813a512e2958b3eb2054343b",
     "managedDefaultProfile": true,
     "capabilities": {
       "inputSelectionVersion": 2,
       "memoryEffortPolicyVersion": 1
     },
     "healthStatus": 200,
-    "readyAt": "2026-10-15T04:01:30.455Z",
+    "readyAt": "2026-10-15T06:53:08.585Z",
     "effortProfileRuntimeAcceptance": false,
-    "manifestSha256": "3a4dba7d1dba126aded60b281cee03147f9e87a5072e8f4f78d6e645836ed22d",
-    "backendManifestSha256": "35c0de9a7a5875185d0ef6394c99c988d916ddbaca682ea6663223e5570655cf",
+    "manifestSha256": "fc3a3b698b252abc2bdda8616a1b5d151174adc18bb3c674c7696d5effb621ff",
+    "backendManifestSha256": "3c81c8504fdd31e28c49945bffae5268dd60c4001a3d38ca7fa51abdf7fa7ba7",
     "backendFileCount": 174,
-    "modelCalls": 0
+    "modelCalls": 0,
+    "readyMetadataHistoricalOnly": true,
+    "windowState": "CLOSED",
+    "cleanupReceipt": "memory-effort-budget-native-cleanup-1792049188217.json",
+    "cleanupFreshChecks": 21,
+    "cleanupPassedChecks": 21,
+    "originalLauncherActualExit": 130,
+    "currentLiveTarget": false,
+    "closedAt": "2026-10-15T07:26:28.445000+00:00",
+    "finalEvaluation": "memory-effort-budget-final-evaluation.json"
   },
   "actualSamples": {
-    "generation": "K21",
-    "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
-    "browserFirstAfterPaintMs": 3781.100000023842,
-    "browserWarmAfterPaintMs": 7182.600000023842,
-    "cliFirstStdoutAcknowledgedMs": 10605.955964000004,
-    "cliWarmFirstStdoutAcknowledgedMs": 10822.097005000003,
-    "responses": "COMPLETE4/4",
-    "sloPass": 0,
-    "sloTotal": 4,
-    "subsecondAccepted": false,
-    "nativeMemoryAcceptance": "PASS4/4positive userfacts +8/8canonical sourcevectors/profile/nativeusage/currentauthority; contiguousthrough8",
-    "authHTTPComparison": "PASS officialHTTPvalid200, expired/invalid401, absentUNAUTHENTICATED; originalWS timeoutfailures unchanged",
-    "browserSelectorFailures": 2,
-    "resubmissions": 0,
-    "originalDeadlineMs": 30000,
+    "generation": "memory-effort-budget-c258",
+    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "browserFirstAfterPaintMs": [
+      3378.6,
+      3946.4,
+      6046.7,
+      5911.8,
+      7329.5,
+      5245.1
+    ],
+    "browserRecallQuestionsCorrect": "5/5",
+    "browserTimingTargetsMet": "3/6",
+    "seedLiteralMarkerPresent": false,
+    "cliFirstPrintedMs": [
+      7807.05392,
+      6682.274253
+    ],
+    "cliCorrect": "2/2",
+    "cliTimingTargetsMet": "0/2",
+    "responsesAndMemoryComplete": true,
     "requiredIntegrationAccepted": false,
-    "nativeMemoryReceipt": "k21-memory-native-v2-four-run-verification-1791977137881.json",
-    "ordinaryRemember": "FAIL second equal-content canonicalcapture asynchronousINDEXING_FAILED; firstpaircomplete secondfailed; replay/distinctcapturessucceeded; no publicrecall or negatives run",
-    "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
+    "finalVerifierExit": 1,
+    "finalSatisfiedChecks": 247,
+    "finalUnmetChecks": [
+      "normal-seed declared positive answer marker present"
+    ],
+    "environmentState": "CLEANED",
+    "finalEvaluation": "memory-effort-budget-final-evaluation.json"
   },
   "pendingRepairs": [
-    "Current hosted Fast/Normal latency misses and Max/warm useful-fact omission; source repairs awaiting combined review and new installed outcomes",
-    "Five actual question extraction dead letters require additive strict-schema Gateway contract and real qualification",
-    "Actual changed-candidate tool approval/cancel, protected output, CLI/demo installed checks, cleanup, docs and independent final audit"
+    "Current c258 Fast recent/cross and populated Normal browser timing misses, plus both Normal CLI timing misses; bounded literal lookup/preparation repair is in progress under /root/literal_lookup_latency.",
+    "Seed acknowledgement retains the sole final-verifier literal apricot echo unmet assertion; do not rewrite the original exit1 or treat response/memory completion as that assertion passing.",
+    "Next coherent source batch requires one independent non-author source review, meaningful affected checks, fresh installed real-service qualification and the final independent audit; no final acceptance yet."
   ],
   "refinements": [
     {
@@ -524,6 +542,79 @@
       "cleanupReceipt": "k20-cleanup-final.json",
       "launcherExit": 130,
       "clientsClosed": true
+    },
+    {
+      "generation": "memory-effort-budget-c258",
+      "historicalReadyMetadata": {
+        "state": "READY",
+        "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+        "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+        "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-budget-2026-10-15",
+        "target": {
+          "id": 6188142,
+          "name": "woozy-whale-679",
+          "kind": "cloud",
+          "teamId": 325340,
+          "projectId": 3200658,
+          "reference": "dev/cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+          "deploymentType": "dev",
+          "isDefault": false,
+          "expiresAt": 1792651810024,
+          "deploymentUrl": "https://woozy-whale-679.convex.cloud",
+          "disposable": true,
+          "serverExpiryVerified": true
+        },
+        "container": {
+          "name": "cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+          "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
+          "labels": {
+            "dev.cortex.disposable-sandbox": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+            "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/75310545-3b70-46e5-884d-bcd2cc97e0e9"
+          },
+          "id": "31c0c259afbaa2a507f28cc35e8e843630e9744f5980f49c98b5adad4645e26d"
+        },
+        "ports": {
+          "web": 3390,
+          "basic": 3391
+        },
+        "launcherPid": 16003,
+        "rootExecSession": 53396,
+        "startupFixedQualification": "8/8ACTUAL_PASS",
+        "startupBatch": {
+          "actualSuccessfulMethods": 8,
+          "dispatches": 8,
+          "fullUnknownLiabilityUnits": 2700000,
+          "activeConcurrency": 0,
+          "aggregateUsdComplete": false,
+          "perRunHumanReview": false,
+          "procedureApprovalDigest": "319378726e5ceb92b35e28c24f798dbd0e949fe37af04d0199817c54ca4449b0",
+          "immutableProcedureReviewedBeforeRun": true,
+          "freshActualOutcomes": true,
+          "oldQualificationDatesReused": false
+        },
+        "startupBatchSha256": "99db18e3895d4330e3feb80007540293e02973fc74e83781cc0ddd06f106f884",
+        "startupStrictEmptyQuestion": true,
+        "startupExtractionSha256": "de42cc7d0c501618d4cadf0a31a508af880f78aa96ec749a6be878da25e29cc7",
+        "runtimeReadySha256": "243d568c530ddc2af2f4727b40c26081a6cce126813a512e2958b3eb2054343b",
+        "managedDefaultProfile": true,
+        "capabilities": {
+          "inputSelectionVersion": 2,
+          "memoryEffortPolicyVersion": 1
+        },
+        "healthStatus": 200,
+        "readyAt": "2026-10-15T06:53:08.585Z",
+        "effortProfileRuntimeAcceptance": false,
+        "manifestSha256": "fc3a3b698b252abc2bdda8616a1b5d151174adc18bb3c674c7696d5effb621ff",
+        "backendManifestSha256": "3c81c8504fdd31e28c49945bffae5268dd60c4001a3d38ca7fa51abdf7fa7ba7",
+        "backendFileCount": 174,
+        "modelCalls": 0
+      },
+      "state": "CLEANED",
+      "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+      "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+      "cleanupReceipt": "memory-effort-budget-native-cleanup-1792049188217.json",
+      "originalLauncherExit": 130,
+      "finalEvaluation": "memory-effort-budget-final-evaluation.json"
     }
   ],
   "nextCandidate": {
@@ -636,25 +727,18 @@
     "exact200msBaselineVerified": false
   },
   "inProgressCandidate": {
-    "rawAuthorityScope": "single native invocation; every predicate retained; all writes invalidate",
-    "agentModelAuthorityReadsControlledFixture": {
-      "noWitnessesBefore": 326,
-      "noWitnessesAfter": 42,
-      "fourWitnessesBefore": 1046,
-      "fourWitnessesAfter": 66
-    },
-    "routing": "V4 metadata-only route to original Action for represented-snapshot-excluded candidates; original empty proof retained",
-    "readSource": "original unscoped",
-    "contextSource": "original unscoped; strict second-getter revocation assertion retained",
-    "sourceChecks": {
-      "authAgentTests": 1289,
-      "suites": 25,
-      "skips": 0,
-      "newRoutingTests": 52
-    },
-    "sourceReview": "PASS4.0 cloud-authority-routing-source-review.md",
-    "nativeSloAccepted": false,
-    "sourceCheckPercent": 100
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
   },
   "packagingMilestone": {
     "percent": 100,
@@ -710,13 +794,18 @@
     "doesNotAcceptUnder1000": true
   },
   "nextSourceGate": {
-    "verdict": "PASS4.0",
-    "sourcePercent": 100,
-    "review": "parallel-policy-joint-source-review.md",
-    "tests": 1855,
-    "suites": 41,
-    "skipped": 0,
-    "nativeQualified": false
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
   },
   "packagingK13": {
     "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
@@ -778,13 +867,18 @@
     "publication": "unavailable while GitHub access is unavailable"
   },
   "nextRepair": {
-    "name": "V5 ordinary context/model orchestration consolidation",
-    "owner": "/root/latency_backend_repair",
-    "state": "Source accepted; native packaging next",
-    "sourceAccepted": true,
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
     "nativeAccepted": false,
     "sloAccepted": false,
-    "preservesOriginalStrictBarriersAndApprovals": true
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
   },
   "docsV8": {
     "verdict": "PASS as part of joint source gate",
@@ -839,12 +933,11 @@
     "cleanupReceipt": "k14-cleanup-final.json"
   },
   "currentChainAnalysis": {
-    "generation": "K14",
-    "milestonePercent": 100,
-    "report": "cloud-k14-delay-chain.md",
-    "nativeReadOrInferenceByAnalyzer": false,
-    "firstBrowserEarlyStagesUnavailable": true,
-    "subsecondAccepted": false
+    "generation": "memory-effort-budget-c258",
+    "report": "memory-effort-budget-first-pair-chain.json",
+    "hostedSpeedClaim": false,
+    "providerGatewayInternalSplit": "UNAVAILABLE",
+    "currentLatencyTargetsAccepted": false
   },
   "v5SourceBatch": {
     "scope": "ordinary V5 action and original native parent composition",
@@ -916,11 +1009,18 @@
     "cleanup": "freshABSENT"
   },
   "nextSourceBatch": {
-    "packet": "k23-repair-review-packet.json",
-    "sharedQuality": "6/6exit0",
-    "sourceReview": "PASS",
-    "nativeQualified": false,
-    "reviewReceipt": "k23-repair-independent-review.json"
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
   },
   "actualK16Samples": {
     "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
@@ -939,25 +1039,18 @@
     "subsecondUnavailable": 1
   },
   "nextRepairBatch": {
-    "state": "IMPLEMENTING",
-    "sourceBaseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
-    "owners": {
-      "nativeV8ReadAndRecallCosts": "cloud_checkpoint_composition",
-      "exactDuplicateExtractionAndMalformedOutputBoundaries": "latency_backend_repair",
-      "authoritativeHttpDenialDuringSilentWsAuth": "root"
-    },
-    "goalPercent": 50,
-    "nativeQualified": false,
-    "independentReview": "PENDING onejointbatch",
-    "authoritativeHttpDenial": {
-      "implementationPercent": 100,
-      "controlledChecksPercent": 100,
-      "tests": "279/279/9files/0skip",
-      "equivalentOriginalMethodBodies": 62,
-      "sharedQuality": "PENDING",
-      "independentReview": "PENDING",
-      "nativeQualified": false
-    }
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
   },
   "k17ObservedSamples": {
     "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
@@ -983,21 +1076,18 @@
     }
   },
   "currentSourceBatch": {
-    "name": "endpoint-scope-admission-timing",
-    "implementationPercent": 100,
-    "affectedVerificationPercent": 100,
-    "independentReview": "PASS4.0 source/test/docsONLY zero breakingfindings",
-    "nativeQualified": false,
-    "liveSpeedClaim": false,
-    "originalBroadScopeGate": "FAIL1121/1123;unchangedtool-context60stimeout+follow-oncountfailure retained",
-    "isolatedUnchangedToolContext": "PASS4/4 in2.266s;causeoforiginalfailureUNKNOWN",
-    "finalTimingAffectedGate": "PASS379/13/0skip",
-    "goalPercent": 50,
-    "review": "endpoint-scope-admission-timing-joint-review.md",
-    "sourceAcceptancePercent": 100,
-    "packagingPercent": 100,
-    "packagingReport": "endpoint-scopes-packaging-report.md",
-    "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c"
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
   },
   "k18ActualSamples": {
     "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
@@ -1464,21 +1554,18 @@
     }
   },
   "currentRepairBatch": {
-    "state": "COMMITTED_PACKAGING",
-    "baseline": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
-    "goalPercent": 50,
-    "nativeQualified": false,
-    "boundedContext": "complete canonical per-message history retained; request selects4recent/4memories/4facts/4pending,16combined cap",
-    "regions": "next disposable requests aws-us-east-1; K23 observed region UNAVAILABLE",
-    "implementationPercent": 100,
-    "independentReviewPercent": 100,
-    "qualityPercent": 100,
-    "review": "k24-repair-independent-review.md",
-    "breakingFindings": 0,
-    "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
-    "packagingPercent": 100,
-    "launcherPercent": 100,
-    "launcherTests": "117/117PASS0skip"
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
   },
   "k22ActualSamples": {
     "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
@@ -1984,7 +2071,7 @@
     }
   },
   "memoryEffortExecution": {
-    "state": "ACTUAL_PUBLIC_FOUR_MODES_PASS_BROWSER_FAST_TARGET_FAIL",
+    "state": "C258_FUNCTIONAL_NATIVE_AND_CLIENT_OUTCOMES_OBSERVED_SLO_NOT_ACCEPTED",
     "goalReview": "PASS4.4",
     "plan": "modified-goal-execution-v4.md",
     "backendExecutor": "memory_effort_backend",
@@ -2006,21 +2093,33 @@
       "cleanup": "ABSENT_FRESH_VERIFICATION",
       "receipt": "memory-effort-launcher-first-cleanup.json"
     },
-    "currentProductCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3"
+    "currentProductCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
+    "latestObservedSourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "latestEvaluation": "memory-effort-budget-final-evaluation.json",
+    "latestPublicModesPositive": "4/4",
+    "latestTopologyDepths": [
+      2,
+      4,
+      8,
+      13
+    ],
+    "nativeProductOutcomePass": true,
+    "goalAcceptance": false,
+    "currentOwnedEnvironment": null
   },
   "currentOwnedEnvironment": null,
   "installedNativeFindings": [
     {
-      "code": "CHAT_ES2021_OBJECT_HASOWN",
-      "state": "SOURCE_FIXED_INDEPENDENT_PASS_NATIVE_REQUALIFICATION_PENDING",
-      "report": "memory-effort-e1-es2021-report.md"
+      "code": "C258_HOSTED_LATENCY_TARGETS_MISSED",
+      "state": "OPEN_REPAIR_IN_PROGRESS",
+      "report": "memory-effort-budget-final-evaluation.json",
+      "owner": "/root/literal_lookup_latency"
     },
     {
-      "code": "INGESTION_CLAIM_OCC_BECOMES_PERMANENT_FAILURE",
-      "state": "SOURCE_FIXED_INDEPENDENT_PASS_NATIVE_REQUALIFICATION_PENDING",
-      "raw": "memory-effort-service-log-snapshot-public-post-ordinary-1792023370350.json",
-      "failurePreserved": "memory-effort-native-regression-1792023230933.json",
-      "modelDispatchForFailedStage": false
+      "code": "C258_SEED_LITERAL_APRICOT_ECHO_UNMET",
+      "state": "OBSERVED_UNMET_ASSERTION_RETAINED",
+      "report": "memory-effort-budget-final-snapshot-1792049072200.json",
+      "actualVerifierExit": 1
     }
   ],
   "repairProductCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
@@ -3150,16 +3249,18 @@
     "cliReport": "memory-effort-ranked-cli-report.md"
   },
   "rankedRepairInProgress": {
-    "state": "INDEPENDENT_SOURCE_PASS4.0_ZERO_BREAKING",
+    "state": "C258_INSTALLED_WINDOW_COMPLETED_CLEANED_WITH_UNMET_LATENCY_AND_SEED_ASSERTION",
     "rawRunLookup": "existing invocationlocal exactrawread reuse; allpredicates/fencesunchanged",
     "deadline": "preserve alreadyvalidatedevidence afterinflightRPC and propagateoriginalworkdeadline; neverextendbudget",
     "independentReview": "memory-effort-budget-combined-review.json",
-    "installedRetest": "PENDING_MATERIAL_CHANGED_CANDIDATE",
+    "installedRetest": "COMPLETED_NOT_ACCEPTED",
     "noPaidRetries": true,
-    "interruption": "memory-effort-budget-interrupted-checks.json"
+    "interruption": "memory-effort-budget-interrupted-checks.json",
+    "finalEvaluation": "memory-effort-budget-final-evaluation.json",
+    "nextRepairOwner": "/root/literal_lookup_latency"
   },
   "budgetCandidate": {
-    "state": "SOURCE_ACCEPTED_PENDING_COMMIT_AND_FRESH_INSTALLATION",
+    "state": "CLOSED_CLEANED_NOT_ACCEPTED_LATENCY_AND_SEED_ASSERTION",
     "baseCommit": "9973b498e5d076457367b285858729917830e51a",
     "sourceFiles": 11,
     "independentReview": "PASS4.0",
@@ -3168,8 +3269,548 @@
     "skips": 0,
     "naturalExit": 0,
     "build": "memory-effort-budget-root-build2.json",
-    "contracts": "memory-effort-budget-root-contracts1.json",
+    "contracts": "ACTUAL_NATURAL0",
     "sloAcceptance": false,
-    "actualInstalledQualification": "PENDING"
+    "actualInstalledQualification": "OBSERVED_FUNCTIONAL_PRODUCT_OUTCOMES_WITH_LATENCY_MISSES_AND_SEED_MARKER_UNMET",
+    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "entirePush": "ACTUAL_EXIT0",
+    "rootBuild": "ACTUAL_NATURAL0",
+    "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
+    "packaging": "ACTUAL_GENUINE_PACKAGING_AND_LAUNCHER_INSTALL_OBSERVED",
+    "proposal": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-package-integration-proposal.json",
+    "actualRuntime": "NATIVE_PUBLIC_FOUR_MODES_AND_CLIENT_FUNCTIONAL_OUTCOMES_OBSERVED; SLO_NOT_ACCEPTED",
+    "firstLaunch": {
+      "sessionId": "7f2167c2-2589-4c48-8cda-583615567217",
+      "targetId": 6188107,
+      "status": "FAILED_BEFORE_INFERENCE_CLEANED",
+      "receipt": "memory-effort-budget-first-launch-failure-cleanup.json",
+      "exactMissingCapability": "host-side CLI setupBackend module missing from kit staging",
+      "inferenceCalls": 0
+    },
+    "hostKitRepair": "memory-effort-budget-package-host-cli-repair.json",
+    "integration": "memory-effort-budget-package-checks/launcher-integration-final-receipt.json",
+    "launcherTests": {
+      "passed": 133,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "activeSessionId": null,
+    "readyReceipt": "memory-effort-budget-environment-ready.json",
+    "traceReceipt": "memory-effort-budget-kit-backend-trace-enabled.json",
+    "browserObserved": 6,
+    "browserPlanned": 6,
+    "observedTimingMisses": [
+      "fast-recent3946.4ms",
+      "normal-indexed6046.7ms",
+      "fast-cross5245.1ms",
+      "cli-normal7807.05392ms",
+      "cli-normal6682.274253ms"
+    ],
+    "browserSummary": "memory-effort-budget-browser-summary.json",
+    "browserTimingPassed": 3,
+    "browserTimingFailed": 3,
+    "recallQuestionsCorrect": 5,
+    "recallQuestionsTotal": 5,
+    "nativeQualification": "ACTUAL_PRODUCT_OUTCOMES_PASS_ACROSS_PREFIX_AND_CONTINUATION",
+    "nativeReceipt": "memory-effort-budget-native-actual-outcome.json",
+    "nativeChecksPassed": null,
+    "nativePublicFast": "ACTUAL_CURRENT_POSITIVE_FACT_AND_SUPPORTING_SOURCE; genuine saved original response reused without a paid replay",
+    "nativePaidOperations": 8,
+    "nativePaidAttempts": 8,
+    "nativeConservativeUnknownUnits": 800000,
+    "actualManualTenantUnknownUnits": 6900000,
+    "remainingTenantUnits": 3100000,
+    "historicalSessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+    "nativeObservedChecks": {
+      "prefixSuccessful": 256,
+      "prefixExit": 1,
+      "continuation": 357,
+      "continuationExit": 0,
+      "uniqueSumClaimed": false
+    },
+    "remainingTenantUnitsHistoricalQuietObservationOnly": true,
+    "finalFinancial": {
+      "allTargetOperations": 77,
+      "allTargetFirstAttempts": 77,
+      "startupCallsIncluded": 8,
+      "unknownLiabilityMicroUsdDistinctRunAccounts": 9600000,
+      "breakdown": {
+        "manualScoped": 6100000,
+        "nativeRegression": 800000,
+        "startupOther": 2700000
+      },
+      "sharedManualTenantMirrorMicroUsd": 6900000,
+      "mirrorIncludesNativeRegressionMicroUsd": 800000,
+      "mirrorNotAddedAgain": true,
+      "settledUnits": 0,
+      "reservedUnits": 0,
+      "activeConcurrency": 0,
+      "exactUsd": "UNKNOWN",
+      "paidRetries": 0,
+      "rule": "Distinct run accounts counted once. Operation and tenant control mirrors are not additional charges. Resource deletion/cancellation does not refund UNKNOWN liability."
+    },
+    "finalVerifier": {
+      "actualExit": 1,
+      "status": "OBSERVED_WITH_UNMET_VERIFIER_CHECKS",
+      "satisfiedChecks": 247,
+      "unmetChecks": [
+        "normal-seed declared positive answer marker present"
+      ],
+      "selectedRuns": 11,
+      "allExpectedCompleteCancelledOutcomesMatched": true,
+      "stableAcrossCollection": true,
+      "clientsClosed": true,
+      "claim": "Observed selected snapshot with retained unmet assertion, not a rewritten PASS"
+    },
+    "chat": {
+      "genuineInstalledCodegenTypesProductionBuild": "PASS",
+      "actualCorrectReply": "Your favorite fruit is apricot.",
+      "normalDefault": true,
+      "sameRunReconnect": true,
+      "phoneViewport": [
+        393,
+        852
+      ],
+      "phoneClientWidth": 393,
+      "phoneScrollWidth": 393,
+      "consoleWarnings": 0,
+      "consoleErrors": 0,
+      "responseMemoryComplete": true,
+      "numericalSlo": "NOT_INSTRUMENTED_NOT_CLAIMED"
+    },
+    "tools": {
+      "approvedReadonlyRecall": "ACTUAL_ONE_COMPLETE_APPROVED_MEMORY_RECALL_AND_ONE_DURABLE_NATIVE_RESULT",
+      "unapprovedMemoryRemember": "CANCELLED_ZERO_APPROVED_TOOL_EFFECT",
+      "canonicalInputBoundary": "An approved canonical user input may independently derive the fox fact through ordinary ingestion. Cancelled tool approval does not imply zero writes or zero ordinary canonical memory effects."
+    },
+    "cleanup": {
+      "status": "ABSENT",
+      "freshChecks": 21,
+      "freshChecksPassed": 21,
+      "originalRootLauncherActualExit": 130,
+      "rootReplacementChatServerActualExit": 0,
+      "earlierAgentChatServerOriginalExit": "UNKNOWN_NO_JOIN_AVAILABLE",
+      "earlierAgentPidsAndPortAbsent": true,
+      "ownedDatabaseContainerPrivatePathsProcesses": "ABSENT",
+      "browserSignedOutClosedViewportReset": true
+    },
+    "finalEvaluation": "memory-effort-budget-final-evaluation.json",
+    "nextRepairOwner": "/root/literal_lookup_latency"
+  },
+  "historicalCurrentEnvironmentBeforeBudget": {
+    "state": "READY",
+    "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+    "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-compact-2026-10-15",
+    "target": {
+      "id": 6186053,
+      "name": "striped-toad-620",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1792641462436,
+      "deploymentUrl": "https://striped-toad-620.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    "container": {
+      "name": "cortex-sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
+      "imageId": "sha256:1ec4c11c232bedd2a16443061f3da0cddec35c18b2788da81a326b6fd45b6a19",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/c371f9bb-831d-44e3-95a2-bfe43f48d946"
+      },
+      "id": "10dcf204dffe947715a0bfa12253b067ef47cbef8f32a40e6c33490972542adf"
+    },
+    "ports": {
+      "web": 3428,
+      "basic": 3429
+    },
+    "launcherPid": 14964,
+    "rootExecSession": 29454,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "36a00deea314c80eb1ac9906cd2b54989ddd0642814f82d0aab9f89a42f26017",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "6f6c6bdaeac5567ace5636efae6485e22e2b5f8b1cd84e3030e5c33035c29e46",
+    "startupStrictEmptyQuestion": true,
+    "startupExtractionSha256": "5ef5e3701e75e3ed4140ae27972667c38be18ddbb25944f954304232d9510547",
+    "runtimeReadySha256": "603878d3753bc16185a91ce3e630fda3bdcfeb57e494b28e306ba778c21936dd",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T04:01:30.455Z",
+    "effortProfileRuntimeAcceptance": false,
+    "manifestSha256": "3a4dba7d1dba126aded60b281cee03147f9e87a5072e8f4f78d6e645836ed22d",
+    "backendManifestSha256": "35c0de9a7a5875185d0ef6394c99c988d916ddbaca682ea6663223e5570655cf",
+    "backendFileCount": 174,
+    "modelCalls": 0
+  },
+  "currentStateHistory": [
+    {
+      "archivedAt": "2026-10-15T07:40:45.403060+00:00",
+      "reason": "c258 completed window closure reconciles stale READY and pending repair monitors; original observations preserved",
+      "previousUpdatedAt": "2026-10-15T07:04:41.197651+00:00",
+      "fields": {
+        "phase": "BUDGET_BROWSER_OBSERVED_NATIVE_COLLECTOR_REPAIR_CHAT_INSTALL",
+        "pendingRepairs": [
+          "Current hosted Fast/Normal latency misses and Max/warm useful-fact omission; source repairs awaiting combined review and new installed outcomes",
+          "Five actual question extraction dead letters require additive strict-schema Gateway contract and real qualification",
+          "Actual changed-candidate tool approval/cancel, protected output, CLI/demo installed checks, cleanup, docs and independent final audit"
+        ],
+        "actualSamples": {
+          "generation": "K21",
+          "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+          "browserFirstAfterPaintMs": 3781.100000023842,
+          "browserWarmAfterPaintMs": 7182.600000023842,
+          "cliFirstStdoutAcknowledgedMs": 10605.955964000004,
+          "cliWarmFirstStdoutAcknowledgedMs": 10822.097005000003,
+          "responses": "COMPLETE4/4",
+          "sloPass": 0,
+          "sloTotal": 4,
+          "subsecondAccepted": false,
+          "nativeMemoryAcceptance": "PASS4/4positive userfacts +8/8canonical sourcevectors/profile/nativeusage/currentauthority; contiguousthrough8",
+          "authHTTPComparison": "PASS officialHTTPvalid200, expired/invalid401, absentUNAUTHENTICATED; originalWS timeoutfailures unchanged",
+          "browserSelectorFailures": 2,
+          "resubmissions": 0,
+          "originalDeadlineMs": 30000,
+          "requiredIntegrationAccepted": false,
+          "nativeMemoryReceipt": "k21-memory-native-v2-four-run-verification-1791977137881.json",
+          "ordinaryRemember": "FAIL second equal-content canonicalcapture asynchronousINDEXING_FAILED; firstpaircomplete secondfailed; replay/distinctcapturessucceeded; no publicrecall or negatives run",
+          "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
+        },
+        "nextRepair": {
+          "name": "V5 ordinary context/model orchestration consolidation",
+          "owner": "/root/latency_backend_repair",
+          "state": "Source accepted; native packaging next",
+          "sourceAccepted": true,
+          "nativeAccepted": false,
+          "sloAccepted": false,
+          "preservesOriginalStrictBarriersAndApprovals": true
+        },
+        "nextRepairBatch": {
+          "state": "IMPLEMENTING",
+          "sourceBaseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+          "owners": {
+            "nativeV8ReadAndRecallCosts": "cloud_checkpoint_composition",
+            "exactDuplicateExtractionAndMalformedOutputBoundaries": "latency_backend_repair",
+            "authoritativeHttpDenialDuringSilentWsAuth": "root"
+          },
+          "goalPercent": 50,
+          "nativeQualified": false,
+          "independentReview": "PENDING onejointbatch",
+          "authoritativeHttpDenial": {
+            "implementationPercent": 100,
+            "controlledChecksPercent": 100,
+            "tests": "279/279/9files/0skip",
+            "equivalentOriginalMethodBodies": 62,
+            "sharedQuality": "PENDING",
+            "independentReview": "PENDING",
+            "nativeQualified": false
+          }
+        },
+        "currentRepairBatch": {
+          "state": "COMMITTED_PACKAGING",
+          "baseline": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
+          "goalPercent": 50,
+          "nativeQualified": false,
+          "boundedContext": "complete canonical per-message history retained; request selects4recent/4memories/4facts/4pending,16combined cap",
+          "regions": "next disposable requests aws-us-east-1; K23 observed region UNAVAILABLE",
+          "implementationPercent": 100,
+          "independentReviewPercent": 100,
+          "qualityPercent": 100,
+          "review": "k24-repair-independent-review.md",
+          "breakingFindings": 0,
+          "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+          "packagingPercent": 100,
+          "launcherPercent": 100,
+          "launcherTests": "117/117PASS0skip"
+        },
+        "currentSourceBatch": {
+          "name": "endpoint-scope-admission-timing",
+          "implementationPercent": 100,
+          "affectedVerificationPercent": 100,
+          "independentReview": "PASS4.0 source/test/docsONLY zero breakingfindings",
+          "nativeQualified": false,
+          "liveSpeedClaim": false,
+          "originalBroadScopeGate": "FAIL1121/1123;unchangedtool-context60stimeout+follow-oncountfailure retained",
+          "isolatedUnchangedToolContext": "PASS4/4 in2.266s;causeoforiginalfailureUNKNOWN",
+          "finalTimingAffectedGate": "PASS379/13/0skip",
+          "goalPercent": 50,
+          "review": "endpoint-scope-admission-timing-joint-review.md",
+          "sourceAcceptancePercent": 100,
+          "packagingPercent": 100,
+          "packagingReport": "endpoint-scopes-packaging-report.md",
+          "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c"
+        },
+        "nextSourceBatch": {
+          "packet": "k23-repair-review-packet.json",
+          "sharedQuality": "6/6exit0",
+          "sourceReview": "PASS",
+          "nativeQualified": false,
+          "reviewReceipt": "k23-repair-independent-review.json"
+        },
+        "nextSourceGate": {
+          "verdict": "PASS4.0",
+          "sourcePercent": 100,
+          "review": "parallel-policy-joint-source-review.md",
+          "tests": 1855,
+          "suites": 41,
+          "skipped": 0,
+          "nativeQualified": false
+        },
+        "inProgressCandidate": {
+          "rawAuthorityScope": "single native invocation; every predicate retained; all writes invalidate",
+          "agentModelAuthorityReadsControlledFixture": {
+            "noWitnessesBefore": 326,
+            "noWitnessesAfter": 42,
+            "fourWitnessesBefore": 1046,
+            "fourWitnessesAfter": 66
+          },
+          "routing": "V4 metadata-only route to original Action for represented-snapshot-excluded candidates; original empty proof retained",
+          "readSource": "original unscoped",
+          "contextSource": "original unscoped; strict second-getter revocation assertion retained",
+          "sourceChecks": {
+            "authAgentTests": 1289,
+            "suites": 25,
+            "skips": 0,
+            "newRoutingTests": 52
+          },
+          "sourceReview": "PASS4.0 cloud-authority-routing-source-review.md",
+          "nativeSloAccepted": false,
+          "sourceCheckPercent": 100
+        },
+        "rankedRepairInProgress": {
+          "state": "INDEPENDENT_SOURCE_PASS4.0_ZERO_BREAKING",
+          "rawRunLookup": "existing invocationlocal exactrawread reuse; allpredicates/fencesunchanged",
+          "deadline": "preserve alreadyvalidatedevidence afterinflightRPC and propagateoriginalworkdeadline; neverextendbudget",
+          "independentReview": "memory-effort-budget-combined-review.json",
+          "installedRetest": "PENDING_MATERIAL_CHANGED_CANDIDATE",
+          "noPaidRetries": true,
+          "interruption": "memory-effort-budget-interrupted-checks.json"
+        },
+        "currentChainAnalysis": {
+          "generation": "K14",
+          "milestonePercent": 100,
+          "report": "cloud-k14-delay-chain.md",
+          "nativeReadOrInferenceByAnalyzer": false,
+          "firstBrowserEarlyStagesUnavailable": true,
+          "subsecondAccepted": false
+        },
+        "memoryEffortExecution": {
+          "state": "ACTUAL_PUBLIC_FOUR_MODES_PASS_BROWSER_FAST_TARGET_FAIL",
+          "goalReview": "PASS4.4",
+          "plan": "modified-goal-execution-v4.md",
+          "backendExecutor": "memory_effort_backend",
+          "clientExecutor": "dev_integration_provider_ci",
+          "publicContract": "src/domain/memory-effort.ts",
+          "sourceAcceptance": true,
+          "nativeAcceptance": false,
+          "chatNativeCodegen": "GENUINE_INSTALLED_CODEGEN_ES2021_FULL_BUILD_PASS",
+          "sourceReview": "memory-effort-joint-source-review.json",
+          "sourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+          "topologyReceipt": "memory-effort-hosted-topology-1792022915539.json",
+          "topologyChecks": 49,
+          "topologyInferenceCalls": 0,
+          "firstLaunch": {
+            "sessionId": "6cc4c640-3af8-419a-a7ed-5288c0ffc981",
+            "exitCode": 1,
+            "failure": "Temporary QA fixture type errors",
+            "paidCalls": 0,
+            "cleanup": "ABSENT_FRESH_VERIFICATION",
+            "receipt": "memory-effort-launcher-first-cleanup.json"
+          },
+          "currentProductCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3"
+        },
+        "installedNativeFindings": [
+          {
+            "code": "CHAT_ES2021_OBJECT_HASOWN",
+            "state": "SOURCE_FIXED_INDEPENDENT_PASS_NATIVE_REQUALIFICATION_PENDING",
+            "report": "memory-effort-e1-es2021-report.md"
+          },
+          {
+            "code": "INGESTION_CLAIM_OCC_BECOMES_PERMANENT_FAILURE",
+            "state": "SOURCE_FIXED_INDEPENDENT_PASS_NATIVE_REQUALIFICATION_PENDING",
+            "raw": "memory-effort-service-log-snapshot-public-post-ordinary-1792023370350.json",
+            "failurePreserved": "memory-effort-native-regression-1792023230933.json",
+            "modelDispatchForFailedStage": false
+          }
+        ],
+        "budgetCandidate": {
+          "state": "ACTUAL_STARTUP8PASS_BROWSER_RUNNING",
+          "baseCommit": "9973b498e5d076457367b285858729917830e51a",
+          "sourceFiles": 11,
+          "independentReview": "PASS4.0",
+          "independentTests": 494,
+          "independentSuites": 14,
+          "skips": 0,
+          "naturalExit": 0,
+          "build": "memory-effort-budget-root-build2.json",
+          "contracts": "ACTUAL_NATURAL0",
+          "sloAcceptance": false,
+          "actualInstalledQualification": "PENDING",
+          "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+          "entirePush": "ACTUAL_EXIT0",
+          "rootBuild": "ACTUAL_NATURAL0",
+          "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
+          "packaging": "PASS_ROOT_LAUNCHER_INTEGRATION_NEXT",
+          "proposal": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-package-integration-proposal.json",
+          "actualRuntime": "STARTUP8PASS_EFFORT_QUALIFICATION_PENDING",
+          "firstLaunch": {
+            "sessionId": "7f2167c2-2589-4c48-8cda-583615567217",
+            "targetId": 6188107,
+            "status": "FAILED_BEFORE_INFERENCE_CLEANED",
+            "receipt": "memory-effort-budget-first-launch-failure-cleanup.json",
+            "exactMissingCapability": "host-side CLI setupBackend module missing from kit staging",
+            "inferenceCalls": 0
+          },
+          "hostKitRepair": "memory-effort-budget-package-host-cli-repair.json",
+          "integration": "memory-effort-budget-package-checks/launcher-integration-final-receipt.json",
+          "launcherTests": {
+            "passed": 133,
+            "skipped": 0,
+            "exitCode": 0
+          },
+          "activeSessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+          "readyReceipt": "memory-effort-budget-environment-ready.json",
+          "traceReceipt": "memory-effort-budget-kit-backend-trace-enabled.json",
+          "browserObserved": 6,
+          "browserPlanned": 6,
+          "observedTimingMisses": [
+            "fast-recent3946.4ms",
+            "normal-indexed6046.7ms"
+          ],
+          "browserSummary": "memory-effort-budget-browser-summary.json",
+          "browserTimingPassed": 3,
+          "browserTimingFailed": 3,
+          "recallQuestionsCorrect": 5,
+          "recallQuestionsTotal": 5,
+          "nativeQualification": "PARTIAL_STOP_LOCAL_OPTIONAL_MEMORY_ASSERTION",
+          "nativeReceipt": "memory-effort-budget-native-regression-1792047679001.json",
+          "nativeChecksPassed": 256,
+          "nativePublicFast": "ACTUAL_POSITIVE_RESPONSE_RETURNED_SCOPE_SOURCE_ASSERTION_PENDING",
+          "nativePaidOperations": 6,
+          "nativePaidAttempts": 6,
+          "nativeConservativeUnknownUnits": 600000,
+          "actualManualTenantUnknownUnits": 3700000,
+          "remainingTenantUnits": 6300000
+        }
+      }
+    }
+  ],
+  "latestCompletedWindow": {
+    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+    "state": "CLOSED",
+    "environmentState": "CLEANED",
+    "evaluation": "memory-effort-budget-final-evaluation.json",
+    "goalAccepted": false,
+    "outcomePercentages": {
+      "browserObservation": {
+        "complete": 6,
+        "total": 6,
+        "percent": 100.0
+      },
+      "browserRecallQuestionsCorrect": {
+        "complete": 5,
+        "total": 5,
+        "percent": 100.0
+      },
+      "browserTimingTargetsMet": {
+        "complete": 3,
+        "total": 6,
+        "percent": 50.0
+      },
+      "browserSeedLiteralMarker": {
+        "complete": 0,
+        "total": 1,
+        "percent": 0.0
+      },
+      "publicEffortModesPositive": {
+        "complete": 4,
+        "total": 4,
+        "percent": 100.0
+      },
+      "persistedTopologyDepthCases": {
+        "complete": 4,
+        "total": 4,
+        "percent": 100.0
+      },
+      "cliCorrect": {
+        "complete": 2,
+        "total": 2,
+        "percent": 100.0
+      },
+      "cliTimingTargetsMet": {
+        "complete": 0,
+        "total": 2,
+        "percent": 0.0
+      },
+      "selectedExpectedRunOutcomes": {
+        "complete": 11,
+        "total": 11,
+        "percent": 100.0
+      },
+      "finalVerifierSatisfiedAssertions": {
+        "complete": 247,
+        "total": 248,
+        "percent": 99.6,
+        "acceptanceClaim": false
+      },
+      "cleanupAbsenceChecks": {
+        "complete": 21,
+        "total": 21,
+        "percent": 100.0
+      },
+      "goalMilestones": {
+        "complete": 4,
+        "total": 6,
+        "percent": 66.7
+      }
+    }
+  },
+  "literalCandidate": {
+    "state": "SOURCE_V2_ACCEPTED",
+    "baseCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "hashes": "memory-effort-literal-source-hashes-v2.json",
+    "implementation": "memory-effort-literal-report-v2.json",
+    "testsPassed": 332,
+    "testSuites": 6,
+    "skips": 0,
+    "fullTypes": "memory-effort-literal-types5.json",
+    "strictLint": "memory-effort-literal-lint5.json",
+    "build": "memory-effort-literal-root-build2.json",
+    "contracts": "memory-effort-literal-root-contracts2.json",
+    "reviewOwner": "/root/literal_source_review",
+    "installedQualification": "NOT_RUN",
+    "cloudSaving": "NOT_MEASURED",
+    "review": "memory-effort-literal-independent-review-v2.json",
+    "verdict": "PASS4.0",
+    "sourceAccepted": true,
+    "finding": "Missing structured value metadata permits conflicting literal values in new canonical-source proof; supported repository/traversal/delivery reproduction confirms; old singleton rule unchanged",
+    "repairOwner": "/root/literal_lookup_latency",
+    "firstRootBuildRetained": "Successful build/contracts are not acceptance of this known source defect",
+    "originalTestsRetained": 320,
+    "regressionCasesAdded": 12,
+    "priorReview": "memory-effort-literal-independent-review.json",
+    "priorReviewVerdict": "NEEDS_FIXES",
+    "findingStatus": "LSR-1 independentlyclosed; original NEEDS FIXES retained",
+    "buildStatus": "PASS",
+    "contractsStatus": "PASS"
   }
 }

@@ -1,6 +1,6 @@
 import {it,expect} from "@jest/globals";
-import type {DerivedFact} from "../../../src/domain/contracts";
-import {sufficientDirectFactLookup,directFactTraversalComplete,directFactTraversalCompatible} from "../../../src/domain/memory-direct-recall";
+import type {DerivedFact,SourceContent} from "../../../src/domain/contracts";
+import {sufficientDirectFactLookup,directFactTraversalComplete,directFactTraversalCompatible,proveDirectFactLookup,directFactProofCompatible,directFactLookupSourceId} from "../../../src/domain/memory-direct-recall";
 import {resolveMemoryEffortPolicy} from "../../../src/domain/memory-effort";
 import {prepareSourceContent} from "../../../src/domain/sources";
 import {ConvexMemoryRepository,memoryScope} from "../../../convex-dev/runtimeMemoryRepository";
@@ -90,4 +90,81 @@ it.each([1,4])("inspects mixed-predicate conflicting literal evidence before sel
   expect(compatibility.accepted&&directFactTraversalComplete(result.memoryEffort)).toBe(false);
   expect(result.items.length).toBeLessThanOrEqual(maxEntries);
   if(maxEntries===1){expect(result.items.map(item=>item.id)).toEqual([facts[0]!.factId]);expect(result.memoryEffort.stopReasons).toContain("entries");expect(JSON.stringify(result)).not.toContain("pear");}
+});
+
+const literalSource:SourceContent={tenantId:observed.tenantId!,memorySpaceId:observed.memorySpaceId,ownerPrincipalId:observed.ownerPrincipalId,lineage:observed.lineage,content:"My favorite fruit is apricot.",contentHash:"a".repeat(64),createdAt:observed.createdAt};
+const projections:DerivedFact[]=[observed,
+  {...observed,factId:"likes",fact:"User likes fruit.",predicate:"likes",object:"fruit"},
+  {...observed,factId:"general",fact:"User stated a specific preference for a type of fruit.",predicate:"has_a_preference_for",object:"apricot"}];
+const sourceProof=(facts:DerivedFact[]=projections,source=literalSource,version?:1)=>proveDirectFactLookup("What is my favorite fruit?",{facts,candidateWorkBound:false},observed.createdAt,version,source);
+it("only the new source-proof pin admits the observed three projections of one exact canonical assertion",()=>{
+ expect(sourceProof()).toBeUndefined();expect(sufficientDirectFactLookup("What is my favorite fruit?",{facts:projections,candidateWorkBound:false},observed.createdAt)).toBe(false);
+ const proof=sourceProof(projections,literalSource,1);expect(proof?.seed.factId).toBe(observed.factId);expect(proof?.source).toEqual(literalSource);
+ expect(directFactLookupSourceId("What is my favorite fruit?",{facts:projections,candidateWorkBound:false},observed.createdAt,1)).toBe(literalSource.lineage.sourceId);
+ expect(directFactProofCompatible(proof!,projections,observed.createdAt)).toBe(true);
+ expect(resolveMemoryEffortPolicy({effort:"fast"})).toMatchObject({literalSourceProofVersion:1,maxEntries:4,maxDepth:2,targetFirstAnswerMs:3000});
+});
+it.each([
+ {name:"same-source contradiction",change:{fact:"User's favorite fruit is pear.",object:"pear"}},
+ {name:"same-source negation",change:{fact:"User does not like fruit."}},
+ {name:"unknown projection",change:{fact:"User hates fruit."}},
+ {name:"unknown neutral projection",change:{fact:"User enjoys fruit."}},
+ {name:"wrong projection value",change:{object:"pear"}},
+ {name:"wrong owner",change:{ownerPrincipalId:"other"}},
+ {name:"different source",change:{lineage:{...observed.lineage,sourceId:"other"}}},
+ {name:"different event",change:{lineage:{...observed.lineage,sourceEventId:"other"}}},
+ {name:"different revision",change:{lineage:{...observed.lineage,sourceRevision:2}}},
+ {name:"correction",change:{supersedes:"old"}},
+ {name:"history",change:{historyReceipt:{committed:true as const,graphJobs:[],events:[],affectedFactIds:[],resultFactId:undefined}}},
+ {name:"edited projection",change:{updatedAt:observed.createdAt+1}},
+ {name:"future projection",change:{validFrom:observed.createdAt+1}},
+ {name:"expired projection",change:{validUntil:observed.createdAt-1}},
+ {name:"time-bound projection",change:{validUntil:observed.createdAt+1}},
+])("$name cannot use the canonical-source proof",({change})=>{
+ const facts=[projections[0]!,{...projections[1]!,...change},projections[2]!];expect(sourceProof(facts,literalSource,1)).toBeUndefined();
+ expect(directFactLookupSourceId("What is my favorite fruit?",{facts,candidateWorkBound:false},observed.createdAt,1)).toBeUndefined();
+ const proof=sourceProof(projections,literalSource,1)!;expect(directFactProofCompatible(proof,[facts[1]!],observed.createdAt)).toBe(false);
+});
+it.each(["My favorite fruit is pear.","My favorite fruit is apricot. My favorite fruit is pear.","My favorite fruit is apricot and pear.","I like apricot.","'My favorite fruit is apricot.'","My favorite fruit is apricot. Please acknowledge."])("non-single or nonmatching canonical source %s retains semantic discovery",content=>{
+ expect(sourceProof(projections,{...literalSource,content},1)).toBeUndefined();
+});
+it("does not infer literal aliases, ignore work limits or accept absent/retired canonical sources",()=>{
+ expect(proveDirectFactLookup("Which fruit do I prefer?",{facts:projections,candidateWorkBound:false},observed.createdAt,1,literalSource)).toBeUndefined();
+ expect(proveDirectFactLookup("What is my favorite fruit?",{facts:projections,candidateWorkBound:true},observed.createdAt,1,literalSource)).toBeUndefined();
+ expect(proveDirectFactLookup("What is my favorite fruit?",{facts:projections,candidateWorkBound:false},observed.createdAt,1)).toBeUndefined();
+ expect(sourceProof(projections,{...literalSource,tombstonedAt:observed.createdAt},1)).toBeUndefined();
+ expect(sourceProof(projections,{...literalSource,lineage:{...literalSource.lineage,sourceRevision:2}},1)).toBeUndefined();
+ expect(sourceProof(projections.map(fact=>({...fact,lineage:{...fact.lineage,sourceRevision:2}})),{...literalSource,lineage:{...literalSource.lineage,sourceRevision:2}},1)).toBeUndefined();
+});
+
+it.each(["contradiction","canonical-mismatch","same-value"])("LSR-1 unstructured %s has no prospective/source proof while the historical singleton rule remains",scenario=>{
+ const values=["apricot",scenario==="contradiction"?"pear":"apricot"],facts=values.map((value,index)=>({...observed,factId:`unstructured-${index}`,fact:`My favorite fruit is ${value}.`,subject:undefined,predicate:undefined,object:undefined}));
+ const source={...literalSource,content:`My favorite fruit is ${scenario==="canonical-mismatch"?"pear":"apricot"}.`},candidates={facts,candidateWorkBound:false};
+ expect(sufficientDirectFactLookup("What is my favorite fruit?",{facts:[facts[0]!],candidateWorkBound:false},observed.createdAt)).toBe(true);
+ expect(directFactLookupSourceId("What is my favorite fruit?",candidates,observed.createdAt,1)).toBeUndefined();
+ expect(proveDirectFactLookup("What is my favorite fruit?",candidates,observed.createdAt,1,source)).toBeUndefined();
+ expect(directFactProofCompatible(sourceProof(projections,literalSource,1)!,facts,observed.createdAt)).toBe(false);
+});
+it.each(["subject","predicate","object"] as const)("new multi-fact source proof requires nonempty structured %s before its prospective source read",field=>{
+ for(const missing of [undefined,""," ","!!!"]){
+  const facts=[{...observed,[field]:missing},{...observed,factId:"second",[field]:missing}],candidates={facts,candidateWorkBound:false};
+  expect(directFactLookupSourceId("What is my favorite fruit?",candidates,observed.createdAt,1)).toBeUndefined();
+  expect(proveDirectFactLookup("What is my favorite fruit?",candidates,observed.createdAt,1,literalSource)).toBeUndefined();
+ }
+});
+it.each(["contradiction","canonical-mismatch"])("LSR-1 actual repository/traversal/delivery cannot turn unstructured %s into source proof",async scenario=>{
+ const f=memoryFixture(),scope=memoryScope(f.reference),writer=new ConvexMemoryRepository(f.ctx,f.reference,"write",f.ctx.db,{now:()=>1000});
+ const lineage={sourceId:`unstructured-${scenario}`,sourceEventId:`unstructured-event-${scenario}`,sourceRevision:1,role:"user" as const,trust:"user_assertion" as const};
+ const prepared=await prepareSourceContent(scope,lineage,`My favorite fruit is ${scenario==="canonical-mismatch"?"pear":"apricot"}.`,{now:()=>1000});await writer.putSource(prepared.source);
+ const facts:DerivedFact[]=["apricot",scenario==="contradiction"?"pear":"apricot"].map((value,index)=>({...observed,_id:"",factId:`native-unstructured-${index}`,tenantId:scope.tenantId,memorySpaceId:scope.memorySpaceId,ownerPrincipalId:scope.principalId,lineage,
+  fact:`My favorite fruit is ${value}.`,subject:undefined,predicate:undefined,object:undefined,createdAt:1000,updatedAt:1000}));
+ await writer.commitDerived({source:lineage,identity:{...lineage,stage:"facts",semanticPolicyVersion:observed.extractionPolicyVersion},facts,expectedFactVersions:Object.fromEntries(facts.map(fact=>[fact.factId,0]))});
+ const repository=new ConvexMemoryRepository(f.ctx,f.reference,"read",undefined,{now:()=>1000}),query="What is my favorite fruit",candidates=await repository.searchFactCandidates(query,8);
+ expect(candidates.facts).toHaveLength(2);expect(candidates.candidateWorkBound).toBe(false);
+ const proof=proveDirectFactLookup(query,candidates,1000,1,prepared.source);expect(proof).toBeUndefined();expect(directFactLookupSourceId(query,candidates,1000,1)).toBeUndefined();
+ const bindings:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]},inspected:string[]=[];
+ const traversal=await traverseConvexMemory(f.ctx,repository,candidates.facts.map(fact=>factEvidenceNode(fact,1)),resolveMemoryEffortPolicy({effort:"fast"}),bindings,undefined,fact=>{inspected.push(fact.factId);},query);
+ expect(new Set(inspected)).toEqual(new Set(facts.map(fact=>fact.factId)));expect(traversal.items.filter(item=>item.type==="fact")).toHaveLength(2);
+ expect(bindings.facts.map(fact=>fact.factId).sort()).toEqual(facts.map(fact=>fact.factId).sort());expect(directFactTraversalComplete(traversal.memoryEffort)).toBe(true);
+ await expect(repository.checkDelivery(bindings)).resolves.toMatchObject({version:1});expect(!!proof&&directFactTraversalComplete(traversal.memoryEffort)).toBe(false);
 });

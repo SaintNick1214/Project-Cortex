@@ -1,0 +1,412 @@
+{
+  "at": "2026-10-15T07:40:45.403060+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "relatedRepositories": {
+    "docs": "SaintNick1214/cortexmemory.dev; separate repository, docs updated separately",
+    "localProofs": "Project-Cortex-Proofs; separate local repository, no edits in this reconciliation"
+  },
+  "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+  "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+  "windowState": "CLOSED",
+  "environmentState": "CLEANED",
+  "verdict": "NOT_ACCEPTED_LATENCY_TARGETS_AND_RETAINED_SEED_LITERAL_ASSERTION",
+  "targetHistory": {
+    "state": "CLEANED",
+    "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-budget-2026-10-15",
+    "target": {
+      "id": 6188142,
+      "name": "woozy-whale-679",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1792651810024,
+      "deploymentUrl": "https://woozy-whale-679.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    "container": {
+      "name": "cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+      "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/75310545-3b70-46e5-884d-bcd2cc97e0e9"
+      },
+      "id": "31c0c259afbaa2a507f28cc35e8e843630e9744f5980f49c98b5adad4645e26d"
+    },
+    "ports": {
+      "web": 3390,
+      "basic": 3391
+    },
+    "launcherPid": 16003,
+    "rootExecSession": 53396,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "319378726e5ceb92b35e28c24f798dbd0e949fe37af04d0199817c54ca4449b0",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "99db18e3895d4330e3feb80007540293e02973fc74e83781cc0ddd06f106f884",
+    "startupStrictEmptyQuestion": true,
+    "startupExtractionSha256": "de42cc7d0c501618d4cadf0a31a508af880f78aa96ec749a6be878da25e29cc7",
+    "runtimeReadySha256": "243d568c530ddc2af2f4727b40c26081a6cce126813a512e2958b3eb2054343b",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T06:53:08.585Z",
+    "effortProfileRuntimeAcceptance": false,
+    "manifestSha256": "fc3a3b698b252abc2bdda8616a1b5d151174adc18bb3c674c7696d5effb621ff",
+    "backendManifestSha256": "3c81c8504fdd31e28c49945bffae5268dd60c4001a3d38ca7fa51abdf7fa7ba7",
+    "backendFileCount": 174,
+    "modelCalls": 0,
+    "readyMetadataHistoricalOnly": true,
+    "cleanupReceipt": "memory-effort-budget-native-cleanup-1792049188217.json"
+  },
+  "native": {
+    "verdict": "ACTUAL_PRODUCT_OUTCOMES_PASS_ACROSS_PREFIX_AND_CONTINUATION",
+    "prefixObservedChecks": 256,
+    "prefixExit": 1,
+    "prefixFailure": "Collector TypeError from optional nested memory metadata; genuine Fast response saved before failure",
+    "continuationObservedChecks": 357,
+    "continuationExit": 0,
+    "countsAreNotUniqueSum": true,
+    "captures": 2,
+    "canonicalMessageSourceVectorRows": 4,
+    "publicEffortModesPositive": 4,
+    "publicEffortModeCount": 4,
+    "publicRecallApiMs": {
+      "fast": 1216.7,
+      "normal": 1160.0,
+      "high": 1672.7,
+      "max": 970.5
+    },
+    "allModes": {
+      "selected": 2,
+      "depth": 2,
+      "route": "direct-facts-v1",
+      "optionalEntryLimitsOmitted": true,
+      "queryEmbeddingCalls": 0
+    },
+    "separatePersistedTopologyDepths": [
+      2,
+      4,
+      8,
+      13
+    ],
+    "sourceGrantAuthNegatives": "ACTUAL_PASS",
+    "cancelledTrackedEditStrictReadiness": "ACTUAL_PUBLIC_FACTS_VECTORS_4/4_PASS",
+    "strictReadinessMs": 7430.4,
+    "strictAgentResponseStarted": false,
+    "nativeOperations": 8,
+    "nativeFirstAttempts": 8,
+    "nativeUnknownLiabilityMicroUsd": 800000,
+    "nativeLiabilityIncludedInFinalTotals": true,
+    "publicApiTimingsAreNotBrowserSlo": true
+  },
+  "browser": {
+    "observed": 6,
+    "recallQuestionsCorrect": 5,
+    "recallQuestionsTotal": 5,
+    "timingMet": 3,
+    "timingTotal": 6,
+    "allResponseMemoryComplete": true,
+    "firstVisibleMs": [
+      3378.6,
+      3946.4,
+      6046.7,
+      5911.8,
+      7329.5,
+      5245.1
+    ],
+    "seed": "Nonspecific acknowledgement with unnecessary remember-confirmation question; literal apricot echo absent, retained as verifier unmet",
+    "fastCross": {
+      "correctPreference": true,
+      "selected": 4,
+      "retrievalMs": 739,
+      "deadlineMs": 750,
+      "actual785msLateCaseExercised": false
+    },
+    "sourceReviewIsNotInstalledSloAcceptance": true
+  },
+  "cli": {
+    "ordinaryCorrect": 2,
+    "ordinaryTotal": 2,
+    "timingMet": 0,
+    "timingTotal": 2,
+    "firstPrintedMs": [
+      7807.05392,
+      6682.274253
+    ],
+    "targetMs": 6000,
+    "responseCanonicalMemoryComplete": true,
+    "paidRetries": 0
+  },
+  "chat": {
+    "genuineInstalledCodegenTypesProductionBuild": "PASS",
+    "actualCorrectReply": "Your favorite fruit is apricot.",
+    "normalDefault": true,
+    "sameRunReconnect": true,
+    "phoneViewport": [
+      393,
+      852
+    ],
+    "phoneClientWidth": 393,
+    "phoneScrollWidth": 393,
+    "consoleWarnings": 0,
+    "consoleErrors": 0,
+    "responseMemoryComplete": true,
+    "numericalSlo": "NOT_INSTRUMENTED_NOT_CLAIMED"
+  },
+  "tools": {
+    "approvedReadonlyRecall": "ACTUAL_ONE_COMPLETE_APPROVED_MEMORY_RECALL_AND_ONE_DURABLE_NATIVE_RESULT",
+    "unapprovedMemoryRemember": "CANCELLED_ZERO_APPROVED_TOOL_EFFECT",
+    "canonicalInputBoundary": "An approved canonical user input may independently derive the fox fact through ordinary ingestion. Cancelled tool approval does not imply zero writes or zero ordinary canonical memory effects."
+  },
+  "finalVerifier": {
+    "actualExit": 1,
+    "status": "OBSERVED_WITH_UNMET_VERIFIER_CHECKS",
+    "satisfiedChecks": 247,
+    "unmetChecks": [
+      "normal-seed declared positive answer marker present"
+    ],
+    "selectedRuns": 11,
+    "allExpectedCompleteCancelledOutcomesMatched": true,
+    "stableAcrossCollection": true,
+    "clientsClosed": true,
+    "claim": "Observed selected snapshot with retained unmet assertion, not a rewritten PASS"
+  },
+  "financial": {
+    "allTargetOperations": 77,
+    "allTargetFirstAttempts": 77,
+    "startupCallsIncluded": 8,
+    "unknownLiabilityMicroUsdDistinctRunAccounts": 9600000,
+    "breakdown": {
+      "manualScoped": 6100000,
+      "nativeRegression": 800000,
+      "startupOther": 2700000
+    },
+    "sharedManualTenantMirrorMicroUsd": 6900000,
+    "mirrorIncludesNativeRegressionMicroUsd": 800000,
+    "mirrorNotAddedAgain": true,
+    "settledUnits": 0,
+    "reservedUnits": 0,
+    "activeConcurrency": 0,
+    "exactUsd": "UNKNOWN",
+    "paidRetries": 0,
+    "rule": "Distinct run accounts counted once. Operation and tenant control mirrors are not additional charges. Resource deletion/cancellation does not refund UNKNOWN liability."
+  },
+  "cleanup": {
+    "status": "ABSENT",
+    "freshChecks": 21,
+    "freshChecksPassed": 21,
+    "originalRootLauncherActualExit": 130,
+    "rootReplacementChatServerActualExit": 0,
+    "earlierAgentChatServerOriginalExit": "UNKNOWN_NO_JOIN_AVAILABLE",
+    "earlierAgentPidsAndPortAbsent": true,
+    "ownedDatabaseContainerPrivatePathsProcesses": "ABSENT",
+    "browserSignedOutClosedViewportReset": true
+  },
+  "currentOwnedEnvironment": null,
+  "nextCoherentRepair": {
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
+  },
+  "outcomePercentages": {
+    "browserObservation": {
+      "complete": 6,
+      "total": 6,
+      "percent": 100.0
+    },
+    "browserRecallQuestionsCorrect": {
+      "complete": 5,
+      "total": 5,
+      "percent": 100.0
+    },
+    "browserTimingTargetsMet": {
+      "complete": 3,
+      "total": 6,
+      "percent": 50.0
+    },
+    "browserSeedLiteralMarker": {
+      "complete": 0,
+      "total": 1,
+      "percent": 0.0
+    },
+    "publicEffortModesPositive": {
+      "complete": 4,
+      "total": 4,
+      "percent": 100.0
+    },
+    "persistedTopologyDepthCases": {
+      "complete": 4,
+      "total": 4,
+      "percent": 100.0
+    },
+    "cliCorrect": {
+      "complete": 2,
+      "total": 2,
+      "percent": 100.0
+    },
+    "cliTimingTargetsMet": {
+      "complete": 0,
+      "total": 2,
+      "percent": 0.0
+    },
+    "selectedExpectedRunOutcomes": {
+      "complete": 11,
+      "total": 11,
+      "percent": 100.0
+    },
+    "finalVerifierSatisfiedAssertions": {
+      "complete": 247,
+      "total": 248,
+      "percent": 99.6,
+      "acceptanceClaim": false
+    },
+    "cleanupAbsenceChecks": {
+      "complete": 21,
+      "total": 21,
+      "percent": 100.0
+    },
+    "goalMilestones": {
+      "complete": 4,
+      "total": 6,
+      "percent": 66.7
+    }
+  },
+  "goal": {
+    "complete": 4,
+    "total": 6,
+    "percent": 66.7,
+    "fullGoalComplete": false,
+    "finalIndependentAudit": "NOT_APPROVED_PENDING_REQUIRED_OUTCOMES"
+  },
+  "preservedHistory": "All prior scoped failures and verdicts remain. No original 17-task scope reopened; no C7 missing backing, filesystem identity, process custody or archive transport reconstruction claimed.",
+  "evidence": [
+    {
+      "path": "memory-effort-budget-final-snapshot-1792049072200.json",
+      "bytes": 345505,
+      "sha256": "b46a728edfda0b05a1c3504387a97cc050b6e6cbedfb0a9e9be224294c1b313a",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-final-selection.json",
+      "bytes": 3828,
+      "sha256": "166058842224b7d7ad7bfa76775686a0cb10af9cf7492de39a51d43f948322da",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-native-actual-outcome.md",
+      "bytes": 4501,
+      "sha256": "61642ed1b72cc542dbdd43544664492cb15538aa0a81a26971068c8d36e870b8",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-native-actual-outcome.json",
+      "bytes": 19558,
+      "sha256": "d57a72764ff3f76e0d627dbb2be48efca305eeea2c00a2af14a19a50e1c02ed2",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-native-regression-1792047679001.json",
+      "bytes": 137533,
+      "sha256": "aeb55f52b52823bc962e99ee84e0388b760565e20e01a3167ac8b36a97b33e55",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-native-continuation-1792048404257.json",
+      "bytes": 149031,
+      "sha256": "94bc732c260e792af96b678a73e2bbf22593635708a025c6387374f2e3af9258",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-native-liveness-1792048425780.json",
+      "bytes": 6283,
+      "sha256": "7282a1d492fff51373c999efb82661b582e219763127ce3a8b3a99b03c779f14",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-browser-summary.json",
+      "bytes": 5206,
+      "sha256": "0cf975a14cc10327830143bff3dfbe44815ac55231a6c5abcc7f0013c54b13e1",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-cli-report.md",
+      "bytes": 2764,
+      "sha256": "434f80e89a9a5e82a47f879144a573ee3dd947741f2492b0738ae8bce8871869",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-cli-report.json",
+      "bytes": 7871,
+      "sha256": "22e6a2ee5c38db9630f1cccc54f184a2e64f9bd98f84f7100d66aa98b8a67510",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-chat-ui-observed.json",
+      "bytes": 834,
+      "sha256": "2f1aa3bcafa1e34371c5844ff52ed64fa78f7d4f9300cdff08072d665119e24c",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-chat-cleanup.json",
+      "bytes": 1012,
+      "sha256": "5cbdca43d5fa948921afd0ce5ae92804bf120eabc143ca8f6ebbabf6d3ea0143",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-launcher-exit.json",
+      "bytes": 350,
+      "sha256": "3fa20ae15d8cf81cf8a955b6bf655699c89d70a176824e54972f2fbad251b27c",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    },
+    {
+      "path": "memory-effort-budget-native-cleanup-1792049188217.json",
+      "bytes": 2368,
+      "sha256": "8bfb8ab97fc1ffaf44b9df111456d2cad2f8e5b67f1063e4156c3643355a530a",
+      "backing": "PRESENT_LOCAL; Git backing requires explicit staging/commit, not assumed"
+    }
+  ],
+  "reconciliationActions": {
+    "services": 0,
+    "builds": 0,
+    "inference": 0,
+    "productEdits": 0,
+    "docsRepoEdits": 0,
+    "proofsRepoEdits": 0,
+    "reviews": 0,
+    "largeEvidenceCopies": 0
+  },
+  "reconciliationChecks": {
+    "jsonReadAndCurrentStateAssertions": "PASS",
+    "rawEvidenceHashesUnchanged": "PASS",
+    "parentDocumentHistoricalPrefixesPreserved": "PASS",
+    "selectedSixPathGitDiffCheckActualExit": 0,
+    "servicesBuildsOrQualificationReruns": 0
+  }
+}

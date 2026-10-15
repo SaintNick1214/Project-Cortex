@@ -1,4 +1,4 @@
-import type { DerivedFact } from "./contracts.js";
+import type { DerivedFact, SourceContent } from "./contracts.js";
 import type { MemoryEffortTrace } from "./memory-effort.js";
 
 /** A versioned literal lookup rule, not a semantic confidence estimate. Every
@@ -25,6 +25,65 @@ export function sufficientDirectFactLookup(text: string, candidates: { facts: re
   if (fact.version !== 1 || fact.supersedes || fact.supersededBy || fact.supersedesEndpoint || fact.supersededByEndpoint || fact.historyReceipt
     || fact.updatedAt !== fact.createdAt || fact.validFrom !== undefined && fact.validFrom > now || fact.validUntil !== undefined) return false;
   return literalPropertyEvidence(text,fact,now);
+}
+
+export type DirectFactLookupProof = { seed: DerivedFact; source?: undefined } | { seed: DerivedFact; source: SourceContent; query: string };
+/** The new source proof needs an explicit value to compare with canonical text.
+ * Historical singleton facts may omit these fields; that rule stays separate. */
+function structuredLiteralValue(fact: DerivedFact): fact is DerivedFact & { subject: string; predicate: string; object: string } {
+  return [fact.subject, fact.predicate, fact.object].every(value => typeof value === "string" && words(value).length > 0);
+}
+function pristineFact(fact: DerivedFact, now: number): boolean {
+  return fact.version === 1 && !fact.supersedes && !fact.supersededBy && !fact.supersedesEndpoint && !fact.supersededByEndpoint && !fact.historyReceipt
+    && fact.updatedAt === fact.createdAt && (fact.validFrom === undefined || fact.validFrom <= now) && fact.validUntil === undefined;
+}
+function sameFactSource(fact: DerivedFact, source: Pick<DerivedFact,"tenantId"|"memorySpaceId"|"ownerPrincipalId"|"lineage">): boolean {
+  return fact.tenantId === source.tenantId && fact.memorySpaceId === source.memorySpaceId && fact.ownerPrincipalId === source.ownerPrincipalId
+    && fact.lineage.role === "user" && source.lineage.role === "user"
+    && fact.lineage.sourceId === source.lineage.sourceId && fact.lineage.sourceEventId === source.lineage.sourceEventId && fact.lineage.sourceRevision === source.lineage.sourceRevision;
+}
+/** Deliberately finite projection grammar. These statements supply no aliases or
+ * answer evidence: the exact fact AND single canonical assertion below do that.
+ * Unknown projections remain a semantic miss, even when their source agrees. */
+function neutralLiteralProjection(fact: DerivedFact, seed: DerivedFact): boolean {
+  const head = literalAssertionHead(seed.fact), category = head?.match(/^self:favorite ([\p{L}\p{N}]+)$/u)?.[1];
+  if (!category || !fact.object || !fact.predicate || !["user", "the user", "i", "me", "my", words(fact.ownerPrincipalId).join(" ")].includes(words(fact.subject ?? "").join(" "))) return false;
+  const statement = words(fact.fact).join(" "), predicate = words(fact.predicate).join(" "), object = words(fact.object).join(" ");
+  return selfPrefixes.some(prefix => statement === `${prefix} likes ${category}` && predicate === "likes" && object === category
+    || statement === `${prefix} stated a specific preference for a type of ${category}` && predicate === "has a preference for" && object === words(seed.object ?? "").join(" "));
+}
+function compatibleLiteralProjection(text: string, seed: DerivedFact, fact: DerivedFact, now: number): boolean {
+  return structuredLiteralValue(seed) && structuredLiteralValue(fact) && pristineFact(fact, now) && sameFactSource(fact, seed)
+    && (literalPropertyEvidence(text, fact, now) && words(fact.object).join(" ") === words(seed.object).join(" ") || neutralLiteralProjection(fact, seed));
+}
+function sourceProofSeed(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number, version?: 1): DerivedFact | undefined {
+  if (version !== 1 || text.length > 1024 || candidates.candidateWorkBound || candidates.facts.length < 2) return undefined;
+  const seed = candidates.facts.find(fact => structuredLiteralValue(fact) && pristineFact(fact, now) && literalPropertyEvidence(text, fact, now));
+  return seed && seed.lineage.sourceRevision === 1 && candidates.facts.every(fact => compatibleLiteralProjection(text, seed, fact, now)) ? seed : undefined;
+}
+/** Avoid another source read for broad/ambiguous/partial/unknown candidates. The
+ * returned ID is only a prospective read location, never an authority decision. */
+export function directFactLookupSourceId(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number, version?: 1): string | undefined {
+  return sourceProofSeed(text, candidates, now, version)?.lineage.sourceId;
+}
+/** New immutable-snapshot opt-in only. All current direct candidates must be
+ * explained by the SAME one-assertion canonical user source. Every candidate is
+ * still traversed/bound; this never removes facts or relaxes output/work bounds. */
+export function proveDirectFactLookup(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number,
+  version?: 1, source?: SourceContent): DirectFactLookupProof | undefined {
+  if (sufficientDirectFactLookup(text, candidates, now)) return { seed: candidates.facts[0]! };
+  const seed = sourceProofSeed(text, candidates, now, version);
+  if (!seed || !source || source.tombstonedAt !== undefined || source.lineage.sourceRevision !== 1
+    || !/^[a-f0-9]{64}$/.test(source.contentHash) || !/^[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?(?: [\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?)*\.?$/u.test(source.content)) return undefined;
+  if (!sameFactSource(seed, source) || !literalPropertyEvidence(text, { ...seed, fact: source.content }, now)) return undefined;
+  const proof = { seed, source, query: text };
+  return directFactProofCompatible(proof, candidates.facts, now) ? proof : undefined;
+}
+/** Called for every discovered current fact BEFORE entry/queue shedding. */
+export function directFactProofCompatible(proof: DirectFactLookupProof, facts: readonly DerivedFact[], now: number): boolean {
+  if (!proof.source) return directFactTraversalCompatible(proof.seed, facts);
+  const { source, query } = proof;
+  return facts.every(fact => sameFactSource(fact, source) && compatibleLiteralProjection(query, proof.seed, fact, now));
 }
 
 /** Priority within an already-authorized current candidate set, never proof that

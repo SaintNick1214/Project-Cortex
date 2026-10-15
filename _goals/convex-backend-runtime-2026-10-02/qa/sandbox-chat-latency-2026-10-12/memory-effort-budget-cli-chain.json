@@ -1,0 +1,760 @@
+{
+  "version": 1,
+  "status": "OFFLINE_EXACT_RUN_CLI_CHAIN_ANALYSIS",
+  "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+  "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+  "targetStatus": "DELETED_BEFORE_THIS_ANALYSIS_PER_ROOT; no service access attempted",
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-cli-iris-1792048277951.json",
+      "bytes": 42071,
+      "sha256": "e6b700377565b04ca8d79b888c5d3a561f8a36eab4572caad30bdcae370f35ee"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-cli-iris-collector.mjs",
+      "bytes": 22123,
+      "sha256": "197c8a1628e0935186543fcbed2b9ca71c3ec9c5b12433dfc15825485a681d5f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-service-log-snapshot-cli-post-pair-1792048325883.json",
+      "bytes": 698334,
+      "sha256": "8f7ae8d9f4d8e2ebe93e0142814cb32c8c8b56acfea893c05f5117720f5dd90b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-quiet-metadata.json",
+      "bytes": 3679,
+      "sha256": "ec87ce818cc003771ac1d32bc465fe5b1dfb8a350646727144a2df207e15797c"
+    }
+  ],
+  "scope": "Two actual c258 Basic CLI Normal default turns, raw receipts unchanged; analysis only, no source/model/service/build/review work",
+  "serviceCalls": 0,
+  "modelCalls": 0,
+  "writes": [
+    "memory-effort-budget-cli-chain.md",
+    "memory-effort-budget-cli-chain.json"
+  ],
+  "timingDefinition": {
+    "boundary": "CLI monotonic submit.begin to first nonblank answer process.stdout.write callback acknowledgement",
+    "startupExcluded": true,
+    "startupEvidence": "Collector first spawns Docker npm start, waits for You prompt, shows default effort and runs /new before sending either measured plain-text intent. Per-turn same-commandId atMs subtraction equals durationMs. Thus Docker/npm/tsx startup, prior /new, history/readiness and eventual full-response/async-memory completion are outside this first-answer measurement.",
+    "notTerminalPaint": "Acknowledgement of stdout write, not measurement of pixels on a human terminal.",
+    "monotonicSource": "The captured installed CLI emits submit and first_printed on its same performance clock. Host collector chunk offsets and server UTC timestamps are separate clocks."
+  },
+  "runs": [
+    {
+      "label": "first-compound-iris-seed",
+      "runId": "run:c377ac0356544095c08ab634208d46adbf61cf65af2e15f58bf61600f13f32f7",
+      "intentRequestId": "ab58f36e-42f6-411a-8d73-22ded41ac237",
+      "commandId": 1,
+      "normalTargetMs": 6000,
+      "firstPrintedAnswerMs": 7807.05392,
+      "targetMissMs": 1807.0539200000003,
+      "functionalPass": true,
+      "actualClientClock": {
+        "authMs": 365.274875,
+        "initialFreshSession": {
+          "rpcId": 1,
+          "method": "runtimeClient:session",
+          "beginAfterSubmitMs": 382.19625,
+          "endAfterSubmitMs": 707.177083,
+          "durationMs": 324.98083299999996
+        },
+        "submitEnvelope": {
+          "rpcId": 2,
+          "method": "runtimeClient:submitAndStartEnvelope",
+          "beginAfterSubmitMs": 709.3234580000001,
+          "endAfterSubmitMs": 1439.1385420000001,
+          "durationMs": 729.8150840000001
+        },
+        "postAdmissionFreshSession": {
+          "rpcId": 3,
+          "method": "runtimeClient:session",
+          "beginAfterSubmitMs": 1439.4752090000002,
+          "endAfterSubmitMs": 1652.7204590000001,
+          "durationMs": 213.24524999999994
+        },
+        "allCompletedFreshSessionsBeforeFirstPrint": [
+          {
+            "rpcId": 1,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 382.19625,
+            "endAfterSubmitMs": 707.177083,
+            "durationMs": 324.98083299999996
+          },
+          {
+            "rpcId": 3,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 1439.4752090000002,
+            "endAfterSubmitMs": 1652.7204590000001,
+            "durationMs": 213.24524999999994
+          },
+          {
+            "rpcId": 5,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 1868.462834,
+            "endAfterSubmitMs": 2089.409084,
+            "durationMs": 220.94624999999996
+          },
+          {
+            "rpcId": 7,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 5580.632294,
+            "endAfterSubmitMs": 5764.536086,
+            "durationMs": 183.90379200000007
+          },
+          {
+            "rpcId": 9,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 7602.914128,
+            "endAfterSubmitMs": 7806.070045,
+            "durationMs": 203.15591700000004
+          }
+        ],
+        "allCompletedObserveRPCsBeforeFirstPrint": [
+          {
+            "rpcId": 4,
+            "method": "runtimeClient:observeEnvelope",
+            "beginAfterSubmitMs": 1655.942459,
+            "endAfterSubmitMs": 1867.3634590000001,
+            "durationMs": 211.42100000000005
+          },
+          {
+            "rpcId": 6,
+            "method": "runtimeClient:observeEnvelope",
+            "beginAfterSubmitMs": 5293.249294,
+            "endAfterSubmitMs": 5579.8162520000005,
+            "durationMs": 286.56695800000034
+          },
+          {
+            "rpcId": 8,
+            "method": "runtimeClient:observeEnvelope",
+            "beginAfterSubmitMs": 6785.622128,
+            "endAfterSubmitMs": 7602.033337,
+            "durationMs": 816.4112089999999
+          }
+        ],
+        "openRPCsAtFirstPrint": [],
+        "lastCompletedObserve": {
+          "rpcId": 8,
+          "method": "runtimeClient:observeEnvelope",
+          "beginAfterSubmitMs": 6785.622128,
+          "endAfterSubmitMs": 7602.033337,
+          "durationMs": 816.4112089999999
+        },
+        "freshSessionImmediatelyBeforePrint": {
+          "rpcId": 9,
+          "method": "runtimeClient:session",
+          "beginAfterSubmitMs": 7602.914128,
+          "endAfterSubmitMs": 7806.070045,
+          "durationMs": 203.15591700000004
+        },
+        "lastSessionEndToPrintMs": 0.9838749999998981,
+        "partition": [
+          {
+            "label": "submit\u2192initial fresh session end (includes auth when present)",
+            "ms": 707.177083
+          },
+          {
+            "label": "gap before envelope.begin",
+            "ms": 2.1463750000000346
+          },
+          {
+            "label": "submit/start envelope RPC",
+            "ms": 729.8150840000001
+          },
+          {
+            "label": "envelope.end\u2192post-admission fresh session end",
+            "ms": 213.58191699999998
+          },
+          {
+            "label": "post-admission session.end\u2192first stdout acknowledgement",
+            "ms": 6154.333461
+          }
+        ],
+        "unallocatedIntervalMeaning": "Last partition is observed waiting/delivery after post-admission session; it overlaps native preparation, recall, inference, durable publication and subsequent observer/session RPCs. No server/client clock mapping exists to subdivide it additively by server phases."
+      },
+      "nativeIdentityJoin": {
+        "runIdTraceExecutionId": "ec12f989-43df-44a4-8324-df940b62007b",
+        "parentRequestId": "8969a7f7a7f54263",
+        "runBudgetId": "ee8416ad76c856ef678e9475c1d12aad4edd7d6d815a283001592bff8af3c8f1",
+        "agentRespondSemanticId": "sha256:cd75761e447ecb921a296d462887ecf1040ed8e4cff3a9be486c13354fa7ce3c",
+        "queryEmbeddingSemanticId": "sha256:b9288e7f46f43d6cb0c5625d82dc673a801fc87e015e0fe81613f9bd8d3cc992",
+        "method": "Exact runId direct.prepare trace\u2192same executionId Gateway phases\u2192native completion requestId child executions; budget+operationKey+semanticId separate query embedding and main response. Native submit envelope joined by exact runId admission trace executionId. Client rpcId has no native execution identifier and is not invented as a cross-clock join."
+      },
+      "nativeActionBeforeMainDispatch": {
+        "ms": 4038,
+        "partition": [
+          {
+            "label": "direct.prepare begin\u2192end",
+            "ms": 436
+          },
+          {
+            "label": "post-direct preparation\u2192recall.begin (initial context/direct-fact gate)",
+            "ms": 440
+          },
+          {
+            "label": "context.recall begin\u2192end (entire governed semantic path)",
+            "ms": 2281
+          },
+          {
+            "label": "post-recall\u2192turn.prepare.end (save/fit/handoff)",
+            "ms": 389
+          },
+          {
+            "label": "turn.model.begin\u2192main Gateway stream.begin",
+            "ms": 492
+          }
+        ],
+        "clock": "Server Action phase UTC timestamps (integer ms); includes child-RPC waits, distinct from child executionTime."
+      },
+      "nativeNestedRecall": {
+        "whole": {
+          "beginPhase": "context.recall.begin",
+          "endPhase": "context.recall.end",
+          "startServerMs": 1792048281085,
+          "endServerMs": 1792048283366,
+          "actionWallMs": 2281
+        },
+        "embeddingAdmitCheckpoint": {
+          "beginPhase": "gateway.ledger.admit-checkpoint.begin",
+          "endPhase": "gateway.ledger.admit-checkpoint.end",
+          "startServerMs": 1792048281096,
+          "endServerMs": 1792048281508,
+          "actionWallMs": 412,
+          "nativeMonotonicDurationMs": 412
+        },
+        "embeddingNative": {
+          "beginPhase": "gateway.native.embed.begin",
+          "endPhase": "gateway.native.embed.ready",
+          "startServerMs": 1792048281511,
+          "endServerMs": 1792048281758,
+          "actionWallMs": 247,
+          "nativeMonotonicDurationMs": 247
+        },
+        "embeddingCapture": {
+          "beginPhase": "gateway.ledger.capture.begin",
+          "endPhase": "gateway.ledger.capture.end",
+          "startServerMs": 1792048281764,
+          "endServerMs": 1792048282175,
+          "actionWallMs": 411,
+          "nativeMonotonicDurationMs": 411
+        },
+        "embeddingAttach": {
+          "beginPhase": "gateway.ledger.attach.begin",
+          "endPhase": "gateway.ledger.attach.end",
+          "startServerMs": 1792048282176,
+          "endServerMs": 1792048282389,
+          "actionWallMs": 213,
+          "nativeMonotonicDurationMs": 212
+        },
+        "postEmbeddingAttachmentToRecallEndWallMs": 977,
+        "retrievalReportedByPublicTraceMs": 975,
+        "prepareReadsNative": {
+          "function": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "26b46aa0-fe98-4dc8-be93-50e358fd30e6",
+          "requestId": "8969a7f7a7f54263",
+          "serverStartMs": 1792048282392.0,
+          "serverCompletionMs": 1792048282626.0781,
+          "nativeExecutionMs": 234.125497,
+          "cachedResult": false,
+          "errorPresent": false
+        },
+        "readMatchesAndDeliveryNative": {
+          "function": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "5ace5b13-b1e2-429a-91af-a89988e30022",
+          "requestId": "8969a7f7a7f54263",
+          "serverStartMs": 1792048282767.0,
+          "serverCompletionMs": 1792048283363.2097,
+          "nativeExecutionMs": 596.592951,
+          "cachedResult": false,
+          "errorPresent": false
+        },
+        "notAdditive": "All nested inside context.recall; child executions, model wrapper spans and public traversal duration overlap the same interval. No DB-only CPU attribution."
+      },
+      "nativeMain": {
+        "admitCheckpoint": {
+          "beginPhase": "gateway.ledger.admit-checkpoint.begin",
+          "endPhase": "gateway.ledger.admit-checkpoint.end",
+          "startServerMs": 1792048283836,
+          "endServerMs": 1792048284243,
+          "actionWallMs": 407,
+          "nativeMonotonicDurationMs": 407
+        },
+        "admitPreparedNative": {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "d4e49989-ec75-4135-bc77-acba7c4d7989",
+          "requestId": "8969a7f7a7f54263",
+          "serverStartMs": 1792048283840.0,
+          "serverCompletionMs": 1792048284242.874,
+          "nativeExecutionMs": 391.211125,
+          "cachedResult": false,
+          "errorPresent": false
+        },
+        "gatewayStreamToFirstText": {
+          "beginPhase": "gateway.native.stream.begin",
+          "endPhase": "gateway.native.stream.first-text",
+          "startServerMs": 1792048284247,
+          "endServerMs": 1792048284743,
+          "actionWallMs": 496,
+          "nativeMonotonicDurationMs": 496
+        },
+        "firstVisibility": {
+          "beginPhase": "gateway.ledger.visibility.begin",
+          "endPhase": "gateway.ledger.visibility.end",
+          "startServerMs": 1792048284744,
+          "endServerMs": 1792048285012,
+          "actionWallMs": 268,
+          "nativeMonotonicDurationMs": 268
+        },
+        "firstRecordOutput": {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "9ad80ca9-babb-4ed0-94b7-fe5a483a95a8",
+          "requestId": "8969a7f7a7f54263",
+          "serverStartMs": 1792048285017.0,
+          "serverCompletionMs": 1792048285280.5051,
+          "nativeExecutionMs": 232.416497,
+          "cachedResult": false,
+          "errorPresent": false
+        },
+        "directPrepareBeginToFirstRecordOutputCompletionWallMs": 5071.505126953125,
+        "mainSetupResidualOutsideAdmitCheckpointApproxMs": 85,
+        "residualMeaning": "Observed main setup envelope less its nested admit-checkpoint duration only; remaining component setup, dispatch gaps and scheduling are not individually apportioned. Integer UTC/monotonic rounding applies.",
+        "inferenceBoundaryMeaning": "Gateway stream invocation\u2192first text includes client/provider/network/Gateway processing. This receipt cannot separate Convex internal routing, external-provider queue/compute, or network transit."
+      },
+      "nativeAdmission": {
+        "function": "runtimeClient:submitAndStartEnvelope",
+        "executionId": "d32380cc-dc60-4209-9161-a60687695e18",
+        "requestId": "5e89b5db25b0bc26",
+        "serverStartMs": 1792048279453.0,
+        "serverCompletionMs": 1792048280096.5232,
+        "nativeExecutionMs": 623.86197,
+        "cachedResult": false,
+        "errorPresent": false
+      },
+      "nativeInitialPrepare": {
+        "function": "runtimeAgent:prepareDirectTurnV8",
+        "executionId": "6d77cb4e-49a1-4366-8f87-3ae87aca5fc7",
+        "requestId": "8969a7f7a7f54263",
+        "serverStartMs": 1792048280211.0,
+        "serverCompletionMs": 1792048280644.6572,
+        "nativeExecutionMs": 423.320661,
+        "cachedResult": false,
+        "errorPresent": false
+      },
+      "nativeInitialContext": {
+        "function": "runtimeAgent:contextInputsAndEmbeddingV8",
+        "executionId": "f66e63f6-eedd-46cc-b1ab-74c75832413a",
+        "requestId": "8969a7f7a7f54263",
+        "serverStartMs": 1792048280647.0,
+        "serverCompletionMs": 1792048281083.6387,
+        "nativeExecutionMs": 436.76129099999997,
+        "cachedResult": false,
+        "errorPresent": false
+      },
+      "nativeSaveFit": {
+        "function": "runtimeAgent:saveAndPrepareContextV8",
+        "executionId": "fafc2a7e-0b9b-4dd9-aa9f-167014d3cac7",
+        "requestId": "8969a7f7a7f54263",
+        "serverStartMs": 1792048283371.0,
+        "serverCompletionMs": 1792048283752.9148,
+        "nativeExecutionMs": 374.86827900000003,
+        "cachedResult": false,
+        "errorPresent": false
+      },
+      "directGate": {
+        "phase": "context.direct.candidates.insufficient",
+        "candidateFacts": 1,
+        "meaning": "Actual direct candidates were declared insufficient; this establishes fallback, not the exact semantic fact mismatch."
+      },
+      "input": {
+        "selectedMessages": 1,
+        "selectedMemories": 6,
+        "selectedFacts": 1,
+        "selectedPending": 0,
+        "contextBytes": 2043,
+        "inputTokens": 30798,
+        "inputLimit": 32768
+      }
+    },
+    {
+      "label": "warm-iris-question-new-conversation",
+      "runId": "run:5b489b08844c5e0d6fbf2b419a35103a79908794f507cf6c3376a910164f9d8f",
+      "intentRequestId": "50753522-045d-4eea-b654-1f3570d99b00",
+      "commandId": 7,
+      "normalTargetMs": 6000,
+      "firstPrintedAnswerMs": 6682.274253,
+      "targetMissMs": 682.2742529999996,
+      "functionalPass": true,
+      "actualClientClock": {
+        "authMs": null,
+        "initialFreshSession": {
+          "rpcId": 53,
+          "method": "runtimeClient:session",
+          "beginAfterSubmitMs": 0.5867499999985739,
+          "endAfterSubmitMs": 172.7487089999995,
+          "durationMs": 172.16195900000093
+        },
+        "submitEnvelope": {
+          "rpcId": 54,
+          "method": "runtimeClient:submitAndStartEnvelope",
+          "beginAfterSubmitMs": 173.762999999999,
+          "endAfterSubmitMs": 629.0152500000004,
+          "durationMs": 455.25225000000137
+        },
+        "postAdmissionFreshSession": {
+          "rpcId": 55,
+          "method": "runtimeClient:session",
+          "beginAfterSubmitMs": 629.3297920000005,
+          "endAfterSubmitMs": 797.6130840000005,
+          "durationMs": 168.28329200000007
+        },
+        "allCompletedFreshSessionsBeforeFirstPrint": [
+          {
+            "rpcId": 53,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 0.5867499999985739,
+            "endAfterSubmitMs": 172.7487089999995,
+            "durationMs": 172.16195900000093
+          },
+          {
+            "rpcId": 55,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 629.3297920000005,
+            "endAfterSubmitMs": 797.6130840000005,
+            "durationMs": 168.28329200000007
+          },
+          {
+            "rpcId": 57,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 1093.970792,
+            "endAfterSubmitMs": 1293.7693760000002,
+            "durationMs": 199.79858400000012
+          },
+          {
+            "rpcId": 59,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 5248.820460999999,
+            "endAfterSubmitMs": 5453.079253,
+            "durationMs": 204.25879200000054
+          },
+          {
+            "rpcId": 61,
+            "method": "runtimeClient:session",
+            "beginAfterSubmitMs": 6454.483669999998,
+            "endAfterSubmitMs": 6681.081836999998,
+            "durationMs": 226.5981670000001
+          }
+        ],
+        "allCompletedObserveRPCsBeforeFirstPrint": [
+          {
+            "rpcId": 56,
+            "method": "runtimeClient:observeEnvelope",
+            "beginAfterSubmitMs": 799.6849169999987,
+            "endAfterSubmitMs": 1093.3870009999991,
+            "durationMs": 293.70208400000047
+          },
+          {
+            "rpcId": 58,
+            "method": "runtimeClient:observeEnvelope",
+            "beginAfterSubmitMs": 4935.629543999999,
+            "endAfterSubmitMs": 5248.576960999999,
+            "durationMs": 312.9474169999994
+          },
+          {
+            "rpcId": 60,
+            "method": "runtimeClient:observeEnvelope",
+            "beginAfterSubmitMs": 6150.57242,
+            "endAfterSubmitMs": 6454.226044999999,
+            "durationMs": 303.653624999999
+          }
+        ],
+        "openRPCsAtFirstPrint": [
+          {
+            "rpcId": 62,
+            "method": "runtimeClient:observeEnvelope",
+            "beginAfterSubmitMs": 6681.761461999999
+          }
+        ],
+        "lastCompletedObserve": {
+          "rpcId": 60,
+          "method": "runtimeClient:observeEnvelope",
+          "beginAfterSubmitMs": 6150.57242,
+          "endAfterSubmitMs": 6454.226044999999,
+          "durationMs": 303.653624999999
+        },
+        "freshSessionImmediatelyBeforePrint": {
+          "rpcId": 61,
+          "method": "runtimeClient:session",
+          "beginAfterSubmitMs": 6454.483669999998,
+          "endAfterSubmitMs": 6681.081836999998,
+          "durationMs": 226.5981670000001
+        },
+        "lastSessionEndToPrintMs": 1.1924160000016855,
+        "partition": [
+          {
+            "label": "submit\u2192initial fresh session end (includes auth when present)",
+            "ms": 172.7487089999995
+          },
+          {
+            "label": "gap before envelope.begin",
+            "ms": 1.0142909999995027
+          },
+          {
+            "label": "submit/start envelope RPC",
+            "ms": 455.25225000000137
+          },
+          {
+            "label": "envelope.end\u2192post-admission fresh session end",
+            "ms": 168.59783400000015
+          },
+          {
+            "label": "post-admission session.end\u2192first stdout acknowledgement",
+            "ms": 5884.661168999999
+          }
+        ],
+        "unallocatedIntervalMeaning": "Last partition is observed waiting/delivery after post-admission session; it overlaps native preparation, recall, inference, durable publication and subsequent observer/session RPCs. No server/client clock mapping exists to subdivide it additively by server phases."
+      },
+      "nativeIdentityJoin": {
+        "runIdTraceExecutionId": "66cc9aee-a829-4a1b-844f-b274509ce0b1",
+        "parentRequestId": "efe498f40f5389e9",
+        "runBudgetId": "9d0b53c5c1c87ee81bc38d1575f51b4fbdd3e6cf741427746fca265cc6436c39",
+        "agentRespondSemanticId": "sha256:4b3e1d418645959a5a401ba27d93322f94c1f459758c52142e2476e97db6bc40",
+        "queryEmbeddingSemanticId": "sha256:60ab078ae30f7b05b2679d41d95424d7884aa8a28b281fc7736cf2557fd74e01",
+        "method": "Exact runId direct.prepare trace\u2192same executionId Gateway phases\u2192native completion requestId child executions; budget+operationKey+semanticId separate query embedding and main response. Native submit envelope joined by exact runId admission trace executionId. Client rpcId has no native execution identifier and is not invented as a cross-clock join."
+      },
+      "nativeActionBeforeMainDispatch": {
+        "ms": 4204,
+        "partition": [
+          {
+            "label": "direct.prepare begin\u2192end",
+            "ms": 193
+          },
+          {
+            "label": "post-direct preparation\u2192recall.begin (initial context/direct-fact gate)",
+            "ms": 485
+          },
+          {
+            "label": "context.recall begin\u2192end (entire governed semantic path)",
+            "ms": 2568
+          },
+          {
+            "label": "post-recall\u2192turn.prepare.end (save/fit/handoff)",
+            "ms": 464
+          },
+          {
+            "label": "turn.model.begin\u2192main Gateway stream.begin",
+            "ms": 494
+          }
+        ],
+        "clock": "Server Action phase UTC timestamps (integer ms); includes child-RPC waits, distinct from child executionTime."
+      },
+      "nativeNestedRecall": {
+        "whole": {
+          "beginPhase": "context.recall.begin",
+          "endPhase": "context.recall.end",
+          "startServerMs": 1792048299047,
+          "endServerMs": 1792048301615,
+          "actionWallMs": 2568
+        },
+        "embeddingAdmitCheckpoint": {
+          "beginPhase": "gateway.ledger.admit-checkpoint.begin",
+          "endPhase": "gateway.ledger.admit-checkpoint.end",
+          "startServerMs": 1792048299055,
+          "endServerMs": 1792048299787,
+          "actionWallMs": 732,
+          "nativeMonotonicDurationMs": 732
+        },
+        "embeddingNative": {
+          "beginPhase": "gateway.native.embed.begin",
+          "endPhase": "gateway.native.embed.ready",
+          "startServerMs": 1792048299789,
+          "endServerMs": 1792048300097,
+          "actionWallMs": 308,
+          "nativeMonotonicDurationMs": 307
+        },
+        "embeddingCapture": {
+          "beginPhase": "gateway.ledger.capture.begin",
+          "endPhase": "gateway.ledger.capture.end",
+          "startServerMs": 1792048300103,
+          "endServerMs": 1792048300306,
+          "actionWallMs": 203,
+          "nativeMonotonicDurationMs": 203
+        },
+        "embeddingAttach": {
+          "beginPhase": "gateway.ledger.attach.begin",
+          "endPhase": "gateway.ledger.attach.end",
+          "startServerMs": 1792048300307,
+          "endServerMs": 1792048300523,
+          "actionWallMs": 216,
+          "nativeMonotonicDurationMs": 217
+        },
+        "postEmbeddingAttachmentToRecallEndWallMs": 1092,
+        "retrievalReportedByPublicTraceMs": 1091,
+        "prepareReadsNative": {
+          "function": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "0c63b238-2fbd-41b0-9072-25274a9fb065",
+          "requestId": "efe498f40f5389e9",
+          "serverStartMs": 1792048300526.0,
+          "serverCompletionMs": 1792048300810.405,
+          "nativeExecutionMs": 284.403138,
+          "cachedResult": false,
+          "errorPresent": false
+        },
+        "readMatchesAndDeliveryNative": {
+          "function": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "3e28a19e-2d14-46bc-bcd6-6c35bc64c487",
+          "requestId": "efe498f40f5389e9",
+          "serverStartMs": 1792048300853.0,
+          "serverCompletionMs": 1792048301613.8745,
+          "nativeExecutionMs": 761.632201,
+          "cachedResult": false,
+          "errorPresent": false
+        },
+        "notAdditive": "All nested inside context.recall; child executions, model wrapper spans and public traversal duration overlap the same interval. No DB-only CPU attribution."
+      },
+      "nativeMain": {
+        "admitCheckpoint": {
+          "beginPhase": "gateway.ledger.admit-checkpoint.begin",
+          "endPhase": "gateway.ledger.admit-checkpoint.end",
+          "startServerMs": 1792048302157,
+          "endServerMs": 1792048302569,
+          "actionWallMs": 412,
+          "nativeMonotonicDurationMs": 412
+        },
+        "admitPreparedNative": {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "7b26b0bd-d64e-4067-9d9e-02cf96e762b8",
+          "requestId": "efe498f40f5389e9",
+          "serverStartMs": 1792048302159.0,
+          "serverCompletionMs": 1792048302568.8735,
+          "nativeExecutionMs": 382.73209099999997,
+          "cachedResult": false,
+          "errorPresent": false
+        },
+        "gatewayStreamToFirstText": {
+          "beginPhase": "gateway.native.stream.begin",
+          "endPhase": "gateway.native.stream.first-text",
+          "startServerMs": 1792048302573,
+          "endServerMs": 1792048303043,
+          "actionWallMs": 470,
+          "nativeMonotonicDurationMs": 470
+        },
+        "firstVisibility": {
+          "beginPhase": "gateway.ledger.visibility.begin",
+          "endPhase": "gateway.ledger.visibility.end",
+          "startServerMs": 1792048303043,
+          "endServerMs": 1792048303353,
+          "actionWallMs": 310,
+          "nativeMonotonicDurationMs": 309
+        },
+        "firstRecordOutput": {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "d0c29b69-4587-4101-9cf0-913668b2775f",
+          "requestId": "efe498f40f5389e9",
+          "serverStartMs": 1792048303358.0,
+          "serverCompletionMs": 1792048303618.0798,
+          "nativeExecutionMs": 249.44928199999998,
+          "cachedResult": false,
+          "errorPresent": false
+        },
+        "directPrepareBeginToFirstRecordOutputCompletionWallMs": 5249.079833984375,
+        "mainSetupResidualOutsideAdmitCheckpointApproxMs": 82,
+        "residualMeaning": "Observed main setup envelope less its nested admit-checkpoint duration only; remaining component setup, dispatch gaps and scheduling are not individually apportioned. Integer UTC/monotonic rounding applies.",
+        "inferenceBoundaryMeaning": "Gateway stream invocation\u2192first text includes client/provider/network/Gateway processing. This receipt cannot separate Convex internal routing, external-provider queue/compute, or network transit."
+      },
+      "nativeAdmission": {
+        "function": "runtimeClient:submitAndStartEnvelope",
+        "executionId": "8b7e7ea4-cc6b-4e31-8937-fbee65913542",
+        "requestId": "ef4f055c0e0f98d7",
+        "serverStartMs": 1792048297928.0,
+        "serverCompletionMs": 1792048298298.1003,
+        "nativeExecutionMs": 344.62622999999996,
+        "cachedResult": false,
+        "errorPresent": false
+      },
+      "nativeInitialPrepare": {
+        "function": "runtimeAgent:prepareDirectTurnV8",
+        "executionId": "a9858604-8407-42b8-bdbb-974ff3db310e",
+        "requestId": "efe498f40f5389e9",
+        "serverStartMs": 1792048298372.0,
+        "serverCompletionMs": 1792048298561.366,
+        "nativeExecutionMs": 185.350048,
+        "cachedResult": false,
+        "errorPresent": false
+      },
+      "nativeInitialContext": {
+        "function": "runtimeAgent:contextInputsAndEmbeddingV8",
+        "executionId": "fbe03e14-0aed-4372-b0ab-ee27650a5898",
+        "requestId": "efe498f40f5389e9",
+        "serverStartMs": 1792048298564.0,
+        "serverCompletionMs": 1792048299045.6372,
+        "nativeExecutionMs": 481.705796,
+        "cachedResult": false,
+        "errorPresent": false
+      },
+      "nativeSaveFit": {
+        "function": "runtimeAgent:saveAndPrepareContextV8",
+        "executionId": "534a5c92-041d-4233-a078-4f62ea255c89",
+        "requestId": "efe498f40f5389e9",
+        "serverStartMs": 1792048301620.0,
+        "serverCompletionMs": 1792048302077.504,
+        "nativeExecutionMs": 446.451386,
+        "cachedResult": false,
+        "errorPresent": false
+      },
+      "directGate": {
+        "phase": "context.direct.candidates.insufficient",
+        "candidateFacts": 2,
+        "meaning": "Actual direct candidates were declared insufficient; this establishes fallback, not the exact semantic fact mismatch."
+      },
+      "input": {
+        "selectedMessages": 1,
+        "selectedMemories": 5,
+        "selectedFacts": 2,
+        "selectedPending": 0,
+        "contextBytes": 2102,
+        "inputTokens": 30924,
+        "inputLimit": 32768
+      }
+    }
+  ],
+  "coverage": {
+    "officialExecutions": 554,
+    "officialPhases": 256,
+    "executionCapHit": false,
+    "rawPromptsOrProviderOutputInThisReport": false,
+    "bothNativeMainExecutionIdsUnique": true,
+    "bothClientSameCommandIdSubtractionsVerified": true
+  },
+  "conclusions": [
+    "The2.281/2.568s whole governed semantic recall paths are the largest named pre-main spans; their query model portions are only247/307ms. Multiple durable ledger stages and post-embedding retrieval each account for substantial observed time.",
+    "Main Gateway stream\u2192first text496/470ms is materially smaller than native pre-main work4.038/4.204s; no evidence attributes the multi-second excess solely to provider generation or hidden Gateway internals.",
+    "Five completed fresh-session RPCs occur before each first print, including the final203.156/226.598ms session following the last completed observer. They are an observed client delivery cost, but serial time cannot all be added to concurrent server work.",
+    "A grounded next optimization is avoiding unnecessary semantic query embedding/ledger/retrieval for genuinely proven direct facts, and reducing demonstrated read/RPC work inside remaining scopes while preserving authority, delivery and financial boundaries. Both current turns declared direct candidates insufficient.",
+    "The new literal-proof repair covers only projections of one immutable lineage, not mixed-source facts. Current CLI gates reported1/2 candidate facts, while the later census contains an iris favorite-flower source distinct from the three same-lineage apricot projections; the fox source was created later. Actual returned candidate IDs/propositions were not captured. A shared-favorite full-text match is a hypothesis, not proof. No claim that this repair fixes iris CLI or yields savings."
+  ],
+  "limits": [
+    "No globally synchronized client/server/host clocks. Client total minus nested server durations is not a valid network or unallocated-CPU residual.",
+    "No arbitrary addition of native child executionTime, Action wall spans, ledger spans, public retrieval duration or per-chunk visibility calls.",
+    "recordOutput completion proves a durable native execution endpoint; this analysis cannot map it exactly to client visible content or terminal paint. Native signal/observe executions with only temporal proximity are not falsely attributed to a particular client RPC.",
+    "Repeated visibility/output/finalization after first output and subsequent ingestion/title work are not all first-answer critical path.",
+    "Convex mutation/query Date.now can be fixed per transaction; equal phase timestamps do not establish zero work. Only actual native performance duration and execution metadata support those durations.",
+    "Two serial sample outcomes do not establish p50/p95 or a load-independent bound. Earlier failures remain unchanged; deleted target was not accessed."
+  ],
+  "originalInputsUnchanged": true,
+  "laterFactCensusCaution": {
+    "actualCLIDirectGateCounts": [
+      1,
+      2
+    ],
+    "actualReturnedCandidateIdsOrPropositions": "NOT_CAPTURED_BY_SAFE_SCALAR_TRACE",
+    "laterCensusCount": 5,
+    "sameLineageApricotProjections": 3,
+    "irisFavoriteFlowerDistinctLineage": true,
+    "foxFavoriteAnimalDifferentLaterSource": true,
+    "foxCreatedAfterBothCLIDirectGates": true,
+    "newLiteralProofScopePerRoot": "Same immutable source/lineage proposition projections only, intentionally not mixed sources; source frozen outside this analysis.",
+    "hypothesisOnly": "Full-text matches on shared favorite may widen candidate results across the favorite-fruit and favorite-flower sources. Candidate counts1/2 and later census are compatible with this theory but do not establish the actual query-returned membership or ordering.",
+    "conclusion": "Do not claim new same-lineage proof fixes either measured CLI turn, especially the compound seed. No new requirements, mid-review broadening or savings claim."
+  }
+}

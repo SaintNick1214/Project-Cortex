@@ -41,18 +41,37 @@ const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = aw
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
 beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; });
 afterEach(() => { jest.restoreAllMocks(); });
-async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number,directLookup:boolean|"fruit"=false,repeatedQuestions=0,linkedConflict=false) {
+async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number,directLookup:boolean|"fruit"=false,repeatedQuestions=0,linkedConflict=false,observedProjections:boolean|"contradiction"|"canonical-mismatch"=false,observedQuery?:string) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
-  const prepared = await prepareSourceContent(scope, explicitSourceLineage(scope, "whole-source"), directLookup==="fruit"?"My favorite fruit is apricot. Please acknowledge it in one brief sentence.":"My favorite season is autumn", { now: () => clock });
+  const observedContent=observedProjections==="canonical-mismatch"?"My favorite fruit is pear.":"My favorite fruit is apricot.";
+  const prepared = await prepareSourceContent(scope, explicitSourceLineage(scope, "whole-source"), directLookup==="fruit"?observedProjections?observedContent:"My favorite fruit is apricot. Please acknowledge it in one brief sentence.":"My favorite season is autumn", { now: () => clock });
   await writer.putSource(prepared.source);await ingestion.enqueueSourceEvent(f.ctx, f.reference, prepared.source);
   const source = { sourceId: prepared.source.lineage.sourceId, sourceEventId: prepared.source.lineage.sourceEventId, sourceRevision: 1 };
   const identity = { ...source, stage: "facts" as const, semanticPolicyVersion: "policy-v1" };
   const fact: DerivedFact = { _id: "", factId: "whole-fact", tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId,
     ownerPrincipalId: scope.principalId, lineage: prepared.source.lineage, extractionPolicyVersion: "policy-v1", fact: directLookup==="fruit"?"User\'s favorite fruit is apricot.":directLookup?"User favorite season is autumn":"User prefers autumn",...(directLookup?{subject:"user",predicate:directLookup==="fruit"?"is_favorite_fruit":"favorite season",object:directLookup==="fruit"?"apricot":"autumn"}:{}),
     factType: "preference", confidence: 91, sourceType: "manual", tags: [], version: 1, createdAt: clock, updatedAt: clock };
+  const initialFacts=typeof observedProjections==="string"?["apricot",observedProjections==="contradiction"?"pear":"apricot"].map((value,index)=>({...fact,factId:`unstructured-agent-${index}`,fact:`My favorite fruit is ${value}.`,subject:undefined,predicate:undefined,object:undefined}))
+  :[fact,...(observedProjections?[
+    {...fact,factId:"whole-likes",fact:"User likes fruit.",subject:"User",predicate:"likes",object:"fruit"},
+    {...fact,factId:"whole-general",fact:"User stated a specific preference for a type of fruit.",subject:"User",predicate:"has_a_preference_for",object:"apricot"},
+  ]:[])];
   await writer.commitDerived({ source, identity, chunks: prepared.chunks, vectors: [{ ...source, vectorId: "whole-vector", chunkId: prepared.chunks[0]!.chunkId,
     tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId, profile, embedding: Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0), processingReceiptId: await processingIdentityKey(identity) }],
-    facts: [fact], expectedFactVersions: { "whole-fact": 0 } });
+    facts: initialFacts, expectedFactVersions: Object.fromEntries(initialFacts.map(value=>[value.factId,0])) });
+  if(observedProjections){
+    // Correct only this controlled native search port's '?' tokenization to
+    // reproduce the actual hosted three-candidate result; repository guards,
+    // indexed entity links and canonical source reads remain the real code.
+    const nativeQuery=f.db.query.bind(f.db);jest.spyOn(f.db,"query").mockImplementation(table=>{
+      const builder=nativeQuery(table);if(table!=="facts")return builder;const nativeSearch=builder.withSearchIndex.bind(builder);
+      builder.withSearchIndex=(index,callback)=>nativeSearch(index,q=>{
+        if(q===null||typeof q!=="object")throw Error("Expected native search port");
+        return callback(new Proxy(q,{get(target,key){const method:unknown=Reflect.get(target,key,target);return key==="search"&&typeof method==="function"
+          ?(field:string,text:string)=>Reflect.apply(method,target,[field,text.replace(/\?$/u,"")]):method;}}));
+      });return builder;
+    });
+  }
   Object.assign(f.db.table("runtimeIngestionEvents")[0], { factsState: "complete", vectorsState: "complete", vectorProfilesComplete: [profile.profileId] });
   for(let i=0;i<independentSeeds;i++){
     const current=await prepareSourceContent(scope,explicitSourceLineage(scope,`direct-seed-${i}`),`Independent direct source ${i}`,{now:()=>clock});await writer.putSource(current.source);await ingestion.enqueueSourceEvent(f.ctx,f.reference,current.source);
@@ -86,7 +105,7 @@ async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"
   const published = v8 ? await f.call<{agentId:string;version:number}>(definitions.publishVersion, { memorySpaceId:"space-a",clientMutationId:"v8-recall-read-scope",expectedPreviousVersion:0,
     definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:effortAware?await definitions.executableRegistryHashV4():await definitions.executableRegistryHashV3(),handlerVersion:effortAware?2:1,
       inputSelection:effortAware?{version:2,...(seedWork===undefined?{}:{effort:{version:1,maxWork:seedWork}})}:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}} }) : undefined;
-  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: { ...f.request(), ...(directLookup?{parts:[{type:"text" as const,text:directLookup==="fruit"?"What is my favorite fruit?":"What is my favorite season?"}]}:{}), ...(published ? {agentId:published.agentId,agentVersion:published.version,...(effortAware?{memory:{effort}}:{})}: {}) } });await f.call(agent.start, { runId: run.runId });
+  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: { ...f.request(), ...(directLookup?{parts:[{type:"text" as const,text:observedQuery??(directLookup==="fruit"?"What is my favorite fruit?":"What is my favorite season?")}]}:{}), ...(published ? {agentId:published.agentId,agentVersion:published.version,...(effortAware?{memory:{effort}}:{})}: {}) } });await f.call(agent.start, { runId: run.runId });
   const owned = f.db.table("runtimeAgentExecutions")[0];
   const attempt = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };await f.call(agent.startContext, attempt);
   const current = await agent.executionContext(f.ctx, attempt);
@@ -780,6 +799,76 @@ it("direct V8 native parent uses actual indexed facts and depth2 source without 
  expect(candidate.current.execution.contextCanonical).toContain("autumn");expect(candidate.current.execution.sourceWitnesses.length).toBeGreaterThan(0);
  expect(JSON.parse(candidate.current.run.memoryEffortTraceCanonical!)).toMatchObject({retrievalRoute:"direct-facts-v1"});expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
  expect(await f.call(agent.admitPreparedModelOperationV8,directAdmissionArgs(f,candidate))).toMatchObject({admission:{status:"reserved"},permit:{dispatchPermit:true}});expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+});
+const projectedAgentFixture=(queryText?:string,seedWork?:number,unstructured?:"contradiction"|"canonical-mismatch")=>fixture(true,true,"fast",0,seedWork,"fruit",0,false,unstructured??true,queryText);
+it("Agent native composition proves all three observed projections and the exact canonical source without an embedding proposal or call",async()=>{
+ const f=await projectedAgentFixture(),before=wholeState(f),parent=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>>(agent.contextInputsAndEmbeddingV8,f.attempt);
+ expect(parent.proposal).toBeUndefined();expect(parent.direct).toBeDefined();expect(wholeState(f)).toEqual(before);
+ expect(parent.direct!.read.bindings.facts.map(fact=>fact.factId).sort()).toEqual(["whole-fact","whole-general","whole-likes"]);
+ expect(parent.direct!.read.effortResult!.items).toHaveLength(4);expect(parent.direct!.read.effortResult!.memoryEffort).toMatchObject({retrievalRoute:"direct-facts-v1",maxDepth:2,maxEntries:4,entriesByKind:{fact:3,memory:1}});
+ let semanticCalls=0;const candidate=await agent.prepareContextV8Handler(f.action,f.attempt,async()=>{semanticCalls++;throw Error("Proven source must not embed");},true);
+ expect(semanticCalls).toBe(0);if(candidate?.state!=="started")throw Error("Expected real prepared dispatch candidate");
+ expect(candidate.current.execution.contextCanonical).toContain("apricot");expect(candidate.current.execution.sourceWitnesses).toHaveLength(1);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+ await expect(f.call(agent.admitPreparedModelOperationV8,directAdmissionArgs(f,candidate))).resolves.toMatchObject({permit:{dispatchPermit:true}});
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+});
+it.each(["contradiction","canonical-mismatch"] as const)("LSR-1 Agent unstructured %s refuses direct source proof and invokes the original governed semantic fallback once",async scenario=>{
+ const f=await projectedAgentFixture(undefined,undefined,scenario),getSource=jest.spyOn(ConvexMemoryRepository.prototype,"getSource");
+ expect(await whole.readDirectAgentRecallV8Handler(f.ctx,f.args)).toBeUndefined();expect(getSource).not.toHaveBeenCalled();getSource.mockRestore();
+ const parent=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>>(agent.contextInputsAndEmbeddingV8,f.attempt);
+ expect(parent.direct).toBeUndefined();expect(parent.proposal?.binding.operationKey).toBe("embedding.query");expect(parent.proposal?.request.texts).toEqual(["What is my favorite fruit?"]);
+ let semanticCalls=0;
+ const candidate=await agent.prepareContextV8Handler(f.action,f.attempt,async(_repository,input,selection,proposal)=>{
+  semanticCalls++;expect(proposal?.binding.operationKey).toBe("embedding.query");expect(proposal?.resolutions).toHaveLength(2);
+  const result=await whole.finishAgentRecallV8(f.action,f.attempt,{now:()=>clock},input,profile,{profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},selection!,clock);
+  expect(result.memoryEffort?.retrievalRoute).toBe("semantic-v1");expect(result.items.filter(item=>item.type==="fact").map(item=>item.content).sort()).toEqual(["apricot",scenario==="contradiction"?"pear":"apricot"].map(value=>`My favorite fruit is ${value}.`).sort());
+  return result;
+ },true);
+ expect(semanticCalls).toBe(1);if(candidate?.state!=="started")throw Error("Expected prepared semantic main request");
+ expect(JSON.parse(candidate.current.run.memoryEffortTraceCanonical!)).toMatchObject({retrievalRoute:"semantic-v1"});expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+ await expect(f.call(agent.admitPreparedModelOperationV8,directAdmissionArgs(f,candidate))).resolves.toMatchObject({permit:{dispatchPermit:true}});expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+});
+it.each(["legacy-pin","conflict","unknown","different-source","history","work"])("Agent projected %s retains the original governed embedding proposal",async fault=>{
+ const f=await projectedAgentFixture(),row=f.db.table("facts").find(value=>value.factId==="whole-likes")!;
+ if(fault==="legacy-pin"||fault==="work"){
+  const run=f.db.table("runtimeRuns")[0]!,effort=JSON.parse(run.memoryEffortCanonical as string),snapshot=JSON.parse(run.snapshotCanonical as string);
+  if(fault==="legacy-pin"){delete effort.literalSourceProofVersion;delete snapshot.inputSelection.effort.literalSourceProofVersion;}
+  else{effort.maxWork=16;snapshot.inputSelection.effort.maxWork=16;}
+  run.memoryEffortCanonical=canonicalModelJson(effort);run.snapshotCanonical=canonicalModelJson(snapshot);
+ }
+ if(fault==="conflict")Object.assign(row,{fact:"User's favorite fruit is pear.",predicate:"is_favorite_fruit",object:"pear"});
+ if(fault==="unknown")row.fact="User enjoys fruit.";if(fault==="history")row.supersedes="older-fact";
+ if(fault==="different-source"){
+  const source=await prepareSourceContent(memoryScope(f.reference),explicitSourceLineage(memoryScope(f.reference),"different-source"),"User likes fruit.",{now:()=>clock});
+  await new ConvexMemoryRepository(f.ctx,f.reference,"write",f.ctx.db).putSource(source.source);row.lineage=source.source.lineage;
+ }
+ const parent=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>>(agent.contextInputsAndEmbeddingV8,f.attempt);
+ expect(parent.direct).toBeUndefined();expect(parent.proposal?.request).toMatchObject({purpose:"embedding.query",texts:["What is my favorite fruit?"]});expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it.each(["expire-fact","edit-source"])("Agent projected proof retains its final %s delivery fence before model preparation",async fault=>{
+ const f=await projectedAgentFixture(),original=ConvexMemoryRepository.prototype.checkDelivery;
+ const delivery=jest.spyOn(ConvexMemoryRepository.prototype,"checkDelivery").mockImplementation(async function(this:InstanceType<typeof ConvexMemoryRepository>,bindings,authority){
+  expect(bindings.facts.map(fact=>fact.factId).sort()).toEqual(["whole-fact","whole-general","whole-likes"]);
+  if(fault==="expire-fact")f.db.table("facts").find(value=>value.factId==="whole-general")!.validUntil=clock;
+  if(fault==="edit-source")f.db.table("runtimeMemorySources")[0]!.contentHash="f".repeat(64);return original.call(this,bindings,authority);
+ });
+ await expect(f.call(agent.contextInputsAndEmbeddingV8,f.attempt)).rejects.toThrow();expect(delivery).toHaveBeenCalledTimes(1);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it("Agent projected proof refuses authority revoked across the actual preparation-to-admission boundary",async()=>{
+ const f=await projectedAgentFixture(),candidate=await agent.prepareContextV8Handler(f.action,f.attempt,async()=>{throw Error("Proven source must not embed");},true);
+ if(candidate?.state!=="started")throw Error("Expected direct prepared model candidate");f.grant.revokedAt=clock;
+ await expect(f.call(agent.admitPreparedModelOperationV8,directAdmissionArgs(f,candidate))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it.each(["broad","work-bound","mixed-source","unknown"])("Agent prospective %s miss performs zero extra canonical-source get calls",async fault=>{
+ const f=await projectedAgentFixture(fault==="broad"?"Tell me about fruit.":undefined,fault==="work-bound"?24:undefined),row=f.db.table("facts").find(value=>value.factId==="whole-likes")!;
+ if(fault==="unknown")row.fact="User enjoys fruit.";
+ if(fault==="mixed-source"){
+  const source=await prepareSourceContent(memoryScope(f.reference),explicitSourceLineage(memoryScope(f.reference),"other-source"),"User likes fruit.",{now:()=>clock});
+  await new ConvexMemoryRepository(f.ctx,f.reference,"write",f.ctx.db).putSource(source.source);row.lineage=source.source.lineage;
+ }
+ const getSource=jest.spyOn(ConvexMemoryRepository.prototype,"getSource");
+ expect(await whole.readDirectAgentRecallV8Handler(f.ctx,f.args)).toBeUndefined();expect(getSource).not.toHaveBeenCalled();expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
 });
 it.each(["revoke","edit"])("direct evidence still refuses %s before dispatch preparation and exposes no stale context",async fault=>{
  const f=await fixture(true,true,"normal",0,undefined,true);

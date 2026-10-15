@@ -1,0 +1,197 @@
+{
+  "version": 2,
+  "status": "LSR_1_AUTHOR_REPAIR_AND_AFFECTED_OFFLINE_CHECKS_COMPLETE_INDEPENDENT_REREVIEW_PENDING",
+  "repository": "SaintNick1214/Project-Cortex",
+  "baseCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+  "sourceHashManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-source-hashes-v2.json",
+  "previousManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-source-hashes.json",
+  "priorReview": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-independent-review.json",
+  "frozenAt": "2026-10-15T08:03:48.043Z",
+  "sourceHashes": {
+    "src/domain/memory-direct-recall.ts": "18a419cb7c1dec83ecd9b5d5213974f10a11b2b376372561e84da076fa92704c",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "06576b9b5fc59a95c9fa6dbdd8f31899ed8a1f678f29b49f8ec4f870450b90bd",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "8bc7f946779d4553833c550533c2ab0cfcf2c04a698af4cd3c3065cf0900dd12",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "13e915f9ad5b4053d117fbf76bf2ec392785898d5941abdb91acf2172e424104",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c"
+  },
+  "changedSinceV1": [
+    "src/domain/memory-direct-recall.ts",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+  ],
+  "finding": {
+    "id": "LSR-1",
+    "previousVerdict": "NEEDS FIXES",
+    "previousAverage": 3.4,
+    "acknowledged": "Supported facts without structured fields could compare two absent objects as empty strings and failed to bind the literal canonical source value.",
+    "repair": "Require explicit nonempty lexical subject/predicate/object in only the new multi-fact prospective/source proof and projection compatibility path; compare actual structured object values without empty defaults. Preserve sufficientDirectFactLookup and the historical singleton path unchanged.",
+    "independentAcceptance": "PENDING"
+  },
+  "checks": {
+    "tests6": {
+      "name": "tests6",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtime/latency-trace.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-tests6.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T08:02:05.130Z",
+      "durationMs": 23003,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "types5": {
+      "name": "types5",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T08:02:05.130Z",
+      "durationMs": 15345,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "lint5": {
+      "name": "lint5",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-direct-recall.ts",
+        "src/domain/memory-effort.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeAgent.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T08:02:05.130Z",
+      "durationMs": 8690,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "diff2": {
+      "name": "diff2",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T08:02:06.280Z",
+      "durationMs": 800,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    }
+  },
+  "testCounts": {
+    "suites": 6,
+    "passedSuites": 6,
+    "tests": 332,
+    "passed": 332,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0,
+    "success": true,
+    "previousPassingAssertionsRetained": 320,
+    "previousAssertionsMissingOrFailing": 0,
+    "additionalPassingAssertions": 12
+  },
+  "regressions": {
+    "pure": [
+      "two unstructured same-source literal values disagree",
+      "two unstructured identical values disagree with canonical source",
+      "even matching unstructured multi-fact candidates conservatively fall back",
+      "undefined/empty/whitespace/punctuation-only subject/predicate/object",
+      "valid structured proof cannot admit newly discovered unstructured facts"
+    ],
+    "actualRepositoryTraversal": [
+      "actual putSource/commitDerived/searchFactCandidates accept supported unstructured records",
+      "all contradictory or canonical-mismatched facts remain inspected and bound; traversal can complete and delivery can pass, while new semantic source proof remains refused"
+    ],
+    "public": [
+      "both counterexamples return no direct result and zero prospective getSource calls",
+      "actual registered public recall retains both facts and exactly one governed mocked-provider query-embedding attempt; terminal capture precedes attachment"
+    ],
+    "agent": [
+      "both counterexamples return no direct result and zero prospective getSource calls",
+      "actual Agent parent returns original governed embedding proposal; exactly one controlled semantic recall peer produces prepared context and retains both facts",
+      "no paid attempts before main admission; original main admission produces exactly one attempt"
+    ]
+  },
+  "preserved": {
+    "earlierAuthorReports": true,
+    "sourceHashManifestV1": true,
+    "independentNeedsFixesAndBothRepros": true,
+    "original320Assertions": true,
+    "rootBuildReceipts": true,
+    "unknownProjectionFallback": true,
+    "oldOmittedPinAndSingletonBehavior": true,
+    "finalSourceExpiryRevocationFences": true
+  },
+  "limitations": {
+    "cloudLatency": "NOT_RUN",
+    "installedConsumers": "NOT_RUN",
+    "rootBuildAndContracts": "ROOT_OWNED_AFTER_INDEPENDENT_ACCEPTANCE",
+    "inferenceCalls": 0,
+    "deployments": 0,
+    "commits": 0,
+    "packageOperations": 0,
+    "goalCompletion": "NOT_CLAIMED"
+  }
+}

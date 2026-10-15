@@ -73,6 +73,21 @@ it("actual V8 preparation retains exact output/state and non-control reads while
  expect(observed.counts().authority).toBeLessThan(control.authority);expect(observed.counts().total).toBeLessThan(control.total);
  console.info(JSON.stringify({type:"controlled-v8-preparation-read-count",original:control,optimized:observed.counts(),nativeProof:false}));
 });
+it("three opt-in preparation spans preserve exact native output, state and read order while exposing only scalar timing",async()=>{
+ const initial=process.env.CORTEX_RUNTIME_LATENCY_TRACE;
+ try{
+  delete process.env.CORTEX_RUNTIME_LATENCY_TRACE;const f=await fixture(),before=f.state(),observed=instrument(f),output=jest.spyOn(console,"log").mockImplementation(()=>{});
+  const original=await f.call(agent.prepareDirectTurnV8,f.attempt),after=f.state(),reads=clone(observed.reads);expect(output).not.toHaveBeenCalled();
+  f.restore(before);observed.clear();process.env.CORTEX_RUNTIME_LATENCY_TRACE="1";
+  expect(await f.call(agent.prepareDirectTurnV8,f.attempt)).toEqual(original);expect(f.state()).toEqual(after);expect(observed.reads).toEqual(reads);
+  const stages=output.mock.calls.map(([row])=>JSON.parse(row as string) as {phase:string;durationMs?:number});
+  for(const stage of ["context-lifecycle","context-route","model-candidate"]){
+   expect(stages.filter(row=>row.phase===`prepareDirect.${stage}.begin`)).toHaveLength(1);
+   const end=stages.filter(row=>row.phase===`prepareDirect.${stage}.end`);expect(end).toHaveLength(1);expect(end[0]!.durationMs).toBeGreaterThanOrEqual(0);
+   expect(Object.keys(end[0]!).sort()).toEqual(["at","attemptNumber","durationMs","phase","runId"]);
+  }
+ }finally{if(initial===undefined)delete process.env.CORTEX_RUNTIME_LATENCY_TRACE;else process.env.CORTEX_RUNTIME_LATENCY_TRACE=initial;}
+});
 it("profile availability composes the original helper without changing its repeated current checks",async()=>{
  const f=await fixture();await f.call(agent.startContext,f.attempt);const current=await agent.executionContext(f.ctx,f.attempt);
  const args={reference:f.reference,cutoff:current.snapshot.ingestionCutoff.sequence,excludedSourceKeys:current.snapshot.messages.map(pin=>contextSourceKey({tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!},{...pin,sourceId:pin.sourceEventId})),

@@ -2223,14 +2223,18 @@ async function prepareDirectTurnV8Handler(nativeCtx: MutationCtx, args: Attempt)
   }
   const current = await executionContext(ctx, args);
   if (current.definition.context.memoryMode === "strict") transcriptDenied("INVALID_STATE");
-  await startContextHandler(ctx, args);
-  const barrier = await contextBarrierHandler(ctx, args);
+  const barrier = await traceRuntimeMutationSpan(args.runId, args.attemptNumber, "prepareDirect.context-lifecycle", async () => {
+    await startContextHandler(ctx, args);
+    return await contextBarrierHandler(ctx, args);
+  });
   if (barrier.state !== "ready") transcriptDenied("INVALID_STATE");
   await ctx.db.patch("runtimeAgentExecutions", owned._id, { directState: "started" });
-  const context = await prepareRoutedContextV8Handler(ctx, args, true, nativeCtx);
+  const context = await traceRuntimeMutationSpan(args.runId, args.attemptNumber, "prepareDirect.context-route",
+    async () => await prepareRoutedContextV8Handler(ctx, args, true, nativeCtx));
   if (context.state === "FAILED") return { state: "failed_context" as const, failureCode: context.failureCode };
   if (context.state === "NEEDS_ACTION") return { state: "needs_context" as const };
-  return await prepareResolvedModelCandidateV8Handler(ctx, { ...args, ordinal: 0 });
+  return await traceRuntimeMutationSpan(args.runId, args.attemptNumber, "prepareDirect.model-candidate",
+    async () => await prepareResolvedModelCandidateV8Handler(ctx, { ...args, ordinal: 0 }));
 }
 export const prepareDirectTurnV8=internalMutation({ args:agentAttempt,handler:prepareDirectTurnV8Handler });
 

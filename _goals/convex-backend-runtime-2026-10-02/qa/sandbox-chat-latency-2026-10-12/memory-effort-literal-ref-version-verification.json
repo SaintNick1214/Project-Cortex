@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-15T08:07:04.444785+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "refs": {
+    "HEAD": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "FETCH_HEAD": "46013de5919a72ecdbf55d02486aaaa7994cb79f",
+    "entire/dev": "46013de5919a72ecdbf55d02486aaaa7994cb79f",
+    "origin/dev": "443148c1d8a63ed820bafe7d87bf21c7e0a2fd21"
+  },
+  "freshEntireFetchExitCode": 0,
+  "entireDevAncestor": true,
+  "versions": [
+    {
+      "path": "package.json",
+      "current": "0.39.0",
+      "freshEntireDev": "0.36.0",
+      "newer": true
+    },
+    {
+      "path": "packages/cortex-cli/package.json",
+      "current": "0.39.0",
+      "freshEntireDev": "0.36.0",
+      "newer": true
+    },
+    {
+      "path": "packages/vercel-ai-provider/package.json",
+      "current": "0.39.0",
+      "freshEntireDev": "0.36.0",
+      "newer": true
+    },
+    {
+      "path": "packages/cortex-templates/package.json",
+      "current": "1.4.0",
+      "freshEntireDev": null,
+      "status": "NEW_PACKAGE_NOT_PRESENT_IN_FRESH_ENTIRE_DEV"
+    }
+  ],
+  "githubAccessAttempted": false,
+  "originDev": "Historical cached ref only, not freshly verified",
+  "initialFetchFailure": {
+    "exitCode": 128,
+    "reason": "remote-entire unavailable on default shell PATH",
+    "corrected": "Prepend /Users/SaintNick/.local/bin; fetch then exited0",
+    "toolChunks": [
+      "f3f9dc",
+      "4d59ef"
+    ]
+  },
+  "initialOfflineVersionReporterFailure": {
+    "exitCode": 1,
+    "cause": "Assumed new catalog package existed at historical Entire dev; corrected reporter distinguishes absent package from version comparison",
+    "toolChunk": "16253d"
+  }
+}

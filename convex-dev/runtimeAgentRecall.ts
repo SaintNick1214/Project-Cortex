@@ -1,4 +1,4 @@
-import { sufficientDirectFactLookup, directFactTraversalCompatible, directFactTraversalComplete, DIRECT_FACT_RECALL_ROUTE } from "../src/domain/memory-direct-recall";
+import { proveDirectFactLookup, directFactLookupSourceId, directFactProofCompatible, directFactTraversalComplete, DIRECT_FACT_RECALL_ROUTE } from "../src/domain/memory-direct-recall";
 import type { MemoryEffortRequest } from "../src/domain/memory-effort";
 import { traverseConvexMemory,factEvidenceNode,sourceEvidenceNode,createMemoryRetrievalWorkClock } from "./runtimeMemoryTraversal";
 import { memoryEffortRequest } from "./runtimeMemorySchema";
@@ -237,13 +237,16 @@ export async function readDirectAgentRecallV8Handler(nativeCtx: QueryCtx, args: 
   const {current,repository}=await currentRead(ctx,args,8);
   if(current.snapshot.version!==8||current.snapshot.inputSelection.version!==2)return undefined;
   const candidates=await repository.searchFactCandidates(args.input.text,args.input.limit);
-  const sufficient=sufficientDirectFactLookup(args.input.text,candidates,Date.now());
+  const proofVersion=current.snapshot.inputSelection.effort?.literalSourceProofVersion;
+  const sourceId=directFactLookupSourceId(args.input.text,candidates,Date.now(),proofVersion);
+  const source=sourceId===undefined?undefined:await repository.getSource(sourceId,"canViewFacts");
+  const proof=proveDirectFactLookup(args.input.text,candidates,Date.now(),proofVersion,source??undefined),sufficient=proof!==undefined;
   traceRuntimePhase(args.runId,args.attemptNumber,`context.direct.candidates.${candidates.candidateWorkBound?"work-bound":sufficient?"sufficient":"insufficient"}`,{selectedFacts:candidates.facts.length});
-  if(!sufficient)return undefined;
+  if(!proof)return undefined;
   const bindings=emptyBindings();
   for(const fact of candidates.facts)await captureRecallFact(bindings,fact,await repository.getSource(fact.lineage.sourceId,"canViewFacts"));
   let compatible=true;
-  const read=await readMatchesHandler(nativeCtx,{...args,hits:[],factPlan:{kind:"ready",facts:candidates.facts,bindings}},8,ctx,true,fact=>{compatible=compatible&&directFactTraversalCompatible(candidates.facts[0]!,[fact]);},workClock);
+  const read=await readMatchesHandler(nativeCtx,{...args,hits:[],factPlan:{kind:"ready",facts:candidates.facts,bindings}},8,ctx,true,fact=>{compatible=compatible&&directFactProofCompatible(proof,[fact],Date.now());},workClock);
   const trace=read.effortResult?.memoryEffort,hasFact=!!read.effortResult?.items.some(item=>item.type==="fact");
   const complete=trace!==undefined&&directFactTraversalComplete(trace);
   traceRuntimePhase(args.runId,args.attemptNumber,`context.direct.traversal.${!hasFact?"no-fact":!compatible?"conflict":!complete?"partial":"ready"}`,{selectedFacts:trace?.entriesByKind.fact,selectedMemories:trace?.entriesByKind.memory,durationMs:trace?.durationMs});

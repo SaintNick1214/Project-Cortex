@@ -1,0 +1,11 @@
+# Completed c258 window documentation update
+
+Updated only the separate `SaintNick1214/cortexmemory.dev` performance and memory-orchestration pages. Current six actual browser rows remain unchanged: three timing passes, five correct recall questions, all response/memory complete, and the seed acknowledgement’s absent literal preference/unnecessary confirmation retained. The correct Fast cross result at 739 ms inside 750 ms is not labeled a hosted 785 ms late-return proof.
+
+Native product outcomes now reflect the genuine prefix plus collector-only continuation: four positive direct-fact public modes, separate 2/4/8/13-hop topology, strict cancelled/edit liveness through facts/vectors 4/4 without Agent execution, and actual source/grant/auth negatives. The original 256-check collector TypeError is retained; continuation 357 observed checks are explicitly not added as unique coverage. Public recall API timings are separate from browser SLOs. Native eight calls/$0.80 UNKNOWN are included in final accounting.
+
+Added both correct CLI iris answers with both Normal timing misses (7,807.053920 / 6,682.274253 ms), genuine fresh Chat correct reply/same-run reconnect/phone checks without a numerical SLO, approved read-only recall and cancelled unapproved write. Final 247 satisfied checks plus the sole unmet seed literal marker and all 11 selected run outcomes remain explicit. Final 77 operations/77 first attempts retained $9.60 conservative UNKNOWN liability; the $6.90 shared manual tenant mirror includes native $0.80 and is not added again. Zero settled/reserved/active does not establish exact cost.
+
+The original launcher actually joined 130; Root replacement Chat server joined 0. The earlier agent Chat server’s original exit remains UNKNOWN despite fresh process/port absence. Database/container/private paths/processes were verified absent with 21 fresh checks. The goal stays 4/6 (66.7%); timing repair and final audit remain open. All earlier 9973 and older failure tables and scoped outcomes remain.
+
+No build, browser/service/model call, product edit or commit was performed. Root will compile and verify changed docs. The companion JSON retains prior pending-status update as historical context, current file/evidence hashes and exact scope.

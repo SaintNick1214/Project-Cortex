@@ -1,4 +1,4 @@
-import { sufficientDirectFactLookup, directFactTraversalCompatible, directFactTraversalComplete, DIRECT_FACT_RECALL_ROUTE } from "../src/domain/memory-direct-recall";
+import { proveDirectFactLookup, directFactLookupSourceId, directFactProofCompatible, directFactTraversalComplete, DIRECT_FACT_RECALL_ROUTE } from "../src/domain/memory-direct-recall";
 import type { DerivedFact } from "../src/domain/contracts";
 import type { MemoryEffortRequest } from "../src/domain/memory-effort";
 import { resolveMemoryEffortPolicy,memoryEffortCandidateLimit } from "../src/domain/memory-effort";
@@ -181,11 +181,14 @@ export async function readDirectPublicRecallHandler(nativeCtx:QueryCtx,a:Args&{r
   const repository=readRepository(ctx,{...a,profile:selected.profile});
   await repository.assertReadAuthority();await repository.assertProfileReady(selected.profile,a.runBudgetId);
   const candidates=await repository.searchFactCandidates(a.input.text,directLimit(a.input));
-  const sufficient=sufficientDirectFactLookup(a.input.text,candidates,Date.now());
+  const proofVersion=resolveMemoryEffortPolicy(a.input.memory).literalSourceProofVersion;
+  const sourceId=directFactLookupSourceId(a.input.text,candidates,Date.now(),proofVersion);
+  const source=sourceId===undefined?undefined:await repository.getSource(sourceId,'canViewFacts');
+  const proof=proveDirectFactLookup(a.input.text,candidates,Date.now(),proofVersion,source??undefined),sufficient=proof!==undefined;
   traceRuntimePhase(a.runBudgetId,1,`recall.direct.candidates.${candidates.candidateWorkBound?'work-bound':sufficient?'sufficient':'insufficient'}`,{selectedFacts:candidates.facts.length});
-  if(!sufficient)return null;
+  if(!proof)return null;
   let compatible=true;
-  const read=await readRecallMatchesHandler(nativeCtx,{...a,profile:selected.profile,hits:[]},candidates,fact=>{compatible=compatible&&directFactTraversalCompatible(candidates.facts[0]!,[fact]);},workClock);
+  const read=await readRecallMatchesHandler(nativeCtx,{...a,profile:selected.profile,hits:[]},candidates,fact=>{compatible=compatible&&directFactProofCompatible(proof,[fact],Date.now());},workClock);
   const trace=read.effortResult?.memoryEffort,hasFact=!!read.effortResult?.items.some(item=>item.type==='fact');
   const complete=trace!==undefined&&directFactTraversalComplete(trace);
   traceRuntimePhase(a.runBudgetId,1,`recall.direct.traversal.${!hasFact?'no-fact':!compatible?'conflict':!complete?'partial':'ready'}`,{selectedFacts:trace?.entriesByKind.fact,selectedMemories:trace?.entriesByKind.memory,durationMs:trace?.durationMs});
