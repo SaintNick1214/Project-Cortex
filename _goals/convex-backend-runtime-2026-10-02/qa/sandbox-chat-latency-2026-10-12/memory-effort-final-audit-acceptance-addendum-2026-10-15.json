@@ -1,0 +1,286 @@
+{
+  "schema": "cortex.memory-effort.final-audit-acceptance-addendum.v1",
+  "at": "2026-10-15T20:18:02.571432+00:00",
+  "reviewerRole": "same independent non-author final auditor",
+  "verdict": "APPROVED",
+  "verdictScope": "Product/functional six-milestone memory-effort follow-up implementation, installed qualification and cleanup only",
+  "productMilestonesComplete": 6,
+  "productMilestonesTotal": 6,
+  "productMilestonePercent": 100,
+  "fullRequestedDeliveryComplete": false,
+  "externalDeliveryStatus": "PENDING_GITHUB_DRAFT_PR_UNAVAILABLE_NOT_CREATED_NOT_WAIVED",
+  "authority": {
+    "source": "Direct human acceptance recorded in the coordinator-provided current amendment",
+    "statements": [
+      "Accept functional completion; track latency misses",
+      "we're close enough on latency targets im satisfied.  Let's consider this milestone met."
+    ],
+    "amendmentPath": "memory-effort-latency-acceptance-amendment-2026-10-15.json",
+    "amendmentSha256": "5174b9785d19b47ba3b1f5e1929bb747b9fd269b280a096b1373f60b72786acb",
+    "effect": "Milestone5 is accepted; observed target misses remain optimization backlog. This addendum satisfies independent milestone6."
+  },
+  "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+  "qaOnlyHead": "52569cf975afe43d2c2aabc3f7e1afeae26ce155",
+  "productDiffD4ToQaHead": "EMPTY for convex-dev/src/packages/scripts",
+  "originalAuditPreserved": {
+    "verdict": "ISSUES FOUND",
+    "files": [
+      {
+        "path": "memory-effort-final-audit-2026-10-15.md",
+        "sha256": "1dbfeabe96d359de39fa62baddf13add3e44d9c797405ecdf093316f45fcc64b"
+      },
+      {
+        "path": "memory-effort-final-audit-2026-10-15.json",
+        "sha256": "64701b81a475386dd072719a0b3013ee94972378d775757fbb2fbde29f02c923"
+      }
+    ],
+    "unchanged": true,
+    "originalScoresAndProgressNotRewritten": true
+  },
+  "currentVerification": {
+    "source": {
+      "manifest": "memory-effort-native-recall-coherent-source-hashes.json",
+      "manifestSha256": "18c44da22844831af5ce087c7a429bf1ab8f134a1ddac3b4bb1176e1dde520a6",
+      "files": 54,
+      "allMatch": true
+    },
+    "website": {
+      "reference": "memory-effort-native-recall-final-docs-source.json",
+      "pages": [
+        {
+          "path": "docs-site/docs/architecture/performance.mdx",
+          "sha256": "6a181c760b109cd83480e6beb02959c1e7f3f50bf39848e2629a8dcb93449190"
+        },
+        {
+          "path": "docs-site/docs/core-features/memory-orchestration.mdx",
+          "sha256": "c6ecb2724e5b1120c311c4b72bd1dce7093d251252008ebb9d5a3d81a10810cd"
+        }
+      ],
+      "allMatch": true
+    },
+    "proofsSources": [
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts",
+        "expectedSha256": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92",
+        "matches": true,
+        "basis": "coherent source manifest"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json",
+        "expectedSha256": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed",
+        "matches": true,
+        "basis": "coherent source manifest"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs",
+        "expectedSha256": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f",
+        "matches": true,
+        "basis": "coherent source manifest"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+        "expectedSha256": "d269aaba8b64034cfbced1412c153bb899ca51f6bbd8fedcda36a754aeabcff5",
+        "matches": true,
+        "basis": "final d4 launcher integration afterSha256"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/agent-definitions.test.mjs",
+        "expectedSha256": "404812e6a6d735376fc5c7006133bdfcff43f0464b00135a781b9dbe3f69c633",
+        "matches": true,
+        "basis": "coherent source manifest"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/docker.mjs",
+        "expectedSha256": "7941678be807aedb4aecf98c278d8c7890e4e4a470ded9b8a8d799f0aea0b10e",
+        "matches": true,
+        "basis": "final d4 launcher integration afterSha256"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/local.test.mjs",
+        "expectedSha256": "cf42cf517b0850cfc327e154579c8d67c53f1397ffe160fc5d2b2ef4b83e901a",
+        "matches": true,
+        "basis": "final d4 launcher integration afterSha256"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs",
+        "expectedSha256": "d14d0886f4ba09d3114237bd907701d2544f55f392ca44e2dbabe43841d13682",
+        "matches": true,
+        "basis": "coherent source manifest"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud-config.json",
+        "expectedSha256": "e74904989e5c97095603d47a0792dcec2dab97ed993ffe930b03add19e01d062",
+        "matches": true,
+        "basis": "coherent source manifest"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs",
+        "expectedSha256": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45",
+        "matches": true,
+        "basis": "coherent source manifest"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs",
+        "expectedSha256": "44f7bcc105a02ccea49480f0fe8ae4da63a9390e3814ef50df653431f86c5f11",
+        "matches": true,
+        "basis": "final d4 launcher integration afterSha256"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/native-package-lock.json",
+        "expectedSha256": "48e2030f200e70e8a5253ad5cc5697baf00c1c50e452436e5348dc0f9d3a5062",
+        "matches": true,
+        "basis": "coherent source manifest"
+      }
+    ],
+    "procedureApproval": {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/procedure-approval.json",
+      "sha256": "b9dae67dc95cb6e86bd7ad7ee00e8a948438250ee1383aab845c7a800092698c",
+      "matches": true
+    },
+    "proofsGuide": {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/SANDBOX.md",
+      "sha256": "17d75bf50eac9d8396782f044fb5c5d6dfa3cea4f10b07797dacfece01769551",
+      "matches": true
+    },
+    "visual": {
+      "path": "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html",
+      "sha256": "28365660d2a4e6fb1d2b904ff27aa7a6e028f47bf8111e73be7af7f77397bae4"
+    },
+    "selectedOriginalReceipts": [
+      {
+        "path": "memory-effort-native-recall-native-regression-1792087842674.json",
+        "sha256": "d778bd70a8da6bf8ace52264313b1b18f83853fefd2db51085cbd46ec3f7f267",
+        "unchanged": true
+      },
+      {
+        "path": "memory-effort-native-recall-runtime-readback-1792088353311.json",
+        "sha256": "40a1049407cb38eb04519b8a34b6bed9075b4a8319c58bb575d0c5ce3b38f56a",
+        "unchanged": true
+      },
+      {
+        "path": "memory-effort-native-recall-tool-exercise-1792088179277.json",
+        "sha256": "54510ad785d8b15828f5a9dfac192bab16248ccc5eb46e8a281b48267bf43c6c",
+        "unchanged": true
+      },
+      {
+        "path": "memory-effort-native-recall-cleanup-1792088754344.json",
+        "sha256": "7963ef67e276d962aad221249ebf754eebb08e8df35e7c3d2178905d808c46cb",
+        "unchanged": true
+      },
+      {
+        "path": "memory-effort-property-title-runtime-readback-1792085795781.json",
+        "sha256": "60410b518ca4cc09b12c554b8dc8ab8db9fd62ba028743a1475c2ecfc3946641",
+        "unchanged": true
+      }
+    ],
+    "note": "Three Proofs kit/image-selector files use final installed d4 integration hashes, not their earlier coherent-manifest baseline. All final expected values match; no newly introduced drift observed."
+  },
+  "requirementsDisposition": [
+    {
+      "id": "R01-R14",
+      "status": "MET_WITH_ORIGINAL_SCOPED_BOUNDARIES_RETAINED",
+      "explanation": "The original audit approved these functional/safety/source/installed/docs/cleanup outcomes; material source and evidence remain unchanged."
+    },
+    {
+      "id": "R15",
+      "status": "ACCEPTED_BY_DIRECT_USER_DECISION_WITH_MEASURED_MISSES_RETAINED",
+      "explanation": "Human acceptance resolves original A1. It is not a new timing PASS or execution."
+    },
+    {
+      "id": "R16_product_final_audit",
+      "status": "MET",
+      "explanation": "The required independent final audit now approves the accepted product/functional six-milestone follow-up."
+    },
+    {
+      "id": "R16_external_delivery",
+      "status": "PENDING",
+      "explanation": "GitHub draft PR is separately outstanding; Entire push does not create or waive it."
+    }
+  ],
+  "issueDisposition": [
+    {
+      "id": "A1",
+      "status": "RESOLVED_BY_USER_ACCEPTANCE",
+      "breaking": false
+    },
+    {
+      "id": "D1",
+      "status": "OPEN_EXTERNAL_DELIVERY",
+      "breaking": false,
+      "scope": "Blocks full requested delivery; does not invalidate accepted product behavior/qualification/cleanup milestone6."
+    },
+    {
+      "id": "T1",
+      "status": "RETAINED_NONBLOCKING_TEST_DEBT",
+      "breaking": false
+    }
+  ],
+  "breakingFindings": [],
+  "concreteRemainingFunctionalGaps": [],
+  "dimensionScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "averageScore": 4.0,
+  "minimums": {
+    "requirementFulfillment": 4,
+    "codeQuality": 3,
+    "testQuality": 4,
+    "patternAdherence": 3,
+    "completeness": 4,
+    "average": 3.6
+  },
+  "allProductMinimumsMet": true,
+  "scoreScope": "Accepted product/functional follow-up; no score is asserted for completed GitHub delivery. The original whole-delivery scores remain unchanged in the original audit.",
+  "timingDisposition": {
+    "fastNormalHighMaxTargetsMs": [
+      3000,
+      6000,
+      8000,
+      30000
+    ],
+    "acceptance": "Optimization targets accepted with observed misses",
+    "historicalMeasurementsAndVerdictsUnchanged": true,
+    "noNewSpeedClaim": true,
+    "toolActionNewMs": 6862.334065,
+    "toolActionPriorMs": 6804.212588,
+    "toolActionSpeedGainEstablished": false
+  },
+  "preservedLimitations": [
+    "No new live service/browser/model execution by this auditor; retained receipts were inspected.",
+    "d4 tool-only window is not a new complete all-profile CLI/Chat/phone timing matrix.",
+    "Seeded zero-model topology is actual Convex data traversal, not ordinary ingestion or LLM10-hop reasoning.",
+    "Current exact three-projection question-proof fixture is explicitly NOT_COVERED; unchanged finite proof has source/controlled outcomes and prior direct-path outcomes.",
+    "Current completed-run reconnect is not current in-flight reconnect; prior24b in-flight scope retained only.",
+    "No new external Neo4j/Memgraph graph qualification; required Convex-backed evidence links were actually exercised.",
+    "C7 missing historical backing/custody remains unqualified.",
+    "Async Gateway video remains user-deferred and is not PASS.",
+    "Exact USD charges unavailable; UNKNOWN liability and mirror rules preserved.",
+    "GitHub availability not checked."
+  ],
+  "original17NonVideoReopened": false,
+  "asyncVideo": "USER_DEFERRED_NOT_PASS",
+  "c7HistoricalBackingCustody": "UNQUALIFIED_UNCHANGED",
+  "activities": {
+    "services": 0,
+    "tests": 0,
+    "builds": 0,
+    "models": 0,
+    "packs": 0,
+    "deployments": 0,
+    "reprovisioning": 0,
+    "githubCalls": 0,
+    "gitMutations": 0,
+    "productEdits": 0,
+    "websiteEdits": 0,
+    "proofsEdits": 0,
+    "writesOnly": [
+      "memory-effort-final-audit-acceptance-addendum-2026-10-15.md",
+      "memory-effort-final-audit-acceptance-addendum-2026-10-15.json"
+    ]
+  },
+  "recommendation": "Record product implementation/qualification/cleanup as6/6 complete. Keep measured latency misses as optimization backlog, T1 as nonblocking test debt, and GitHub draft PR as outstanding external delivery. Do not describe full requested delivery as completed."
+}

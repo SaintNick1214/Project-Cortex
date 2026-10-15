@@ -1,0 +1,14 @@
+{
+  "initialStaging": {
+    "scriptExit": 1,
+    "gitAddExit": 128,
+    "reason": "Root-relative add paths were invoked from QA cwd; only four intended partial-index records had staged",
+    "correction": "Use absolute file paths and explicit actual repository cwd; retain partial staging"
+  },
+  "correctedGitAddExit": 0,
+  "stagedDiffCheckExit": 0,
+  "stagedDiffCheckOutput": "",
+  "stagedCanonicalProductMilestones": "6/6=100%",
+  "fullRequestedDeliveryComplete": false,
+  "preexistingUnrelatedWorkPreserved": true
+}

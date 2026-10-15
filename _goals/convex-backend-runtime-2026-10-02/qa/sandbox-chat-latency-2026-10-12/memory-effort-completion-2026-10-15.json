@@ -1,0 +1,54 @@
+{
+  "schema": "cortex.memory-effort.product-completion.v1",
+  "at": "2026-10-15T20:23:19.986002+00:00",
+  "status": "PRODUCT_FUNCTIONAL_COMPLETE_EXTERNAL_PR_PENDING",
+  "productSourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+  "closedEvidenceCommit": "52569cf975afe43d2c2aabc3f7e1afeae26ce155",
+  "branch": "feat/convex-backend-runtime-completion",
+  "productMilestonesComplete": 6,
+  "productMilestonesTotal": 6,
+  "productMilestonePercent": 100,
+  "independentFinalAudit": "memory-effort-final-audit-acceptance-addendum-2026-10-15.json",
+  "auditVerdict": "APPROVED",
+  "auditAverage": 4.0,
+  "unresolvedBreakingFindings": 0,
+  "userAcceptance": "memory-effort-latency-acceptance-amendment-2026-10-15.json",
+  "latencyBacklog": "memory-effort-latency-optimization-backlog.md",
+  "timingMissesUnchanged": true,
+  "originalNonVideoTaskAcceptance": "17/17tasks;61/61taskcriteria;12/12revisedgoalcriteria; prior scope-version3 audit retained",
+  "actualLatestAffectedChecks": {
+    "startup": 8,
+    "native": 671,
+    "finalReadback": 82,
+    "readonlyToolOriginalDeadline": "PASS28.315882s/30s",
+    "unapprovedWriteCancel": "PASS18.119743s/30s",
+    "allTargetOperations": 35,
+    "allTargetAttempts": 35,
+    "unknownLiabilityUnits": 5400000,
+    "reservedUnits": 0,
+    "activeSlots": 0,
+    "cleanupAbsences": 21,
+    "launcherJoinedExit": 130
+  },
+  "docsCloseout": {
+    "typecheck": "PASS1.376s",
+    "build": "PASS5.885s",
+    "browser": "memory-effort-acceptance-docs-browser.json",
+    "websiteProofsCommits": 0,
+    "handoff": "memory-effort-acceptance-documentation-handoff.patch"
+  },
+  "externalDelivery": {
+    "entireBranch": "PUSHED; final acceptance commit push follows",
+    "githubDraftPr": "UNAVAILABLE_NOT_CREATED_NOT_WAIVED",
+    "fullRequestedDeliveryComplete": false
+  },
+  "retainedLimitations": [
+    "All earlier failures retain original scoped verdicts",
+    "C7 historical backing/custody remains unqualified",
+    "Async Gateway video remains user-deferred",
+    "Actual timing samples are not percentiles or guarantees",
+    "New native tool action-speed gain not established",
+    "Populated native-tool controlled fixture remains nonblocking test debt"
+  ],
+  "servicesNeededForThisCloseout": 0
+}

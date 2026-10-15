@@ -1,9 +1,9 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "CANONICAL_COHERENT_SOURCE_PASS_BUILD_PASS_COMMIT_AND_PACK",
-  "complete": 4,
+  "phase": "PRODUCT_FUNCTIONAL_COMPLETE_EXTERNAL_PR_PENDING",
+  "complete": 6,
   "total": 6,
-  "percent": 66.7,
+  "percent": 100,
   "metric": "Accepted backend/Gateway foundation; accepted client/Basic foundation; K29 actualbaseline; effort source/client/docs acceptance; installed realprofile/latency qualification; cleanup/finalaudit",
   "baseline": {
     "firstDurableTextMs": 17597,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-15T09:45:53.810763+00:00",
+  "updatedAt": "2026-10-15T20:23:19.986002+00:00",
   "metricVersion": 3,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -49,9 +49,23 @@
       "review": "memory-effort-joint-source-review.json",
       "verdict": "SOURCE_PASS4.0",
       "nativeAcceptance": false
+    },
+    {
+      "name": "Changed installed-candidate real profile/latency/product qualification",
+      "verdict": "MET_BY_USER_ACCEPTANCE_OF_OBSERVED_FUNCTIONAL_AND_LATENCY_OUTCOMES",
+      "amendment": "memory-effort-latency-acceptance-amendment-2026-10-15.json",
+      "nativeChecks": 671,
+      "readbackChecks": 82,
+      "latencyMissesPreserved": true
+    },
+    {
+      "name": "Cleanup and independent final audit",
+      "verdict": "APPROVED4.0",
+      "report": "memory-effort-final-audit-acceptance-addendum-2026-10-15.md",
+      "cleanup": "ABSENT21; launcher130; no new cloud resources"
     }
   ],
-  "primaryLatencyTarget": "Hosted submit to first visible model answer: Fast2hops/3s;Normal4hops/6s default;High8hops/8s;Max30s, bounded by qualified context and governance. Implementation accepted at source/test level; installed qualification pending.",
+  "primaryLatencyTarget": "Fast2h/3s; Normal4h/6s default; High8h/8s; Max context-fit/30s. User accepted observed latency; misses remain tracked optimization targets. Six product/functional milestones independently APPROVED; GitHub draft PR pending.",
   "actualFailedEnvironment": {
     "id": "8a1aa585-aff0-4383-acda-c221c6d405e1",
     "database": "energized-wildcat-602",
@@ -187,12 +201,7 @@
     "cleanup": "memory-effort-singleton-cleanup-1792055676406.json",
     "requiredIntegrationAccepted": false
   },
-  "pendingRepairs": [
-    "Actual3875 Fast cross-conversation answer was incorrect with zero context at848/750ms; canonical finite-grammar and already-bound prefix repair author checks460/460, independent combined review pending. The unbound late case is not claimed repaired.",
-    "Actual3875 Basic CLI Normal replies10.333/6.032s both miss6s; same-operation raw source unique-read reuse is under bounded implementation; measured savings not yet established.",
-    "Next coherent source/test review, root build/contracts, genuine packaging and fresh hosted correctness/latency/native verification required.",
-    "Installed milestone and final independent audit remain open. GitHub draft PR unavailable; Entire mirror is the authorized Git delivery route."
-  ],
+  "pendingRepairs": [],
   "refinements": [
     {
       "name": "Measured early-delivery repair",
@@ -2123,68 +2132,13 @@
     "currentOwnedEnvironment": null
   },
   "currentOwnedEnvironment": {
-    "state": "READY",
-    "sessionId": "04ab48d4-6995-4d90-9a20-5935787e58f2",
-    "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
-    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-literal-2026-10-15",
-    "target": {
-      "id": 6189484,
-      "name": "impartial-stoat-767",
-      "kind": "cloud",
-      "teamId": 325340,
-      "projectId": 3200658,
-      "reference": "dev/cortex-sandbox-04ab48d4-6995-4d90-9a20-5935787e58f2",
-      "deploymentType": "dev",
-      "isDefault": false,
-      "expiresAt": 1792656777783,
-      "deploymentUrl": "https://impartial-stoat-767.convex.cloud",
-      "disposable": true,
-      "serverExpiryVerified": true
-    },
-    "container": {
-      "name": "cortex-sandbox-04ab48d4-6995-4d90-9a20-5935787e58f2",
-      "imageId": "sha256:1856464478b4b8820262b724db678d2c08e4505d7774db1263efce0e6cda6a92",
-      "labels": {
-        "dev.cortex.disposable-sandbox": "04ab48d4-6995-4d90-9a20-5935787e58f2",
-        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/04ab48d4-6995-4d90-9a20-5935787e58f2"
-      },
-      "id": "dec6decc762559bdcaddbeda1104be088ef4f4c528d8f2f7c782215947d5478b"
-    },
-    "ports": {
-      "web": 3124,
-      "basic": 3125
-    },
-    "launcherPid": 31978,
-    "rootExecSession": 51160,
-    "startupFixedQualification": "8/8ACTUAL_PASS",
-    "startupBatch": {
-      "actualSuccessfulMethods": 8,
-      "dispatches": 8,
-      "fullUnknownLiabilityUnits": 2700000,
-      "activeConcurrency": 0,
-      "aggregateUsdComplete": false,
-      "perRunHumanReview": false,
-      "procedureApprovalDigest": "d9e23f3e3ab9c0a07d57192846d24bec1a937a9bb02e9c651729176b4e98d814",
-      "immutableProcedureReviewedBeforeRun": true,
-      "freshActualOutcomes": true,
-      "oldQualificationDatesReused": false
-    },
-    "startupBatchSha256": "44ca9bd90d871361685040bbc2e2522999b9b4a75f8bf61bfc5aabcfc7501f05",
-    "startupStrictEmptyQuestion": true,
-    "startupExtractionSha256": "55c0b1a39a840ff219d0875084592a00b0c52454ae223879946e0421ff3dbfe8",
-    "runtimeReadySha256": "0fc1c1a6c07129900aee1aaef778661d51d9fa73c046c96392f9196ef164c522",
-    "managedDefaultProfile": true,
-    "capabilities": {
-      "inputSelectionVersion": 2,
-      "memoryEffortPolicyVersion": 1
-    },
-    "healthStatus": 200,
-    "readyAt": "2026-10-15T08:16:32.248Z",
-    "effortProfileRuntimeAcceptance": false,
-    "manifestSha256": "c90ca5d7e733e2dbfef68cd6a0e775c453a65d6a8657ba4b0d02a3ebee014b1a",
-    "backendManifestSha256": "eebdb256de455f2680fabf391b8a35584ab04d137864017d041f141881916b61",
-    "backendFileCount": 174,
-    "modelCalls": 0
+    "state": "CLOSED_VERIFIED_ABSENT_NOT_REUSABLE",
+    "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+    "targetId": 6201117,
+    "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "cleanup": "memory-effort-native-recall-cleanup-1792088754344.json",
+    "launcherJoinedExit": 130,
+    "tupleRetired": true
   },
   "installedNativeFindings": [
     {
@@ -3792,22 +3746,9 @@
     }
   ],
   "latestCompletedWindow": {
-    "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
-    "sessionId": "3d381c46-a9ab-4650-9ea2-a541c76bf207",
-    "state": "CLOSED",
-    "environmentState": "CLEANED",
-    "goalAccepted": false,
-    "browserObserved": "6/6",
-    "browserTimingTargets": "5/6",
-    "recallAnswersCorrect": "4/5",
-    "cliCorrect": "2/2",
-    "cliNormalTimingTargets": "0/2",
-    "currentNativeRegression": "NOT_RUN_AFTER_FAILED_BROWSER_GATE",
-    "checks": "memory-effort-singleton-browser-summary.json",
-    "chain": "memory-effort-singleton-full-chain.json",
-    "cli": "memory-effort-singleton-cli-chain.json",
-    "cleanup": "memory-effort-singleton-cleanup-1792055676406.json",
-    "freshAbsenceChecks": 21
+    "report": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-closed-window.json",
+    "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "scope": "Affected native-tool functionalPASS; Normal seed timingMISS; not full goal acceptance"
   },
   "literalCandidate": {
     "state": "CLOSED_862_CLEANED_WITH_FAILED_LATENCY_GATE",
@@ -3876,13 +3817,264 @@
     "historicalOnly": true
   },
   "currentDocumentationVerification": {
-    "repository": "SaintNick1214/cortexmemory.dev",
-    "sourceWindow": "3875d323",
-    "receipt": "memory-effort-singleton-docs-verification.json",
-    "buildExit": 0,
-    "typesExit": 0,
-    "hashesStable": 16,
-    "actualBrowser": true,
-    "published": false
+    "at": "2026-10-15T20:23:19.986002+00:00",
+    "status": "ACTUAL_ACCEPTANCE_DOCS_VISUAL_PASS",
+    "scope": "Acceptance/status prose only; unchanged product paths and historical timing data",
+    "docsSource": "memory-effort-acceptance-documentation-source.json",
+    "sourceStable": true,
+    "checks": "memory-effort-acceptance-docs-checks.json",
+    "desktop": {
+      "viewport": 1280,
+      "client": 1272,
+      "scroll": 1272,
+      "acceptanceAndMissAndPendingDeliveryVisible": true
+    },
+    "phone": {
+      "viewport": 393,
+      "client": 385,
+      "scroll": 385,
+      "normalDefaultPreserved": true,
+      "effortAcceptanceVisible": true,
+      "orchestrationAcceptanceVisible": true
+    },
+    "visualPhone": {
+      "frameClient": 361,
+      "frameScroll": 361,
+      "visibleStatus": "Accepted functional milestone:6/6(100%); independent audit4.0/5; latency misses tracked"
+    },
+    "consoleWarningsErrors": 0,
+    "screenshotsViewed": true,
+    "screenshots": [
+      {
+        "path": "memory-effort-acceptance-orchestration-phone.png",
+        "sha256": "a11032df668f74819dbe740a4da993edea5fbbbbbca2c48b6733cb8a70a75090"
+      },
+      {
+        "path": "memory-effort-acceptance-visual-phone.png",
+        "sha256": "10f8fc9db902687fbbfaded22a8c2ada8af0d0e1138996504222cd24497373d6"
+      },
+      {
+        "path": "memory-effort-acceptance-effort-phone.png",
+        "sha256": "805a5fa0557f0d3cc38c705015466bb0d6c02d96094fe443f0959bf1e21ce97b"
+      },
+      {
+        "path": "memory-effort-acceptance-performance-desktop.png",
+        "sha256": "db80e6cab3b910fbf04171c557b33b7978b451292d3f56713ba6246996760b44"
+      }
+    ],
+    "visualSource": {
+      "path": "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html",
+      "sha256": "27b134cd6229b62224e87ac204273934de28c1e4c5fddb9922b1b9256b0f210d"
+    },
+    "previewRender": {
+      "firstAttemptExit": 2,
+      "reason": "Owned preview destination already existed",
+      "correction": "Explicit --force replaces only the generated owned preview",
+      "correctedExit": 0,
+      "warning": "Standalone wrapper has widgetState/follow-up host references; not published"
+    },
+    "cleanup": {
+      "ownedTabsClosed": [
+        "47",
+        "48"
+      ],
+      "userTab4Untouched": true,
+      "viewportReset": true,
+      "previewExecSessions": [
+        27944,
+        26035
+      ],
+      "actualJoinedExits": [
+        0,
+        0
+      ],
+      "cloudResourcesCreated": 0,
+      "models": 0,
+      "productChanges": 0
+    }
+  },
+  "productFunctionalComplete": true,
+  "fullRequestedDeliveryComplete": false,
+  "finalAudit": {
+    "report": "memory-effort-final-audit-acceptance-addendum-2026-10-15.md",
+    "json": "memory-effort-final-audit-acceptance-addendum-2026-10-15.json",
+    "verdict": "APPROVED",
+    "score": 4.0,
+    "scope": "Functional implementation, installed qualification and cleanup;6/6milestones",
+    "unresolvedBreakingFindings": 0,
+    "externalDeliveryPending": true
+  },
+  "historicalFinalAuditBeforeAcceptance": {
+    "report": "memory-effort-final-audit-2026-10-15.md",
+    "json": "memory-effort-final-audit-2026-10-15.json",
+    "overallVerdict": "ISSUES FOUND",
+    "functionalSafetyVerdict": "APPROVED",
+    "concreteUnresolvedBreakingFindings": 0,
+    "functionalAverage": 4.0,
+    "wholeFollowupAverage": 3.6,
+    "goalCompletionApproved": false,
+    "open": [
+      "User latency acceptance rule pending; original observed misses remain",
+      "GitHub draft PR unavailable; Entire push completed"
+    ],
+    "noSourceFixRequestedWithoutConcreteDefect": true
+  },
+  "latencyAcceptance": {
+    "schema": "cortex.memory-effort.acceptance-amendment.v1",
+    "adoptedAt": "2026-10-15T20:15:51.390092+00:00",
+    "authority": "Direct current human user instructions",
+    "userStatements": [
+      "Accept functional completion; track latency misses",
+      "we're close enough on latency targets im satisfied.  Let's consider this milestone met."
+    ],
+    "milestone": 5,
+    "milestoneName": "Changed installed-candidate real profile/latency/product qualification",
+    "acceptance": "MET_BY_USER_ACCEPTANCE_OF_OBSERVED_FUNCTIONAL_AND_LATENCY_OUTCOMES",
+    "performanceTargets": {
+      "fastMs": 3000,
+      "normalMs": 6000,
+      "highMs": 8000,
+      "maxMs": 30000
+    },
+    "latencyMisses": "Preserved as measured optimization backlog, not rewritten as timing PASS or guarantees",
+    "changedProductSource": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "evidenceCommit": "52569cf975afe43d2c2aabc3f7e1afeae26ce155",
+    "priorIndependentAudit": "memory-effort-final-audit-2026-10-15.json",
+    "preservedRequirements": [
+      "All functional/security/currentness/billing/replay/cancellation/deadline/cleanup requirements",
+      "Historical failures and their scoped verdicts",
+      "Final independent product audit",
+      "GitHub draft PR remains unavailable and is not claimed created",
+      "No production/release/merge; no website/Proofs commits; no Union Arena work"
+    ],
+    "original17NonVideoAccepted": true,
+    "milestonesComplete": 5,
+    "milestonesTotal": 6,
+    "milestonePercent": 83.3
+  },
+  "productCompletion": {
+    "schema": "cortex.memory-effort.product-completion.v1",
+    "at": "2026-10-15T20:23:19.986002+00:00",
+    "status": "PRODUCT_FUNCTIONAL_COMPLETE_EXTERNAL_PR_PENDING",
+    "productSourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "closedEvidenceCommit": "52569cf975afe43d2c2aabc3f7e1afeae26ce155",
+    "branch": "feat/convex-backend-runtime-completion",
+    "productMilestonesComplete": 6,
+    "productMilestonesTotal": 6,
+    "productMilestonePercent": 100,
+    "independentFinalAudit": "memory-effort-final-audit-acceptance-addendum-2026-10-15.json",
+    "auditVerdict": "APPROVED",
+    "auditAverage": 4.0,
+    "unresolvedBreakingFindings": 0,
+    "userAcceptance": "memory-effort-latency-acceptance-amendment-2026-10-15.json",
+    "latencyBacklog": "memory-effort-latency-optimization-backlog.md",
+    "timingMissesUnchanged": true,
+    "originalNonVideoTaskAcceptance": "17/17tasks;61/61taskcriteria;12/12revisedgoalcriteria; prior scope-version3 audit retained",
+    "actualLatestAffectedChecks": {
+      "startup": 8,
+      "native": 671,
+      "finalReadback": 82,
+      "readonlyToolOriginalDeadline": "PASS28.315882s/30s",
+      "unapprovedWriteCancel": "PASS18.119743s/30s",
+      "allTargetOperations": 35,
+      "allTargetAttempts": 35,
+      "unknownLiabilityUnits": 5400000,
+      "reservedUnits": 0,
+      "activeSlots": 0,
+      "cleanupAbsences": 21,
+      "launcherJoinedExit": 130
+    },
+    "docsCloseout": {
+      "typecheck": "PASS1.376s",
+      "build": "PASS5.885s",
+      "browser": "memory-effort-acceptance-docs-browser.json",
+      "websiteProofsCommits": 0,
+      "handoff": "memory-effort-acceptance-documentation-handoff.patch"
+    },
+    "externalDelivery": {
+      "entireBranch": "PUSHED; final acceptance commit push follows",
+      "githubDraftPr": "UNAVAILABLE_NOT_CREATED_NOT_WAIVED",
+      "fullRequestedDeliveryComplete": false
+    },
+    "retainedLimitations": [
+      "All earlier failures retain original scoped verdicts",
+      "C7 historical backing/custody remains unqualified",
+      "Async Gateway video remains user-deferred",
+      "Actual timing samples are not percentiles or guarantees",
+      "New native tool action-speed gain not established",
+      "Populated native-tool controlled fixture remains nonblocking test debt"
+    ],
+    "servicesNeededForThisCloseout": 0
+  },
+  "remainingOptimizationBacklog": "memory-effort-latency-optimization-backlog.md",
+  "externalDelivery": {
+    "entireBranch": "PUSHED; final acceptance commit push follows",
+    "githubDraftPr": "UNAVAILABLE_NOT_CREATED_NOT_WAIVED",
+    "fullRequestedDeliveryComplete": false
+  },
+  "nextAction": "Accepted product milestones complete. GitHub draft PR delivery remains unavailable; preserve draft handoff and do not claim PR created. Latency misses and nonbreaking test debt remain tracked optimization work.",
+  "activeEnvironment": {
+    "state": "CLOSED_VERIFIED_ABSENT_NOT_REUSABLE",
+    "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+    "targetId": 6201117,
+    "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "cleanup": "memory-effort-native-recall-cleanup-1792088754344.json",
+    "launcherJoinedExit": 130,
+    "tupleRetired": true
+  },
+  "currentSourceCandidate": {
+    "status": "CLOSED_AFFECTED_FUNCTIONAL_PASS_SLO_UNMET",
+    "baseCommit": "374c3784c3bda76602540a0236753b793aa95741",
+    "scope": "Native approved readonly-tool recall composition; common ordinary CLI/Chat semantics unchanged",
+    "manifest": "memory-effort-native-recall-coherent-source-hashes.json",
+    "frozenSourceFiles": 54,
+    "changedFiles": 5,
+    "authorChecks": "423/423 in7suites;zero skips;root/lint types and scopedESLintPASS",
+    "rootChecks": "SDKbuild29.291s/contracts1.996sPASS;54sourcehashesstable",
+    "installed": "671native/82readbackPASS; both original30s tool casesPASS; browser seedNormalMISS",
+    "goalPercent": 100,
+    "at": "2026-10-15T18:08:31.246Z",
+    "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "delivery": "PUSHED_ENTIRE",
+    "independentReview": "PASS4.0;40selected tests,49older cases intentionallydeselected;zero breaking",
+    "reviewSha256": "603c18b128451d93f9501072cec14ce808e0722501c53b06b621907632423b42",
+    "packaging": "PASS1SDKbuild consumed/1SDKpack/3unchanged archives/4consumer groups/1LinuxARM64image",
+    "imageId": "sha256:bdba8702da9e56bb5e4556109e82214b31369d7c460531cc26ea97d8404ccea2",
+    "launcherTests": "PASS151/151 after correcting omittedTSX loader; original97/99 failure retained",
+    "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+    "cleanup": "ABSENT21 launcherjoined130",
+    "closedReceipt": "memory-effort-native-recall-closed-window.json",
+    "speedGainEstablished": false,
+    "state": "ACCEPTED_FUNCTIONAL_QUALIFICATION_LATENCY_MISSES_TRACKED"
+  },
+  "nextSourceCandidate": {
+    "status": "NONE_REQUIRED_FOR_ACCEPTED_FUNCTIONAL_GOAL",
+    "reason": "User accepted installed qualification; final independent product audit APPROVED6/6. Latency misses remain nonblocking optimization backlog."
+  },
+  "closureDelivery": {
+    "at": "2026-10-15T18:44:43.277965+00:00",
+    "repository": "SaintNick1214/Project-Cortex",
+    "branch": "feat/convex-backend-runtime-completion",
+    "productSourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "closureCommit": "52569cf975afe43d2c2aabc3f7e1afeae26ce155",
+    "files": 41,
+    "scope": "Only selected QA receipts/audit/documentation handoff; unrelated dirty work unstaged",
+    "initialPush": {
+      "exit": 128,
+      "failure": "Entire Git helper absent from shell PATH; no remote update"
+    },
+    "correctedPush": {
+      "exit": 0,
+      "correction": "Added existing /Users/SaintNick/.local/bin helper directory to PATH",
+      "remote": "entire",
+      "ref": "feat/convex-backend-runtime-completion",
+      "from": "d4ba7faac",
+      "to": "52569cf97"
+    },
+    "githubCalls": 0,
+    "websiteProofsCommits": 0,
+    "productChangesAfterQualification": 0,
+    "overallCompletionApproved": false,
+    "goalPercent": 66.7
   }
 }

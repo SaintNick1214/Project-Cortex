@@ -52,3 +52,8 @@ Original17-task scope-version3 acceptance remains historical/current for its sco
 6. Cleanup and final independent audit.
 
 Starting v3 progress is **2/6=33.3%**, a scope/denominator change, not lost implementation. Advance only on the named actual outcomes. Keep per-packet progress and blockers in `status.json`, append notices to `completion-notices.jsonl`, and report after internal milestones. Do not turn hypothetical target comparisons into accepted effort behavior.
+
+
+## User acceptance amendment — 2026-10-15
+
+The user explicitly chose “Accept functional completion; track latency misses”, then confirmed “we’re close enough on latency targets im satisfied. Let’s consider this milestone met.” Milestone5 is accepted on the observed installed functional and latency evidence. The3/6/8/30-second values remain optimization targets; all actual misses, historical verdicts and original product deadlines remain unchanged. See `memory-effort-latency-acceptance-amendment-2026-10-15.json` and `memory-effort-latency-optimization-backlog.md`. Milestone6 closes after the independent final audit applies this decision and verifies required functional/cleanup outcomes. GitHub PR delivery remains separately unavailable; no waiver or created PR is implied. This amendment does not reopen original17 accepted non-video tasks or authorize new production/release work.

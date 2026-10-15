@@ -1,0 +1,33 @@
+{
+  "schema": "cortex.memory-effort.acceptance-amendment.v1",
+  "adoptedAt": "2026-10-15T20:15:51.390092+00:00",
+  "authority": "Direct current human user instructions",
+  "userStatements": [
+    "Accept functional completion; track latency misses",
+    "we're close enough on latency targets im satisfied.  Let's consider this milestone met."
+  ],
+  "milestone": 5,
+  "milestoneName": "Changed installed-candidate real profile/latency/product qualification",
+  "acceptance": "MET_BY_USER_ACCEPTANCE_OF_OBSERVED_FUNCTIONAL_AND_LATENCY_OUTCOMES",
+  "performanceTargets": {
+    "fastMs": 3000,
+    "normalMs": 6000,
+    "highMs": 8000,
+    "maxMs": 30000
+  },
+  "latencyMisses": "Preserved as measured optimization backlog, not rewritten as timing PASS or guarantees",
+  "changedProductSource": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+  "evidenceCommit": "52569cf975afe43d2c2aabc3f7e1afeae26ce155",
+  "priorIndependentAudit": "memory-effort-final-audit-2026-10-15.json",
+  "preservedRequirements": [
+    "All functional/security/currentness/billing/replay/cancellation/deadline/cleanup requirements",
+    "Historical failures and their scoped verdicts",
+    "Final independent product audit",
+    "GitHub draft PR remains unavailable and is not claimed created",
+    "No production/release/merge; no website/Proofs commits; no Union Arena work"
+  ],
+  "original17NonVideoAccepted": true,
+  "milestonesComplete": 5,
+  "milestonesTotal": 6,
+  "milestonePercent": 83.3
+}
