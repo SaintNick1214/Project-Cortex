@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "verdict": "REJECTED_NO_PRODUCT_EDIT",
+  "baselineProductCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "baselineManifest": "memory-effort-control-coherent-source-hashes.json",
+  "baselineManifestSha256": "88bd2a56b2efa4df88b06658ca925792f04d733dc3731cbd04fe8ca587455161",
+  "allElevenFrozenHashesStillMatch": true,
+  "productEdits": 0,
+  "testEdits": 0,
+  "testsRun": 0,
+  "services": 0,
+  "models": 0,
+  "gitCommands": 0,
+  "builds": 0,
+  "deploys": 0,
+  "blocker": {
+    "name": "Financial cancellation is not repeated by durable-output guard",
+    "sequence": [
+      "First private V8 Gateway markVisible succeeds for exact native financial attempt; text A may publish.",
+      "Existing internal runtimeModelPolicy.cancelBudget sets run budget account cancelled=true and version+1, with Core run/outbox/lease/definition/grant/source unchanged.",
+      "Baseline next Gateway chunk freshly invokes markVisible\u2192attemptContext\u2192currentOperation; cancelled run financial account is rejected before Gateway enqueue.",
+      "A hypothetical successful-first-ACK shortcut instead enqueues chunk B into the official Agent/AI SDK pipeline.",
+      "Original recordOutput executes current executionContext/tool projection, but never reads the native model attempt/operation or financial account; no check observes this cancellation. It can insert B into runtimeAgentOutput.",
+      "Existing guardedObservation rechecks read/conversation/source/artifact/media/deadlines and reads runtimeAgentOutput, but does not inspect that financial cancellation. A fresh client session still passes. B can become visible."
+    ],
+    "baselineRefusal": "currentOperation rejects cancelled run account at runtimeModelPolicy.ts:323\u2013324; markVisible therefore fails before chunk emission.",
+    "candidateFailure": "Returning the prior ACK is an authorization/currentness decision reuse at this boundary, despite later Agent grant/source/lease checks."
+  },
+  "otherUnmatchedGuards": [
+    "markVisible accepts only dispatch_pending or uncertain native financial attempt states.",
+    "currentOperation checks native operation cancellation/reference and financial run-account identity/cancellation.",
+    "currentOperation checks parent native-operation lineage, current pinned model/qualification/evidence compatibility and active tenant override actors.",
+    "recordOutput indirectly reruns executable-definition policy narrowing; this is retained and is not equivalent to exact native currentOperation."
+  ],
+  "officialPipeline": {
+    "enqueueBeforeOnChunk": "AI SDK7 eventProcessor enqueues current chunk before awaiting onChunk notification. Downstream reads are not gated by callback completion.",
+    "componentPersistence": "Official Agent consumes result.toUIMessageStream into DeltaStreamer; component addDelta/listDeltas can hold raw chunks. SDK does not expose syncStreams or a raw component-delta endpoint in the audited public runtime/client paths. This is private component storage, not evidence of an existing public raw-stream bypass.",
+    "durablePublication": "Private Agent flush publishes first text immediately, then batches up to32pending chunks or250ms, each through original recordOutput. Therefore per-chunk callback is not a per-chunk durable-currentness fence.",
+    "tools": "serverTools has no execute callback; tool work is routed through explicit Workflow begin/approval/start/tool guards and next model admission. Those remain current, but cannot retroactively replace the missing financial fence for prior emitted chunks."
+  },
+  "visibilityFlags": "First toolInputVisible acknowledgment cannot substitute for a later outputVisible=true transition (or the reverse) without changing original monotone financial evidence; premarking all flags would alter abort-after-first-ACK state. This is an additional constraint, not the primary rejection.",
+  "preserved": "No change to first ACK-before-emit ordering, abort-after-ACK zero-output behavior, later original markVisible calls, recordOutput/tool/admission guards, UNKNOWN cost handling, deadlines, replay/fallback or JWT verification.",
+  "nextBoundary": "A different optimization would need to re-execute the exact missing native currentOperation/attempt guards before every actual visible effect and prove all downstream/component exposure ordering. That is a separately scoped guard-relocation/composition change, not successful-ACK deduplication, and has not been implemented or authorized by this report.",
+  "evidenceKind": "Read-only exact source/control-flow proof; no runtime counterexample test or hosted measurement was run.",
+  "references": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "start": 1075,
+      "end": 1109
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "start": 1007,
+      "end": 1015
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "start": 1137,
+      "end": 1181
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "start": 1010,
+      "end": 1070
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "start": 317,
+      "end": 356
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "start": 854,
+      "end": 867
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "start": 1285,
+      "end": 1299
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "start": 297,
+      "end": 307
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "start": 1691,
+      "end": 1734
+    },
+    {
+      "path": "node_modules/ai/src/generate-text/stream-text.ts",
+      "start": 1495,
+      "end": 1508
+    },
+    {
+      "path": "node_modules/@convex-dev/agent/src/vercel/client/streamText.ts",
+      "start": 280,
+      "end": 303
+    },
+    {
+      "path": "node_modules/@convex-dev/agent/src/vercel/client/streaming.ts",
+      "start": 377,
+      "end": 385
+    },
+    {
+      "path": "convex-dev/runtimeAgentTools.ts",
+      "start": 35,
+      "end": 44
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/remote/index.ts",
+      "start": 214,
+      "end": 214
+    }
+  ]
+}

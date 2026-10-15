@@ -1,0 +1,13 @@
+The original readonly tool collector remains FAILED_STOPPED_NO_RESUBMISSION (ORIGINAL_DEADLINE), with one accepted approval and no retry. The unused write case was never dispatched.
+
+The 30s clock starts after setup/pre-case verification, and includes submit, identity verification before start, waiting approval, identity verification before approval, approval and waiting for both response and memory complete. Pending was observed at 15244.3ms, leaving at most 14755.7ms. Eight admin table reads occur only after terminal observation; they were not reached. There are no explicit management/Docker verifications inside the postapproval observation loop; one cleanup verification occurs after failure. Guard duration and the exact per-client observe count were not recorded. The helper itself polls every 100ms; this says nothing about browser watcher behavior.
+
+Saved server metadata joins this exact run to its initial Action (10132.2ms), tool Action (6417.6ms), continuation Action (6151.0ms), and finalization. Approval completion to finalization completion is 13056.3ms on the server wall clock. Model0 has14 visibility calls totaling3552ms and two OCC retried ledger mutations; model1 has7 totaling1971ms. Those mutations are not paid model retries. These are nested intervals.
+
+After the unique approval completion and before cleanup cancel, the target-wide interval contains 26 runtimeClient:observeEnvelope and 23 runtimeClient:session. Public rows have no run tags: these are interval counts, not an exact helper RPC/session mapping.
+
+Root later attached the same existing run read-only and saw the correct apricot answer, response complete and memory complete. This establishes eventual product completion separately. The local receipt lacks the last response/memory/session state and clock bridge, so it cannot prove whether memory, response or protected-read delivery was pending at timeout. It does prove admin inspection did not cause the timeout.
+
+The smallest remaining investigation is Root current selected native readback for this exact run/op/hash, model0/1 and embeddings, native tool result/effects, ordinary approved-input ingestion/current profile and usage/liability/slots. No replay or second approval is needed. The separate unused write intent may be submitted once by the cancel-only adapter after fresh quiet finance and full current pins/GO, then cancelled without approval. Original failure files and verdict stay intact.
+
+Detailed JSON retains native IDs, exact server intervals, original helper source line references, input hashes and clock limitations. Offline only: zero services/models/private/Proofs/source/Git/test operations.

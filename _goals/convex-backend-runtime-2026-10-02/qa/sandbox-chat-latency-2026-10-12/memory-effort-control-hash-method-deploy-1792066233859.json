@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "status": "QA_INTERNAL_QUERY_DEPLOYED",
+  "mode": "--deploy",
+  "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+  "imageId": "sha256:26980f56eafa7c7b5b8141ba314344e10e21238089bf302a3d11c95739c70986",
+  "targetId": 6192965,
+  "fixtureSha256": "18b2dc9678cd4e80ac3ca88d5bdd3f53fdea8be94833184a08aee24b571e45b0",
+  "function": "hashLatencyQualification:fixedMethod",
+  "startedAt": 1792066233859,
+  "inferenceCalls": 0,
+  "tokenCalls": 0,
+  "applicationMutations": 0,
+  "retries": 0,
+  "queryCalls": 0,
+  "officialLogGets": 0,
+  "clientsClosed": true,
+  "cleanup": {
+    "localFixtureRemoved": false,
+    "deployedEndpointRemoved": false,
+    "required": "Root verified whole disposable target deletion; no third redeploy performed."
+  },
+  "preconditions": {
+    "readback": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-runtime-readback-1792065768689.json",
+      "sha256": "a74ab6a3239d4bc3f2d71cd4bf06f7e080c661bd2012add46486e016ab359170",
+      "status": "OBSERVED_WITH_UNMET_VERIFIER_CHECKS",
+      "unmetChecks": [
+        "unapproved-write-tool-cancelled declared actual response outcome preserved",
+        "unapproved-write-tool-cancelled actual cancelled tool run has zero approval result native tool message or owned effect"
+      ],
+      "results": [],
+      "productFailuresPreserved": true
+    },
+    "finance": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-finance-after-1792065701173.json",
+      "sha256": "c41f17458f75e72a5e8772c02b4aefb03d4110388b53405a2fdea5b056677229",
+      "allTargetFinance": {
+        "distinctOperations": 78,
+        "distinctAttempts": 78,
+        "unknownLiabilityUnits": 9700000,
+        "settledUnits": 0,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "attemptsFirstOnly": true,
+        "attemptStates": {
+          "uncertain": 78
+        },
+        "aggregateUsdComplete": false,
+        "rule": "Distinct operation/attempt rows across this exact disposable target; run liabilities summed once; tenant mirrors excluded."
+      },
+      "finishedAt": 1792065703509
+    },
+    "rootModeGoAttestsNoNewModelCallsAfterLastFinance": true
+  },
+  "originalProductBefore": {
+    "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+    "backendManifestSha256": "858568e0e5438448d09c9b23cb3b3427031a19190a5e9e808b83da8ac9d4b860",
+    "installedPackageFiles": 174,
+    "allInstalledHashesMatch": true,
+    "originalHostFiles": 174,
+    "allOriginalHostHashesMatch": true,
+    "qualifiedBootstrapSha256": "f0a9b1458836a4b6cfc49e5328d144174d7d31dca5d0ed8bba63b9c84a815b32",
+    "originalHostDigest": "44e4b226512d115b482540f3a0f7dcd61a274ee9ce6db65c0ddc7606fe613ca1",
+    "newQaAdditionIsSeparateFromFrozenProductClosure": true
+  },
+  "previousExperiment": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-hash-latency-first-1792066053757.json",
+    "sha256": "4ea8de36bd66c2d681960818a113a51c3c0da313dfdc0fc36fa4d750307b25f0",
+    "newCursor": 1792066061302.876,
+    "failurePreserved": true,
+    "notARetry": true
+  },
+  "qaHostAddition": {
+    "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/d3c6dc04-af66-4894-acd4-bb75bf3d544b/host/convex/hashLatencyQualification.ts",
+    "previousSha256": "e9c4fd5d14cd2e6852b7f284f8df7d30dcf2e10a68faeaf544fed804683facdf",
+    "sha256": "18b2dc9678cd4e80ac3ca88d5bdd3f53fdea8be94833184a08aee24b571e45b0",
+    "writeMode": "exact-prior-SHA-replacement",
+    "intentionalDifferentExperiment": true
+  },
+  "command": {
+    "code": 0,
+    "stdout": "",
+    "stderr": "▌ Developing against deployment:\n▌ [Development] nicholasgeil:cortex-sandboxes:dev/cortex-sandbox-d3c6dc04-af66-4894-acd4-bb75bf3d544b (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-sandboxes/calm-snake-661)\n▌ └─ https://calm-snake-661.convex.cloud\n- Preparing Convex functions...\n\nConvex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.\n✔ 05:10:47 Convex functions ready! (12.48s)\n"
+  },
+  "originalProductAfter": {
+    "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+    "backendManifestSha256": "858568e0e5438448d09c9b23cb3b3427031a19190a5e9e808b83da8ac9d4b860",
+    "installedPackageFiles": 174,
+    "allInstalledHashesMatch": true,
+    "originalHostFiles": 174,
+    "allOriginalHostHashesMatch": true,
+    "qualifiedBootstrapSha256": "f0a9b1458836a4b6cfc49e5328d144174d7d31dca5d0ed8bba63b9c84a815b32",
+    "originalHostDigest": "44e4b226512d115b482540f3a0f7dcd61a274ee9ce6db65c0ddc7606fe613ca1",
+    "newQaAdditionIsSeparateFromFrozenProductClosure": true
+  },
+  "finishedAt": 1792066247615,
+  "productClosureNote": "Original installed ef094 product174files remain pinned; QA query is an intentional additional host function, not unchanged frozen backend closure."
+}

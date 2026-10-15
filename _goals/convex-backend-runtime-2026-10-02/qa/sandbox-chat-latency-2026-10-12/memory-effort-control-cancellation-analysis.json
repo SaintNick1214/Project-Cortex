@@ -1,0 +1,1110 @@
+{
+  "version": 1,
+  "status": "OFFLINE_CORRELATION_COMPLETE_WITH_ATTRIBUTION_LIMITS",
+  "observedAt": "2026-10-15T12:07:06.826734+00:00",
+  "scope": {
+    "modelCalls": 0,
+    "serviceCalls": 0,
+    "sourceEdits": 0,
+    "docsEdits": 0,
+    "testRuns": 0,
+    "writes": [
+      "memory-effort-control-cancellation-analysis.json",
+      "memory-effort-control-cancellation-analysis.md"
+    ]
+  },
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-tool-cancel-only-1792065614058.json",
+      "sha256": "4295396bde9663d3beca66046562c030070db6a640654a5d58b76a054c4c6d1f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-service-log-snapshot-public-post-run-1792065692584.json",
+      "sha256": "d1457297500946721ece6503e851396907917d0303eac8825fd6e58c1e5461e8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-runtime-readback-1792065768689.json",
+      "sha256": "a74ab6a3239d4bc3f2d71cd4bf06f7e080c661bd2012add46486e016ab359170"
+    }
+  ],
+  "identity": {
+    "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+    "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+    "imageId": "sha256:26980f56eafa7c7b5b8141ba314344e10e21238089bf302a3d11c95739c70986",
+    "targetId": 6192965
+  },
+  "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+  "operationId": "agent-op:e3169c5bfdb034816b1102c06d3a060a7fc3cd9cb3cb1acabaa9f5a2d6d5ac57",
+  "clientRequestId": "60022d39-e8f0-4d07-a28a-7c1ef67eda79",
+  "requestHash": "f848d94a37b4730267a3dc699bfc029e889dd1b7513a421ecde1e8ab4ac1d4cc",
+  "conclusion": [
+    "The largest measured exact-run region is the 13634ms main-model region, not the 2703ms recall bracket inside3977ms preparation.",
+    "Fourteen serial awaited visibility checkpoints occupy a 7168ms envelope inside that main region. First stream part is 628ms after stream begin; no first-text event was captured. This does not measure exclusive provider compute.",
+    "Two actual terminal-evidence OCC retries occur in the 2032ms main capture bracket. Four observer OCC conflicts share the same execution-document hash; these are distinct backend retries, not paid model retries.",
+    "The client first sees approval at 29268.266084ms. Exact Action executionTime is 18710.966826ms on backend metadata; these clocks are not aligned or subtracted. Later workflow work has no exact runId join, so full 29s exclusive attribution remains unresolved.",
+    "The final readback leaves the unapproved write waiting_approval with zero approval/result/tool message/owned tool effect. Original deadline failure and uncertain cancellation ACK remain unchanged."
+  ],
+  "clientClock": {
+    "clock": "case-local monotonic performance timing only",
+    "originalDeadlineMs": 30000,
+    "pendingObservedMs": 29268.266084,
+    "lastObserved": {
+      "responseStatus": "waiting_approval",
+      "memoryStatus": "complete",
+      "caseElapsedMs": 29267.976416999998
+    },
+    "observations": 28,
+    "approvalSubmissions": 0,
+    "cancelSubmissions": 1,
+    "cancel": {
+      "phase": "cancel",
+      "beginCaseMs": 29474.478166999997,
+      "durationMs": 526.0922080000018,
+      "endCaseMs": 30000.570375,
+      "deadlineOverrunMs": 0.5703749999993306
+    },
+    "phaseAggregates": {
+      "submit": {
+        "count": 1,
+        "sumDisjointDurationsMs": 986.9312919999998,
+        "durationRangeMs": [
+          986.9312919999998,
+          986.9312919999998
+        ]
+      },
+      "identity.before-start": {
+        "count": 1,
+        "sumDisjointDurationsMs": 180.53637500000013,
+        "durationRangeMs": [
+          180.53637500000013,
+          180.53637500000013
+        ]
+      },
+      "start": {
+        "count": 1,
+        "sumDisjointDurationsMs": 461.55475000000024,
+        "durationRangeMs": [
+          461.55475000000024,
+          461.55475000000024
+        ]
+      },
+      "observe": {
+        "count": 28,
+        "sumDisjointDurationsMs": 24886.576583000002,
+        "durationRangeMs": [
+          373.37445800000023,
+          2045.0992079999996
+        ]
+      },
+      "observe.pause": {
+        "count": 27,
+        "sumDisjointDurationsMs": 2750.8442519999994,
+        "durationRangeMs": [
+          100.30366700000013,
+          102.43337500000052
+        ]
+      },
+      "identity.before-cancel": {
+        "count": 1,
+        "sumDisjointDurationsMs": 206.16208299999926,
+        "durationRangeMs": [
+          206.16208299999926,
+          206.16208299999926
+        ]
+      },
+      "cancel": {
+        "count": 1,
+        "sumDisjointDurationsMs": 526.0922080000018,
+        "durationRangeMs": [
+          526.0922080000018,
+          526.0922080000018
+        ]
+      }
+    },
+    "collectorNote": "The collector explicitly awaited 27 observe.pause intervals totaling 2750.844252ms. This is not the reactive browser client and is not evidence of reactive polling backoff. Observe calls are end-to-end awaited client calls, not exclusive backend work."
+  },
+  "exactAction": {
+    "requestId": "b966229922f8f227",
+    "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b",
+    "identifier": "runtimeAgent:executeDirectV8",
+    "executionTimestamp": 1792065616.744697,
+    "timestamp": 1792065635.4589179,
+    "nativeExecutionMs": 18710.966826,
+    "nativeUserExecutionMs": 18700.441645000003,
+    "errorPresent": false,
+    "willRetry": false,
+    "joinedExecutionCount": 52
+  },
+  "exactRunPhases": [
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 0,
+      "phase": "claim.begin",
+      "at": 1792065616474,
+      "functionPath": "runtimeAgent:start",
+      "executionId": "0d764720-b9cd-4268-a2b9-8cdd93c54a2a"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 0,
+      "phase": "start.claimNext.begin",
+      "at": 1792065616474,
+      "functionPath": "runtimeAgent:start",
+      "executionId": "0d764720-b9cd-4268-a2b9-8cdd93c54a2a"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 0,
+      "phase": "start.claimNext.end",
+      "at": 1792065616474,
+      "durationMs": 84.89999999990687,
+      "functionPath": "runtimeAgent:start",
+      "executionId": "0d764720-b9cd-4268-a2b9-8cdd93c54a2a"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "claim.end",
+      "at": 1792065616474,
+      "functionPath": "runtimeAgent:start",
+      "executionId": "0d764720-b9cd-4268-a2b9-8cdd93c54a2a"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "direct.prepare.begin",
+      "at": 1792065616828,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "prepareDirect.context-lifecycle.begin",
+      "at": 1792065616831,
+      "functionPath": "runtimeAgent:prepareDirectTurnV8",
+      "executionId": "ae9149d4-5e7f-4dcc-aef1-78a2da540c2d"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "prepareDirect.context-lifecycle.end",
+      "at": 1792065616831,
+      "durationMs": 23.800000000279397,
+      "functionPath": "runtimeAgent:prepareDirectTurnV8",
+      "executionId": "ae9149d4-5e7f-4dcc-aef1-78a2da540c2d"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "prepareDirect.context-route.begin",
+      "at": 1792065616831,
+      "functionPath": "runtimeAgent:prepareDirectTurnV8",
+      "executionId": "ae9149d4-5e7f-4dcc-aef1-78a2da540c2d"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "prepareDirect.context-route.end",
+      "at": 1792065616831,
+      "durationMs": 21.299999999813735,
+      "functionPath": "runtimeAgent:prepareDirectTurnV8",
+      "executionId": "ae9149d4-5e7f-4dcc-aef1-78a2da540c2d"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "direct.prepare.end",
+      "at": 1792065617059,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "model.input.fit.baseline",
+      "at": 1792065617061,
+      "selectedMessages": 1,
+      "selectedMemories": 0,
+      "selectedFacts": 0,
+      "selectedPending": 0,
+      "contextBytes": 0,
+      "inputTokens": 13418,
+      "inputLimit": 32768,
+      "functionPath": "runtimeAgent:contextInputsAndEmbeddingV8",
+      "executionId": "237fb837-cd93-429b-8063-ea7996034f68"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "context.indexed-probe.begin",
+      "at": 1792065617061,
+      "functionPath": "runtimeAgent:contextInputsAndEmbeddingV8",
+      "executionId": "237fb837-cd93-429b-8063-ea7996034f68"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "context.indexed-probe.end",
+      "at": 1792065617061,
+      "functionPath": "runtimeAgent:contextInputsAndEmbeddingV8",
+      "executionId": "237fb837-cd93-429b-8063-ea7996034f68"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "context.direct.candidates.insufficient",
+      "at": 1792065617061,
+      "selectedFacts": 2,
+      "functionPath": "runtimeAgent:contextInputsAndEmbeddingV8",
+      "executionId": "237fb837-cd93-429b-8063-ea7996034f68"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "context.recall.begin",
+      "at": 1792065617617,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "context.recall.end",
+      "at": 1792065620320,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "model.input.fit.candidate",
+      "at": 1792065620325,
+      "selectedMessages": 1,
+      "selectedMemories": 5,
+      "selectedFacts": 2,
+      "selectedPending": 0,
+      "contextBytes": 2257,
+      "inputTokens": 32208,
+      "inputLimit": 32768,
+      "functionPath": "runtimeAgent:saveAndPrepareContextV8",
+      "executionId": "13cf1e42-ee8e-4a4e-9e5d-0df555b38e37"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "turn.prepare.end",
+      "at": 1792065620805,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "turn.model.begin",
+      "at": 1792065620805,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "attemptNumber": 1,
+      "phase": "turn.model.end",
+      "at": 1792065634439,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b"
+    }
+  ],
+  "brackets": {
+    "preparation": {
+      "beginAt": 1792065616828,
+      "endAt": 1792065620805,
+      "elapsedMs": 3977,
+      "clock": "same Action phase timestamps",
+      "nestedDoNotAdd": true
+    },
+    "recall": {
+      "beginAt": 1792065617617,
+      "endAt": 1792065620320,
+      "elapsedMs": 2703,
+      "clock": "same Action phase timestamps",
+      "nestedDoNotAdd": true
+    },
+    "mainModelRegion": {
+      "beginAt": 1792065620805,
+      "endAt": 1792065634439,
+      "elapsedMs": 13634,
+      "clock": "same Action phase timestamps",
+      "nestedDoNotAdd": true
+    },
+    "visibilityEnvelope": {
+      "beginAt": 1792065622863,
+      "endAt": 1792065630031,
+      "elapsedMs": 7168,
+      "count": 14,
+      "reportedDurationRangeMs": [
+        322,
+        1120
+      ],
+      "nestedDoNotAdd": true
+    },
+    "streamBeginToLastVisibilityEnd": {
+      "beginAt": 1792065622231,
+      "endAt": 1792065630031,
+      "elapsedMs": 7800,
+      "nestedDoNotAdd": true
+    }
+  },
+  "gatewayMain": {
+    "streamReady": {
+      "at": 1792065622858,
+      "reportedDurationMs": 627
+    },
+    "firstPart": {
+      "at": 1792065622859,
+      "reportedDurationMs": 628
+    },
+    "firstTextCaptured": false,
+    "admitCheckpoint": {
+      "at": 1792065622227,
+      "reportedDurationMs": 1121
+    },
+    "capture": {
+      "at": 1792065632066,
+      "reportedDurationMs": 2032
+    },
+    "attach": {
+      "at": 1792065633531,
+      "reportedDurationMs": 1464
+    },
+    "visibility": [
+      {
+        "ordinal": 1,
+        "beginAt": 1792065622863,
+        "endAt": 1792065623615,
+        "reportedDurationMs": 752
+      },
+      {
+        "ordinal": 2,
+        "beginAt": 1792065623618,
+        "endAt": 1792065623969,
+        "reportedDurationMs": 352
+      },
+      {
+        "ordinal": 3,
+        "beginAt": 1792065623971,
+        "endAt": 1792065624490,
+        "reportedDurationMs": 518
+      },
+      {
+        "ordinal": 4,
+        "beginAt": 1792065624491,
+        "endAt": 1792065624850,
+        "reportedDurationMs": 359
+      },
+      {
+        "ordinal": 5,
+        "beginAt": 1792065624851,
+        "endAt": 1792065625264,
+        "reportedDurationMs": 413
+      },
+      {
+        "ordinal": 6,
+        "beginAt": 1792065625265,
+        "endAt": 1792065625610,
+        "reportedDurationMs": 345
+      },
+      {
+        "ordinal": 7,
+        "beginAt": 1792065625611,
+        "endAt": 1792065625935,
+        "reportedDurationMs": 324
+      },
+      {
+        "ordinal": 8,
+        "beginAt": 1792065625936,
+        "endAt": 1792065626574,
+        "reportedDurationMs": 638
+      },
+      {
+        "ordinal": 9,
+        "beginAt": 1792065626575,
+        "endAt": 1792065627472,
+        "reportedDurationMs": 897
+      },
+      {
+        "ordinal": 10,
+        "beginAt": 1792065627473,
+        "endAt": 1792065627929,
+        "reportedDurationMs": 455
+      },
+      {
+        "ordinal": 11,
+        "beginAt": 1792065627930,
+        "endAt": 1792065628263,
+        "reportedDurationMs": 332
+      },
+      {
+        "ordinal": 12,
+        "beginAt": 1792065628263,
+        "endAt": 1792065629383,
+        "reportedDurationMs": 1120
+      },
+      {
+        "ordinal": 13,
+        "beginAt": 1792065629385,
+        "endAt": 1792065629707,
+        "reportedDurationMs": 322
+      },
+      {
+        "ordinal": 14,
+        "beginAt": 1792065629708,
+        "endAt": 1792065630031,
+        "reportedDurationMs": 323
+      }
+    ]
+  },
+  "gatewayEmbedding": {
+    "admitCheckpoint": {
+      "at": 1792065618046,
+      "reportedDurationMs": 417
+    },
+    "embedReady": {
+      "at": 1792065618438,
+      "reportedDurationMs": 389
+    },
+    "capture": {
+      "at": 1792065618640,
+      "reportedDurationMs": 195
+    },
+    "attach": {
+      "at": 1792065619175,
+      "reportedDurationMs": 535
+    }
+  },
+  "uniqueTaggedModelTraces": [
+    {
+      "runBudgetId": "755d1b6d2a3a2345bf51f575c731231e60d884c84755e6d6d40e697932ef58a0",
+      "semanticId": "sha256:98a3df270bea152f09d5d3b060e656db524fb7c4ddd79057bf9cb9b3a94ac67a",
+      "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b",
+      "operationKey": "embedding.query",
+      "constructBeginCount": 1,
+      "phaseCount": 10,
+      "attribution": "exact cancellation run via runId-tagged Action executionId and official requestId",
+      "beginAt": 1792065617620,
+      "endAt": 1792065619175
+    },
+    {
+      "runBudgetId": "755d1b6d2a3a2345bf51f575c731231e60d884c84755e6d6d40e697932ef58a0",
+      "semanticId": "sha256:aff4f71a4fca9f461583518ada7d2ed0f9e97d971bb408e82342fe17ea4051b0",
+      "executionId": "5b37fe31-d140-439f-bd73-87a708f97d0b",
+      "operationKey": "agent.respond",
+      "constructBeginCount": 1,
+      "phaseCount": 39,
+      "attribution": "exact cancellation run via runId-tagged Action executionId and official requestId",
+      "beginAt": 1792065620806,
+      "endAt": 1792065633531
+    },
+    {
+      "runBudgetId": "b78debfada48dfbde39173288b0f4f4d5cf571e2ddd57a9fcb1b083d1a9598ca",
+      "semanticId": "sha256:079d40732cc093937893deef38389b850dcc3fc2dabe195bff27875df97defaf",
+      "executionId": "1d6ebb22-1f4d-42e0-984b-00691f552e4d",
+      "operationKey": "memory.extract",
+      "constructBeginCount": 1,
+      "phaseCount": 12,
+      "attribution": "tagged ingestion model; no exact cancellation run/source join in analyzed evidence",
+      "beginAt": 1792065622271,
+      "endAt": 1792065624104
+    },
+    {
+      "runBudgetId": "b78debfada48dfbde39173288b0f4f4d5cf571e2ddd57a9fcb1b083d1a9598ca",
+      "semanticId": "sha256:3746b68130938c3008f9682c4c763c5a527555252ad12479dc611ff2d862d7d5",
+      "executionId": "5241cd2a-d962-4ae4-9835-989757505ac0",
+      "operationKey": "facts.resolve",
+      "constructBeginCount": 1,
+      "phaseCount": 12,
+      "attribution": "tagged ingestion model; no exact cancellation run/source join in analyzed evidence",
+      "beginAt": 1792065625249,
+      "endAt": 1792065631335
+    },
+    {
+      "runBudgetId": "b78debfada48dfbde39173288b0f4f4d5cf571e2ddd57a9fcb1b083d1a9598ca",
+      "semanticId": "sha256:3844967204f5f55e4e01423e1d7208389688534ef648c9787acae32177bd39f0",
+      "executionId": "07821d8f-67fc-4ca9-b51b-f3eb4a5f6f65",
+      "operationKey": "embedding.memory",
+      "constructBeginCount": 1,
+      "phaseCount": 12,
+      "attribution": "tagged ingestion model; no exact cancellation run/source join in analyzed evidence",
+      "beginAt": 1792065635336,
+      "endAt": 1792065637612
+    }
+  ],
+  "modelTraceCounts": {
+    "wholeSnapshot": 5,
+    "exactCancellationAction": 2,
+    "separatelyTaggedUnjoinedIngestion": 3,
+    "preflightBoundsAreNotDispatches": true,
+    "observedPaidModelRetries": 0
+  },
+  "actualOcc": {
+    "exactActionCaptureRetries": [
+      {
+        "identifier": "runtimeModelPolicy:captureTerminalEvidenceV8",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "b966229922f8f227",
+        "executionId": "247ad76e-1706-467b-a252-cc1cd3ec2d20",
+        "timestamp": 1792065630.642515,
+        "executionTimestamp": 1792065630.038,
+        "executionTime": 0.596440292,
+        "userExecutionTime": 0.156927581,
+        "returnBytes": 117,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": true,
+        "occRetryCount": 0,
+        "occInfo": {
+          "retryCount": 0,
+          "tableName": "runtimeAgentExecutions",
+          "documentIdSha256": "d9f974ca07acd0550e451602f9f872f545aaf6423113187faa64683d89932391",
+          "writeSource": "runtimeAgent.js:recordOutput"
+        },
+        "usage": {
+          "databaseReadBytes": 374594,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 374594,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 92,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "runtimeModelPolicy:captureTerminalEvidenceV8",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "b966229922f8f227",
+        "executionId": "c5d5ace6-8cff-4122-af60-f1ae42b63baf",
+        "timestamp": 1792065631.6868389,
+        "executionTimestamp": 1792065630.643,
+        "executionTime": 0.848346989,
+        "userExecutionTime": 0.160558755,
+        "returnBytes": 117,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": true,
+        "occRetryCount": 1,
+        "occInfo": {
+          "retryCount": 1,
+          "tableName": "runtimeBudgetAccounts",
+          "documentIdSha256": "6d9a505e1575ca0ff72b486f15a921585f8a1f853cafba11ad90f9ab156b1603",
+          "writeSource": "runtimeModelPolicy.js:captureTerminalEvidence"
+        },
+        "usage": {
+          "databaseReadBytes": 374594,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 374594,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 92,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      }
+    ],
+    "sameExecutionDocumentHashObserverRetries": [
+      {
+        "identifier": "runtimeClient:observeEnvelope",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "57a0780ef49195fe",
+        "executionId": "af82257f-3d0c-4472-b3a7-45b8d4ce382a",
+        "timestamp": 1792065630.5355794,
+        "executionTimestamp": 1792065629.596,
+        "executionTime": 0.848124414,
+        "userExecutionTime": 0.123601939,
+        "returnBytes": 1869,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": true,
+        "occRetryCount": 0,
+        "occInfo": {
+          "retryCount": 0,
+          "tableName": "runtimeAgentExecutions",
+          "documentIdSha256": "d9f974ca07acd0550e451602f9f872f545aaf6423113187faa64683d89932391",
+          "writeSource": "runtimeAgent.js:recordOutput"
+        },
+        "usage": {
+          "databaseReadBytes": 148955,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 148955,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 74,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "runtimeClient:observeEnvelope",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "220064904d9c7bd9",
+        "executionId": "52f9cb03-38a6-4a5c-81c3-249575a9ab64",
+        "timestamp": 1792065634.6756256,
+        "executionTimestamp": 1792065634.016,
+        "executionTime": 0.654470738,
+        "userExecutionTime": 0.15588036,
+        "returnBytes": 1999,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": true,
+        "occRetryCount": 0,
+        "occInfo": {
+          "retryCount": 0,
+          "tableName": "runtimeAgentExecutions",
+          "documentIdSha256": "d9f974ca07acd0550e451602f9f872f545aaf6423113187faa64683d89932391",
+          "writeSource": "runtimeAgent.js:finishOperation"
+        },
+        "usage": {
+          "databaseReadBytes": 149564,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 149564,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 75,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "runtimeClient:observeEnvelope",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "3cc97bb068988efb",
+        "executionId": "5bdd4676-9cc8-436b-b1c8-795d868f757c",
+        "timestamp": 1792065636.2469199,
+        "executionTimestamp": 1792065635.344,
+        "executionTime": 0.894825673,
+        "userExecutionTime": 0.128974498,
+        "returnBytes": 1999,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": true,
+        "occRetryCount": 0,
+        "occInfo": {
+          "retryCount": 0,
+          "tableName": "runtimeAgentExecutions",
+          "documentIdSha256": "d9f974ca07acd0550e451602f9f872f545aaf6423113187faa64683d89932391",
+          "writeSource": "runtimeAgent.js:attachDirectContinuationV8"
+        },
+        "usage": {
+          "databaseReadBytes": 149758,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 149758,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 75,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "runtimeClient:observeEnvelope",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "476fe467895ba2cc",
+        "executionId": "c281c724-073a-409a-a6e0-11f936258266",
+        "timestamp": 1792065643.3247542,
+        "executionTimestamp": 1792065642.58,
+        "executionTime": 0.647506705,
+        "userExecutionTime": 0.15158985,
+        "returnBytes": 2000,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": true,
+        "occRetryCount": 0,
+        "occInfo": {
+          "retryCount": 0,
+          "tableName": "runtimeAgentExecutions",
+          "documentIdSha256": "d9f974ca07acd0550e451602f9f872f545aaf6423113187faa64683d89932391",
+          "writeSource": "workflow/workpool/worker.js:runMutationWrapper"
+        },
+        "usage": {
+          "databaseReadBytes": 149809,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 149809,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 75,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      }
+    ],
+    "observerAttribution": "Four conflicts target the same stable execution-document hash as the exact Action retry. The metadata does not retain a client-observation ordinal; no one-to-one client call assignment is asserted.",
+    "doNotSumWithParentBrackets": true
+  },
+  "laterWorkflowNativeUncertainty": {
+    "rows": [
+      {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "2c863c072afd7791",
+        "executionId": "d99b35cf-0423-4177-bc67-eebd6f50f5cb",
+        "timestamp": 1792065636.2309625,
+        "executionTimestamp": 1792065636.021,
+        "executionTime": 0.199847528,
+        "userExecutionTime": 0.005138829,
+        "returnBytes": 4,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usage": {
+          "databaseReadBytes": 4968,
+          "databaseWriteBytes": 2355,
+          "databaseIoReadBytes": 4968,
+          "databaseIoWriteBytes": 2355,
+          "databaseReadDocuments": 9,
+          "databaseWriteDocuments": 3,
+          "databaseWriteIndexRows": 10,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "runtimeAgent:completedModelStep",
+        "udfType": "Query",
+        "kind": "Completion",
+        "requestId": "637eeaa979feee44",
+        "executionId": "fa9a638d-198c-48b7-9bbf-c0bc7b1d65ac",
+        "timestamp": 1792065638.651932,
+        "executionTimestamp": 1792065636.491,
+        "executionTime": 2.161211187,
+        "userExecutionTime": 0.223933891,
+        "returnBytes": 247,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usage": {
+          "databaseReadBytes": 494344,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 494344,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 694,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "worker:runBatch",
+        "componentPath": "workflow/workpool",
+        "udfType": "Action",
+        "kind": "Completion",
+        "requestId": "637eeaa979feee44",
+        "executionId": "1d330221-7e10-4430-b949-914ac5d26a72",
+        "timestamp": 1792065639.9106038,
+        "executionTimestamp": 1792065636.479305,
+        "executionTime": 3.428028533,
+        "userExecutionTime": 3.418685621,
+        "returnBytes": 4,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usage": {
+          "databaseReadBytes": 0,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 0,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 0,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "3d19852f6e29a202",
+        "executionId": "2447bf8e-43fb-4ad2-914e-be33f7228ca5",
+        "timestamp": 1792065641.1161835,
+        "executionTimestamp": 1792065640.353,
+        "executionTime": 0.757072887,
+        "userExecutionTime": 0.002675622,
+        "returnBytes": 4,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usage": {
+          "databaseReadBytes": 7722,
+          "databaseWriteBytes": 2615,
+          "databaseIoReadBytes": 7722,
+          "databaseIoWriteBytes": 2615,
+          "databaseReadDocuments": 11,
+          "databaseWriteDocuments": 3,
+          "databaseWriteIndexRows": 10,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "5fb5f7c70bf3b440",
+        "executionId": "6fd00571-35a3-4294-97db-bb0a5aa690a6",
+        "timestamp": 1792065642.6518853,
+        "executionTimestamp": 1792065641.665,
+        "executionTime": 0.977845473,
+        "userExecutionTime": 0.003668435,
+        "returnBytes": 4,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usage": {
+          "databaseReadBytes": 520929,
+          "databaseWriteBytes": 21764,
+          "databaseIoReadBytes": 520929,
+          "databaseIoWriteBytes": 21764,
+          "databaseReadDocuments": 705,
+          "databaseWriteDocuments": 3,
+          "databaseWriteIndexRows": 11,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "61e22b4fc5e1a799",
+        "executionId": "64fe3abb-63bc-47bc-9d60-1701a3c5de11",
+        "timestamp": 1792065643.3004725,
+        "executionTimestamp": 1792065643.113,
+        "executionTime": 0.179031443,
+        "userExecutionTime": 0.002220999,
+        "returnBytes": 4,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usage": {
+          "databaseReadBytes": 9117,
+          "databaseWriteBytes": 2489,
+          "databaseIoReadBytes": 9117,
+          "databaseIoWriteBytes": 2489,
+          "databaseReadDocuments": 12,
+          "databaseWriteDocuments": 3,
+          "databaseWriteIndexRows": 10,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "82fc7009a187fc33",
+        "executionId": "33ec7155-ce64-4922-9cc6-fa9651d192aa",
+        "timestamp": 1792065643.8724968,
+        "executionTimestamp": 1792065643.461,
+        "executionTime": 0.40520834,
+        "userExecutionTime": 0.002505909,
+        "returnBytes": 4,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usage": {
+          "databaseReadBytes": 524365,
+          "databaseWriteBytes": 27258,
+          "databaseIoReadBytes": 524365,
+          "databaseIoWriteBytes": 27258,
+          "databaseReadDocuments": 699,
+          "databaseWriteDocuments": 3,
+          "databaseWriteIndexRows": 15,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "udfType": "Mutation",
+        "kind": "Completion",
+        "requestId": "78d20b1edc39d41d",
+        "executionId": "403a8dde-c212-4017-9a27-3589cbb3daf2",
+        "timestamp": 1792065644.3115842,
+        "executionTimestamp": 1792065644.141,
+        "executionTime": 0.166502029,
+        "userExecutionTime": 0.002412462,
+        "returnBytes": 4,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usage": {
+          "databaseReadBytes": 8632,
+          "databaseWriteBytes": 944,
+          "databaseIoReadBytes": 8632,
+          "databaseIoWriteBytes": 944,
+          "databaseReadDocuments": 13,
+          "databaseWriteDocuments": 2,
+          "databaseWriteIndexRows": 7,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      }
+    ],
+    "exactRunJoin": false,
+    "note": "completedModelStep query has 2161.211187ms native execution and shares request 637eeaa979feee44 with a 3428.028533ms worker:runBatch Action, including a workpool completion retry. These are nested and not summed. Six generic mutation-wrapper rows have no raw run identity or argument join in this snapshot. The target run durable execution.updatedAt 1792065643461 equals one wrapper executionTimestamp in milliseconds, which is a timing correlation only and does not establish identity."
+  },
+  "finalReadback": {
+    "status": "OBSERVED_WITH_UNMET_VERIFIER_CHECKS",
+    "checks": 318,
+    "unmetChecks": [
+      "unapproved-write-tool-cancelled declared actual response outcome preserved",
+      "unapproved-write-tool-cancelled actual cancelled tool run has zero approval result native tool message or owned effect"
+    ],
+    "stableAcrossCollection": true,
+    "responseStatus": "waiting_approval",
+    "execution": [
+      {
+        "state": "waiting_approval",
+        "contextState": "complete",
+        "nextModelStep": 1,
+        "toolCount": 1,
+        "savedMessageCount": 1,
+        "finalMessageCount": 0,
+        "updatedAt": 1792065643461
+      }
+    ],
+    "tools": [
+      {
+        "operationIdSha256": "e5409ba171e6071ee5696166deded2655363bb58049654bd232be4f0933a50e1",
+        "toolName": "memory_remember",
+        "state": "waiting_approval",
+        "ordinal": 0,
+        "approvalPresent": false,
+        "resultPresent": false,
+        "nativeMessageCount": 0,
+        "ownedSourceEffectCount": 0,
+        "resultSourceIdSha256": null,
+        "resultReceiptIdSha256": null
+      }
+    ],
+    "unapprovedTool": {
+      "toolName": "memory_remember",
+      "expectedOperationIdSha256": "e5409ba171e6071ee5696166deded2655363bb58049654bd232be4f0933a50e1",
+      "actualOperationIdSha256": "e5409ba171e6071ee5696166deded2655363bb58049654bd232be4f0933a50e1",
+      "operationIdMatched": true,
+      "conversationIdSha256": "5f785923ae9f9fbddc1afef5f6c0d5c97c12b6602f752d0e9b4b1a0bfa0efa4b",
+      "conversationDerivedFromNativeRun": true,
+      "conversationRunCount": 1,
+      "conversationToolCount": 1,
+      "conversationNativeToolMessages": 0,
+      "conversationOwnedToolEffects": 0,
+      "inputApprovalAndIngestion": "ORDINARY_CANONICAL_INPUT_REMAINS_SEPARATE_FROM_ZERO_TOOL_EFFECT",
+      "collectorDeadlineAcceptance": "NOT_REEVALUATED_OR_RELABELLED"
+    },
+    "agentModelOps": [
+      {
+        "ordinal": 0,
+        "state": "complete",
+        "nativeModelOperationBound": true,
+        "nativeRequestPresent": true,
+        "resultPresent": true
+      }
+    ],
+    "modelOperationKinds": [
+      "agent.respond",
+      "embedding.query"
+    ],
+    "ordinaryInputMemoryStatus": [
+      {
+        "memoryStatus": "complete",
+        "version": 2,
+        "updatedAt": 1792065637862
+      }
+    ],
+    "collectorAcceptance": "Original FAILED_STOPPED_NO_RESUBMISSION remains; no replay and no relabeling."
+  },
+  "nextInvestigation": "The measured per-part visibility path is the first bounded optimization candidate; also inspect observer/execution-record contention and post-direct workflow handoff. Preserve durable visibility, accounting and revocation guarantees. The evidence does not justify attributing29s to memory recall or provider generation, removing checks, or promising a latency saving.",
+  "limits": [
+    "No client/server clock offset inferred; no residual from subtracting client and backend intervals.",
+    "Nested gateway/model/Action/native spans are not summed. Client aggregate sums include only disjoint same-type local phases.",
+    "Date.now within Convex mutation logs is fixed; equal begin/end timestamps are not zero duration. Use reported durationMs or official executionTime.",
+    "Only exact runId-to-executionId/requestId joins attribute gateway main/query work. Ingestion traces and later generic workflow workers remain explicitly unjoined.",
+    "No new actual inference, service calls, browser action, source/docs edit, or test executed."
+  ]
+}

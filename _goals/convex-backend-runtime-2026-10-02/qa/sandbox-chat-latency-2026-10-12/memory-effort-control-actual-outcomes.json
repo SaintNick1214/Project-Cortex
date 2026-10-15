@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "status": "FUNCTIONAL_EVIDENCE_RETAINED_LATENCY_AND_TOOL_GATES_OPEN",
+  "at": "2026-10-15T12:06:49.931062+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+  "goal": {
+    "completedMilestones": 4,
+    "totalMilestones": 6,
+    "percentage": 66.66666666666667,
+    "complete": false
+  },
+  "native": {
+    "receipt": "memory-effort-control-native-regression-1792062947300.json",
+    "checks": 654,
+    "actualPublicFastMs": 3012.787292,
+    "fastTargetMet": false
+  },
+  "browser": [
+    {
+      "label": "normal-seed",
+      "effort": "normal",
+      "runId": "run:73ded98f4f4866211677194ade4c28efbd7b8df4bf593083795748dbc8bac01a",
+      "firstAfterPaintMs": null,
+      "timingPass": null,
+      "answerMarkerPresent": null,
+      "numericalTiming": "NOT_MEASURED frontend diagnostics disabled for original seed; no replay"
+    },
+    {
+      "label": "fast-recent",
+      "effort": "fast",
+      "runId": "run:c04cbb4b1b998f0776cb46349f441b51e01ebc932097431f2f29469ad2340d06",
+      "firstAfterPaintMs": 3312.599999997765,
+      "timingPass": false,
+      "answerMarkerPresent": true,
+      "numericalTiming": "ACTUAL visible after-paint"
+    },
+    {
+      "label": "normal-indexed",
+      "effort": "normal",
+      "runId": "run:0ca2079fa92bff55d94619f224fc6fe8fe380bd196aaf535e1fd975f61a494c0",
+      "firstAfterPaintMs": 3661.699999999255,
+      "timingPass": true,
+      "answerMarkerPresent": true,
+      "numericalTiming": "ACTUAL visible after-paint"
+    },
+    {
+      "label": "high",
+      "effort": "high",
+      "runId": "run:cf156dab29777e11ecdaf0015502a9b859692f8a1991e48f310ea1615336c9f7",
+      "firstAfterPaintMs": 3776,
+      "timingPass": true,
+      "answerMarkerPresent": true,
+      "numericalTiming": "ACTUAL visible after-paint"
+    },
+    {
+      "label": "max",
+      "effort": "max",
+      "runId": "run:58a27cfbdd9d2e6acefe652466c89b7d29171187615d14787b134baeda2121b6",
+      "firstAfterPaintMs": 3661.599999997765,
+      "timingPass": true,
+      "answerMarkerPresent": true,
+      "numericalTiming": "ACTUAL visible after-paint"
+    },
+    {
+      "label": "fast-cross",
+      "effort": "fast",
+      "runId": "run:bc71a76b73564312c469de1198af97775f8d404e1ef24c0467acc21aefd61dc5",
+      "firstAfterPaintMs": 3310.5,
+      "timingPass": false,
+      "answerMarkerPresent": true,
+      "numericalTiming": "ACTUAL visible after-paint"
+    }
+  ],
+  "cli": [
+    {
+      "runId": "run:f29af7dcea6d845026bb98cba1ce57d2152018c5143db036b0d040e7c2b93655",
+      "effort": "normal",
+      "firstStdoutMs": 7294.286462,
+      "timingPass": false
+    },
+    {
+      "runId": "run:bd40994475f111f8910517aa053ad41e1e78c15d8583cbf86029d3ecbf1fbfb2",
+      "effort": "normal",
+      "firstStdoutMs": 6330.4546279999995,
+      "timingPass": false
+    }
+  ],
+  "chat": {
+    "receipt": "memory-effort-control-chat-ui.json",
+    "functional": "correct iris, managed1536 default, Normal, subject title, reconnect and phone observed",
+    "numericalFirstVisible": "NOT_MEASURED"
+  },
+  "tool": {
+    "readonlyCollector": "FAILED_ORIGINAL_DEADLINE",
+    "readonlyActualNative": "COMPLETE approved once correctapricot one tool result zero tool-owned sources",
+    "writeCollector": "FAILED_STOPPED_NO_RESUBMISSION",
+    "writeActualNative": "waiting_approval",
+    "writeCancellation": "one submission;deadline expired before ACK; no replay",
+    "writeApprovalCount": 0,
+    "writeToolOwnedEffects": 0,
+    "coverageCorrection": "Original readonly receipt says two intents in static coverage prose; authoritative cases.length=1. Separate cancel-only receipt contains second new intent."
+  },
+  "finalReadback": {
+    "receipt": "memory-effort-control-runtime-readback-1792065768689.json",
+    "status": "OBSERVED_WITH_UNMET_VERIFIER_CHECKS",
+    "checks": 318,
+    "unmetChecks": [
+      "unapproved-write-tool-cancelled declared actual response outcome preserved",
+      "unapproved-write-tool-cancelled actual cancelled tool run has zero approval result native tool message or owned effect"
+    ],
+    "stable": true
+  },
+  "finance": {
+    "receipt": "memory-effort-control-finance-after-1792065701173.json",
+    "distinctOperations": 78,
+    "distinctAttempts": 78,
+    "unknownLiabilityUnits": 9700000,
+    "settledUnits": 0,
+    "reservedUnits": 0,
+    "activeConcurrency": 0,
+    "attemptsFirstOnly": true,
+    "attemptStates": {
+      "uncertain": 78
+    },
+    "aggregateUsdComplete": false,
+    "rule": "Distinct operation/attempt rows across this exact disposable target; run liabilities summed once; tenant mirrors excluded.",
+    "manualTenantLiabilityUnits": 7000000,
+    "startupLiabilityUnits": 2700000,
+    "refund": false
+  },
+  "cleanup": {
+    "status": "ABSENT",
+    "receipt": "memory-effort-control-cleanup-1792066432772.json",
+    "checks": 21,
+    "launcherJoinedExit": 130,
+    "chatServerJoinedExit": 143,
+    "pendingToolAndQaEndpoint": "Removed by verified whole disposable database deletion",
+    "unknownLiabilityRefund": false
+  },
+  "diagnosis": {
+    "rejectedUnsafeAckDeduplication": "memory-effort-agent-visible-once-report.md",
+    "hashBenchmark": {
+      "webcryptoMs": 166.670792,
+      "fastSha256Ms": 25.467481,
+      "digestsEach": 110,
+      "parityEach": true,
+      "method": "Separate uncached fixed-method official native completions",
+      "zeroInference": true,
+      "internalClockFailedFirst": "memory-effort-control-hash-latency-first-1792066053757.json",
+      "endToEndSavings": "UNMEASURED"
+    }
+  },
+  "limitations": [
+    "Original collector deadlines unchanged; eventual outcomes do not relabel failures.",
+    "Both Fast browser samples miss3s; both CLI Normal samples miss6s.",
+    "Untimed seed and genuine Chat are not timing successes.",
+    "No final audit/completion; original historical missing C7 backing/transport/custody remain.",
+    "No GitHub access, production deployment, package release, Union Arena changes, or W/P commits."
+  ]
+}

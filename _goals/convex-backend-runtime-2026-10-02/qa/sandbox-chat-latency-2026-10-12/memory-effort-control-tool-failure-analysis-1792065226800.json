@@ -1,0 +1,567 @@
+{
+  "version": 1,
+  "status": "ORIGINAL_30S_COLLECTOR_FAILURE_PRESERVED_PRODUCT_COMPLETION_SEPARATE",
+  "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+  "imageId": "sha256:26980f56eafa7c7b5b8141ba314344e10e21238089bf302a3d11c95739c70986",
+  "targetId": 6192965,
+  "failedReceipt": "memory-effort-control-tool-exercise-1792064780272.json",
+  "failedVerdict": "FAILED_STOPPED_NO_RESUBMISSION",
+  "error": {
+    "name": "Error",
+    "code": "ORIGINAL_DEADLINE",
+    "messageSha256": "1392c636dbe31876b9cf6f53378fdd66fbd83e1853d0cd6291c85e45f647f519"
+  },
+  "runId": "run:8b483ab130064f2fe29049ede3467753fb2754a13560dc77843f15cbfa114a73",
+  "operationId": "agent-op:4f2ef00a2166cc005e065ea19017084138c4fbb6ab2574e4e01178e19a8b313c",
+  "requestHash": "ca925ffec28b8ea0da790dfb37055cb39e0c0ca51cfe8a67c1f428a62a2f580a",
+  "approvalSubmissions": 1,
+  "paidRetries": 0,
+  "resubmissions": 0,
+  "writeCase": "NOT_STARTED",
+  "clientsClosed": true,
+  "failureCleanupCancellationRequested": true,
+  "helperClock": {
+    "caseDeadlineMs": 30000,
+    "pendingObservedMs": 15244.331999999999,
+    "maximumRemainingAfterPendingMs": 14755.668000000001,
+    "initialSetup": "OUTSIDE_CASE_CLOCK",
+    "preCaseIdentityGuard": "OUTSIDE_CASE_CLOCK",
+    "included": [
+      "submit",
+      "fresh identity guard before start",
+      "start",
+      "observe waiting approval",
+      "fresh identity guard before approval",
+      "one approval RPC",
+      "observe response complete AND memory complete",
+      "100ms between unsuccessful observations"
+    ],
+    "adminInspection": "NOT_REACHED: all eight admin table reads run only after expected terminal observation and elapsed check",
+    "postApprovalIdentityVerifierCallsBeforeFailure": 0,
+    "postFailureCleanupIdentityVerifierCalls": 1,
+    "postApprovalSdkObserveCount": "NOT_RECORDED_PER_CLIENT",
+    "managementRequestCount": "NOT_RECORDED: one preapproval verifyRuntimeIdentity wrapper calls fresh session identity + verifyCloud + Docker inspect; no verifier in observation loop",
+    "guardDurationMs": "NOT_RECORDED",
+    "lastPublicRunState": "NOT_RECORDED",
+    "programmedPollingMs": 100,
+    "sourceLines": {
+      "clock": 48,
+      "submitStart": 49,
+      "observe": 50,
+      "approval": 52,
+      "inspectionAfterTerminal": 54,
+      "cleanup": 59
+    },
+    "dispatchOrderingRisk": "timed(work) evaluates work() before bounded checks remaining time. Not established as this failure cause; cancel-only continuation checks remaining before invoking any work."
+  },
+  "serverClock": {
+    "join": "Exact run phase execution IDs -> direct/model1 request IDs; exact shared raw64hex runBudgetId -> toolStep -> its request children. Unique approve/cancel calls are interval-associated; log omits their canonical arguments.",
+    "direct": {
+      "identifier": "runtimeAgent:executeDirectV8",
+      "executionId": "5dbbb50b-f3c9-4ad2-bd5a-dcacf92c852f",
+      "requestId": "1b937297b299e9f3",
+      "startServerMs": 1792064783106.1147,
+      "endServerMs": 1792064793241.2122,
+      "nativeExecutionMs": 10132.182544000001,
+      "reportedUserExecutionMs": 10123.489997,
+      "willRetry": false
+    },
+    "tool": {
+      "identifier": "runtimeAgent:toolStep",
+      "executionId": "aa731b75-e33e-4f4d-8ffa-10bed9882b8c",
+      "requestId": "bc7a3f3ff2fb25ab",
+      "startServerMs": 1792064798037.806,
+      "endServerMs": 1792064804454.42,
+      "nativeExecutionMs": 6417.587827,
+      "reportedUserExecutionMs": 6405.964912,
+      "willRetry": false
+    },
+    "continuation": {
+      "identifier": "runtimeAgent:turnStepV8",
+      "executionId": "c4f27507-ea57-42de-ab1c-ae5c9ea18ada",
+      "requestId": "7cbd6db17fc9b050",
+      "startServerMs": 1792064804972.2607,
+      "endServerMs": 1792064811122.413,
+      "nativeExecutionMs": 6151.027781,
+      "reportedUserExecutionMs": 6141.272477,
+      "willRetry": false
+    },
+    "finalize": {
+      "identifier": "runtimeAgent:finalize",
+      "executionId": "667e5291-ffcc-42c2-b43d-3a28d2f3fe57",
+      "requestId": "7cbd6db17fc9b050",
+      "startServerMs": 1792064810113,
+      "endServerMs": 1792064810572.977,
+      "nativeExecutionMs": 445.133789,
+      "reportedUserExecutionMs": 148.61864,
+      "willRetry": false
+    },
+    "approval": {
+      "identifier": "runtimeAgent:approveTool",
+      "executionId": "e85c4458-da3f-4821-83a8-1ec29c7d6925",
+      "requestId": "a154d8691b39072d",
+      "startServerMs": 1792064797102,
+      "endServerMs": 1792064797516.6682,
+      "nativeExecutionMs": 400.98047199999996,
+      "reportedUserExecutionMs": 165.912771,
+      "willRetry": false
+    },
+    "cancel": {
+      "identifier": "runtimeAgent:cancel",
+      "executionId": "74d6d328-8938-4c1a-baab-93feb5da690a",
+      "requestId": "94795eb2646f07d4",
+      "startServerMs": 1792064812061,
+      "endServerMs": 1792064812313.5146,
+      "nativeExecutionMs": 211.03934999999998,
+      "reportedUserExecutionMs": 80.217995,
+      "willRetry": false
+    },
+    "approvalCompletionToToolStartMs": 521.1376953125,
+    "toolCompletionToContinuationStartMs": 517.8408203125,
+    "approvalCompletionToFinalizeCompletionMs": 13056.308837890625,
+    "startToFinalizeCompletionMs": 27697.97705078125,
+    "finalizeCompletionToCleanupCancelStartMs": 1488.02294921875,
+    "initial": [
+      {
+        "operationKey": "embedding.query",
+        "semanticIds": [
+          "sha256:5deb6598a52b67dfc952104af1becda26dde9c2739ade2ad9fab3a95aae4dcee"
+        ],
+        "admissionMs": 305,
+        "providerFirstTextMs": null,
+        "nativeEmbeddingMs": 329,
+        "visibilityCount": 0,
+        "visibilityMs": 0,
+        "captureMs": 177,
+        "attachMs": 180,
+        "ledgerPhases": [
+          {
+            "phase": "gateway.ledger.admit-checkpoint.end",
+            "at": 1792064784033,
+            "durationMs": 305
+          },
+          {
+            "phase": "gateway.ledger.capture.end",
+            "at": 1792064784548,
+            "durationMs": 177
+          },
+          {
+            "phase": "gateway.ledger.attach.end",
+            "at": 1792064784730,
+            "durationMs": 180
+          }
+        ],
+        "firstStreamAtServerMs": null
+      },
+      {
+        "operationKey": "agent.respond",
+        "semanticIds": [
+          "sha256:ec314acf930da2d1fd822834628cadbe2abeed62dfed86c8d61bc133674140ff"
+        ],
+        "admissionMs": 329,
+        "providerFirstTextMs": null,
+        "nativeEmbeddingMs": null,
+        "visibilityCount": 14,
+        "visibilityMs": 3552,
+        "captureMs": 717,
+        "attachMs": 630,
+        "ledgerPhases": [
+          {
+            "phase": "gateway.ledger.admit-checkpoint.end",
+            "at": 1792064786499,
+            "durationMs": 329
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064787316,
+            "durationMs": 285
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064787597,
+            "durationMs": 279
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064787818,
+            "durationMs": 219
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064788045,
+            "durationMs": 226
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064788311,
+            "durationMs": 265
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064788558,
+            "durationMs": 246
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064788815,
+            "durationMs": 256
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064789089,
+            "durationMs": 273
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064789339,
+            "durationMs": 249
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064789609,
+            "durationMs": 269
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064789857,
+            "durationMs": 247
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064790111,
+            "durationMs": 254
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064790329,
+            "durationMs": 216
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064790598,
+            "durationMs": 268
+          },
+          {
+            "phase": "gateway.ledger.capture.end",
+            "at": 1792064791317,
+            "durationMs": 717
+          },
+          {
+            "phase": "gateway.ledger.attach.end",
+            "at": 1792064791947,
+            "durationMs": 630
+          }
+        ],
+        "firstStreamAtServerMs": 1792064786503
+      }
+    ],
+    "toolGateway": [
+      {
+        "operationKey": "embedding.query",
+        "semanticIds": [
+          null,
+          "sha256:a8df28cdab83e311b2fa12f70a9a66ed99711123ec9a0e6fa6ef958f9d9e065a"
+        ],
+        "admissionMs": null,
+        "providerFirstTextMs": null,
+        "nativeEmbeddingMs": 278,
+        "visibilityCount": 0,
+        "visibilityMs": 0,
+        "captureMs": 481,
+        "attachMs": 322,
+        "ledgerPhases": [
+          {
+            "phase": "gateway.ledger.resolve.end",
+            "at": 1792064800716,
+            "durationMs": 329
+          },
+          {
+            "phase": "gateway.ledger.resolve.end",
+            "at": 1792064800718,
+            "durationMs": 1
+          },
+          {
+            "phase": "gateway.ledger.admit.end",
+            "at": 1792064801055,
+            "durationMs": 331
+          },
+          {
+            "phase": "gateway.ledger.checkpoint.end",
+            "at": 1792064801362,
+            "durationMs": 306
+          },
+          {
+            "phase": "gateway.ledger.capture.end",
+            "at": 1792064802129,
+            "durationMs": 481
+          },
+          {
+            "phase": "gateway.ledger.attach.end",
+            "at": 1792064802451,
+            "durationMs": 322
+          }
+        ],
+        "firstStreamAtServerMs": null
+      }
+    ],
+    "continuationGateway": [
+      {
+        "operationKey": "agent.respond",
+        "semanticIds": [
+          "sha256:9ddf243030781e288fbc9ad2c0de8a85a7e014e79f1ec4e947e21be0fc058910"
+        ],
+        "admissionMs": 466,
+        "providerFirstTextMs": 542,
+        "nativeEmbeddingMs": null,
+        "visibilityCount": 7,
+        "visibilityMs": 1971,
+        "captureMs": 281,
+        "attachMs": 378,
+        "ledgerPhases": [
+          {
+            "phase": "gateway.ledger.admit-checkpoint.end",
+            "at": 1792064806114,
+            "durationMs": 466
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064806921,
+            "durationMs": 258
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064807226,
+            "durationMs": 302
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064807453,
+            "durationMs": 226
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064807728,
+            "durationMs": 274
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064808005,
+            "durationMs": 276
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064808292,
+            "durationMs": 285
+          },
+          {
+            "phase": "gateway.ledger.visibility.end",
+            "at": 1792064808642,
+            "durationMs": 350
+          },
+          {
+            "phase": "gateway.ledger.capture.end",
+            "at": 1792064808930,
+            "durationMs": 281
+          },
+          {
+            "phase": "gateway.ledger.attach.end",
+            "at": 1792064809308,
+            "durationMs": 378
+          }
+        ],
+        "firstStreamAtServerMs": 1792064806121
+      }
+    ],
+    "nativeModelBounds": [
+      {
+        "phase": "gateway.model.bounds",
+        "stage": "native",
+        "ordinal": 0,
+        "semanticIdHash": "ec314acf930da2d1fd822834628cadbe2abeed62dfed86c8d61bc133674140ff",
+        "runBudgetIdHash": "0f426921195d5d550327a47c0da2f027982566df098049b6ea0b88dd044f6fd7",
+        "modelIdentityHash": "eac66c1cf143182de7bfbac14669049b3dea72a904de242e531560686b220881",
+        "dimensions": {
+          "inputTokens": 31074,
+          "outputTokens": 256,
+          "toolSteps": 1,
+          "timeoutMs": 60000,
+          "contextTokens": 31330
+        },
+        "limits": {
+          "inputTokens": 32768,
+          "outputTokens": 256,
+          "toolSteps": 1,
+          "timeoutMs": 60000,
+          "contextTokens": 65536
+        },
+        "exceeded": [],
+        "identifier": "runtimeAgent:executeDirectV8",
+        "executionId": "5dbbb50b-f3c9-4ad2-bd5a-dcacf92c852f",
+        "requestId": "1b937297b299e9f3",
+        "timestamp": 1792064783.1049852
+      },
+      {
+        "phase": "gateway.model.bounds",
+        "stage": "native",
+        "ordinal": 1,
+        "semanticIdHash": "9ddf243030781e288fbc9ad2c0de8a85a7e014e79f1ec4e947e21be0fc058910",
+        "runBudgetIdHash": "0f426921195d5d550327a47c0da2f027982566df098049b6ea0b88dd044f6fd7",
+        "modelIdentityHash": "eac66c1cf143182de7bfbac14669049b3dea72a904de242e531560686b220881",
+        "dimensions": {
+          "inputTokens": 31970,
+          "outputTokens": 256,
+          "toolSteps": 1,
+          "timeoutMs": 60000,
+          "contextTokens": 32226
+        },
+        "limits": {
+          "inputTokens": 32768,
+          "outputTokens": 256,
+          "toolSteps": 1,
+          "timeoutMs": 60000,
+          "contextTokens": 65536
+        },
+        "exceeded": [],
+        "identifier": "runtimeAgent:turnStepV8",
+        "executionId": "c4f27507-ea57-42de-ab1c-ae5c9ea18ada",
+        "requestId": "7cbd6db17fc9b050",
+        "timestamp": 1792064804.9713209
+      }
+    ],
+    "occRetries": [
+      {
+        "identifier": "runtimeModelPolicy:captureTerminalEvidenceV8",
+        "executionId": "e7a64c26-736e-4d3b-9a48-d0ce8d1a799b",
+        "requestId": "1b937297b299e9f3",
+        "startServerMs": 1792064790602,
+        "endServerMs": 1792064790907.715,
+        "nativeExecutionMs": 271.395825,
+        "reportedUserExecutionMs": 126.926296,
+        "willRetry": true,
+        "occInfo": {
+          "retryCount": 0,
+          "tableName": "runtimeAgentExecutions",
+          "documentIdSha256": "cf973b72f625f8581a8bdea22d9f80c6d2484593d31bb83e5a63a4dfc4ffbac3",
+          "writeSource": "runtimeAgent.js:recordOutput"
+        }
+      },
+      {
+        "identifier": "runtimeAgent:attachModelResultV8",
+        "executionId": "1c4c1748-a078-447e-b627-cf1f189a1eb7",
+        "requestId": "1b937297b299e9f3",
+        "startServerMs": 1792064791319,
+        "endServerMs": 1792064791613.7874,
+        "nativeExecutionMs": 282.019775,
+        "reportedUserExecutionMs": 143.530588,
+        "willRetry": true,
+        "occInfo": {
+          "retryCount": 0,
+          "tableName": "runtimeBudgetAccounts",
+          "documentIdSha256": "6d9a505e1575ca0ff72b486f15a921585f8a1f853cafba11ad90f9ab156b1603",
+          "writeSource": "runtimeModelPolicy.js:admit"
+        }
+      }
+    ],
+    "publicReadIntervalCounts": [
+      {
+        "identifier": "runtimeClient:observeEnvelope",
+        "count": 26,
+        "first": {
+          "identifier": "runtimeClient:observeEnvelope",
+          "executionId": "290332f5-fd4c-4225-a059-65051f0d9733",
+          "requestId": "d7be31bf506dff0a",
+          "startServerMs": 1792064797628,
+          "endServerMs": 1792064797796.1292,
+          "nativeExecutionMs": 160.4606,
+          "reportedUserExecutionMs": 89.25285099999999,
+          "willRetry": false
+        },
+        "last": {
+          "identifier": "runtimeClient:observeEnvelope",
+          "executionId": "736dc058-de4c-45d8-87fc-7292e680d990",
+          "requestId": "a9c47332edcf462d",
+          "startServerMs": 1792064811222,
+          "endServerMs": 1792064811382.4045,
+          "nativeExecutionMs": 155.18521900000002,
+          "reportedUserExecutionMs": 87.234742,
+          "willRetry": false
+        },
+        "binding": "TARGET_WIDE_INTERVAL_ONLY_PUBLIC_READS_HAVE_NO_RUN_TAG"
+      },
+      {
+        "identifier": "runtimeClient:session",
+        "count": 23,
+        "first": {
+          "identifier": "runtimeClient:session",
+          "executionId": "e740fc3b-6a14-4e0f-a37b-661cb15ae020",
+          "requestId": "36622ddfd2c94dd9",
+          "startServerMs": 1792064797886,
+          "endServerMs": 1792064797985.826,
+          "nativeExecutionMs": 85.451167,
+          "reportedUserExecutionMs": 74.542631,
+          "willRetry": false
+        },
+        "last": {
+          "identifier": "runtimeClient:session",
+          "executionId": "c3d2a9d8-7279-4a03-92c3-4ed7b3e048b7",
+          "requestId": "ddc2e2b78e753987",
+          "startServerMs": 1792064811874,
+          "endServerMs": 1792064811971.03,
+          "nativeExecutionMs": 80.46364799999999,
+          "reportedUserExecutionMs": 66.930645,
+          "willRetry": false
+        },
+        "binding": "TARGET_WIDE_INTERVAL_ONLY_PUBLIC_READS_HAVE_NO_RUN_TAG"
+      }
+    ],
+    "adminTableExecutionsInWholeSavedSnapshot": 0
+  },
+  "rootObservedCompletion": {
+    "evidence": "Root read-only attached existing run; memory-effort-control-tool-existing-run.full.ax.txt/.png",
+    "answer": "Your favorite fruit is apricot.",
+    "responseComplete": true,
+    "memoryComplete": true,
+    "oldFailureRelabelled": false
+  },
+  "attribution": {
+    "conclusion": "The collector expired while waiting for expected terminal response+memory, before admin inspection. Backend finalized the response; Root later read the correct complete response and complete memory. This does not establish whether the final helper observation was response-pending, memory-pending, or awaiting a fresh SDK session.",
+    "supportedDelays": [
+      "Initial exact direct Action is 10.132s; model0 has fourteen serialized visibility checkpoints totaling 3.552s and two OCC retried ledger mutations.",
+      "After approval completion the native tool Action is 6.418s and model1 Action is 6.151s, including governed query embedding, authority/policy work, model dispatch, publication and finalization.",
+      "A fresh preapproval identity guard is inside the shared case deadline. Its time and individual management request count were not recorded.",
+      "Ingestion processing occurs after response finalization in the saved server window; exact selected native readback is needed for source/work identities and final effects."
+    ],
+    "notEstablished": [
+      "No product ORIGINAL_DEADLINE failure is logged by this receipt; ORIGINAL_DEADLINE is the adapter timer code. Native model bounds retain their existing 60000ms timeout, separate from the 30000ms client request and whole-case collection budgets.",
+      "Cannot calibrate local performance.now to server wall timestamps, subtract wall time from local pendingObservedMs, or attribute the entire time difference to guard overhead.",
+      "OCC mutation re-execution is not a paid model retry.",
+      "No source patch, model retry, readonly replay or second approval is justified."
+    ]
+  },
+  "smallestRemainingReadback": [
+    "Read exact existing run/op/request hash once under current native pins; confirm complete tool/result, approval actor and one genuine native tool result with zero owned tool-source effects.",
+    "Verify model ordinals0/1 and all actual embedding/model attempts once, slot release, usage attachment and conservative UNKNOWN liability; cancelled cleanup is not a refund.",
+    "Verify ordinary canonical-input ingestion separately, with current profile, facts/vector/usage states and exact run memory progress; do not conflate ordinary ingestion with tool effects."
+  ],
+  "actions": {
+    "services": 0,
+    "models": 0,
+    "privateReads": 0,
+    "proofsReads": 0,
+    "sourceReads": 0,
+    "sourceEdits": 0,
+    "git": 0,
+    "tests": 0
+  },
+  "limitations": [
+    "Client monotonic elapsed, native performance durations and server wall timestamps stay separate; no offset or exact timeout-state inference.",
+    "Parent and child intervals are nested and cannot be added to their totals.",
+    "Public read interval counts do not prove exact SDK invocation counts or a per-run public read mapping.",
+    "Approval and cleanup canonical arguments are not exposed by official scalar log; exact receipt and Root native selection provide those identities."
+  ],
+  "inputHashes": {
+    "memory-effort-control-tool-exercise-1792064780272.json": "9a561c0b56cef26833a95a19e021f8b3fb99eb616928d777e3da23ec5a718fe2",
+    "memory-effort-control-service-log-snapshot-public-post-run-1792064915798.json": "7f9b15b5572a1bd1dcc4f9aef3f876baa7d7c37b08dc1f9c75936429d1e161f7"
+  }
+}

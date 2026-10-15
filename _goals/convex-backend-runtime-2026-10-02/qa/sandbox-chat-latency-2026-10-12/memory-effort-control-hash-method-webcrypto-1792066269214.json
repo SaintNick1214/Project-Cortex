@@ -1,0 +1,211 @@
+{
+  "version": 1,
+  "status": "NATIVE_FIXED_METHOD_COMPLETE",
+  "mode": "--webcrypto",
+  "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+  "imageId": "sha256:26980f56eafa7c7b5b8141ba314344e10e21238089bf302a3d11c95739c70986",
+  "targetId": 6192965,
+  "fixtureSha256": "18b2dc9678cd4e80ac3ca88d5bdd3f53fdea8be94833184a08aee24b571e45b0",
+  "function": "hashLatencyQualification:fixedMethod",
+  "startedAt": 1792066269214,
+  "inferenceCalls": 0,
+  "tokenCalls": 0,
+  "applicationMutations": 0,
+  "retries": 0,
+  "queryCalls": 1,
+  "officialLogGets": 1,
+  "clientsClosed": true,
+  "cleanup": {
+    "localFixtureRemoved": false,
+    "deployedEndpointRemoved": false,
+    "required": "Root verified whole disposable target deletion; no third redeploy performed."
+  },
+  "preconditions": {
+    "readback": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-runtime-readback-1792065768689.json",
+      "sha256": "a74ab6a3239d4bc3f2d71cd4bf06f7e080c661bd2012add46486e016ab359170",
+      "status": "OBSERVED_WITH_UNMET_VERIFIER_CHECKS",
+      "unmetChecks": [
+        "unapproved-write-tool-cancelled declared actual response outcome preserved",
+        "unapproved-write-tool-cancelled actual cancelled tool run has zero approval result native tool message or owned effect"
+      ],
+      "results": [],
+      "productFailuresPreserved": true
+    },
+    "finance": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-finance-after-1792065701173.json",
+      "sha256": "c41f17458f75e72a5e8772c02b4aefb03d4110388b53405a2fdea5b056677229",
+      "allTargetFinance": {
+        "distinctOperations": 78,
+        "distinctAttempts": 78,
+        "unknownLiabilityUnits": 9700000,
+        "settledUnits": 0,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "attemptsFirstOnly": true,
+        "attemptStates": {
+          "uncertain": 78
+        },
+        "aggregateUsdComplete": false,
+        "rule": "Distinct operation/attempt rows across this exact disposable target; run liabilities summed once; tenant mirrors excluded."
+      },
+      "finishedAt": 1792065703509
+    },
+    "rootModeGoAttestsNoNewModelCallsAfterLastFinance": true
+  },
+  "originalProductBefore": {
+    "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+    "backendManifestSha256": "858568e0e5438448d09c9b23cb3b3427031a19190a5e9e808b83da8ac9d4b860",
+    "installedPackageFiles": 174,
+    "allInstalledHashesMatch": true,
+    "originalHostFiles": 174,
+    "allOriginalHostHashesMatch": true,
+    "qualifiedBootstrapSha256": "f0a9b1458836a4b6cfc49e5328d144174d7d31dca5d0ed8bba63b9c84a815b32",
+    "originalHostDigest": "44e4b226512d115b482540f3a0f7dcd61a274ee9ce6db65c0ddc7606fe613ca1",
+    "newQaAdditionIsSeparateFromFrozenProductClosure": true
+  },
+  "deployReceipt": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-hash-method-deploy-1792066233859.json",
+    "sha256": "d750f840019cb0ed3cf056ff0cf2c0858d0169a9d2f576b37cde70c7c8244fe7"
+  },
+  "queryArgs": {
+    "method": "webcrypto"
+  },
+  "rawApiResponse": {
+    "status": 200,
+    "requestHeadersOmitted": true,
+    "responseHeaders": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "status": "success",
+      "value": {
+        "completedDigests": 110,
+        "dbReads": 0,
+        "dbWrites": 0,
+        "experiment": "fixed-method-official-native-time-v1",
+        "inferenceCalls": 0,
+        "internalClockCalls": 0,
+        "method": "webcrypto",
+        "networkCalls": 0,
+        "parity": true,
+        "samples": [
+          {
+            "completed": 100,
+            "expectedSha256": "e9db45c3f7a86685e25cc656449043585dd2e8312db159685efc8da983deb769",
+            "input": "short",
+            "method": "webcrypto",
+            "requested": 100,
+            "utf8Bytes": 115
+          },
+          {
+            "completed": 10,
+            "expectedSha256": "ae25c6e6777943907af501f13f16b7d32adf92dc88047a10c048f58775a5821b",
+            "input": "long32KiB",
+            "method": "webcrypto",
+            "requested": 10,
+            "utf8Bytes": 32768
+          }
+        ],
+        "status": "COMPLETE",
+        "tokenCalls": 0,
+        "version": 1
+      }
+    }
+  },
+  "rawResult": {
+    "completedDigests": 110,
+    "dbReads": 0,
+    "dbWrites": 0,
+    "experiment": "fixed-method-official-native-time-v1",
+    "inferenceCalls": 0,
+    "internalClockCalls": 0,
+    "method": "webcrypto",
+    "networkCalls": 0,
+    "parity": true,
+    "samples": [
+      {
+        "completed": 100,
+        "expectedSha256": "e9db45c3f7a86685e25cc656449043585dd2e8312db159685efc8da983deb769",
+        "input": "short",
+        "method": "webcrypto",
+        "requested": 100,
+        "utf8Bytes": 115
+      },
+      {
+        "completed": 10,
+        "expectedSha256": "ae25c6e6777943907af501f13f16b7d32adf92dc88047a10c048f58775a5821b",
+        "input": "long32KiB",
+        "method": "webcrypto",
+        "requested": 10,
+        "utf8Bytes": 32768
+      }
+    ],
+    "status": "COMPLETE",
+    "tokenCalls": 0,
+    "version": 1
+  },
+  "queryWallMs": 402.11662500000006,
+  "provenance": {
+    "requestCursor": 1792066061302.876,
+    "newCursor": 1792066269786.1736,
+    "byteCount": 1022,
+    "entryCount": 1,
+    "executions": [
+      {
+        "identifier": "hashLatencyQualification:fixedMethod",
+        "udfType": "Query",
+        "kind": "Completion",
+        "requestId": "cd67013b34ef9f8c",
+        "executionId": "d328b3f2-bc02-437e-a2aa-5763cf77a0a0",
+        "timestamp": 1792066269.7861495,
+        "executionTimestamp": 1792066269.638,
+        "executionTime": 0.166670792,
+        "userExecutionTime": 0.009069481,
+        "returnBytes": 628,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usageStats": {
+          "databaseReadBytes": 0,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 0,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 0,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "storageReadBytes": 0,
+          "storageWriteBytes": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "textIndexQueryBytes": 0,
+          "textIndexWriteQueryBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      }
+    ],
+    "join": "One serialized never-retried exact internal query since retained official cursor, one uncached successful Completion; raw official requestId/executionId retained. Query arguments differ between modes."
+  },
+  "nativeTiming": {
+    "executionMs": 166.670792,
+    "reportedUserExecutionMs": 9.069481000000001,
+    "source": "Official uncached Completion only; no internal query clock. Native wall/user figures are not a calibrated CPU/network split."
+  },
+  "originalProductAfter": {
+    "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+    "backendManifestSha256": "858568e0e5438448d09c9b23cb3b3427031a19190a5e9e808b83da8ac9d4b860",
+    "installedPackageFiles": 174,
+    "allInstalledHashesMatch": true,
+    "originalHostFiles": 174,
+    "allOriginalHostHashesMatch": true,
+    "qualifiedBootstrapSha256": "f0a9b1458836a4b6cfc49e5328d144174d7d31dca5d0ed8bba63b9c84a815b32",
+    "originalHostDigest": "44e4b226512d115b482540f3a0f7dcd61a274ee9ce6db65c0ddc7606fe613ca1",
+    "newQaAdditionIsSeparateFromFrozenProductClosure": true
+  },
+  "finishedAt": 1792066270238,
+  "productClosureNote": "Original installed ef094 product174files remain pinned; QA query is an intentional additional host function, not unchanged frozen backend closure."
+}

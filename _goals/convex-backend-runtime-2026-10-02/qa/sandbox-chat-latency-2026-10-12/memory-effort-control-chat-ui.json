@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "status": "GENUINE_CHAT_RUNTIME_FUNCTIONAL_PASS_TIMING_UNMEASURED",
+  "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+  "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "runId": "run:04b03989b229dcce2495e571c0b7f50a83e9d62b09f9aad416386cc1dc5923cb",
+  "canonicalInput": "What is my favorite flower? Reply in one brief sentence.",
+  "actualAnswer": "Your favorite flower is iris.",
+  "effort": "normal",
+  "reachedDepth": 1,
+  "selectedEntries": 7,
+  "retrievalMs": 933,
+  "responseComplete": true,
+  "memoryComplete": true,
+  "reconnect": "Clicked disconnect/reconnect; same actual run ID and retained answer remained; no extra request submitted. Native operation uniqueness pending final readback.",
+  "phone": {
+    "viewport": 393,
+    "scrollWidth": 393,
+    "height": 852,
+    "visible": true,
+    "screenshot": "memory-effort-control-chat-phone.png",
+    "visuallyInspected": true,
+    "viewportReset": true
+  },
+  "liveTitle": {
+    "title": "Favorite Flower Query",
+    "contentJobId": "content:0b87b4441931c88b5e3c2ecdb5fa4cc131b535e544deca878193c24b5e8416e6",
+    "ready": true,
+    "source": "Actual Chat UI backend job card, not a fixed/mocked model reply"
+  },
+  "readiness": {
+    "cutoff": 18,
+    "factsThrough": 18,
+    "vectorsThrough": 18,
+    "factsComplete": true,
+    "vectorsComplete": true,
+    "strictStages": [],
+    "graph": "not_requested"
+  },
+  "consoleWarningErrors": 0,
+  "firstVisibleMs": null,
+  "timingCoverage": "No Chat first-visible instrumentation/sample; do not infer SLO from tool wait time.",
+  "paidRetries": 0,
+  "sourceEvidence": "memory-effort-control-chat-after-readiness.full.ax.txt",
+  "cleanup": "Root still owns active Chat server, launcher, container and target",
+  "at": "2026-10-15T11:47:05.216168+00:00"
+}

@@ -1,0 +1,322 @@
+{
+  "version": 1,
+  "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+  "cases": [
+    {
+      "label": "normal-seed",
+      "effort": "normal",
+      "runId": "run:73ded98f4f4866211677194ade4c28efbd7b8df4bf593083795748dbc8bac01a",
+      "targetMs": 6000,
+      "firstAfterPaintMs": null,
+      "timingPass": null,
+      "answerMarkerPresent": null,
+      "responseComplete": true,
+      "memoryComplete": true,
+      "statusEvidence": "Actual emitted CUA states and same-time screenshots; final native readback still pending",
+      "browserEvents": [],
+      "numericalTiming": "NOT_MEASURED frontend diagnostics disabled for original seed; no replay",
+      "evidence": {
+        "logs": "memory-effort-control-browser-normal-seed.logs.json",
+        "screenshot": "memory-effort-control-browser-normal-seed.png"
+      },
+      "originalAxSave": "Diff-only and inadequate as standalone evidence; preserved, not used for these assertions"
+    },
+    {
+      "label": "fast-recent",
+      "effort": "fast",
+      "runId": "run:c04cbb4b1b998f0776cb46349f441b51e01ebc932097431f2f29469ad2340d06",
+      "targetMs": 3000,
+      "firstAfterPaintMs": 3312.599999997765,
+      "timingPass": false,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true,
+      "statusEvidence": "Actual emitted CUA states and same-time screenshots; final native readback still pending",
+      "browserEvents": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 840.5999999977648,
+          "runId": "run:c04cbb4b1b998f0776cb46349f441b51e01ebc932097431f2f29469ad2340d06"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 3301.39999999851,
+          "runId": "run:c04cbb4b1b998f0776cb46349f441b51e01ebc932097431f2f29469ad2340d06"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 3312.599999997765,
+          "runId": "run:c04cbb4b1b998f0776cb46349f441b51e01ebc932097431f2f29469ad2340d06",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 5684,
+          "runId": "run:c04cbb4b1b998f0776cb46349f441b51e01ebc932097431f2f29469ad2340d06"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 5690.89999999851,
+          "runId": "run:c04cbb4b1b998f0776cb46349f441b51e01ebc932097431f2f29469ad2340d06"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 5691.699999999255,
+          "runId": "run:c04cbb4b1b998f0776cb46349f441b51e01ebc932097431f2f29469ad2340d06"
+        }
+      ],
+      "numericalTiming": "ACTUAL visible after-paint",
+      "evidence": {
+        "logs": "memory-effort-control-browser-fast-recent.logs.json",
+        "screenshot": "memory-effort-control-browser-fast-recent.png"
+      },
+      "originalAxSave": "Diff-only and inadequate as standalone evidence; preserved, not used for these assertions"
+    },
+    {
+      "label": "normal-indexed",
+      "effort": "normal",
+      "runId": "run:0ca2079fa92bff55d94619f224fc6fe8fe380bd196aaf535e1fd975f61a494c0",
+      "targetMs": 6000,
+      "firstAfterPaintMs": 3661.699999999255,
+      "timingPass": true,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true,
+      "statusEvidence": "Actual emitted CUA states and same-time screenshots; final native readback still pending",
+      "browserEvents": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 773.0999999977648,
+          "runId": "run:0ca2079fa92bff55d94619f224fc6fe8fe380bd196aaf535e1fd975f61a494c0"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 3638.39999999851,
+          "runId": "run:0ca2079fa92bff55d94619f224fc6fe8fe380bd196aaf535e1fd975f61a494c0"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 3661.699999999255,
+          "runId": "run:0ca2079fa92bff55d94619f224fc6fe8fe380bd196aaf535e1fd975f61a494c0",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 6042.300000000745,
+          "runId": "run:0ca2079fa92bff55d94619f224fc6fe8fe380bd196aaf535e1fd975f61a494c0"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 6050,
+          "runId": "run:0ca2079fa92bff55d94619f224fc6fe8fe380bd196aaf535e1fd975f61a494c0"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 6050.800000000745,
+          "runId": "run:0ca2079fa92bff55d94619f224fc6fe8fe380bd196aaf535e1fd975f61a494c0"
+        }
+      ],
+      "numericalTiming": "ACTUAL visible after-paint",
+      "evidence": {
+        "logs": "memory-effort-control-browser-normal-indexed.logs.json",
+        "screenshot": "memory-effort-control-browser-normal-indexed.png"
+      },
+      "originalAxSave": "Diff-only and inadequate as standalone evidence; preserved, not used for these assertions"
+    },
+    {
+      "label": "high",
+      "effort": "high",
+      "runId": "run:cf156dab29777e11ecdaf0015502a9b859692f8a1991e48f310ea1615336c9f7",
+      "targetMs": 8000,
+      "firstAfterPaintMs": 3776,
+      "timingPass": true,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true,
+      "statusEvidence": "Actual emitted CUA states and same-time screenshots; final native readback still pending",
+      "browserEvents": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 1082.300000000745,
+          "runId": "run:cf156dab29777e11ecdaf0015502a9b859692f8a1991e48f310ea1615336c9f7"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 3751.599999997765,
+          "runId": "run:cf156dab29777e11ecdaf0015502a9b859692f8a1991e48f310ea1615336c9f7"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 3776,
+          "runId": "run:cf156dab29777e11ecdaf0015502a9b859692f8a1991e48f310ea1615336c9f7",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 6292.099999997765,
+          "runId": "run:cf156dab29777e11ecdaf0015502a9b859692f8a1991e48f310ea1615336c9f7"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 6298.599999997765,
+          "runId": "run:cf156dab29777e11ecdaf0015502a9b859692f8a1991e48f310ea1615336c9f7"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 6299.39999999851,
+          "runId": "run:cf156dab29777e11ecdaf0015502a9b859692f8a1991e48f310ea1615336c9f7"
+        }
+      ],
+      "numericalTiming": "ACTUAL visible after-paint",
+      "evidence": {
+        "logs": "memory-effort-control-browser-high.logs.json",
+        "screenshot": "memory-effort-control-browser-high.png"
+      },
+      "originalAxSave": "Diff-only and inadequate as standalone evidence; preserved, not used for these assertions"
+    },
+    {
+      "label": "max",
+      "effort": "max",
+      "runId": "run:58a27cfbdd9d2e6acefe652466c89b7d29171187615d14787b134baeda2121b6",
+      "targetMs": 30000,
+      "firstAfterPaintMs": 3661.599999997765,
+      "timingPass": true,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true,
+      "statusEvidence": "Actual emitted CUA states and same-time screenshots; final native readback still pending",
+      "browserEvents": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 880.8999999985099,
+          "runId": "run:58a27cfbdd9d2e6acefe652466c89b7d29171187615d14787b134baeda2121b6"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 3644.199999999255,
+          "runId": "run:58a27cfbdd9d2e6acefe652466c89b7d29171187615d14787b134baeda2121b6"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 3661.599999997765,
+          "runId": "run:58a27cfbdd9d2e6acefe652466c89b7d29171187615d14787b134baeda2121b6",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 6500.29999999702,
+          "runId": "run:58a27cfbdd9d2e6acefe652466c89b7d29171187615d14787b134baeda2121b6"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 6507.099999997765,
+          "runId": "run:58a27cfbdd9d2e6acefe652466c89b7d29171187615d14787b134baeda2121b6"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 6507.89999999851,
+          "runId": "run:58a27cfbdd9d2e6acefe652466c89b7d29171187615d14787b134baeda2121b6"
+        }
+      ],
+      "numericalTiming": "ACTUAL visible after-paint",
+      "evidence": {
+        "logs": "memory-effort-control-browser-max.logs.json",
+        "screenshot": "memory-effort-control-browser-max.png"
+      },
+      "originalAxSave": "Diff-only and inadequate as standalone evidence; preserved, not used for these assertions"
+    },
+    {
+      "label": "fast-cross",
+      "effort": "fast",
+      "runId": "run:bc71a76b73564312c469de1198af97775f8d404e1ef24c0467acc21aefd61dc5",
+      "targetMs": 3000,
+      "firstAfterPaintMs": 3310.5,
+      "timingPass": false,
+      "answerMarkerPresent": true,
+      "responseComplete": true,
+      "memoryComplete": true,
+      "statusEvidence": "Actual emitted CUA states and same-time screenshots; final native readback still pending",
+      "browserEvents": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 774.3000000007451,
+          "runId": "run:bc71a76b73564312c469de1198af97775f8d404e1ef24c0467acc21aefd61dc5"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 3292.10000000149,
+          "runId": "run:bc71a76b73564312c469de1198af97775f8d404e1ef24c0467acc21aefd61dc5"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 3310.5,
+          "runId": "run:bc71a76b73564312c469de1198af97775f8d404e1ef24c0467acc21aefd61dc5",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 5695.10000000149,
+          "runId": "run:bc71a76b73564312c469de1198af97775f8d404e1ef24c0467acc21aefd61dc5"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 5701.60000000149,
+          "runId": "run:bc71a76b73564312c469de1198af97775f8d404e1ef24c0467acc21aefd61dc5"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 5702.20000000298,
+          "runId": "run:bc71a76b73564312c469de1198af97775f8d404e1ef24c0467acc21aefd61dc5"
+        }
+      ],
+      "numericalTiming": "ACTUAL visible after-paint",
+      "evidence": {
+        "logs": "memory-effort-control-browser-fast-cross.logs.json",
+        "screenshot": "memory-effort-control-browser-fast-cross.png"
+      },
+      "originalAxSave": "Diff-only and inadequate as standalone evidence; preserved, not used for these assertions"
+    }
+  ],
+  "correctQuestionAnswers": 5,
+  "questionCases": 5,
+  "numericalBrowserCases": 5,
+  "timingPasses": 3,
+  "timingMisses": 2,
+  "unmeasuredBrowserCases": 1,
+  "paidRetries": 0,
+  "goalComplete": false,
+  "freshFullAx": "memory-effort-control-browser-fast-cross.full.ax.txt",
+  "axSavingLimitation": "Original getAXState saves used default diff mode after already emitting state, so saved no-change diffs. Original actual full/diff states remain in CUA call outputs and screenshots; current Fast-cross full snapshot separately captured. No original file overwritten and no model replay.",
+  "at": "2026-10-15T11:36:15.623683+00:00"
+}
