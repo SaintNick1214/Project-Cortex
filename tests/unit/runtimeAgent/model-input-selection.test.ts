@@ -48,3 +48,17 @@ describe("async SDK fitting keeps the original selection semantics",()=>{
   expect(calls).toBe(0);
  });
 });
+
+it('pinned V2 literal priority survives question history and required pending within the same shared cap, while omitted pin is legacy',()=>{
+ const policy=modelInputPolicy({version:2,optionalEntries:4}),priority={...entry('answer',.7,'fact'),literalPropertyPriority:true as const};
+ const history:ModelInputMessage[]=[...Array.from({length:4},(_,i)=>({id:`q${i}`,message:{role:'user' as const,content:'What is my favorite fruit?'},mandatory:false,relevance:1.000000238418579})),messages[1]!];
+ const input={messages:history,entries:[priority,entry('pending',1,'pending')],check:within};
+ const current=fitModelInput({...input,policy:{...policy,evidenceRankingVersion:1}}),old=fitModelInput({...input,policy});
+ expect(current.entryKeys).toEqual(['answer','pending']);expect(current.messageIds).toHaveLength(3);expect(current.messageIds).toContain('current');expect(current.omissionReasons).toEqual(['entries']);
+ expect(old.entryKeys).toEqual(['pending']);expect(old.messageIds).toHaveLength(4);
+ const overflow=fitModelInput({...input,policy:{...policy,evidenceRankingVersion:1},check:(_m,context)=>({supported:true,withinBound:!context.includes('answer')})});
+ expect(overflow.entryKeys).toEqual(['pending']);expect(overflow.messageIds).toEqual(['current']);expect(overflow.omissionReasons).toContain('input');
+});
+it('unknown internal ranking pins refuse rather than falling back to another comparator',()=>{
+ expect(()=>modelInputPolicy({...modelInputPolicy({version:2}),evidenceRankingVersion:2} as unknown as Parameters<typeof modelInputPolicy>[0])).toThrow('CONTEXT_LIMIT_EXCEEDED');
+});

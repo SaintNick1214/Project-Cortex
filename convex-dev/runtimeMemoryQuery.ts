@@ -137,7 +137,7 @@ export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hi
   }
   // Original post-staged authority fence remains raw and current.
   await new ConvexMemoryRepository(nativeCtx,a.reference,'read').recheckAuthority();
-  const effortResult=a.input.memory===undefined?undefined:await traverseConvexMemory(sourceCtx,repository,[...matches.map(match=>({...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!})),...facts.map(fact=>factEvidenceNode(fact,directFacts?1:undefined))],resolveMemoryEffortPolicy(a.input.memory),bindings,undefined,inspectFact);
+  const effortResult=a.input.memory===undefined?undefined:await traverseConvexMemory(sourceCtx,repository,[...matches.map(match=>({...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!})),...facts.map(fact=>factEvidenceNode(fact,directFacts?1:undefined))],resolveMemoryEffortPolicy(a.input.memory),bindings,undefined,inspectFact,a.input.text);
   if(effortResult)for(const stage of [...(factRead.value.candidateWorkBound?["direct-fact-candidate-work-bound"]:[]),...(a.hits.length===directLimit(a.input)?["direct-vector-candidate-work-bound"]:[])]){
     if(!effortResult.memoryEffort.unavailableStages.includes(stage))effortResult.memoryEffort.unavailableStages.push(stage);
     if(!effortResult.memoryEffort.stopReasons.includes("work"))effortResult.memoryEffort.stopReasons.push("work");

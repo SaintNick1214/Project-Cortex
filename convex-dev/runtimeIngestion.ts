@@ -165,13 +165,49 @@ export async function enqueueSourceEvent(ctx: MutationCtx, reference: RuntimeAut
   for (const stage of ["extract", "facts", "vectors"] as const) await ctx.db.insert("runtimeIngestionStages", { tenantId: source.tenantId,
     memorySpaceId: source.memorySpaceId, eventId, stage, state: source.lineage.role === "assistant" && stage !== "vectors" ? "skipped" : "pending",
     attempt: 0, leaseVersion: 0, updatedAt: now });
-  const event = (await ctx.db.get("runtimeIngestionEvents", id))!; await readiness(ctx, event);
+  const event = (await ctx.db.get("runtimeIngestionEvents", id))!;
+  // A tracked edit preserves its cancelled run/message identity. It must not
+  // reopen an approval path that cancellation permanently retired.
+  const run = eligibility === "awaiting_approval" && event.runId ? await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", event.tenantId)
+    .eq("memorySpaceId", event.memorySpaceId).eq("runId", event.runId!)).unique() : null;
+  if (run?.responseStatus === "cancelled" && run.attemptNumber === 0 && run.approvedAt === undefined) await retireCancelledUnapprovedInputs(ctx, run);
+  else await readiness(ctx, event);
   if (eligibility === "eligible") await ctx.scheduler.runAfter(0, processRef, { reference, eventId, stage: source.lineage.role === "assistant" ? "vectors" : "extract" });
   return { eventId, sequence, created: true };
 }
 export async function retireSourceEvents(ctx: MutationCtx, reference: RuntimeAuthorityReference, sourceId: string, state: "superseded" | "tombstoned") {
   if (!reference.memorySpaceId) ingestionDenied();
   await retireScopedSourceEvents(ctx, { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId }, sourceId, state);
+}
+/** The authorized cancellation parent has closed this run's only approval path.
+ * Retire only exact, never-admitted input work; canonical messages and stage
+ * receipts remain untouched. Eligible/paid work retains its original lifecycle. */
+export async function retireCancelledUnapprovedInputs(ctx: MutationCtx, run: Doc<"runtimeRuns">) {
+  if (run.responseStatus !== "cancelled" || run.cancellationRequestedAt === undefined
+    || run.attemptNumber !== 0 || run.approvedAt !== undefined) ingestionDenied("INVALID_STATE");
+  for (const nativeMessageId of run.inputMessageIds) {
+    const event = exactOne(await ctx.db.query("runtimeIngestionEvents").withIndex("by_run_message_eligibility", q => q.eq("tenantId", run.tenantId)
+      .eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId).eq("nativeMessageId", nativeMessageId).eq("eligibility", "awaiting_approval")).take(2));
+    if (!event) continue; // Empty or already explicitly retired input has no hole.
+    const bridge = await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", run.tenantId)
+      .eq("memorySpaceId", run.memorySpaceId).eq("nativeMessageId", nativeMessageId)).unique();
+    if (!bridge || bridge.approved || bridge.tombstonedAt !== undefined || bridge.role !== "user"
+      || bridge.runId !== run.runId || bridge.conversationId !== run.conversationId || bridge.ownerPrincipalId !== run.ownerPrincipalId
+      || event.ownerPrincipalId !== run.ownerPrincipalId || event.conversationId !== run.conversationId || event.conversationEpoch !== run.conversationEpoch
+      || event.lineage.sourceId !== bridge.sourceId || event.lineage.sourceEventId !== bridge.sourceEventId
+      || event.lineage.sourceRevision !== bridge.revision || event.lineage.role !== "user" || event.lineage.trust !== "user_assertion"
+      || event.contentHash !== bridge.sourceContentHash || canonicalModelJson(event.authorityReference) !== canonicalModelJson(bridge.actorReference)
+      || event.toolOperationId !== undefined || event.factsState !== "pending" || event.vectorsState !== "pending") ingestionDenied("INGESTION_CONFLICT");
+    const job = await ctx.db.query("runtimeIngestionJobs").withIndex("by_event", q => q.eq("tenantId", run.tenantId)
+      .eq("memorySpaceId", run.memorySpaceId).eq("eventId", event.eventId)).unique();
+    const stages = await readEventStages(ctx, event);
+    if (job || stages.length !== 3 || new Set(stages.map(stage => stage.stage)).size !== 3
+      || stages.some(stage => stage.state !== "pending" || stage.attempt !== 0 || stage.leaseVersion !== 0
+        || stage.leaseExpiresAt !== undefined || stage.policyCanonical !== undefined || stage.receiptId !== undefined || stage.payloadCanonical !== undefined
+        || stage.capacityWait !== undefined || stage.claimWait !== undefined || stage.failureCode !== undefined)) ingestionDenied("INGESTION_CONFLICT");
+    await ctx.db.patch("runtimeIngestionEvents", event._id, { eligibility: "ineligible", updatedAt: Date.now() });
+    await readiness(ctx, { ...event, eligibility: "ineligible" });
+  }
 }
 /** Trusted parent deletion/edit already checked its own resource authority. Active rows only: retained history never grows cleanup cost. */
 export async function retireScopedSourceEvents(ctx: MutationCtx, scope: { tenantId: string; memorySpaceId: string }, sourceId: string, state: "superseded" | "tombstoned") {

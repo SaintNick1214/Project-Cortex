@@ -19,7 +19,7 @@ import { agentComponent, approveRegisteredMessage, bridgeFor, captureCutoff, cap
   hydrateCutoff, registerMessages, requireConversation, singleTranscript, transcriptDenied } from "./runtimeTranscript";
 import { recheckAuthority } from "./runtimeAuth";
 import { stageStatus } from "./runtimeTranscriptSchema";
-import { readRunMemoryPublication } from "./runtimeIngestion";
+import { readRunMemoryPublication, retireCancelledUnapprovedInputs } from "./runtimeIngestion";
 import { holdForegroundIngestion, releaseForegroundIngestion } from "./runtimeIngestionPriority";
 
 function internalMutationRef<Args extends Record<string, unknown>, Result>(name: string) {
@@ -149,6 +149,9 @@ export const cancel = mutation({ args: runSelector, handler: async (ctx, args) =
   if (row.responseStatus === "complete" || row.responseStatus === "failed" || row.responseStatus === "cancelled") return publicRun(row);
   const now = Date.now(); await ctx.runMutation(cancelAgentBudgetRef, { reference, runId: row.runId });
   await retireWork(ctx, row, "cancelled", "CANCELLED", now);
+  if (row.responseStatus === "waiting_approval" && row.attemptNumber === 0 && row.approvedAt === undefined) {
+    await retireCancelledUnapprovedInputs(ctx, (await ctx.db.get("runtimeRuns", row._id))!);
+  }
   await ctx.scheduler.runAfter(0, recoverOwnedRef, { reference, conversationId: row.conversationId });
   return publicRun((await ctx.db.get("runtimeRuns", row._id))!);
 } });

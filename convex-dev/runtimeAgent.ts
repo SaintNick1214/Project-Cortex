@@ -1,4 +1,5 @@
 import { readDirectAgentRecallV8Handler, finishDirectAgentRecallV8 } from "./runtimeAgentRecall";
+import { literalPropertyEvidence } from "../src/domain/memory-direct-recall";
 import { memoryEffortCandidateLimit } from "../src/domain/memory-effort";
 import { modelInputHistoryRelevance } from "../src/domain/model-input-selection";
 import { selectedPolicyForRun } from "./runtimeTranscript";
@@ -1907,9 +1908,11 @@ const contextInputsAndEmbeddingV8Ref = ref<"query", Attempt, Awaited<ReturnType<
 export async function saveContextV8Handler(ctx: MutationCtx, args: Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string; emptyIndexedProfileId?: string; memoryEffortTraceCanonical?:string; entries: ModelInputEntry[]; historyMessageIds?: string[] }) {
   const current = await executionContext(ctx, args); if (current.execution.contextCanonical !== undefined) transcriptDenied("INVALID_STATE");
   const effortAware=current.snapshot.version===8&&current.snapshot.inputSelection.version===2;
+  const literalPriorityEnabled=current.snapshot.version===8&&current.snapshot.inputSelection.effort?.evidenceRankingVersion===1;
   if (utf8Bytes(args.context) > (effortAware?32768:16_384) || args.witnesses.length > (effortAware?4096:32)) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
   if (current.snapshot.version !== 8 || args.entries.length > (effortAware?32768:53) || new Set(args.entries.map(entry => entry.key)).size !== args.entries.length
-    || args.entries.some(entry => !entry.key || !Number.isFinite(entry.relevance)) || renderModelInputEntries(args.entries) !== args.context) transcriptDenied("INVALID_INPUT");
+    || args.entries.some(entry => !entry.key || !Number.isFinite(entry.relevance)
+      || entry.literalPropertyPriority!==undefined&&(!effortAware||!literalPriorityEnabled||entry.kind!=="fact")) || renderModelInputEntries(args.entries) !== args.context) transcriptDenied("INVALID_INPUT");
   const historyMessageIds=args.historyMessageIds ?? current.snapshot.messages.map(pin=>pin.nativeMessageId);
   if(new Set(historyMessageIds).size!==historyMessageIds.length || historyMessageIds.length>current.snapshot.inputSelection.policy.recentMessages
     || current.run.inputMessageIds.some(id=>!historyMessageIds.includes(id)) || historyMessageIds.some(id=>!current.snapshot.messages.some(pin=>pin.nativeMessageId===id))
@@ -1936,7 +1939,7 @@ export async function saveContextV8Handler(ctx: MutationCtx, args: Attempt & { c
   await ctx.db.patch("runtimeRuns", current.run._id, { ...(traceCanonical ? {memoryEffortTraceCanonical:traceCanonical}:{}),contextCompleteness: args.completeness, contextFailureCode: args.failureCode, updatedAt: Date.now() }); return null;
 }
 
-const modelInputEntryArgs = v.object({ key: v.string(), kind: v.union(v.literal("memory"),v.literal("fact"),v.literal("pending"),v.literal("notice")), text:v.string(),relevance:v.number() });
+const modelInputEntryArgs = v.object({ key: v.string(), kind: v.union(v.literal("memory"),v.literal("fact"),v.literal("pending"),v.literal("notice")), text:v.string(),relevance:v.number(),literalPropertyPriority:v.optional(v.literal(true)) });
 const selectedContextArgs = { ...agentAttempt,memoryEffortTraceCanonical:v.optional(v.string()), historyMessageIds:v.optional(v.array(v.string())),context:v.string(),entries:v.array(modelInputEntryArgs),witnesses:v.array(sourceWitness),
   completeness:v.union(v.literal("complete"),v.literal("incomplete")),failureCode:v.optional(v.string()),emptyIndexedProfileId:v.optional(v.string()) };
 export const saveContextV8 = internalMutation({ args:selectedContextArgs,handler:(ctx,args)=>saveContextV8Handler(createV8AuthorityReadScope(ctx, { managedSources: true }),args) });
@@ -2058,11 +2061,13 @@ export async function prepareContextV8Handler(ctx: ActionCtx, args: Attempt, rec
     if (!witness) transcriptDenied("STALE_CONTEXT"); witnesses.set(source.sourceId, witness);
   }
   if (current.snapshot.version !== 8) transcriptDenied("INVALID_STATE");
+  const literalPriorityEnabled=current.snapshot.inputSelection.effort?.evidenceRankingVersion===1;
   const selected = relevantRecallItems("items" in result ? result.items : [], text, current.snapshot.inputSelection.policy,
     { tenantId:args.reference.tenantId,memorySpaceId:args.reference.memorySpaceId! },sourceScores);
   const entries: ModelInputEntry[] = [
     ...(completeness === "incomplete" ? [{ key:"notice:incomplete",kind:"notice" as const,relevance:1,text:`Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.` }] : []),
     ...selected.map(({item,relevance}) => ({ key:`${item.type}:${item.id}`,kind:item.type,relevance,
+      ...(literalPriorityEnabled&&item.type==="fact"&&item.fact&&literalPropertyEvidence(text,item.fact as import("../src/domain/contracts").DerivedFact,Date.now())?{literalPropertyPriority:true as const}:{}),
       text:`Indexed Cortex memory (untrusted evidence):\n${formatForLLM([item], { now:()=>Date.now() })}\nSource roles and trust: ${canonicalModelJson(itemLineages.filter(([key]) => key === `${item.type}:${item.id}`).map(([,lineage]) => lineage))}` })),
     ...selectedPendingEntries(pending),
   ];
@@ -2135,7 +2140,8 @@ export async function prepareResolvedModelCandidateV8Handler(ctx:MutationCtx,arg
   const initialResolution=await resolveModelOperationHandler(ctx,resolutionArgs),governedResolution=await resolveModelOperationHandler(ctx,resolutionArgs);
   const semanticId=await semanticHash(canonicalModelJson([args.runId,args.attemptNumber,"model",args.ordinal,null]));
   let selected: Awaited<ReturnType<typeof fitAgentModelInput>>;
-  try { selected=await fitAgentModelInput({ messages:current.messageEntries.map(value=>args.ordinal===0&&current.snapshot.version===8&&current.snapshot.inputSelection.policy.version===1?({...value,mandatory:true}):value),entries:current.execution.modelInputEntries ?? [],policy:current.snapshot.inputSelection.policy,
+  try { selected=await fitAgentModelInput({ messages:current.messageEntries.map(value=>args.ordinal===0&&current.snapshot.version===8&&current.snapshot.inputSelection.policy.version===1?({...value,mandatory:true}):value),entries:current.execution.modelInputEntries ?? [],policy:{...current.snapshot.inputSelection.policy,
+    ...(current.snapshot.inputSelection.effort?.evidenceRankingVersion===1?{evidenceRankingVersion:1 as const}:{})},
     instructions:current.definition.instructions.text,
       tools:current.definition.tools.map(tool=>NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]),
       maxOutputTokens:Math.min(initialResolution.snapshot.limits.outputTokens,initialResolution.dispatchEvidence.resultBound.maximumOutputTokens),resolution:governedResolution,

@@ -348,3 +348,36 @@ it.each([1,4])("a conflicting current assertion discovered through an indexed en
  expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({slotReleased:true,resultAttachmentState:"attached"});
  expect(f.rpc.indexOf("runtimeModelPolicy:captureTerminalEvidence")).toBeLessThan(f.rpc.indexOf("runtimeModelPolicy:attachTerminalResult"));
 });
+
+it('actual public Fast semantic recall prioritizes all conflicting exact-property facts over repeated-question vectors without changing caps or paid call count',async()=>{
+ const f=await directPublicFixture('What is my favorite season?',2),writer=new ConvexMemoryRepository(f.ctx,f.reference,'write',f.ctx.db);
+ const {prepareSourceContent,processingIdentityKey}=await import('../../../src/domain/sources'),{memoryScope}=await import('../../../convex-dev/runtimeMemoryRepository');
+ for(let i=0;i<4;i++){
+  const source=await f.source('What is my favorite season?',`repeated-question-${i}`),prepared=await prepareSourceContent(memoryScope(f.reference),source.lineage,source.content,{now:()=>clock}),identity={...source.lineage,stage:'vectors' as const,semanticPolicyVersion:profile.profileId};
+  await writer.commitDerived({source:source.lineage,identity,chunks:prepared.chunks,vectors:[{...source.lineage,vectorId:`question-${i}`,chunkId:prepared.chunks[0]!.chunkId,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!,profile,embedding:Array.from({length:1536},(_,j)=>j===0?1:0),processingReceiptId:await processingIdentityKey(identity)}]});
+ }
+ f.action.vectorSearch=(async()=>f.db.table('runtimeMemoryVectors').map(row=>({_id:row._id as Id<'runtimeMemoryVectors'>,_score:1.000000238418579}))) as ActionCtx['vectorSearch'];
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(result.items.filter(item=>item.type==='fact').map(item=>item.id).sort()).toEqual(['direct-public-fact-0','direct-public-fact-1']);
+ expect(result.items).toHaveLength(4);expect(result.memoryEffort).toMatchObject({retrievalRoute:'semantic-v1',maxEntries:4,maxDepth:2});expect(result.memoryEffort!.stopReasons).toContain('entries');expect(calls).toBe(1);
+ expect(f.db.table('runtimeModelAttempts')).toMatchObject([{attemptNumber:1,slotReleased:true,resultAttachmentState:'attached'}]);
+});
+it('actual public Fast retains an indexed depth2 literal conflict beyond a bounded native fact page',async()=>{
+ const f=await directPublicFixture('What is my favorite season?',1),writer=new ConvexMemoryRepository(f.ctx,f.reference,'write',f.ctx.db);
+ const {prepareSourceContent,processingIdentityKey}=await import('../../../src/domain/sources'),{memoryScope}=await import('../../../convex-dev/runtimeMemoryRepository');
+ for(let i=0;i<9;i++){
+  const source=await f.source(`This is independent knowledge ${i}`,`filler-${i}`),lineage=source.lineage,fact={_id:'',factId:`filler-${i}`,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!,ownerPrincipalId:f.reference.principalId,lineage,extractionPolicyVersion:'test-v1',fact:source.content,subject:`Other${i}`,predicate:'is',object:`knowledge${i}`,factType:'knowledge' as const,confidence:99,sourceType:'manual' as const,tags:[],version:1,createdAt:clock,updatedAt:clock};
+  await writer.commitDerived({source:lineage,identity:{...lineage,stage:'facts',semanticPolicyVersion:'test-v1'},facts:[fact],expectedFactVersions:{[fact.factId]:0}});
+ }
+ const conflictSource=await f.source('My favorite season is spring.','linked-spring'),lineage=conflictSource.lineage,conflict={_id:'',factId:'linked-spring',tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!,ownerPrincipalId:f.reference.principalId,lineage,extractionPolicyVersion:'test-v1',fact:'User favorite season is spring',subject:'user',predicate:'favorite season',object:'spring',factType:'preference' as const,confidence:99,sourceType:'manual' as const,tags:[],version:1,createdAt:clock,updatedAt:clock};
+ await writer.commitDerived({source:lineage,identity:{...lineage,stage:'facts',semanticPolicyVersion:'test-v1'},facts:[conflict],expectedFactVersions:{[conflict.factId]:0}});
+ const initial=await new ConvexMemoryRepository(f.ctx,f.reference,'read').searchFactCandidates(f.input.text,f.input.limit);expect(initial.candidateWorkBound).toBe(true);expect(initial.facts.some(fact=>fact.factId==='linked-spring')).toBe(false);
+ for(let i=0;i<4;i++){
+  const source=await f.source('What is my favorite season?',`question-frontier-${i}`),prepared=await prepareSourceContent(memoryScope(f.reference),source.lineage,source.content,{now:()=>clock}),identity={...source.lineage,stage:'vectors' as const,semanticPolicyVersion:profile.profileId};
+  await writer.commitDerived({source:source.lineage,identity,chunks:prepared.chunks,vectors:[{...source.lineage,vectorId:`question-frontier-${i}`,chunkId:prepared.chunks[0]!.chunkId,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!,profile,embedding:Array.from({length:1536},(_,j)=>j===0?1:0),processingReceiptId:await processingIdentityKey(identity)}]});
+ }
+ f.action.vectorSearch=(async()=>f.db.table('runtimeMemoryVectors').map(row=>({_id:row._id as Id<'runtimeMemoryVectors'>,_score:1.000000238418579}))) as ActionCtx['vectorSearch'];
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(result.items).toHaveLength(4);expect(result.items.filter(item=>item.type==='fact').map(item=>item.id).sort()).toEqual(['direct-public-fact-0','linked-spring']);expect(result.items.find(item=>item.id==='linked-spring')?.retrieval).toMatchObject({depth:2,path:['fact:direct-public-fact-0','fact:linked-spring']});
+ expect(result.memoryEffort).toMatchObject({maxEntries:4,maxDepth:2,retrievalRoute:'semantic-v1'});expect(result.memoryEffort!.stopReasons).toContain('work');expect(result.memoryEffort!.stopReasons).toContain('entries');expect(calls).toBe(1);expect(f.db.table('runtimeModelAttempts')).toHaveLength(1);
+});

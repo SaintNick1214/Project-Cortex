@@ -15,7 +15,7 @@ export const runtimeAgentTables = {
       v.literal("finalizing"), v.literal("complete"), v.literal("failed"), v.literal("cancelled"), v.literal("unknown")),
     streaming: v.boolean(), nextOutputSequence: v.number(), nextModelStep: v.number(), toolCount: v.number(),
     modelInputHistoryIds: v.optional(v.array(v.string())),
-    modelInputEntries: v.optional(v.array(v.object({ key: v.string(), kind: v.union(v.literal("memory"), v.literal("fact"), v.literal("pending"), v.literal("notice")), text: v.string(), relevance: v.number() }))),
+    modelInputEntries: v.optional(v.array(v.object({ key: v.string(), kind: v.union(v.literal("memory"), v.literal("fact"), v.literal("pending"), v.literal("notice")), text: v.string(), relevance: v.number(), literalPropertyPriority:v.optional(v.literal(true)) }))),
     modelInputSelection: v.optional(v.object({ ordinal: v.number(), messageIds: v.array(v.string()), entryKeys: v.array(v.string()), policyHash: v.string(), hash: v.string() })),
     contextCanonical: v.optional(v.string()), contextState: v.optional(v.union(v.literal("started"), v.literal("complete"), v.literal("failed"))), sourceWitnesses: v.array(sourceWitness),
     contextCompleteness: v.optional(v.union(v.literal("complete"), v.literal("incomplete"))), contextFailureCode: v.optional(v.string()),

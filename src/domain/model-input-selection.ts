@@ -8,6 +8,8 @@ import type { SourceLineage } from "./contracts.js";
 /** Versioned request selection only. Canonical storage and authorization are external. */
 export interface ModelInputSelectionPolicy {
   version: 1 | 2;
+  /** Internal effective-snapshot pin; absent V2 snapshots keep score ordering. */
+  evidenceRankingVersion?: 1;
   effort?: MemoryEffortPolicyV1;
   optionalEntries?: number | null;
   recentMessages: number;
@@ -21,7 +23,7 @@ export const MODEL_INPUT_SELECTION_V1: Readonly<ModelInputSelectionPolicy> = Obj
 });
 export const MODEL_INPUT_RECENT_SCAN_LIMIT = 128;
 export const MODEL_INPUT_RECALL_CANDIDATES = 10;
-export interface ModelInputEntry { key: string; kind: "memory" | "fact" | "pending" | "notice"; text: string; relevance: number }
+export interface ModelInputEntry { key: string; kind: "memory" | "fact" | "pending" | "notice"; text: string; relevance: number; literalPropertyPriority?:true }
 export interface ModelInputMessage { id: string; message: ModelMessage; mandatory: boolean; relevance?:number }
 export type ModelInputBoundResult = { supported: false } | { supported: true; withinBound: boolean };
 export class ModelInputSelectionError extends Error {
@@ -30,10 +32,12 @@ export class ModelInputSelectionError extends Error {
 export function modelInputPolicy(input?: ModelInputSelectionPolicy | { version:2;effort?:MemoryEffortPolicyV1;optionalEntries?:number|null }): ModelInputSelectionPolicy {
   const selected = input ?? MODEL_INPUT_SELECTION_V1;
   if (selected.version === 2) {
-    if (Object.keys(selected).some(key => !["version","recentMessages","relevantMemories","relevantFacts","pendingEntries","maxMessages","effort","optionalEntries"].includes(key))) throw new ModelInputSelectionError("CONTEXT_LIMIT_EXCEEDED");
+    const ranking:unknown="evidenceRankingVersion" in selected?selected.evidenceRankingVersion:undefined;
+    if (Object.keys(selected).some(key => !["version","recentMessages","relevantMemories","relevantFacts","pendingEntries","maxMessages","effort","optionalEntries","evidenceRankingVersion"].includes(key))
+      || ranking!==undefined&&ranking!==1) throw new ModelInputSelectionError("CONTEXT_LIMIT_EXCEEDED");
     const effort=validateMemoryEffortPolicy(selected.effort), policy=resolveMemoryEffortPolicy(undefined,effort);
     if(selected.optionalEntries!==undefined && selected.optionalEntries!==null && (!Number.isSafeInteger(selected.optionalEntries)||selected.optionalEntries<0)) throw new ModelInputSelectionError("CONTEXT_LIMIT_EXCEEDED");
-    return { version:2,recentMessages:32768,relevantMemories:32768,relevantFacts:32768,pendingEntries:32,maxMessages:32768,effort,
+    return { version:2,...(ranking===1?{evidenceRankingVersion:1 as const}:{}),recentMessages:32768,relevantMemories:32768,relevantFacts:32768,pendingEntries:32,maxMessages:32768,effort,
       optionalEntries:selected.optionalEntries === undefined ? policy.maxEntries : selected.optionalEntries };
   }
   if ((selected as { version:number }).version !== 1 || Object.keys(selected).sort().join(",") !== "maxMessages,pendingEntries,recentMessages,relevantFacts,relevantMemories,version"
@@ -102,9 +106,9 @@ function* modelInputFitSteps(input: ModelInputFitSource): Generator<ModelInputFi
     // V2 compares optional history and evidence together. V1 keeps its exact
     // original evidence-first then oldest-history removal below.
     if(policy.version===2){
-      const candidates=[...entries.filter(value=>value.kind==="memory"||value.kind==="fact").map(value=>({kind:"entry" as const,key:value.key,relevance:value.relevance})),
-        ...messages.filter(value=>!value.mandatory).map((value,index)=>({kind:"history" as const,key:value.id,relevance:value.relevance??0,index}))]
-        .sort((a,b)=>a.relevance-b.relevance||(a.kind!==b.kind?(a.kind==="history"?-1:1):a.kind==="history"&&b.kind==="history"?a.index-b.index:a.key.localeCompare(b.key)));
+      const candidates=[...entries.filter(value=>value.kind==="memory"||value.kind==="fact").map(value=>({kind:"entry" as const,key:value.key,relevance:value.relevance,priority:policy.evidenceRankingVersion===1&&value.literalPropertyPriority?1:0})),
+        ...messages.filter(value=>!value.mandatory).map((value,index)=>({kind:"history" as const,key:value.id,relevance:value.relevance??0,index,priority:0}))]
+        .sort((a,b)=>a.priority-b.priority||a.relevance-b.relevance||(a.kind!==b.kind?(a.kind==="history"?-1:1):a.kind==="history"&&b.kind==="history"?a.index-b.index:a.key.localeCompare(b.key)));
       if(candidates.length===0)throw new ModelInputSelectionError("CONTEXT_LIMIT_EXCEEDED");const weakest=candidates[0]!;
       if(weakest.kind==="entry")entries.splice(entries.findIndex(value=>value.key===weakest.key),1);
       else messages.splice(messages.findIndex(value=>value.id===weakest.key),1);

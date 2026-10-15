@@ -41,14 +41,14 @@ const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = aw
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
 beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; });
 afterEach(() => { jest.restoreAllMocks(); });
-async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number,directLookup=false) {
+async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number,directLookup:boolean|"fruit"=false,repeatedQuestions=0,linkedConflict=false) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
-  const prepared = await prepareSourceContent(scope, explicitSourceLineage(scope, "whole-source"), "My favorite season is autumn", { now: () => clock });
+  const prepared = await prepareSourceContent(scope, explicitSourceLineage(scope, "whole-source"), directLookup==="fruit"?"My favorite fruit is apricot. Please acknowledge it in one brief sentence.":"My favorite season is autumn", { now: () => clock });
   await writer.putSource(prepared.source);await ingestion.enqueueSourceEvent(f.ctx, f.reference, prepared.source);
   const source = { sourceId: prepared.source.lineage.sourceId, sourceEventId: prepared.source.lineage.sourceEventId, sourceRevision: 1 };
   const identity = { ...source, stage: "facts" as const, semanticPolicyVersion: "policy-v1" };
   const fact: DerivedFact = { _id: "", factId: "whole-fact", tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId,
-    ownerPrincipalId: scope.principalId, lineage: prepared.source.lineage, extractionPolicyVersion: "policy-v1", fact: directLookup?"User favorite season is autumn":"User prefers autumn",...(directLookup?{subject:"user",predicate:"favorite season",object:"autumn"}:{}),
+    ownerPrincipalId: scope.principalId, lineage: prepared.source.lineage, extractionPolicyVersion: "policy-v1", fact: directLookup==="fruit"?"User\'s favorite fruit is apricot.":directLookup?"User favorite season is autumn":"User prefers autumn",...(directLookup?{subject:"user",predicate:directLookup==="fruit"?"is_favorite_fruit":"favorite season",object:directLookup==="fruit"?"apricot":"autumn"}:{}),
     factType: "preference", confidence: 91, sourceType: "manual", tags: [], version: 1, createdAt: clock, updatedAt: clock };
   await writer.commitDerived({ source, identity, chunks: prepared.chunks, vectors: [{ ...source, vectorId: "whole-vector", chunkId: prepared.chunks[0]!.chunkId,
     tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId, profile, embedding: Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0), processingReceiptId: await processingIdentityKey(identity) }],
@@ -60,6 +60,22 @@ async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"
     const fact:DerivedFact={_id:"",factId:`independent-${i}`,tenantId:scope.tenantId,memorySpaceId:scope.memorySpaceId,ownerPrincipalId:scope.principalId,lineage,extractionPolicyVersion:"independent-v1",fact:`Hello world independent match ${i}`,factType:"knowledge",confidence:90,sourceType:"manual",tags:[],version:1,createdAt:clock,updatedAt:clock};
     await writer.commitDerived({source:lineage,identity,facts:[fact],expectedFactVersions:{[fact.factId]:0}});
   }
+  if(linkedConflict)for(let i=0;i<14;i++){
+    const current=await prepareSourceContent(scope,explicitSourceLineage(scope,`unrelated-candidate-${i}`),`This is independent knowledge ${i}`,{now:()=>clock});await writer.putSource(current.source);await ingestion.enqueueSourceEvent(f.ctx,f.reference,current.source);
+    const lineage=current.source.lineage,identity={...lineage,stage:"facts" as const,semanticPolicyVersion:"candidate-v1"},candidate:DerivedFact={...fact,_id:"",factId:`unrelated-candidate-${i}`,lineage,fact:current.source.content,subject:`Other${i}`,predicate:"is",object:`knowledge${i}`};
+    await writer.commitDerived({source:lineage,identity,facts:[candidate],expectedFactVersions:{[candidate.factId]:0}});
+  }
+  for(let i=0;i<repeatedQuestions;i++){
+    const current=await prepareSourceContent(scope,explicitSourceLineage(scope,`prior-question-${i}`),"What is my favorite fruit?",{now:()=>clock});await writer.putSource(current.source);await ingestion.enqueueSourceEvent(f.ctx,f.reference,current.source);
+    const lineage=current.source.lineage,identity={...lineage,stage:"facts" as const,semanticPolicyVersion:"question-v1"};
+    const projection:DerivedFact={...fact,_id:"",factId:`question-projection-${i}`,lineage,fact:"User has a favorite fruit.",subject:"User",predicate:"has",object:"favorite fruit"};
+    await writer.commitDerived({source:lineage,identity,chunks:current.chunks,vectors:[{...lineage,vectorId:`question-vector-${i}`,chunkId:current.chunks[0]!.chunkId,tenantId:scope.tenantId,memorySpaceId:scope.memorySpaceId,profile,embedding:Array.from({length:1536},(_,j)=>j===0?1:0),processingReceiptId:await processingIdentityKey(identity)}],...(i===0?{facts:[projection],expectedFactVersions:{[projection.factId]:0}}:{})});
+  }
+  if(linkedConflict){
+    const current=await prepareSourceContent(scope,explicitSourceLineage(scope,"linked-plum"),"My favorite fruit is plum.",{now:()=>clock});await writer.putSource(current.source);await ingestion.enqueueSourceEvent(f.ctx,f.reference,current.source);
+    const lineage=current.source.lineage,identity={...lineage,stage:"facts" as const,semanticPolicyVersion:"conflict-v1"},candidate:DerivedFact={...fact,_id:"",factId:"linked-plum",lineage,fact:"User's favorite fruit is plum.",object:"plum"};
+    await writer.commitDerived({source:lineage,identity,facts:[candidate],expectedFactVersions:{[candidate.factId]:0}});
+  }
   for(const event of f.db.table("runtimeIngestionEvents"))Object.assign(event,{factsState:"complete",vectorsState:"complete",vectorProfilesComplete:[profile.profileId]});
   const startupMutation = f.ctx.runMutation.bind(f.ctx);
   f.ctx.runMutation = (async (ref, args) => {
@@ -70,7 +86,7 @@ async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"
   const published = v8 ? await f.call<{agentId:string;version:number}>(definitions.publishVersion, { memorySpaceId:"space-a",clientMutationId:"v8-recall-read-scope",expectedPreviousVersion:0,
     definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:effortAware?await definitions.executableRegistryHashV4():await definitions.executableRegistryHashV3(),handlerVersion:effortAware?2:1,
       inputSelection:effortAware?{version:2,...(seedWork===undefined?{}:{effort:{version:1,maxWork:seedWork}})}:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}} }) : undefined;
-  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: { ...f.request(), ...(directLookup?{parts:[{type:"text" as const,text:"What is my favorite season?"}]}:{}), ...(published ? {agentId:published.agentId,agentVersion:published.version,...(effortAware?{memory:{effort}}:{})}: {}) } });await f.call(agent.start, { runId: run.runId });
+  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: { ...f.request(), ...(directLookup?{parts:[{type:"text" as const,text:directLookup==="fruit"?"What is my favorite fruit?":"What is my favorite season?"}]}:{}), ...(published ? {agentId:published.agentId,agentVersion:published.version,...(effortAware?{memory:{effort}}:{})}: {}) } });await f.call(agent.start, { runId: run.runId });
   const owned = f.db.table("runtimeAgentExecutions")[0];
   const attempt = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };await f.call(agent.startContext, attempt);
   const current = await agent.executionContext(f.ctx, attempt);
@@ -95,7 +111,7 @@ async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"
   f.ctx.runMutation = (async (ref, value) => { const found = lookup(ref);if (!found) return oldMutation(ref, value);
     calls.push(found.name);if (found.name === "runtimeMemory:finalDelivery" || found.name === "runtimeAgentRecall:finalDeliveryV8") beforeDeliveryQueries = [...physicalQueries];
     assertNativeArgs(found.value, value);return f.transaction(() => invoke(found.value, f.ctx, value)); }) as MutationCtx["runMutation"];
-  const hits = f.db.table("runtimeMemoryVectors").map(row => ({ id: row._id as Id<"runtimeMemoryVectors">, score: 0.9 }));
+  const hits = f.db.table("runtimeMemoryVectors").map(row => ({ id: row._id as Id<"runtimeMemoryVectors">, score: String(row.vectorId).startsWith("question-vector-")?1.000000238418579:0.9 }));
   const action = { ...f.ctx, vectorSearch: async () => hits.map(hit => ({ _id: hit.id, _score: hit.score })) } as unknown as ActionCtx;
   return { ...f, get grant() { return f.grant; }, args, attempt, profile, input, selection, hits, action, calls, physicalQueries, beforeDeliveryQueries: () => beforeDeliveryQueries, current };
 }
@@ -767,4 +783,34 @@ it("ambiguous direct facts retain the original semantic proposal and real entry/
  const parent=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>>(agent.contextInputsAndEmbeddingV8,f.attempt);
  expect(parent.direct).toBeUndefined();expect(parent.proposal?.request.purpose).toBe("embedding.query");expect(parent.proposal?.request.texts).toEqual(["What is my favorite season?"]);
  expect(parent.inputs.current.snapshot.version===8&&parent.inputs.current.snapshot.inputSelection.effort?.maxEntries).toBe(4);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+
+it.each([true,false])("Fast cross-conversation exact property ranking pin=%s retains eligible answer evidence with four repeated-question vectors",async ranking=>{
+ const f=await fixture(true,true,"fast",0,undefined,"fruit",4);
+ if(!ranking){const run=f.db.table("runtimeRuns")[0]!,effort=JSON.parse(run.memoryEffortCanonical as string),snapshot=JSON.parse(run.snapshotCanonical as string);delete effort.evidenceRankingVersion;delete snapshot.inputSelection.effort.evidenceRankingVersion;run.memoryEffortCanonical=canonicalModelJson(effort);run.snapshotCanonical=canonicalModelJson(snapshot);}
+ const originalPlan=await f.call<Awaited<ReturnType<typeof whole.prepareReadsHandler>>>(whole.prepareReadsV8,f.args);
+ expect(originalPlan.factPlan.kind).toBe("ready");if(originalPlan.factPlan.kind!=="ready")throw Error("Expected actual indexed fact plan");expect(originalPlan.factPlan.facts.some(fact=>fact.factId==="whole-fact")).toBe(true);
+ let semanticCalls=0;
+ const candidate=await agent.prepareContextV8Handler(f.action,f.attempt,async(_repository,input,selection)=>{semanticCalls++;return whole.finishAgentRecallV8(f.action,f.attempt,{now:()=>clock},input,profile,{profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},selection!,clock);},true);
+ expect(semanticCalls).toBe(1);expect(candidate?.state).toBe("started");if(candidate?.state!=="started")throw Error("Expected real prepared dispatch context");
+ const selected=candidate.current.execution.modelInputEntries??[],dispatch=JSON.parse(candidate.op.nativeRequestCanonical!);
+ expect(selected).toHaveLength(4);expect(selected.some(entry=>/apricot/.test(entry.text))).toBe(ranking);expect(JSON.stringify(dispatch.messages).includes("apricot")).toBe(ranking);
+ expect(selected.filter(entry=>entry.literalPropertyPriority).map(entry=>entry.kind)).toEqual(ranking?["fact"]:[]);
+ const trace=JSON.parse(candidate.current.run.memoryEffortTraceCanonical!);expect(trace).toMatchObject({retrievalRoute:"semantic-v1",maxEntries:4,maxDepth:2});expect(trace.entriesByKind.fact).toBe(ranking?1:0);expect(trace.stopReasons).toContain("entries");
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(0); // No main dispatch; semantic embedding is the single controlled peer above.
+ await expect(f.call(agent.admitPreparedModelOperationV8,directAdmissionArgs(f,candidate))).resolves.toMatchObject({permit:{dispatchPermit:true}});
+});
+
+it("actual Fast Agent retains the current literal conflict discovered at depth2 beyond a bounded direct fact page",async()=>{
+ const f=await fixture(true,true,"fast",0,undefined,"fruit",4,true),plan=await f.call<Awaited<ReturnType<typeof whole.prepareReadsHandler>>>(whole.prepareReadsV8,f.args);
+ if(plan.factPlan.kind!=="ready")throw Error("Expected ready native fact page");
+ expect(plan.factPlan.candidateWorkBound).toBe(true);expect(plan.factPlan.facts.some(fact=>fact.factId==="whole-fact")).toBe(true);expect(plan.factPlan.facts.some(fact=>fact.factId==="linked-plum")).toBe(false);
+ let semanticCalls=0;
+ const candidate=await agent.prepareContextV8Handler(f.action,f.attempt,async(_repository,input,selection)=>{semanticCalls++;const result=await whole.finishAgentRecallV8(f.action,f.attempt,{now:()=>clock},input,profile,{profile,vectors:[Array.from({length:1536},(_,i)=>i===0?1:0)]},selection!,clock);expect(result.items.find(item=>item.id==="linked-plum")?.retrieval).toMatchObject({depth:2,path:["fact:whole-fact","fact:linked-plum"]});return result;},true);
+ expect(semanticCalls).toBe(1);if(candidate?.state!=="started")throw Error("Expected real prepared main request");
+ const entries=candidate.current.execution.modelInputEntries??[],request=JSON.parse(candidate.op.nativeRequestCanonical!);
+ expect(entries).toHaveLength(4);expect(entries.filter(entry=>entry.kind==="fact").map(entry=>entry.key).sort()).toEqual(["fact:linked-plum","fact:whole-fact"]);
+ expect(JSON.stringify(request.messages)).toContain("apricot");expect(JSON.stringify(request.messages)).toContain("plum");
+ expect(JSON.parse(candidate.current.run.memoryEffortTraceCanonical!)).toMatchObject({maxEntries:4,maxDepth:2,entriesByKind:{fact:2},retrievalRoute:"semantic-v1"});
+ await expect(f.call(agent.admitPreparedModelOperationV8,directAdmissionArgs(f,candidate))).resolves.toMatchObject({permit:{dispatchPermit:true}});
 });

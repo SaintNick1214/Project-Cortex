@@ -123,7 +123,7 @@ export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hit
     for(const next of selected.witnesses){const merged=mergeContextWitness(witnesses.get(next.sourceId),next);if(!merged)memoryError("STALE_CONTEXT","Traversal source changed");witnesses.set(next.sourceId,merged);}
     for(const [key,lineage] of selected.provenance)provenance.set(key,lineage);
     return selected.selectedIndexes.length===1;
-  },inspectFact):undefined;
+  },inspectFact,args.input.text):undefined;
   if(effortResult){
     for(const stage of [...(args.factPlan.candidateWorkBound?["direct-fact-candidate-work-bound"]:[]),...(args.hits.length===args.input.limit?["direct-vector-candidate-work-bound"]:[])]){
       if(!effortResult.memoryEffort.unavailableStages.includes(stage))effortResult.memoryEffort.unavailableStages.push(stage);

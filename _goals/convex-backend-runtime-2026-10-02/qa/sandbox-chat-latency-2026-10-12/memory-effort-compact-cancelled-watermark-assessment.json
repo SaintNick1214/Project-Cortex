@@ -1,0 +1,334 @@
+{
+  "version": 1,
+  "status": "SOURCE_CONFIRMED_CANCELLED_UNAPPROVED_INPUT_WATERMARK_LIVENESS_DEFECT",
+  "at": "2026-10-15T04:46:15.769624+00:00",
+  "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "evidence": {
+    "path": "memory-effort-compact-final-snapshot-1792039226566.json",
+    "sha256": "693c50434d07d3fa10ea9dc383c28b9c52cabcc1eecd5983513aa9762a255ffe",
+    "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+    "nativeRun": {
+      "label": "preapproval-cancel",
+      "client": "browser",
+      "runId": "run:ef3643783f97f3d8ba037e9be5794aa37b67f09816adfac2db41cff5074982c9",
+      "scopeSha256": "cbd6ed94443ee0c103aa26822c74c69b235fd1490368cf7973baf4bcbcc50d3a",
+      "responseStatus": "cancelled",
+      "failureCode": "CANCELLED",
+      "modelInputVersion": 8,
+      "attemptNumber": 0,
+      "nativeRunAttemptCount": 0,
+      "agentOperationCount": 0,
+      "nativeModelOperationCount": 0,
+      "nativeModelAttemptCount": 0,
+      "queueSequence": 1,
+      "inputMessageCount": 1,
+      "outputMessageCount": 0,
+      "nativeRunIdentityCopies": 1,
+      "publicationCopies": 0,
+      "progress": [],
+      "execution": [],
+      "tools": [],
+      "modelOperationKinds": [],
+      "agentModelOps": [],
+      "createdAt": 1792038427236,
+      "updatedAt": 1792038468149
+    },
+    "nativeSourceEvent": {
+      "runId": "run:ef3643783f97f3d8ba037e9be5794aa37b67f09816adfac2db41cff5074982c9",
+      "label": "preapproval-cancel",
+      "eventSequence": 15,
+      "role": "user",
+      "trust": "user_assertion",
+      "eligibility": "awaiting_approval",
+      "factsState": "pending",
+      "vectorsState": "pending",
+      "sourceRevision": 1,
+      "sourceContentHash": "b80deacca7c54facac777220fe28de1f88b35849bdacd3d95b072b7aa0cb02ec",
+      "profileId": "cortex-text-small-1536-v1",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "pending",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792038427236
+        },
+        {
+          "stage": "facts",
+          "state": "pending",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792038427236
+        },
+        {
+          "stage": "extract",
+          "state": "pending",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792038427236
+        }
+      ],
+      "preApprovalCancelled": true,
+      "sourceRowCount": 0,
+      "chunkCount": 0,
+      "vectorCount": 0,
+      "sourceExpectation": "NO_APPROVED_DERIVED_SOURCE_BEFORE_INPUT_APPROVAL"
+    },
+    "nativeScopeWatermark": {
+      "scopeSha256": "cbd6ed94443ee0c103aa26822c74c69b235fd1490368cf7973baf4bcbcc50d3a",
+      "sequence": 15,
+      "factsThrough": 14,
+      "vectorsThrough": 14,
+      "vectorProfileThrough": {
+        "cortex-text-large-3072-v1": 0,
+        "cortex-text-small-1536-v1": 14
+      },
+      "updatedAt": 1792038427498,
+      "incompleteEvents": [
+        {
+          "runId": "run:ef3643783f97f3d8ba037e9be5794aa37b67f09816adfac2db41cff5074982c9",
+          "eventSequence": 15,
+          "factsState": "pending",
+          "vectorsState": "pending"
+        }
+      ]
+    }
+  },
+  "findings": {
+    "privacyExclusionCorrect": true,
+    "normalRunCancellationRetiresUnapprovedIngestionEvent": false,
+    "sameCancelledRunPublicApprovalReachable": false,
+    "legacyMessageApprovalBypassesRunFence": false,
+    "laterDistinctSourceCompletionCrossesHole": false,
+    "laterOrdinaryRunMayDispatchAndIndexOwnEligibleEvents": true,
+    "strictBarrierSpanningHoleOutcome": "wait until original configured deadline, then MEMORY_BARRIER_TIMEOUT; fail or incomplete per policy",
+    "scopeEffect": "Shared tenant/memorySpace sequence; unrelated later conversation in same scope is also affected.",
+    "permanentMeaning": "No automatic run/approval/ingestion lifecycle transition closes the hole. Explicit authorized message/conversation/source retirement can remediate; not physically irreparable.",
+    "intendedPendingDistinction": "Pending is intentional while input approval remains viable. Terminal cancellation removes that approval route yet retains the pending hole; source does not exempt it from later strict scope barriers."
+  },
+  "pointers": [
+    {
+      "path": "convex-dev/runs.ts",
+      "lineStart": 107,
+      "lineEnd": 117,
+      "meaning": "Submission registers the unapproved user message before run insertion; waiting_approval run has attempt0."
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "lineStart": 164,
+      "lineEnd": 178,
+      "meaning": "Pending transcript outbox creates awaiting_approval ingestion event in shared scope sequence; sourceWrite at131 refuses unapproved source."
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "lineStart": 146,
+      "lineEnd": 167,
+      "meaning": "cancel calls retireWork and recovers queue; approve accepts only waiting_approval (or already-approved replay), so cancelled input cannot later be approved through runs.approve."
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "lineStart": 177,
+      "lineEnd": 191,
+      "meaning": "retireWork cancels response/outbox/attempt and releases foreground hold; it does not retire input events, transcript bridge or transcript outbox."
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "lineStart": 1750,
+      "lineEnd": 1766,
+      "meaning": "Public Agent cancel delegates to runs.cancel and retires owned execution if any; attempt0 has no execution and no ingestion disposition."
+    },
+    {
+      "path": "convex-dev/conversations.ts",
+      "lineStart": 160,
+      "lineEnd": 170,
+      "meaning": "Legacy approveMessage also refuses bridges with runId; it is not an alternate approval route for cancelled run input."
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "lineStart": 252,
+      "lineEnd": 266,
+      "meaning": "Approval of a different run supersedes only that approved message source; it does not retire the cancelled source."
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "lineStart": 145,
+      "lineEnd": 169,
+      "meaning": "New source advances scope sequence and schedules only eligible event; no global earlier-event gate at this enqueue boundary."
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "lineStart": 62,
+      "lineEnd": 65,
+      "meaning": "Claim current-event guard refuses eligibility other than eligible; canceled awaiting_approval event has no expiry/recovery claim job."
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "lineStart": 293,
+      "lineEnd": 299,
+      "meaning": "Facts/vector dependency check is within the current event, not a mechanism to skip earlier scope holes."
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "lineStart": 417,
+      "lineEnd": 425,
+      "meaning": "V8 captureSelectedCutoff captures complete memory-space sequence, not just approved history or this conversation sequence."
+    },
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "lineStart": 29,
+      "lineEnd": 34,
+      "meaning": "awaiting_approval maps to pending before any stage summary; only trusted skipped eligibility crosses."
+    },
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "lineStart": 59,
+      "lineEnd": 81,
+      "meaning": "readStageProgress scans shared scope sequence to captured cutoff; no cancelled-run or conversation-boundary exception in watermark progress."
+    },
+    {
+      "path": "src/domain/ingestion.ts",
+      "lineStart": 26,
+      "lineEnd": 28,
+      "meaning": "Only ineligible/superseded/tombstoned are skipped."
+    },
+    {
+      "path": "src/domain/memory-context.ts",
+      "lineStart": 23,
+      "lineEnd": 39,
+      "meaning": "contiguousWatermark stops at pending even if all later events are complete."
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "lineStart": 576,
+      "lineEnd": 592,
+      "meaning": "Strict context barrier refreshes watermarks and evaluates required stages against captured scope cutoff."
+    },
+    {
+      "path": "src/domain/memory-context.ts",
+      "lineStart": 92,
+      "lineEnd": 118,
+      "meaning": "Pending progress waits only until fixed deadline, then MEMORY_BARRIER_TIMEOUT uses configured fail/incomplete behavior."
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "lineStart": 1791,
+      "lineEnd": 1812,
+      "meaning": "Ordinary path dispatches directly; strict path uses waiting Workflow. Ordinary success is not a proof shared watermarks recovered."
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "lineStart": 571,
+      "lineEnd": 599,
+      "meaning": "Explicit authorized message deletion can retire source event through messageOutbox tombstone; editing unapproved input instead creates another pending revision."
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "lineStart": 626,
+      "lineEnd": 638,
+      "meaning": "Explicit authorized conversation deletion retires exact source events; this is remediation, not normal cancellation disposition."
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "lineStart": 172,
+      "lineEnd": 184,
+      "meaning": "Trusted source retirement records skipped eligibility and schedules refresh/readiness without approving or indexing input."
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "convex-dev/runs.ts",
+      "sha256": "670e5b9a7549aa1e3b116215a1b45e7856460fe89e7145b066b886ae64aab49b"
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "sha256": "9084c842b40ffb5d124b4bc5848711ca40e1cce2d0da5753828acb2738a218ec"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "5681a9a28c27b7fda2787dabdb95c6450ec737da7288dccd2e867b3ca5899c74"
+    },
+    {
+      "path": "convex-dev/conversations.ts",
+      "sha256": "571258988d1559c0d14d99d6b6e61896ba1fe32ed8b3eb3682cec3ab1c74ea2a"
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "sha256": "a36410ff1e6beb13b4cd571ad42d7c0ab73e898d34f55c6b0ec21970f67c5f07"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "5fdb7ba3ff46390b89c08540f540d1261700a02cc8799cabcd9a661a371d93e6"
+    },
+    {
+      "path": "src/domain/ingestion.ts",
+      "sha256": "0f94fa1c791283994e58ef417d095aa930ebfcd007389056290784216e9fc70a"
+    },
+    {
+      "path": "src/domain/memory-context.ts",
+      "sha256": "85deb720acb6b5f4c8762006db815671ee3856417128d6f2b766745660851767"
+    },
+    {
+      "path": "tests/unit/runtimeRuns/admission.test.ts",
+      "sha256": "dfb62c5e01d814b3a10f21563870b68da1d3d6a3259962a24ed23c5262167358"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/context.test.ts",
+      "sha256": "79b9c98ae9c63de72c6defd125ce7fbe0e989386e2f133e993ab49b327c364b1"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/stages.test.ts",
+      "sha256": "148c307acff1563f8357f45463a4cafbbc5ed505628762718a5fea03880a12aa"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/inline-barrier.test.ts",
+      "sha256": "8ff9725818174ff8ba1ab1a694b3394418993f974d077a2dba4bd99f47ba5aec"
+    }
+  ],
+  "reviewedTests": [
+    {
+      "path": "tests/unit/runtimeRuns/admission.test.ts",
+      "lineStart": 71,
+      "lineEnd": 84,
+      "coverage": "queued/running cancellation releases queue and denies stale output; no unapproved cancellation followed by ingestion watermarks/strict barrier"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/stages.test.ts",
+      "lineStart": 26,
+      "lineEnd": 34,
+      "coverage": "awaiting approval has no job/model; explicit approval revision supersedes original event"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/context.test.ts",
+      "lineStart": 10,
+      "lineEnd": 21,
+      "coverage": "later completed events cannot cross earlier hole; explicit retirement closes it"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/inline-barrier.test.ts",
+      "lineStart": 111,
+      "lineEnd": 118,
+      "coverage": "strict pending stage waits then times out with no model operation; no cancellation-created hole chain"
+    }
+  ],
+  "minimalReproducerProposal": [
+    "Reuse transcriptFixture and existing inline-barrier fixture; create approval-required conversation A in one owned memory space.",
+    "Submit A0, cancel before approval with public registered runtimeAgent.cancel/runs.cancel; assert response cancelled, attempt0, bridge unapproved, source/chunk/vector/model/tool count0 and no ingestion job.",
+    "Submit distinct B1 in same conversation and approve B1 only (or use an approved ordinary run in another conversation in same memory space). Capture sequence/cutoff. For same-conversation approval, A0 remains event1, B1 oldrevision2 is superseded, B1 approvedrevision3 eligible.",
+    "Use existing controlled ingestion fixture to complete B1 own eligible stages without changing A0; refreshScopeWatermarks/readStageProgress through B1 cutoff. Current source must show facts/vectors hole at A0 despite B1 complete.",
+    "Start a distinct strict run in the same memory space with required facts/vectors and bounded100ms onFailure fail; complete its own source stages in controlled fixture to isolate A0. Exercise original startContext/contextBarrier and real Workflow sleep with controlled clock. Current source waits then MEMORY_BARRIER_TIMEOUT; governed response calls remain0.",
+    "Repair acceptance should require an explicit trusted non-ingesting terminal disposition for exactly cancelled unapproved A0, contiguous advancement through completed later events, stale approval still denied, cancelled content absent from all sources/context/vectors/tools, idempotent cancellation, foreign-scope denial and rollback. Never weaken contiguousWatermark or mark stages falsely complete."
+  ],
+  "notExecuted": [
+    "No new later ordinary/strict run on hosted target; target is cleaned.",
+    "No tests/reproducer executed; this is retained native observation plus source reasoning."
+  ],
+  "activity": {
+    "services": 0,
+    "privateKeyReads": 0,
+    "inference": 0,
+    "productEdits": 0,
+    "tests": 0,
+    "newJudges": 0
+  },
+  "scope": "e9 committed source read from selective staged export, source hashes verified with git show; relevant committed tests inspected read-only. New report files only."
+}

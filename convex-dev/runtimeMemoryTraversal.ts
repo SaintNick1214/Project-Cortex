@@ -6,6 +6,7 @@ import type { MemoryEvidenceNode, MemoryEvidencePage } from "../src/domain/memor
 import type { EffectiveMemoryEffortPolicy } from "../src/domain/memory-effort";
 import { traverseMemoryEvidence } from "../src/domain/memory-traversal";
 import { factToRecallItem } from "../src/domain/recall";
+import { literalPropertyEvidence } from "../src/domain/memory-direct-recall";
 import { ConvexMemoryRepository, captureRecallFact, captureRecallSource,isMemoryResourceDenied,canonicalMemoryValue,memoryError } from "./runtimeMemoryRepository";
 import type { MemoryDeliveryBindings } from "./runtimeMemoryRepository";
 
@@ -28,7 +29,7 @@ export function sourceEvidenceNode(source:SourceContent,score=.65):MemoryEvidenc
     lineage:source.lineage,item:{type:"memory",id:source.lineage.sourceId,content:source.content,score,source:"graph-expanded"} };
 }
 export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemoryRepository, seeds:MemoryEvidenceNode[], policy:EffectiveMemoryEffortPolicy,
-  bindings:MemoryDeliveryBindings, eligible?:(node:MemoryEvidenceNode)=>Promise<boolean>, inspectFact?:(fact:DerivedFact)=>void) {
+  bindings:MemoryDeliveryBindings, eligible?:(node:MemoryEvidenceNode)=>Promise<boolean>, inspectFact?:(fact:DerivedFact)=>void, literalQuery?:string) {
   const authority=await repository.authority(undefined,"read"), scope=repository.scope;
   async function optionalMemorySource(sourceId:string){
     try{return await repository.getSource(sourceId,"canViewMemories");}
@@ -47,6 +48,7 @@ export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemory
     if(canonicalMemoryValue(source.lineage)!==canonicalMemoryValue(node.lineage))memoryError("STALE_SOURCE","Traversal seed source changed");
     if(node.item.type==="fact") {const fact=await repository.getFact(node.item.id);if(!fact)return false;
       if(canonicalMemoryValue(fact)!==canonicalMemoryValue(node.item.fact))memoryError("STALE_SOURCE","Traversal seed fact changed");
+      if(policy.evidenceRankingVersion===1&&literalQuery!==undefined&&literalPropertyEvidence(literalQuery,fact,Date.now()))node.literalPropertyPriority=true;
       inspectFact?.(fact);await captureRecallFact(selectedBindings,fact,source);}
     else captureRecallSource(selectedBindings,source,"canViewMemories");
     candidateBindings.set(node.key,selectedBindings);if(!candidateNodes.has(node.key))candidateNodes.set(node.key,node);

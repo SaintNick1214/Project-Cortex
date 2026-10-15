@@ -1,0 +1,255 @@
+{
+  "revision": 3,
+  "status": "FROZEN_FOR_SAME_REVIEWER_LP2_REPAIR_ASSESSMENT",
+  "baseCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "preservedPriorArtifacts": [
+    "memory-effort-literal-priority-report.json",
+    "memory-effort-literal-priority-report-v2.json",
+    "memory-effort-literal-priority-hashes.json",
+    "memory-effort-literal-priority-hashes-v2.json",
+    "original independent REJECTs and red receipts unchanged"
+  ],
+  "finding": "LP-2: input shedding skipped a longer current literal conflict although the two facts together fit490/500. Queue ended at exactly4 selected entries so v2 entryBoundReached guard never ran.",
+  "repair": "All already-discovered/current literal-priority nodes not selected enter the bounded local final selection pass, including input-skipped nodes, after queue exhaustion or work/entry shedding. Weaker optional selected entries can be replaced. BFS discovery/expansion/first-seen paths/dedup are unchanged. No additional adjacency read or discovery.",
+  "bounds": {
+    "entries": "Original maxEntries retained including null Max; no requirement to include conflicts that cannot fit.",
+    "context": "Complete-entry UTF8 units recomputed under original maxContextTokens. Exact490/500 regression now retains both facts.",
+    "work": "Discovery still stops at original maxWork; final pass only uses bounded already-seen data and performs no read.",
+    "cancellation": "An existing cancellation stop prevents reselection. A fresh optional cancellation check precedes a needed final pass.",
+    "deadline": "Original start/budget retained. Checks before and after local fitting prevent late replacement; no clock restart or new allowance. Existing Action real elapsed fence remains unchanged.",
+    "legacy": "Omitted ranking pin bypasses postpass exactly as before."
+  },
+  "compatibility": {
+    "effectiveRankingPin": 1,
+    "unreleasedPinUnchanged": true,
+    "publicCapabilities": "2/1 unchanged",
+    "publicPolicyVersion": 1,
+    "noPublicControlChanges": true
+  },
+  "changedSinceRejectedV2": [
+    "src/domain/memory-traversal.ts",
+    "convex-dev/runtimeAgent.ts",
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts"
+  ],
+  "allProductFiles": [
+    "src/domain/memory-effort.ts",
+    "src/domain/memory-direct-recall.ts",
+    "src/domain/memory-traversal.ts",
+    "src/domain/model-input-selection.ts",
+    "convex-dev/runtimeMemoryTraversal.ts",
+    "convex-dev/runtimeAgentRecall.ts",
+    "convex-dev/runtimeMemoryQuery.ts",
+    "convex-dev/runtimeAgent.ts",
+    "convex-dev/runtimeAgentSchema.ts"
+  ],
+  "allTestFiles": [
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+  ],
+  "hashReceipt": "memory-effort-literal-priority-hashes-v3.json",
+  "checks": {
+    "lp2-red1": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "--testNamePattern=LP-2",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/lp2-red1.jest.json"
+      ],
+      "code": 1,
+      "naturalExit": true,
+      "elapsedMs": 3064
+    },
+    "lp2-final1": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "--watchman=false",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/lp2-final1.jest.json"
+      ],
+      "code": 0,
+      "naturalExit": true,
+      "elapsedMs": 17623
+    },
+    "lp2-types1": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "code": 0,
+      "naturalExit": true,
+      "elapsedMs": 8611
+    },
+    "lp2-lint1": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-effort.ts",
+        "src/domain/memory-direct-recall.ts",
+        "src/domain/memory-traversal.ts",
+        "src/domain/model-input-selection.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentSchema.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--max-warnings=0",
+        "--report-unused-disable-directives"
+      ],
+      "code": 0,
+      "naturalExit": true,
+      "elapsedMs": 6756
+    },
+    "lp2-diffcheck": {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "lp2-root-types1": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "code": 0,
+      "naturalExit": true,
+      "elapsedMs": 12621
+    },
+    "lp2-agent-final2": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/lp2-agent-final2.jest.json"
+      ],
+      "code": 0,
+      "naturalExit": true,
+      "elapsedMs": 15292
+    },
+    "lp2-lint2": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-effort.ts",
+        "src/domain/memory-direct-recall.ts",
+        "src/domain/memory-traversal.ts",
+        "src/domain/model-input-selection.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentSchema.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--max-warnings=0",
+        "--report-unused-disable-directives"
+      ],
+      "code": 0,
+      "naturalExit": true,
+      "elapsedMs": 9322
+    },
+    "lp2-diffcheck-final2": {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "regressions": {
+    "redBeforeRepair": {
+      "failed": 2,
+      "passed": 4,
+      "filteredNotRun": 15,
+      "meaning": "Exact LP-2 and work-bound known-conflict selection failed before correction; cancellation/deadline/too-small bounds already passed. Name-filtered red is not claimed as coverage PASS."
+    },
+    "finalAffected": {
+      "passed": 224,
+      "failed": 0,
+      "pending": 0,
+      "suites": 6,
+      "naturalExit": true
+    },
+    "exactLP2": {
+      "combinedLiteralUnits": 490,
+      "contextLimit": 500,
+      "visited": 5,
+      "selectedFactKeys": [
+        "fact:apricot",
+        "fact:plum"
+      ],
+      "extraDiscoveryReads": 0
+    },
+    "remaining": "Existing actual public/Agent depth2 conflict selection, prepared/admitted native body, shortest-path/cycle, old snapshot and all resource/source fence regressions passed in the same final224-test run.",
+    "finalAgentAfterTypeFix": {
+      "numPassedTests": 108,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numPassedTestSuites": 1
+    },
+    "composition": "224/6 affected pass before two equivalent local boolean closure fixes; latest108/1 affected Agent composition pass after those fixes. Actual full root tsc and strict13-file lint pass at final hash. Composed evidence, no invented final224 invocation."
+  },
+  "activity": {
+    "serviceCalls": 0,
+    "inference": 0,
+    "builds": 0,
+    "deploys": 0,
+    "commits": 0,
+    "continuationHelperEdits": 0,
+    "cancellationLivenessFilesEdited": 0,
+    "productFrozen": true
+  },
+  "limitations": [
+    "No assertion of fresh native correctness or numerical latency for this unreleased source. Original live failures remain unchanged.",
+    "Full root tsc passed at this timestamp; the separate runs/ingestion liveness worker is independently owned and later changes require parent combined checks."
+  ],
+  "frozenAt": "2026-10-15T04:52:14.704734+00:00",
+  "typeScopeCorrection": {
+    "earlierLabelWasTooBroad": "Earlier tsc receipts used tsconfig.lint.json, which excludes tests and does not cover the backend/test import graph. They prove source-lint typing only, not full root typing.",
+    "actualFullRootCheck": "lp2-root-types1.json: node node_modules/typescript/bin/tsc --noEmit exit0/12.621s",
+    "repair": "Two runtimeAgent callback union narrowings use a locally narrowed ranking-pin boolean. No behavior or validation condition changes.",
+    "preservation": "Initial written v3 artifacts retained as *-pre-root-type-correction.*. Historical v1/v2 receipts/reports unchanged; this correction governs their tsc scope labels."
+  }
+}

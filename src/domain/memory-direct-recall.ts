@@ -21,14 +21,24 @@ function literalAssertionHead(text:string):string|undefined {
 }
 export function sufficientDirectFactLookup(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number): boolean {
   if (text.length > 1024 || candidates.candidateWorkBound || candidates.facts.length !== 1) return false;
+  const fact=candidates.facts[0]!;
+  if (fact.version !== 1 || fact.supersedes || fact.supersededBy || fact.supersedesEndpoint || fact.supersededByEndpoint || fact.historyReceipt
+    || fact.updatedAt !== fact.createdAt || fact.validFrom !== undefined && fact.validFrom > now || fact.validUntil !== undefined) return false;
+  return literalPropertyEvidence(text,fact,now);
+}
+
+/** Priority within an already-authorized current candidate set, never proof that
+ * semantic discovery can be skipped. Every explicit value for the exact property
+ * receives equal priority, including current corrections and conflicting values. */
+export function literalPropertyEvidence(text:string,fact:DerivedFact,now:number):boolean {
+  if(text.length>1024||fact.supersededBy||fact.supersededByEndpoint
+    ||fact.validFrom!==undefined&&fact.validFrom>now||fact.validUntil!==undefined&&fact.validUntil<=now)return false;
   // One explicit property lookup only. Compound requests, conversational asks,
   // paraphrases and broad retrieval requests deliberately retain semantic search.
   const query = /^(?:what|which)\s+(?:is|are)\s+(my|the)\s+([^?!;.\n]+)\??$/iu.exec(text.trim());
   if (!query) return false;
-  const topic = words(query[2]!), fact = candidates.facts[0]!;
+  const topic = words(query[2]!);
   if (topic.length < 2 || topic.length > 8 || topic.some(word => word.length < 3 || ambiguous.has(word))) return false;
-  if (fact.version !== 1 || fact.supersedes || fact.supersededBy || fact.supersedesEndpoint || fact.supersededByEndpoint || fact.historyReceipt
-    || fact.updatedAt !== fact.createdAt || fact.validFrom !== undefined && fact.validFrom > now || fact.validUntil !== undefined) return false;
   const statement = words(fact.fact);
   if (statement.some(word => ambiguous.has(word))) return false;
   const phrase = topic.join(" ");

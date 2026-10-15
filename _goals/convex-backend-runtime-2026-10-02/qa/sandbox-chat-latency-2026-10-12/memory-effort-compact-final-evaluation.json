@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+  "status": "CANDIDATE_REJECTED_WITH_FULL_FINANCIAL_AND_CLEANUP_EVIDENCE",
+  "selectedRuns": 8,
+  "ordinaryBrowserRuns": 7,
+  "correctOrdinaryAnswers": 6,
+  "ordinaryMemoryComplete": 7,
+  "withinTimingTargets": 5,
+  "knownWrongAnswer": "fast-new-conversation",
+  "nativeContinuation": "SCOPED_PASS_ORIGINAL_LITERAL_FAIL_RETAINED",
+  "regressionFactsVectors": "4/4 before intentional owned source/grant fences",
+  "observedManualWatermark": {
+    "scopeSha256": "cbd6ed94443ee0c103aa26822c74c69b235fd1490368cf7973baf4bcbcc50d3a",
+    "sequence": 15,
+    "factsThrough": 14,
+    "vectorsThrough": 14,
+    "vectorProfileThrough": {
+      "cortex-text-large-3072-v1": 0,
+      "cortex-text-small-1536-v1": 14
+    },
+    "updatedAt": 1792038427498,
+    "incompleteEvents": [
+      {
+        "runId": "run:ef3643783f97f3d8ba037e9be5794aa37b67f09816adfac2db41cff5074982c9",
+        "eventSequence": 15,
+        "factsState": "pending",
+        "vectorsState": "pending"
+      }
+    ]
+  },
+  "financial": {
+    "operations": 52,
+    "firstAttempts": 52,
+    "uniqueRunAccountUnknownMicroUsd": 7100000,
+    "manualUnknownMicroUsd": 3200000,
+    "regressionUnknownMicroUsd": 1200000,
+    "startupUnknownMicroUsd": 2700000,
+    "reservedMicroUsd": 0,
+    "activeConcurrency": 0,
+    "aggregateUsdComplete": false,
+    "refunded": false
+  },
+  "originalNativeFailure": "Ineligible two-candidate direct-route expectation; conservative semantic fallback retained. Not relabeled PASS.",
+  "finalCollection": {
+    "receipt": "memory-effort-compact-final-snapshot-1792039226566.json",
+    "exitCode": 1,
+    "stableAcrossCollection": true,
+    "unmetChecks": [
+      "fast-new-conversation declared positive answer marker present"
+    ],
+    "modelCalls": 0,
+    "mutations": 0
+  },
+  "coverageLimits": {
+    "cliFreshGeneratedReplies": "NOT_RUN_ON_E9",
+    "chatFreshGeneratedReply": "NOT_RUN_ON_E9; retained successful browser run attached/reconnected",
+    "readonlyToolApproval": "NOT_RUN_ON_E9",
+    "latencyAcceptance": false,
+    "newRankingRepairHosted": "NOT_RUN"
+  },
+  "cleanup": {
+    "directLauncherExit": 130,
+    "receipt": "memory-effort-compact-native-cleanup-1792039305148.json",
+    "checks": 21,
+    "targetContainerPrivateFilesAndOwnedProcessesAbsent": true,
+    "ownedChatServerAlsoAbsent": true,
+    "userDocs3367Untouched": true
+  }
+}
