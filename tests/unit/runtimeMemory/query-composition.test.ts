@@ -4,6 +4,7 @@ import {getFunctionName} from 'convex/server';
 import {ConvexError} from 'convex/values';
 import type {Id} from '../../../convex-dev/_generated/dataModel';
 import type {EmbeddingModelV4} from '@ai-sdk/provider';
+import type {DerivedFact} from '../../../src/domain/contracts';
 import type {MutationCtx,ActionCtx} from '../../../convex-dev/_generated/server';
 import {canonicalModelJson} from '../../../src/domain/model-policy';
 import {DEFAULT_EMBEDDING_PROFILE as profile} from '../../../src/domain/profile';
@@ -32,6 +33,7 @@ const query=await import('../../../convex-dev/runtimeMemoryQuery');
 const memory=await import('../../../convex-dev/runtimeMemory');
 const auth=await import('../../../convex-dev/runtimeAuth');
 const {ConvexMemoryRepository,createActionMemoryRepository}=await import('../../../convex-dev/runtimeMemoryRepository');
+const {replaceFactEntityLinks}=await import('../../../convex-dev/runtimeMemoryTraversal');
 const {readCurrentEmbeddingProfile,resolveHandler}=await import('../../../convex-dev/runtimeModelPolicy');
 const {createGatewayMemoryModel}=await import('../../../convex-dev/runtimeMemoryGateway');
 const {recallMemory}=await import('../../../convex-dev/runtimeMemoryServices');
@@ -312,13 +314,13 @@ it("actual public recall delivers literal direct evidence and supporting depth2 
  expect(result.items).toEqual(expect.arrayContaining([expect.objectContaining({id:"direct-public-fact-0",content:"User favorite season is autumn",retrieval:expect.objectContaining({depth:1})}),expect.objectContaining({type:"memory",retrieval:expect.objectContaining({depth:2})})]));
  expect(result.memoryEffort).toMatchObject({retrievalRoute:"direct-facts-v1",maxEntries:4,maxDepth:2});expect(calls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(before);expect(f.rpc).not.toContain("runtimeMemoryQuery:admit");
 });
-async function projectedPublicFixture(maxEntries=4,sourceContent="My favorite fruit is apricot.",queryText="What is my favorite fruit?",unstructured?:"contradiction"|"canonical-mismatch"){
+async function projectedPublicFixture(maxEntries=4,sourceContent="My favorite fruit is apricot.",queryText="What is my favorite fruit?",unstructured?:"contradiction"|"canonical-mismatch",singleSearchHit=false){
  const f=await fixture(true,"fast",queryText,maxEntries),writer=new ConvexMemoryRepository(f.ctx,f.reference,"write",f.ctx.db),source=await f.source(sourceContent,"projected-public"),lineage=source.lineage;
  const base={_id:"",tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!,ownerPrincipalId:f.reference.principalId,lineage,extractionPolicyVersion:"observed-projection-v1",subject:"User",factType:"preference" as const,confidence:91,sourceType:"manual" as const,tags:[],version:1,createdAt:clock,updatedAt:clock};
  const facts=unstructured?["apricot",unstructured==="contradiction"?"pear":"apricot"].map((value,index)=>({...base,factId:`unstructured-public-${index}`,fact:`My favorite fruit is ${value}.`,subject:undefined}))
  :[{...base,factId:"projected-exact",fact:"User's favorite fruit is apricot.",predicate:"is_favorite_fruit",object:"apricot"},
-  {...base,factId:"projected-likes",fact:"User likes fruit.",predicate:"likes",object:"fruit"},
-  {...base,factId:"projected-general",fact:"User stated a specific preference for a type of fruit.",predicate:"has_a_preference_for",object:"apricot"}];
+  {...base,factId:"projected-likes",fact:singleSearchHit?"User likes apricot.":"User likes fruit.",predicate:"likes",object:singleSearchHit?"apricot":"fruit"},
+  ...(singleSearchHit?[]:[{...base,factId:"projected-general",fact:"User stated a specific preference for a type of fruit.",predicate:"has_a_preference_for",object:"apricot"}])];
  await writer.commitDerived({source:lineage,identity:{...lineage,stage:"facts",semanticPolicyVersion:base.extractionPolicyVersion},facts,expectedFactVersions:Object.fromEntries(facts.map(fact=>[fact.factId,0]))});
  // This DB fixture's substring search treats the terminal '?' as part of a
  // token. The actual hosted index returned all three fruit projections. Keep
@@ -333,6 +335,39 @@ async function projectedPublicFixture(maxEntries=4,sourceContent="My favorite fr
   });return builder;
  });return f;
 }
+it("public recall proves one search hit before real indexed adjacency discovers its compatible value projection",async()=>{
+ const f=await projectedPublicFixture(4,undefined,undefined,undefined,true),repository=new ConvexMemoryRepository(f.ctx,f.reference,"read");
+ const initial=await repository.searchFactCandidates(f.input.text,f.input.limit);expect(initial.facts.map(fact=>fact.factId)).toEqual(["projected-exact"]);expect(initial.candidateWorkBound).toBe(false);
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(result.items.filter(item=>item.type==="fact").map(item=>item.id).sort()).toEqual(["projected-exact","projected-likes"]);
+ expect(result.items.find(item=>item.id==="projected-likes")?.retrieval).toMatchObject({depth:2,path:["fact:projected-exact","fact:projected-likes"]});
+ expect(result.items.find(item=>item.type==="memory")?.content).toBe("My favorite fruit is apricot.");
+ expect(result.memoryEffort).toMatchObject({retrievalRoute:"direct-facts-v1",maxDepth:2,maxEntries:4,entriesByKind:{fact:2,memory:1}});
+ expect(calls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);expect(f.rpc).not.toContain("runtimeMemoryQuery:admit");
+});
+it.each(["wrong-value","negation","unknown","history","missing-object","different-source","entries"])("public one-hit adjacency %s preserves governed fallback before dropping discovered evidence",async fault=>{
+ const f=await projectedPublicFixture(fault==="entries"?1:4,undefined,undefined,undefined,true),row=f.db.table("facts").find(value=>value.factId==="projected-likes")!;
+ if(fault==="wrong-value")Object.assign(row,{fact:"User likes pear.",object:"pear"});if(fault==="negation")row.fact="User does not like apricot.";
+ if(fault==="unknown")row.fact="User enjoys apricot.";if(fault==="history")row.supersedes="older";if(fault==="missing-object")delete row.object;
+ if(fault==="different-source"){const source=await f.source("User likes apricot.","other-one-hit-source");row.lineage=source.lineage;}
+ await replaceFactEntityLinks(f.ctx.db,row as unknown as DerivedFact);
+ const initial=await new ConvexMemoryRepository(f.ctx,f.reference,"read").searchFactCandidates(f.input.text,f.input.limit);expect(initial.facts.map(fact=>fact.factId)).toEqual(["projected-exact"]);
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(result.memoryEffort?.retrievalRoute).toBe("semantic-v1");expect(calls).toBe(1);expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+ if(fault==="entries"){expect(result.items).toHaveLength(1);expect(result.memoryEffort?.stopReasons).toContain("entries");}
+ expect(f.rpc.indexOf("runtimeModelPolicy:captureTerminalEvidence")).toBeLessThan(f.rpc.indexOf("runtimeModelPolicy:attachTerminalResult"));
+});
+it.each(["revoke","expire-fact","edit-source","delete-source"])("public one-hit source proof retains the fresh final %s fence",async fault=>{
+ const f=await projectedPublicFixture(4,undefined,undefined,undefined,true),original=ConvexMemoryRepository.prototype.checkDelivery;
+ const delivery=jest.spyOn(ConvexMemoryRepository.prototype,"checkDelivery").mockImplementation(async function(this:InstanceType<typeof ConvexMemoryRepository>,bindings,authority){
+  expect(bindings.facts.map(fact=>fact.factId).sort()).toEqual(["projected-exact","projected-likes"]);expect(bindings.sources.length).toBeGreaterThan(0);
+  if(fault==="revoke")f.grant.revokedAt=clock;if(fault==="expire-fact")f.db.table("facts").find(value=>value.factId==="projected-likes")!.validUntil=clock;
+  if(fault==="edit-source")f.db.table("runtimeMemorySources")[0]!.contentHash="f".repeat(64);
+  if(fault==="delete-source")f.db.table("runtimeMemorySources")[0]!.tombstonedAt=clock;return original.call(this,bindings,authority);
+ });
+ await expect(invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId})).rejects.toThrow();
+ expect(delivery).toHaveBeenCalledTimes(1);expect(calls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
 it("public recall proves the observed three current projections against their actual one-assertion source without query embedding",async()=>{
  const f=await projectedPublicFixture(),candidates=await new ConvexMemoryRepository(f.ctx,f.reference,"read").searchFactCandidates(f.input.text,f.input.limit);
  expect(candidates.facts).toHaveLength(3);expect(candidates.candidateWorkBound).toBe(false);

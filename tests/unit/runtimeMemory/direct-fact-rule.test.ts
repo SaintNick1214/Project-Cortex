@@ -97,6 +97,42 @@ const projections:DerivedFact[]=[observed,
   {...observed,factId:"likes",fact:"User likes fruit.",predicate:"likes",object:"fruit"},
   {...observed,factId:"general",fact:"User stated a specific preference for a type of fruit.",predicate:"has_a_preference_for",object:"apricot"}];
 const sourceProof=(facts:DerivedFact[]=projections,source=literalSource,version?:1)=>proveDirectFactLookup("What is my favorite fruit?",{facts,candidateWorkBound:false},observed.createdAt,version,source);
+it("prefers a pinned canonical proof for one initial hit before compatible value projection traversal",()=>{
+ const candidates={facts:[observed],candidateWorkBound:false},query="What is my favorite fruit?",now=observed.createdAt;
+ const later={...observed,factId:"later-likes",fact:"User likes apricot.",predicate:"likes",object:"apricot"};
+ expect(directFactLookupSourceId(query,candidates,now,1)).toBe(literalSource.lineage.sourceId);
+ const proof=proveDirectFactLookup(query,candidates,now,1,literalSource)!;expect(proof.source).toEqual(literalSource);
+ expect(directFactProofCompatible(proof,[observed,later],now)).toBe(true);
+ expect(directFactLookupSourceId(query,candidates,now)).toBeUndefined();
+ const legacy=proveDirectFactLookup(query,candidates,now,undefined,literalSource)!;expect(legacy).toEqual({seed:observed});
+ expect(directFactProofCompatible(legacy,[later],now)).toBe(false);
+ expect(proveDirectFactLookup(query,candidates,now,1)).toEqual(legacy);
+ expect(proveDirectFactLookup(query,candidates,now,1,{...literalSource,content:"Please acknowledge my favorite fruit."})).toEqual(legacy);
+});
+it.each([
+ {name:"wrong value",change:{fact:"User likes pear.",object:"pear"}},
+ {name:"metadata mismatch",change:{object:"pear"}},
+ {name:"negation",change:{fact:"User does not like apricot."}},
+ {name:"unknown assertion",change:{fact:"User enjoys apricot."}},
+ {name:"other lineage",change:{lineage:{...observed.lineage,sourceId:"other"}}},
+ {name:"history",change:{supersedes:"older"}},
+ {name:"missing subject",change:{subject:undefined}},
+ {name:"missing predicate",change:{predicate:undefined}},
+ {name:"missing object",change:{object:undefined}},
+])("singleton source proof refuses a newly discovered $name projection",({change})=>{
+ const proof=sourceProof([observed],literalSource,1)!;
+ expect(proof.source).toEqual(literalSource);
+ expect(directFactProofCompatible(proof,[{...observed,factId:"later-likes",fact:"User likes apricot.",predicate:"likes",...change}],observed.createdAt)).toBe(false);
+});
+it.each(["subject","predicate","object"] as const)("unstructured singleton %s retains the old rule without a prospective source read",field=>{
+ for(const missing of [undefined,""," ","!!!"]){
+  const candidates={facts:[{...observed,[field]:missing}],candidateWorkBound:false};
+  expect(directFactLookupSourceId("What is my favorite fruit?",candidates,observed.createdAt,1)).toBeUndefined();
+  const proof=proveDirectFactLookup("What is my favorite fruit?",candidates,observed.createdAt,1,literalSource);
+  expect(proof?.source).toBeUndefined();
+  expect(proof!==undefined).toBe(sufficientDirectFactLookup("What is my favorite fruit?",candidates,observed.createdAt));
+ }
+});
 it("only the new source-proof pin admits the observed three projections of one exact canonical assertion",()=>{
  expect(sourceProof()).toBeUndefined();expect(sufficientDirectFactLookup("What is my favorite fruit?",{facts:projections,candidateWorkBound:false},observed.createdAt)).toBe(false);
  const proof=sourceProof(projections,literalSource,1);expect(proof?.seed.factId).toBe(observed.factId);expect(proof?.source).toEqual(literalSource);

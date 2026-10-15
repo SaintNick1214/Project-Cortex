@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "LITERAL_SOURCE_V2_ACCEPTED_PACKAGING_NEXT",
+  "phase": "SINGLETON_ACCEPTED_SOURCE_BUILD_CONTRACTS_PACKAGING_NEXT",
   "complete": 4,
   "total": 6,
   "percent": 66.7,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-15T08:09:02.608908+00:00",
+  "updatedAt": "2026-10-15T08:48:33.141659+00:00",
   "metricVersion": 3,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -75,38 +75,38 @@
   },
   "currentEnvironment": {
     "state": "CLEANED",
-    "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
-    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
-    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-budget-2026-10-15",
+    "sessionId": "04ab48d4-6995-4d90-9a20-5935787e58f2",
+    "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-literal-2026-10-15",
     "target": {
-      "id": 6188142,
-      "name": "woozy-whale-679",
+      "id": 6189484,
+      "name": "impartial-stoat-767",
       "kind": "cloud",
       "teamId": 325340,
       "projectId": 3200658,
-      "reference": "dev/cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+      "reference": "dev/cortex-sandbox-04ab48d4-6995-4d90-9a20-5935787e58f2",
       "deploymentType": "dev",
       "isDefault": false,
-      "expiresAt": 1792651810024,
-      "deploymentUrl": "https://woozy-whale-679.convex.cloud",
+      "expiresAt": 1792656777783,
+      "deploymentUrl": "https://impartial-stoat-767.convex.cloud",
       "disposable": true,
       "serverExpiryVerified": true
     },
     "container": {
-      "name": "cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
-      "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
+      "name": "cortex-sandbox-04ab48d4-6995-4d90-9a20-5935787e58f2",
+      "imageId": "sha256:1856464478b4b8820262b724db678d2c08e4505d7774db1263efce0e6cda6a92",
       "labels": {
-        "dev.cortex.disposable-sandbox": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
-        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/75310545-3b70-46e5-884d-bcd2cc97e0e9"
+        "dev.cortex.disposable-sandbox": "04ab48d4-6995-4d90-9a20-5935787e58f2",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/04ab48d4-6995-4d90-9a20-5935787e58f2"
       },
-      "id": "31c0c259afbaa2a507f28cc35e8e843630e9744f5980f49c98b5adad4645e26d"
+      "id": "dec6decc762559bdcaddbeda1104be088ef4f4c528d8f2f7c782215947d5478b"
     },
     "ports": {
-      "web": 3390,
-      "basic": 3391
+      "web": 3124,
+      "basic": 3125
     },
-    "launcherPid": 16003,
-    "rootExecSession": 53396,
+    "launcherPid": 31978,
+    "rootExecSession": 51160,
     "startupFixedQualification": "8/8ACTUAL_PASS",
     "startupBatch": {
       "actualSuccessfulMethods": 8,
@@ -115,66 +115,77 @@
       "activeConcurrency": 0,
       "aggregateUsdComplete": false,
       "perRunHumanReview": false,
-      "procedureApprovalDigest": "319378726e5ceb92b35e28c24f798dbd0e949fe37af04d0199817c54ca4449b0",
+      "procedureApprovalDigest": "d9e23f3e3ab9c0a07d57192846d24bec1a937a9bb02e9c651729176b4e98d814",
       "immutableProcedureReviewedBeforeRun": true,
       "freshActualOutcomes": true,
       "oldQualificationDatesReused": false
     },
-    "startupBatchSha256": "99db18e3895d4330e3feb80007540293e02973fc74e83781cc0ddd06f106f884",
+    "startupBatchSha256": "44ca9bd90d871361685040bbc2e2522999b9b4a75f8bf61bfc5aabcfc7501f05",
     "startupStrictEmptyQuestion": true,
-    "startupExtractionSha256": "de42cc7d0c501618d4cadf0a31a508af880f78aa96ec749a6be878da25e29cc7",
-    "runtimeReadySha256": "243d568c530ddc2af2f4727b40c26081a6cce126813a512e2958b3eb2054343b",
+    "startupExtractionSha256": "55c0b1a39a840ff219d0875084592a00b0c52454ae223879946e0421ff3dbfe8",
+    "runtimeReadySha256": "0fc1c1a6c07129900aee1aaef778661d51d9fa73c046c96392f9196ef164c522",
     "managedDefaultProfile": true,
     "capabilities": {
       "inputSelectionVersion": 2,
       "memoryEffortPolicyVersion": 1
     },
     "healthStatus": 200,
-    "readyAt": "2026-10-15T06:53:08.585Z",
+    "readyAt": "2026-10-15T08:16:32.248Z",
     "effortProfileRuntimeAcceptance": false,
-    "manifestSha256": "fc3a3b698b252abc2bdda8616a1b5d151174adc18bb3c674c7696d5effb621ff",
-    "backendManifestSha256": "3c81c8504fdd31e28c49945bffae5268dd60c4001a3d38ca7fa51abdf7fa7ba7",
+    "manifestSha256": "c90ca5d7e733e2dbfef68cd6a0e775c453a65d6a8657ba4b0d02a3ebee014b1a",
+    "backendManifestSha256": "eebdb256de455f2680fabf391b8a35584ab04d137864017d041f141881916b61",
     "backendFileCount": 174,
     "modelCalls": 0,
-    "readyMetadataHistoricalOnly": true,
-    "windowState": "CLOSED",
-    "cleanupReceipt": "memory-effort-budget-native-cleanup-1792049188217.json",
-    "cleanupFreshChecks": 21,
-    "cleanupPassedChecks": 21,
-    "originalLauncherActualExit": 130,
-    "currentLiveTarget": false,
-    "closedAt": "2026-10-15T07:26:28.445000+00:00",
-    "finalEvaluation": "memory-effort-budget-final-evaluation.json"
+    "cleanup": {
+      "receipt": "memory-effort-literal-cleanup-1792053354195.json",
+      "checks": 21,
+      "status": "ABSENT",
+      "originalLauncherExit": 130,
+      "originalLauncherJoined": true
+    }
   },
   "actualSamples": {
-    "generation": "memory-effort-budget-c258",
-    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "generation": "memory-effort-literal-862",
+    "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
     "browserFirstAfterPaintMs": [
-      3378.6,
-      3946.4,
-      6046.7,
-      5911.8,
-      7329.5,
-      5245.1
+      3293.100000000559,
+      3096.399999999441,
+      6344.4000000003725,
+      6745.5,
+      6861,
+      6291.600000000559
     ],
     "browserRecallQuestionsCorrect": "5/5",
     "browserTimingTargetsMet": "3/6",
-    "seedLiteralMarkerPresent": false,
-    "cliFirstPrintedMs": [
-      7807.05392,
-      6682.274253
-    ],
-    "cliCorrect": "2/2",
-    "cliTimingTargetsMet": "0/2",
     "responsesAndMemoryComplete": true,
     "requiredIntegrationAccepted": false,
-    "finalVerifierExit": 1,
-    "finalSatisfiedChecks": 247,
-    "finalUnmetChecks": [
-      "normal-seed declared positive answer marker present"
-    ],
-    "environmentState": "CLEANED",
-    "finalEvaluation": "memory-effort-budget-final-evaluation.json"
+    "browserReceipt": "memory-effort-literal-browser-summary.json",
+    "diagnostic": "Initial exact singleton search result bypassed new canonical source proof; source-adjacent User likes apricot triggers semantic fallback. Actual quiet metadata and logs retained.",
+    "browserSignedOut": true,
+    "browserTabClosed": true,
+    "nativeCurrentCandidate": {
+      "status": "PASS663",
+      "receipt": "memory-effort-literal-native-regression-1792053131973.json",
+      "realEffortDepths": [
+        2,
+        4,
+        8,
+        13
+      ],
+      "allClientsClosed": true,
+      "latencyAcceptance": false
+    },
+    "finalFinance": {
+      "receipt": "memory-effort-literal-finance-after-1792053270064.json",
+      "uniqueOperations": 47,
+      "uniqueFirstAttempts": 47,
+      "uncertainUnits": 6600000,
+      "settledUnits": 0,
+      "activeConcurrency": 0,
+      "reservedUnits": 0,
+      "aggregateUsdComplete": false
+    },
+    "cleanup": "memory-effort-literal-cleanup-1792053354195.json"
   },
   "pendingRepairs": [
     "Current c258 Fast recent/cross and populated Normal browser timing misses, plus both Normal CLI timing misses; bounded literal lookup/preparation repair is in progress under /root/literal_lookup_latency.",
@@ -618,19 +629,15 @@
     }
   ],
   "nextCandidate": {
-    "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
-    "generation": "K16",
-    "sourcePercent": 100,
-    "packagingPercent": 100,
-    "cloudPercent": 0,
-    "sourceReview": "native-transcript-read-source-review.md",
-    "imageId": "sha256:b6348f112d76399d79c1b2bdd10ec1499cb9b70291e297192496a27199b1748b",
-    "sessionId": "c530728c-fdc2-4876-8690-13317e55ef8d",
-    "launcherTests": {
-      "passed": 105,
-      "failed": 0,
-      "skipped": 0
-    }
+    "baseCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+    "sourceReview": "memory-effort-singleton-independent-review.json",
+    "sourceVerdict": "PASS4.0_SOURCE_ONLY",
+    "breakingFindings": 0,
+    "tests": "371/371 across6suites,0skips,naturalexit0",
+    "rootBuildExit": 0,
+    "contractsExit": 0,
+    "installed": "NOT_YET_RUN",
+    "latencyAcceptance": false
   },
   "actualSampleHistory": [
     {
@@ -2107,7 +2114,70 @@
     "goalAcceptance": false,
     "currentOwnedEnvironment": null
   },
-  "currentOwnedEnvironment": null,
+  "currentOwnedEnvironment": {
+    "state": "READY",
+    "sessionId": "04ab48d4-6995-4d90-9a20-5935787e58f2",
+    "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-literal-2026-10-15",
+    "target": {
+      "id": 6189484,
+      "name": "impartial-stoat-767",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-04ab48d4-6995-4d90-9a20-5935787e58f2",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1792656777783,
+      "deploymentUrl": "https://impartial-stoat-767.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    "container": {
+      "name": "cortex-sandbox-04ab48d4-6995-4d90-9a20-5935787e58f2",
+      "imageId": "sha256:1856464478b4b8820262b724db678d2c08e4505d7774db1263efce0e6cda6a92",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "04ab48d4-6995-4d90-9a20-5935787e58f2",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/04ab48d4-6995-4d90-9a20-5935787e58f2"
+      },
+      "id": "dec6decc762559bdcaddbeda1104be088ef4f4c528d8f2f7c782215947d5478b"
+    },
+    "ports": {
+      "web": 3124,
+      "basic": 3125
+    },
+    "launcherPid": 31978,
+    "rootExecSession": 51160,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "d9e23f3e3ab9c0a07d57192846d24bec1a937a9bb02e9c651729176b4e98d814",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "44ca9bd90d871361685040bbc2e2522999b9b4a75f8bf61bfc5aabcfc7501f05",
+    "startupStrictEmptyQuestion": true,
+    "startupExtractionSha256": "55c0b1a39a840ff219d0875084592a00b0c52454ae223879946e0421ff3dbfe8",
+    "runtimeReadySha256": "0fc1c1a6c07129900aee1aaef778661d51d9fa73c046c96392f9196ef164c522",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T08:16:32.248Z",
+    "effortProfileRuntimeAcceptance": false,
+    "manifestSha256": "c90ca5d7e733e2dbfef68cd6a0e775c453a65d6a8657ba4b0d02a3ebee014b1a",
+    "backendManifestSha256": "eebdb256de455f2680fabf391b8a35584ab04d137864017d041f141881916b61",
+    "backendFileCount": 174,
+    "modelCalls": 0
+  },
   "installedNativeFindings": [
     {
       "code": "C258_HOSTED_LATENCY_TARGETS_MISSED",
@@ -3785,7 +3855,7 @@
     }
   },
   "literalCandidate": {
-    "state": "SOURCE_V2_ACCEPTED",
+    "state": "INSTALLED_CLOUD_QUALIFICATION_ACTIVE",
     "baseCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
     "hashes": "memory-effort-literal-source-hashes-v2.json",
     "implementation": "memory-effort-literal-report-v2.json",
@@ -3811,6 +3881,31 @@
     "priorReviewVerdict": "NEEDS_FIXES",
     "findingStatus": "LSR-1 independentlyclosed; original NEEDS FIXES retained",
     "buildStatus": "PASS",
-    "contractsStatus": "PASS"
+    "contractsStatus": "PASS",
+    "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+    "pushedTo": "Entire cortex-memory/cortex",
+    "commitReceipt": "memory-effort-literal-commit-and-push.json",
+    "packageState": "PASS",
+    "sdkSnapshot": "memory-effort-literal-package-root-sdk-snapshot.json",
+    "packageReceipt": "memory-effort-literal-package-report.json",
+    "launcherIntegration": "memory-effort-literal-package-checks/launcher-integration-final-receipt.json",
+    "offlineLauncherTests": {
+      "passed": 134,
+      "failed": 0,
+      "skipped": 0
+    },
+    "nativeAcceptance": false,
+    "readyReceipt": "memory-effort-literal-environment-ready.json",
+    "traceReceipt": "memory-effort-literal-kit-backend-trace-enabled.json",
+    "browserSummary": "memory-effort-literal-browser-summary.json",
+    "observedBrowserCases": 2,
+    "browserTimingMet": 1,
+    "firstTwoBrowserTimesMs": [
+      3293.1,
+      3096.4
+    ],
+    "initialFastMissMs": 96.4,
+    "sourceOptimizationRuntimeAcceptance": "PENDING; recent-contextcase containsno newmulti-factpathclaim",
+    "currentCloudGate": "NOT_ACCEPTED"
   }
 }

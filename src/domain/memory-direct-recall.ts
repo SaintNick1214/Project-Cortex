@@ -48,16 +48,17 @@ function sameFactSource(fact: DerivedFact, source: Pick<DerivedFact,"tenantId"|"
 function neutralLiteralProjection(fact: DerivedFact, seed: DerivedFact): boolean {
   const head = literalAssertionHead(seed.fact), category = head?.match(/^self:favorite ([\p{L}\p{N}]+)$/u)?.[1];
   if (!category || !fact.object || !fact.predicate || !["user", "the user", "i", "me", "my", words(fact.ownerPrincipalId).join(" ")].includes(words(fact.subject ?? "").join(" "))) return false;
-  const statement = words(fact.fact).join(" "), predicate = words(fact.predicate).join(" "), object = words(fact.object).join(" ");
-  return selfPrefixes.some(prefix => statement === `${prefix} likes ${category}` && predicate === "likes" && object === category
-    || statement === `${prefix} stated a specific preference for a type of ${category}` && predicate === "has a preference for" && object === words(seed.object ?? "").join(" "));
+  const statement = words(fact.fact).join(" "), predicate = words(fact.predicate).join(" "), object = words(fact.object).join(" "), value = words(seed.object ?? "").join(" ");
+  return selfPrefixes.some(prefix => predicate === "likes" && (statement === `${prefix} likes ${category}` && object === category
+      || statement === `${prefix} likes ${value}` && object === value)
+    || statement === `${prefix} stated a specific preference for a type of ${category}` && predicate === "has a preference for" && object === value);
 }
 function compatibleLiteralProjection(text: string, seed: DerivedFact, fact: DerivedFact, now: number): boolean {
   return structuredLiteralValue(seed) && structuredLiteralValue(fact) && pristineFact(fact, now) && sameFactSource(fact, seed)
     && (literalPropertyEvidence(text, fact, now) && words(fact.object).join(" ") === words(seed.object).join(" ") || neutralLiteralProjection(fact, seed));
 }
 function sourceProofSeed(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number, version?: 1): DerivedFact | undefined {
-  if (version !== 1 || text.length > 1024 || candidates.candidateWorkBound || candidates.facts.length < 2) return undefined;
+  if (version !== 1 || text.length > 1024 || candidates.candidateWorkBound || candidates.facts.length === 0) return undefined;
   const seed = candidates.facts.find(fact => structuredLiteralValue(fact) && pristineFact(fact, now) && literalPropertyEvidence(text, fact, now));
   return seed && seed.lineage.sourceRevision === 1 && candidates.facts.every(fact => compatibleLiteralProjection(text, seed, fact, now)) ? seed : undefined;
 }
@@ -71,13 +72,16 @@ export function directFactLookupSourceId(text: string, candidates: { facts: read
  * still traversed/bound; this never removes facts or relaxes output/work bounds. */
 export function proveDirectFactLookup(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number,
   version?: 1, source?: SourceContent): DirectFactLookupProof | undefined {
-  if (sufficientDirectFactLookup(text, candidates, now)) return { seed: candidates.facts[0]! };
+  // New snapshots can start from one search hit and discover another projection
+  // through an indexed edge. Prefer a verified source proof before traversal;
+  // absent/older pins and unavailable proofs retain the original singleton rule.
+  const singleton = sufficientDirectFactLookup(text, candidates, now) ? { seed: candidates.facts[0]! } : undefined;
   const seed = sourceProofSeed(text, candidates, now, version);
   if (!seed || !source || source.tombstonedAt !== undefined || source.lineage.sourceRevision !== 1
-    || !/^[a-f0-9]{64}$/.test(source.contentHash) || !/^[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?(?: [\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?)*\.?$/u.test(source.content)) return undefined;
-  if (!sameFactSource(seed, source) || !literalPropertyEvidence(text, { ...seed, fact: source.content }, now)) return undefined;
+    || !/^[a-f0-9]{64}$/.test(source.contentHash) || !/^[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?(?: [\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?)*\.?$/u.test(source.content)) return singleton;
+  if (!sameFactSource(seed, source) || !literalPropertyEvidence(text, { ...seed, fact: source.content }, now)) return singleton;
   const proof = { seed, source, query: text };
-  return directFactProofCompatible(proof, candidates.facts, now) ? proof : undefined;
+  return directFactProofCompatible(proof, candidates.facts, now) ? proof : singleton;
 }
 /** Called for every discovered current fact BEFORE entry/queue shedding. */
 export function directFactProofCompatible(proof: DirectFactLookupProof, facts: readonly DerivedFact[], now: number): boolean {

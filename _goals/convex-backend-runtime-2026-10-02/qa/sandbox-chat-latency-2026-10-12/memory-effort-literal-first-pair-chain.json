@@ -1,0 +1,759 @@
+{
+  "version": 1,
+  "status": "ACTUAL_FIRST_PAIR_ANALYSIS_NORMAL_PASS_FAST_MISS",
+  "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+  "sessionId": "04ab48d4-6995-4d90-9a20-5935787e58f2",
+  "scope": "Two exact initial literal-candidate browser outcomes only; Root continues other modes independently. No new source edits, services, inference, builds or reviews.",
+  "serviceCalls": 0,
+  "modelCalls": 0,
+  "sourceWrites": 0,
+  "inputReceipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-browser-normal-seed.logs.json",
+      "sha256": "c65140818c81d3f17a266cecdbd2f94b3cb7b85baee8019839c2806d970b47ec",
+      "bytes": 39702,
+      "immutableForAnalysis": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-browser-fast-recent.logs.json",
+      "sha256": "d3689333abd8b5d8636a362fa40757bc3b9d42eeccf8430a513dcf1a8ff265c5",
+      "bytes": 64965,
+      "immutableForAnalysis": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-service-log-snapshot-browser-post-pair-1792052437632.json",
+      "sha256": "66f324ba4f7c8147d05d6489349995c398d0f17e0b19602b68c0ab38cdfdd124",
+      "bytes": 510807,
+      "immutableForAnalysis": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-latency-phase-projection.mjs",
+      "sha256": "6bb27bc511e000a0f7c091a12827659096e322c816a4cb56804a66fda104312f",
+      "bytes": 619,
+      "immutableForAnalysis": true
+    }
+  ],
+  "mutableSummaryRead": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-browser-summary.json",
+    "sha256AtRead": "ddedbdc868387f6a6298eeb7ec80765a2bac4efd5600bcf2d254e7f04637d067",
+    "selectedLabelsOnly": [
+      "normal-seed",
+      "fast-recent"
+    ],
+    "caution": "Root may append later samples; analysis freezes these two exact run IDs, not the whole mutable summary."
+  },
+  "sourceReadHashes": {
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "convex-dev/runtimeAuth.ts": "4b82c9e7f73eeaa373ed65e4b43d67c2711a8b7232ef6183e9e3505f4046a605",
+    "convex-dev/runs.ts": "b4fb8141c5ce43302e199850c34a42b02dd8d08d8dba3b8bbc887296151d86bb",
+    "convex-dev/runtimeModelPolicy.ts": "d77e06cf03354d95790dfd84cee1711256995558379f3edfefaf7fa38240a2a3",
+    "convex-dev/runtimeGateway.ts": "ae204b07ca0d930f63c5657bd5cdddd5af0c3a5453ce3c213a3caa0e99d9545d",
+    "convex-dev/runtimeGatewayBackend.ts": "f8c5377968951e226cc7554fda17c03c4571ae7bc180ade46c00d91ab323fd3c",
+    "convex-dev/runtimeLatencyTrace.ts": "b0e8b390bc5dd3f7facfc8ce0a6a572d15379bac8fd40a56b12f9d68f7ad8b07",
+    "src/client-runtime/client.ts": "f72e74f557fc690c2a4439df082b55bbae2c65589b7bd32927ad06b5d9316921"
+  },
+  "runs": [
+    {
+      "label": "normal-seed",
+      "runId": "run:72a3efefb73ccc54692be341da7a0bcd8e14408378ea4b1c2c560bfe98b56f8e",
+      "effort": "normal",
+      "targetMs": 6000,
+      "firstAfterPaintMs": 3293.100000000559,
+      "withinTarget": true,
+      "targetMissMs": 0,
+      "correctness": {
+        "answerMarker": null,
+        "answerMarkerPresent": null,
+        "responseComplete": true,
+        "memoryComplete": true
+      },
+      "identityJoin": {
+        "actionExecutionId": "128b6cb8-5004-4f4b-ac83-5873eccaa038",
+        "parentRequestId": "bb40e03c835aeb63",
+        "preparationExecutionId": "b395c9a1-8a55-4680-8262-ee411fbcc747",
+        "admissionEnvelopeExecutionId": "ef2fcd5d-1bd9-4196-bbb8-cd3e9d87c60c",
+        "runBudgetId": "d01dc007d8933005e2a355d440345c53873ea01ff2b998e8700130d9d29c6259",
+        "semanticId": "sha256:21da77116da2b73edadedb3aa0afa308bc29df8dde9bdf5a3ad2b902bf031890",
+        "proof": "Exact raw runId traces identify Action and admission executions. Action completion requestId selects native children. Gateway operationKey+semanticId+executionId bind the main response; client RPC pairing uses its own rpcId, not invented native request IDs."
+      },
+      "browserClockPartition": {
+        "admissionDeliveredMs": 1026,
+        "admissionToFirstDomMs": 2251.800000000745,
+        "domToAfterPaintMs": 15.299999999813735,
+        "sumMs": 3293.100000000559,
+        "visibility": "visible"
+      },
+      "clientClock": {
+        "authDuringMeasuredSubmission": false,
+        "envelope": {
+          "rpcId": 11,
+          "method": "runtimeClient:submitAndStartEnvelope",
+          "atMsBegin": 66085.59999999963,
+          "atMsEnd": 66741.89999999944,
+          "durationMs": 656.2999999998137
+        },
+        "postAdmissionFreshSession": {
+          "rpcId": 12,
+          "method": "runtimeClient:session",
+          "atMsBegin": 66742.39999999944,
+          "atMsEnd": 67104.79999999981,
+          "durationMs": 362.40000000037253
+        },
+        "admissionResidualOutsideEnvelopeAndSessionMs": 7.2999999998137355,
+        "observesBeforePaint": [
+          {
+            "rpcId": 13,
+            "method": "runtimeClient:observeEnvelope",
+            "atMsBegin": 67107.70000000019,
+            "atMsEnd": 67565.5,
+            "durationMs": 457.79999999981374
+          },
+          {
+            "rpcId": 15,
+            "method": "runtimeClient:observeEnvelope",
+            "atMsBegin": 68949.29999999981,
+            "atMsEnd": 69170.70000000019,
+            "durationMs": 221.40000000037253
+          }
+        ],
+        "sessionsBeforePaint": [
+          {
+            "rpcId": 12,
+            "method": "runtimeClient:session",
+            "atMsBegin": 66742.39999999944,
+            "atMsEnd": 67104.79999999981,
+            "durationMs": 362.40000000037253
+          },
+          {
+            "rpcId": 14,
+            "method": "runtimeClient:session",
+            "atMsBegin": 67566.70000000019,
+            "atMsEnd": 67755.59999999963,
+            "durationMs": 188.8999999994412
+          },
+          {
+            "rpcId": 16,
+            "method": "runtimeClient:session",
+            "atMsBegin": 69171.70000000019,
+            "atMsEnd": 69349.89999999944,
+            "durationMs": 178.19999999925494
+          }
+        ],
+        "allClientEventsMonotonicWithinBrowserPage": true,
+        "caution": "RPC durations and browser elapsed values are same-page monotonic intervals with different origins; only ordered admission envelope+post-session residual is subtracted. Server spans overlap these client intervals."
+      },
+      "preparation": {
+        "actionAwaitWallMs": 436,
+        "native": {
+          "function": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "b395c9a1-8a55-4680-8262-ee411fbcc747",
+          "requestId": "bb40e03c835aeb63",
+          "serverStartMs": 1792052279025.0,
+          "serverCompletionMs": 1792052279455.1663,
+          "nativeExecutionMs": 418.463383,
+          "usage": {
+            "databaseReadBytes": 245888,
+            "databaseWriteBytes": 13075,
+            "databaseIoReadBytes": 245888,
+            "databaseIoWriteBytes": 13075,
+            "databaseReadDocuments": 163,
+            "databaseWriteDocuments": 4,
+            "databaseWriteIndexRows": 18,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "occInfo": null,
+          "errorPresent": false,
+          "cachedResult": false
+        },
+        "stages": [
+          {
+            "phase": "prepareDirect.context-lifecycle",
+            "durationMs": 10.800000000046566,
+            "nativeExecutionId": "b395c9a1-8a55-4680-8262-ee411fbcc747",
+            "beginDateNow": 1792052279025,
+            "endDateNow": 1792052279025
+          },
+          {
+            "phase": "prepareDirect.context-route",
+            "durationMs": 162.59999999997672,
+            "nativeExecutionId": "b395c9a1-8a55-4680-8262-ee411fbcc747",
+            "beginDateNow": 1792052279025,
+            "endDateNow": 1792052279025
+          },
+          {
+            "phase": "prepareDirect.model-candidate",
+            "durationMs": 63,
+            "nativeExecutionId": "b395c9a1-8a55-4680-8262-ee411fbcc747",
+            "beginDateNow": 1792052279025,
+            "endDateNow": 1792052279025
+          }
+        ],
+        "measuredStagesSumMs": 236.40000000002328,
+        "untracedNativeExecutionResidualMs": 182.06338299997674,
+        "residualMeaning": "Native executionTime less three non-overlapping sequential mutation-span performance durations. Includes initial ownership/executionContext checks, the directState patch, other gaps and native overhead; not a measured DB-only, CPU-only or complete prelude span. Mutation Date.now is fixed; use recorded durationMs, not zero begin/end Date.now differences.",
+        "actionStartMetadataToFirstActionTraceMs": 117.55908203125,
+        "actionPrefixMeaning": "Unallocated interval from official Action executionTimestamp to first handler trace; no isolated module initialization/CPU/scheduling attribution.",
+        "beforeMainDispatchFromFirstActionTraceMs": 926,
+        "postPrepareToMainDispatchMs": 490,
+        "turnModelSetupToMainDispatchMs": 490
+      },
+      "retrieval": {
+        "hasContextRecallPhase": false,
+        "queryEmbeddingGatewayPhases": 0,
+        "meaning": "No query embedding or semantic recall on these two exact action executions. Normal empty scope and Fast recent canonical context completed in preparation. New same-lineage literal proof is not shown to improve this path."
+      },
+      "mainModel": {
+        "admitCheckpointMs": 366,
+        "admitNative": {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "cedc0c27-fcaf-48e6-984c-2cc1d3be36f2",
+          "requestId": "bb40e03c835aeb63",
+          "serverStartMs": 1792052279583.0,
+          "serverCompletionMs": 1792052279943.8586,
+          "nativeExecutionMs": 348.180592,
+          "usage": {
+            "databaseReadBytes": 240780,
+            "databaseWriteBytes": 44078,
+            "databaseIoReadBytes": 240780,
+            "databaseIoWriteBytes": 44078,
+            "databaseReadDocuments": 85,
+            "databaseWriteDocuments": 5,
+            "databaseWriteIndexRows": 22,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "occInfo": null,
+          "errorPresent": false,
+          "cachedResult": false
+        },
+        "gatewayToFirstTextMs": 599,
+        "firstVisibilityLedgerMs": 228,
+        "firstRecordOutput": {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "4698c97c-2922-4f5e-a323-a854367ee9a3",
+          "requestId": "bb40e03c835aeb63",
+          "serverStartMs": 1792052280781.0,
+          "serverCompletionMs": 1792052280985.4597,
+          "nativeExecutionMs": 190.096755,
+          "usage": {
+            "databaseReadBytes": 31012,
+            "databaseWriteBytes": 3204,
+            "databaseIoReadBytes": 31012,
+            "databaseIoWriteBytes": 3204,
+            "databaseReadDocuments": 23,
+            "databaseWriteDocuments": 3,
+            "databaseWriteIndexRows": 11,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "occInfo": null,
+          "errorPresent": false,
+          "cachedResult": false
+        },
+        "firstTextToFirstRecordOutputCompletionWallMs": 438.459716796875,
+        "gatewayOpaqueSplits": "Includes official Gateway acquisition/provider/network work; none of internal Gateway routing, provider compute/queue or network-only legs is separately measured.",
+        "partsAfterFirstOutputNotFirstAnswerCriticalPath": "Later visibility/output/terminal capture/attachment/finalization/title calls remain separate from the initial-output spans."
+      },
+      "nativeAdmission": {
+        "function": "runtimeClient:submitAndStartEnvelope",
+        "executionId": "ef2fcd5d-1bd9-4196-bbb8-cd3e9d87c60c",
+        "requestId": "a54c138c09a89ff4",
+        "serverStartMs": 1792052278318.0,
+        "serverCompletionMs": 1792052278886.9268,
+        "nativeExecutionMs": 549.765382,
+        "usage": {
+          "databaseReadBytes": 136534,
+          "databaseWriteBytes": 26890,
+          "databaseIoReadBytes": 136534,
+          "databaseIoWriteBytes": 26890,
+          "databaseReadDocuments": 118,
+          "databaseWriteDocuments": 19,
+          "databaseWriteIndexRows": 80,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        },
+        "occInfo": null,
+        "errorPresent": false,
+        "cachedResult": false
+      },
+      "fitInput": {
+        "selectedMessages": 1,
+        "selectedMemories": 0,
+        "selectedFacts": 0,
+        "selectedPending": 0,
+        "inputTokens": 13076,
+        "inputLimit": 32768
+      },
+      "occAfterInitialOutput": {
+        "entries": [
+          {
+            "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+            "executionId": "cb1eb6af-9fd0-4f2d-8ae4-e913d7ebc557",
+            "requestId": "bb40e03c835aeb63",
+            "serverStartMs": 1792052283743.0,
+            "serverCompletionMs": 1792052284027.577,
+            "nativeExecutionMs": 249.549242,
+            "usage": {
+              "databaseReadBytes": 186865,
+              "databaseWriteBytes": 0,
+              "databaseIoReadBytes": 186865,
+              "databaseIoWriteBytes": 0,
+              "databaseReadDocuments": 44,
+              "databaseWriteDocuments": 0,
+              "databaseWriteIndexRows": 0,
+              "vectorIndexReadBytes": 0,
+              "vectorIndexWriteBytes": 0,
+              "vectorIndexReadQueryBytes": 0,
+              "vectorIndexWriteQueryBytes": 0,
+              "networkEgressBytes": 0,
+              "memoryUsedMb": 64
+            },
+            "occInfo": {
+              "retryCount": 0,
+              "tableName": "runtimeAgentExecutions",
+              "documentIdSha256": "df640346b7bfe81280d32b0d2c75dc70dc3d5661f27f7f50cc787836830ab8c6",
+              "writeSource": "runtimeAgent.js:recordOutput"
+            },
+            "errorPresent": false,
+            "cachedResult": false
+          },
+          {
+            "function": "runtimeAgent:attachModelResultV8",
+            "executionId": "51e8f3db-b9ee-45a4-9421-881c9adfec8e",
+            "requestId": "bb40e03c835aeb63",
+            "serverStartMs": 1792052284339.0,
+            "serverCompletionMs": 1792052284693.4487,
+            "nativeExecutionMs": 305.51096,
+            "usage": {
+              "databaseReadBytes": 140047,
+              "databaseWriteBytes": 0,
+              "databaseIoReadBytes": 140047,
+              "databaseIoWriteBytes": 0,
+              "databaseReadDocuments": 58,
+              "databaseWriteDocuments": 0,
+              "databaseWriteIndexRows": 0,
+              "vectorIndexReadBytes": 0,
+              "vectorIndexWriteBytes": 0,
+              "vectorIndexReadQueryBytes": 0,
+              "vectorIndexWriteQueryBytes": 0,
+              "networkEgressBytes": 0,
+              "memoryUsedMb": 64
+            },
+            "occInfo": {
+              "retryCount": 0,
+              "tableName": "runtimeBudgetAccounts",
+              "documentIdSha256": "de0f9944f093d2f53d052d95402257522683540b2b49a989aa7914a2324f00c0",
+              "writeSource": "runtimeModelPolicy.js:admit"
+            },
+            "errorPresent": false,
+            "cachedResult": false
+          }
+        ],
+        "allStartAfterFirstRecordOutputCompletion": true,
+        "browserAfterPaintConsoleTimestamp": "2026-10-15T08:18:01.541Z",
+        "recordedUtcOccStartMinusBrowserPaintMs": [
+          2202.0,
+          2798.0
+        ],
+        "crossClockCaution": "Recorded UTC order places these terminal OCC-bearing starts after browser after-paint, but browser/server clocks are not calibrated. They are not preparation-stage spans or an attributed cause of the96.4ms first-answer miss. retryCount0 is retained exactly; repeated native executions are not counted as paid inference retries."
+      }
+    },
+    {
+      "label": "fast-recent",
+      "runId": "run:8d3e63cef847b3b866d821a205d5bf2cfe19f4b9e079da6c34960bfb31d72201",
+      "effort": "fast",
+      "targetMs": 3000,
+      "firstAfterPaintMs": 3096.399999999441,
+      "withinTarget": false,
+      "targetMissMs": 96.3999999994412,
+      "correctness": {
+        "answerMarker": "apricot",
+        "answerMarkerPresent": true,
+        "responseComplete": true,
+        "memoryComplete": true
+      },
+      "identityJoin": {
+        "actionExecutionId": "3a4dbb9c-e48f-4fc2-8091-d91e21a2cc1b",
+        "parentRequestId": "c879bf9c0a1ec484",
+        "preparationExecutionId": "e49feed4-4afe-474c-9016-0c0d83a67bf5",
+        "admissionEnvelopeExecutionId": "51065ed9-b03d-4c73-9007-3c7ffa276bb4",
+        "runBudgetId": "6f20123d18243d3645082b023b90f9d1d4cbeca4393da2ec035260a8d22ad865",
+        "semanticId": "sha256:eba600111c95865e44fd34444d955c4959b9c139fbfbe12b437d5b19a021fd14",
+        "proof": "Exact raw runId traces identify Action and admission executions. Action completion requestId selects native children. Gateway operationKey+semanticId+executionId bind the main response; client RPC pairing uses its own rpcId, not invented native request IDs."
+      },
+      "browserClockPartition": {
+        "admissionDeliveredMs": 1265.7999999998137,
+        "admissionToFirstDomMs": 1813.7000000001863,
+        "domToAfterPaintMs": 16.899999999441206,
+        "sumMs": 3096.399999999441,
+        "visibility": "visible"
+      },
+      "clientClock": {
+        "authDuringMeasuredSubmission": false,
+        "envelope": {
+          "rpcId": 35,
+          "method": "runtimeClient:submitAndStartEnvelope",
+          "atMsBegin": 149519.2000000002,
+          "atMsEnd": 150470.09999999963,
+          "durationMs": 950.8999999994412
+        },
+        "postAdmissionFreshSession": {
+          "rpcId": 36,
+          "method": "runtimeClient:session",
+          "atMsBegin": 150470.7000000002,
+          "atMsEnd": 150777.7000000002,
+          "durationMs": 307
+        },
+        "admissionResidualOutsideEnvelopeAndSessionMs": 7.900000000372529,
+        "observesBeforePaint": [
+          {
+            "rpcId": 37,
+            "method": "runtimeClient:observeEnvelope",
+            "atMsBegin": 150779.39999999944,
+            "atMsEnd": 151008.09999999963,
+            "durationMs": 228.70000000018626
+          },
+          {
+            "rpcId": 39,
+            "method": "runtimeClient:observeEnvelope",
+            "atMsBegin": 152222.7999999998,
+            "atMsEnd": 152407.7000000002,
+            "durationMs": 184.90000000037253
+          }
+        ],
+        "sessionsBeforePaint": [
+          {
+            "rpcId": 36,
+            "method": "runtimeClient:session",
+            "atMsBegin": 150470.7000000002,
+            "atMsEnd": 150777.7000000002,
+            "durationMs": 307
+          },
+          {
+            "rpcId": 38,
+            "method": "runtimeClient:session",
+            "atMsBegin": 151008.7999999998,
+            "atMsEnd": 151178.39999999944,
+            "durationMs": 169.59999999962747
+          },
+          {
+            "rpcId": 40,
+            "method": "runtimeClient:session",
+            "atMsBegin": 152408.2000000002,
+            "atMsEnd": 152584.09999999963,
+            "durationMs": 175.8999999994412
+          }
+        ],
+        "allClientEventsMonotonicWithinBrowserPage": true,
+        "caution": "RPC durations and browser elapsed values are same-page monotonic intervals with different origins; only ordered admission envelope+post-session residual is subtracted. Server spans overlap these client intervals."
+      },
+      "preparation": {
+        "actionAwaitWallMs": 528,
+        "native": {
+          "function": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "e49feed4-4afe-474c-9016-0c0d83a67bf5",
+          "requestId": "c879bf9c0a1ec484",
+          "serverStartMs": 1792052362460.0,
+          "serverCompletionMs": 1792052362983.9336,
+          "nativeExecutionMs": 510.22758300000004,
+          "usage": {
+            "databaseReadBytes": 352636,
+            "databaseWriteBytes": 14751,
+            "databaseIoReadBytes": 352636,
+            "databaseIoWriteBytes": 14751,
+            "databaseReadDocuments": 209,
+            "databaseWriteDocuments": 4,
+            "databaseWriteIndexRows": 18,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "occInfo": null,
+          "errorPresent": false,
+          "cachedResult": false
+        },
+        "stages": [
+          {
+            "phase": "prepareDirect.context-lifecycle",
+            "durationMs": 13,
+            "nativeExecutionId": "e49feed4-4afe-474c-9016-0c0d83a67bf5",
+            "beginDateNow": 1792052362460,
+            "endDateNow": 1792052362460
+          },
+          {
+            "phase": "prepareDirect.context-route",
+            "durationMs": 178.09999999997672,
+            "nativeExecutionId": "e49feed4-4afe-474c-9016-0c0d83a67bf5",
+            "beginDateNow": 1792052362460,
+            "endDateNow": 1792052362460
+          },
+          {
+            "phase": "prepareDirect.model-candidate",
+            "durationMs": 64.5,
+            "nativeExecutionId": "e49feed4-4afe-474c-9016-0c0d83a67bf5",
+            "beginDateNow": 1792052362460,
+            "endDateNow": 1792052362460
+          }
+        ],
+        "measuredStagesSumMs": 255.59999999997672,
+        "untracedNativeExecutionResidualMs": 254.62758300002332,
+        "residualMeaning": "Native executionTime less three non-overlapping sequential mutation-span performance durations. Includes initial ownership/executionContext checks, the directState patch, other gaps and native overhead; not a measured DB-only, CPU-only or complete prelude span. Mutation Date.now is fixed; use recorded durationMs, not zero begin/end Date.now differences.",
+        "actionStartMetadataToFirstActionTraceMs": 254.946533203125,
+        "actionPrefixMeaning": "Unallocated interval from official Action executionTimestamp to first handler trace; no isolated module initialization/CPU/scheduling attribution.",
+        "beforeMainDispatchFromFirstActionTraceMs": 954,
+        "postPrepareToMainDispatchMs": 426,
+        "turnModelSetupToMainDispatchMs": 425
+      },
+      "retrieval": {
+        "hasContextRecallPhase": false,
+        "queryEmbeddingGatewayPhases": 0,
+        "meaning": "No query embedding or semantic recall on these two exact action executions. Normal empty scope and Fast recent canonical context completed in preparation. New same-lineage literal proof is not shown to improve this path."
+      },
+      "mainModel": {
+        "admitCheckpointMs": 303,
+        "admitNative": {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "2a688cae-9727-40a6-89a7-d6b81581d022",
+          "requestId": "c879bf9c0a1ec484",
+          "serverStartMs": 1792052363106.0,
+          "serverCompletionMs": 1792052363406.0469,
+          "nativeExecutionMs": 288.03508100000005,
+          "usage": {
+            "databaseReadBytes": 265456,
+            "databaseWriteBytes": 45330,
+            "databaseIoReadBytes": 265456,
+            "databaseIoWriteBytes": 45330,
+            "databaseReadDocuments": 97,
+            "databaseWriteDocuments": 5,
+            "databaseWriteIndexRows": 22,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "occInfo": null,
+          "errorPresent": false,
+          "cachedResult": false
+        },
+        "gatewayToFirstTextMs": 450,
+        "firstVisibilityLedgerMs": 204,
+        "firstRecordOutput": {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "e17b37ae-20c9-4dff-a3c3-4bf551cdfd0a",
+          "requestId": "c879bf9c0a1ec484",
+          "serverStartMs": 1792052364072.0,
+          "serverCompletionMs": 1792052364268.613,
+          "nativeExecutionMs": 181.85061199999998,
+          "usage": {
+            "databaseReadBytes": 38320,
+            "databaseWriteBytes": 3341,
+            "databaseIoReadBytes": 38320,
+            "databaseIoWriteBytes": 3341,
+            "databaseReadDocuments": 28,
+            "databaseWriteDocuments": 3,
+            "databaseWriteIndexRows": 11,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "occInfo": null,
+          "errorPresent": false,
+          "cachedResult": false
+        },
+        "firstTextToFirstRecordOutputCompletionWallMs": 406.613037109375,
+        "gatewayOpaqueSplits": "Includes official Gateway acquisition/provider/network work; none of internal Gateway routing, provider compute/queue or network-only legs is separately measured.",
+        "partsAfterFirstOutputNotFirstAnswerCriticalPath": "Later visibility/output/terminal capture/attachment/finalization/title calls remain separate from the initial-output spans."
+      },
+      "nativeAdmission": {
+        "function": "runtimeClient:submitAndStartEnvelope",
+        "executionId": "51065ed9-b03d-4c73-9007-3c7ffa276bb4",
+        "requestId": "cfa152ec05ec54ae",
+        "serverStartMs": 1792052361751.0,
+        "serverCompletionMs": 1792052362172.6606,
+        "nativeExecutionMs": 398.428521,
+        "usage": {
+          "databaseReadBytes": 140283,
+          "databaseWriteBytes": 26621,
+          "databaseIoReadBytes": 140283,
+          "databaseIoWriteBytes": 26621,
+          "databaseReadDocuments": 113,
+          "databaseWriteDocuments": 17,
+          "databaseWriteIndexRows": 72,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        },
+        "occInfo": null,
+        "errorPresent": false,
+        "cachedResult": false
+      },
+      "fitInput": {
+        "selectedMessages": 3,
+        "selectedMemories": 0,
+        "selectedFacts": 0,
+        "selectedPending": 0,
+        "inputTokens": 14362,
+        "inputLimit": 32768
+      },
+      "occAfterInitialOutput": {
+        "entries": [
+          {
+            "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+            "executionId": "23613ad6-bc13-49bb-8999-cb54c5d5b906",
+            "requestId": "c879bf9c0a1ec484",
+            "serverStartMs": 1792052365252.0,
+            "serverCompletionMs": 1792052365532.523,
+            "nativeExecutionMs": 233.896032,
+            "usage": {
+              "databaseReadBytes": 198183,
+              "databaseWriteBytes": 0,
+              "databaseIoReadBytes": 198183,
+              "databaseIoWriteBytes": 0,
+              "databaseReadDocuments": 49,
+              "databaseWriteDocuments": 0,
+              "databaseWriteIndexRows": 0,
+              "vectorIndexReadBytes": 0,
+              "vectorIndexWriteBytes": 0,
+              "vectorIndexReadQueryBytes": 0,
+              "vectorIndexWriteQueryBytes": 0,
+              "networkEgressBytes": 0,
+              "memoryUsedMb": 64
+            },
+            "occInfo": {
+              "retryCount": 0,
+              "tableName": "runtimeAgentExecutions",
+              "documentIdSha256": "330053ab4c752cf27ae526349b32d5cb2196bce7351ea39b1962dc4638e26a34",
+              "writeSource": "runtimeAgent.js:recordOutput"
+            },
+            "errorPresent": false,
+            "cachedResult": false
+          }
+        ],
+        "allStartAfterFirstRecordOutputCompletion": true,
+        "browserAfterPaintConsoleTimestamp": "2026-10-15T08:19:24.782Z",
+        "recordedUtcOccStartMinusBrowserPaintMs": [
+          470.0
+        ],
+        "crossClockCaution": "Recorded UTC order places these terminal OCC-bearing starts after browser after-paint, but browser/server clocks are not calibrated. They are not preparation-stage spans or an attributed cause of the96.4ms first-answer miss. retryCount0 is retained exactly; repeated native executions are not counted as paid inference retries."
+      }
+    }
+  ],
+  "sourceReadFamilies": [
+    {
+      "family": "Fresh native-entry scopes, bounded raw authority/metadata/transcript/source sharing within one parent",
+      "references": [
+        "convex-dev/runtimeAgent.ts:2217",
+        "convex-dev/runtimeAuth.ts:271",
+        "convex-dev/runtimeAuth.ts:277",
+        "convex-dev/runtimeAuth.ts:303",
+        "convex-dev/runtimeAuth.ts:310",
+        "convex-dev/runtimeAuth.ts:427",
+        "convex-dev/runtimeAuth.ts:441"
+      ],
+      "facts": "V8 parent owns nonserialized scope; repeated nested authority helpers return the same opted-in context. Cached values are raw rows, never authorization verdicts. Policy, definition, tenant, exact transcript-ID and source/conversation/bridge/run families have explicit entry/byte bounds. Separate Action child native RPCs receive fresh contexts."
+    },
+    {
+      "family": "Native same-snapshot context/save sharing with retained original checks",
+      "references": [
+        "convex-dev/runtimeAgent.ts:2087",
+        "convex-dev/runtimeAgent.ts:2103",
+        "convex-dev/runtimeAuth.ts:128",
+        "convex-dev/runtimeAuth.ts:133"
+      ],
+      "facts": "Empty-route save can reuse exact-owner raw metadata/transcript scopes inside the same native transaction; owner mismatch returns original context and explicit fresh metadata/transcript fallback. Does not remove empty/profile probe or source/currentness predicates."
+    },
+    {
+      "family": "Uncached execution, Agent operation, active attempt and outbox state",
+      "references": [
+        "convex-dev/runtimeAgent.ts:127",
+        "convex-dev/runtimeAgent.ts:133",
+        "convex-dev/runtimeAgent.ts:169",
+        "convex-dev/runs.ts:297",
+        "convex-dev/runtimeAgent.ts:570",
+        "convex-dev/runtimeAgent.ts:576",
+        "convex-dev/runtimeAgent.ts:2134",
+        "convex-dev/runtimeAgent.ts:2161"
+      ],
+      "facts": "execution queries runtimeAgentExecutions directly; operation queries runtimeAgentOperations directly; activeAttempt reads outbox and runtimeRunAttempts. executionContext repeats validation/hydration/source fences at logical entry points. Logs count aggregate163/209 preparation docs but do not identify actual per-family duplicate read counts."
+    },
+    {
+      "family": "Writer invalidation and mutable accounting stay fresh",
+      "references": [
+        "convex-dev/runtimeAuth.ts:361",
+        "convex-dev/runtimeAuth.ts:383",
+        "convex-dev/runtimeAuth.ts:396",
+        "convex-dev/runtimeAuth.ts:416",
+        "convex-dev/runtimeModelPolicy.ts:797",
+        "convex-dev/runtimeModelPolicy.ts:317"
+      ],
+      "facts": "Only explicit validated V8 control writers retain eligible raw families; runtimeRuns writes evict origin-run rows. Financial writes clear policy/message metadata. Unknown/fluent/failed/child writers invalidate; no read can populate across a writer. Accounts, model operations and attempts are not cached."
+    },
+    {
+      "family": "Fresh output and client delivery boundaries",
+      "references": [
+        "convex-dev/runtimeModelPolicy.ts:854",
+        "convex-dev/runtimeAgent.ts:1008",
+        "convex-dev/runtimeAuth.ts:151",
+        "src/client-runtime/client.ts:278",
+        "src/client-runtime/client.ts:301",
+        "src/client-runtime/client.ts:322",
+        "src/client-runtime/client.ts:362"
+      ],
+      "facts": "Every markVisible and recordOutput native entry constructs its own memory-source read scope and reruns its own guards. Browser admission and observation retain independent post-I/O session checks before exposing protected results. A reduction cannot replace those fences with a time-based/global cached permit."
+    }
+  ],
+  "visibilityOutputCompositionAssessment": {
+    "status": "CONDITIONAL_CANDIDATE_NOT_DROP_IN_NOT_APPROVED",
+    "measuredPotentialBoundary": "First visibility228/204ms, then first native recordOutput190.097/181.851ms; these remain required work, not a claim that their sum can be removed. A combined parent may remove one RPC/read-scope boundary only if protocol obligations are met.",
+    "currentOrder": [
+      "runtimeGateway.ts:1026 awaits state.visible before1029/1030 emit.",
+      "runtimeGateway.ts:894 accepts visibility acknowledgement, then rechecks local delivery state.",
+      "runtimeAgent.ts:1139 flush projects Agent-delivered chunks;1155 invokes recordOutput;1160\u20131169 serializes and joins callback queue."
+    ],
+    "handlerAccessibility": "Both markVisible(runtimeModelPolicy.ts854\u2013867) and recordOutput(runtimeAgent.ts1008\u20131017) are inline registered internalMutation bodies. No existing exported reusable handler composes them directly.",
+    "concreteConstraints": [
+      "Visibility ledger request contains reference/attemptId/visibility flags, no text chunk or Cortex producer sequence. Blindly deferring markVisible until current onChunk would emit into Agent before its existing pre-enqueue ledger fence.",
+      "Directly prepublishing a chunk and leaving ordinary onChunk/flush unchanged can append the same output twice: recordOutput appends sequence rows and accepts no explicit chunk dedup identity. Exact projection/ordinal binding and one-publication handling must be preserved.",
+      "Simply authorizing two original handlers independently does not establish that model attemptA is the producer for Agent runB. Any new combined payload must preserve exact run/account/model-operation/semantic/ordinal association. Existing binding is in runtimeAgent.ts947\u2013956; preserve all current authority, lease, source witness, limits and malformed-output refusals.",
+      "New atomic grouping must acknowledge successful markVisible+public output before Gateway emit, with fail/rollback/abort/ambiguous-RPC behavior considered; preserving two original bodies alone does not prove end-to-end equivalence."
+    ],
+    "financialBoundary": "No source rule here inherently requires a separate commit between the monotone markVisible flag and the matching first Cortex output. However terminal capture remains prior charge-only committed evidence and terminal attachment remains independently fenced; do not fold either into this publication transaction. Existing separation is explicit at runtimeAgent.ts1018\u20131029 and runtimeGatewayBackend.ts53\u201358/111\u2013114.",
+    "boundedNextInvestigation": "A private V8 pre-enqueue publication port could be investigated with original handlers extracted, exact attempt/run/delta binding and one-publication semantics, all fresh checks intact and terminal commits separate. This report approves no implementation and predicts no numeric saving."
+  },
+  "groundedConclusion": [
+    "Fast recent context misses3s by96.4ms despite no query embedding/semantic recall. The literal proof cannot explain a gain for this path.",
+    "The largest named preparation span is context-route178.1ms; model-candidate64.5ms and lifecycle13ms are smaller. A further254.628ms of native preparation is untraced remainder.209read documents352636bytes is aggregate work, not table-specific timing.",
+    "Client Fast admission is1265.8ms (950.9ms envelope+307ms independent session+7.9ms other local interval). Main first text is450ms, first visibility204ms and first native output181.851ms. These clocks/spans overlap; no additive claim explains every millisecond.",
+    "Specific first-publication boundary composition is a plausible narrow next investigation with concrete pre-enqueue/order/binding/dedup constraints, rather than removing authority/financial checks or adding speculative caches. Main preparation duplication requires measured per-family evidence before choosing any retained-row change.",
+    "This single Normal/Fast pair is not a controlled comparison with c258 or a distribution/p95. Normal passes6s; Fast remains an actual failed3s target. No overall installed/native SLO success claimed."
+  ],
+  "immutableLogsAndSourceBytesUnchanged": true
+}

@@ -1,0 +1,219 @@
+{
+  "version": 1,
+  "status": "DOCS_UPDATED_STATIC_CHECKS_PASS_RENDER_PENDING",
+  "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+  "repository": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+  "baselineDirtyFiles": {
+    "docs-site/docs/api-reference/memory-operations.mdx": {
+      "status": " M",
+      "sha256": "cfbaa77a023fd30b0e86793b7a46c0148615e9e2d7ddd231e75cee16145cc444"
+    },
+    "docs-site/docs/api-reference/runtime-client.mdx": {
+      "status": " M",
+      "sha256": "6791d4d8f37abdb1facccd35e8b55ae6e707317547983ec9c9c12d1876bdbebc"
+    },
+    "docs-site/docs/architecture/model-policy.mdx": {
+      "status": " M",
+      "sha256": "1b63b2a2e6fea34ce20fbd37a73a425a13631d55836afae27c7c8ecd01152694"
+    },
+    "docs-site/docs/architecture/performance.mdx": {
+      "status": " M",
+      "sha256": "93d73e90f65e96728509fc60a585fdc37b70025ae3d4078a6623c0abd4cdfc96"
+    },
+    "docs-site/docs/core-features/index.mdx": {
+      "status": " M",
+      "sha256": "cb10a3292e27216860fd2dbddc4aa612de489ff95b792e91b1191c938718e823"
+    },
+    "docs-site/docs/core-features/memory-orchestration.mdx": {
+      "status": " M",
+      "sha256": "9120f2a1be3931fbe20bf6a16c7bc6d5b6d0171fe73ec624e9e88774312156bb"
+    },
+    "docs-site/docs/getting-started/backend-runtime.mdx": {
+      "status": " M",
+      "sha256": "304a9eac906a93f6bfcda3a0745818cdbceacf858c6a589c5fff8665598cbbff"
+    },
+    "docs-site/docs/getting-started/five-minute-quickstart.mdx": {
+      "status": " M",
+      "sha256": "61d75d4e1e8e863193dee0769a5f5c368c4f2b47f15f3db80afc048b23fd3934"
+    },
+    "docs-site/docs/getting-started/installation.mdx": {
+      "status": " M",
+      "sha256": "763bd8bfd690addaf344c4d189fdadb53345e1681b93224dd174e1ad01d029a4"
+    },
+    "docs-site/docs/integrations/vercel-ai-sdk/api-reference.mdx": {
+      "status": " M",
+      "sha256": "95bc54da6352a75d136023093b70ec5828270cb725f12fc57af5455ab9851078"
+    },
+    "docs-site/docs/integrations/vercel-ai-sdk/getting-started.mdx": {
+      "status": " M",
+      "sha256": "20b390ca0833efb74f1e6329e542768e46a7665f68784be4ba583a97d7b45468"
+    },
+    "docs-site/docs/integrations/vercel-ai-sdk/troubleshooting.mdx": {
+      "status": " M",
+      "sha256": "ce1bcacfe9788d7d6c3f97e6ec84c95886329f0ea90da7e2e9b675c810d255d7"
+    },
+    "docs-site/docs/reference/cheat-sheet.mdx": {
+      "status": " M",
+      "sha256": "1d099f1763f9a3c3566f19fd9908f9ce011598d062c0727bc9540711f433bffb"
+    },
+    "docs-site/docs/tools/cli-reference.mdx": {
+      "status": " M",
+      "sha256": "169deab465482425858342097ad18809b345435d3b7cba3e06294566c95ff0f0"
+    },
+    "docs-site/sidebars.ts": {
+      "status": " M",
+      "sha256": "ee56f977abf69ed7678003ffdd6ccedf4f49650016ceb977acf77989acf0674c"
+    },
+    "docs-site/docs/core-features/memory-effort.mdx": {
+      "status": "??",
+      "sha256": "597f6e6984da085ff2821550a1c384f0659c4c55d0c79f41fdb514437d8de8d6"
+    }
+  },
+  "modifiedFiles": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx",
+      "beforeSha256": "93d73e90f65e96728509fc60a585fdc37b70025ae3d4078a6623c0abd4cdfc96",
+      "afterSha256": "48f7b83f428d92e0cbec360ee416bfd4bad05912267e5f39fd2877750409046a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx",
+      "beforeSha256": "9120f2a1be3931fbe20bf6a16c7bc6d5b6d0171fe73ec624e9e88774312156bb",
+      "afterSha256": "ba2d854a7530c371c698ae9c5f273d1a5c8db53af8a3b8984e8f1e18180e2138"
+    }
+  ],
+  "preservation": {
+    "performanceHistoricalBodyPreservedExceptTemporalLabels": true,
+    "orchestrationHistoricalBodyPreservedExceptTemporalLabels": true
+  },
+  "fullChainEvidence": "memory-effort-literal-full-chain.md and .json read; actual frozen 862 singleton-to-multi-projection fallback incorporated.",
+  "checks": {
+    "gitDiffCheck": {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    "sixBrowserMeasurementsMatchReceipt": true,
+    "nativeAndAccountingScalarsMatchReceipts": true,
+    "frontmatterCodeFencesAndLocalLinks": true,
+    "untouchedDirtyFiles": {
+      "count": 14,
+      "allHashesMatch": true
+    },
+    "dirtyPathSetUnchanged": true,
+    "build": "NOT_RUN_DELEGATED_TO_COORDINATOR",
+    "typecheck": "NOT_RUN_DELEGATED_TO_COORDINATOR",
+    "browser": "NOT_RUN_DELEGATED_TO_COORDINATOR"
+  },
+  "completedAt": "2026-10-15T08:41:39.850289+00:00",
+  "untouchedDirtyFiles": [
+    {
+      "path": "docs-site/docs/api-reference/memory-operations.mdx",
+      "sha256": "cfbaa77a023fd30b0e86793b7a46c0148615e9e2d7ddd231e75cee16145cc444"
+    },
+    {
+      "path": "docs-site/docs/api-reference/runtime-client.mdx",
+      "sha256": "6791d4d8f37abdb1facccd35e8b55ae6e707317547983ec9c9c12d1876bdbebc"
+    },
+    {
+      "path": "docs-site/docs/architecture/model-policy.mdx",
+      "sha256": "1b63b2a2e6fea34ce20fbd37a73a425a13631d55836afae27c7c8ecd01152694"
+    },
+    {
+      "path": "docs-site/docs/core-features/index.mdx",
+      "sha256": "cb10a3292e27216860fd2dbddc4aa612de489ff95b792e91b1191c938718e823"
+    },
+    {
+      "path": "docs-site/docs/getting-started/backend-runtime.mdx",
+      "sha256": "304a9eac906a93f6bfcda3a0745818cdbceacf858c6a589c5fff8665598cbbff"
+    },
+    {
+      "path": "docs-site/docs/getting-started/five-minute-quickstart.mdx",
+      "sha256": "61d75d4e1e8e863193dee0769a5f5c368c4f2b47f15f3db80afc048b23fd3934"
+    },
+    {
+      "path": "docs-site/docs/getting-started/installation.mdx",
+      "sha256": "763bd8bfd690addaf344c4d189fdadb53345e1681b93224dd174e1ad01d029a4"
+    },
+    {
+      "path": "docs-site/docs/integrations/vercel-ai-sdk/api-reference.mdx",
+      "sha256": "95bc54da6352a75d136023093b70ec5828270cb725f12fc57af5455ab9851078"
+    },
+    {
+      "path": "docs-site/docs/integrations/vercel-ai-sdk/getting-started.mdx",
+      "sha256": "20b390ca0833efb74f1e6329e542768e46a7665f68784be4ba583a97d7b45468"
+    },
+    {
+      "path": "docs-site/docs/integrations/vercel-ai-sdk/troubleshooting.mdx",
+      "sha256": "ce1bcacfe9788d7d6c3f97e6ec84c95886329f0ea90da7e2e9b675c810d255d7"
+    },
+    {
+      "path": "docs-site/docs/reference/cheat-sheet.mdx",
+      "sha256": "1d099f1763f9a3c3566f19fd9908f9ce011598d062c0727bc9540711f433bffb"
+    },
+    {
+      "path": "docs-site/docs/tools/cli-reference.mdx",
+      "sha256": "169deab465482425858342097ad18809b345435d3b7cba3e06294566c95ff0f0"
+    },
+    {
+      "path": "docs-site/sidebars.ts",
+      "sha256": "ee56f977abf69ed7678003ffdd6ccedf4f49650016ceb977acf77989acf0674c"
+    },
+    {
+      "path": "docs-site/docs/core-features/memory-effort.mdx",
+      "sha256": "597f6e6984da085ff2821550a1c384f0659c4c55d0c79f41fdb514437d8de8d6"
+    }
+  ],
+  "limits": [
+    "No commit, build, service, browser, deployment or production writes.",
+    "No extra independent judge.",
+    "Only the two assigned W pages and this Q report pair written.",
+    "332-test source acceptance is distinct from installed multi-fact proof and latency acceptance.",
+    "663-check native run does not cover synthetic three-projection proof, semantic fallback, new Basic CLI/Chat/tool gate.",
+    "Historical c258 outcomes retained under labeled history."
+  ],
+  "evidenceHashes": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-browser-summary.json",
+      "sha256": "ddedbdc868387f6a6298eeb7ec80765a2bac4efd5600bcf2d254e7f04637d067"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-first-pair-chain.md",
+      "sha256": "38b114978fb9ea456d2925ff537b57389e2b68c954809cec67202da5d8d00d14"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-first-pair-chain.json",
+      "sha256": "5761cc132ae5f8a14e33dedb082a10b12eeefa86537217cb65fc0bb7eec7b53e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-full-chain.md",
+      "sha256": "c494706fbc5bfab522713dacae9f0b1dc3c080d54d8f674fb45e7bf0e2871ae6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-full-chain.json",
+      "sha256": "1de215609f73dc892058aca085c71ba96767269fa8b26295b14f087ec857227d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-native-regression-1792053131973.json",
+      "sha256": "37a7fb8834748fb06f4b66bc2a7fcf2603639d57443dae77c83f362b5f15f431"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-finance-after-1792053270064.json",
+      "sha256": "f0fd78eea88f9819ceb198c1f462e7c5646a1a701024b17f9a345b74084d203a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-launcher-exit.json",
+      "sha256": "c2a9067d8c1894e961974eccbd6fc4227bebe1424285275a1b392e996e4355b1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-cleanup-1792053354195.json",
+      "sha256": "7394b50b26673dc423bbb7b7787968b1027956359eb1dbf943ce9317bcc9e2d5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-independent-review-v2.json",
+      "sha256": "1850abbe1ddbbc5d25c4c791af3cb5d9156fdc29af441697f32cac71ab69de28"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-review-v2-check-summary.json",
+      "sha256": "7386cf1f90efffc962c47f9a3a88c3d0f3745d17401ab33546da0c1607ece38e"
+    }
+  ]
+}
