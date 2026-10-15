@@ -289,8 +289,7 @@ export class ConvexMemoryRepository {
   }
   /** Derived rows whose source was deleted/changed are excluded; grant denial still throws. */
   private async visibleSource(sourceId: string, authority: RuntimeAuthority, permission: "canViewFacts" | "canViewMemories", deadlines?: number[]): Promise<SourceContent | null> {
-    const row = await this.ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", (q) =>
-      q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", sourceId)).unique();
+    const row = await readManagedSourceUniqueRow(this.ctx, this.scope.tenantId, this.scope.memorySpaceId, sourceId);
     if (!row || row.tombstonedAt !== undefined || (authority.resourceAccess === "own" && row.ownerPrincipalId !== authority.principalId)) return null;
     const reader = createAuthorityReader(this.ctx);
     if (await reader.hasTombstone({ tenantId: this.scope.tenantId, memorySpaceId: this.scope.memorySpaceId, resourceType: "source", resourceId: sourceId })
@@ -420,8 +419,7 @@ export class ConvexMemoryRepository {
       const row = await this.ctx.db.get("runtimeMemoryVectors", hit.id);
       if (!row || row.tenantId !== this.scope.tenantId || row.memorySpaceId !== this.scope.memorySpaceId
         || row.profileId !== profile.profileId || canonicalMemoryValue(row.profile) !== canonicalMemoryValue(profile) || !Number.isFinite(hit.score)) continue;
-      const sourceRow = await this.ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", (q) =>
-        q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", row.sourceId)).unique();
+      const sourceRow = await readManagedSourceUniqueRow(this.ctx, this.scope.tenantId, this.scope.memorySpaceId, row.sourceId);
       if (!sourceRow || sourceRow.tombstonedAt !== undefined || row.ownerPrincipalId !== sourceRow.ownerPrincipalId
         || (authority.resourceAccess === "own" && sourceRow.ownerPrincipalId !== authority.principalId)) continue;
       const source = await this.visibleSource(row.sourceId, authority, "canViewMemories", deadlines);

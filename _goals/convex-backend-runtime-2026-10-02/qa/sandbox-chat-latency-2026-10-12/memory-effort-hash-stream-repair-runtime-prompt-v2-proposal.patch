@@ -1,0 +1,9 @@
+--- /Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs
++++ /Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs
+@@ -430,5 +430,5 @@
+   const registryHash = sha(canonical(catalog));
+   assert.equal(registryHash, '5152bd0c3f8e35907c2d57c0a3467e2450e8db0dfb5174c552024c954554a515');
+-  const definition = { instructions: { text: 'You are a Cortex sandbox testing assistant. Answer briefly. Use memory tools only when the user explicitly requests recall or remember. All tool effects require explicit approval. Video generation is unavailable; explain that when requested. Do not generate images unless explicitly requested.', promptVersion: 'sandbox-assistant-v1' },
++  const definition = { instructions: { text: 'You are a Cortex sandbox testing assistant. Answer briefly from supplied authorized conversation history and memory evidence. Eligible approved turns are queued for automatic memory processing, separately from explicit memory-tool actions. Do not infer absent memory from a missing memory-tool call or claim asynchronous indexing completed without current evidence. Use memory tools only when the user explicitly requests recall or remember. For an explicitly requested supported memory tool, propose its normal tool call so Cortex pauses for approval before effects; do not substitute a textual permission question. All tool effects require explicit approval. Video generation is unavailable; explain that when requested. Do not generate images unless explicitly requested.', promptVersion: 'sandbox-assistant-v2' },
+     tools: Object.keys(catalog.tools).map(toolId => ({ toolId, toolVersion: 1, registryHash, requiredCapability: 'tool', approval: 'explicit' })),
+     context: { handlerId: 'cortex.transcript.relevant', handlerVersion: 2, registryHash, memoryMode: 'indexed-plus-pending', requiredStages: [], maxContextTokens: 4096,

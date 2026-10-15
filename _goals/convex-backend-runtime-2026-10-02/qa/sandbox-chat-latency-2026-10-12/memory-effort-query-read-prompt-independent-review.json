@@ -1,0 +1,297 @@
+{
+  "version": 1,
+  "at": "2026-10-15T14:11:09.155826+00:00",
+  "reviewer": "query_read_prompt_review independent non-author",
+  "role": ".agents/roles/pessimistic-judge.md with judge-task rubric and adopted acceptance-policy.md",
+  "verdict": "PASS",
+  "acceptanceScope": "Bounded source/test/configuration batch only; no all-goal, installed-consumer, live prompt-behavior, hosted latency, SLO or paid-qualification acceptance.",
+  "policy": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+    "minimums": {
+      "requirementFulfillment": 4,
+      "testQuality": 4,
+      "completeness": 4,
+      "codeQuality": 3,
+      "patternAdherence": 3,
+      "average": 3.6
+    },
+    "zeroBreakingFindingsRequired": true
+  },
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "5aeb14d734ddc0e189cb392f779613bd342720bb",
+  "manifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-query-read-coherent-source-hashes.json",
+    "sha256": "2c97e9d0659ea0e28d1e54bc7cd5fbba2ac2b98ffb2d87803b854e8b26fce50a",
+    "fileCount": 21,
+    "changedInThisReview": 3,
+    "unchangedPreviouslyAccepted": 18,
+    "externalPExcludedFromSourceHashes": true
+  },
+  "sourceHashesBefore": {
+    "convex-dev/runtimeGateway.ts": "3bdc339a7da20a15577159127c2b65c6f33f43c40ee258a5b8a0ec012cff1bc1",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "5ed014b4b81a787aa60364e76ff4586eb86d17e073f6bf60b0cfe94bf9543c9a",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235",
+    "convex-dev/runtimeMemoryRepository.ts": "0c7041f1b1938dab166b9546f64c71a311163c66e2eb06202e73bcb5dfa9d556",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": null
+  },
+  "sourceHashesAfter": {
+    "convex-dev/runtimeGateway.ts": "3bdc339a7da20a15577159127c2b65c6f33f43c40ee258a5b8a0ec012cff1bc1",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "2f70fb8165d5414abcf90709ca40b7498578ab72aa4b4c61347accc0abecc1bb",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235",
+    "convex-dev/runtimeMemoryRepository.ts": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420"
+  },
+  "allSourcesStable": true,
+  "changedFiles": [
+    "convex-dev/runtimeMemoryRepository.ts",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+  ],
+  "inherited18": {
+    "unchangedFromBase": true,
+    "priorAcceptedReview": "memory-effort-hash-stream-repair-independent-review.json",
+    "priorVerdict": "PASS",
+    "scope": "Hash continuity verified only; no new behavioral judgment or repeated checks for these unchanged files."
+  },
+  "externalP": {
+    "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+    "beforeSha256": "7216ebf7e0da1030712f46186de271d878ed405b5caadd33f0d00f3985e3183a",
+    "afterSha256": "3e5a8e648f272823e8daf8fc82d7e790fc03a20b1447eeb601c1ae01ae0f2233",
+    "actualAfterHashIndependentlyConfirmed": true,
+    "changedLines": [
+      432
+    ],
+    "reverseReplacementReconstructsExactBeforeHash": true,
+    "fieldsChanged": [
+      "definition.instructions.text",
+      "definition.instructions.promptVersion"
+    ],
+    "syntaxCheckExitCode": 0,
+    "separateFromRBundleManifest": true
+  },
+  "requirementsReview": [
+    {
+      "requirement": "Route only visibleSource and hydrateVectorCandidates raw unique terminals through existing reader",
+      "met": true,
+      "evidence": "runtimeMemoryRepository.ts:292,422; exact diff against base contains only these two production substitutions."
+    },
+    {
+      "requirement": "Keep operation/cardinality, scope, currentness, permission, writer invalidation, bounds and original final fence",
+      "met": true,
+      "evidence": "Unchanged runtimeAuth.ts b830ece95b342f505b7e81000d2bd675d6dac1caa923f7e3ed78075e7dfb28b6; original unique fallback, private V8 source.unique operation key, shared512/1000000 limits and writer epochs inspected; 45 independent cases passed."
+    },
+    {
+      "requirement": "Meaningful registered-pipeline differential and relevant negative outcomes without weakening historic assertions",
+      "met": true,
+      "evidence": "New12-case oracle independently passed; complete result/body/state/effects/guards/call sequence/non-source reads equal, 33->10 source unique terminals. Selected old physical-read comparison passed with every original assertion retained."
+    },
+    {
+      "requirement": "Bounded prompt correction preserves tool approval/only-requested media controls and immutable commissioning guards",
+      "met": true,
+      "evidence": "Actual P line432 only; all other9 procedure-approved files match old approval; caps8/2700000 unchanged, paid loop no-retry receipt and error paths unchanged."
+    }
+  ],
+  "historicalIsolation": {
+    "verdict": "VALID_ISOLATION_NOT_ASSERTION_WEAKENING",
+    "evidence": "The old case specifically compares snapshot-parent control retention while classifying non-control queries as mutable. Disabling only the later two-callsite source mechanism in that one case restores its declared independent variable; no assertions or cases removed. All other whole-recall cases keep candidate enabled. The new12-case actual registered prepare/read/delivery/save/candidate oracle compares only those two source callsites enabled/disabled while keeping existing mechanisms active, so combined behavior remains exercised.",
+    "concurrentNegativeGuards": "Three source-negative cases retain exact predicate multiplicities and originating-callsite order; global interleaving between pre-existing parallel branches is not asserted. Happy path and all other applicable negative cases retain global order equality."
+  },
+  "independentChecks": [
+    {
+      "kind": "focusedJest",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "jest.config.mjs",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/query-source-read-reuse.test.ts",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts"
+      ],
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "LOCAL_CONVEX_URL": "http://127.0.0.1:9",
+        "GRAPH_TESTING_ENABLED": "false",
+        "unset": [
+          "NEO4J_URI",
+          "MEMGRAPH_URI"
+        ]
+      },
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "naturalExitCode": 0,
+      "forceExit": false,
+      "suitesPassed": 2,
+      "testsPassed": 45,
+      "testsFailed": 0,
+      "testsSkipped": 0,
+      "seconds": 12.277,
+      "observedOutput": [
+        "query-source oracle12/12; baselineRootReads33 reusedRootReads10; exactOutputBodyStateGuardsAndOtherReads=true; finalColdFences1; modelCalls0",
+        "existing source-root reader33/33; root getter boundaries, unique errors, scopes, ceilings, writer/failure/current-clock/fence outcomes passed"
+      ],
+      "toolSessions": [
+        42858
+      ]
+    },
+    {
+      "kind": "selectedHistoricalJest",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "jest.config.mjs",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--testNamePattern=same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal"
+      ],
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "LOCAL_CONVEX_URL": "http://127.0.0.1:9",
+        "GRAPH_TESTING_ENABLED": "false",
+        "unset": [
+          "NEO4J_URI",
+          "MEMGRAPH_URI"
+        ]
+      },
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "naturalExitCode": 0,
+      "forceExit": false,
+      "suitesPassed": 1,
+      "testsPassed": 1,
+      "testsFailed": 0,
+      "testsSkipped": 140,
+      "skipExplanation": "Intentional name selection; not a full whole-recall rerun or claim. Author latest full changed-suite evidence reviewed separately.",
+      "seconds": 7.777,
+      "observedOutput": [
+        "initial oldGets6/newGets3 oldQueries167/newQueries131; tail oldGets15/newGets12 oldQueries92/newQueries71; mutableReadSequencesEqual=true; applicationWrites0"
+      ],
+      "toolSessions": [
+        18681
+      ]
+    },
+    {
+      "kind": "promptSyntax",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "sandbox-env/runtime.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+      "naturalExitCode": 0
+    },
+    {
+      "kind": "staticHashDiffAndContinuity",
+      "observed": "All21 R file bytes match manifest; exactly3 differ from base; P reverse reconstruction proves exact proposed one-line diff;9 other approved controls byte-identical; git diff --check for tracked R changed files exit0. New untracked test independently exercised."
+    }
+  ],
+  "toolVersions": {
+    "node": "24.15.0",
+    "jest": "30.5.2",
+    "tsJest": "29.4.14",
+    "typescript": "6.0.3",
+    "convex": "1.46.0"
+  },
+  "nonblockingExecutionWarnings": [
+    "Watchman prior recrawl notice; no watchman state changed.",
+    "Node experimental VM Modules warning."
+  ],
+  "authorEvidenceReviewed": {
+    "initialFocused": "9passed/3failed retained; raw diffs show concurrent global guard interleaving only.",
+    "initialAffected": "17suites;800passed/1failed/0skipped retained; raw failure removes one now-retainable source unique terminal from physical-query comparison.",
+    "latestRepair": "2suites153/153 passed,0skipped,natural0.",
+    "latestUniqueCoverage": {
+      "suites": 17,
+      "tests": 801,
+      "unchanged15SuitesTests": 648,
+      "latestRepair2SuitesTests": 153,
+      "singleAllGreen17SuiteRun": false
+    },
+    "qualityReceipts": [
+      "memory-effort-query-read-reuse-types-repair-v2.exit.json (tsconfig.lint.json source TypeScript check,exit0)",
+      "memory-effort-query-read-reuse-lint-repair-v2.exit.json (3 affected files,zero warnings,exit0)",
+      "memory-effort-query-read-reuse-diff-check-final.exit.json (tracked changed files,exit0)"
+    ]
+  },
+  "dimensionScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "breakingFindings": [],
+  "blockingFindings": [],
+  "minorFindings": [
+    {
+      "location": "tests/unit/runtimeMemory/query-source-read-reuse.test.ts:18-23 and tests/unit/runtimeAgent/whole-recall-composition.test.ts:25-32",
+      "finding": "Test-only callsite selection depends on V8 stack frame names. Current source-count differential and preserved historical equality demonstrate effective separation on the pinned runtime. Keep that sensitivity if stack format or methods change; no production risk found."
+    }
+  ],
+  "procedureAuthorization": {
+    "authorizeBoundedRuntimeSourceDiff": true,
+    "authorizedAfterSha256": "3e5a8e648f272823e8daf8fc82d7e790fc03a20b1447eeb601c1ae01ae0f2233",
+    "allowedFollowup": "Root may update only the source-bound runtime.mjs approval hash and link this review for the exact bounded prompt change; retain all other procedure safety controls and original failures.",
+    "approvalAtReview": "The existing procedure approval still expects the before hash. Its exact-byte gate must remain fail-closed until the explicit source-bound update; this is expected sequencing, not a weakened check.",
+    "otherApprovedFilesVerifiedUnchanged": 9,
+    "maximumPaidRequests": 8,
+    "maximumUnknownLiabilityUnits": 2700000,
+    "automaticPaidRetries": 0,
+    "perRunHumanReview": false,
+    "protectedControls": [
+      "auth/target checks",
+      "model/policy controls",
+      "deadlines/cancellation",
+      "UNKNOWN liability",
+      "exclusive issued-call receipts",
+      "exact procedure hash checks"
+    ]
+  },
+  "limitations": [
+    "No builds, packs, model calls, service calls, deployment, Git mutation or additional product/source edits performed by reviewer.",
+    "Controlled physical read reduction does not establish hosted latency or live prompt compliance.",
+    "Original failed runs remain failed; no all-green17-suite run or full-goal PASS claimed."
+  ]
+}

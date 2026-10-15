@@ -18,9 +18,17 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
 } }));
 let nativeSnapshotReads = true;
 let controlReuse = true;
+let querySourceReuse = true;
 const controlPredicates: unknown[] = [];
 const originalAuth = await import("../../../convex-dev/runtimeAuth");
 jest.unstable_mockModule("../../../convex-dev/runtimeAuth", () => ({ ...originalAuth,
+  readManagedSourceUniqueRow: async (...args: Parameters<typeof originalAuth.readManagedSourceUniqueRow>) => {
+    const caller = new Error().stack?.split("\n").find(line => line.includes("ConvexMemoryRepository.")) ?? "";
+    const candidate = /ConvexMemoryRepository\.(visibleSource|hydrateVectorCandidates)\b/.test(caller);
+    return !querySourceReuse && candidate ? await args[0].db.query("runtimeMemorySources").withIndex("by_scope_source", q =>
+      q.eq("tenantId", args[1]).eq("memorySpaceId", args[2]).eq("lineage.sourceId", args[3])).unique()
+      : await originalAuth.readManagedSourceUniqueRow(...args);
+  },
   readV8AgentExecutionRows: async (...args: Parameters<typeof originalAuth.readV8AgentExecutionRows>) => {
     controlPredicates.push(["execution", ...args.slice(1)]);
     return originalAuth.readV8AgentExecutionRows(controlReuse ? args[0] : { ...args[0] }, args[1], args[2], args[3], args[4]);
@@ -57,7 +65,7 @@ const memory = await import("../../../convex-dev/runtimeMemory");
 const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = await import("../../../convex-dev/runtimeMemoryRepository");
 const {replaceFactEntityLinks}=await import("../../../convex-dev/runtimeMemoryTraversal");
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
-beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; controlReuse = true; controlPredicates.length = 0; });
+beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; controlReuse = true; querySourceReuse = true; controlPredicates.length = 0; });
 afterEach(() => { jest.restoreAllMocks(); });
 async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number,directLookup:boolean|"fruit"=false,repeatedQuestions=0,linkedConflict=false,observedProjections:boolean|"contradiction"|"canonical-mismatch"|"singleton"=false,observedQuery?:string,requestedMaxEntries?:number) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
@@ -529,6 +537,7 @@ it("shared native parent keeps the final raw revocation fence and fresh save rec
 
 it("same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal",async()=>{
  controlReuse=false; // Isolate the original snapshot-parent retention mechanism.
+ querySourceReuse=false; // This historical physical-read comparison also isolates the later two-callsite source reuse.
  const f=await fixture(true),get=f.db.get.bind(f.db),query=f.db.query.bind(f.db),seen:{table:string;id:string}[]=[],queries:{table:string;index?:string;keys:unknown[];limit?:number}[]=[];
  jest.spyOn(f.db,"get").mockImplementation(async(table,id)=>{seen.push({table,id});return await get(table,id);});
  jest.spyOn(f.db,"query").mockImplementation(table=>{const record:typeof queries[number]={table,keys:[]};queries.push(record);const builder=query(table),withIndex=builder.withIndex.bind(builder),take=builder.take.bind(builder);

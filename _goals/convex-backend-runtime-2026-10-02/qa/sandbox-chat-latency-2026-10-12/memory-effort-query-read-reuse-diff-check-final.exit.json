@@ -1,0 +1,15 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check",
+    "--",
+    "convex-dev/runtimeMemoryRepository.ts",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "exitCode": 0,
+  "elapsedSeconds": 0.1691880830003356,
+  "untrackedTestNote": "git diff excludes new test content; new file separately typechecked/linted and SHA frozen"
+}

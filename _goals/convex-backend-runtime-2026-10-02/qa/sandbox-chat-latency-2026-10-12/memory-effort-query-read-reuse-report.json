@@ -1,0 +1,130 @@
+{
+  "status": "AUTHOR_COMPLETE_FROZEN_AWAITING_PARENT_COMBINED_REVIEW",
+  "baseSource": "5aeb14d734ddc0e189cb392f779613bd342720bb",
+  "recordedAt": "2026-10-15T13:52:44.590445+00:00",
+  "sourceManifest": "memory-effort-query-read-reuse-source-hashes.json",
+  "sourceManifestSha256": "3856b16c8ec541b06ba68fed0f651de6774072196e1084acdb90f29e28072006",
+  "ownedFiles": [
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-source-read-reuse.test.ts",
+      "sha256": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "2f70fb8165d5414abcf90709ca40b7498578ab72aa4b4c61347accc0abecc1bb"
+    }
+  ],
+  "change": "Only visibleSource and hydrateVectorCandidates source unique reads route through the existing private-V8 operation-distinct raw reader; original currentness, permissions, predicates and cold final-delivery fence remain. No new cache family or decision reuse.",
+  "controlledRegisteredOracle": {
+    "physicalSourceUniqueReads": {
+      "baseline": 33,
+      "candidate": 10,
+      "removed": 23
+    },
+    "fixture": "two independent managed sources, two vectors/facts, actual registered prepare/read/delivery/save/candidate handlers with controlled native DB/component ports",
+    "exactParity": [
+      "result",
+      "model nativeRequestCanonical",
+      "database/application state",
+      "effects/scheduled work",
+      "ordered happy-path authority predicates",
+      "all non-source physical reads and native call sequence"
+    ],
+    "negativeCases": [
+      "grant revoked",
+      "lease mismatch",
+      "source tombstone",
+      "source owner mismatch",
+      "source revision mismatch",
+      "duplicate original unique row",
+      "fact tombstone",
+      "memory-only versus fact-only share permissions",
+      "late source invalidation at cold final fence",
+      "late grant invalidation at cold final fence"
+    ],
+    "negativeOrdering": "Three source-negative cases preserve exact predicate multiplicity and ordered originating-callsite sequences across pre-existing concurrent branches; independent branch interleavings may differ. Other negative cases and happy path retain global order equality.",
+    "modelCalls": 0,
+    "runtimeModelAttempts": 0,
+    "hostedLatency": "NOT_MEASURED"
+  },
+  "checks": {
+    "initialFocused": {
+      "receipt": "memory-effort-query-read-reuse-focused-first.exit.json",
+      "passed": 9,
+      "failed": 3,
+      "naturalExit": 1,
+      "explanation": "Only concurrent negative global authority interleaving assertions differed; receipt unchanged."
+    },
+    "focusedV2": {
+      "receipt": "memory-effort-query-read-reuse-focused-v2.exit.json",
+      "passed": 12,
+      "failed": 0,
+      "naturalExit": 0
+    },
+    "initialAffected": {
+      "receipt": "memory-effort-query-read-reuse-targeted-final.exit.json",
+      "jest": "memory-effort-query-read-reuse-targeted-final.jest.json",
+      "suites": 17,
+      "passed": 800,
+      "failed": 1,
+      "skipped": 0,
+      "naturalExit": 1,
+      "seconds": 52.162,
+      "failure": "One historical snapshot-parent physical-read comparison classified an intentionally reused source unique as mutable; preserved unchanged."
+    },
+    "repairAffected": {
+      "receipt": "memory-effort-query-read-reuse-affected-repair-v2.exit.json",
+      "jest": "memory-effort-query-read-reuse-affected-repair-v2.jest.json",
+      "suites": 2,
+      "passed": 153,
+      "failed": 0,
+      "skipped": 0,
+      "naturalExit": 0,
+      "seconds": 16.581
+    },
+    "finalApplicableCoverage": {
+      "uniqueSuites": 17,
+      "uniqueTests": 801,
+      "unchangedSuitesPreviouslyPassed": 15,
+      "unchangedTestsPreviouslyPassed": 648,
+      "repairedSuitesLatestPassed": 2,
+      "repairedTestsLatestPassed": 153,
+      "singleAllGreen17SuiteRun": false,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "types": {
+      "receipt": "memory-effort-query-read-reuse-types-repair-v2.exit.json",
+      "exitCode": 0
+    },
+    "lint": {
+      "receipt": "memory-effort-query-read-reuse-lint-repair-v2.exit.json",
+      "exitCode": 0,
+      "warnings": 0
+    },
+    "diff": {
+      "receipt": "memory-effort-query-read-reuse-diff-check-final.exit.json",
+      "exitCode": 0
+    }
+  },
+  "historicalTestMaintenance": {
+    "file": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "beforeSha256": "5ed014b4b81a787aa60364e76ff4586eb86d17e073f6bf60b0cfe94bf9543c9a",
+    "scope": "Only same-snapshot parents reuse raw control rows only comparison disables new two-callsite routes via test-local exact-caller wrapper. Every original case/assertion remains unchanged; all other cases retain candidate enabled. New full registered differential separately exercises candidate on/off."
+  },
+  "reusedSafetyCoverage": {
+    "tests/unit/runtimeMemory/source-root-read-scope.test.ts": "Exact unique versus take(2), duplicate/query errors, tenant/space keys, null then insert, clones, shared limits, default/public/ingestion/wrong owner, share expiry/permission mismatches, all writer forms, pending/failure/late population and fresh-owner/fence behavior. Existing mechanism unchanged.",
+    "tests/unit/runtimeAuth/managed-source-read-scope.test.ts": "Source/conversation/bridge/run and authority raw boundaries, current clocks, writer epochs including component/fluent/unknown/failed/in-flight writes, late reads, private snapshot-owner isolation. Existing mechanism unchanged.",
+    "remainingSelectedSuites": "Registered whole-recall/control/preparation/checkpoint composition, public boundaries, repository/services/traversal/query/vector-delivery/deadline behavior; exact inventory retained in selected-tests.json."
+  },
+  "serialLookupLead": "No batching added. In hydrateVectorCandidates, chunk and receipt raw rows are independent after source validation, but naive parallelization moves physical/error work before original source/chunk/hash failures and can change work/deadline semantics. Requires a separate grounded design.",
+  "limits": [
+    "No hosted latency or SLO improvement established by controlled physical-read differential.",
+    "No service, model, build, deployment, pack, Git mutation, P or W change performed by this task.",
+    "Existing operation-distinct reader retains its shared512entry/1000000byte limits, clones, writer epochs, unique errors and final cold fence; Auth unchanged."
+  ]
+}
