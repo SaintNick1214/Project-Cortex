@@ -81,7 +81,7 @@ export function normalizeTextSubmit(input: unknown): NormalizedAdmissionV1 {
     assertUnicode(part.text); bytes += utf8Bytes(part.text); scalars += [...part.text].length;
   }
   if (!scalars || bytes > 120_000) invalid();
-  if(Object.hasOwn(value,"memory")) value.memory=normalizeMemoryEffortRequest(value.memory as MemoryEffortRequest);
+  if(Object.prototype.hasOwnProperty.call(value,"memory")) value.memory=normalizeMemoryEffortRequest(value.memory as MemoryEffortRequest);
   const publicRequest = value as unknown as TextSubmitV1;
   return { internalVersion: 1, publicRequest,
     conversationSelector: publicRequest.conversationId === undefined ? { kind: "create" }

@@ -33,14 +33,14 @@ const presets = {
 function positive(value: unknown, zero = false): value is number { return Number.isSafeInteger(value) && (value as number) >= (zero ? 0 : 1); }
 function ownDataRecord(input: unknown): input is Record<string, unknown> {
   if (!input || typeof input !== "object" || Array.isArray(input) || ![Object.prototype, null].includes(Object.getPrototypeOf(input))) return false;
-  return Reflect.ownKeys(input).every(key => typeof key === "string" && Object.hasOwn(Object.getOwnPropertyDescriptor(input,key)!,"value"));
+  return Reflect.ownKeys(input).every(key => typeof key === "string" && Object.prototype.hasOwnProperty.call(Object.getOwnPropertyDescriptor(input,key)!,"value"));
 }
 function invalid(): never { throw new Error("INVALID_INPUT: invalid memory effort"); }
 export function normalizeMemoryEffortRequest(input?: MemoryEffortRequest): MemoryEffortRequest {
   if (input === undefined) return { effort: "normal" };
   if (!ownDataRecord(input) || Object.keys(input).some(key => !["effort", "maxEntries", "maxContextTokens"].includes(key))) invalid();
   const effort = input.effort === undefined ? "normal" : input.effort;
-  if (!(typeof effort === "string" && Object.hasOwn(presets, effort)) || input.maxEntries !== undefined && !positive(input.maxEntries, true)
+  if (!(typeof effort === "string" && Object.prototype.hasOwnProperty.call(presets, effort)) || input.maxEntries !== undefined && !positive(input.maxEntries, true)
     || input.maxContextTokens !== undefined && !positive(input.maxContextTokens)) invalid();
   return { effort:effort as MemoryEffort, ...(input.maxEntries === undefined ? {} : { maxEntries: input.maxEntries }), ...(input.maxContextTokens === undefined ? {} : { maxContextTokens: input.maxContextTokens }) };
 }

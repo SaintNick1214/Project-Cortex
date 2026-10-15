@@ -46,6 +46,7 @@ export const runtimeIngestionTables = {
     attempt: v.number(), leaseVersion: v.number(), leaseExpiresAt: v.optional(v.number()),
     policyCanonical: v.optional(v.string()), receiptId: v.optional(v.string()), payloadCanonical: v.optional(v.string()),
     capacityWait: v.optional(v.object({ deadline: v.number(), notBefore: v.number(), wakes: v.number() })),
+    claimWait: v.optional(v.object({ deadline: v.number(), notBefore: v.number(), wakes: v.number(), failedClaimAt: v.number() })),
     failureCode: v.optional(v.string()), updatedAt: v.number() })
     .index("by_event_stage", ["tenantId", "memorySpaceId", "eventId", "stage"]),
   runtimeIngestionJobs: defineTable({ ...scope, eventId: v.string(), runBudgetId: v.string(),
