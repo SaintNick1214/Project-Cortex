@@ -265,8 +265,9 @@ export function createAuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: 
   if ((ctx as Ctx & { [v8ReadScope]?: true })[v8ReadScope]) return ctx;
   return createRawReadScope(ctx, options, false);
 }
-/** Opt-in native V8 transaction only. No derived decision or mutable account/run
- * row is retained; every original predicate continues to execute. */
+/** Opt-in native V8 transaction only. No derived decision or mutable account
+ * read is retained; managed origin runs have a separate invalidating raw family.
+ * Every original predicate continues to execute. */
 export function createV8AuthorityReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options?: { managedSources: true }): Ctx {
   if ((ctx as Ctx & { [v8ReadScope]?: true })[v8ReadScope]
     && (!options?.managedSources || (ctx as ManagedSourceContext)[managedSourceReadScope])) return ctx;
@@ -291,9 +292,14 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
   const metadata = new Map<string, unknown>();
   const executableMetadata = new Map<string, unknown>();
   let executableMetadataBytes = 0;
-  const graph = new Map<string, unknown>();
+  type GraphFamily = "source" | "conversation" | "bridge" | "run";
+  const graph = new Map<string, { family: GraphFamily; value: unknown; bytes: number }>();
   let graphBytes = 0, graphEpoch = 0;
-  const freshGraph = () => { graph.clear(); graphBytes = 0; graphEpoch++; };
+  const freshGraph = (family?: GraphFamily) => {
+    if (family === undefined) { graph.clear(); graphBytes = 0; }
+    else for (const [key, entry] of graph) if (entry.family === family) { graph.delete(key); graphBytes -= entry.bytes; }
+    graphEpoch++;
+  };
   // Nested helper scopes share only this explicitly opted-in parent reader.
   // Native child RPC contexts never receive the symbol through serialized args.
   const nativeTranscript = (ctx as NativeTranscriptContext)[nativeTranscriptReadScope] ?? (options?.nativeTranscript ? createNativeTranscriptReader() : undefined);
@@ -342,26 +348,29 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
     }
     return cloneAuthorityValue(value);
   };
-  const readGraph = async <T>(family: string, args: readonly string[], invoke: () => Promise<T>): Promise<T> => {
+  const readGraph = async <T>(family: GraphFamily, args: readonly string[], invoke: () => Promise<T>): Promise<T> => {
     const key = authorityReadKey(family, args), started = graphEpoch;
-    if (!writers && graph.has(key)) return cloneAuthorityValue(graph.get(key)) as T;
+    if (!writers && graph.has(key)) return cloneAuthorityValue(graph.get(key)!.value) as T;
     const value = cloneAuthorityValue(await invoke());
     if (!writers && graphEpoch === started && !graph.has(key) && graph.size < MANAGED_SOURCE_READ_SCOPE_MAX_ENTRIES) {
       const bytes = nativeTranscriptBytes(value) + new TextEncoder().encode(key).length;
-      if (graphBytes + bytes <= MANAGED_SOURCE_READ_SCOPE_MAX_BYTES) { graph.set(key, value); graphBytes += bytes; }
+      if (graphBytes + bytes <= MANAGED_SOURCE_READ_SCOPE_MAX_BYTES) { graph.set(key, { family, value, bytes }); graphBytes += bytes; }
     }
     return cloneAuthorityValue(value);
   };
-  // Explicit native tables only. State writes affect none of the retained raw
-  // families. Financial writes retain authority alone: accounts/operations/
-  // attempts are never cached, and policy/message rows are freshly read.
-  const retention = (method: string, args: unknown[]): "all" | "authority" | undefined => {
+  // Explicit native tables only. State writes retain authority/policy/message
+  // rows; origin-run writes separately evict raw run rows. Financial writers
+  // retain authority and the managed graph, but freshly read policy/messages.
+  // Mutable accounts, operations and attempts are never cached.
+  type WriteRetention = { reads: "all" | "authority"; graph: "all" | "except-run" };
+  const retention = (method: string, args: unknown[]): WriteRetention | undefined => {
     if (!v8 || typeof args[0] !== "string") return undefined;
     const table = args[0];
     const state = ["runtimeAgentExecutions", "runtimeAgentOperations", "runtimeRunOutbox", "runtimeRuns"].includes(table);
     const finance = ["runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"].includes(table);
     if (!state && !finance) return undefined;
-    if (method === "insert") return args.length === 2 ? state ? "all" : "authority" : undefined;
+    const retained: WriteRetention = { reads: state ? "all" : "authority", graph: table === "runtimeRuns" ? "except-run" : "all" };
+    if (method === "insert") return args.length === 2 ? retained : undefined;
     if (args.length !== (method === "delete" ? 2 : 3) || typeof args[1] !== "string") return undefined;
     // The native normalizer proves the ID belongs to the explicit table. If
     // unavailable/refused, invoke the original writer under full invalidation.
@@ -369,14 +378,20 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
     try {
       if (typeof normalize !== "function" || Reflect.apply(normalize, ctx.db, [table, args[1]]) !== args[1]) return undefined;
     } catch { return undefined; }
-    return state ? "all" : "authority";
+    return retained;
   };
-  const writing = async (invoke: () => unknown, retained?: "all" | "authority"): Promise<unknown> => {
-    // Even a previously proven control-only writer can change an origin run.
-    // Graph values never use the authority/policy writer-retention exemption.
-    const boundary = () => { freshGraph(); if (retained) { epoch++; if (retained === "authority") freshMetadata(); } else invalidate(); };
-    boundary(); writers++; nativeTranscript?.beginWrite(retained === "all");
-    try { return await invoke(); } finally { writers--; nativeTranscript?.endWrite(retained === "all"); boundary(); }
+  const writing = async (invoke: () => unknown, retained?: WriteRetention): Promise<unknown> => {
+    // Exact control/finance writers cannot change source/conversation/bridge
+    // rows. An origin run writer evicts every cached run, including absent rows.
+    // Advance the epoch even for retained families so late reads never populate
+    // across a writer. Unknown or failed writers clear the complete raw graph.
+    const boundary = () => {
+      if (!retained) freshGraph(); else if (retained.graph === "except-run") freshGraph("run"); else graphEpoch++;
+      if (retained) { epoch++; if (retained.reads === "authority") freshMetadata(); } else invalidate();
+    };
+    boundary(); writers++; nativeTranscript?.beginWrite(retained?.reads === "all");
+    try { return await invoke(); } catch (error) { freshGraph(); throw error; }
+    finally { writers--; nativeTranscript?.endWrite(retained?.reads === "all"); boundary(); }
   };
   const db = new Proxy(ctx.db, { get(target, key) {
     const value: unknown = Reflect.get(target, key, target);

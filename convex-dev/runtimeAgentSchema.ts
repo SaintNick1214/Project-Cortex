@@ -30,6 +30,7 @@ export const runtimeAgentTables = {
     .index("by_delivery", ["tenantId", "memorySpaceId", "runId", "attemptNumber", "final", "sequence"]),
   runtimeAgentOperations: defineTable({ ...scope, operationId: v.string(), semanticId: v.string(), kind: v.union(v.literal("model"), v.literal("tool")),
     ordinal: v.number(), toolCallId: v.optional(v.string()), toolName: v.optional(v.string()), requestCanonical: v.string(),
+    nativeRequestCanonical: v.optional(v.string()),
     state: v.union(v.literal("prepared"), v.literal("waiting_approval"), v.literal("approved"), v.literal("started"), v.literal("complete"), v.literal("unknown")),
     resultCanonical: v.optional(v.string()), nativeMessageIds: v.array(v.string()), nativeModelOperationId: v.optional(v.id("runtimeModelOperations")), approvalActor: v.optional(runtimeAuthorityReference),
     startedAt: v.optional(v.number()), endedAt: v.optional(v.number()), createdAt: v.number(),

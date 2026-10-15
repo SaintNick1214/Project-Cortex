@@ -603,30 +603,26 @@ it.each(["edit", "revoke"])("final resource boundary freshly sees a late %s afte
   const scope = createV8AuthorityReadScope(f.ctx); await expect(read(f.ctx, args, 8, scope)).rejects.toThrow("FORBIDDEN");
 });
 
-it.each([true, false])("save/candidate shared=%s ancestry reduces reads inside each fresh child while keeping exact writes and state", async shared => {
+it.each([true, false])("atomic save/candidate shared=%s ancestry reduces raw reads while keeping exact writes and state", async shared => {
   const f = await ancestryFixture(shared), save = { ...f.attempt, context: "", entries: [], witnesses: [f.topWitness], completeness: "complete" as const };
-  const before = { ...wholeState(f), sequence: f.db.sequence }, observed = instrumentGraphReads(f), nativeMutation = f.ctx.runMutation;
+  const before = { ...wholeState(f), sequence: f.db.sequence }, observed = instrumentGraphReads(f), callsBefore = f.calls.length;
   const restore = () => { f.db.rows = clone(before.rows); f.db.writes = before.writes; f.db.sequence = before.sequence;
     Object.assign(f.native, clone(before.native)); Object.assign(f.effects, before.effects); f.scheduled.splice(0, f.scheduled.length, ...clone(before.scheduled)); };
-  // K25's exact child helper/body under its original graph-disabled V8 scope.
-  f.ctx.runMutation = (async (reference, args) => {
-    if (getFunctionName(reference) === "runtimeAgent:prepareResolvedModelCandidateV8") {
-      return f.transaction(() => agent.prepareResolvedModelCandidateV8Handler(createV8AuthorityReadScope(f.ctx), args as Parameters<typeof agent.prepareResolvedModelCandidateV8Handler>[1]));
-    }
-    return nativeMutation.call(f.ctx, reference, args);
-  }) as MutationCtx["runMutation"];
+  // Compare graph-disabled and graph-enabled raw row scopes in the same
+  // atomic native body. The former child/savepoint boundary is no longer used.
   const original = await f.transaction(() => agent.saveAndPrepareContextV8Handler(createV8AuthorityReadScope(f.ctx), save));
-  const originalAfter = wholeState(f), originalReads = clone(observed.reads); restore(); observed.clear(); f.ctx.runMutation = nativeMutation;
+  const originalAfter = wholeState(f), originalReads = clone(observed.reads); restore(); observed.clear();
   const actual = await f.call(agent.saveAndPrepareContextV8, save), actualReads = clone(observed.reads);
   expect(actual).toEqual(original); expect(wholeState(f)).toEqual(originalAfter);
   expect(originalMutableReads(actualReads)).toEqual(originalMutableReads(originalReads));
   const originalGraph = originalReads.filter(row => row.family), actualGraph = actualReads.filter(row => row.family);
   expect(actualGraph.length).toBeLessThan(originalGraph.length / 2);
   expect(actual).toMatchObject({ kind: "prepared", prepared: { state: "started" } });
+  expect(f.calls.slice(callsBefore)).not.toContain("runtimeAgent:prepareResolvedModelCandidateV8");
   expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
   console.info(JSON.stringify({ type: "k26-controlled-save-candidate-reads", shared, original: {
     total: originalReads.length, graphQueries: originalGraph.length }, optimized: { total: actualReads.length, graphQueries: actualGraph.length },
-    exactStateAndMutableReadSequenceEqual: true, independentChild: true, billableAttempts: 0, nativeLatency: "UNAVAILABLE" }));
+    exactStateAndMutableReadSequenceEqual: true, atomicSaveAndPrepare: true, billableAttempts: 0, nativeLatency: "UNAVAILABLE" }));
 });
 
 /** K26's exact activation set: retain every scope descriptor except the new
@@ -661,28 +657,24 @@ it.each([true, false])("K27 incremental K26 read/delivery comparison shared=%s r
   console.info(JSON.stringify({ type: "k27-incremental-k26-tail", shared, baseline: { total: baseline.length, documents: baseline.reduce((n,r)=>n+r.documents,0) },
     optimized: { total: optimized.length, documents: optimized.reduce((n,r)=>n+r.documents,0) }, uniqueRawIdentitySetEqual: true, applicationWrites: 0, nativeLatency: "UNAVAILABLE" }));
 });
-it.each([true, false])("K27 incremental K26 save/fresh-child comparison shared=%s preserves state and complete native readset", async shared => {
+it.each([true, false])("K27 incremental K26 atomic save/candidate comparison shared=%s preserves state and complete native readset", async shared => {
   const f = await ancestryFixture(shared), save = { ...f.attempt, context: "", entries: [], witnesses: [f.topWitness], completeness: "complete" as const };
-  const before = { ...wholeState(f), sequence: f.db.sequence }, observed = instrumentGraphReads(f), nativeMutation = f.ctx.runMutation;
+  const before = { ...wholeState(f), sequence: f.db.sequence }, observed = instrumentGraphReads(f), callsBefore = f.calls.length;
   const restore = () => { f.db.rows = clone(before.rows); f.db.writes = before.writes; f.db.sequence = before.sequence;
     Object.assign(f.native, clone(before.native)); Object.assign(f.effects, before.effects); f.scheduled.splice(0, f.scheduled.length, ...clone(before.scheduled)); };
-  f.ctx.runMutation = (async (reference, args) => {
-    if (getFunctionName(reference) === "runtimeAgent:prepareResolvedModelCandidateV8")
-      return f.transaction(() => agent.prepareResolvedModelCandidateV8Handler(k26GraphScope(f.ctx), args as Parameters<typeof agent.prepareResolvedModelCandidateV8Handler>[1]));
-    return nativeMutation.call(f.ctx, reference, args);
-  }) as MutationCtx["runMutation"];
   const original = await f.transaction(() => agent.saveAndPrepareContextV8Handler(k26GraphScope(f.ctx), save));
-  const after = wholeState(f), baseline = clone(observed.reads); restore(); observed.clear(); f.ctx.runMutation = nativeMutation;
+  const after = wholeState(f), baseline = clone(observed.reads); restore(); observed.clear();
   expect(await f.call(agent.saveAndPrepareContextV8, save)).toEqual(original);
   const optimized = clone(observed.reads);
   expect(wholeState(f)).toEqual(after); expect(originalMutableReads(optimized)).toEqual(originalMutableReads(baseline));
   expect(uniqueRawReads(optimized)).toEqual(uniqueRawReads(baseline));
-  // K26 already retains these raw rows in each full parent and fresh child.
-  // Keep that scope; this batch adds no save/candidate read reduction.
+  // These two graph-enabled scopes retain the same raw families inside the
+  // atomic native body; their complete readsets must still agree.
   expect(optimized.length).toBe(baseline.length);
+  expect(f.calls.slice(callsBefore)).not.toContain("runtimeAgent:prepareResolvedModelCandidateV8");
   expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
   console.info(JSON.stringify({ type: "k27-incremental-k26-save-child", shared, baseline: { total: baseline.length, documents: baseline.reduce((n,r)=>n+r.documents,0) },
-    optimized: { total: optimized.length, documents: optimized.reduce((n,r)=>n+r.documents,0) }, uniqueRawIdentitySetEqual: true, independentChild: true, billableAttempts: 0, nativeLatency: "UNAVAILABLE" }));
+    optimized: { total: optimized.length, documents: optimized.reduce((n,r)=>n+r.documents,0) }, uniqueRawIdentitySetEqual: true, atomicSaveAndPrepare: true, billableAttempts: 0, nativeLatency: "UNAVAILABLE" }));
 });
 
 

@@ -2,7 +2,6 @@
 import {afterEach,beforeEach,expect,it,jest} from "@jest/globals";
 import {getFunctionName} from "convex/server";
 import type {MutationCtx} from "../../../convex-dev/_generated/server";
-import type {ModelCallRequest} from "../../../src/domain/model-policy";
 import type {GatewayAdmissionCheckpoint,GatewayResolution} from "../../../convex-dev/runtimeGateway";
 import {canonicalModelJson} from "../../../src/domain/model-policy";
 import {contextSourceKey} from "../../../src/domain/memory-context";
@@ -82,12 +81,8 @@ async function admission(f:Awaited<ReturnType<typeof fixture>>){
  const prepared=await f.call<Awaited<ReturnType<typeof agent.prepareResolvedModelCandidateV8Handler>>>(agent.prepareDirectTurnV8,f.attempt);
  if(prepared.state!=="started")throw Error("Expected original started model candidate");
  const resolution=prepared.governedResolution as GatewayResolution;
- const request:ModelCallRequest={semanticId:prepared.op.semanticId,childCallId:"same-bounded-native-child",texts:["Hello world!"],messages:[{role:"user",parts:[{type:"text",text:"Hello world!"}]}],
-   inputTokens:1,outputTokens:20,toolSteps:0,timeoutMs:1000,reservationUnits:resolution.snapshot.costBound.maximumCostUnits,
-   promptVersion:resolution.snapshot.pins.promptVersion,schemaVersion:resolution.snapshot.pins.schemaVersion,extractionVersion:resolution.snapshot.pins.extractionVersion,
-   toolRegistryVersion:resolution.snapshot.pins.toolRegistryVersion,tools:[],options:{maxRetries:0}};
- request.inputTokens=ledger.deriveQualifiedInputBound(resolution.dispatchEvidence,request);
- return{...f.attempt,operationId:prepared.op.operationId,ordinal:0,requestCanonical:canonicalModelJson(request),snapshotCanonical:canonicalModelJson(resolution.snapshot),
+ if(typeof prepared.op.nativeRequestCanonical!=="string")throw Error("Expected exact prepared native body");
+ return{...f.attempt,operationId:prepared.op.operationId,ordinal:0,requestCanonical:prepared.op.nativeRequestCanonical,snapshotCanonical:canonicalModelJson(resolution.snapshot),
    bindingCanonical:canonicalModelJson({reference:f.reference,operationKey:"agent.respond",runBudgetId:prepared.current.run.runBudgetId,semanticId:prepared.op.semanticId,ordinal:0})};
 }
 it("financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read",async()=>{
@@ -99,11 +94,11 @@ it("financial retention preserves the exact real permit/accounts/attempt and eve
  expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);expect(observed.counts().authority).toBeLessThan(control.authority);
  console.info(JSON.stringify({type:"controlled-v8-financial-read-count",original:control,optimized:observed.counts(),nativeProof:false}));
 });
-it.each(["budget","revocation","lease","binding"])("current %s still rejects V8 admission with original error/state",async fault=>{
+it.each(["budget","revocation","lease","binding","body"])("current %s still rejects V8 admission with original error/state",async fault=>{
  const f=await fixture(),args=await admission(f);
  if(fault==="budget")f.db.table("runtimeBudgetAccounts").find(value=>value.kind==="run")!.cancelled=true;
  if(fault==="revocation")f.grant.revokedAt=1_000_000;if(fault==="lease")args.leaseVersion++;
- if(fault==="binding")args.bindingCanonical="{}";
+ if(fault==="binding")args.bindingCanonical="{}";if(fault==="body"){const body=JSON.parse(args.requestCanonical);body.outputTokens--;args.requestCanonical=canonicalModelJson(body);}
  const before=f.state(),failure=async()=>{try{await f.call(agent.admitPreparedModelOperationV8,args);throw Error("Expected refusal");}catch(error){if(!(error instanceof Error)||error.message==="Expected refusal")throw error;return{name:error.name,message:error.message,data:"data" in error?error.data:undefined};}};
  enabled=false;const original=await failure();expect(f.state()).toEqual(before);enabled=true;
  expect(await failure()).toEqual(original);expect(f.state()).toEqual(before);

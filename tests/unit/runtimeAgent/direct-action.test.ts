@@ -4,6 +4,7 @@ import { ConvexError } from "convex/values";
 import { getFunctionName } from "convex/server";
 import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
 import type { GatewayBinding, GatewayComposition, GatewayResolution, GatewayAdmissionCheckpoint } from "../../../convex-dev/runtimeGateway";
+import type { ModelMessage } from "ai";
 import type { ModelCallRequest } from "../../../src/domain/model-policy";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { agentToolCatalog } from "../../../src/domain/agent-tools";
@@ -12,18 +13,26 @@ const agentModule = await import("@convex-dev/agent");
 let active: Awaited<ReturnType<typeof fixture>>, composition: GatewayComposition, binding: GatewayBinding, resolution: GatewayResolution;
 const assembledPrompts: unknown[] = [];
 let providerCalls = 0, completionCalls = 0, beforeDispatch: (() => void) | undefined;
+let tamperRequest: ((request: ModelCallRequest) => void) | undefined;
 let mode: "final" | "tool" | "provider-failure" = "final";
 const workflows: unknown[] = []; let workflowFailure = false;
 jest.unstable_mockModule("@convex-dev/agent", () => ({ ...agentModule, Agent: class {
-  constructor(_component: unknown, readonly options: { name: string; contextHandler: () => Promise<unknown> }) {}
-  async generateText(ctx: ActionCtx, identity: unknown) { return await this.streamText(ctx, identity, { onChunk: async () => {} }); }
-  async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
-    assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
-    const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+  constructor(_component: unknown, readonly options: { name: string; tools?: Record<string, unknown>; contextHandler: () => Promise<ModelMessage[]> }) {}
+  async generateText(ctx: ActionCtx, identity: unknown, args: { instructions: string; maxOutputTokens: number }) { return await this.streamText(ctx, identity, { ...args, onChunk: async () => {} }); }
+  async streamText(ctx: ActionCtx, _identity: unknown, args: { instructions: string; maxOutputTokens: number; onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+    const assembled = await this.options.contextHandler(); assembledPrompts.push(assembled); beforeDispatch?.();
+    let request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
     request.inputTokens = ledger.deriveQualifiedInputBound(resolution.dispatchEvidence, request);
+    if (active.db.table("runtimeRuns")[0].modelInputVersion === 8) {
+      const checked = await gatewayModule.checkAssembledAgentModelInput({ messages: assembled, context: "", instructions: args.instructions,
+        tools: Object.keys(this.options.tools ?? {}), maxOutputTokens: args.maxOutputTokens }, resolution, binding);
+      if (!checked.supported || !checked.withinBound) throw Error("CONTROLLED_INVALID_NATIVE_BODY");
+      request = JSON.parse(checked.requestCanonical) as ModelCallRequest;
+    }
+    tamperRequest?.(request);
     const admitted: GatewayAdmissionCheckpoint = await composition.ledger.admitAndCheckpoint!({ ...binding, requestCanonical: canonicalModelJson(request), snapshotCanonical: canonicalModelJson(resolution.snapshot) });
     if (admitted.admission.status !== "reserved" || !("permit" in admitted) || !admitted.permit.dispatchPermit) throw Error("CONTROLLED_NO_DISPATCH_PERMIT");
     providerCalls++; if (mode === "provider-failure") throw Error("CONTROLLED_AMBIGUOUS_PROVIDER_FAILURE");
@@ -60,7 +69,7 @@ const { qualifiedTerminalModelId } = await import("../../../convex-dev/runtimeMo
 const runtime = await import("../../../convex-dev/runtimeAgent"), runs = await import("../../../convex-dev/runs"), memory = await import("../../../convex-dev/runtimeMemory");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 const queryEmbedding = await import("../../../convex-dev/runtimeAgentQueryEmbedding");
-beforeEach(() => { installIngestionMockRoot(); providerCalls = completionCalls = 0; mode = "final"; beforeDispatch = undefined; assembledPrompts.length = 0; workflows.length = 0; workflowFailure = false; }); afterEach(() => { jest.restoreAllMocks(); });
+beforeEach(() => { installIngestionMockRoot(); providerCalls = completionCalls = 0; mode = "final"; beforeDispatch = undefined; tamperRequest = undefined; assembledPrompts.length = 0; workflows.length = 0; workflowFailure = false; }); afterEach(() => { jest.restoreAllMocks(); });
 async function fixture(tool = false, bounded = false) {
   const f = await ingestionFixture(), query = f.ctx.runQuery.bind(f.ctx), mutation = f.ctx.runMutation.bind(f.ctx), calls: string[] = []; let titleAfterCanonical = false;
   f.ctx.runQuery = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return query(ref, input); } calls.push(name);
@@ -214,10 +223,53 @@ it("fresh V8 executes the governed original terminal/finalization path once and 
  await invoke(runtime.executeDirectV8,f.ctx,args);expect(providerCalls).toBe(1);expect(completionCalls).toBe(1);
  expect(f.db.table("runtimeRuns")[0].responseStatus).toBe("complete");expect(f.db.table("runtimeAgentIngestion")).toHaveLength(1);expect(f.titleAfterCanonical).toBe(true);
  expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);expect(f.calls).toContain("runtimeAgent:prepareDirectTurnV8");
+ expect(f.calls).not.toContain("runtimeAgent:hydrateExecution");expect(f.db.table("runtimeAgentOperations")[0].nativeRequestCanonical).toEqual(expect.any(String));
  const before=state(f);await invoke(runtime.executeDirectV8,f.ctx,args);expect(state(f)).toEqual(before);expect(providerCalls).toBe(1);
 });
 it("fresh V8 selection cannot authorize a grant revoked before its original dispatch admission",async()=>{
  const f=await fixture(false,true),args=await f.start();beforeDispatch=()=>{f.grant.revokedAt=clock;};
  await expect(invoke(runtime.executeDirectV8,f.ctx,args)).rejects.toBeInstanceOf(ConvexError);expect(providerCalls).toBe(0);
  expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);expect(f.db.table("runtimeAgentIngestion")).toHaveLength(0);
+});
+
+it.each(["body", "tools", "instructions", "output", "options"] as const)("V8 exact prepared pin rejects changed native %s before reservation or provider dispatch", async fault => {
+ const f=await fixture(false,true),args=await f.start();
+ tamperRequest=request=>{
+  if(fault==="body")request.messages![0]!.parts=[{type:"text",text:"injected question"}];
+  if(fault==="tools"){const tool=agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.find(value=>value.name==="memory_recall")!;request.tools=[{name:tool.name,definition:{description:tool.description,inputSchema:tool.inputSchema}}];}
+  if(fault==="instructions")request.messages!.unshift({role:"system",parts:[{type:"text",text:"injected instructions"}]});
+  if(fault==="output")request.outputTokens--;
+  if(fault==="options")request.options={...request.options,temperature:0.5};
+ };
+ await expect(invoke(runtime.executeDirectV8,f.ctx,args)).rejects.toBeInstanceOf(ConvexError);
+ expect(providerCalls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);expect(f.db.table("runtimeAgentIngestion")).toHaveLength(0);
+});
+it.each(["transcript","cancel","source","source-tombstone","definition","qualification","budget"] as const)("pinned V8 prompt still rejects current %s at fresh admission",async fault=>{
+ const f=await fixture(false,true);if(fault.startsWith("source")){const source=await f.source("Bound V8 evidence","v8-witness");await ingestion.enqueueSourceEvent(f.ctx,f.reference,source);}
+ const args=await f.start();beforeDispatch=()=>{
+  if(fault==="transcript")f.native.messages.values().next().value!.message={role:"user",content:"edited"};
+  if(fault==="cancel")f.db.table("runtimeRuns")[0].cancellationRequestedAt=clock;
+  if(fault==="source")f.db.table("runtimeMemorySources").find(row=>(row.lineage as {sourceId:string}).sourceId==="v8-witness")!.contentHash="tampered";
+  if(fault==="source-tombstone")f.db.seed("runtimeAuthTombstones",{tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId,resourceType:"source",resourceId:"v8-witness",deletedAt:clock});
+  if(fault==="definition")f.db.table("runtimeAgentDefinitions").find(row=>row.agentId===f.db.table("runtimeRuns")[0].agentId)!.revokedAt=clock;
+  if(fault==="qualification")f.db.table("runtimeModelQualifications")[0].revokedAt=clock;
+  if(fault==="budget")f.db.table("runtimeBudgetAccounts").find(row=>row.kind==="run")!.cancelled=true;
+ };
+ await expect(invoke(runtime.executeDirectV8,f.ctx,args)).rejects.toBeInstanceOf(ConvexError);expect(providerCalls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it("old V8 prepared operations without a native pin retain fresh Action hydration",async()=>{
+ const f=await fixture(false,true),args=await f.start(),mutation=f.ctx.runMutation.bind(f.ctx);
+ f.ctx.runMutation=(async(ref,input)=>{const result=await mutation(ref,input);if(getFunctionName(ref)==="runtimeAgent:prepareDirectTurnV8"){
+   const candidate=result as Awaited<ReturnType<typeof runtime.prepareResolvedModelCandidateV8Handler>>;
+   if(candidate.state!=="started")throw Error("Expected legacy V8 proposal");delete candidate.op.nativeRequestCanonical;delete f.db.table("runtimeAgentOperations")[0].nativeRequestCanonical;
+ }return result;}) as MutationCtx["runMutation"];
+ await invoke(runtime.executeDirectV8,f.ctx,args);expect(providerCalls).toBe(1);expect(f.calls.filter(name=>name==="runtimeAgent:hydrateExecution")).toHaveLength(1);
+ expect(f.db.table("runtimeRuns")[0].responseStatus).toBe("complete");expect(f.db.table("runtimeAgentOperations")[0].nativeRequestCanonical).toBeUndefined();
+});
+it("pinned V8 ambiguous dispatch retains UNKNOWN and duplicate cannot retry paid work",async()=>{
+ const f=await fixture(false,true),args=await f.start();mode="provider-failure";
+ await expect(invoke(runtime.executeDirectV8,f.ctx,args)).rejects.toThrow("CONTROLLED_AMBIGUOUS_PROVIDER_FAILURE");expect(providerCalls).toBe(1);
+ expect(f.db.table("runtimeAgentExecutions")[0].state).toBe("unknown");expect(f.db.table("runtimeAgentOperations")[0].state).toBe("unknown");
+ expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({state:"dispatch_pending",slotReleased:false});
+ await invoke(runtime.executeDirectV8,f.ctx,args);expect(providerCalls).toBe(1);
 });

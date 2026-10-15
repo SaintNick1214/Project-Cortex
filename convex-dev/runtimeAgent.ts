@@ -863,7 +863,7 @@ async function prepareResolvedModelOperationHandler(ctx: MutationCtx, args: Atte
 export const prepareResolvedModelOperation = internalMutation({ args: { ...agentAttempt, ordinal: v.number() },
   handler: (ctx, args) => prepareResolvedModelOperationHandler(createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }), args) });
 export type PreparedModelCandidate = { state: "completed"; resultCanonical: string } | {
-  state: "started"; current: Awaited<ReturnType<typeof executionContext>>; op: Awaited<ReturnType<typeof beginOperationHandler>>;
+  state: "started"; current: Awaited<ReturnType<typeof executionContext>>; op: Awaited<ReturnType<typeof beginOperationHandler>> & { nativeRequestCanonical?: string };
   initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>;
   requestPreflight: true;
 };
@@ -963,6 +963,12 @@ async function admitModelOperationHandler(ctx: MutationCtx, args: Attempt & { op
   if (!Number.isSafeInteger(args.ordinal) || args.ordinal < 0 || args.ordinal > 32 || op.kind !== "model" || op.state !== "started"
     || op.ordinal !== args.ordinal || op.semanticId !== semanticId || op.operationId !== `agent-op:${semanticId}`
     || op.requestCanonical !== modelBinding) transcriptDenied("POLICY_DENIED");
+  // The prepared prompt is a proposal. This fresh native parent checks the
+  // complete actual body as well as current source/definition/model binding
+  // before the original policy admission, reservation and dispatch permit.
+  if (current.snapshot.version === 8 && op.nativeRequestCanonical !== undefined
+    && (utf8Bytes(op.nativeRequestCanonical) > MODEL_LEDGER_STORAGE_LIMITS.canonicalBytes
+      || op.nativeRequestCanonical !== args.requestCanonical)) transcriptDenied("POLICY_DENIED");
   const admission = await admitHandler(ctx, { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId,
     semanticId: op.semanticId, ordinal: op.ordinal, requestCanonical: args.requestCanonical });
   await bindNativeOperationHandler(ctx, { ...attempt, operationId: op.operationId, nativeOperationId: admission.operationId });
@@ -1026,7 +1032,7 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
   const prepared = await ctx.runMutation(refs.prepareModelOperation, { ...attempt, ordinal: args.ordinal });
   return await executePreparedModelStep(ctx, args, prepared);
 }
-async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordinal: number }, prepared: Awaited<ReturnType<typeof prepareModelOperationHandler>>,
+async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordinal: number }, prepared: Awaited<ReturnType<typeof prepareModelOperationHandler>> | PreparedModelCandidate,
   proposal?: { initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; requestPreflight?: true }): Promise<StepResult> {
   const attempt = attemptArgs(args);
   if (prepared.state === "completed") return JSON.parse(prepared.resultCanonical) as StepResult;
@@ -1074,6 +1080,11 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
     tools: serverTools(current.definition.tools.map(tool => tool.toolId as keyof typeof NATIVE_TOOL_NAMES)),
     contextOptions: { recentMessages: 0 }, storageOptions: { saveMessages: "promptAndOutput" },
     contextHandler: async () => {
+      if (current.snapshot.version === 8 && "nativeRequestCanonical" in op && typeof op.nativeRequestCanonical === "string") {
+        // No authorization is reused: final V8 admission freshly validates the
+        // operation's current model binding and its exact normalized body pin.
+        return buildV8AgentMessages(current.messages, current.execution.contextCanonical ?? "");
+      }
       const fresh = await ctx.runQuery(refs.hydrate, attempt);
       if (proposal?.requestPreflight) {
         if (fresh.snapshot.version === 8) await preflightModelCandidateV8(fresh, args, op, proposal.initialResolution, proposal.governedResolution);
@@ -1884,9 +1895,10 @@ const selectedContextArgs = { ...agentAttempt,memoryEffortTraceCanonical:v.optio
 export const saveContextV8 = internalMutation({ args:selectedContextArgs,handler:(ctx,args)=>saveContextV8Handler(createV8AuthorityReadScope(ctx, { managedSources: true }),args) });
 export async function saveAndPrepareContextV8Handler(ctx: MutationCtx,args:Parameters<typeof saveContextV8Handler>[1]) {
   await saveContextV8Handler(ctx,args);
-  try { const prepared = await ctx.runMutation(ref<"mutation",Attempt & { ordinal:number },PreparedModelCandidate>("mutation","runtimeAgent:prepareResolvedModelCandidateV8"),{ ...attemptArgs(args),ordinal:0 });
-    return { kind:"prepared" as const,prepared }; }
-  catch(error) { return { kind:"refused" as const,refusal:boundedRefusal(error) }; }
+  // Both helpers are native-only. Failure rolls back context and unadmitted
+  // operation writes together; earlier paid embedding commits remain separate.
+  const prepared = await prepareResolvedModelCandidateV8Handler(ctx,{ ...attemptArgs(args),ordinal:0 });
+  return { kind:"prepared" as const,prepared };
 }
 export const saveAndPrepareContextV8 = internalMutation({ args:selectedContextArgs,handler:(ctx,args)=>saveAndPrepareContextV8Handler(createV8AuthorityReadScope(ctx, { managedSources: true }),args) });
 function selectedPendingEntries(pending: Awaited<ReturnType<typeof contextInputsV8Handler>>["pending"]): ModelInputEntry[] {
@@ -2008,7 +2020,6 @@ export async function prepareContextV8Handler(ctx: ActionCtx, args: Attempt, rec
   const save = { ...args, ...(memoryEffortTrace?{memoryEffortTraceCanonical:canonicalModelJson(memoryEffortTrace)}:{}),context, entries, historyMessageIds, witnesses: [...witnesses.values()], completeness, ...(failureCode ? { failureCode } : {}), ...(availability.empty ? { emptyIndexedProfileId: availability.profileId } : {}) };
   if (privateComposition) {
     const result = await ctx.runMutation(ref<"mutation", typeof save, Awaited<ReturnType<typeof saveAndPrepareContextV8Handler>>>("mutation", "runtimeAgent:saveAndPrepareContextV8"), save);
-    if (result.kind === "refused") throwRefusal(result.refusal);
     return result.prepared;
   }
   await ctx.runMutation(ref<"mutation",typeof save,null>("mutation","runtimeAgent:saveContextV8"), save); return null;
@@ -2091,9 +2102,13 @@ export async function prepareResolvedModelCandidateV8Handler(ctx:MutationCtx,arg
   const requestCanonical=canonicalModelJson({ messages:current.messages,context:current.execution.contextCanonical ?? "",instructions:current.definition.instructions });
   const op=await beginOperationHandler(ctx,{ ...attempt,ordinal:args.ordinal,kind:"model",requestCanonical });
   if(op.state==="complete" && op.resultCanonical) return { state:"completed",resultCanonical:op.resultCanonical };
-  await preflightModelCandidateV8(current,args,op,initialResolution,governedResolution);
+  const checked=await preflightModelCandidateV8(current,args,op,initialResolution,governedResolution);
+  if(utf8Bytes(checked.requestCanonical)>MODEL_LEDGER_STORAGE_LIMITS.canonicalBytes)transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
+  const stored=await operation(ctx,attempt,op.operationId);
+  if(stored.nativeRequestCanonical!==undefined&&stored.nativeRequestCanonical!==checked.requestCanonical)transcriptDenied("IDEMPOTENCY_CONFLICT");
+  await ctx.db.patch("runtimeAgentOperations",stored._id,{nativeRequestCanonical:checked.requestCanonical});
   await startOperationHandler(ctx,{ ...attempt,operationId:op.operationId });
-  return { state:"started",current,op,initialResolution,governedResolution,requestPreflight:true };
+  return { state:"started",current,op:{...op,nativeRequestCanonical:checked.requestCanonical},initialResolution,governedResolution,requestPreflight:true };
 }
 export const prepareResolvedModelCandidateV8=internalMutation({ args:{ ...agentAttempt,ordinal:v.number() },
   handler:(ctx,args)=>prepareResolvedModelCandidateV8Handler(createV8AuthorityReadScope(ctx, { managedSources: true }),args) });

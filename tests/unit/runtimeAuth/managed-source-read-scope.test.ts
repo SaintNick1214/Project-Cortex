@@ -112,7 +112,7 @@ describe("closed invocation-local managed-source raw rows", () => {
     const parent = createV8AuthorityReadScope(f.ctx, { managedSources: true }), view = withManagedSourceReads(f.ctx, parent); expect(await read(view, f, f.first)).toBe(true);
     jest.spyOn(Date, "now").mockReturnValue(1010); expect(await outcome(() => read(view, f, f.first))).toEqual(await outcome(() => read(f.ctx, f, f.first))); expect(await read(view, f, f.first)).toBe(false);
   });
-  it.each(["insert", "patch", "replace"] as const)("%s invalidates graph before/after including original V8 state-retention writes", async method => {
+  it.each(["insert", "patch", "replace"] as const)("%s invalidates run rows before/after including original V8 state-retention writes", async method => {
     const f = setup(), scoped = createV8AuthorityReadScope(f.ctx, { managedSources: true }); await readManagedSourceRunRows(scoped, "tenant-a", "space-a", "run-a");
     const row = f.db.table("runtimeRuns")[0]!, id = row._id as Id<"runtimeRuns">;
     // These two ports exercise writer epochs on the controlled partial rows,
@@ -129,6 +129,133 @@ describe("closed invocation-local managed-source raw rows", () => {
     const before = physical.length; await readManagedSourceRows(scoped, "tenant-a", "space-a", "overflow"); await readManagedSourceRows(scoped, "tenant-a", "space-a", "overflow"); expect(physical.length - before).toBe(2);
     const oversized = createV8AuthorityReadScope(f.ctx, { managedSources: true }); f.a.content = "x".repeat(MANAGED_SOURCE_READ_SCOPE_MAX_BYTES);
     const previous = physical.length; await readManagedSourceRows(oversized, "tenant-a", "space-a", "a"); await readManagedSourceRows(oversized, "tenant-a", "space-a", "a"); expect(physical.length - previous).toBe(2);
+  });
+});
+
+describe("exact V8 writer graph retention", () => {
+  const retainedTables = ["runtimeAgentExecutions", "runtimeAgentOperations", "runtimeRunOutbox",
+    "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"] as const;
+  const families = (ctx: MutationCtx) => Promise.all([
+    readManagedSourceRows(ctx, "tenant-a", "space-a", "a"),
+    readManagedConversationRows(ctx, "tenant-a", "space-a", "conversation-a"),
+    readManagedTranscriptBridgeRows(ctx, "tenant-a", "space-a", "native-a"),
+    readManagedSourceRunRows(ctx, "tenant-a", "space-a", "run-a"),
+  ]);
+  it.each(retainedTables)("%s updates retain unchanged raw graph and rerun actual source predicates", async table => {
+    const f = setup(), physical = observe(f), row = f.db.seed(table, { state: "ready" });
+    const parent = createV8AuthorityReadScope(f.ctx, { managedSources: true }), view = withNativeSnapshotReads(f.ctx, parent);
+    const expected = await families(view); expect(await read(view, f, f.first)).toBe(true);
+    const before = physical.filter(row => graphTables.has(row.table)).length;
+    await (view.db as unknown as typeof f.db).patch(table, row._id, { state: "running" });
+    expect(await families(view)).toEqual(expected); expect(await read(view, f, f.first)).toBe(true);
+    expect(physical.filter(row => graphTables.has(row.table))).toHaveLength(before);
+    expect(await (view.db as unknown as typeof f.db).get(table, row._id)).toMatchObject({ state: "running" });
+    // Re-evaluate the clock predicate over retained raw conversation rows.
+    freshManagedSourceReads(view); f.conversation.retentionUntil = 1010;
+    expect(await read(view, f, f.first)).toBe(true); jest.spyOn(Date, "now").mockReturnValue(1010);
+    expect(await read(view, f, f.first)).toBe(false);
+  });
+  it("run updates evict the whole run family and retain independent source/conversation/bridge rows", async () => {
+    const f = setup(), physical = observe(f), view = createV8AuthorityReadScope(f.ctx, { managedSources: true });
+    const expected = await families(view);
+    await readManagedSourceRunRows(view, "tenant-a", "space-a", "run-b");
+    await readManagedSourceRunRows(view, "tenant-a", "space-a", "missing"); physical.length = 0;
+    const a = f.db.table("runtimeRuns")[0]!;
+    await view.db.patch("runtimeRuns", a._id as Id<"runtimeRuns">, { tombstonedAt: 1000 });
+    const current = await families(view);
+    expect(current.slice(0, 3)).toEqual(expected.slice(0, 3)); expect(current[3][0]).toMatchObject({ tombstonedAt: 1000 });
+    expect(await readManagedSourceRunRows(view, "tenant-a", "space-a", "run-b")).toHaveLength(1);
+    expect(await readManagedSourceRunRows(view, "tenant-a", "space-a", "missing")).toEqual([]);
+    expect(physical.map(row => row.table)).toEqual(["runtimeRuns", "runtimeRuns", "runtimeRuns"]);
+    expect(await read(view, f, f.first)).toBe(false);
+  });
+  it("retained graph rows do not cache a running memory_remember operation's eligibility", async () => {
+    const f = setup(), physical = observe(f), operation = f.db.seed("runtimeAgentOperations", {
+      tenantId: "tenant-a", memorySpaceId: "space-a", operationId: "remember-a", toolName: "memory_remember", state: "started",
+    });
+    const source = f.db.seed("runtimeMemorySources", { ...f.first, _id: "runtimeMemorySources:tool",
+      lineage: { sourceId: "tool", sourceEventId: "event-tool", sourceRevision: 1, role: "tool", trust: "verified_tool_evidence", operationId: "remember-a" },
+      transcriptOrigin: undefined,
+    }) as unknown as Doc<"runtimeMemorySources">;
+    const view = withNativeSnapshotReads(f.ctx, createV8AuthorityReadScope(f.ctx, { managedSources: true }));
+    expect(await read(view, f, source)).toBe(false);
+    expect(await managedSourceIsCurrent(view, f.reference, source, "write")).toBe(true);
+    const before = physical.filter(row => graphTables.has(row.table)).length;
+    await view.db.patch("runtimeAgentOperations", operation._id as Id<"runtimeAgentOperations">, { state: "complete" });
+    expect(await read(view, f, source)).toBe(true);
+    expect(physical.filter(row => graphTables.has(row.table))).toHaveLength(before);
+    expect(physical.filter(row => row.table === "runtimeAgentOperations")).toHaveLength(3);
+  });
+  it("explicit freshness and non-V8 scopes still clear every raw graph family", async () => {
+    const f = setup(), physical = observe(f), view = createV8AuthorityReadScope(f.ctx, { managedSources: true });
+    await families(view); freshManagedSourceReads(view); await families(view); expect(physical).toHaveLength(8);
+    const normal = createMemorySourceReadScope(f.ctx), row = f.db.seed("runtimeAgentOperations", { state: "ready" });
+    await families(normal); physical.length = 0;
+    await (normal.db as unknown as typeof f.db).patch("runtimeAgentOperations", row._id, { state: "running" });
+    await families(normal); expect(physical.map(row => row.table)).toEqual([...graphTables]);
+  });
+  it.each(["source", "bridge", "grant"] as const)("retained control rows do not mask a later %s edit/revocation", async kind => {
+    const f = setup(), view = withNativeSnapshotReads(f.ctx, createV8AuthorityReadScope(f.ctx, { managedSources: true }));
+    expect(await read(view, f, f.first)).toBe(true);
+    const state = f.db.seed("runtimeAgentExecutions", { state: "ready" }), db = view.db as unknown as typeof f.db;
+    await db.patch("runtimeAgentExecutions", state._id, { state: "running" }); expect(await read(view, f, f.first)).toBe(true);
+    if (kind === "source") await db.patch("runtimeMemorySources", f.a._id, { contentHash: "edited" });
+    if (kind === "bridge") await db.patch("runtimeTranscriptMessages", f.db.table("runtimeTranscriptMessages")[0]!._id, { tombstonedAt: 1000 });
+    if (kind === "grant") await db.patch("runtimeAuthGrants", f.grant._id, { revokedAt: 1000 });
+    const actual = await outcome(() => read(view, f, f.first));
+    expect(actual).toEqual(await outcome(() => read(f.ctx, f, f.first))); expect(actual).not.toEqual({ result: true });
+  });
+  it("a rejected exact writer clears all graph rows and preserves the original error", async () => {
+    const f = setup(), physical = observe(f), row = f.db.seed("runtimeAgentOperations", { state: "ready" });
+    const failure = Error("EXACT_STATE_WRITER_FAILED"), view = createV8AuthorityReadScope(f.ctx, { managedSources: true });
+    await families(view); physical.length = 0;
+    jest.spyOn(f.db, "patch").mockRejectedValueOnce(failure);
+    await expect((view.db as unknown as typeof f.db).patch("runtimeAgentOperations", row._id, { state: "running" })).rejects.toBe(failure);
+    await families(view); expect(physical.map(row => row.table)).toEqual([...graphTables]);
+  });
+  it.each(["unknown-table", "missing-normalizer"] as const)("%s clears every graph family rather than assuming a safe writer", async kind => {
+    const f = setup(), physical = observe(f), row = f.db.seed("runtimeAgentOperations", { state: "ready" });
+    const view = createV8AuthorityReadScope(f.ctx, { managedSources: true }); await families(view); physical.length = 0;
+    const db = view.db as unknown as typeof f.db;
+    if (kind === "unknown-table") await db.insert("facts", { factId: "unrelated" });
+    else {
+      Object.defineProperty(f.db, "normalizeId", { configurable: true, value: undefined });
+      await db.patch("runtimeAgentOperations", row._id, { state: "running" });
+    }
+    await families(view); expect(physical.map(row => row.table)).toEqual([...graphTables]);
+  });
+  it("retained writers suppress hits in flight without replacing the retained pre-write rows", async () => {
+    const f = setup(), physical = observe(f), row = f.db.seed("runtimeAgentOperations", { state: "ready" });
+    const view = createV8AuthorityReadScope(f.ctx, { managedSources: true }); await families(view);
+    let releaseWriter!: () => void, enteredWriter!: () => void;
+    const entered = new Promise<void>(resolve => { enteredWriter = resolve; }), gate = new Promise<void>(resolve => { releaseWriter = resolve; });
+    const patch = f.db.patch.bind(f.db);
+    jest.spyOn(f.db, "patch").mockImplementation(async (...args) => { enteredWriter(); await gate; await patch(...args); });
+    const writing = (view.db as unknown as typeof f.db).patch("runtimeAgentOperations", row._id, { state: "running" }); await entered;
+    const before = physical.length; expect(await families(view)).toHaveLength(4); expect(physical.length - before).toBe(4);
+    releaseWriter(); await writing; const completed = physical.length; await families(view); expect(physical).toHaveLength(completed);
+  });
+  it("a late raw graph read cannot repopulate after a retained writer epoch", async () => {
+    const f = setup(), row = f.db.seed("runtimeAgentOperations", { state: "ready" });
+    const view = createV8AuthorityReadScope(f.ctx, { managedSources: true });
+    let releaseRead!: () => void, enteredRead!: () => void, first = true;
+    const readEntered = new Promise<void>(resolve => { enteredRead = resolve; }), readGate = new Promise<void>(resolve => { releaseRead = resolve; });
+    const query = f.db.query.bind(f.db);
+    const reads = jest.spyOn(f.db, "query").mockImplementation(table => { const builder = query(table), take = builder.take;
+      builder.take = async cap => { const rows = await take(cap); if (first) { first = false; enteredRead(); await readGate; } return rows; }; return builder; });
+    const reading = readManagedSourceRows(view, "tenant-a", "space-a", "a"); await readEntered;
+    await (view.db as unknown as typeof f.db).patch("runtimeAgentOperations", row._id, { state: "complete" });
+    releaseRead(); await reading;
+    await readManagedSourceRows(view, "tenant-a", "space-a", "a"); expect(reads).toHaveBeenCalledTimes(2);
+  });
+  it("fluent writers clear all graph rows instead of inferring a retained table", async () => {
+    const f = setup(), physical = observe(f), parent = { ...f.ctx, db: f.db } as unknown as MutationCtx;
+    const table = f.db.table.bind(f.db), fluent = { patch: async function(this: unknown) { expect(this).toBe(fluent); } };
+    const view = createV8AuthorityReadScope(parent, { managedSources: true }); await families(view); physical.length = 0;
+    Object.defineProperty(f.db, "table", { configurable: true, value: () => fluent });
+    await (view.db as unknown as { table(name: string): typeof fluent }).table("runtimeAgentOperations").patch();
+    Object.defineProperty(f.db, "table", { configurable: true, value: table });
+    await families(view); expect(physical.map(row => row.table)).toEqual([...graphTables]);
   });
 });
 

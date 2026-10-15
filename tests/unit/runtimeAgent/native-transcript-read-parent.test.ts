@@ -49,6 +49,10 @@ function messageReads(spy: { mock: { calls: readonly (readonly unknown[])[] } })
 it.each(["prepareTurnModel", "prepareResolvedModelOperation"] as const)("%s retains exact original output/writes with fewer official raw reads", async name => {
  const f = await fixture(), args = await f.start(name !== "prepareTurnModel"), before = state(f), spy = jest.spyOn(f.ctx,"runQuery"), input = name === "prepareTurnModel" ? args : { ...args, ordinal:0 }, stop=Error("REFERENCE_ROLLBACK"); let expected:unknown, expectedState:unknown;
  await expect(f.transaction(async()=>{expected=await invoke(legacy[name],f.ctx,input);expectedState=state(f);throw stop;})).rejects.toBe(stop); const referenceReads=messageReads(spy);expect(state(f)).toEqual(before);spy.mockClear();
+ // The historical read-control predates the additive selection metadata. Derive
+ // it from the same immutable pins while retaining exact existing output/state.
+ const candidate=expected as Prepared;
+ candidate.current.messageEntries=candidate.current.messages.map((message,index)=>({id:candidate.current.snapshot.messages[index]!.nativeMessageId,message,mandatory:candidate.current.run.inputMessageIds.includes(candidate.current.snapshot.messages[index]!.nativeMessageId)}));
  expect(await f.call(runtime[name],input)).toEqual(expected);expect(state(f)).toEqual(expectedState);const optimizedReads=messageReads(spy);console.info(JSON.stringify({type:"native-transcript-read-count",name,referenceReads,optimizedReads}));expect(optimizedReads).toBeLessThan(referenceReads);
  expect({referenceReads,optimizedReads}).toEqual(name === "prepareTurnModel" ? {referenceReads:32,optimizedReads:9}:{referenceReads:16,optimizedReads:3});
 });
