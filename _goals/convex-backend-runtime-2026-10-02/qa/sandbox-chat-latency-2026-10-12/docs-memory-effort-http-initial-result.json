@@ -1,0 +1,13 @@
+{
+  "status": "harness errors repaired without source changes",
+  "attempts": [
+    {
+      "error": "AttributeError: 'NoneType' object has no attribute 'group'",
+      "cause": "Initial title parser assumed no attributes; static HTML uses title data-rh=true; actual response HTTP200."
+    },
+    {
+      "error": "HTTP404 for guessed /core-features/core-features route",
+      "cause": "Confused doc/sidebar id with index permalink. Rendered sidebar and breadcrumbs link actual /core-features/; actual product link was unchanged."
+    }
+  ]
+}

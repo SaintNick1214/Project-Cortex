@@ -1,9 +1,9 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "EXECUTION_RESUMED: modified goalv4; K29 quietauthPASS; tokenrefresh then actualbrowser/CLIbaseline first",
-  "complete": 2,
+  "phase": "EFFORT_SOURCE_ACCEPTED_INSTALLED_NATIVE_QUALIFICATION_NEXT",
+  "complete": 4,
   "total": 6,
-  "percent": 50,
+  "percent": 66.7,
   "metric": "Accepted backend/Gateway foundation; accepted client/Basic foundation; K29 actualbaseline; effort source/client/docs acceptance; installed realprofile/latency qualification; cleanup/finalaudit",
   "baseline": {
     "firstDurableTextMs": 17597,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T23:16:14.305Z",
+  "updatedAt": "2026-10-14T23:54:18.793339+00:00",
   "metricVersion": 3,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -43,6 +43,12 @@
       "ordinaryReceipt": "k29-native-ordinary-memory-recovery-v2-1792019539538-b2f21997-71ac-4b34-a9de-8c3e58e0648c.json",
       "effortAcceptance": false,
       "cleanup": "ABSENT_FRESH_VERIFICATION"
+    },
+    {
+      "name": "Effort-aware backend/client/UI source/tests/docs",
+      "review": "memory-effort-joint-source-review.json",
+      "verdict": "SOURCE_PASS4.0",
+      "nativeAcceptance": false
     }
   ],
   "primaryLatencyTarget": "Hosted submit to first visible model answer by effort: Fast3s/Normal6s/High8s/Max30s; Normal4hops default (design only)",
@@ -132,7 +138,7 @@
     "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
   },
   "pendingRepairs": [
-    "Reduce measured backend pre-dispatch preparation (2087–6949ms) and protected delivery while retaining all current authority/source/accounting predicates and fresh boundaries",
+    "Reduce measured backend pre-dispatch preparation (2087\u20136949ms) and protected delivery while retaining all current authority/source/accounting predicates and fresh boundaries",
     "Fresh installed hosted sub1000ms and semantic qualification",
     "Unqualified in-plan new-target UPDATE/SUPERSEDE remains disclosed",
     "Independent final audit"
@@ -537,8 +543,8 @@
         "pass": 8,
         "fail": 2,
         "failures": [
-          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
-          "invalidsignature→AUTHENTICATION_TIMEOUT"
+          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
+          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
         ],
         "noAccessDelivered": true,
         "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
@@ -572,8 +578,8 @@
       "priorAuthenticationExpectedCodeFailures": {
         "generation": "K9",
         "failures": [
-          "expired valid signature → AUTHENTICATION_TIMEOUT",
-          "invalid signature → AUTHENTICATION_TIMEOUT"
+          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
+          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
         ],
         "notRerun": true
       },
@@ -595,7 +601,7 @@
       },
       "toolInclusiveSupplement": {
         "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
-        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
         "originalGenericFailPreserved": true
       }
     }
@@ -1895,7 +1901,7 @@
     "canonicalMessageStorage": "unchanged",
     "agentStop": "k29_auth_recovery confirmed no clients opened/service calls begun; unexecuted local draft only",
     "goalProgressChanged": false,
-    "revision": 3,
+    "revision": 4,
     "latencyTargetsMs": {
       "fast": 3000,
       "normal": 6000,
@@ -1958,13 +1964,15 @@
     }
   },
   "memoryEffortExecution": {
-    "state": "E1_AND_E2_IMPLEMENTING",
+    "state": "SOURCE_ACCEPTED_PACKAGING",
     "goalReview": "PASS4.4",
     "plan": "modified-goal-execution-v4.md",
     "backendExecutor": "memory_effort_backend",
     "clientExecutor": "dev_integration_provider_ci",
     "publicContract": "src/domain/memory-effort.ts",
-    "sourceAcceptance": false,
-    "nativeAcceptance": false
+    "sourceAcceptance": true,
+    "nativeAcceptance": false,
+    "chatNativeCodegen": "PENDING_GENUINE_NATIVE_GENERATION_AND_FULL_TYPES_BUILD",
+    "sourceReview": "memory-effort-joint-source-review.json"
   }
 }

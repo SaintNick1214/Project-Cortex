@@ -1,0 +1,27 @@
+{
+  "command": [
+    "docker",
+    "build",
+    "--platform",
+    "linux/arm64",
+    "--tag",
+    "cortex-sandbox-memory-effort:20261014",
+    "--build-arg",
+    "SANDBOX_UID=501",
+    "--build-arg",
+    "SANDBOX_GID=20",
+    "--label",
+    "dev.cortex.manual-sandbox=f3036de4-c819-4f6e-a444-0581a3550488",
+    "--label",
+    "dev.cortex.manual-sandbox.path=/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-2026-10-14",
+    "--label",
+    "dev.cortex.manual-sandbox.source=d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+    "--iidfile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/docker-image-id.txt",
+    "--progress",
+    "plain",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-2026-10-14/image"
+  ],
+  "exitCode": 0,
+  "runtimeContainersStarted": 0
+}

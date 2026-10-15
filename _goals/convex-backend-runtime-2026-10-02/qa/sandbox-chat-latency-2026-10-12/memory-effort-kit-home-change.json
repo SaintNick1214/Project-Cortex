@@ -1,0 +1,40 @@
+{
+  "change": "Preserve real os.homedir() in prospective child environment; keep explicit targets, isolated TMPDIR/cache and secret environment closure.",
+  "files": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs",
+      "beforeSha256": "1e6a10d586b4d42a62fcaf4c87fe22c286f6871edc3a54635d3c7a403fe96806",
+      "afterSha256": "b925ceb8c2362ea1fe005d47fc074db61d6a02db55a79b78974ac37a821eacaf"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/lifecycle.test.mjs",
+      "beforeSha256": "67dd578ac21c99c1a9bb418f0911093957cf9853db64cf1afdc52109b58ec2ec",
+      "afterSha256": "bf2fea0f464279db535db52f533a4c3630fe19893d851b1bf4f1f390f27803fd"
+    }
+  ],
+  "serviceCalls": 0,
+  "checks": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-name-pattern",
+        "owned command|framing",
+        "sandbox-env/lifecycle.test.mjs"
+      ],
+      "exitCode": 0,
+      "tests": 1
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-name-pattern",
+        "actual native-table command labels",
+        "sandbox-env/lifecycle.test.mjs"
+      ],
+      "exitCode": 0,
+      "tests": 1
+    }
+  ]
+}

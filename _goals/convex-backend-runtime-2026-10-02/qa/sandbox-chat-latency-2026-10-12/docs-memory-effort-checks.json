@@ -1,0 +1,219 @@
+{
+  "examples": {
+    "command": [
+      "node",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+      "-p",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-memory-effort-tsconfig.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "timeoutSeconds": 45,
+    "startedAt": "2026-10-14T23:40:17.181435+00:00",
+    "exitCode": 0,
+    "durationSeconds": 0.931,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-memory-effort-examples.log"
+  },
+  "typecheck": {
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+    "timeoutSeconds": 60,
+    "startedAt": "2026-10-14T23:39:06.423215+00:00",
+    "exitCode": 0,
+    "durationSeconds": 1.373,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-memory-effort-typecheck.log"
+  },
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+    "timeoutSeconds": 120,
+    "startedAt": "2026-10-14T23:39:10.424175+00:00",
+    "exitCode": 0,
+    "durationSeconds": 7.705,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-memory-effort-build.log"
+  },
+  "whitespace": {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+    "timeoutSeconds": 20,
+    "startedAt": "2026-10-14T23:40:18.173852+00:00",
+    "exitCode": 0,
+    "durationSeconds": 0.089,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-memory-effort-whitespace.log"
+  },
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0",
+    "docusaurus": "3.9.2"
+  },
+  "sourceAssertions": {
+    "relativeMarkdownTargets": {
+      "missing": [],
+      "pages": 15
+    },
+    "guideFacts": {
+      "normalDefault": true,
+      "logicalDepth": true,
+      "maxQualifiedBound": true,
+      "sharedNotPerCategory": true,
+      "targetsNotGuarantees": true,
+      "legacyRefusal": true,
+      "durationBoundary": true,
+      "wholeInputAccounting": true,
+      "preservedCanonicalRows": true,
+      "mermaid": true
+    }
+  },
+  "http": {
+    "recordedAt": "2026-10-14T23:41:35.157834+00:00",
+    "kind": "HTTP static delivery only, not a browser/render verdict",
+    "routes": [
+      {
+        "url": "http://127.0.0.1:3367/core-features/memory-effort",
+        "status": 200,
+        "bytes": 44874,
+        "title": "Memory Effort | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/api-reference/runtime-client",
+        "status": 200,
+        "bytes": 102696,
+        "title": "TypeScript Runtime Client | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/api-reference/memory-operations",
+        "status": 200,
+        "bytes": 129036,
+        "title": "Explicit Memory API | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/architecture/performance",
+        "status": 200,
+        "bytes": 47811,
+        "title": "Performance | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/core-features/memory-orchestration",
+        "status": 200,
+        "bytes": 35810,
+        "title": "Memory Orchestration | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/getting-started/backend-runtime",
+        "status": 200,
+        "bytes": 42696,
+        "title": "Backend Runtime Setup | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/getting-started/five-minute-quickstart",
+        "status": 200,
+        "bytes": 29665,
+        "title": "First Backend Run | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/getting-started/installation",
+        "status": 200,
+        "bytes": 29832,
+        "title": "Installation | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/tools/cli-reference",
+        "status": 200,
+        "bytes": 36643,
+        "title": "CLI Reference | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/integrations/vercel-ai-sdk/api-reference",
+        "status": 200,
+        "bytes": 39583,
+        "title": "Remote Transport API | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/integrations/vercel-ai-sdk/getting-started",
+        "status": 200,
+        "bytes": 63196,
+        "title": "AI SDK 7 with React | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/integrations/vercel-ai-sdk/troubleshooting",
+        "status": 200,
+        "bytes": 26858,
+        "title": "Troubleshooting | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/architecture/model-policy",
+        "status": 200,
+        "bytes": 33902,
+        "title": "Model Policy and Budgets | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/reference/cheat-sheet",
+        "status": 200,
+        "bytes": 24323,
+        "title": "Cheat Sheet | Cortex Memory Docs"
+      },
+      {
+        "url": "http://127.0.0.1:3367/core-features/",
+        "status": 200,
+        "bytes": 25965,
+        "title": "Core Features | Cortex Memory Docs"
+      }
+    ],
+    "assets": [
+      {
+        "url": "http://127.0.0.1:3367/assets/css/styles.03a22a4d.css",
+        "status": 200,
+        "bytes": 150127
+      },
+      {
+        "url": "http://127.0.0.1:3367/assets/js/main.75257701.js",
+        "status": 200,
+        "bytes": 516871
+      },
+      {
+        "url": "http://127.0.0.1:3367/assets/js/runtime~main.0d98defe.js",
+        "status": 200,
+        "bytes": 8933
+      }
+    ],
+    "browserAttempt": {
+      "requested": "owned IAB tab",
+      "url": "http://127.0.0.1:3367/core-features/memory-effort",
+      "error": "Browser is not available: iab",
+      "availableBrowsers": [],
+      "appOpenStatus": "queued",
+      "appOpenThreadId": "01a12373-9057-79e3-bd96-915d43b5a3b9",
+      "SafariAndOriginalTabsTouched": false
+    }
+  },
+  "browserHandoff": {
+    "RootConfirmed": "Opened preview in browserID2, tab6",
+    "rootOwnsServerSession": 19780,
+    "rootOwnsRenderAndCleanup": true,
+    "childRenderVerdict": "UNAVAILABLE, not claimed PASS"
+  },
+  "buildAdvisories": [
+    "Docusaurus update notice; installed3.9.2 retained.",
+    "caniuse-lite data11months old; no dependency changes made."
+  ],
+  "scope": {
+    "websiteFiles": 16,
+    "preExistingDirtyMdx": 10,
+    "releaseHistoryUntouched": true,
+    "coreProductWrites": false,
+    "gitMutations": false,
+    "publication": false,
+    "serviceCalls": false
+  }
+}

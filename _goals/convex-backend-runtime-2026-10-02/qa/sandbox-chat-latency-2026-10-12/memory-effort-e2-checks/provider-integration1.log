@@ -1,0 +1,132 @@
+npm notice run @cortexmemory/vercel-ai-provider@0.39.0 test:integration
+npm notice run node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects integration --runInBand
+Running one project: integration
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+PASS integration tests/integration/memory-flow.test.ts
+  ● Console
+
+    console.error
+      [Cortex Memory] Memory recall failed: Error: Recall service unavailable
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+      at CortexMemoryProvider.doGenerate (src/provider.ts:160:22)
+      at Object.<anonymous> (tests/integration/memory-flow.test.ts:183:22)
+
+    console.error
+      [Cortex Memory] Failed to store memory: Error: Storage unavailable
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at src/provider.ts:233:25
+      at CortexMemoryProvider.doGenerate (src/provider.ts:199:9)
+      at Object.<anonymous> (tests/integration/memory-flow.test.ts:206:22)
+
+    console.warn
+      [Cortex Memory] Failed to generate embedding, recall will use keyword search: Error: Embedding failed
+
+    [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 666 |[39m     }[33m,[39m
+     [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+     [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+
+      at Object.warn (src/types.ts:665:15)
+      at CortexMemoryProvider.recallContext (src/provider.ts:337:23)
+      at CortexMemoryProvider.doGenerate (src/provider.ts:160:22)
+      at Object.<anonymous> (tests/integration/memory-flow.test.ts:322:7)
+
+PASS integration tests/integration/streaming-flow.test.ts
+  ● Console
+
+    console.error
+      [Cortex Memory] Failed to store stream: Error: Storage failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at Object.flush (src/provider.ts:550:23)
+
+    console.error
+      [Cortex Memory] Memory recall failed: Error: Recall failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+      at CortexMemoryProvider.doStream (src/provider.ts:262:22)
+      at Object.<anonymous> (tests/integration/streaming-flow.test.ts:314:22)
+
+    console.warn
+      [Cortex Memory] Stream completed but produced no text content
+
+    [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 666 |[39m     }[33m,[39m
+     [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+     [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+
+      at Object.warn (src/types.ts:665:15)
+      at Object.flush (src/provider.ts:476:23)
+
+    console.warn
+      [Cortex Memory] Stream completed but produced no text content
+
+    [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 666 |[39m     }[33m,[39m
+     [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+     [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+
+      at Object.warn (src/types.ts:665:15)
+      at Object.flush (src/provider.ts:476:23)
+
+PASS integration tests/integration/layer-streaming.test.ts
+PASS integration tests/integration/v6-api-routes.test.ts
+(node:13927) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS integration tests/integration/ai7-model.test.ts
+
+Test Suites: 5 passed, 5 total
+Tests:       74 passed, 74 total
+Snapshots:   0 total
+Time:        4.989 s
+Ran all test suites.

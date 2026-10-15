@@ -1,0 +1,33 @@
+✔ remote Agent setup refuses wrong target, foreign claims and missing explicit fixture before any RPC (1.251625ms)
+✖ unpaid setup verifies current owner, publishes one immutable observed V2 definition and exports only returned pins (1.076167ms)
+✔ current-authority and exact publication failures stop setup without retries or model execution (0.422666ms)
+✔ the canonical CI publisher selects the current effort-aware V8 handler and refuses legacy readback (0.182708ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 90.492791
+
+✖ failing tests:
+
+test at scripts/ci/remote-agent.test.mjs:41:1
+✖ unpaid setup verifies current owner, publishes one immutable observed V2 definition and exports only returned pins (1.076167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '5152bd0c3f8e35907c2d57c0a3467e2450e8db0dfb5174c552024c954554a515'
+  - '975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631'
+  
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/remote-agent.test.mjs:50:10)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '5152bd0c3f8e35907c2d57c0a3467e2450e8db0dfb5174c552024c954554a515',
+    expected: '975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

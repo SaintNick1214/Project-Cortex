@@ -1,6 +1,6 @@
 # Cortex memory effort — design for discussion
 
-2026-10-14 · Revision 3 (measured baseline added; revision 2 settings retained) · **Implementation and service qualification paused by the user.**
+2026-10-14 · Revision 4 (execution resumed; K29 baseline added; approved effort settings retained) · **Implementation resumed by direct user authorization.**
 
 Repository: **SaintNick1214/Project-Cortex**, checkout `worktrees/backend-runtime-completion`. This is a proposed goal refinement, not an implementation or a new runtime acceptance claim. The separate **SaintNick1214/cortexmemory.dev** documentation repository and **Project-Cortex-Proofs** sandbox have not been changed for this design.
 
@@ -151,7 +151,9 @@ Source pointers: `Project-Cortex-Proofs/sandbox-env/templates/qualification-enve
 
 ## Latest completed cloud latency measurements
 
-Measured **October 14, 2026, 1:41–1:48 p.m. Pacific**, on disposable hosted Convex with **SaintNick1214/Project-Cortex** source **`a773bd545c22e3c6eeb228b800d4c3a679375c5b` (K28)**. These are four ordinary chat runs and one separate public recall, not percentile statistics. The newer **K29 `f8769578`** candidate has not had a chat latency run; implementation and qualification are paused.
+The latest completed baseline is now **K29 `f87695783e8b21ffecf6298057a87cd8e69a3016`** on disposable hosted Convex. Browser first-visible replies measured **3.960s / 3.580s**, and CLI first-printed replies **6.855s / 6.981s**. Server preparation before main dispatch measured **2.168 / 1.808 / 4.400 / 4.759s**, respectively. The two CLI recall spans were **1.842s / 2.111s**. A separate public recall measured **3.393s** at the API boundary, including a **1.150s** embedding interval and **0.702s** after result attachment for reads and final delivery. These are individual observations before effort profiles, not percentile statistics or profile acceptance. Four-run memory, ordinary capture/recall, authorization and financial checks passed; the exact database, container and credentials were removed and their absence freshly verified. The original interrupted launcher exit remains unknown. See `k29-baseline-completion-v1.json`, `k29-four-run-critical-path-readonly.md` and `k29-public-recall-critical-path-readonly.md`.
+
+The retained K28 measurements below were observed **October 14, 2026, 1:41–1:48 p.m. Pacific**, with source **`a773bd545c22e3c6eeb228b800d4c3a679375c5b`**. Workload, selected context and concurrency differ between generations, so the observations do not establish a causal speed ratio. The existing revision 3 inline chart still shows this historical K28 snapshot.
 
 ### What the user actually waited
 
@@ -202,7 +204,7 @@ Evidence: `k28-four-run-critical-path-readonly.json`, `k28-public-recall-critica
 - What retrieval-time and expansion-work budgets support each mode? Determine these from the fixed-overhead trace and representative memory-rich tests, not invented timing claims.
 - Should callers explicitly choose best-effort versus strict memory readiness, or should particular operations require strict readiness? Existing mandatory barriers cannot be weakened by selecting Fast.
 
-Once these choices are settled, add the approved contract and affected acceptance cases to the existing goal. Do not create another broad re-planning/judge loop. Keep source implementation and qualification paused until the user resumes them.
+The user resumed execution with the modified goal. `modified-goal-execution-v4.md` records the approved contract, affected acceptance cases and six follow-up milestones. Its independent goal review passed 4.4; backend and client implementation are underway. Do not create another broad re-planning/judge loop.
 
 ## Acceptance examples for the eventual implementation
 

@@ -1,0 +1,305 @@
+Browser tab: 6, Title: "Memory Effort | Cortex Memory Docs", URL: "http://127.0.0.1:3367/core-features/memory-effort".
+0 AXWebArea Memory Effort | Cortex Memory Docs, URL: 127.0.0.1:3367/core-features/memory-effort
+	1 container
+		2 container Skip to main content
+			3 link Description: Skip to main content, Value: 127.0.0.1:3367/core-features/memory-effort#__docusaurus_skipToContent_fallback
+		4 container Main
+			5 link Description: Cortex Memory logo Cortex Memory, Value: cortexmemory.dev/
+			6 link Description: Documentation, Value: 127.0.0.1:3367/
+			293 link Description: sdk v0.37.0, Help: @cortexmemory/sdk on npm, Value: npmjs.com/package/@cortexmemory/sdk
+			294 link Description: cli v0.37.0, Help: @cortexmemory/cli on npm, Value: npmjs.com/package/@cortexmemory/cli
+			295 link Description: cortex-memory v0.36.0, Help: cortex-memory on PyPI, Value: pypi.org/project/cortex-memory/
+			7 link Description: Main Site (opens in new tab), Value: cortexmemory.dev/
+			8 link Description: GitHub (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex
+			9 button Search (Meta+k)
+				10 text Search
+			11 button Description: Switch between dark and light mode (currently system mode), Help: system mode
+		12 container Docs sidebar
+			13 content list
+				14 link Description: Documentation Overview, Value: 127.0.0.1:3367/
+				15 link Description: What's New, Value: 127.0.0.1:3367/whats-new
+				16 container
+					17 button (expanded) Getting Started, Secondary Actions: Collapse
+						18 text Getting Started
+					19 content list
+						20 link Description: Getting Started, Value: 127.0.0.1:3367/getting-started/
+						21 link Description: Introduction to Cortex, Value: 127.0.0.1:3367/getting-started/introduction
+						22 link Description: Installation, Value: 127.0.0.1:3367/getting-started/installation
+						23 link Description: Backend Runtime Setup, Value: 127.0.0.1:3367/getting-started/backend-runtime
+						24 link Description: First Backend Run, Value: 127.0.0.1:3367/getting-started/five-minute-quickstart
+						25 link Description: Core Concepts, Value: 127.0.0.1:3367/getting-started/core-concepts
+						26 link Description: Configuration, Value: 127.0.0.1:3367/getting-started/configuration
+						27 link Description: Auth Integration, Value: 127.0.0.1:3367/getting-started/auth-integration
+				28 text CORE
+				29 container
+					30 button (expanded) Core Features, Secondary Actions: Collapse
+						31 text Core Features
+					32 content list
+						33 link Description: Core Features, Value: 127.0.0.1:3367/core-features/
+						34 link Description: Memory Orchestration, Value: 127.0.0.1:3367/core-features/memory-orchestration
+						35 link Description: Memory Effort, Value: 127.0.0.1:3367/core-features/memory-effort
+						36 link Description: Memory Spaces, Value: 127.0.0.1:3367/core-features/memory-spaces
+						37 link Description: Semantic Search, Value: 127.0.0.1:3367/core-features/semantic-search
+						38 link Description: User Profiles, Value: 127.0.0.1:3367/core-features/user-profiles
+						39 link Description: Conversation History, Value: 127.0.0.1:3367/core-features/conversation-history
+						40 link Description: Fact Extraction, Value: 127.0.0.1:3367/core-features/fact-extraction
+						41 link Description: Hive Mode, Value: 127.0.0.1:3367/core-features/hive-mode
+						42 link Description: Streaming Support, Value: 127.0.0.1:3367/core-features/streaming-support
+						43 link Description: Artifacts, Value: 127.0.0.1:3367/core-features/artifacts
+						44 link Description: Private Assets and Media, Value: 127.0.0.1:3367/core-features/assets-and-media
+				45 button (collapsed) Integrations, Secondary Actions: Expand
+					46 text Integrations
+				47 text DEVELOP
+				48 button (collapsed) API Reference, Secondary Actions: Expand
+					49 text API Reference
+				50 button (collapsed) Advanced Topics, Secondary Actions: Expand
+					51 text Advanced Topics
+				52 button (collapsed) Architecture, Secondary Actions: Expand
+					53 text Architecture
+				54 text RESOURCES
+				55 button (collapsed) Security, Secondary Actions: Expand
+					56 text Security
+				57 button (collapsed) Reference, Secondary Actions: Expand
+					58 text Reference
+				59 button (collapsed) Tools, Secondary Actions: Expand
+					60 text Tools
+				61 text PROJECT
+				62 button (collapsed) Roadmap, Secondary Actions: Expand
+					63 text Roadmap
+				64 button (collapsed) Project, Secondary Actions: Expand
+					65 text Project
+		66 container
+			67 container Breadcrumbs
+				68 content list
+					69 container
+						70 link Description: Home page, Value: 127.0.0.1:3367/
+					71 container
+						72 text Core Features
+					73 text Memory Effort
+			74 heading Memory effort, Value: 1
+				75 text Memory effort
+			76 container
+				77 text Memory effort controls how far Cortex looks for relevant evidence and how much optional context it selects for a request.  Normal is the default.  It changes retrieval work, not the response model's reasoning setting. The backend still stores the full canonical transcript, with one message per row; a smaller request context does not discard history.
+			78 container
+				79 text These controls belong to the  unpublished 0.39.0 candidate  and its matching backend and application sources. Use the 
+				80 link Description: explicit local installation path, Value: 127.0.0.1:3367/getting-started/installation
+				81 text  until those packages are published. Installing a registry's current  latest  does not establish support.
+			82 heading Choose an effort Direct link to Choose an effort, Value: 2, ID: choose-an-effort
+				83 text Choose an effort
+				84 link Description: Direct link to Choose an effort, Value: 127.0.0.1:3367/core-features/memory-effort#choose-an-effort
+			85 table
+				86 row
+					87 cell
+						88 text Effort
+					89 cell
+						90 text Maximum logical depth
+					91 cell
+						92 text Initial shared optional-entry ceiling
+					93 cell
+						94 text Hosted first visible answer target
+				95 row
+					96 cell
+						97 text Fast
+					98 cell
+						99 text 2 hops
+					100 cell
+						101 text 4
+					102 cell
+						103 text 3 seconds
+				104 row
+					105 cell
+						106 text Normal (default)
+					107 cell
+						108 text 4 hops
+					109 cell
+						110 text 8
+					111 cell
+						112 text 6 seconds
+				113 row
+					114 cell
+						115 text High
+					116 cell
+						117 text 8 hops
+					118 cell
+						119 text 16
+					120 cell
+						121 text 8 seconds
+				122 row
+					123 cell
+						124 text Max
+					125 cell
+						126 text No preset depth cap
+					127 cell
+						128 text Useful entries that fit the context
+					129 cell
+						130 text 30 seconds
+			131 text The hop limits describe the product profiles. The 4/8/16 entry ceilings are the initial administrator policy defaults, separate from depth. Administrators can narrow effective depth, entry, context, work and retrieval-deadline limits; callers can lower entry/context ceilings. A request cannot raise deployment policy. The trace reports the effective bounds.
+			132 container
+				133 text The times are  targets, not measured guarantees or completed qualification . They run from submission to the first visible model-generated answer text, including authentication, admission, retrieval, Gateway work and client delivery/paint. An acknowledgement, spinner, retrieved snippet or replayed old answer does not meet that boundary. Public recall has its own duration. See 
+				134 link Description: pre-effort hosted observations, Value: 127.0.0.1:3367/architecture/performance#current-hosted-measurements
+				135 text .
+			136 heading What a hop means Direct link to What a hop means, Value: 2, ID: what-a-hop-means
+				137 text What a hop means
+				138 link Description: Direct link to What a hop means, Value: 127.0.0.1:3367/core-features/memory-effort#what-a-hop-means
+			139 text The current request is depth 0. A directly relevant memory, fact or approved pending source is depth 1, even if it is years old. Age and position in the transcript do not add hops. Another meaningful relation from that evidence adds one hop: for example, an authorized fact's source message, evidence derived from that source, or an existing explicitly related entity. Loading a record, checking authority or joining its provenance does not add a hop.
+			140 text Only current, authorized, evidence-backed relations participate. Two records are not related merely because they share a conversation. Cortex deduplicates discovered evidence and retains its shortest permitted path rather than revisiting cycles. Convex-backed evidence links do not require an external graph database; unavailable external-only coverage is reported rather than fabricated.
+			141 text More depth can expand work quickly. This illustration assumes two new useful neighbors per item and no overlap:
+			296 container mermaid-svg-2505146
+				297 text Request · depth 0
+				298 text 2 items · depth 1
+				299 text 4 items · depth 2
+				300 text 8 items · depth 3
+				301 text 16 items · depth 4
+			142 text That toy frontier reaches 6 items by depth 2, 30 by depth 4 and 510 by depth 8 before deduplication. Real fanout varies; these are an explanation of growth, not forecasts, selected-entry counts or promises to exhaust a graph.
+			143 heading One shared context budget Direct link to One shared context budget, Value: 2, ID: one-shared-context-budget
+				144 text One shared context budget
+				145 link Description: Direct link to One shared context budget, Value: 127.0.0.1:3367/core-features/memory-effort#one-shared-context-budget
+			146 text Optional history messages, memories/chunks, facts, pending entries and selected graph evidence share the entry ceiling. Normal's eight entries are eight total, not eight from every category. An optional exchange containing two message rows consumes two entries. Required current input and complete required tool-call/result groups remain intact.
+			147 text Selection stops when relevance is exhausted or a depth, entry, input, work, deadline or cancellation boundary is reached. Instructions, wrappers, tool definitions and the output reserve also consume the qualified whole-input allowance. Whole optional entries can be removed to fit. Required content that cannot fit refuses before another model call.
+			148 container
+				149 text Max removes the preset product depth and entry caps; it does not remove bounds.  Its context must still fit the qualified  32,768 conservative input units  for the whole request, narrowed by any administrator/caller ceiling and with output reserve accounted for. Indexed paging, candidate bytes, work, elapsed retrieval time, current-source checks, authorization, budget and cancellation remain bounded. This is not qualification of a model's full advertised window. Useful relevant context can finish well before the input is full.
+			150 container
+				151 text The approved configuration remains  openai/gpt-4o-mini  for responses/extraction and the managed  openai/text-embedding-3-small  profile at 1,536 dimensions. An effort change does not switch models, add summarization/reranking or authorize hidden paid retries. Existing 
+				152 link Description: per-call model policy, Value: 127.0.0.1:3367/architecture/model-policy
+				153 text  applies to every billable operation.
+			154 heading Request and capability Direct link to Request and capability, Value: 2, ID: request-and-capability
+				155 text Request and capability
+				156 link Description: Direct link to Request and capability, Value: 127.0.0.1:3367/core-features/memory-effort#request-and-capability
+			157 container
+				158 text The modern runtime accepts  memory  on  submit ,  submitAndStart  and  recall :
+			159 container
+				160 container
+					161 text import type {  CortexRuntimeClient ,  MemoryEffortRequest  } from '@cortexmemory/sdk/runtime' ;
+					162 text export async function recallWithEffort (
+					163 text   client :  CortexRuntimeClient ,  requestId : string ,  text : string ,
+					164 text ) {
+					165 text const  memory :  MemoryEffortRequest  = {  effort : 'high' ,  maxEntries : 12 } ;
+					166 text const  result  = await  client . recall ( {  requestId ,  text ,  memory  } ) ;
+					167 text return {  items :  result . items ,  context :  result . context ,  effort :  result . memoryEffort  } ;
+					168 text }
+				169 button Description: Copy code to clipboard, Help: Copy
+			170 container
+				171 text effort  accepts  fast ,  normal ,  high  or  max .  maxEntries  is a nonnegative safe integer; zero excludes optional entries.  maxContextTokens  is a positive safe integer and lowers the conservative input ceiling despite its field name; it is not a measurement of provider token usage. Other keys, invalid types and invalid values receive  INVALID_INPUT . Explicit Max public recall has a default 30-second RPC observation deadline; other operations default to 12 seconds, and an explicit  requestTimeoutMs  takes precedence. A public recall  limit , when supplied, must be 1–100 and also lowers the entry ceiling; omit it to use the effort entry policy with the backend's bounded candidate/index work. A timeout is not permission to retry. Retain the original request ID and complete request, including memory selection, across uncertainty. Changing effort under that identity changes the intent and is not reconnect recovery.
+			172 container
+				173 text An effort-aware Agent uses context handler  cortex.transcript.relevant  version 2, executable registry generation 4 and input selection version 2.  getDefinition  advertises  both inputSelectionVersion: 2  and  memoryEffortPolicyVersion: 1 . Use that pair before enabling a selector. New effort-aware definitions default omitted memory to Normal. Historical definitions retain their original selection when memory is omitted; an explicit  memory  request against an unsupported legacy definition receives  INVALID_INPUT  before admission transcript/budget effects. The client preserves omission for old replay identities. Missing capability or trace metadata is not proof that Normal was applied.
+			174 container
+				175 text The 
+				176 link Description: remote transport, Value: 127.0.0.1:3367/integrations/vercel-ai-sdk/api-reference
+				177 text  accepts a snapshotted default  memory  option or a per-message body exactly shaped as  { memory: MemoryEffortRequest } . Other body fields, headers and arbitrary metadata remain unsupported. The Basic app exposes  /effort ; both the Vercel quickstart and ChatSDK expose a selector for capable Agents. Neither changes a retained run's effort during reconnect. The root SDK's administrative  cortex.memory.recall  retains its 
+				178 link Description: legacy limits, Value: 127.0.0.1:3367/api-reference/memory-operations
+				179 text ; it does not accept this request field.
+			180 heading Read the outcome Direct link to Read the outcome, Value: 2, ID: read-the-outcome
+				181 text Read the outcome
+				182 link Description: Direct link to Read the outcome, Value: 127.0.0.1:3367/core-features/memory-effort#read-the-outcome
+			183 container
+				184 text Runs and public recall results can contain  memoryEffort: MemoryEffortTrace . It includes requested/effective effort, effective depth/entry/context bounds, the target duration, reached depth, visited/expanded/selected/deduplicated counts,  entriesByKind , selected input units, retrieval duration, stop reasons and unavailable stages.  maxDepth: null  or  maxEntries: null  means no preset cap for that dimension, not unlimited execution. Individual recall items can include  retrieval: { depth, path }  for the selected evidence route.
+			185 table
+				186 row
+					187 cell
+						188 text Trace fields
+					189 cell
+						190 text Meaning
+				191 row
+					192 cell
+						193 text version: 1
+						194 text , 
+						195 text policyVersion: 'memory-effort-v1'
+					196 cell
+						197 text Trace and policy interpretation
+				198 row
+					199 cell
+						200 text requestedEffort
+						201 text , 
+						202 text effectiveEffort
+					203 cell
+						204 text Requested/effective profile names; read the numeric bounds for any policy narrowing
+				205 row
+					206 cell
+						207 text maxDepth
+						208 text , 
+						209 text maxEntries
+					210 cell
+						211 text Effective ceilings, or 
+						212 text null
+						213 text  for no preset cap in that dimension
+				214 row
+					215 cell
+						216 text maxContextTokens
+						217 text , 
+						218 text targetFirstAnswerMs
+					219 cell
+						220 text Effective conservative input ceiling and profile's answer target
+				221 row
+					222 cell
+						223 text reachedDepth
+						224 text , 
+						225 text visited
+						226 text , 
+						227 text expanded
+						228 text , 
+						229 text selected
+						230 text , 
+						231 text deduplicated
+					232 cell
+						233 text Actual discovery/selection counters, without a claim of exhaustive coverage
+				234 row
+					235 cell
+						236 text entriesByKind
+					237 cell
+						238 text Selected 
+						239 text memory
+						240 text , 
+						241 text fact
+						242 text , 
+						243 text pending
+						244 text  and 
+						245 text history
+						246 text  counts
+				247 row
+					248 cell
+						249 text selectedInputUnits
+						250 text , 
+						251 text durationMs
+					252 cell
+						253 text Conservative input accounting and the stage-specific duration described below
+				254 row
+					255 cell
+						256 text stopReasons
+						257 text , 
+						258 text unavailableStages
+					259 cell
+						260 text Why work stopped and which coverage could not be provided
+			261 container
+				262 text durationMs  measures the retrieval/delivery stage after governed embedding ledger completion through protected result delivery. It excludes that embedding work and is neither full public-recall latency nor submission-to-visible answer time. On an Agent run,  selectedInputUnits  reports the conservative whole normalized model-input bound after final fitting, including required instructions/current input/tools; it is not an observed tokenizer count.
+			263 container
+				264 text Stop reasons are  exhausted ,  depth ,  relevance ,  entries ,  input ,  deadline ,  work ,  cancellation  and  unavailable . A stopped or unavailable stage does not establish that all relevant evidence was searched. No matching evidence and unavailable coverage are different outcomes. Do not invent a trace for an older definition or treat a reached depth as proof that every branch was complete.
+			265 container
+				266 text Memory effort is separate from 
+				267 link Description: indexing readiness, Value: 127.0.0.1:3367/core-features/memory-orchestration
+				268 text . Eligible pending context can participate before facts/vectors finish, but that does not imply complete semantic coverage. Strict barriers retain their captured stages and contiguous watermarks; choosing Fast or Max does not weaken those requirements. Response completion, optional title work and asynchronous memory/graph completion remain distinct.
+			269 link Description: Edit this page, Value: github.com/SaintNick1214/cortexmemory.dev/tree/main/docs-site/docs/core-features/memory-effort.mdx
+			270 container Docs pages
+				271 link Description: Previous « Memory Orchestration, Value: 127.0.0.1:3367/core-features/memory-orchestration
+				272 link Description: Next Memory Spaces », Value: 127.0.0.1:3367/core-features/memory-spaces
+			273 content list
+				274 link Description: Choose an effort, Value: 127.0.0.1:3367/core-features/memory-effort#choose-an-effort
+				275 link Description: What a hop means, Value: 127.0.0.1:3367/core-features/memory-effort#what-a-hop-means
+				276 link Description: One shared context budget, Value: 127.0.0.1:3367/core-features/memory-effort#one-shared-context-budget
+				277 link Description: Request and capability, Value: 127.0.0.1:3367/core-features/memory-effort#request-and-capability
+				278 link Description: Read the outcome, Value: 127.0.0.1:3367/core-features/memory-effort#read-the-outcome
+		279 text Documentation
+		280 content list
+			281 link Description: Getting Started, Value: 127.0.0.1:3367/
+			282 link Description: Core Features, Value: 127.0.0.1:3367/core-features/memory-orchestration
+			283 link Description: API Reference, Value: 127.0.0.1:3367/api-reference/overview
+		284 text Community
+		285 content list
+			286 link Description: GitHub (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex
+			287 link Description: GitHub Issues (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex/issues
+		288 text More
+		289 content list
+			290 link Description: Main Site (opens in new tab), Value: cortexmemory.dev/
+			291 link Description: Integrations, Value: 127.0.0.1:3367/integrations/
+		292 text Copyright © 2026 Cortex Memory. Built with Docusaurus.
+
+The focused UI element is 0 AXWebArea Memory Effort | Cortex Memory Docs, URL: 127.0.0.1:3367/core-features/memory-effort

@@ -1,0 +1,172 @@
+{
+  "status": "frozen canonical source; all owned static checks pass; Root owns actual render/server cleanup",
+  "recordedAt": "2026-10-14T23:36:45.706891+00:00",
+  "websiteHead": "66661d7fbe2b21a1a02ef79070363ccc962f1daf",
+  "productHead": "3756a53b2333598bc23f089794ee1a76437bba2e",
+  "websiteFiles": [
+    {
+      "path": "docs-site/docs/api-reference/memory-operations.mdx",
+      "sha256": "cfbaa77a023fd30b0e86793b7a46c0148615e9e2d7ddd231e75cee16145cc444"
+    },
+    {
+      "path": "docs-site/docs/api-reference/runtime-client.mdx",
+      "sha256": "6791d4d8f37abdb1facccd35e8b55ae6e707317547983ec9c9c12d1876bdbebc"
+    },
+    {
+      "path": "docs-site/docs/architecture/model-policy.mdx",
+      "sha256": "a948a0b37897689c7b5dbcc88021c41d4b8a180d475448b61664df11430ab419"
+    },
+    {
+      "path": "docs-site/docs/architecture/performance.mdx",
+      "sha256": "ec3d890e0b427ec054cad23af6fb6b1f5bcdcbbb11e0bd81f71a5dde8b48241e"
+    },
+    {
+      "path": "docs-site/docs/core-features/index.mdx",
+      "sha256": "cb10a3292e27216860fd2dbddc4aa612de489ff95b792e91b1191c938718e823"
+    },
+    {
+      "path": "docs-site/docs/core-features/memory-orchestration.mdx",
+      "sha256": "e9467c869ec2f0b9df2996117b1c5215a822ff5a6ab24ce033cabf6d0b100876"
+    },
+    {
+      "path": "docs-site/docs/getting-started/backend-runtime.mdx",
+      "sha256": "304a9eac906a93f6bfcda3a0745818cdbceacf858c6a589c5fff8665598cbbff"
+    },
+    {
+      "path": "docs-site/docs/getting-started/five-minute-quickstart.mdx",
+      "sha256": "61d75d4e1e8e863193dee0769a5f5c368c4f2b47f15f3db80afc048b23fd3934"
+    },
+    {
+      "path": "docs-site/docs/getting-started/installation.mdx",
+      "sha256": "763bd8bfd690addaf344c4d189fdadb53345e1681b93224dd174e1ad01d029a4"
+    },
+    {
+      "path": "docs-site/docs/integrations/vercel-ai-sdk/api-reference.mdx",
+      "sha256": "95bc54da6352a75d136023093b70ec5828270cb725f12fc57af5455ab9851078"
+    },
+    {
+      "path": "docs-site/docs/integrations/vercel-ai-sdk/getting-started.mdx",
+      "sha256": "20b390ca0833efb74f1e6329e542768e46a7665f68784be4ba583a97d7b45468"
+    },
+    {
+      "path": "docs-site/docs/integrations/vercel-ai-sdk/troubleshooting.mdx",
+      "sha256": "ce1bcacfe9788d7d6c3f97e6ec84c95886329f0ea90da7e2e9b675c810d255d7"
+    },
+    {
+      "path": "docs-site/docs/reference/cheat-sheet.mdx",
+      "sha256": "1d099f1763f9a3c3566f19fd9908f9ce011598d062c0727bc9540711f433bffb"
+    },
+    {
+      "path": "docs-site/docs/tools/cli-reference.mdx",
+      "sha256": "169deab465482425858342097ad18809b345435d3b7cba3e06294566c95ff0f0"
+    },
+    {
+      "path": "docs-site/sidebars.ts",
+      "sha256": "ee56f977abf69ed7678003ffdd6ccedf4f49650016ceb977acf77989acf0674c"
+    },
+    {
+      "path": "docs-site/docs/core-features/memory-effort.mdx",
+      "sha256": "597f6e6984da085ff2821550a1c384f0659c4c55d0c79f41fdb514437d8de8d6"
+    }
+  ],
+  "inspectedSource": [
+    {
+      "path": "src/domain/memory-effort.ts",
+      "sha256": "567f8691ad72e116c21a2d7bc51c76fac027155400d7b7c14d748225c531a0c1"
+    },
+    {
+      "path": "src/domain/memory-traversal.ts",
+      "sha256": "c0e51bfc3ca85d702803c6d855d1edc6569f88d7d96e611d1e7bc5a71fa3631d"
+    },
+    {
+      "path": "src/domain/model-input-selection.ts",
+      "sha256": "5ac483b63492d1224771d9b1ad4b0a8d1a79bc2fe363ae106f7ca891ad162ce7"
+    },
+    {
+      "path": "src/client-runtime/types.ts",
+      "sha256": "ab1dc810041316edd2885338e2a51e8e4882681f6c6302ddc1ec736865cb1d07"
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "sha256": "f72e74f557fc690c2a4439df082b55bbae2c65589b7bd32927ad06b5d9316921"
+    },
+    {
+      "path": "src/client-runtime/validation.ts",
+      "sha256": "a6b593485cae3e59406bd1742e1032add141548df64cc8a3bc8a39fd33f88b73"
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "sha256": "b83636664685fa5b4e6d28cc206d824d32e7691bf216ef1de1de53b993e10331"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryTraversal.ts",
+      "sha256": "172454f2113f3e272f1406d5b8dddebd8abbd6e08ca3cd6150792ec22a912c59"
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/remote/index.ts",
+      "sha256": "585bcb92c1f90afb1a323d1bce971f2763536ce23d64198a2195cc5db90ab50b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/memory-effort.ts",
+      "sha256": "60db9bc97cdd3491183ad0e178a636ddf3f4eb5d29375c38119b26439e2e2243"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/index.ts",
+      "sha256": "06d767ba9e2c4fb488ebd14516f9976745ca35fa03b37ff5b6fab7ccc390cfdd"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/components/MemoryEffortControl.tsx",
+      "sha256": "6e2225a99ffeb2f92da2010c55a95107321828bea16d44a34c380cca7a1d4cef"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/memory-effort-control.tsx",
+      "sha256": "1568d87c3473ae378cf1d2cafc7a564bfbf126033eccae8ea0312dec25ffb70f"
+    }
+  ],
+  "preEffortEvidence": [
+    {
+      "path": "k29-four-run-critical-path-readonly.md",
+      "sha256": "93e7cf85bd9001456b7136522daf74466b8be48b063ef26030bdba87dec64d0e"
+    },
+    {
+      "path": "k29-public-recall-critical-path-readonly.md",
+      "sha256": "4de1f1dd5898deb5061cc3076af64643148a6c1e48fe87fea64f7f67fc38b44d"
+    }
+  ],
+  "versionTuple": {
+    "sdk": "0.39.0",
+    "cli": "0.39.0",
+    "provider": "0.39.0",
+    "apps": "1.5.0",
+    "catalog": "1.4.0",
+    "published": false
+  },
+  "noHistoricalReleasePageChanges": true,
+  "finalRecordedAt": "2026-10-14T23:42:50.932336+00:00",
+  "publicContracts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/client-runtime/index.d.ts",
+      "sha256": "65052e154168deaff76fc422a54608ff7377225943f908b58edc0380e391d16d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/index.d.ts",
+      "sha256": "60c1bd3276e52d65eaa30159b10d49f6c35b843abf753ebd9f70b00fcf8d742a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/dist/remote/index.d.ts",
+      "sha256": "9a4217ee9ef592a02600761c5c9e57f71171f183b6cfe51e77abba17dcc22e73"
+    }
+  ],
+  "sharedContractReceipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-e1-checks.json",
+      "sha256": "47a9f4f85ec80b77cd57c53d13fb47f52994ea01ee2a1444dc044f5ba1c1cc81"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-e1-report.md",
+      "sha256": "cb16efd1ce5157841097dc68c38d9fb41d34a44873700892a4f875cb0be15f41"
+    }
+  ],
+  "sourceUncommitted": true,
+  "sourceFrozen": true
+}

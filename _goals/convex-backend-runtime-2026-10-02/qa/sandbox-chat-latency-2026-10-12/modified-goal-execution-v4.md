@@ -15,7 +15,9 @@ The original 17 product tasks remain accepted only within the independently appr
 | High | 8 | 8,000 ms |
 | Max | No preset hop cap | 30,000 ms |
 
-These supersede the older Instant/1-hop/under-1-second follow-up target prospectively. Historical failures remain failures under their original gates. The latest completed K28 timing baseline is `memory-effort-latency-baseline-v3.json`; K29 now has four measured replies and a passing four-run memory proof; its remaining ordinary qualification and saved trace analysis are in progress. Do not call pre-effort K29 outcomes profile acceptance.
+These supersede the older Instant/1-hop/under-1-second follow-up target prospectively. Historical failures remain failures under their original gates. The earlier K28 timing baseline remains `memory-effort-latency-baseline-v3.json`. K29 is now complete as a pre-effort baseline: four measured replies, passing four-run and ordinary native-memory qualifications, saved critical-path analysis and verified cleanup. See `k29-baseline-completion-v1.json`. Do not call pre-effort K29 outcomes profile acceptance.
+
+Execution update: milestone4 source/test/docs review passed4.0 with zero unresolved breaking source findings, and the coherent product batch is committed locally as `d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe`. The expanded follow-up is4/6=66.7%; installed native profiles, genuine Chat codegen/full build, latency and final audit remain open. Source-only acceptance does not advance those gates.
 
 Depth0 is the current request. Direct relevant matches are depth1 regardless of age; meaningful further evidence connections add one hop. Physical hydration, authorization reads and joins do not create extra logical hops. Preserve the full canonical transcript as one message per row. Normalize duplicate paths to the shortest depth; prevent cycles and duplicate evidence/vector/chunk/message copies. Optional breadth is independent of depth, selected by relevance, and bounded by remaining qualified input/context and execution budgets.
 

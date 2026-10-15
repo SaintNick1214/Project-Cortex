@@ -1,0 +1,15 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "sandbox-env/local.test.mjs",
+    "sandbox-env/lifecycle.test.mjs",
+    "sandbox-env/qualification.test.mjs"
+  ],
+  "observed": "Test failures in qualification source imports because invocation omitted actual TSX loader.",
+  "directTestChildExit": "NOT_CAPTURED",
+  "compositeShellExit": 0,
+  "excerpt": "launcher-selected-tests-v1-excerpt.log",
+  "correctedDirectExitReceipt": "launcher-selected-tests-v2-exit.json",
+  "sourceOrQualificationAssertionsChanged": false
+}

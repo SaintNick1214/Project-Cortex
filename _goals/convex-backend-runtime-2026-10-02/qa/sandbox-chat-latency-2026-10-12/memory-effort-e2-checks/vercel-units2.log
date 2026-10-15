@@ -1,0 +1,31 @@
+npm notice run @cortexmemory/vercel-ai-quickstart@1.5.0 test
+npm notice run jest --selectProjects unit integration --runInBand --forceExit=false
+Running 2 projects:
+- integration
+- unit
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+PASS unit tests/unit/runtime-observation.test.ts
+PASS unit tests/unit/password.test.ts
+PASS integration tests/integration/auth.test.ts
+PASS unit tests/unit/private-auth.test.ts
+PASS integration tests/integration/conversations.test.ts
+PASS unit tests/unit/private-backend.test.ts
+PASS unit tests/unit/private-chat.test.ts
+PASS unit tests/unit/chat-latency.test.ts
+
+Test Suites: 8 passed, 8 total
+Tests:       156 passed, 156 total
+Snapshots:   0 total
+Time:        1.489 s, estimated 3 s
+Ran all test suites in 2 projects.

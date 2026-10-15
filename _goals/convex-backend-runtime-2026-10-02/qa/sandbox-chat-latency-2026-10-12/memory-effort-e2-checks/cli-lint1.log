@@ -1,0 +1,16 @@
+npm notice run @cortexmemory/cli@0.39.0 lint
+npm notice run eslint . --report-unused-disable-directives
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic/src/index.ts
+  104:76   error  'NodeJS' is not defined  no-undef
+  104:108  error  'NodeJS' is not defined  no-undef
+
+✖ 2 problems (2 errors, 0 warnings)
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli
+npm error workspace @cortexmemory/cli@0.39.0
+npm error location /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli
+npm error command failed
+npm error command sh -c eslint . --report-unused-disable-directives
