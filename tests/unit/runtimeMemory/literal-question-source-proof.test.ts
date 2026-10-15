@@ -33,10 +33,10 @@ type CompleteRecall = Awaited<ReturnType<typeof import("../../../convex-dev/runt
 beforeEach(() => { installIngestionMockRoot(); embeddings = 0; jest.spyOn(performance, "now").mockReturnValue(0); });
 afterEach(() => { jest.restoreAllMocks(); });
 const queryText = "What is my favorite color?";
-type Shape = "question" | "projection";
+type Shape = "question" | "projection" | "existence";
 async function fixture(shape: Shape = "question", maxEntries = 8) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
-  const value = shape === "question" ? "apricot" : "coral";
+  const value = shape === "projection" ? "coral" : "apricot";
   async function source(id: string, text: string, rows: { id: string; fact: string; predicate: string; object: string }[]) {
     const prepared = await prepareSourceContent(scope, explicitSourceLineage(scope, id), text, { now: () => clock });
     await writer.putSource(prepared.source); await ingestion.enqueueSourceEvent(f.ctx, f.reference, prepared.source);
@@ -48,8 +48,9 @@ async function fixture(shape: Shape = "question", maxEntries = 8) {
     return prepared.source;
   }
   const seedSource = await source("literal-seed", `My favorite color is ${value}.`, [
-    { id: "literal-value", fact: `User's favorite color is ${value}.`, predicate: shape === "question" ? "is_favorite_color" : "is", object: value },
+    { id: "literal-value", fact: `User's favorite color is ${value}.`, predicate: shape === "question" ? "is_favorite_color" : shape === "existence" ? "prefers" : "is", object: value },
     ...(shape === "projection" ? [{ id: "literal-projection", fact: "User prefers the color coral.", predicate: "prefers", object: value }] : []),
+    ...(shape === "existence" ? [{ id: "literal-existence", fact: `User's favorite color is ${value}.`, predicate: "has", object: "favorite color" }] : []),
   ]);
   const question = shape === "question" ? await source("literal-question", queryText, [{ id: "literal-question-fact", fact: "User has a favorite color.", predicate: "has", object: "a favorite color" }]) : undefined;
   for (const event of f.db.table("runtimeIngestionEvents")) Object.assign(event, { factsState: "complete", vectorsState: "complete", vectorProfilesComplete: [profile.profileId] });
@@ -65,7 +66,7 @@ async function fixture(shape: Shape = "question", maxEntries = 8) {
   const action = { ...f.ctx, vectorSearch: async () => [] } as unknown as ActionCtx;
   const input = { text: queryText, requestId: "literal-public", limit: 10, memory: { effort: "normal" as const, maxEntries } };
   const performPublic = () => invoke<CompleteRecall>(memory.recall, action as never, { ...input, tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId });
-  async function agentRun(version?: 1 | 2 | "omitted", maxWork?: number) {
+  async function agentRun(version?: 1 | 2 | 3 | "omitted", maxWork?: number) {
     const published = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, { memorySpaceId: "space-a", clientMutationId: "literal-agent", expectedPreviousVersion: 0,
       definitionInput: { ...f.definitionInput, context: { ...f.definitionInput.context, handlerId: "cortex.transcript.relevant", handlerVersion: 2,
         registryHash: await definitions.executableRegistryHashV4(), inputSelection: { version: 2 } } } });
@@ -218,4 +219,121 @@ it("v2 source-read locations remain bounded by the native candidate ceiling", as
   const f = await fixture(), facts = [f.facts()[0]!, ...Array.from({ length: 100 }, (_, index) => ({ ...f.facts()[1]!, factId: `question-${index}`, lineage: { ...f.facts()[1]!.lineage, sourceId: `question-${index}` } }))];
   expect(directFactLookupSourceIds(queryText, { facts, candidateWorkBound: false }, clock, 2)).toEqual([]);
   expect(proveDirectFactLookup(queryText, { facts, candidateWorkBound: false }, clock, 2, f.sources())).toBeUndefined();
+});
+
+it.each(["favorite color", "a favorite color"])("v3 registered public recall retains the exact asserted %s metadata projection without embedding", async object => {
+  const f = await fixture("existence"), projection = f.facts().find(fact => fact.factId === "literal-existence")!;
+  projection.object = object; await replaceFactEntityLinks(f.ctx.db, projection);
+  const result = await f.performPublic();
+  expect(result.memoryEffort).toMatchObject({ retrievalRoute: "direct-facts-v1", entriesByKind: { fact: 2, memory: 1 } });
+  expect(result.items.filter(item => item.type === "fact").map(item => item.id).sort()).toEqual(["literal-existence", "literal-value"]);
+  expect(result.items.filter(item => item.type === "fact").map(item => item.content)).toEqual(["User's favorite color is apricot.", "User's favorite color is apricot."]);
+  expect(result.items.find(item => item.type === "memory")!.content).toBe("My favorite color is apricot.");
+  expect(embeddings).toBe(0); expect(f.db.table("runtimeModelAttempts")).toHaveLength(0); expect(f.calls).not.toContain("runtimeMemoryQuery:admit");
+});
+it.each(["favorite color", "a favorite color"])("new Agent snapshot3 binds both assertion facts with %s metadata and the guarded source", async object => {
+  const f = await fixture("existence"), projection = f.facts().find(fact => fact.factId === "literal-existence")!;
+  projection.object = object; await replaceFactEntityLinks(f.ctx.db, projection);
+  const run = await f.agentRun(), row = f.db.table("runtimeRuns").find(row => row.runId === run.attempt.runId)!;
+  expect(JSON.parse(row.snapshotCanonical as string).inputSelection.effort.literalSourceProofVersion).toBe(3);
+  const before = f.state(), parent = await run.parent(); expect(f.state()).toEqual(before);
+  expect(parent.proposal).toBeUndefined(); expect(parent.direct!.read.bindings.facts.map(fact => fact.factId).sort()).toEqual(["literal-existence", "literal-value"]);
+  expect([...new Set(parent.direct!.read.bindings.sources.map(source => source.sourceId))]).toEqual([f.seedSource.lineage.sourceId]);
+  const candidate = await run.prepare(); if (candidate?.state !== "started") throw Error("Prepared v3 main candidate required");
+  expect(candidate.current.execution.sourceWitnesses.map(source => source.sourceId)).toEqual([f.seedSource.lineage.sourceId]);
+  expect(candidate.current.execution.contextCanonical).toContain("User's favorite color is apricot.");
+  expect(embeddings).toBe(0); expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it.each(["omitted", 1, 2] as const)("historical pin %s does not reinterpret the identical-assertion existence metadata", async version => {
+  const f = await fixture("existence"), candidates = { facts: f.facts(), candidateWorkBound: false }, pin = version === "omitted" ? undefined : version;
+  expect(directFactLookupSourceIds(queryText, candidates, clock, pin)).toEqual([]);
+  expect(proveDirectFactLookup(queryText, candidates, clock, pin, f.sources())).toBeUndefined();
+  const run = await f.agentRun(version), before = f.state(), parent = await run.parent();
+  expect(parent.direct).toBeUndefined(); expect(parent.proposal?.binding.operationKey).toBe("embedding.query"); expect(f.state()).toEqual(before);
+  expect(embeddings).toBe(0); expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it.each(["statement", "question", "subject", "predicate", "property", "value", "owner", "source", "event", "revision", "assistant", "correction", "edited", "future", "time-bound", "conflict"] as const)("v3 refuses %s metadata instead of removing the incompatible candidate", async fault => {
+  const f = await fixture("existence"), facts = clone(f.facts()), projection = facts.find(fact => fact.factId === "literal-existence")!;
+  if (fault === "statement") projection.fact = "My favorite color is apricot.";
+  if (fault === "question") projection.fact = "What is my favorite color?";
+  if (fault === "subject") projection.subject = "another user";
+  if (fault === "predicate") projection.predicate = "likes";
+  if (fault === "property") projection.object = "favorite flower";
+  if (fault === "value") projection.object = "blue";
+  if (fault === "owner") projection.ownerPrincipalId = "foreign";
+  if (fault === "source") projection.lineage.sourceId = "foreign";
+  if (fault === "event") projection.lineage.sourceEventId = "foreign";
+  if (fault === "revision") projection.lineage.sourceRevision = 2;
+  if (fault === "assistant") projection.lineage = { ...projection.lineage, role: "assistant", trust: "assistant_claim" };
+  if (fault === "correction") projection.supersedes = "old";
+  if (fault === "edited") projection.updatedAt++;
+  if (fault === "future") projection.validFrom = clock + 1;
+  if (fault === "time-bound") projection.validUntil = clock + 1;
+  if (fault === "conflict") Object.assign(projection, { fact: "User's favorite color is blue.", predicate: "prefers", object: "blue" });
+  const candidates = { facts, candidateWorkBound: false };
+  expect(directFactLookupSourceIds(queryText, candidates, clock, 3)).toEqual([]);
+  expect(proveDirectFactLookup(queryText, candidates, clock, 3, f.sources())).toBeUndefined();
+  const valid = proveDirectFactLookup(queryText, { facts: f.facts(), candidateWorkBound: false }, clock, 3, f.sources())!;
+  expect(valid).toMatchObject({ version: 3 }); expect(directFactProofCompatible(valid, [projection], clock)).toBe(false);
+});
+it.each(["question", "request", "compound", "alias", "wrong-value", "untrusted", "foreign", "revision", "tombstone", "hash", "missing"] as const)("v3 cannot use %s canonical source as value evidence", async fault => {
+  const f = await fixture("existence"), sources = clone(f.sources()), source = sources[0]!;
+  if (fault === "question") source.content = "What is my favorite color?";
+  if (fault === "request") source.content = "Please tell me my favorite color.";
+  if (fault === "compound") source.content += " My favorite color is blue.";
+  if (fault === "alias") source.content = "My preferred color is apricot.";
+  if (fault === "wrong-value") source.content = "My favorite color is blue.";
+  if (fault === "untrusted") source.lineage = { ...source.lineage, role: "assistant", trust: "assistant_claim" };
+  if (fault === "foreign") source.ownerPrincipalId = "foreign";
+  if (fault === "revision") source.lineage.sourceRevision = 2;
+  if (fault === "tombstone") source.tombstonedAt = clock;
+  if (fault === "hash") source.contentHash = "invalid";
+  if (fault === "missing") sources.pop();
+  expect(proveDirectFactLookup(queryText, { facts: f.facts(), candidateWorkBound: false }, clock, 3, sources)).toBeUndefined();
+});
+it("v3 retains prospective source deduplication, candidate ceiling and work-bound fallback", async () => {
+  const f = await fixture("existence"), candidates = { facts: f.facts(), candidateWorkBound: false };
+  expect(directFactLookupSourceIds(queryText, candidates, clock, 3)).toEqual([f.seedSource.lineage.sourceId]);
+  for (const bounded of [{ ...candidates, candidateWorkBound: true }, { ...candidates, facts: [...candidates.facts, ...Array.from({ length: 99 }, () => candidates.facts[1]!)] }]) {
+    expect(directFactLookupSourceIds(queryText, bounded, clock, 3)).toEqual([]);
+    expect(proveDirectFactLookup(queryText, bounded, clock, 3, f.sources())).toBeUndefined();
+  }
+});
+it.each(["statement", "question", "conflict"] as const)("both registered v3 paths preserve semantic fallback for an incompatible %s projection", async fault => {
+  for (const path of ["public", "agent"] as const) {
+    const f = await fixture("existence"), projection = f.facts().find(fact => fact.factId === "literal-existence")!;
+    if (fault === "statement") projection.fact = "My favorite color is apricot.";
+    if (fault === "question") projection.fact = "What is my favorite color?";
+    if (fault === "conflict") Object.assign(projection, { fact: "User's favorite color is blue.", predicate: "prefers", object: "blue" });
+    await replaceFactEntityLinks(f.ctx.db, projection);
+    if (path === "public") {
+      const result = await f.performPublic(); expect(result.memoryEffort?.retrievalRoute).toBe("semantic-v1");
+      expect(embeddings).toBe(1); expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+    } else {
+      const run = await f.agentRun(), parent = await run.parent();
+      expect(parent.direct).toBeUndefined(); expect(parent.proposal?.binding.operationKey).toBe("embedding.query");
+    }
+    embeddings = 0;
+  }
+});
+it.each(["source-delete", "source-edit", "fact-expire"] as const)("v3 cold final delivery rejects late %s with both projection facts retained", async fault => {
+  for (const path of ["public", "agent"] as const) {
+    const f = await fixture("existence"), run = path === "agent" ? await f.agentRun() : undefined;
+    const original = ConvexMemoryRepository.prototype.checkDelivery;
+    const guard = jest.spyOn(ConvexMemoryRepository.prototype, "checkDelivery").mockImplementation(async function (this: InstanceType<typeof ConvexMemoryRepository>, bindings, authority) {
+      expect(bindings.facts.map(fact => fact.factId).sort()).toEqual(["literal-existence", "literal-value"]);
+      const source = f.sources().find(source => source.lineage.sourceId === f.seedSource.lineage.sourceId)!;
+      if (fault === "source-delete") source.tombstonedAt = clock;
+      if (fault === "source-edit") source.contentHash = "f".repeat(64);
+      if (fault === "fact-expire") f.facts().find(fact => fact.factId === "literal-existence")!.validUntil = clock;
+      return original.call(this, bindings, authority);
+    });
+    await expect(path === "public" ? f.performPublic() : run!.parent()).rejects.toThrow(); expect(guard).toHaveBeenCalledTimes(1); guard.mockRestore();
+    expect(embeddings).toBe(0); expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+  }
+});
+it("v3 revocation between direct selection and preparation remains a fresh refusal", async () => {
+  const f = await fixture("existence"), run = await f.agentRun(), parent = await run.parent();
+  expect(parent.direct).toBeDefined(); f.grant.revokedAt = clock;
+  await expect(run.prepare()).rejects.toThrow(); expect(embeddings).toBe(0); expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
 });

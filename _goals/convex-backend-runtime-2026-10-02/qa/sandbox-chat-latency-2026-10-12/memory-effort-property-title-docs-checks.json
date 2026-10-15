@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "node": "24.15.0",
+  "results": [
+    {
+      "name": "typecheck",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 1288,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-docs-typecheck.log",
+      "logSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "name": "build",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/@docusaurus/core/bin/docusaurus.mjs",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 8429,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-docs-build.log",
+      "logSha256": "64e74132aa20e278f4a23d2d7d6c455ebbb05848c4b8b0c713eda3157bd368e1"
+    }
+  ],
+  "files": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx",
+      "sha256": "24e9193023e03dcd656b820722b04b9dd67feff55abb5123ae1aa70c65167f4e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx",
+      "sha256": "3a696b741a5a36bb8602722c1ae85a3c0f2529aa65f3b8ec9b773ef179c9124c"
+    }
+  ]
+}

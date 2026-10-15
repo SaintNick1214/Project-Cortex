@@ -5,7 +5,7 @@ import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { CutoffV1 } from "../src/domain/transcript";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import type { QueryCtx } from "./_generated/server";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import { comparePosition } from "../src/domain/transcript";
 import { activeAttempt, currentRun } from "./runs";
 import { agentComponent, canonicalMessageHash, checkNativeMediaReferences, executionRevision, hydratePrivateCutoff, singleTranscript, transcriptDenied } from "./runtimeTranscript";
@@ -15,6 +15,28 @@ import { NATIVE_TOOL_NAMES_V2 as NATIVE_TOOL_NAMES } from "../src/domain/agent-t
 
 /** Internal automatic-title witness, never accepted from a public/model request. */
 export type CompletedAgentTitle = { runId: string; sourceMessageId: string; attemptNumber: number; leaseVersion: number; parentOperationId: Id<"runtimeModelOperations"> };
+/** Final registration increments executionRevision once per completed Agent
+ * turn. Explain only those later appends, never edits/approval/policy changes.
+ * The indexed suffix is bounded by the existing 1000-message/registration
+ * horizon; no completed-title check scans the conversation's older history. */
+async function completedTitleRevision(ctx: Pick<QueryCtx, "db">, run: Doc<"runtimeRuns">, snapshot: CutoffV1, revision: number): Promise<number> {
+  const increments = revision - snapshot.historyRevision - 1;
+  if (!Number.isSafeInteger(increments) || increments < 0) transcriptDenied("INVALID_STATE");
+  if (increments === 0) return revision;
+  if (increments > 1000) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
+  const suffix = await ctx.db.query("runtimeRuns").withIndex("by_conversation_queue", q => q.eq("tenantId", run.tenantId)
+    .eq("memorySpaceId", run.memorySpaceId).eq("conversationId", run.conversationId).gt("queueSequence", run.queueSequence)).take(1001);
+  if (suffix.length > 1000) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
+  const completed = suffix.filter(row => row.responseStatus === "complete");
+  if (completed.length !== increments || new Set(completed.map(row => row.queueSequence)).size !== completed.length) transcriptDenied("INVALID_STATE");
+  for (const later of completed) {
+    if (!later.executionRequested || later.tombstonedAt !== undefined || later.conversationEpoch !== snapshot.conversationEpoch || !later.outputMessageIds.length) transcriptDenied("INVALID_STATE");
+    const receipt = singleTranscript(await ctx.db.query("runtimeAgentIngestion").withIndex("by_run", q => q.eq("tenantId", later.tenantId)
+      .eq("memorySpaceId", later.memorySpaceId).eq("runId", later.runId)).take(2));
+    if (!receipt || receipt.attemptNumber !== later.attemptNumber || receipt.identityCanonical !== canonicalModelJson([later.runId, later.attemptNumber, later.outputMessageIds])) transcriptDenied("INVALID_STATE");
+  }
+  return revision;
+}
 export async function guardAgentRunBudget(ctx: Pick<QueryCtx, "db" | "runQuery">,
   reference: RuntimeAuthorityReference, runAccountId: Id<"runtimeBudgetAccounts">, title?: CompletedAgentTitle): Promise<void> {
   const run = singleTranscript(await ctx.db.query("runtimeRuns").withIndex("by_run_account", q => q.eq("runAccountId", runAccountId)).take(2));
@@ -29,7 +51,7 @@ export async function guardAgentRunBudget(ctx: Pick<QueryCtx, "db" | "runQuery">
   if (owned.state === "complete" && title) {
     current = await currentRun(ctx, reference, run.runId, "run");
     if (run.responseStatus !== "complete" || run.cancellationRequestedAt !== undefined || title.runId !== run.runId || title.sourceMessageId !== run.inputMessageIds[0] || title.attemptNumber !== run.attemptNumber
-      || title.leaseVersion !== owned.leaseVersion || executionRevision(current.conversation) !== snapshot.historyRevision + 1
+      || title.leaseVersion !== owned.leaseVersion
       || !owned.finalMessageIds?.length || canonicalModelJson(owned.finalMessageIds) !== canonicalModelJson(run.outputMessageIds)) transcriptDenied("INVALID_STATE");
     const outbox = singleTranscript(await ctx.db.query("runtimeRunOutbox").withIndex("by_run", q => q.eq("tenantId", run.tenantId).eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId)).take(2));
     const attempt = singleTranscript(await ctx.db.query("runtimeRunAttempts").withIndex("by_run_attempt", q => q.eq("tenantId", run.tenantId).eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId).eq("attemptNumber", run.attemptNumber)).take(2));
@@ -45,9 +67,11 @@ export async function guardAgentRunBudget(ctx: Pick<QueryCtx, "db" | "runQuery">
       || canonicalModelJson(final.nativeMessageIds) !== canonicalModelJson(owned.finalMessageIds)
       || !parent || parent.operationKey !== "agent.respond" || parent.runAccountId !== runAccountId || parent.cancelled || parent.overrun
       || canonicalModelJson(parent.reference) !== canonicalModelJson(reference)) transcriptDenied("POLICY_DENIED");
-    // Final registration advances this revision exactly once. The original
-    // cutoff bytes/pins stay immutable; only that proven completion is allowed.
-    await hydratePrivateCutoff(ctx, current.conversation, current.row, { ...snapshot, historyRevision: snapshot.historyRevision + 1 });
+    // Keep all captured native bytes/pins and source witnesses cold-checked.
+    // Only the local revision comparison accounts for proven later appends;
+    // the stored cutoff and ordinary Agent invalidation contract stay intact.
+    const revision = await completedTitleRevision(ctx, run, snapshot, executionRevision(current.conversation));
+    await hydratePrivateCutoff(ctx, current.conversation, current.row, { ...snapshot, historyRevision: revision });
   } else {
     if (!["ready", "running"].includes(owned.state)) transcriptDenied("INVALID_STATE");
     current = await activeAttempt(ctx, args);

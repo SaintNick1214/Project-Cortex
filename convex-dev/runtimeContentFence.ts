@@ -36,12 +36,16 @@ export async function contentArtifact(ctx: Ctx, job: ContentJob, reference: Runt
 }
 export async function checkContentJob(ctx: Ctx, job: ContentJob, reference: RuntimeAuthorityReference, execution = false, deadlines: number[] = []) {
   const s = { tenantId: job.tenantId, memorySpaceId: job.memorySpaceId };
+  const completedTitle = execution ? titleParent(job) : undefined;
   if (reference.tenantId !== s.tenantId || reference.memorySpaceId !== s.memorySpaceId) contentDenied();
   await recheckAuthority(ctx, reference, { ...s, capability: execution ? "run" : "read" });
   if (job.conversationId) {
     const conversation = await conversationById(ctx, reference, job.conversationId); if (!conversation) contentDenied();
     await managedConversationAccess(ctx, reference, conversation, execution ? "write" : "read", execution ? "canContinue" : "canView", deadlines);
-    if (execution && (conversation.epoch !== job.conversationEpoch || executionRevision(conversation) !== job.conversationRevision)) contentDenied("STALE_CONTEXT");
+    // Only the internal completed-parent title can outlive a later turn. Its
+    // parent fence below proves every revision increment and the original
+    // captured prefix; source pin/current authority checks still run here.
+    if (execution && (conversation.epoch !== job.conversationEpoch || !completedTitle && executionRevision(conversation) !== job.conversationRevision)) contentDenied("STALE_CONTEXT");
     if (job.sourceMessageId) {
       const bridge = await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", job.tenantId).eq("memorySpaceId", job.memorySpaceId).eq("nativeMessageId", job.sourceMessageId!)).unique();
       if (!bridge || !ctx.runQuery || !job.sourceMessagePin || bridge.revision !== job.sourceMessagePin.revision || bridge.contentHash !== job.sourceMessagePin.contentHash) contentDenied("STALE_CONTEXT");
@@ -66,7 +70,7 @@ export async function checkContentJob(ctx: Ctx, job: ContentJob, reference: Runt
     }
   }
   if (execution && job.parentRunId) {
-    await guardAgentRunBudget(ctx as Pick<QueryCtx, "db" | "runQuery">, reference, job.runAccountId, titleParent(job));
+    await guardAgentRunBudget(ctx as Pick<QueryCtx, "db" | "runQuery">, reference, job.runAccountId, completedTitle);
   }
   if (execution && (job.state !== "running" || job.expiresAt <= Date.now() || !job.leaseToken || !job.leaseExpiresAt || job.leaseExpiresAt <= Date.now())) contentDenied("CONTENT_JOB_EXPIRED");
   await deliveryExpiresAt(ctx, reference, deadlines); return artifact;

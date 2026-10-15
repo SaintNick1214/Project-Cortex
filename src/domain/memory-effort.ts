@@ -15,7 +15,7 @@ export interface EffectiveMemoryEffortPolicy {
   evidenceRankingVersion?: 1;
   /** New snapshots may prove redundant literal and question-source projections.
    * Omission keeps the historical singleton-only direct lookup rule. */
-  literalSourceProofVersion?: 1 | 2;
+  literalSourceProofVersion?: 1 | 2 | 3;
   requestedEffort: MemoryEffort; effectiveEffort: MemoryEffort;
   maxDepth: number | null; maxEntries: number | null; maxContextTokens: number;
   maxWork: number; maxCandidateBytes:number; pageSize: number; retrievalDeadlineMs: number; targetFirstAnswerMs: number;
@@ -59,7 +59,7 @@ export function validateMemoryEffortPolicy(input: MemoryEffortPolicyV1 = MEMORY_
 export function resolveMemoryEffortPolicy(request?: MemoryEffortRequest, administrator?: MemoryEffortPolicyV1): EffectiveMemoryEffortPolicy {
   const normalized = normalizeMemoryEffortRequest(request), admin = validateMemoryEffortPolicy(administrator), effort = normalized.effort!, preset = presets[effort];
   const narrow = (base: number | null, ...values: (number | undefined)[]) => { const present = values.filter((v): v is number => v !== undefined); return !present.length ? base : Math.min(base ?? Infinity, ...present); };
-  return { version: 1, policyVersion: "memory-effort-v1", evidenceRankingVersion: 1, literalSourceProofVersion: 2, requestedEffort: effort, effectiveEffort: effort,
+  return { version: 1, policyVersion: "memory-effort-v1", evidenceRankingVersion: 1, literalSourceProofVersion: 3, requestedEffort: effort, effectiveEffort: effort,
     maxDepth: narrow(preset.maxDepth, admin.maxDepth), maxEntries: narrow(preset.maxEntries, admin.maxEntries, normalized.maxEntries),
     maxContextTokens: Math.min(32768, admin.maxContextTokens ?? 32768, normalized.maxContextTokens ?? 32768),
     maxWork: Math.min(preset.maxWork, admin.maxWork ?? preset.maxWork), maxCandidateBytes:262144, pageSize: 16,

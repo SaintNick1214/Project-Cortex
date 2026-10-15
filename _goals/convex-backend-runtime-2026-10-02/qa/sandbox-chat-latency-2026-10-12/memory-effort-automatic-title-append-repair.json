@@ -1,0 +1,277 @@
+{
+  "version": 1,
+  "status": "TITLE_IMPLEMENTATION_FROZEN_FOCUSED_CHECKS_PASS_ONE_UNRELATED_DEPENDENCY_FAILURE_RETAINED",
+  "sourceImplementation": "COMPLETE_FOR_COHERENT_REVIEW",
+  "overallSelectedQuality": "INCOMPLETE_DEPENDENCY_CHECK_HAS_ONE_FAILURE",
+  "sourceHashesBefore": {
+    "convex-dev/runtimeContentFence.ts": "068092215a1fe50345921ca63a71b1b8697a9abf1e5a61565172ebff0ced3c72",
+    "convex-dev/runtimeAgentFence.ts": "daaadfc6772a2ebaaf2c76bd3fd76c29cc35e564b32ca14756c4087240a558a2",
+    "tests/unit/runtimeContent/jobs.test.ts": "7ca171c32df55f632c14cda77df121bd8b76bfa909d122b24533b509223b5032"
+  },
+  "sourceHashesAfter": {
+    "convex-dev/runtimeContentFence.ts": "ab53fe3bd69ebb04debc1038ee1a94a791aa7937ef8fd0d1198446105b0b0742",
+    "convex-dev/runtimeAgentFence.ts": "bc2f8b8328cc2651bb161392e5682d5a5a9ae1a3414be6d7f96e208583c1ff2d",
+    "tests/unit/runtimeContent/jobs.test.ts": "0495965678e4d3878f59172e1e256b653ac2e6fd286690794a1db11535a4da15"
+  },
+  "allOwnedSourcesStableAfterChecks": true,
+  "files": [
+    "convex-dev/runtimeContentFence.ts",
+    "convex-dev/runtimeAgentFence.ts",
+    "tests/unit/runtimeContent/jobs.test.ts"
+  ],
+  "diff": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-repair.diff",
+    "sha256": "f25d90b5771ada9b9b7bf511f7a517a0dcf6eecf81f6b11702a09462585c4063"
+  },
+  "controlledReproduction": {
+    "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-reproduction-confirmed.json",
+    "exitCode": 1,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-reproduction-confirmed.log",
+    "logSha256": "b478ca0491cb2e4639b97ef3554cf7a4c77d3bd2e09a832c2c1ff8d44d693f24",
+    "observed": "Actual controlled next Agent turn finalizes after title action-side guard and before atomic attachment. Before repair confirmed provider terminal becomes closed/withheld and TERMINAL_RESULT_WITHHELD.",
+    "qualification": "Conditional reachability reproduced; exact historical title exception was not retained and is not retroactively identified.",
+    "earlierFixtureFailuresPreserved": [
+      "memory-effort-automatic-title-append-reproduction.json",
+      "memory-effort-automatic-title-append-reproduction-boundary.json"
+    ],
+    "earlierFailureReason": "Test interceptor initially assumed component references were named function references, so its append did not finish; first pending/reconciliation outcomes are not the valid reproduction."
+  },
+  "behavior": {
+    "automaticTitleOnly": true,
+    "laterAppendProof": "Scoped by_conversation_queue suffix after parent queueSequence, <=1000rows plus one overflow witness; each completed same-epoch Agent run requires exact durable ingestion identity and outputs; count exactly equals execution revision increments beyond parent finalization.",
+    "unchangedColdChecks": [
+      "canonical captured source revision/hash/native bytes",
+      "complete original cutoff and saved output pins",
+      "current authority/share/definition/epoch/tombstones",
+      "source/artifact witnesses",
+      "completed parent, outbox, attempt, parent model operation and account",
+      "leases/cancel/approval/lock/policy changes",
+      "native qualification, usage, no paid retry, attachment and financial UNKNOWN ceilings"
+    ],
+    "ordinaryInputAdmission": "Existing runs.submit registerMessages(invalidateExecution:false) preserved and actual queued-input title positive tested.",
+    "noGlobalRevisionBypass": "Ordinary active Agent and standalone/public content revision fences unchanged. No counters/schema/protocol added.",
+    "syntaxOrParserChange": false
+  },
+  "workCost": {
+    "noAppend": "No new suffix/receipt proof work; increments0 returns immediately.",
+    "oneLaterFinalization": "Controlled guard observes exactly one scoped suffix row (query take1001) and one additional ingestion-receipt row (take2); original parent receipt still checked.",
+    "bound": "At most1000 later run rows and1000 exact receipt lookups, no scan of pre-parent run history; >1000 unexplained increments denied before suffix scan/provider dispatch.",
+    "latencyClaim": "NONE; no cloud timing or causal speedup inferred from controlled row counts."
+  },
+  "requirements": [
+    {
+      "name": "benign finalized second turn attaches/publishes title once",
+      "met": true
+    },
+    {
+      "name": "queued next input preserves title and execution revision",
+      "met": true
+    },
+    {
+      "name": "source tracked edit/delete/untracked bytes/current revocation/cancel/policy/receipt negatives",
+      "met": true
+    },
+    {
+      "name": "missing receipt and unaccounted revision deny",
+      "met": true
+    },
+    {
+      "name": "confirmed usage/UNKNOWN liability, no retries and replay attachment checks retained",
+      "met": true
+    },
+    {
+      "name": "bounded suffix work and cap negative",
+      "met": true
+    },
+    {
+      "name": "affected selected checks all green",
+      "met": false,
+      "reason": "one media proxy invariant failure before entering title path"
+    }
+  ],
+  "checks": {
+    "jobs": {
+      "name": "jobs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtimeContent/jobs.test.ts",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--cache=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-jobs-jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "exitCode": 0,
+      "naturalExit": true,
+      "elapsedMs": 20329.073834000155,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-jobs.log",
+      "logSha256": "ac12e9f7787d233e05edd216eef4fdbedc24578a915d38ab5fa5678bf618f71a",
+      "services": 0,
+      "models": 0
+    },
+    "types": {
+      "name": "types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "exitCode": 0,
+      "naturalExit": true,
+      "elapsedMs": 18445.50049999816,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-types.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "services": 0,
+      "models": 0
+    },
+    "lint-types": {
+      "name": "lint-types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "exitCode": 0,
+      "naturalExit": true,
+      "elapsedMs": 13358.368458000768,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-lint-types.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "services": 0,
+      "models": 0
+    },
+    "lint": {
+      "name": "lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeContentFence.ts",
+        "convex-dev/runtimeAgentFence.ts",
+        "tests/unit/runtimeContent/jobs.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "exitCode": 0,
+      "naturalExit": true,
+      "elapsedMs": 9379.327167000156,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-lint.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "services": 0,
+      "models": 0
+    },
+    "dependencies": {
+      "version": 1,
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeMedia/artifact-context.test.ts",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--cache=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-dependencies-jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 1,
+      "naturalExit": true,
+      "elapsedMs": 12729.700708005112,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-dependencies.log",
+      "logSha256": "275bdc032a68709452680ba9d8ef39d48710b99b319ca41ec338d9f77a761e97",
+      "services": 0,
+      "models": 0
+    }
+  },
+  "testCounts": {
+    "titleJobs": {
+      "suites": 1,
+      "tests": 55,
+      "passed": 55,
+      "failed": 0,
+      "skipped": 0
+    },
+    "directDependencySuites": {
+      "suites": 3,
+      "tests": 98,
+      "passed": 97,
+      "failed": 1,
+      "skipped": 0
+    }
+  },
+  "dependencyFailure": {
+    "test": "tests/unit/runtimeMedia/artifact-context.test.ts :: same-run hydration, native paid guard and exhausted observers recheck consumed artifact metadata",
+    "observed": "TypeError: db.query non-configurable/read-only target Proxy returned a different function",
+    "stackBoundary": "runtimeAgent.hydrateExecution -> runtimeAuth.readManagedSourceRunRows:138 -> ctx.db.query; before guardAgentRunBudget title branch",
+    "baselineRun": "ONE_EXACT_ACCEPTED_24B_CONTROL_REPRODUCES_SAME_FAILURE",
+    "action": "Reported Root; no runtimeAuth/media/fixture edits outside ownership",
+    "baselineControl": {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-baseline-control.json",
+      "applicability": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-baseline-control-applicability.json",
+      "exitCode": 1,
+      "naturalExit": true,
+      "selectedTests": 1,
+      "selectedFailures": 1,
+      "nonselectedTestsSkipped": 8,
+      "logSha256": "7400f5a8080e0300c10abeeaa454d4f3a93ac4bdf7a114c271dea279aa2af806",
+      "allCandidateSourcesRestored": true
+    },
+    "fixtureDescriptor": {
+      "own": true,
+      "valueType": "function",
+      "writable": false,
+      "configurable": false,
+      "enumerable": false
+    },
+    "productionQueryDescriptors": {
+      "reader": {
+        "own": true,
+        "valueType": "function",
+        "writable": true,
+        "configurable": true,
+        "enumerable": true
+      },
+      "writer": {
+        "own": true,
+        "valueType": "function",
+        "writable": true,
+        "configurable": true,
+        "enumerable": true
+      }
+    },
+    "titleBranchReached": false,
+    "qualification": "This exact immutable-query fixture invariant reproduces on accepted24b and is absent from the installed Convex reader/writer descriptor construction. Arbitrary custom frozen db adapters are not tested; no cloud claim or blanket production-unreachability claim."
+  },
+  "pending": [
+    "Root single coherent non-author review with literal-v3 and P default-tool batch",
+    "Root one build/contracts and fresh installed qualification after acceptance",
+    "Independent media fixture/proxy failure ownership/triage by Root"
+  ],
+  "operations": {
+    "services": 0,
+    "models": 0,
+    "builds": 0,
+    "packs": 0,
+    "GitMutations": 0,
+    "POrWEdits": 0,
+    "sourceFiles": 3
+  },
+  "createdAt": "2026-10-15T16:57:15.538282+00:00"
+}

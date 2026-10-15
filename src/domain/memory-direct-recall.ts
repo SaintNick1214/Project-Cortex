@@ -27,10 +27,10 @@ export function sufficientDirectFactLookup(text: string, candidates: { facts: re
   return literalPropertyEvidence(text,fact,now);
 }
 
-export type LiteralSourceProofVersion = 1 | 2;
+export type LiteralSourceProofVersion = 1 | 2 | 3;
 export type DirectFactLookupProof = { seed: DerivedFact; source?: undefined }
   | { seed: DerivedFact; source: SourceContent; query: string; version?: 1; sources?: undefined }
-  | { seed: DerivedFact; source: SourceContent; query: string; version: 2; sources: readonly SourceContent[] };
+  | { seed: DerivedFact; source: SourceContent; query: string; version: 2 | 3; sources: readonly SourceContent[] };
 /** The new source proof needs an explicit value to compare with canonical text.
  * Historical singleton facts may omit these fields; that rule stays separate. */
 function structuredLiteralValue(fact: DerivedFact): fact is DerivedFact & { subject: string; predicate: string; object: string } {
@@ -52,6 +52,12 @@ function canonicalLiteralProjection(fact: DerivedFact, seed: DerivedFact, versio
   const head = literalAssertionHead(seed.fact), category = head?.match(/^self:favorite ([\p{L}\p{N}]+)$/u)?.[1];
   if (!category || !fact.object || !fact.predicate || !["user", "the user", "i", "me", "my", words(fact.ownerPrincipalId).join(" ")].includes(words(fact.subject ?? "").join(" "))) return false;
   const statement = words(fact.fact).join(" "), predicate = words(fact.predicate).join(" "), object = words(fact.object).join(" "), value = words(seed.object ?? "").join(" ");
+  // V3 only: extraction can attach property-existence metadata to the exact
+  // same assertion as the value seed. It contributes no answer evidence. The
+  // caller still requires the same pristine source and its guarded assertion.
+  if (version === 3 && fact.fact === seed.fact && fact.subject === seed.subject
+    && fact.lineage.trust === "user_assertion" && seed.lineage.trust === "user_assertion"
+    && predicate === "has" && ["favorite " + category, "a favorite " + category].includes(object)) return true;
   // A closed grammar ties each statement to explicit metadata and the literal
   // favorite-property/value pair. No free-standing prefers/likes assertion can
   // establish that property, and no hypothetical or alternate property fits.
@@ -62,7 +68,7 @@ function canonicalLiteralProjection(fact: DerivedFact, seed: DerivedFact, versio
     { prefixes:["user","the user"], body:`prefers ${value} as their favorite ${category}`, predicate:"prefers", object:value },
     { prefixes:["i"], body:`prefer ${value} as my favorite ${category}`, predicate:"prefer", object:value },
   ];
-  if (version === 2) forms.push({ prefixes:["user","the user"], body:`prefers the ${category} ${value}`, predicate:"prefers", object:value });
+  if (version === 2 || version === 3) forms.push({ prefixes:["user","the user"], body:`prefers the ${category} ${value}`, predicate:"prefers", object:value });
   return forms.some(form => predicate === form.predicate && object === form.object && form.prefixes.some(prefix => statement === `${prefix} ${form.body}`));
 }
 function compatibleLiteralProjection(text: string, seed: DerivedFact, fact: DerivedFact, now: number, version: LiteralSourceProofVersion = 1): boolean {
@@ -81,16 +87,16 @@ function questionProjection(seed: DerivedFact, fact: DerivedFact, now: number): 
     && ["user", "the user"].some(prefix => words(fact.fact).join(" ") === `${prefix} has a favorite ${category}`);
 }
 function sourceProofSeed(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number, version?: LiteralSourceProofVersion): DerivedFact | undefined {
-  if ((version !== 1 && version !== 2) || text.length > 1024 || candidates.candidateWorkBound || candidates.facts.length === 0 || version === 2 && candidates.facts.length > 100) return undefined;
+  if ((version !== 1 && version !== 2 && version !== 3) || text.length > 1024 || candidates.candidateWorkBound || candidates.facts.length === 0 || version !== 1 && candidates.facts.length > 100) return undefined;
   const seed = candidates.facts.find(fact => structuredLiteralValue(fact) && pristineFact(fact, now) && literalPropertyEvidence(text, fact, now));
   return seed && seed.lineage.sourceRevision === 1 && candidates.facts.every(fact => compatibleLiteralProjection(text, seed, fact, now, version)
-    || version === 2 && questionProjection(seed, fact, now)) ? seed : undefined;
+    || (version === 2 || version === 3) && questionProjection(seed, fact, now)) ? seed : undefined;
 }
 /** Bounded prospective locations only. Every returned source must be read by
  * the repository with canViewFacts; these IDs convey no authority or proof. */
 export function directFactLookupSourceIds(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number, version?: LiteralSourceProofVersion): string[] {
   const seed = sourceProofSeed(text, candidates, now, version);
-  return seed ? [...new Set([seed.lineage.sourceId, ...(version === 2 ? candidates.facts.map(fact => fact.lineage.sourceId) : [])])] : [];
+  return seed ? [...new Set([seed.lineage.sourceId, ...(version === 2 || version === 3 ? candidates.facts.map(fact => fact.lineage.sourceId) : [])])] : [];
 }
 /** Retained single-source planning contract for historical callers. */
 export function directFactLookupSourceId(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number, version?: LiteralSourceProofVersion): string | undefined {
@@ -101,7 +107,7 @@ function pristineSource(source: SourceContent): boolean {
     && /^[a-f0-9]{64}$/.test(source.contentHash);
 }
 function singleLiteralSource(source: SourceContent, version?: LiteralSourceProofVersion): boolean {
-  return pristineSource(source) && (version !== 2 || source.lineage.trust === "user_assertion") && /^[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?(?: [\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?)*\.?$/u.test(source.content);
+  return pristineSource(source) && (version !== 2 && version !== 3 || source.lineage.trust === "user_assertion") && /^[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?(?: [\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?)*\.?$/u.test(source.content);
 }
 function questionSource(seed: DerivedFact, fact: DerivedFact, source: SourceContent, now: number): boolean {
   const category = literalAssertionHead(seed.fact)?.match(/^self:favorite ([\p{L}\p{N}]+)$/u)?.[1];
@@ -110,7 +116,9 @@ function questionSource(seed: DerivedFact, fact: DerivedFact, source: SourceCont
 }
 /** Version 1 keeps its exact same-source proof. Version 2 additionally explains
  * the finite prefers-the-property projection and grounded question existence
- * facts. All candidates remain traversed, bound and independently cold-checked. */
+ * facts. Version 3 also admits only byte-identical same-source assertion text
+ * with redundant property-existence metadata. All candidates remain traversed,
+ * bound and independently cold-checked. */
 export function proveDirectFactLookup(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number,
   version?: LiteralSourceProofVersion, supplied?: SourceContent | readonly SourceContent[]): DirectFactLookupProof | undefined {
   const singleton = sufficientDirectFactLookup(text, candidates, now) ? { seed: candidates.facts[0]! } : undefined;
@@ -119,7 +127,7 @@ export function proveDirectFactLookup(text: string, candidates: { facts: readonl
   const source = seed && sources.find(value => value.lineage.sourceId === seed.lineage.sourceId);
   if (!seed || !source || !singleLiteralSource(source, version) || !sameFactSource(seed, source)
     || !literalPropertyEvidence(text, { ...seed, fact: source.content }, now)) return singleton;
-  const proof: DirectFactLookupProof = version === 2 ? { seed, source, query: text, version: 2, sources } : { seed, source, query: text };
+  const proof: DirectFactLookupProof = version === 2 || version === 3 ? { seed, source, query: text, version, sources } : { seed, source, query: text };
   return directFactProofCompatible(proof, candidates.facts, now) ? proof : singleton;
 }
 /** Every discovered fact is checked BEFORE entry/queue shedding. A question
@@ -128,7 +136,7 @@ export function directFactProofCompatible(proof: DirectFactLookupProof, facts: r
   if (!proof.source) return directFactTraversalCompatible(proof.seed, facts);
   const { source, query } = proof;
   return facts.every(fact => sameFactSource(fact, source) && compatibleLiteralProjection(query, proof.seed, fact, now, proof.version)
-    || proof.version === 2 && proof.sources.some(candidate => questionSource(proof.seed, fact, candidate, now)));
+    || (proof.version === 2 || proof.version === 3) && proof.sources.some(candidate => questionSource(proof.seed, fact, candidate, now)));
 }
 
 /** Priority within an already-authorized current candidate set, never proof that

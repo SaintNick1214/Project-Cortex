@@ -173,7 +173,7 @@ it("only the new source-proof pin admits the observed three projections of one e
  const proof=sourceProof(projections,literalSource,1);expect(proof?.seed.factId).toBe(observed.factId);expect(proof?.source).toEqual(literalSource);
  expect(directFactLookupSourceId("What is my favorite fruit?",{facts:projections,candidateWorkBound:false},observed.createdAt,1)).toBe(literalSource.lineage.sourceId);
  expect(directFactProofCompatible(proof!,projections,observed.createdAt)).toBe(true);
- expect(resolveMemoryEffortPolicy({effort:"fast"})).toMatchObject({literalSourceProofVersion:2,maxEntries:4,maxDepth:2,targetFirstAnswerMs:3000});
+ expect(resolveMemoryEffortPolicy({effort:"fast"})).toMatchObject({literalSourceProofVersion:3,maxEntries:4,maxDepth:2,targetFirstAnswerMs:3000});
 });
 it.each([
  {name:"same-source contradiction",change:{fact:"User's favorite fruit is pear.",object:"pear"}},

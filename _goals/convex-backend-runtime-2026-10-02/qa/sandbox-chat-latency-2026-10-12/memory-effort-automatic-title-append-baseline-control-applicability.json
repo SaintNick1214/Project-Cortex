@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "scope": "Offline descriptor inspection only; no database method invoked",
+  "fixtureDefinition": "tests/unit/runtimeAssets/fixture.ts:18 Object.defineProperty(f.db,\"query\",{value:function}) without descriptor flags",
+  "fixtureDescriptorByJavaScriptDefaults": {
+    "own": true,
+    "valueType": "function",
+    "writable": false,
+    "configurable": false,
+    "enumerable": false
+  },
+  "intentQualification": "Source establishes descriptor flags; intent to make query immutable is not documented, so no intentional security contract is inferred.",
+  "productionPackageVersion": "1.46.0",
+  "productionReaderQuery": {
+    "own": true,
+    "valueType": "function",
+    "writable": true,
+    "configurable": true,
+    "enumerable": true
+  },
+  "productionWriterQuery": {
+    "own": true,
+    "valueType": "function",
+    "writable": true,
+    "configurable": true,
+    "enumerable": true
+  },
+  "productionConstruction": "node_modules/convex/src/server/impl/database_impl.ts setupReader returns object-literal query; setupWriter reuses reader. registration_impl.ts calls these for native contexts.",
+  "baselineReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-baseline-control.json",
+  "baselineNaturalExit": true,
+  "baselineExitCode": 1,
+  "candidateFailureRetained": true,
+  "baselineFailure": {
+    "title": "same-run hydration, native paid guard and exhausted observers recheck consumed artifact metadata",
+    "fullName": "same-run hydration, native paid guard and exhausted observers recheck consumed artifact metadata",
+    "failureMessages": [
+      "TypeError: 'get' on proxy: property 'query' is a read-only and non-configurable data property on the proxy target but the proxy did not return its actual value (expected '(table) => {\n            const query = originalQuery(table);\n            const filter = query.filter;\n         ...<omitted>... }' but got '(...args) => invoke(args)')\n    at readManagedSourceRunRows (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:138:20)\n    at runById (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:35:33)\n    at currentControlRun (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:40:21)\n    at currentRun (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:50:39)\n    at activeAttempt (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:298:25)\n    at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:169:96)\n    at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:224:105)\n    at invoke (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts:155:92)\n    at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts:221:113\n    at transaction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts:217:24)\n    at Object.call (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts:221:83)\n    at Object.<anonymous> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMedia/artifact-context.test.ts:55:11)"
+    ]
+  },
+  "candidateFailure": {
+    "ancestorTitles": [],
+    "duration": 13,
+    "failing": false,
+    "failureDetails": [
+      {}
+    ],
+    "failureMessages": [
+      "TypeError: 'get' on proxy: property 'query' is a read-only and non-configurable data property on the proxy target but the proxy did not return its actual value (expected '(table) => {\n            const query = originalQuery(table);\n            const filter = query.filter;\n         ...<omitted>... }' but got '(...args) => invoke(args)')\n    at readManagedSourceRunRows (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:138:20)\n    at runById (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:35:33)\n    at currentControlRun (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:40:21)\n    at currentRun (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:50:39)\n    at activeAttempt (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:298:25)\n    at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:169:96)\n    at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:224:105)\n    at invoke (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts:155:92)\n    at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts:221:113\n    at transaction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts:217:24)\n    at Object.call (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts:221:83)\n    at Object.<anonymous> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMedia/artifact-context.test.ts:55:11)"
+    ],
+    "fullName": "same-run hydration, native paid guard and exhausted observers recheck consumed artifact metadata",
+    "invocations": 1,
+    "location": null,
+    "numPassingAsserts": 0,
+    "retryMessages": [],
+    "retryReasons": [],
+    "status": "failed",
+    "title": "same-run hydration, native paid guard and exhausted observers recheck consumed artifact metadata",
+    "startAt": 1792083297056
+  },
+  "changedTitleBranchReached": false,
+  "reachabilityEvidence": "Both raw stacks stop at runtimeAuth.readManagedSourceRunRows:138 via runs.activeAttempt -> runtimeAgent.executionContext -> hydrateExecution testline55; neither enters runtimeAgentFence.guardAgentRunBudget or runtimeContentFence.",
+  "qualification": "This exact immutable-query fixture invariant reproduces on accepted24b and is absent from the installed Convex reader/writer descriptor construction. Arbitrary custom frozen db adapters are not tested; no cloud claim or blanket production-unreachability claim.",
+  "services": 0,
+  "models": 0,
+  "sourceEdits": 0
+}
