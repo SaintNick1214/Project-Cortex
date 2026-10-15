@@ -1,0 +1,131 @@
+{
+  "status": "PREPARED_EXECUTION_NOT_RUN",
+  "sourceCommit": "SOURCE_COMMIT_PENDING",
+  "combinedFrozenManifest": "PENDING_ROOT",
+  "independentReview": "PENDING_ROOT",
+  "rootSdkSnapshot": "PENDING_ROOT",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-canonical-2026-10-15",
+  "kitExists": false,
+  "checksDirectoryExists": false,
+  "syntax": [
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-builder.mjs",
+      "sha256": "13d789fc278348a610730df298f7a3a194ca371371837e65539435b20de41a28",
+      "check": "node --check",
+      "exitCode": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-runner.mjs",
+      "sha256": "fe3fadd7cc3a0d03b47e18e02f5483d22fd47482d38f057928f4303afc29f0e8",
+      "check": "node --check",
+      "exitCode": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-snapshot.mjs",
+      "sha256": "4086e01deae3279089c2cd8e50f8fdc0a7ad96653ca172d9952e23eb0c8e3e7a",
+      "check": "node --check",
+      "exitCode": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-host-cli.mjs",
+      "sha256": "87aecc3f30ebfa0dcf4cc9fe040b607486941951904c043625e1f1db9c31f7e2",
+      "check": "node --check",
+      "exitCode": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-pack-descriptor.mjs",
+      "sha256": "b41d90c68f9a3a94907a36fde1142ce58115604c67cd971bfa12ac7f6fea6879",
+      "check": "node --check",
+      "exitCode": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-prepare.candidate.mjs",
+      "sha256": "7ce6ad2f848e02a3ace024261b4fbf5b69fe26a5de34ae34a870ad32aefc3376",
+      "check": "node --check",
+      "exitCode": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-reuse.py",
+      "sha256": "a1ea85f9f18fe9700e349d89b24395b8377c131fa1dedf70b6a00a6f1b63ad70",
+      "check": "python ast.parse",
+      "exitCode": 0
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-image-contents.py",
+      "sha256": "44f4105276ff8fe3ec75ba2de4f7e6547a4b7b49f36bad2b27a0e7f10fc994a3",
+      "check": "python ast.parse",
+      "exitCode": 0
+    }
+  ],
+  "prospectiveControls": {
+    "total": 11,
+    "moduleSyntaxChecked": 9
+  },
+  "acceptedReviewSchema": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-independent-review.json",
+    "sha256": "decbc5e5b4d60883f734a6e4dfbbc6184d7e894c5c32932975c949c3df8ec7dc",
+    "frozenPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-source-hashes.json",
+    "frozenRows": 9,
+    "reviewedRows": 9,
+    "status": "EXISTING_ACCEPTED_SCHEMA_CONSUMED_WITHOUT_REWRITE",
+    "newBatchAcceptance": false
+  },
+  "initialCanonicalFreeze": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-source-hashes.json",
+    "sha256": "b346cd586e583905e28888e136766f177d7be700f29ed6a6219ffc76f545541d",
+    "rows": 12,
+    "status": "INITIAL_CANONICAL_CONTEXT_ONLY_COMBINED_FREEZE_PENDING"
+  },
+  "archiveReuse": [
+    {
+      "role": "cli",
+      "sha256": "847367abe21d000cd34b3bb59f1d7aadaacfbd8fdc3b36baf85baba822345f8b",
+      "publishedFiles": 451,
+      "sourceChanges": [],
+      "acceptedPublishedMismatches": [],
+      "currentWorkingPublishedMismatches": [
+        "dist/utils/__tests__/schema-install.test.js"
+      ],
+      "eligibleNow": true
+    },
+    {
+      "role": "provider",
+      "sha256": "a1d9309a6d6175bc1779e5eee36a5afee0d846b47b23887a9038009bc71864f2",
+      "publishedFiles": 18,
+      "sourceChanges": [],
+      "acceptedPublishedMismatches": [],
+      "currentWorkingPublishedMismatches": [],
+      "eligibleNow": true
+    },
+    {
+      "role": "catalog",
+      "sha256": "1d01be513fa6f0f0f2cccc63bef02321366a88e641c11ed17c966d67aee843e4",
+      "publishedFiles": 2215,
+      "sourceChanges": [],
+      "acceptedPublishedMismatches": [],
+      "currentWorkingPublishedMismatches": [],
+      "eligibleNow": true
+    }
+  ],
+  "counts": {
+    "builds": 0,
+    "packs": 0,
+    "packedConsumers": 0,
+    "imageBuilds": 0,
+    "dockerCommands": 0,
+    "archiveExtractions": 0,
+    "proofsWrites": 0,
+    "launcherWrites": 0,
+    "serviceCalls": 0,
+    "inferenceCalls": 0
+  },
+  "strictProcedure": {
+    "approvalFile": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/procedure-approval.json",
+    "approvalSha256": "2452bca8cebf48d47df900d4c6e36f069ead90620658ba4a6a7e2c2abb5d5af6",
+    "reviewPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-independent-review.md",
+    "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+    "maximumPaidRequests": 8,
+    "maximumUnknownLiabilityUnits": 2700000
+  },
+  "launcherChanged": false
+}

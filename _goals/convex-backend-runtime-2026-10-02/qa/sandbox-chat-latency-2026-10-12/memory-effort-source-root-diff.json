@@ -1,0 +1,40 @@
+{
+  "name": "diff",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "checks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts"
+      ],
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "explanation": "git diff --no-index reports an added file with exit1; output is empty, with no whitespace diagnostics."
+    }
+  ],
+  "startedAt": "2026-10-15T09:37:58.892438+00:00",
+  "durationMs": 41,
+  "exitCode": 1,
+  "signal": null,
+  "naturalExit": true,
+  "rawLog": "memory-effort-source-root-diff.raw.log",
+  "status": "PASS",
+  "exitCodeMeaning": "Maximum raw child exit retained; tracked git diff --check exits0 and new-file no-index check exits1 for expected content difference with no whitespace output."
+}

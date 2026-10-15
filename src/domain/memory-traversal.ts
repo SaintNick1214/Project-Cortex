@@ -9,6 +9,9 @@ export interface MemoryEvidencePage { edges: MemoryEvidenceEdge[]; cursor: strin
 export async function traverseMemoryEvidence(input: {
   seeds: readonly MemoryEvidenceNode[]; policy: EffectiveMemoryEffortPolicy; now(): number; startedAt?: number;
   cancelled?(): boolean | Promise<boolean>;
+  /** Private native caller: every seed finished its full bind before expiry.
+   * Allows pure bounded fitting after time expires, never another edge read. */
+  retainValidatedSeedPrefixOnDeadline?: true;
   expand(node: MemoryEvidenceNode, cursor: string | null, limit: number): Promise<MemoryEvidencePage>;
 }) {
   if(input.startedAt!==undefined&&(!Number.isFinite(input.startedAt)||input.startedAt<0))throw new Error("INVALID_INPUT: invalid retrieval work start");
@@ -32,7 +35,8 @@ export async function traverseMemoryEvidence(input: {
   };
   for (const seed of input.seeds.slice(0,input.policy.maxWork).sort((a,b) => (input.policy.evidenceRankingVersion===1?Number(!!b.literalPropertyPriority)-Number(!!a.literalPropertyPriority):0)
     || b.item.score-a.item.score || a.key.localeCompare(b.key))) {
-    if (input.policy.evidenceRankingVersion===1&&await bounded()) break;
+    if (input.policy.evidenceRankingVersion===1&&await bounded()
+      && !(input.retainValidatedSeedPrefixOnDeadline&&trace.stopReasons.includes("deadline")&&!trace.stopReasons.includes("cancellation")&&!trace.stopReasons.includes("work"))) break;
     if (++work > input.policy.maxWork) { stop("work"); break; } add(seed, 1, [seed.key]);
   }
   // An empty/retired frontier must still report a spent inherited work budget.
@@ -57,6 +61,22 @@ export async function traverseMemoryEvidence(input: {
       if (page.cursor === cursor && page.cursor !== null) throw new Error("INVALID_STATE: adjacency cursor did not advance");
       cursor = page.cursor;
     } while (cursor !== null);
+  }
+  if(input.retainValidatedSeedPrefixOnDeadline&&trace.stopReasons.includes("deadline")&&!trace.stopReasons.includes("cancellation")){
+    if(await input.cancelled?.())stop("cancellation");
+    else {
+      // Only already-bound depth1 seeds are added to the selected prefix. This
+      // pass is pure, shares the original caps, and cannot imply full discovery.
+      const keys=new Set(selected.map(node=>node.key)),candidates=[...selected,...queue.filter(node=>node.depth===1&&!keys.has(node.key))]
+        .sort((a,b)=>Number(!!b.literalPropertyPriority)-Number(!!a.literalPropertyPriority)||b.item.score-a.item.score||a.key.localeCompare(b.key));
+      const fitted:MemoryEvidenceNode[]=[];let units=0;
+      for(const node of candidates){
+        if(input.policy.maxEntries!==null&&fitted.length>=input.policy.maxEntries){stop("entries");break;}
+        const nextUnits=unitsFor(node);if(units+nextUnits>input.policy.maxContextTokens){stop("input");continue;}
+        fitted.push(node);units+=nextUnits;
+      }
+      selected.splice(0,selected.length,...fitted);trace.selectedInputUnits=units;
+    }
   }
   if(input.policy.evidenceRankingVersion===1){
     // Discovery remains BFS: moving a deeper frontier node ahead of unexpanded

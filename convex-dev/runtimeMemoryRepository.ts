@@ -10,7 +10,7 @@ import type { DerivedFact, DerivedVector, MemoryRepository, ProfiledQuery, Sourc
 import type { DomainClock } from "../src/domain/clock";
 import { DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, assertSupportedEmbeddingProfile, assertEmbeddingVector, assertProfileMatches, normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { assertSourceLineage, isCurrentAuthorizedVector, prepareSourceContent, processingIdentityKey } from "../src/domain/sources";
-import { assertResourceScope, createAuthorityReader, recheckAuthority } from "./runtimeAuth";
+import { assertResourceScope, createAuthorityReader, readManagedSourceUniqueRow, recheckAuthority } from "./runtimeAuth";
 import { managedSourceIsCurrent } from "./runtimeDataAuth";
 import type { EmbeddingProfile } from "../src/domain/profile";
 import type { ContextSourcePermission } from "../src/domain/context-witness";
@@ -116,8 +116,7 @@ export class ConvexMemoryRepository {
   }
   async getSource(sourceId: string, permission?: ContextSourcePermission, deadlines?: number[]): Promise<SourceContent | null> {
     await this.authority();
-    const row = await this.ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", (q) =>
-      q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", sourceId)).unique();
+    const row = await readManagedSourceUniqueRow(this.ctx, this.scope.tenantId, this.scope.memorySpaceId, sourceId);
     if (!row) return null;
     const source = stripSystem(row);
     await this.authority(sourceResource(source));

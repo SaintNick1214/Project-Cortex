@@ -1,0 +1,813 @@
+{
+  "version": 1,
+  "status": "READONLY_DIAGNOSIS_COMPLETE_IMPLEMENTATION_AND_NATIVE_TIMING_UNRUN",
+  "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+  "scope": "Only new hydration probe Markdown/JSON; frozen source and existing actual hosted receipts. No runtime services, credentials, paid calls, implementation, tests, builds, Git writes, Proofs or website writes.",
+  "runtimeServiceCalls": 0,
+  "modelCalls": 0,
+  "credentialReads": 0,
+  "testsRun": false,
+  "sourceEdits": 0,
+  "snapshotUnionDistinctExecutions": 1772,
+  "snapshotReceipts": [
+    {
+      "file": "memory-effort-singleton-service-log-snapshot-browser-post-pair-1792054780808.json",
+      "executionCount": 385,
+      "requestCursor": 1792054611195.032,
+      "newCursor": 1792054755585.6616,
+      "executionCapHit": false
+    },
+    {
+      "file": "memory-effort-singleton-service-log-snapshot-browser-post-pair-1792054924921.json",
+      "executionCount": 821,
+      "requestCursor": 1792054755585.6616,
+      "newCursor": 1792054916611.4966,
+      "executionCapHit": false
+    },
+    {
+      "file": "memory-effort-singleton-service-log-snapshot-cli-post-pair-1792055482220.json",
+      "executionCount": 566,
+      "requestCursor": 1792054916611.4966,
+      "newCursor": 1792055394564.4014,
+      "executionCapHit": false
+    }
+  ],
+  "componentQueryCompletionRows": 0,
+  "conclusion": "There is observed read/byte growth and multiple explicit uncached query families. Exact CPU versus nested-component-wait attribution is unavailable: no component Query completion timings, no per-helper query counters/durations and no exclusive CPU profile. Official userExecutionTime is retained as reported, never labeled CPU.",
+  "metrics": [
+    {
+      "label": "normal-seed",
+      "runId": "run:73851edc77ed7d702f1af70db7283360690032c91881768b7f9e019a52585bbb",
+      "requestId": "44dff907fb28325e",
+      "selectedHistoryMessagesExcludingCurrent": 0,
+      "visibleFirstMs": 3010.699999999255,
+      "beforeMainDispatchMs": 851,
+      "rows": [
+        {
+          "stage": "prepareDirect",
+          "identifier": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "d95ff832-40a4-473a-88d0-fe87910431ea",
+          "executionMs": 469.61830799999996,
+          "reportedUserExecutionMs": 288.131804,
+          "readDocuments": 163,
+          "readBytes": 245888,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "mainAdmission",
+          "identifier": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "0c8ec14e-163a-4024-b2b5-f0ca1547641d",
+          "executionMs": 275.97774200000003,
+          "reportedUserExecutionMs": 156.200004,
+          "readDocuments": 85,
+          "readBytes": 240780,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        }
+      ]
+    },
+    {
+      "label": "fast-recent",
+      "runId": "run:744ba8ec314df6b6c1b38bff92a50cb92ea2b2e9c226fd4bd94a9ab080d92bc5",
+      "requestId": "b8d058dc556d2fff",
+      "selectedHistoryMessagesExcludingCurrent": 2,
+      "visibleFirstMs": 2728.699999999255,
+      "beforeMainDispatchMs": 859,
+      "rows": [
+        {
+          "stage": "prepareDirect",
+          "identifier": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "943b6327-2d59-4c41-8aa3-4c958e988965",
+          "executionMs": 437.122768,
+          "reportedUserExecutionMs": 283.111385,
+          "readDocuments": 209,
+          "readBytes": 351507,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "mainAdmission",
+          "identifier": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "bdff44f4-947f-4df4-8d41-130b3bd5c5ea",
+          "executionMs": 313.55590900000004,
+          "reportedUserExecutionMs": 178.529783,
+          "readDocuments": 97,
+          "readBytes": 265362,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        }
+      ]
+    },
+    {
+      "label": "normal-indexed",
+      "runId": "run:877bde3b98d0e1e879b04306d1e9b276b02f248d832cb1b8ce3935bf6947a540",
+      "requestId": "503273bec99f4e99",
+      "selectedHistoryMessagesExcludingCurrent": 0,
+      "visibleFirstMs": 5492.700000001118,
+      "beforeMainDispatchMs": 2905,
+      "rows": [
+        {
+          "stage": "prepareDirect",
+          "identifier": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "a177fcf2-09e8-4e07-9247-601978f20c32",
+          "executionMs": 172.03738900000002,
+          "reportedUserExecutionMs": 99.388775,
+          "readDocuments": 42,
+          "readBytes": 54868,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "contextInputs",
+          "identifier": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "e49cf655-b588-4b05-b325-327a7234c115",
+          "executionMs": 323.543147,
+          "reportedUserExecutionMs": 222.382587,
+          "readDocuments": 131,
+          "readBytes": 204902,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "prepareReads",
+          "identifier": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "29173296-af1c-439c-850a-6e4bed618394",
+          "executionMs": 190.75589200000002,
+          "reportedUserExecutionMs": 98.39634799999999,
+          "readDocuments": 50,
+          "readBytes": 72324,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "readMatchesAndDelivery",
+          "identifier": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "0f4e645a-b1fc-400c-b7b2-a8a2559df3b8",
+          "executionMs": 374.733445,
+          "reportedUserExecutionMs": 200.825772,
+          "readDocuments": 283,
+          "readBytes": 803282,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "saveAndPrepare",
+          "identifier": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "9c1bd870-9df8-4f1e-a74c-1e3bf13ba56d",
+          "executionMs": 330.315185,
+          "reportedUserExecutionMs": 202.42025,
+          "readDocuments": 143,
+          "readBytes": 398403,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "mainAdmission",
+          "identifier": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "dc74926a-2863-47f4-9fc2-e2b8e3e2b9e5",
+          "executionMs": 346.50784899999996,
+          "reportedUserExecutionMs": 174.202099,
+          "readDocuments": 122,
+          "readBytes": 438989,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        }
+      ]
+    },
+    {
+      "label": "high",
+      "runId": "run:bb4c41abd2d1e33a6a1857c4630d52c5da9c91caad75b0fe7ea056f75cd5c492",
+      "requestId": "265e7d4b974afaa8",
+      "selectedHistoryMessagesExcludingCurrent": 2,
+      "visibleFirstMs": 7129.799999998882,
+      "beforeMainDispatchMs": 4766,
+      "rows": [
+        {
+          "stage": "prepareDirect",
+          "identifier": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "9bc96099-4b9a-4b0b-946e-270c0ab4d132",
+          "executionMs": 293.285872,
+          "reportedUserExecutionMs": 184.49945100000002,
+          "readDocuments": 99,
+          "readBytes": 190164,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "contextInputs",
+          "identifier": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "23945a96-d6fb-4b84-8a71-dbe421d060fe",
+          "executionMs": 1375.2331419999998,
+          "reportedUserExecutionMs": 431.78524899999996,
+          "readDocuments": 309,
+          "readBytes": 632440,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "prepareReads",
+          "identifier": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "b2a33833-7a9b-4943-94ac-d243c53353c6",
+          "executionMs": 248.12899199999998,
+          "reportedUserExecutionMs": 115.39906900000001,
+          "readDocuments": 81,
+          "readBytes": 143889,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "readMatchesAndDelivery",
+          "identifier": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "8189404d-9e94-486a-a93b-f565aeffea79",
+          "executionMs": 489.350283,
+          "reportedUserExecutionMs": 248.745748,
+          "readDocuments": 340,
+          "readBytes": 1012144,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "saveAndPrepare",
+          "identifier": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "aede6af3-418a-4d29-892f-d01866ca28af",
+          "executionMs": 365.450876,
+          "reportedUserExecutionMs": 228.746149,
+          "readDocuments": 257,
+          "readBytes": 674026,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "mainAdmission",
+          "identifier": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "66cc2da2-e327-4fee-abc8-be6bdbcd4811",
+          "executionMs": 359.92337200000003,
+          "reportedUserExecutionMs": 192.742396,
+          "readDocuments": 194,
+          "readBytes": 609038,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        }
+      ]
+    },
+    {
+      "label": "max",
+      "runId": "run:8cdb15da0396d0b082b39e9b0cc7bc3171ad3b06b8fffe689a95ef97829eb2cf",
+      "requestId": "f849ed639f1e7bc0",
+      "selectedHistoryMessagesExcludingCurrent": 4,
+      "visibleFirstMs": 9493.799999998882,
+      "beforeMainDispatchMs": 6588,
+      "rows": [
+        {
+          "stage": "prepareDirect",
+          "identifier": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "d5ba6eee-b353-4091-9f4e-cb9fa247440f",
+          "executionMs": 419.000944,
+          "reportedUserExecutionMs": 224.980191,
+          "readDocuments": 149,
+          "readBytes": 305768,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "contextInputs",
+          "identifier": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "37ba3a0d-a9d9-42d3-ba64-c940e88206a4",
+          "executionMs": 732.00482,
+          "reportedUserExecutionMs": 408.806271,
+          "readDocuments": 484,
+          "readBytes": 1047057,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "prepareReads",
+          "identifier": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "d60cfdb0-9a06-4d79-9426-b1e5e18397e8",
+          "executionMs": 464.275222,
+          "reportedUserExecutionMs": 168.66446399999998,
+          "readDocuments": 109,
+          "readBytes": 205274,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "readMatchesAndDelivery",
+          "identifier": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "f96ff1ad-cf75-4522-b599-780772e29ffa",
+          "executionMs": 691.05525,
+          "reportedUserExecutionMs": 289.360386,
+          "readDocuments": 392,
+          "readBytes": 1215009,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "saveAndPrepare",
+          "identifier": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "e2ee07b4-51cb-4c56-8bd5-9daaeeecd6c3",
+          "executionMs": 808.578049,
+          "reportedUserExecutionMs": 324.098945,
+          "readDocuments": 371,
+          "readBytes": 948499,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "mainAdmission",
+          "identifier": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "630196c4-494c-4d17-b3a9-aa5dac4a338f",
+          "executionMs": 1379.4690649999998,
+          "reportedUserExecutionMs": 354.319755,
+          "readDocuments": 266,
+          "readBytes": 778225,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        }
+      ]
+    },
+    {
+      "label": "fast-cross",
+      "runId": "run:59e428688db140c0e8c7a3ca2ea58ece3103e59828a0a23b58d02104c36e7636",
+      "requestId": "53100be084c71f7f",
+      "selectedHistoryMessagesExcludingCurrent": 0,
+      "visibleFirstMs": 6923.699999999255,
+      "beforeMainDispatchMs": 4463,
+      "rows": [
+        {
+          "stage": "prepareDirect",
+          "identifier": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "18577f7d-7c5f-4e9c-8d0c-1717a0656ffe",
+          "executionMs": 326.32259400000004,
+          "reportedUserExecutionMs": 184.50998900000002,
+          "readDocuments": 48,
+          "readBytes": 69313,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "contextInputs",
+          "identifier": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "21a97325-40ba-451e-83c1-d2a022cc36f2",
+          "executionMs": 611.383464,
+          "reportedUserExecutionMs": 287.158829,
+          "readDocuments": 149,
+          "readBytes": 230797,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "prepareReads",
+          "identifier": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "f23a6f09-78df-4d65-97ce-f6de914b12f4",
+          "executionMs": 469.476972,
+          "reportedUserExecutionMs": 137.38458400000002,
+          "readDocuments": 56,
+          "readBytes": 78094,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "readMatchesAndDelivery",
+          "identifier": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "1b4dc8de-4673-4643-954f-12e80d0f2393",
+          "executionMs": 371.082467,
+          "reportedUserExecutionMs": 157.729614,
+          "readDocuments": 155,
+          "readBytes": 682863,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "saveAndPrepare",
+          "identifier": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "0f876304-52f6-4dac-8cbe-bb81fb74f7e1",
+          "executionMs": 387.956683,
+          "reportedUserExecutionMs": 185.343618,
+          "readDocuments": 82,
+          "readBytes": 126690,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "mainAdmission",
+          "identifier": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "5e4902c0-2b66-42ed-ae81-c169e5a8f5c9",
+          "executionMs": 303.935698,
+          "reportedUserExecutionMs": 151.84439799999998,
+          "readDocuments": 85,
+          "readBytes": 240700,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        }
+      ]
+    },
+    {
+      "label": "cli-normal-1",
+      "runId": "run:aa0fc297e0b30aa352e3dc4ba1cc731df333ed2dea0033b4e0942930aeccf782",
+      "requestId": "664a8fd43b5c5f27",
+      "selectedHistoryMessagesExcludingCurrent": 0,
+      "visibleFirstMs": 10333.319046,
+      "beforeMainDispatchMs": null,
+      "rows": [
+        {
+          "stage": "prepareDirect",
+          "identifier": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "a568f28c-4a53-44fd-a6f9-67d1a0fb8f05",
+          "executionMs": 641.4245950000001,
+          "reportedUserExecutionMs": 159.088722,
+          "readDocuments": 50,
+          "readBytes": 74582,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "contextInputs",
+          "identifier": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "bbd4269f-fc89-417d-bc12-8f28b7634683",
+          "executionMs": 428.855058,
+          "reportedUserExecutionMs": 262.09794,
+          "readDocuments": 155,
+          "readBytes": 242062,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "prepareReads",
+          "identifier": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "76603cd6-214e-4841-8801-798e8ab68882",
+          "executionMs": 215.808329,
+          "reportedUserExecutionMs": 100.13977799999999,
+          "readDocuments": 58,
+          "readBytes": 80464,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "readMatchesAndDelivery",
+          "identifier": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "5bf9fafb-07ca-4c7d-8f78-b496e5aaff51",
+          "executionMs": 1927.9138549999998,
+          "reportedUserExecutionMs": 374.027672,
+          "readDocuments": 365,
+          "readBytes": 1188711,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "saveAndPrepare",
+          "identifier": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "ee890a55-de00-4a53-b6dd-1ddd1572179e",
+          "executionMs": 506.153985,
+          "reportedUserExecutionMs": 234.192498,
+          "readDocuments": 123,
+          "readBytes": 322951,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "mainAdmission",
+          "identifier": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "a549ea98-641e-4c85-8b1a-d668a8ee1e62",
+          "executionMs": 288.533508,
+          "reportedUserExecutionMs": 160.960824,
+          "readDocuments": 110,
+          "readBytes": 383973,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        }
+      ]
+    },
+    {
+      "label": "cli-normal-2",
+      "runId": "run:22334999a2cae57db8e760b25b93265e6eb573109d9680d964437b61e8ca5972",
+      "requestId": "ea2ad1eb7f0a70b6",
+      "selectedHistoryMessagesExcludingCurrent": 0,
+      "visibleFirstMs": 6031.692752999999,
+      "beforeMainDispatchMs": null,
+      "rows": [
+        {
+          "stage": "prepareDirect",
+          "identifier": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "938ca427-1a94-417c-ae38-b09a664a4141",
+          "executionMs": 169.633891,
+          "reportedUserExecutionMs": 99.405552,
+          "readDocuments": 52,
+          "readBytes": 79137,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "contextInputs",
+          "identifier": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "4425e67f-4391-4180-8fa6-34901ed81965",
+          "executionMs": 385.265623,
+          "reportedUserExecutionMs": 230.035847,
+          "readDocuments": 168,
+          "readBytes": 262327,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "prepareReads",
+          "identifier": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "f3101d52-670a-44d5-8548-6478f7b224c1",
+          "executionMs": 241.02926499999998,
+          "reportedUserExecutionMs": 107.01337099999999,
+          "readDocuments": 69,
+          "readBytes": 97412,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "readMatchesAndDelivery",
+          "identifier": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "e2ee49f9-71de-4314-97d8-f9b3748085e1",
+          "executionMs": 883.374513,
+          "reportedUserExecutionMs": 359.205759,
+          "readDocuments": 609,
+          "readBytes": 1732495,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "saveAndPrepare",
+          "identifier": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "c9c4c30b-f83f-4c83-abce-c10f6c095b7a",
+          "executionMs": 389.907911,
+          "reportedUserExecutionMs": 217.10257199999998,
+          "readDocuments": 171,
+          "readBytes": 525393,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        },
+        {
+          "stage": "mainAdmission",
+          "identifier": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "4eb89a64-610e-4705-8f2a-4556267d9bb4",
+          "executionMs": 351.869861,
+          "reportedUserExecutionMs": 172.869804,
+          "readDocuments": 140,
+          "readBytes": 513093,
+          "willRetry": false,
+          "occRetryCount": null,
+          "cachedResult": false
+        }
+      ]
+    }
+  ],
+  "sourceFindings": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "lines": [
+        169,
+        224
+      ],
+      "finding": "executionContext enters activeAttempt, own mutable execution, selected hydration, source/artifact fences and pure projection on every call; direct current saved-message component reads at 182-193 are outside readNativeTranscriptMessages, but saved messages are not established on these first model turns"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "lines": [
+        1908,
+        1953
+      ],
+      "finding": "saveAndPrepare enters saveContext, then candidate within one native owner; context and run writes retain designated raw families"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "lines": [
+        2134,
+        2171
+      ],
+      "finding": "ordinary noncompleted candidate calls executionContext seven times in addition to saveContext: initial, completed lookup, two resolutions, post-selection, begin and start"
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "lines": [
+        431,
+        505
+      ],
+      "finding": "two ordered message passes; private owner execution query occurs before checkedAttempts deduplication"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "lines": [
+        117,
+        125
+      ],
+      "finding": "outer getSource .unique query bypasses managed raw source-row reader; every logical invocation retains two authority predicates and managed currentness"
+    },
+    {
+      "path": "convex-dev/runtimeContextWitness.ts",
+      "lines": [
+        8,
+        15
+      ],
+      "finding": "each source/permission witness invokes getSource"
+    },
+    {
+      "path": "convex-dev/runtimeDataAuth.ts",
+      "lines": [
+        191,
+        268
+      ],
+      "finding": "managed raw source cache serves recursive linked sources, conversations, bridges and runs; traversal decisions are local to each managedSourceIsCurrent invocation"
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "lines": [
+        181,
+        198
+      ],
+      "finding": "native batches use exact reference/message-ID-array key, capped 16 entries and 250000 bytes, clone on hit; retain across designated state writers"
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "lines": [
+        290,
+        359
+      ],
+      "finding": "existing bounded raw authority/metadata/graph readers do not cache generic DB queries"
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "lines": [
+        361,
+        421
+      ],
+      "finding": "state/finance retention, run-row eviction, unknown/security/component writer invalidation and in-flight suppression must remain"
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "lines": [
+        32,
+        54
+      ],
+      "finding": "runById already consumes managed raw run rows, conversationById remains direct query"
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "lines": [
+        297,
+        306
+      ],
+      "finding": "activeAttempt directly rereads outbox and mutable run attempt on every invocation"
+    },
+    {
+      "path": "src/domain/profile.ts",
+      "lines": [
+        75,
+        77
+      ],
+      "finding": "semanticHash awaits WebCrypto digest; cannot equate elapsed hash time to JS CPU"
+    }
+  ],
+  "frozenSourceSha256": {
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "convex-dev/runtimeAuth.ts": "4b82c9e7f73eeaa373ed65e4b43d67c2711a8b7232ef6183e9e3505f4046a605",
+    "convex-dev/runtimeTranscript.ts": "9084c842b40ffb5d124b4bc5848711ca40e1cce2d0da5753828acb2738a218ec",
+    "convex-dev/runs.ts": "b4fb8141c5ce43302e199850c34a42b02dd8d08d8dba3b8bbc887296151d86bb",
+    "convex-dev/runtimeContextWitness.ts": "0c5246000f4f1d9fcda8f5fb497b9f2ea05f12c8615bd3b0b78bd92d976113fd",
+    "convex-dev/runtimeMemoryRepository.ts": "9c6d9b7fa1bb99d2a011c88025edf2ab5410ade164efee9c6d7da15dc8a2a4ba",
+    "convex-dev/runtimeDataAuth.ts": "83c95f437d3f403917c4873c18025bf74d32f2a970d6da5bb636602a7de3e3f9",
+    "src/domain/profile.ts": "45691e76e6f6727874b7f6285aa173b28059acf9ffaf7dc360360a72778f6972"
+  },
+  "singleNextCandidate": {
+    "function": "ConvexMemoryRepository.getSource",
+    "path": "convex-dev/runtimeMemoryRepository.ts",
+    "lines": [
+      117,
+      125
+    ],
+    "change": "Introduce an exact-owner private V8 bounded RAW reader for the ORIGINAL runtimeMemorySources/by_scope_source .unique result (Doc or null). Reuse existing source-family writer/fresh invalidation and count/byte bounds, with a distinct key from existing .take(2) reads. Use the reader only for this getter; default/fresh independent contexts execute the original query.",
+    "why": "checkContextSourceWitnesses calls this getter once per permission, and history bridge and owner fences can revisit the same source. The existing managed graph reader only serves recursive linked-source .take(2), not the getter root .unique. This is a concrete missed raw read; measured attribution and latency benefit remain unknown.",
+    "preserve": [
+      "Both authority calls and managedSourceIsCurrent/permission/deadline predicates on EVERY getter invocation",
+      "Original .unique duplicate failure and query-error propagation; do not replace with .take(2) plus a different error",
+      "Clone raw return values; count/byte limits fall back to original reads",
+      "Source/conversation/bridge/security/unknown/fluent/component writes and failed/in-flight writers invalidate/suppress as existing scope does",
+      "run writers evict raw run rows and currentness reruns even if root raw source remains unchanged",
+      "No selected-context, authorization, finance, delivery decision or mutable Agent/Run attempt caching; no cross-native ownership",
+      "Original permission argument stays unchanged, including undefined. Earlier fact-source batch witness bookkeeping is not canViewFacts authorization; the later explicit fact bind remains required even on a raw hit."
+    ],
+    "meaningfulOracle": "Compare real registered saveAndPrepareContextV8 handler with feature off/on on populated transcript/source fixtures: exact return/model request, all DB/effect/state after success, and byte-equivalent first refusal plus rollback after source, grant/share, lease, pin, duplicate and child-write mutations. Count original root .unique reads for same scoped source across both permissions and repeated hydration; all logical predicate calls stay in the same order while only eligible identical raw reads decrease.",
+    "negativeCases": [
+      "Same sourceId in another tenant or memory space cannot hit",
+      "Warm hit then original source patch/replace/delete/insert, including cached absence, must reread/refuse correctly",
+      "Warm hit then bridge/conversation edit, run deletion or permission/share revoke/expiry must refuse before candidate or dispatch",
+      "Warm hit then unknown/fluent/component writer, successful or failing and pending, cannot preserve stale/late result",
+      "Fresh native owner and explicit source fence after an external I/O boundary must execute fresh original source read",
+      "Mutation of returned row cannot poison another hit; duplicate and query exception preserve original failure; entry/byte bound overflow falls back",
+      "Same raw source: undefined permission getter may succeed, canViewMemories may succeed, canViewFacts must still refuse when the current share denies facts. Exercise both call orders and share expiry; the raw key never serves as a permission verdict."
+    ],
+    "measuredSavingsMs": null,
+    "acceptance": "Controlled read reduction alone is not hosted latency acceptance; compare actual changed installed ordinary populated cases after the independently owned grammar/seed repair. Do not predict a percentage or first-text gain."
+  },
+  "otherOpportunitiesNotSelected": [
+    "hydratePrivateCutoff directly queries owner runtimeAgentExecutions per message; checkedAttempts is after that query. Those are mutable rows and intentionally outside existing cache. A single-hydration local batch could avoid duplicate owner lookups when multiple selected messages share an owner, but these receipts do not expose owner identities/counts; do not add a broad attempt cache.",
+    "executionContext own saved-message getMessagesByIds bypasses the native reader; these first-model-turn receipts do not establish a nonempty saved-message set, so it is not a supported explanation here.",
+    "Repeated JSON parse/canonical serialization, policy and message digest work is concrete, but no counts/bytes/durations identify the dominant pure transform. Preserve immutable-value identity and all comparison/validation predicates if later optimizing."
+  ],
+  "minimumMissingScalarTrace": [
+    "For each executionContext invocation, existing run correlation plus caller stage/ordinal, selected pin count, durationMs; no source or message text",
+    "Cumulative count/elapsed for actual native message-cache hit/miss/overflow and awaited getMessagesByIds; elapsed of ORIGINAL root getSource .unique and private owner by_attempt queries, separately",
+    "Cumulative elapsed/count/inputBytes for snapshot JSON parse, canonicalModelJson and canonicalMessageHash/semanticHash; separate nonoverlapping scopes to avoid adding nested durations",
+    "Count/elapsed for direct conversation/outbox/current execution/run-attempt reads. Preserve native wall and reported userExecutionTime; residual wall remains unclassified and is not CPU."
+  ],
+  "docs": [
+    {
+      "url": "https://docs.convex.dev/api/interfaces/server.GenericQueryCtx",
+      "claim": "runQuery uses same snapshot; argument/return validation and isolated JS context add overhead"
+    },
+    {
+      "url": "https://docs.convex.dev/components/using",
+      "claim": "components require normal Convex calls and retain transaction guarantees"
+    },
+    {
+      "url": "https://docs.convex.dev/understanding/best-practices",
+      "claim": "plain helper composition avoids overhead; explicit external side effects justify fresh separate native boundaries"
+    }
+  ],
+  "inputSha256": {
+    "memory-effort-singleton-full-chain.md": "48ac9f3a43e814b674b459bbf158689250c00fea46045bed7fa32d27fd84ceaa",
+    "memory-effort-singleton-full-chain.json": "e56aded0fbc573762972f5e8bcaf1f84d64d155634b5ea7864d330cf9ffb2ee8",
+    "memory-effort-singleton-cli-iris-1792055242480.json": "313f0c072bc17720169b65858a491e09d884160911805ef611c7696b2328e942",
+    "memory-effort-singleton-service-log-snapshot-browser-post-pair-1792054780808.json": "245c32b885d2d5179f8747dfba74eed405868b8a9d1b646fbceaf082f06fd9e4",
+    "memory-effort-singleton-service-log-snapshot-browser-post-pair-1792054924921.json": "bedaafe214195879fbb9e516b310217acb27659fb97341591d24a26ce89e31de",
+    "memory-effort-singleton-service-log-snapshot-cli-post-pair-1792055482220.json": "4183473fcf8f1a05b9c8de01b8c7b94fa75050b0432e233c05226e328faf8a48"
+  },
+  "inputsUnchanged": true,
+  "limitations": [
+    "No current native environment; no new scalar traces, mutation tests or implementation executed",
+    "Browser effort/history/timing differ together; no isolated causal scaling experiment",
+    "No child-parent execution ID hierarchy in saved projected receipts; same-request overlap is not enough to assign child wait",
+    "Independent grammar and already-bound-seed repair remains outside this probe",
+    "No new original-17-task audit, acceptance milestone, cleanup, finance or release claim"
+  ],
+  "suggestedImplementationFileScope": {
+    "source": [
+      "convex-dev/runtimeAuth.ts",
+      "convex-dev/runtimeMemoryRepository.ts"
+    ],
+    "tests": [
+      "NEW tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+      "tests/unit/runtimeAuth/managed-source-read-scope.test.ts if existing scope/invalidation fixtures are reused"
+    ],
+    "mustNotTouch": [
+      "convex-dev/runtimeMemoryTraversal.ts",
+      "src/domain/memory-direct-recall.ts",
+      "src/domain/memory-traversal.ts",
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+      "tests/unit/runtimeMemory/query-composition.test.ts"
+    ],
+    "consequentialConflicts": [
+      "The existing readManagedSourceRows uses .take(2); sharing its cached value or failure path as if it were the original .unique result changes duplicate semantics. Add an operation-distinct raw key that preserves the original getter query/error.",
+      "Do not enable root-row retention for ordinary/default public/ingestion scopes merely because they use managed source reads. Opt in only through the private V8 native owner and its exact-owner views; fallback remains the original .unique.",
+      "A new reader method must flow only through existing exact-owner nonserialized scope/view wiring; no public API or serialized cache handles.",
+      "Caching the whole getSource result would suppress current managed permissions/deadlines and is outside this candidate. Cache only the raw row.",
+      "Do not broaden V8 state retention to cache current Agent/Run attempts or move fresh admission/delivery or separate capture/attachment boundaries."
+    ],
+    "workingTreeNote": "Initial status showed runtimeAuth.ts/runtimeMemoryRepository.ts clean and canonical grammar/seed files already dirty. Recheck status immediately before implementation; parent owns all source writes."
+  }
+}

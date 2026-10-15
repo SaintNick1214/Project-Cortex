@@ -80,7 +80,7 @@ export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemory
     return true;
   }
   const accepted:MemoryEvidenceNode[]=[];for(const node of seeds.slice(0,Math.max(1,Math.floor(policy.maxWork/4)))){if(expired())break;if(await bind(node))accepted.push(node);}
-  const result=await traverseMemoryEvidence({seeds:accepted,policy,now,...(startedAt===undefined?{}:{startedAt}),expand:async(node,cursor,limit):Promise<MemoryEvidencePage>=>{
+  const result=await traverseMemoryEvidence({seeds:accepted,policy,now,...(policy.evidenceRankingVersion===1?{retainValidatedSeedPrefixOnDeadline:true as const}:{}),...(startedAt===undefined?{}:{startedAt}),expand:async(node,cursor,limit):Promise<MemoryEvidencePage>=>{
     await repository.recheckAuthority();
     const edges:MemoryEvidencePage["edges"]=[];const unavailableStages:string[]=[];
     if(expired())return {edges,cursor:null,work:1};

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "name": "lint",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "node_modules/eslint/bin/eslint.js",
+    "src/domain/memory-direct-recall.ts",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "src/domain/memory-traversal.ts",
+    "convex-dev/runtimeMemoryTraversal.ts",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts",
+    "convex-dev/runtimeAuth.ts",
+    "convex-dev/runtimeMemoryRepository.ts",
+    "tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+    "--report-unused-disable-directives"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_TEST_MODE": "local",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "GRAPH_TESTING_ENABLED": "false"
+  },
+  "startedAt": "2026-10-15T09:40:54.951239+00:00",
+  "durationMs": 8902,
+  "exitCode": 0,
+  "naturalExit": true,
+  "forceExit": false,
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "rawLog": "memory-effort-canonical-independent-reviewcheck-lint.raw.log"
+}

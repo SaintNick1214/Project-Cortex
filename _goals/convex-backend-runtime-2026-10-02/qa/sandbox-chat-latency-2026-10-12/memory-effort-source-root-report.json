@@ -1,0 +1,302 @@
+{
+  "version": 1,
+  "status": "IMPLEMENTED_LOCAL_CHECKS_PASS_PENDING_PARENT_COMBINED_REVIEW_AND_HOSTED_QUALIFICATION",
+  "repository": "SaintNick1214/Project-Cortex",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+  "sourceManifest": "memory-effort-source-root-source-hashes.json",
+  "sourceManifestSha256": "a419215170d65ab94703a03729e8fb6f41354215f2f2f9334e65dbda9f1d9d6d",
+  "policy": [
+    "acceptance-policy-v2",
+    "modified-goal-execution-v4"
+  ],
+  "implementation": {
+    "lookup": "readManagedSourceUniqueRow retains only raw Doc|null from original runtimeMemorySources/by_scope_source .unique().",
+    "activation": "Optional private reader method is installed only for V8 managedSources scopes; existing exact-native-owner nonserialized views propagate it. All default/public/ingestion/wrong-owner contexts query originally.",
+    "bounds": "Operation key source.unique is separate from take(2) ancestry; same graph source family shares 512 entries, 1,000,000 bytes, clone, epochs, writer suppression/invalidation, run-family eviction, explicit freshness.",
+    "predicates": "Both original getter authority checks, managedSourceIsCurrent, exact permission including undefined, recursive dependencies and deadline propagation remain in original order. No errors, decisions or mutable attempts cached.",
+    "sourceFiles": [
+      "convex-dev/runtimeAuth.ts",
+      "convex-dev/runtimeMemoryRepository.ts"
+    ],
+    "newTests": [
+      "tests/unit/runtimeMemory/source-root-read-scope.test.ts"
+    ],
+    "authorizedOracleDelta": {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "authorization": "Parent message explicitly authorized precise namedFamily/read classification and root count assertions after observed sole oracle mismatch.",
+      "change": "Add SourceUniqueRow to namedFamily; add rootUniqueReads helper and four root-only count/identity-set assertions; no removed predicates, assertions, or cases.",
+      "reconstructingOnlyThisDeltaMatchesCanonicalHash": true
+    }
+  },
+  "controlledOracle": {
+    "type": "source-root-registered-save-candidate",
+    "baselineRootUniqueReads": 62,
+    "retainedRootUniqueReads": 1,
+    "exactOutputModelStatePredicatesAndMutableReads": true,
+    "paidAttempts": 0,
+    "hostedLatency": "NOT_RUN"
+  },
+  "tests": {
+    "suites": 14,
+    "cases": 617,
+    "passed": 617,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0,
+    "countsByFile": {
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts": 140,
+      "tests/unit/runtimeMemory/query-composition.test.ts": 95,
+      "tests/unit/runtimeAuth/v8-read-scope.test.ts": 43,
+      "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": 17,
+      "tests/unit/runtimeMemory/source-root-read-scope.test.ts": 33,
+      "tests/unit/runtimeMemory/memory-traversal.test.ts": 25,
+      "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts": 14,
+      "tests/unit/runtimeIngestion/context-permissions.test.ts": 3,
+      "tests/unit/runtimeAgent/inline-barrier.test.ts": 7,
+      "tests/unit/runtimeMemory/direct-fact-rule.test.ts": 111,
+      "tests/unit/runtimeAuth/managed-source-read-scope.test.ts": 67,
+      "tests/unit/runtimeMemory/memory-effort.test.ts": 10,
+      "tests/unit/runtime/latency-trace.test.ts": 31,
+      "tests/unit/runtimeMemory/literal-property-ranking.test.ts": 21
+    },
+    "canonicalCaseRetention": {
+      "method": "Multiset of exact suite path + fullName, retaining duplicate parameterized instances",
+      "canonical": 460,
+      "retained": 460,
+      "missing": []
+    },
+    "newRootSuite": 33,
+    "naturalExit": true,
+    "forceExit": false
+  },
+  "checks": {
+    "tests": {
+      "name": "tests",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtime/latency-trace.test.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeAgent/inline-barrier.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+        "tests/unit/runtimeAuth/v8-read-scope.test.ts",
+        "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-source-root-tests.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:35:59.836798+00:00",
+      "durationMs": 23017,
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "forceExit": false,
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "rawLog": "memory-effort-source-root-tests.raw.log"
+    },
+    "types": {
+      "name": "types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:35:59.836791+00:00",
+      "durationMs": 14760,
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "forceExit": false,
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "rawLog": "memory-effort-source-root-types.raw.log"
+    },
+    "lint-types": {
+      "name": "lint-types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:34:45.906074+00:00",
+      "durationMs": 12335,
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "forceExit": false,
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "rawLog": "memory-effort-source-root-lint-types.raw.log"
+    },
+    "lint": {
+      "name": "lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:35:59.836797+00:00",
+      "durationMs": 6782,
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "forceExit": false,
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "rawLog": "memory-effort-source-root-lint.raw.log"
+    },
+    "diff": {
+      "name": "diff",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "checks": [
+        {
+          "command": [
+            "git",
+            "diff",
+            "--check",
+            "--",
+            "convex-dev/runtimeAuth.ts",
+            "convex-dev/runtimeMemoryRepository.ts",
+            "tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+            "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+          ],
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "git",
+            "diff",
+            "--no-index",
+            "--check",
+            "/dev/null",
+            "tests/unit/runtimeMemory/source-root-read-scope.test.ts"
+          ],
+          "exitCode": 1,
+          "expectedExitCode": 1,
+          "explanation": "git diff --no-index reports an added file with exit1; output is empty, with no whitespace diagnostics."
+        }
+      ],
+      "startedAt": "2026-10-15T09:37:58.892438+00:00",
+      "durationMs": 41,
+      "exitCode": 1,
+      "signal": null,
+      "naturalExit": true,
+      "rawLog": "memory-effort-source-root-diff.raw.log",
+      "status": "PASS",
+      "exitCodeMeaning": "Maximum raw child exit retained; tracked git diff --check exits0 and new-file no-index check exits1 for expected content difference with no whitespace output."
+    }
+  },
+  "coverage": [
+    {
+      "requirement": "Original unique cardinality/error; uncached errors and detached rows; exact tenant/space/source keys; null then insert; patch/replace/delete; shared entry/byte limits",
+      "evidence": "New source-root-read-scope.test.ts directly covers each condition. Literal original .unique retained in both the private reader and fallback; ancestry .take(2) has a distinct operation key."
+    },
+    {
+      "requirement": "Private V8 exact owner; default/public/ingestion/wrong-owner fallback; no RPC handle",
+      "evidence": "New scope/view test checks all variants and nonenumerable symbols. Existing managed-source-read-scope.test.ts native isolation tests retained. No serialized/public schema/API handle was added."
+    },
+    {
+      "requirement": "Undefined or canViewMemories cannot convey canViewFacts permission, both orders, after expiry, with deadline propagation",
+      "evidence": "New parameterized actual-getter share test first refuses facts, then warms undefined/memories, refuses facts again, verifies deadline, and expires both paths. New grant/retention clock cases compare original refusals."
+    },
+    {
+      "requirement": "Source/bridge/conversation/run/security changes after warm root",
+      "evidence": "Six new actual getter writer cases compare original refusal. Root remains cached across a run write but original raw run-family eviction/currentness refuses. No authority/currentness decision is cached."
+    },
+    {
+      "requirement": "Unknown/fluent/component pending and failed writers; late population; fresh owner/post-await explicit source fence",
+      "evidence": "New root tests cover the three pending/failed routes, late unique result across retained writer epoch, fresh owner and explicit freshManagedSourceReads. Existing managed-source suite covers successful unknown/fluent/child writers, original receivers, retained and failed/in-flight writer variants on the same unchanged readGraph machinery."
+    },
+    {
+      "requirement": "Actual registered saveAndPrepareContextV8 populated bridge/owner witness oracle",
+      "evidence": "Controlled on/off comparison changes only new root raw reuse. Full output, nativeRequestCanonical, DB/component/effect state, ordered getter+authority predicates, and all non-root reads equal. Both source permissions and history bridge/completed-owner witnesses are exercised. Root unique reads 62 to 1; exact unique identity set equal."
+    },
+    {
+      "requirement": "First refusal, atomic rollback, zero candidate/paid dispatch or financial attachment after refusal",
+      "evidence": "Five initial registered source/grant/lease/pin/duplicate faults and five warmed source/grant/run/bridge/component writer faults compare exact error, ordered authority predicates and entire state rollback; no Agent operation or model attempt created, no dispatch/attach/capture registered call. Existing V8 admission/financial negatives retained."
+    },
+    {
+      "requirement": "Mutable execution/owner/run-attempt reads remain uncached; all canonical instances preserved",
+      "evidence": "Registered oracle compares every non-root read in exact order, including current execution/owner by_attempt/run-attempt queries. All 460 canonical exact suite/fullName instances including duplicates retained; 11/12 canonical file hashes unchanged including v8 test. Only explicitly authorized whole-recall root-family classification and added root count/identity assertions differ; reversing precisely this delta reproduces original freeze hash."
+    }
+  ],
+  "preservedFailures": [
+    {
+      "artifact": "memory-effort-source-root-initial-tests.raw.log",
+      "result": "20/26 pass, six fixture setup failures: repository imported before fixture policy mock. Fixed import order only."
+    },
+    {
+      "artifact": "memory-effort-source-root-adjacent-initial.raw.log",
+      "result": "220/224 pass; four historical assertions classified new root unique query as mutable. Parent authorized precise family classification and positive root assertions; all cases pass finally."
+    },
+    {
+      "artifact": "memory-effort-source-root-types-hook-type-failure.json",
+      "result": "Exit2 test-hook QueryCtx/MutationCtx annotation mismatch. Changed hook parameter to exact raw helper argument type; final root types exit0. Runtime behavior unchanged."
+    }
+  ],
+  "limitations": [
+    "Actual registered code on controlled DB/component peers; no live Convex OCC/services/models/hosted timing evidence.",
+    "Explicit post-await freshness is a local fence test; actual fresh external-I/O/admission/financial boundaries were not moved and remain for installed qualification.",
+    "No hosted savings milliseconds or percentage claimed; no milestone advanced. Parent coherent independent review and changed installed qualification remain pending."
+  ],
+  "excludedActionsPerformed": {
+    "services": 0,
+    "modelCalls": 0,
+    "credentialReads": 0,
+    "deploys": 0,
+    "builds": 0,
+    "pack": 0,
+    "gitWrites": 0,
+    "proofsWrites": 0,
+    "websiteWrites": 0,
+    "uiWork": 0
+  }
+}

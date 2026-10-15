@@ -345,6 +345,27 @@ it("public recall proves one search hit before real indexed adjacency discovers 
  expect(result.memoryEffort).toMatchObject({retrievalRoute:"direct-facts-v1",maxDepth:2,maxEntries:4,entriesByKind:{fact:2,memory:1}});
  expect(calls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);expect(f.rpc).not.toContain("runtimeMemoryQuery:admit");
 });
+async function canonicalPublicFixture(){
+ const f=await projectedPublicFixture(4,undefined,undefined,undefined,true),row=f.db.table("facts").find(value=>value.factId==="projected-likes")!;
+ Object.assign(row,{fact:"User prefers apricot as their favorite fruit.",predicate:"prefers"});return f;
+}
+it("public recall proves both actual explicit favorite-property projections against one canonical source without semantic embedding",async()=>{
+ const f=await canonicalPublicFixture(),candidates=await new ConvexMemoryRepository(f.ctx,f.reference,"read").searchFactCandidates(f.input.text,f.input.limit);
+ expect(candidates.facts.map(fact=>fact.factId).sort()).toEqual(["projected-exact","projected-likes"]);expect(candidates.candidateWorkBound).toBe(false);
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(result.items.filter(item=>item.type==="fact").map(item=>item.content).sort()).toEqual(["User's favorite fruit is apricot.","User prefers apricot as their favorite fruit."].sort());
+ expect(result.memoryEffort).toMatchObject({retrievalRoute:"direct-facts-v1",entriesByKind:{fact:2,memory:1}});expect(calls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it.each(["wrong-value","wrong-property","hypothetical","negation","wrong-predicate","time-bound","history","different-source","missing-object"])("public canonical %s keeps the original governed semantic fallback",async fault=>{
+ const f=await canonicalPublicFixture(),row=f.db.table("facts").find(value=>value.factId==="projected-likes")!;
+ if(fault==="wrong-value")Object.assign(row,{fact:"User prefers pear as their favorite fruit.",object:"pear"});
+ if(fault==="wrong-property")row.fact="User prefers apricot as their favorite color.";
+ if(fault==="hypothetical")row.fact="User might prefer apricot as their favorite fruit.";if(fault==="negation")row.fact="User does not prefer apricot as their favorite fruit.";
+ if(fault==="wrong-predicate")row.predicate="likes";if(fault==="time-bound")row.validUntil=clock+1000;if(fault==="history")row.supersedes="older";
+ if(fault==="missing-object")delete row.object;if(fault==="different-source"){const source=await f.source(row.fact as string,"other-canonical-source");row.lineage=source.lineage;}
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(result.memoryEffort?.retrievalRoute).toBe("semantic-v1");expect(calls).toBe(1);expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+});
 it.each(["wrong-value","negation","unknown","history","missing-object","different-source","entries"])("public one-hit adjacency %s preserves governed fallback before dropping discovered evidence",async fault=>{
  const f=await projectedPublicFixture(fault==="entries"?1:4,undefined,undefined,undefined,true),row=f.db.table("facts").find(value=>value.factId==="projected-likes")!;
  if(fault==="wrong-value")Object.assign(row,{fact:"User likes pear.",object:"pear"});if(fault==="negation")row.fact="User does not like apricot.";

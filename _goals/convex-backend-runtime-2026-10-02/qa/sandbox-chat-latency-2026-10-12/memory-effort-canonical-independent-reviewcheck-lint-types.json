@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "name": "lint-types",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "node_modules/typescript/bin/tsc",
+    "--project",
+    "tsconfig.lint.json",
+    "--noEmit"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_TEST_MODE": "local",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "GRAPH_TESTING_ENABLED": "false"
+  },
+  "startedAt": "2026-10-15T09:40:54.950388+00:00",
+  "durationMs": 12122,
+  "exitCode": 0,
+  "naturalExit": true,
+  "forceExit": false,
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "rawLog": "memory-effort-canonical-independent-reviewcheck-lint-types.raw.log"
+}

@@ -573,7 +573,7 @@ type GraphRead = { method: string; table: string; id?: string; index?: string; k
 function instrumentGraphReads(f: Fixture) {
   const query = f.db.query.bind(f.db), get = f.db.get.bind(f.db), reads: GraphRead[] = [];
   let phase = "read";
-  const namedFamily = () => /readManaged(?:SourceRows|ConversationRows|TranscriptBridgeRows|SourceRunRows)/.test(new Error().stack ?? "");
+  const namedFamily = () => /readManaged(?:SourceRows|SourceUniqueRow|ConversationRows|TranscriptBridgeRows|SourceRunRows)/.test(new Error().stack ?? "");
   jest.spyOn(f.db, "get").mockImplementation(async (table, id) => {
     const row = await get(table, id); reads.push({ method: "get", table, id, family: false, phase, documents: row ? 1 : 0 }); return row;
   });
@@ -598,6 +598,7 @@ function instrumentGraphReads(f: Fixture) {
   return { reads, clear: () => { reads.length = 0; phase = "read"; } };
 }
 const graphReadIdentity = ({ method, table, id, index, keys, terminal, phase }: GraphRead) => ({ method, table, id, index, keys, terminal, phase });
+const rootUniqueReads = (reads: GraphRead[]) => reads.filter(row => row.family && row.table === "runtimeMemorySources" && row.terminal === "unique");
 const originalMutableReads = (reads: GraphRead[]) => reads.filter(row => !row.family && !row.table.startsWith("runtimeAuth")
   && !["runtimeModelPolicies", "runtimeModelQualifications", "runtimeAgentDefinitions"].includes(row.table)).map(graphReadIdentity);
 it.each([true, false])("V8 real shared=%s ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads", async shared => {
@@ -609,6 +610,8 @@ it.each([true, false])("V8 real shared=%s ancestry keeps exact values, mutable r
   expect(await f.call(whole.readMatchesAndDeliveryV8, args)).toEqual({ read, delivery });
   const optimized = clone(observed.reads), originalGraph = original.filter(row => row.family), optimizedGraph = optimized.filter(row => row.family);
   expect(originalGraph.length).toBeGreaterThan(20); expect(optimizedGraph.length).toBeLessThan(originalGraph.length / 2);
+  expect(rootUniqueReads(optimized).length).toBeLessThan(rootUniqueReads(original).length);
+  expect(new Set(rootUniqueReads(optimized).map(row => JSON.stringify(graphReadIdentity(row))))).toEqual(new Set(rootUniqueReads(original).map(row => JSON.stringify(graphReadIdentity(row)))));
   expect(originalMutableReads(optimized)).toEqual(originalMutableReads(original));
   for (const phase of ["read", "final"]) {
     const first = new Map(originalGraph.filter(row => row.phase === phase).map(row => [JSON.stringify(graphReadIdentity(row)), graphReadIdentity(row)]));
@@ -663,6 +666,8 @@ it.each([true, false])("atomic save/candidate shared=%s ancestry reduces raw rea
   expect(originalMutableReads(actualReads)).toEqual(originalMutableReads(originalReads));
   const originalGraph = originalReads.filter(row => row.family), actualGraph = actualReads.filter(row => row.family);
   expect(actualGraph.length).toBeLessThan(originalGraph.length / 2);
+  expect(rootUniqueReads(actualReads).length).toBeLessThan(rootUniqueReads(originalReads).length);
+  expect(new Set(rootUniqueReads(actualReads).map(row => JSON.stringify(graphReadIdentity(row))))).toEqual(new Set(rootUniqueReads(originalReads).map(row => JSON.stringify(graphReadIdentity(row)))));
   expect(actual).toMatchObject({ kind: "prepared", prepared: { state: "started" } });
   expect(f.calls.slice(callsBefore)).not.toContain("runtimeAgent:prepareResolvedModelCandidateV8");
   expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
@@ -803,6 +808,28 @@ it("direct V8 native parent uses actual indexed facts and depth2 source without 
 });
 const projectedAgentFixture=(queryText?:string,seedWork?:number,unstructured?:"contradiction"|"canonical-mismatch")=>fixture(true,true,"fast",0,seedWork,"fruit",0,false,unstructured??true,queryText);
 const singletonAgentFixture=(maxEntries?:number)=>fixture(true,true,"fast",0,undefined,"fruit",0,false,"singleton",undefined,maxEntries);
+async function canonicalAgentFixture(){
+ const f=await singletonAgentFixture(),row=f.db.table("facts").find(value=>value.factId==="whole-likes")!;
+ Object.assign(row,{fact:"User prefers apricot as their favorite fruit.",predicate:"prefers"});return f;
+}
+it("Agent native parent proves both actual explicit favorite-property projections without preparing or invoking semantic embedding",async()=>{
+ const f=await canonicalAgentFixture(),candidates=await new ConvexMemoryRepository(f.ctx,f.reference,"read").searchFactCandidates(f.input.text,f.input.limit);
+ expect(candidates.facts.map(fact=>fact.factId).sort()).toEqual(["whole-fact","whole-likes"]);expect(candidates.candidateWorkBound).toBe(false);
+ const parent=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>>(agent.contextInputsAndEmbeddingV8,f.attempt);
+ expect(parent.proposal).toBeUndefined();expect(parent.direct!.read.bindings.facts.map(fact=>fact.factId).sort()).toEqual(["whole-fact","whole-likes"]);
+ expect(parent.direct!.read.effortResult!.memoryEffort).toMatchObject({retrievalRoute:"direct-facts-v1",entriesByKind:{fact:2,memory:1}});
+ let semanticCalls=0;const candidate=await agent.prepareContextV8Handler(f.action,f.attempt,async()=>{semanticCalls++;throw Error("Canonical projection proof must not embed");},true);
+ expect(semanticCalls).toBe(0);if(candidate?.state!=="started")throw Error("Expected prepared main request");
+ expect(candidate.current.execution.contextCanonical).toContain("User prefers apricot as their favorite fruit.");expect(candidate.current.execution.sourceWitnesses).toHaveLength(1);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+ await expect(f.call(agent.admitPreparedModelOperationV8,directAdmissionArgs(f,candidate))).resolves.toMatchObject({permit:{dispatchPermit:true}});expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+});
+it("Agent canonical projection proof remains unavailable to an omitted historical pin",async()=>{
+ const f=await canonicalAgentFixture(),run=f.db.table("runtimeRuns")[0]!,effort=JSON.parse(run.memoryEffortCanonical as string),snapshot=JSON.parse(run.snapshotCanonical as string);
+ delete effort.literalSourceProofVersion;delete snapshot.inputSelection.effort.literalSourceProofVersion;run.memoryEffortCanonical=canonicalModelJson(effort);run.snapshotCanonical=canonicalModelJson(snapshot);
+ const getSource=jest.spyOn(ConvexMemoryRepository.prototype,"getSource");
+ const parent=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>>(agent.contextInputsAndEmbeddingV8,f.attempt);
+ expect(parent.direct).toBeUndefined();expect(parent.proposal?.binding.operationKey).toBe("embedding.query");expect(getSource).not.toHaveBeenCalled();expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
 it("Agent one-hit parent uses a canonical proof before real adjacency finds the compatible value projection",async()=>{
  const f=await singletonAgentFixture(),repository=new ConvexMemoryRepository(f.ctx,f.reference,"read");
  const initial=await repository.searchFactCandidates(f.input.text,f.input.limit);expect(initial.facts.map(fact=>fact.factId)).toEqual(["whole-fact"]);expect(initial.candidateWorkBound).toBe(false);

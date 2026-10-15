@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "status": "PREPARED_WAITING_FOR_COMBINED_INDEPENDENT_REVIEW_PROSPECTIVE_PINS_AND_ROOT_GO",
+  "preparedAt": "2026-10-15T09:33:09.339600+00:00",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "allowedWrites": "Four new canonical helper modules and preparation md/json only",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-canonical-2026-10-15",
+  "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+  "prospectiveSourceCommit": "PENDING_ROOT_ARGUMENT_NO_GUESSED_SHA",
+  "files": {
+    "memory-effort-canonical-enable-trace.mjs": "baba9cf703dde1b2f357e95461a7ca68c9f8980b06bc48e77044fbd978c115f6",
+    "memory-effort-canonical-native-pins.mjs": "e74ba9cf21f851f1bb1622b21c4a9efb930f343cc7574a6be67378784b6bd2a1",
+    "memory-effort-canonical-collect-ready.mjs": "e99a4bd68df6dbc5b89ac3d11377eca4150ad915939893a2a80413ae29d09827",
+    "memory-effort-canonical-native-regression.mjs": "475775d80bd2608a97f31105da97ee0404dd07b9f9c4c8d032b3faafdb0362fd"
+  },
+  "checks": [
+    {
+      "kind": "syntax",
+      "file": "memory-effort-canonical-native-pins.mjs",
+      "exitCode": 0
+    },
+    {
+      "kind": "syntax",
+      "file": "memory-effort-canonical-collect-ready.mjs",
+      "exitCode": 0
+    },
+    {
+      "kind": "syntax",
+      "file": "memory-effort-canonical-enable-trace.mjs",
+      "exitCode": 0
+    },
+    {
+      "kind": "syntax",
+      "file": "memory-effort-canonical-native-regression.mjs",
+      "exitCode": 0
+    },
+    {
+      "kind": "noGO_side_effect_traps",
+      "file": "memory-effort-canonical-collect-ready.mjs",
+      "exitCode": 2,
+      "status": "PREPARED_WAITING_FOR_ROOT_PINS_AND_GO",
+      "liveQualification": "NOT_RUN",
+      "sideEffectTrapCalls": 0
+    },
+    {
+      "kind": "noGO_side_effect_traps",
+      "file": "memory-effort-canonical-enable-trace.mjs",
+      "exitCode": 2,
+      "status": "PREPARED_WAITING_FOR_ROOT_PINS_AND_GO",
+      "liveQualification": "NOT_RUN",
+      "sideEffectTrapCalls": 0
+    },
+    {
+      "kind": "noGO_side_effect_traps",
+      "file": "memory-effort-canonical-native-regression.mjs",
+      "exitCode": 2,
+      "status": "PREPARED_WAITING_FOR_ROOT_PINS_AND_GO",
+      "liveQualification": "NOT_RUN",
+      "sideEffectTrapCalls": 0
+    },
+    {
+      "status": "LOCAL_GUARD_CHECKS_OBSERVED",
+      "checks": [
+        "missing exact pins refuse before access",
+        "local preflight is explicitly pending",
+        "complete prospective arguments parse",
+        "old3875commit refuses",
+        "cleaned singleton session refuses",
+        "cleaned singleton target refuses",
+        "cleaned singleton image refuses",
+        "outside-Q review path refuses",
+        "duplicate arguments refuse",
+        "version1 combined manifest more than12files accepted with exact before after final scores",
+        "wrong review byte pin refuses",
+        "independent rejection refuses",
+        "below4score refuses",
+        "mismatched after-check source hashes refuse",
+        "missing retained required source refuses"
+      ],
+      "serviceCalls": 0,
+      "modelCalls": 0,
+      "sessionReads": 0,
+      "privateKeyReads": 0,
+      "fixtureArgumentsOnly": true
+    },
+    {
+      "kind": "exact_singleton_body_adaptation",
+      "file": "memory-effort-canonical-collect-ready.mjs",
+      "retainedAssertionsAndDeadlines": true,
+      "changes": [
+        "candidate prefix",
+        "explicit frozen-review pins",
+        "local logical target guard",
+        "READY review pin persistence"
+      ]
+    },
+    {
+      "kind": "exact_singleton_body_adaptation",
+      "file": "memory-effort-canonical-enable-trace.mjs",
+      "retainedAssertionsAndDeadlines": true,
+      "changes": [
+        "candidate prefix",
+        "explicit frozen-review pins",
+        "local logical target guard",
+        "READY review pin persistence"
+      ]
+    },
+    {
+      "kind": "exact_singleton_body_adaptation",
+      "file": "memory-effort-canonical-native-regression.mjs",
+      "retainedAssertionsAndDeadlines": true,
+      "changes": [
+        "candidate prefix",
+        "explicit frozen-review pins",
+        "local logical target guard",
+        "READY review pin persistence"
+      ]
+    }
+  ],
+  "priorNative": {
+    "receipt": "memory-effort-literal-native-regression-1792053131973.json",
+    "verdict": "PASS_HISTORICAL_ONLY",
+    "checks": 663,
+    "notNewCandidateAcceptance": true
+  },
+  "preserved": {
+    "topologyDepths": [
+      2,
+      4,
+      8,
+      13
+    ],
+    "topologyHelper": "memory-effort-budget-native-topology.mjs",
+    "cancelledEditStrictBarrierHelper": "memory-effort-budget-native-liveness.mjs",
+    "genuinePublicRecall": "Four actual future public modes; same original coral assertion; no forced paid literal oracle",
+    "sourceFences": [
+      "tombstone",
+      "revoke",
+      "cross-scope and metadata checks"
+    ],
+    "originalBaselineAndFailures": true,
+    "syntheticThreeProjectionProof": "NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT",
+    "paidRetryPolicy": "No automatic capture/Fast replay or new deadline",
+    "startupCalls": 8,
+    "startupUnknownLiabilityUnits": 2700000,
+    "manualRunUnits": 3000000,
+    "tenantUnits": 10000000,
+    "concurrency": 2
+  },
+  "activity": {
+    "serviceCalls": 0,
+    "modelCalls": 0,
+    "sessionReads": 0,
+    "privateKeyReads": 0,
+    "productEdits": 0,
+    "proofsEdits": 0,
+    "websiteEdits": 0,
+    "gitCommands": 0,
+    "builds": 0,
+    "packageOperations": 0,
+    "dockerCalls": 0,
+    "deployments": 0,
+    "runtimeMutations": 0
+  },
+  "liveQualification": "NOT_RUN",
+  "independentReview": "PENDING_ROOT_COMBINED_REVIEW_NO_NEW_JUDGES",
+  "rootOwns": [
+    "new prospective commit",
+    "new kit and fresh disposable target",
+    "launcher and execution",
+    "final cleanup"
+  ],
+  "corrections": [
+    {
+      "at": "2026-10-15T09:34:53.563365+00:00",
+      "request": "Root required actual goal acceptance-policy-v2 minima in place of all4",
+      "policy": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+      "historicalObservationPreserved": "Original below4score refuses observation and original file hashes remain unchanged above; they describe the pre-correction helper. That threshold is superseded prospectively.",
+      "changeScope": "Score validation only; zero-breaking-findings and other guards unchanged",
+      "minimumScores": {
+        "requirementFulfillment": 4,
+        "codeQuality": 3,
+        "testQuality": 4,
+        "patternAdherence": 3,
+        "completeness": 4
+      },
+      "minimumAverage": 3.6,
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--input-type=module",
+        "-"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12",
+      "exitCode": 0,
+      "result": {
+        "status": "POLICY_V2_FOCUSED_PURE_CHECK_OBSERVED",
+        "outcomes": [
+          {
+            "outcome": "ACCEPT",
+            "scores": {
+              "requirementFulfillment": 4,
+              "codeQuality": 3,
+              "testQuality": 4,
+              "patternAdherence": 3,
+              "completeness": 4
+            },
+            "average": 3.6
+          },
+          {
+            "outcome": "REJECT_BELOW_RESPECTIVE_MINIMUM_DESPITE_SUFFICIENT_AVERAGE",
+            "dimension": "requirementFulfillment",
+            "score": 3,
+            "minimum": 4,
+            "average": 4.6
+          },
+          {
+            "outcome": "REJECT_BELOW_RESPECTIVE_MINIMUM_DESPITE_SUFFICIENT_AVERAGE",
+            "dimension": "codeQuality",
+            "score": 2,
+            "minimum": 3,
+            "average": 4.4
+          },
+          {
+            "outcome": "REJECT_BELOW_RESPECTIVE_MINIMUM_DESPITE_SUFFICIENT_AVERAGE",
+            "dimension": "testQuality",
+            "score": 3,
+            "minimum": 4,
+            "average": 4.6
+          },
+          {
+            "outcome": "REJECT_BELOW_RESPECTIVE_MINIMUM_DESPITE_SUFFICIENT_AVERAGE",
+            "dimension": "patternAdherence",
+            "score": 2,
+            "minimum": 3,
+            "average": 4.4
+          },
+          {
+            "outcome": "REJECT_BELOW_RESPECTIVE_MINIMUM_DESPITE_SUFFICIENT_AVERAGE",
+            "dimension": "completeness",
+            "score": 3,
+            "minimum": 4,
+            "average": 4.6
+          }
+        ],
+        "reviewFixtureReads": 12,
+        "serviceCalls": 0,
+        "modelCalls": 0,
+        "sessionReads": 0,
+        "privateKeyReads": 0
+      }
+    }
+  ],
+  "finalFiles": {
+    "memory-effort-canonical-enable-trace.mjs": "baba9cf703dde1b2f357e95461a7ca68c9f8980b06bc48e77044fbd978c115f6",
+    "memory-effort-canonical-native-pins.mjs": "a6b1cce98b9fb60ddaec896584b1768f363c3f845e0e93edf93455f6ce3b6847",
+    "memory-effort-canonical-collect-ready.mjs": "e99a4bd68df6dbc5b89ac3d11377eca4150ad915939893a2a80413ae29d09827",
+    "memory-effort-canonical-native-regression.mjs": "475775d80bd2608a97f31105da97ee0404dd07b9f9c4c8d032b3faafdb0362fd"
+  }
+}

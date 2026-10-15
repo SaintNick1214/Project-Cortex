@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "name": "diff",
+  "command": [
+    "git",
+    "diff",
+    "3875d3238705a90cb191abbf824d3fa3517e42e5",
+    "--check",
+    "--",
+    "src/domain/memory-direct-recall.ts",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "src/domain/memory-traversal.ts",
+    "convex-dev/runtimeMemoryTraversal.ts",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts",
+    "convex-dev/runtimeAuth.ts",
+    "convex-dev/runtimeMemoryRepository.ts",
+    "tests/unit/runtimeMemory/source-root-read-scope.test.ts"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_TEST_MODE": "local",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "GRAPH_TESTING_ENABLED": "false"
+  },
+  "startedAt": "2026-10-15T09:40:54.950781+00:00",
+  "durationMs": 80,
+  "exitCode": 0,
+  "naturalExit": true,
+  "forceExit": false,
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "rawLog": "memory-effort-canonical-independent-reviewcheck-diff.raw.log"
+}

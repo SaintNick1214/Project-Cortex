@@ -1,0 +1,431 @@
+{
+  "version": 1,
+  "subject": "Canonical grammar, validated deadline prefix fitting, and private V8 original root unique reuse",
+  "verdict": "PASS",
+  "reviewer": "fresh independent non-author source/test reviewer",
+  "reviewedAt": "2026-10-15T09:44:27.070571+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+  "coherentManifest": "memory-effort-canonical-coherent-source-hashes.json",
+  "scope": "Bounded frozen source/test acceptance only; not full goal, installed consumer, hosted latency, or runtime SLO acceptance",
+  "policy": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+    "version": 2,
+    "minimums": {
+      "requirementFulfillment": 4,
+      "codeQuality": 3,
+      "testQuality": 4,
+      "patternAdherence": 3,
+      "completeness": 4
+    }
+  },
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "averageScore": 4.0,
+  "unresolvedBreakingFindings": [],
+  "unresolvedBreakingFindingsCount": 0,
+  "requirementsReview": [
+    {
+      "requirement": "Closed canonical same-source projection grammar, exact owned metadata and canonical assertion; no speculative unknown/conflicting/negative/history/lineage shortcut",
+      "met": true,
+      "evidence": [
+        "src/domain/memory-direct-recall.ts:33-98",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts:100-136",
+        "tests/unit/runtimeMemory/query-composition.test.ts:348-370",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts:811-834"
+      ]
+    },
+    {
+      "requirement": "Already permission/source/fact-validated native seed prefix can be fitted after deadline without late source/fact/edge reads, new clock, or raised caps; unbound848ms remains empty",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryTraversal.ts:50-83",
+        "src/domain/memory-traversal.ts:31-79",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts:43-82"
+      ],
+      "limit": "The final pre-capture native guards must finish before expiry; pure local payload binding/hash/fitting may finish later. This does not establish actual Fast848 recovery."
+    },
+    {
+      "requirement": "Fresh final source/fact/revocation/expiry and cancellation fences retained; incomplete discovery does not establish direct completion",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryRepository.ts:358-407",
+        "convex-dev/runtimeAgentRecall.ts:180-182",
+        "src/domain/memory-direct-recall.ts:150-154",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts:63-82"
+      ]
+    },
+    {
+      "requirement": "Only original root Doc|null .unique result retained in exact private V8 native owner; .take(2) distinct; shared bounds/clones/epoch/invalidation; original exceptions/duplicate error",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:55-78",
+        "convex-dev/runtimeAuth.ts:100-160",
+        "convex-dev/runtimeAuth.ts:298-461",
+        "convex-dev/runtimeMemoryRepository.ts:117-124",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts:75-190"
+      ]
+    },
+    {
+      "requirement": "All logical authority/currentness/permission/deadline predicates preserved including undefined versus explicit facts/memories; public/default/ingestion behavior unchanged",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryRepository.ts:117-124",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts:133-159",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts:254-315",
+        "tests/unit/runtimeAuth/managed-source-read-scope.test.ts"
+      ]
+    },
+    {
+      "requirement": "Registered saveAndPrepareContextV8 wired and controlled root reuse off/on preserves output, model body, full state/effects, predicates and non-root reads",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeAgent.ts:1945-1953",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts:193-274",
+        "memory-effort-canonical-independent-reviewcheck-tests.raw.log"
+      ],
+      "observedRootUniqueReads": {
+        "off": 62,
+        "on": 1
+      },
+      "hostedSpeedProven": false
+    },
+    {
+      "requirement": "No mutable attempt cache, cross-RPC permit, financial commit fusion, caps change, old-pin or LSR-1 compatibility loss",
+      "met": true,
+      "evidence": [
+        "scoped diff of all 5 changed product files against3875",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts remains byte-identical",
+        "memory-effort-canonical-independent-reviewcheck-retention.json",
+        "all617 independent outcomes passed"
+      ]
+    },
+    {
+      "requirement": "Precisely authorized classifier delta retains original mutable predicates and all prior/canonical assertions; raw failures retained",
+      "met": true,
+      "evidence": [
+        "memory-effort-canonical-independent-reviewcheck-retention.json",
+        "memory-effort-source-root-adjacent-initial.raw.log",
+        "memory-effort-source-root-types-hook-type-failure.raw.log"
+      ],
+      "canonicalWholeRecallHashReconstructed": true
+    }
+  ],
+  "checks": [
+    {
+      "version": 1,
+      "name": "tests",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtime/latency-trace.test.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeAgent/inline-barrier.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+        "tests/unit/runtimeAuth/v8-read-scope.test.ts",
+        "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-independent-reviewcheck-tests.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:41:44.594280+00:00",
+      "durationMs": 19488,
+      "exitCode": 0,
+      "naturalExit": true,
+      "forceExit": false,
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "rawLog": "memory-effort-canonical-independent-reviewcheck-tests.raw.log",
+      "effectiveForceExit": false,
+      "qualification": "QUALIFYING natural exit with explicit forceExit=false"
+    },
+    {
+      "version": 1,
+      "name": "types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:40:54.950388+00:00",
+      "durationMs": 17179,
+      "exitCode": 0,
+      "naturalExit": true,
+      "forceExit": false,
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "rawLog": "memory-effort-canonical-independent-reviewcheck-types.raw.log"
+    },
+    {
+      "version": 1,
+      "name": "lint-types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:40:54.950388+00:00",
+      "durationMs": 12122,
+      "exitCode": 0,
+      "naturalExit": true,
+      "forceExit": false,
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "rawLog": "memory-effort-canonical-independent-reviewcheck-lint-types.raw.log"
+    },
+    {
+      "version": 1,
+      "name": "lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "src/domain/memory-traversal.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:40:54.951239+00:00",
+      "durationMs": 8902,
+      "exitCode": 0,
+      "naturalExit": true,
+      "forceExit": false,
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "rawLog": "memory-effort-canonical-independent-reviewcheck-lint.raw.log"
+    },
+    {
+      "version": 1,
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "3875d3238705a90cb191abbf824d3fa3517e42e5",
+        "--check",
+        "--",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "src/domain/memory-traversal.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:40:54.950781+00:00",
+      "durationMs": 80,
+      "exitCode": 0,
+      "naturalExit": true,
+      "forceExit": false,
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "rawLog": "memory-effort-canonical-independent-reviewcheck-diff.raw.log"
+    },
+    {
+      "version": 1,
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "stdoutBytes": 0,
+      "expectedExitCode": 1,
+      "status": "PASS",
+      "meaning": "no-index added content difference returns1; empty output confirms no whitespace diagnostics"
+    }
+  ],
+  "independentTestResults": {
+    "numTotalTests": 617,
+    "numPassedTests": 617,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "numTotalTestSuites": 14,
+    "numPassedTestSuites": 14,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0,
+    "success": true
+  },
+  "priorOutcomeRetention": {
+    "version": 1,
+    "priorTotal": 371,
+    "canonicalTotal": 460,
+    "sourceRootTotal": 617,
+    "priorRetainedInCanonical": true,
+    "canonicalRetainedInSourceRoot": true,
+    "priorMissing": [],
+    "canonicalMissing": [],
+    "canonicalWholeRecallHashReconstructed": "44993db84d0d4b39f5b73c5ed3eb24f54b8a302622bd02e5bfcb410c85adb24f",
+    "canonicalWholeRecallHashExpected": "44993db84d0d4b39f5b73c5ed3eb24f54b8a302622bd02e5bfcb410c85adb24f",
+    "onlyAuthorizedAddedClassificationAndRootAssertions": true
+  },
+  "firstIndependentJestInvocation": {
+    "receipt": "memory-effort-canonical-independent-reviewcheck-tests-forced-initial.json",
+    "qualifying": false,
+    "reason": "Reviewer initially omitted forceExit=false, inheriting config forceExit:true. Raw log and617 passed results retained. Corrected once with explicit false; qualifying run closed naturally."
+  },
+  "additionalObservedParentChecks": [
+    "memory-effort-canonical-root-build.json",
+    "memory-effort-canonical-root-build.log",
+    "memory-effort-canonical-root-contracts.json",
+    "memory-effort-canonical-root-contracts.log"
+  ],
+  "sourceHashesBefore": {
+    "src/domain/memory-direct-recall.ts": "7c93979d1e161ee0ec2c94da382b667cf2b08f561f401626b53bc94acdd2ea56",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "b8db94f90339eeb0d7083f845be89a9f7f36f9172794ff921899d469e42d5f48",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "4254ae523f9c93241f93873a8c850c3f9cf6acd3e4765cb4e8b739c26abd55fe",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "0e610436ccd17a45b5709f83ab240fa7852c5dc34522c29072168b628db8838f",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c",
+    "src/domain/memory-traversal.ts": "f2bbc2dc2d0ef7c13bc126475dd123ef85af8cf3124fdad4015fea61444db7fe",
+    "convex-dev/runtimeMemoryTraversal.ts": "fe325d5ecef077af7ebf28486a3b0d5343e957699a3bc2c191de8e426e89b3d7",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts": "cf5e32f2c9692e6c9e7c7e5edef0ead01d9b377ff60ddfdaf0dd91d9a74b7e9b",
+    "convex-dev/runtimeAuth.ts": "78f42cd3694c7d27ea525ae50c11916874210d896b56cd31a6bd574987aa5046",
+    "convex-dev/runtimeMemoryRepository.ts": "0c7041f1b1938dab166b9546f64c71a311163c66e2eb06202e73bcb5dfa9d556",
+    "tests/unit/runtimeMemory/source-root-read-scope.test.ts": "6c6393d3ce596692a3fa348b81cc40d6bf20abc1c974e7152111d4019c02aaa4"
+  },
+  "sourceHashesAfterIndependentChecks": {
+    "src/domain/memory-direct-recall.ts": "7c93979d1e161ee0ec2c94da382b667cf2b08f561f401626b53bc94acdd2ea56",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "b8db94f90339eeb0d7083f845be89a9f7f36f9172794ff921899d469e42d5f48",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "4254ae523f9c93241f93873a8c850c3f9cf6acd3e4765cb4e8b739c26abd55fe",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "0e610436ccd17a45b5709f83ab240fa7852c5dc34522c29072168b628db8838f",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c",
+    "src/domain/memory-traversal.ts": "f2bbc2dc2d0ef7c13bc126475dd123ef85af8cf3124fdad4015fea61444db7fe",
+    "convex-dev/runtimeMemoryTraversal.ts": "fe325d5ecef077af7ebf28486a3b0d5343e957699a3bc2c191de8e426e89b3d7",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts": "cf5e32f2c9692e6c9e7c7e5edef0ead01d9b377ff60ddfdaf0dd91d9a74b7e9b",
+    "convex-dev/runtimeAuth.ts": "78f42cd3694c7d27ea525ae50c11916874210d896b56cd31a6bd574987aa5046",
+    "convex-dev/runtimeMemoryRepository.ts": "0c7041f1b1938dab166b9546f64c71a311163c66e2eb06202e73bcb5dfa9d556",
+    "tests/unit/runtimeMemory/source-root-read-scope.test.ts": "6c6393d3ce596692a3fa348b81cc40d6bf20abc1c974e7152111d4019c02aaa4"
+  },
+  "sourceHashesFinal": {
+    "src/domain/memory-direct-recall.ts": "7c93979d1e161ee0ec2c94da382b667cf2b08f561f401626b53bc94acdd2ea56",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "b8db94f90339eeb0d7083f845be89a9f7f36f9172794ff921899d469e42d5f48",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "4254ae523f9c93241f93873a8c850c3f9cf6acd3e4765cb4e8b739c26abd55fe",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "0e610436ccd17a45b5709f83ab240fa7852c5dc34522c29072168b628db8838f",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c",
+    "src/domain/memory-traversal.ts": "f2bbc2dc2d0ef7c13bc126475dd123ef85af8cf3124fdad4015fea61444db7fe",
+    "convex-dev/runtimeMemoryTraversal.ts": "fe325d5ecef077af7ebf28486a3b0d5343e957699a3bc2c191de8e426e89b3d7",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts": "cf5e32f2c9692e6c9e7c7e5edef0ead01d9b377ff60ddfdaf0dd91d9a74b7e9b",
+    "convex-dev/runtimeAuth.ts": "78f42cd3694c7d27ea525ae50c11916874210d896b56cd31a6bd574987aa5046",
+    "convex-dev/runtimeMemoryRepository.ts": "0c7041f1b1938dab166b9546f64c71a311163c66e2eb06202e73bcb5dfa9d556",
+    "tests/unit/runtimeMemory/source-root-read-scope.test.ts": "6c6393d3ce596692a3fa348b81cc40d6bf20abc1c974e7152111d4019c02aaa4"
+  },
+  "allFrozenHashesMatch": true,
+  "originalFailedChecksRetained": true,
+  "originalFailedCheckArtifacts": [
+    {
+      "path": "memory-effort-source-root-initial-tests.raw.log",
+      "sha256": "f1853efb69cf846b8c3a703ce05b564505c3ff801dab77c91f43f83ff092c8b6",
+      "bytes": 18219
+    },
+    {
+      "path": "memory-effort-source-root-adjacent-initial.raw.log",
+      "sha256": "e236b8a7c86e1ae3ab3d95ac480c65e7c87a80ee6171a70b42d4616c20c7684b",
+      "bytes": 74892
+    },
+    {
+      "path": "memory-effort-source-root-types-hook-type-failure.raw.log",
+      "sha256": "6bb5d5499870a08574ee62a9fbbb3ef8655af1eac9dd579fb182010e7dd8159f",
+      "bytes": 966
+    }
+  ],
+  "preservedActual3875Failures": {
+    "fastCrossConversation": {
+      "visibleAnswerMs": 6923.7,
+      "selectedEntries": 0,
+      "retrievalMs": 848,
+      "retrievalDeadlineMs": 750,
+      "correctApricotAnswer": false
+    },
+    "normalCliMs": [
+      10333.3,
+      6031.7
+    ]
+  },
+  "limitations": [
+    "Raw query savings are controlled handler evidence, not actual hosted speed or live Convex OCC evidence.",
+    "Actual unbound848ms case is not repaired by pure seed fitting.",
+    "Installed changed-candidate qualification, cleanup, hosted correctness/latency and final independent goal audit remain separately mandatory.",
+    "Optional website docs review was not performed; no website or Proofs edits."
+  ],
+  "permissionsObserved": "Only review report and independent-reviewcheck receipts written. No source/test, Proofs, website, Git, build/pack, service, model or credential changes by reviewer."
+}

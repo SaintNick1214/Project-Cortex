@@ -1,0 +1,28 @@
+{
+  "name": "lint",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "node_modules/eslint/bin/eslint.js",
+    "src/domain/memory-direct-recall.ts",
+    "src/domain/memory-traversal.ts",
+    "convex-dev/runtimeMemoryTraversal.ts",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts",
+    "--report-unused-disable-directives"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "CONVEX_TEST_MODE": "local",
+    "GRAPH_TESTING_ENABLED": "false"
+  },
+  "startedAt": "2026-10-15T09:16:22.721Z",
+  "durationMs": 7377,
+  "node": "v24.15.0",
+  "declaredNpm": "12.2.0",
+  "exitCode": 0,
+  "signal": null
+}

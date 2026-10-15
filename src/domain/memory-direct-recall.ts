@@ -45,17 +45,25 @@ function sameFactSource(fact: DerivedFact, source: Pick<DerivedFact,"tenantId"|"
 /** Deliberately finite projection grammar. These statements supply no aliases or
  * answer evidence: the exact fact AND single canonical assertion below do that.
  * Unknown projections remain a semantic miss, even when their source agrees. */
-function neutralLiteralProjection(fact: DerivedFact, seed: DerivedFact): boolean {
+function canonicalLiteralProjection(fact: DerivedFact, seed: DerivedFact): boolean {
   const head = literalAssertionHead(seed.fact), category = head?.match(/^self:favorite ([\p{L}\p{N}]+)$/u)?.[1];
   if (!category || !fact.object || !fact.predicate || !["user", "the user", "i", "me", "my", words(fact.ownerPrincipalId).join(" ")].includes(words(fact.subject ?? "").join(" "))) return false;
   const statement = words(fact.fact).join(" "), predicate = words(fact.predicate).join(" "), object = words(fact.object).join(" "), value = words(seed.object ?? "").join(" ");
-  return selfPrefixes.some(prefix => predicate === "likes" && (statement === `${prefix} likes ${category}` && object === category
-      || statement === `${prefix} likes ${value}` && object === value)
-    || statement === `${prefix} stated a specific preference for a type of ${category}` && predicate === "has a preference for" && object === value);
+  // A closed grammar ties each statement to explicit metadata and the literal
+  // favorite-property/value pair. No free-standing prefers/likes assertion can
+  // establish that property, and no hypothetical or alternate property fits.
+  const forms = [
+    { prefixes:selfPrefixes, body:`likes ${category}`, predicate:"likes", object:category },
+    { prefixes:selfPrefixes, body:`likes ${value}`, predicate:"likes", object:value },
+    { prefixes:selfPrefixes, body:`stated a specific preference for a type of ${category}`, predicate:"has a preference for", object:value },
+    { prefixes:["user","the user"], body:`prefers ${value} as their favorite ${category}`, predicate:"prefers", object:value },
+    { prefixes:["i"], body:`prefer ${value} as my favorite ${category}`, predicate:"prefer", object:value },
+  ];
+  return forms.some(form => predicate === form.predicate && object === form.object && form.prefixes.some(prefix => statement === `${prefix} ${form.body}`));
 }
 function compatibleLiteralProjection(text: string, seed: DerivedFact, fact: DerivedFact, now: number): boolean {
   return structuredLiteralValue(seed) && structuredLiteralValue(fact) && pristineFact(fact, now) && sameFactSource(fact, seed)
-    && (literalPropertyEvidence(text, fact, now) && words(fact.object).join(" ") === words(seed.object).join(" ") || neutralLiteralProjection(fact, seed));
+    && (literalPropertyEvidence(text, fact, now) && words(fact.object).join(" ") === words(seed.object).join(" ") || canonicalLiteralProjection(fact, seed));
 }
 function sourceProofSeed(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number, version?: 1): DerivedFact | undefined {
   if (version !== 1 || text.length > 1024 || candidates.candidateWorkBound || candidates.facts.length === 0) return undefined;

@@ -3,6 +3,7 @@ import {describe,it,expect,jest} from "@jest/globals";
 import type {DerivedFact} from "../../../src/domain/contracts";
 import {resolveMemoryEffortPolicy,emptyMemoryEffortTrace} from "../../../src/domain/memory-effort";
 import {traverseMemoryEvidence} from "../../../src/domain/memory-traversal";
+import {directFactTraversalComplete} from "../../../src/domain/memory-direct-recall";
 import {prepareSourceContent} from "../../../src/domain/sources";
 import type {MemoryDeliveryBindings} from "../../../convex-dev/runtimeMemoryRepository";
 import {ConvexMemoryRepository,memoryScope} from "../../../convex-dev/runtimeMemoryRepository";
@@ -39,4 +40,44 @@ describe("actual scoped indexed logical traversal",()=>{
   await expect(f.repository.checkDelivery(bindings)).resolves.toMatchObject({version:1});
  });
  it("Action work deadline retains pinned validated native results and still executes the final authority fence",async()=>{const f=await chain(),policy=resolveMemoryEffortPolicy({effort:"fast"}),trace=emptyMemoryEffortTrace(policy);trace.selected=1;trace.entriesByKind.fact=1;const items=[factEvidenceNode(f.facts[0]!).item],finalDelivery=jest.fn(async()=>({version:1 as const}));const result=await completeRecallDelivery({clock:{now:()=>2000},finalDelivery},{limit:10},"p",[],[],{items,memoryEffort:trace,retrievalDeadlineMs:policy.retrievalDeadlineMs,retainValidatedOnDeadline:true},1000);expect(result.items).toEqual(items);expect(result.memoryEffort).toMatchObject({selected:1,durationMs:1000,entriesByKind:{fact:1}});expect(result.memoryEffort?.stopReasons).toContain("deadline");expect(finalDelivery).toHaveBeenCalledTimes(1);});
+ it("native seed fully bound before750ms survives pure fitting at848ms with no late reads or expansion",async()=>{
+  const f=await chain(2),bindings=empty(),policy=resolveMemoryEffortPolicy({effort:"fast"});let elapsed=749;
+  const source=jest.spyOn(f.repository,"getSource"),fact=jest.spyOn(f.repository,"getFact");f.db.reads.length=0;
+  const result=await traverseConvexMemory(f.ctx,f.repository,f.facts.map(fact=>factEvidenceNode(fact)),policy,bindings,undefined,()=>{elapsed=848;},undefined,1000,{startedAt:1000,now:()=>1000+elapsed});
+  expect(source).toHaveBeenCalledTimes(1);expect(source.mock.calls[0]![1]).toBe("canViewFacts");expect(fact).toHaveBeenCalledTimes(1);
+  expect(f.db.reads.some(read=>read.table==="runtimeMemoryFactEntities")).toBe(false);
+  expect(result.items.map(item=>item.id)).toEqual(["f1"]);expect(result.items[0]!.retrieval).toMatchObject({depth:1,path:["fact:f1"]});
+  expect(bindings.facts.map(fact=>fact.factId)).toEqual(["f1"]);expect(bindings.sources.map(source=>source.permission)).toEqual(["canViewFacts"]);
+  expect(result.memoryEffort).toMatchObject({selected:1,visited:1,expanded:0,durationMs:848,entriesByKind:{fact:1}});expect(result.memoryEffort.stopReasons).toContain("deadline");expect(result.memoryEffort.stopReasons).not.toContain("exhausted");expect(directFactTraversalComplete(result.memoryEffort)).toBe(false);
+  const final=jest.fn(()=>f.repository.checkDelivery(bindings));
+  const delivered=await completeRecallDelivery({clock:{now:()=>1848},finalDelivery:final},{limit:10},"p",[],[],result,1000);
+  expect(delivered.items.map(item=>item.id)).toEqual(["f1"]);expect(final).toHaveBeenCalledTimes(1);expect(source.mock.calls.length).toBeGreaterThan(1);
+ });
+ it("late unbound seeds remain empty at848ms without starting permission/source I/O or asserting exhaustion",async()=>{
+  const f=await chain(2),source=jest.spyOn(f.repository,"getSource"),fact=jest.spyOn(f.repository,"getFact");
+  const result=await traverseConvexMemory(f.ctx,f.repository,f.facts.map(fact=>factEvidenceNode(fact)),resolveMemoryEffortPolicy({effort:"fast"}),empty(),undefined,undefined,undefined,1000,{startedAt:1000,now:()=>1848});
+  expect(result.items).toEqual([]);expect(result.memoryEffort).toMatchObject({selected:0,visited:0,expanded:0,durationMs:848});expect(result.memoryEffort.stopReasons).toEqual(["deadline"]);
+  expect(source).not.toHaveBeenCalled();expect(fact).not.toHaveBeenCalled();expect(directFactTraversalComplete(result.memoryEffort)).toBe(false);
+ });
+ it.each(["revoked","expired","deleted-source","changed-fact"])("retained late prefix still rejects fresh final %s",async fault=>{
+  const f=await chain(1),bindings=empty();let elapsed=0;
+  const result=await traverseConvexMemory(f.ctx,f.repository,[factEvidenceNode(f.facts[0]!)],resolveMemoryEffortPolicy({effort:"fast"}),bindings,undefined,()=>{elapsed=848;},undefined,1000,{startedAt:1000,now:()=>1000+elapsed});
+  expect(result.items.map(item=>item.id)).toEqual(["f1"]);
+  if(fault==="revoked")f.grant.revokedAt=1000;if(fault==="expired")f.db.table("facts")[0]!.validUntil=1000;
+  if(fault==="deleted-source")f.db.table("runtimeMemorySources")[0]!.tombstonedAt=1000;if(fault==="changed-fact")f.db.table("facts")[0]!.fact="changed";
+  const final=jest.fn(()=>f.repository.checkDelivery(bindings));await expect(completeRecallDelivery({clock:{now:()=>1848},finalDelivery:final},{limit:10},"p",[],[],result,1000)).rejects.toThrow();expect(final).toHaveBeenCalledTimes(1);
+ });
+ it.each([{maxEntries:0},{maxContextTokens:1},{maxWork:1}])("late authorized prefix preserves original bound %j",async bound=>{
+  const f=await chain(2),policy=resolveMemoryEffortPolicy({effort:"fast"}, {version:1,...bound});let elapsed=0;
+  const result=await traverseConvexMemory(f.ctx,f.repository,f.facts.map(fact=>factEvidenceNode(fact)),policy,empty(),undefined,()=>{elapsed=848;},undefined,1000,{startedAt:1000,now:()=>1000+elapsed});
+  expect(result.items.length).toBeLessThanOrEqual(policy.maxEntries!);expect(result.memoryEffort.selectedInputUnits).toBeLessThanOrEqual(policy.maxContextTokens);expect(result.memoryEffort.expanded).toBe(0);expect(result.memoryEffort.stopReasons).toContain("deadline");
+  if(bound.maxEntries===0||bound.maxContextTokens===1)expect(result.items).toEqual([]);else expect(result.items.map(item=>item.id)).toEqual(["f1"]);
+ });
+ it("late pure fitting requires the native opt-in and cannot override cancellation",async()=>{
+  const f=await chain(1),policy=resolveMemoryEffortPolicy({effort:"fast"}),expand=jest.fn(async()=>({edges:[],cursor:null}));
+  const options={seeds:[factEvidenceNode(f.facts[0]!)],policy,now:()=>1848,startedAt:1000,expand};
+  const ordinary=await traverseMemoryEvidence(options);expect(ordinary.nodes).toEqual([]);expect(ordinary.trace.stopReasons).toContain("deadline");
+  const cancelled=await traverseMemoryEvidence({...options,retainValidatedSeedPrefixOnDeadline:true,cancelled:()=>true});
+  expect(cancelled.nodes).toEqual([]);expect(cancelled.trace.stopReasons).toContain("cancellation");expect(expand).not.toHaveBeenCalled();
+ });
 });

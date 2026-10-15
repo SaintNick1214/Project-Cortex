@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "SINGLETON_ACCEPTED_SOURCE_BUILD_CONTRACTS_PACKAGING_NEXT",
+  "phase": "CANONICAL_COHERENT_SOURCE_PASS_BUILD_PASS_COMMIT_AND_PACK",
   "complete": 4,
   "total": 6,
   "percent": 66.7,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-15T08:48:33.141659+00:00",
+  "updatedAt": "2026-10-15T09:45:53.810763+00:00",
   "metricVersion": 3,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -75,38 +75,38 @@
   },
   "currentEnvironment": {
     "state": "CLEANED",
-    "sessionId": "04ab48d4-6995-4d90-9a20-5935787e58f2",
-    "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
-    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-literal-2026-10-15",
+    "sessionId": "3d381c46-a9ab-4650-9ea2-a541c76bf207",
+    "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-singleton-2026-10-15",
     "target": {
-      "id": 6189484,
-      "name": "impartial-stoat-767",
+      "id": 6190027,
+      "name": "flexible-gerbil-87",
       "kind": "cloud",
       "teamId": 325340,
       "projectId": 3200658,
-      "reference": "dev/cortex-sandbox-04ab48d4-6995-4d90-9a20-5935787e58f2",
+      "reference": "dev/cortex-sandbox-3d381c46-a9ab-4650-9ea2-a541c76bf207",
       "deploymentType": "dev",
       "isDefault": false,
-      "expiresAt": 1792656777783,
-      "deploymentUrl": "https://impartial-stoat-767.convex.cloud",
+      "expiresAt": 1792659174132,
+      "deploymentUrl": "https://flexible-gerbil-87.convex.cloud",
       "disposable": true,
       "serverExpiryVerified": true
     },
     "container": {
-      "name": "cortex-sandbox-04ab48d4-6995-4d90-9a20-5935787e58f2",
-      "imageId": "sha256:1856464478b4b8820262b724db678d2c08e4505d7774db1263efce0e6cda6a92",
+      "name": "cortex-sandbox-3d381c46-a9ab-4650-9ea2-a541c76bf207",
+      "imageId": "sha256:19f06ee1e5d86390974183d761011caa70012beba3b99d5844993e0956a778e5",
       "labels": {
-        "dev.cortex.disposable-sandbox": "04ab48d4-6995-4d90-9a20-5935787e58f2",
-        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/04ab48d4-6995-4d90-9a20-5935787e58f2"
+        "dev.cortex.disposable-sandbox": "3d381c46-a9ab-4650-9ea2-a541c76bf207",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/3d381c46-a9ab-4650-9ea2-a541c76bf207"
       },
-      "id": "dec6decc762559bdcaddbeda1104be088ef4f4c528d8f2f7c782215947d5478b"
+      "id": "13392abe70856557b41c9ff5e110bb79a52305c027e668eca45764b951a55b52"
     },
     "ports": {
-      "web": 3124,
-      "basic": 3125
+      "web": 3422,
+      "basic": 3423
     },
-    "launcherPid": 31978,
-    "rootExecSession": 51160,
+    "launcherPid": 42052,
+    "rootExecSession": 92960,
     "startupFixedQualification": "8/8ACTUAL_PASS",
     "startupBatch": {
       "actualSuccessfulMethods": 8,
@@ -115,29 +115,29 @@
       "activeConcurrency": 0,
       "aggregateUsdComplete": false,
       "perRunHumanReview": false,
-      "procedureApprovalDigest": "d9e23f3e3ab9c0a07d57192846d24bec1a937a9bb02e9c651729176b4e98d814",
+      "procedureApprovalDigest": "2452bca8cebf48d47df900d4c6e36f069ead90620658ba4a6a7e2c2abb5d5af6",
       "immutableProcedureReviewedBeforeRun": true,
       "freshActualOutcomes": true,
       "oldQualificationDatesReused": false
     },
-    "startupBatchSha256": "44ca9bd90d871361685040bbc2e2522999b9b4a75f8bf61bfc5aabcfc7501f05",
+    "startupBatchSha256": "ba686fa3b62f06491b9d20419d26bddad6445a65f08301c8fedefdebe5f53dc9",
     "startupStrictEmptyQuestion": true,
-    "startupExtractionSha256": "55c0b1a39a840ff219d0875084592a00b0c52454ae223879946e0421ff3dbfe8",
-    "runtimeReadySha256": "0fc1c1a6c07129900aee1aaef778661d51d9fa73c046c96392f9196ef164c522",
+    "startupExtractionSha256": "7164a96f8dfa30224700dadd61ab5c706581383d2e19d7a26acbe166564aeb2c",
+    "runtimeReadySha256": "aaa1cda0070a4eb3691c23537dcc80980d40bc69cd38bf4ba622ded8c70a8415",
     "managedDefaultProfile": true,
     "capabilities": {
       "inputSelectionVersion": 2,
       "memoryEffortPolicyVersion": 1
     },
     "healthStatus": 200,
-    "readyAt": "2026-10-15T08:16:32.248Z",
+    "readyAt": "2026-10-15T08:56:18.842Z",
     "effortProfileRuntimeAcceptance": false,
-    "manifestSha256": "c90ca5d7e733e2dbfef68cd6a0e775c453a65d6a8657ba4b0d02a3ebee014b1a",
-    "backendManifestSha256": "eebdb256de455f2680fabf391b8a35584ab04d137864017d041f141881916b61",
+    "manifestSha256": "e38e51f1077712ae49322f133656be6194a65363ccadfa03c0322cf66d0853cc",
+    "backendManifestSha256": "b5cfbcfa36e54a01651111de344a8ad686c372deb63b21dcda5ac55cb3213c26",
     "backendFileCount": 174,
     "modelCalls": 0,
     "cleanup": {
-      "receipt": "memory-effort-literal-cleanup-1792053354195.json",
+      "receipt": "memory-effort-singleton-cleanup-1792055676406.json",
       "checks": 21,
       "status": "ABSENT",
       "originalLauncherExit": 130,
@@ -145,52 +145,53 @@
     }
   },
   "actualSamples": {
-    "generation": "memory-effort-literal-862",
-    "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+    "generation": "memory-effort-singleton-3875",
+    "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
     "browserFirstAfterPaintMs": [
-      3293.100000000559,
-      3096.399999999441,
-      6344.4000000003725,
-      6745.5,
-      6861,
-      6291.600000000559
+      3010.7,
+      2728.7,
+      5492.7,
+      7129.8,
+      9493.8,
+      6923.7
     ],
-    "browserRecallQuestionsCorrect": "5/5",
-    "browserTimingTargetsMet": "3/6",
-    "responsesAndMemoryComplete": true,
-    "requiredIntegrationAccepted": false,
-    "browserReceipt": "memory-effort-literal-browser-summary.json",
-    "diagnostic": "Initial exact singleton search result bypassed new canonical source proof; source-adjacent User likes apricot triggers semantic fallback. Actual quiet metadata and logs retained.",
-    "browserSignedOut": true,
-    "browserTabClosed": true,
-    "nativeCurrentCandidate": {
-      "status": "PASS663",
-      "receipt": "memory-effort-literal-native-regression-1792053131973.json",
-      "realEffortDepths": [
-        2,
-        4,
-        8,
-        13
-      ],
-      "allClientsClosed": true,
-      "latencyAcceptance": false
-    },
+    "browserRecallQuestionsCorrect": "4/5",
+    "browserTimingTargetsMet": "5/6",
+    "responseAndMemoryComplete": "6/6",
+    "fastCrossCorrect": false,
+    "fastCrossSelectedEntries": 0,
+    "fastCrossRetrievalMs": 848,
+    "fastCrossStop": "deadline",
+    "cliFirstStdoutMs": [
+      10333.319046,
+      6031.692753
+    ],
+    "cliCorrect": "2/2",
+    "cliNormalTimingTargetsMet": "0/2",
+    "cliActualExit": 0,
+    "nativeCurrentCandidate": "NOT_RUN_AFTER_OBSERVED_BROWSER_FAILURE; prior862663onlyitsownscope",
     "finalFinance": {
-      "receipt": "memory-effort-literal-finance-after-1792053270064.json",
-      "uniqueOperations": 47,
-      "uniqueFirstAttempts": 47,
-      "uncertainUnits": 6600000,
+      "distinctOperations": 52,
+      "distinctAttempts": 52,
+      "unknownLiabilityUnits": 7100000,
       "settledUnits": 0,
-      "activeConcurrency": 0,
       "reservedUnits": 0,
-      "aggregateUsdComplete": false
+      "activeConcurrency": 0,
+      "attemptsFirstOnly": true,
+      "attemptStates": {
+        "uncertain": 52
+      },
+      "aggregateUsdComplete": false,
+      "rule": "Distinct operation/attempt rows across this exact disposable target; run liabilities summed once; tenant mirrors excluded."
     },
-    "cleanup": "memory-effort-literal-cleanup-1792053354195.json"
+    "cleanup": "memory-effort-singleton-cleanup-1792055676406.json",
+    "requiredIntegrationAccepted": false
   },
   "pendingRepairs": [
-    "Current c258 Fast recent/cross and populated Normal browser timing misses, plus both Normal CLI timing misses; bounded literal lookup/preparation repair is in progress under /root/literal_lookup_latency.",
-    "Seed acknowledgement retains the sole final-verifier literal apricot echo unmet assertion; do not rewrite the original exit1 or treat response/memory completion as that assertion passing.",
-    "Next coherent source batch requires one independent non-author source review, meaningful affected checks, fresh installed real-service qualification and the final independent audit; no final acceptance yet."
+    "Actual3875 Fast cross-conversation answer was incorrect with zero context at848/750ms; canonical finite-grammar and already-bound prefix repair author checks460/460, independent combined review pending. The unbound late case is not claimed repaired.",
+    "Actual3875 Basic CLI Normal replies10.333/6.032s both miss6s; same-operation raw source unique-read reuse is under bounded implementation; measured savings not yet established.",
+    "Next coherent source/test review, root build/contracts, genuine packaging and fresh hosted correctness/latency/native verification required.",
+    "Installed milestone and final independent audit remain open. GitHub draft PR unavailable; Entire mirror is the authorized Git delivery route."
   ],
   "refinements": [
     {
@@ -629,15 +630,22 @@
     }
   ],
   "nextCandidate": {
-    "baseCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
-    "sourceReview": "memory-effort-singleton-independent-review.json",
-    "sourceVerdict": "PASS4.0_SOURCE_ONLY",
-    "breakingFindings": 0,
-    "tests": "371/371 across6suites,0skips,naturalexit0",
-    "rootBuildExit": 0,
-    "contractsExit": 0,
-    "installed": "NOT_YET_RUN",
-    "latencyAcceptance": false
+    "prefix": "memory-effort-canonical",
+    "state": "INDEPENDENT_SOURCE_PASS_BUILD_CONTRACTS_PASS",
+    "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+    "canonicalAuthorTests": 460,
+    "canonicalSourceManifest": "memory-effort-canonical-source-hashes.json",
+    "rawReadProbe": "memory-effort-hydration-probe.md",
+    "sourceReview": "memory-effort-canonical-independent-review.json",
+    "runtimeSlo": "NOT_RUN",
+    "previousFailurePreserved": true,
+    "independentTests": 617,
+    "suites": 14,
+    "skips": 0,
+    "reviewAverage": 4.0,
+    "unresolvedBreakingFindings": 0,
+    "build": "memory-effort-canonical-root-build.json",
+    "contracts": "memory-effort-canonical-root-contracts.json"
   },
   "actualSampleHistory": [
     {
@@ -3784,78 +3792,25 @@
     }
   ],
   "latestCompletedWindow": {
-    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
-    "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+    "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+    "sessionId": "3d381c46-a9ab-4650-9ea2-a541c76bf207",
     "state": "CLOSED",
     "environmentState": "CLEANED",
-    "evaluation": "memory-effort-budget-final-evaluation.json",
     "goalAccepted": false,
-    "outcomePercentages": {
-      "browserObservation": {
-        "complete": 6,
-        "total": 6,
-        "percent": 100.0
-      },
-      "browserRecallQuestionsCorrect": {
-        "complete": 5,
-        "total": 5,
-        "percent": 100.0
-      },
-      "browserTimingTargetsMet": {
-        "complete": 3,
-        "total": 6,
-        "percent": 50.0
-      },
-      "browserSeedLiteralMarker": {
-        "complete": 0,
-        "total": 1,
-        "percent": 0.0
-      },
-      "publicEffortModesPositive": {
-        "complete": 4,
-        "total": 4,
-        "percent": 100.0
-      },
-      "persistedTopologyDepthCases": {
-        "complete": 4,
-        "total": 4,
-        "percent": 100.0
-      },
-      "cliCorrect": {
-        "complete": 2,
-        "total": 2,
-        "percent": 100.0
-      },
-      "cliTimingTargetsMet": {
-        "complete": 0,
-        "total": 2,
-        "percent": 0.0
-      },
-      "selectedExpectedRunOutcomes": {
-        "complete": 11,
-        "total": 11,
-        "percent": 100.0
-      },
-      "finalVerifierSatisfiedAssertions": {
-        "complete": 247,
-        "total": 248,
-        "percent": 99.6,
-        "acceptanceClaim": false
-      },
-      "cleanupAbsenceChecks": {
-        "complete": 21,
-        "total": 21,
-        "percent": 100.0
-      },
-      "goalMilestones": {
-        "complete": 4,
-        "total": 6,
-        "percent": 66.7
-      }
-    }
+    "browserObserved": "6/6",
+    "browserTimingTargets": "5/6",
+    "recallAnswersCorrect": "4/5",
+    "cliCorrect": "2/2",
+    "cliNormalTimingTargets": "0/2",
+    "currentNativeRegression": "NOT_RUN_AFTER_FAILED_BROWSER_GATE",
+    "checks": "memory-effort-singleton-browser-summary.json",
+    "chain": "memory-effort-singleton-full-chain.json",
+    "cli": "memory-effort-singleton-cli-chain.json",
+    "cleanup": "memory-effort-singleton-cleanup-1792055676406.json",
+    "freshAbsenceChecks": 21
   },
   "literalCandidate": {
-    "state": "INSTALLED_CLOUD_QUALIFICATION_ACTIVE",
+    "state": "CLOSED_862_CLEANED_WITH_FAILED_LATENCY_GATE",
     "baseCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
     "hashes": "memory-effort-literal-source-hashes-v2.json",
     "implementation": "memory-effort-literal-report-v2.json",
@@ -3907,5 +3862,27 @@
     "initialFastMissMs": 96.4,
     "sourceOptimizationRuntimeAcceptance": "PENDING; recent-contextcase containsno newmulti-factpathclaim",
     "currentCloudGate": "NOT_ACCEPTED"
+  },
+  "closedLiteral862": {
+    "sessionId": "04ab48d4-6995-4d90-9a20-5935787e58f2",
+    "cleanup": "memory-effort-literal-cleanup-1792053354195.json",
+    "native663": "PASS_SCOPED",
+    "browserTiming": "3/6",
+    "recallCorrect": "5/5"
+  },
+  "previousCompletedWindowPointer": {
+    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "evaluation": "memory-effort-budget-final-evaluation.json",
+    "historicalOnly": true
+  },
+  "currentDocumentationVerification": {
+    "repository": "SaintNick1214/cortexmemory.dev",
+    "sourceWindow": "3875d323",
+    "receipt": "memory-effort-singleton-docs-verification.json",
+    "buildExit": 0,
+    "typesExit": 0,
+    "hashesStable": 16,
+    "actualBrowser": true,
+    "published": false
   }
 }

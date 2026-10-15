@@ -97,6 +97,41 @@ const projections:DerivedFact[]=[observed,
   {...observed,factId:"likes",fact:"User likes fruit.",predicate:"likes",object:"fruit"},
   {...observed,factId:"general",fact:"User stated a specific preference for a type of fruit.",predicate:"has_a_preference_for",object:"apricot"}];
 const sourceProof=(facts:DerivedFact[]=projections,source=literalSource,version?:1)=>proveDirectFactLookup("What is my favorite fruit?",{facts,candidateWorkBound:false},observed.createdAt,version,source);
+it.each([
+ {fact:"User likes fruit.",predicate:"likes",object:"fruit"},
+ {fact:"User likes apricot.",predicate:"likes",object:"apricot"},
+ {fact:"User stated a specific preference for a type of fruit.",predicate:"has_a_preference_for",object:"apricot"},
+ {fact:"User prefers apricot as their favorite fruit.",predicate:"prefers",object:"apricot"},
+ {fact:"The user prefers apricot as their favorite fruit.",predicate:"prefers",object:"apricot"},
+ {fact:"I prefer apricot as my favorite fruit.",predicate:"prefer",object:"apricot"},
+])("closed canonical projection grammar accepts $fact with matching metadata",projection=>{
+ const facts=[observed,{...observed,factId:"canonical-projection",...projection}],proof=sourceProof(facts,literalSource,1);
+ expect(proof?.source).toEqual(literalSource);expect(directFactProofCompatible(proof!,facts,observed.createdAt)).toBe(true);
+ expect(sourceProof(facts,literalSource)).toBeUndefined();
+});
+it.each([
+ {name:"wrong value",changes:{fact:"User prefers pear as their favorite fruit.",object:"pear"}},
+ {name:"wrong property",changes:{fact:"User prefers apricot as their favorite color."}},
+ {name:"wrong predicate",changes:{predicate:"likes"}},
+ {name:"metadata value mismatch",changes:{object:"pear"}},
+ {name:"unknown form",changes:{fact:"User prefers apricot."}},
+ {name:"hypothetical",changes:{fact:"User might prefer apricot as their favorite fruit."}},
+ {name:"negation",changes:{fact:"User does not prefer apricot as their favorite fruit."}},
+ {name:"wrong possessive",changes:{fact:"User prefers apricot as your favorite fruit."}},
+ {name:"wrong verb agreement",changes:{fact:"I prefers apricot as my favorite fruit."}},
+ {name:"history",changes:{supersedes:"older"}},
+ {name:"time bound",changes:{validUntil:observed.createdAt+100}},
+ {name:"other lineage",changes:{lineage:{...observed.lineage,sourceId:"other"}}},
+ {name:"missing subject",changes:{subject:undefined}},
+ {name:"missing predicate",changes:{predicate:undefined}},
+ {name:"missing object",changes:{object:undefined}},
+])("closed canonical projection grammar refuses $name without speculative source reads",({changes})=>{
+ const projection={...observed,factId:"canonical-projection",fact:"User prefers apricot as their favorite fruit.",predicate:"prefers",...changes};
+ const candidates={facts:[observed,projection],candidateWorkBound:false};
+ expect(directFactLookupSourceId("What is my favorite fruit?",candidates,observed.createdAt,1)).toBeUndefined();
+ expect(sourceProof(candidates.facts,literalSource,1)).toBeUndefined();
+ expect(directFactProofCompatible(sourceProof([observed],literalSource,1)!,[projection],observed.createdAt)).toBe(false);
+});
 it("prefers a pinned canonical proof for one initial hit before compatible value projection traversal",()=>{
  const candidates={facts:[observed],candidateWorkBound:false},query="What is my favorite fruit?",now=observed.createdAt;
  const later={...observed,factId:"later-likes",fact:"User likes apricot.",predicate:"likes",object:"apricot"};
