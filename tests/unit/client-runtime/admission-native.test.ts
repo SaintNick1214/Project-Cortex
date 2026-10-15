@@ -83,11 +83,38 @@ describe("combined native run admission", () => {
     })).rejects.toBe(rollback);
     const originalReads = reads.splice(0), actual = await f.admitEnvelope(), actualReads = reads.splice(0);
     expect(actual).toEqual(expected); expect(f.snapshot()).toEqual(effects);
-    const retained = (read: string) => read.includes("runtimeModelPolicies") || read.includes("runtimeModelQualifications") || read.includes("getMessagesByIds");
+    // The explicit foreground parent now also retains native authority and
+    // executable metadata across proven unrelated control-table writes. Other
+    // native reads keep their original order; raw-reader identity/invalidation
+    // regressions are exercised directly in runtimeAuth's focused suites.
+    const retained = (read: string) => ["runtimeAuth", "runtimeModelPolicies", "runtimeModelQualifications", "runtimeAgentDefinitions",
+      "runtimeMemorySources", "runtimeConversations", "runtimeTranscriptMessages", "runtimeRuns", "getMessagesByIds"].some(family => read.includes(family));
+    expect(new Set(actualReads)).toEqual(new Set(originalReads));
     expect(actualReads.filter(read => !retained(read))).toEqual(originalReads.filter(read => !retained(read)));
     expect(actualReads.filter(retained).length).toBeLessThan(originalReads.filter(retained).length);
     console.log(JSON.stringify({ controlledAdmissionReads: { original: originalReads.length, scoped: actualReads.length,
       originalRetainable: originalReads.filter(retained).length, scopedRetainable: actualReads.filter(retained).length } }));
+  });
+  it("current effort-aware V8 admission preserves the previous native result and durable effects, with fresh next-RPC revocation", async () => {
+    const f = await fixture();
+    const published = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, {
+      memorySpaceId: "space-a", clientMutationId: "foreground-v8", expectedPreviousVersion: 0,
+      definitionInput: { ...f.definitionInput, context: { ...f.definitionInput.context, handlerId: "cortex.transcript.relevant",
+        handlerVersion: 2, registryHash: await definitions.executableRegistryHashV4(), maxContextTokens: 32768, inputSelection: { version: 2 } } },
+    });
+    const request = { ...f.request("foreground-v8"), agentId: published.agentId, agentVersion: published.version, memory: { effort: "fast" as const } };
+    const stop = Error("PREVIOUS_V8_ADMISSION_ROLLBACK"); let expected: unknown, expectedState: unknown;
+    await expect(f.transaction(async () => {
+      expected = await client.submitAndStartEnvelopeHandler(createAuthorityReadScope(f.ctx, { nativeTranscript: true, policyMetadata: true }), { request });
+      expectedState = f.snapshot(); throw stop;
+    })).rejects.toBe(stop);
+    expect(await f.admitEnvelope(request)).toEqual(expected); expect(f.snapshot()).toEqual(expectedState);
+    expect(f.db.table("runtimeRuns")[0]).toMatchObject({ modelInputVersion: 8 });
+    expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ executionMode: "direct-v8" });
+    expect(f.scheduled.filter(row => row.name === "runtimeAgent:executeDirectV8")).toHaveLength(1);
+    expect(f.effects.saves).toBe(1); expect(f.db.table("runtimeRunAttempts")).toHaveLength(1);
+    f.db.table("runtimeAuthGrants")[0]!.revokedAt = Date.now(); const before = f.snapshot();
+    await expect(f.admitEnvelope(request)).rejects.toThrow("FORBIDDEN"); expect(f.snapshot()).toEqual(before);
   });
   it.each(["read_missing", "revoked", "unauthenticated", "cross_scope"])("envelope %s pre-session denial starts no native writes or dispatch", async kind => {
     const f = await fixture();

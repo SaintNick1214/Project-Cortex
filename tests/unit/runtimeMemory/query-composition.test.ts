@@ -37,7 +37,7 @@ const {createGatewayMemoryModel}=await import('../../../convex-dev/runtimeMemory
 const {recallMemory}=await import('../../../convex-dev/runtimeMemoryServices');
 type CompleteRecallDelivery = typeof import('../../../convex-dev/runtimeMemoryServices').completeRecallDelivery;
 beforeEach(()=>{calls=0;embeddingAdvanceMs=0;nativeSnapshotReads=true;installIngestionMockRoot();});afterEach(()=>{jest.restoreAllMocks();});
-async function fixture(effortAware=false,effort:"fast"|"normal"|"high"|"max"="normal") {
+async function fixture(effortAware=false,effort:"fast"|"normal"|"high"|"max"="normal",queryText="coral preference",maxEntries=10) {
   const f=await ingestionFixture(),oldQuery=f.ctx.runQuery.bind(f.ctx),oldMutation=f.ctx.runMutation.bind(f.ctx),rpc:string[]=[];
   const names={runtimeMemory:memory,runtimeMemoryQuery:query,runtimeModelPolicy:ledger,runtimeAuth:auth};
   const registration=(ref:Parameters<typeof getFunctionName>[0])=>{let name:string;try{name=getFunctionName(ref);}catch{return;}
@@ -46,7 +46,7 @@ async function fixture(effortAware=false,effort:"fast"|"normal"|"high"|"max"="no
   let fault:(()=>Promise<void>)|undefined;
   f.ctx.runMutation=(async(ref,args)=>{const found=registration(ref);if(!found)return oldMutation(ref,args);rpc.push(found.name);
     return f.transaction(async()=>{if(['runtimeModelPolicy:checkpoint','runtimeModelPolicy:checkpointRecall'].includes(found.name)&&fault)await fault();return invoke(found.value,f.ctx,args);});}) as MutationCtx['runMutation'];
-  const input={text:'coral preference',requestId:'public-query',limit:10,...(effortAware?{memory:{effort,maxEntries:10}}:{})};
+  const input={text:queryText,requestId:'public-query',limit:10,...(effortAware?{memory:{effort,maxEntries}}:{})};
   const budget=await f.call<{runBudgetId:string}>(ledger.ensureBudget,{reference:f.reference,operationKey:'embedding.query',requestId:input.requestId,requestCanonical:canonicalModelJson({...{purpose:'recall',text:input.text,limit:input.limit},...(effortAware?{memory:input.memory,memoryEffortPolicyVersion:1}:{})})});
   const args={reference:f.reference,runBudgetId:budget.runBudgetId,input},action={...f.ctx,vectorSearch:async()=>[]} as unknown as ActionCtx,
     repository=createActionMemoryRepository(action,f.reference,'read');
@@ -295,4 +295,56 @@ it.each(['revision','tombstone','revoked','expired','profile','foreign'])(
   expect(actual.value.vectorItems).toHaveLength(2);expect(actual.value.facts).toHaveLength(2);}
  else expect(actual.kind).toBe('refused');
  expect(f.state()).toEqual(before);expect(calls).toBe(0);
+});
+
+async function directPublicFixture(text="What is my favorite season?",count=1,corrected=false,maxEntries=10){
+ const f=await fixture(true,"fast",text,maxEntries),writer=new ConvexMemoryRepository(f.ctx,f.reference,"write",f.ctx.db);
+ for(let i=0;i<count;i++){
+  const source=await f.source(`My favorite season is ${i?"spring":"autumn"}`,`direct-public-${i}`),lineage=source.lineage;
+  const fact={_id:"",factId:`direct-public-fact-${i}`,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!,ownerPrincipalId:f.reference.principalId,lineage,extractionPolicyVersion:"direct-test-v1",fact:`User favorite season is ${i?"spring":"autumn"}`,subject:"user",predicate:"favorite season",object:i?"spring":"autumn",factType:"preference" as const,confidence:1,sourceType:"manual" as const,tags:[],version:1,createdAt:clock,updatedAt:clock,...(corrected?{supersedes:"older-version"}:{})};
+  await writer.commitDerived({source:lineage,identity:{...lineage,stage:"facts",semanticPolicyVersion:"direct-test-v1"},facts:[fact],expectedFactVersions:{[fact.factId]:0}});
+ }
+ return f;
+}
+it("actual public recall delivers literal direct evidence and supporting depth2 source with no paid attempt",async()=>{
+ const f=await directPublicFixture(),before=f.db.table("runtimeModelAttempts").length;
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(result.items).toEqual(expect.arrayContaining([expect.objectContaining({id:"direct-public-fact-0",content:"User favorite season is autumn",retrieval:expect.objectContaining({depth:1})}),expect.objectContaining({type:"memory",retrieval:expect.objectContaining({depth:2})})]));
+ expect(result.memoryEffort).toMatchObject({retrievalRoute:"direct-facts-v1",maxEntries:4,maxDepth:2});expect(calls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(before);expect(f.rpc).not.toContain("runtimeMemoryQuery:admit");
+});
+it.each(["paraphrase","miss","generic","conflict","corrected"])("%s retains exactly one original governed semantic call and separate terminal commits",async scenario=>{
+ const text=scenario==="paraphrase"?"Which season do I prefer?":scenario==="miss"?"What is my home address?":scenario==="generic"?"What is my favorite thing?":"What is my favorite season?";
+ const f=await directPublicFixture(text,scenario==="conflict"?2:1,scenario==="corrected");
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(result.memoryEffort?.retrievalRoute).toBe("semantic-v1");expect(calls).toBe(1);expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+ expect(f.rpc.indexOf("runtimeModelPolicy:captureTerminalEvidence")).toBeLessThan(f.rpc.indexOf("runtimeModelPolicy:attachTerminalResult"));
+ expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({slotReleased:true,resultAttachmentState:"attached"});
+});
+it("direct public discovery propagates revoked authority instead of falling back to a paid call",async()=>{
+ const f=await directPublicFixture(),proposal=await prepared(f);f.grant.revokedAt=clock;
+ await expect(query.recallPublicMemory(f.action,f.reference,f.repository,f.args.runBudgetId,f.input,proposal)).rejects.toThrow("FORBIDDEN");expect(calls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+
+it("a full raw fact page with stale candidates cannot skip the governed fallback",async()=>{
+ const f=await directPublicFixture(),base=f.db.table("facts")[0]!;
+ for(let i=1;i<f.input.limit;i++)f.db.seed("facts",{...base,_id:`stale-direct-${i}`,factId:`stale-direct-${i}`,tombstonedAt:clock});
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(calls).toBe(1);expect(result.memoryEffort?.retrievalRoute).toBe("semantic-v1");expect(result.memoryEffort?.stopReasons).toContain("work");expect(result.memoryEffort?.unavailableStages).toContain("direct-fact-candidate-work-bound");
+});
+it("facts-only direct lookup skips unauthorized optional supporting text",async()=>{
+ const f=await directPublicFixture(),getSource=ConvexMemoryRepository.prototype.getSource;
+ jest.spyOn(ConvexMemoryRepository.prototype,"getSource").mockImplementation(async function(this:InstanceType<typeof ConvexMemoryRepository>,sourceId,permission,deadlines){if(permission!=="canViewFacts")throw new ConvexError({version:1,code:"FORBIDDEN",retryable:false,outcome:"not_dispatched"});return getSource.call(this,sourceId,permission,deadlines);});
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(result.items).toHaveLength(1);expect(result.items[0]!.type).toBe("fact");expect(result.memoryEffort?.retrievalRoute).toBe("direct-facts-v1");expect(calls).toBe(0);
+});
+
+it.each([1,4])("a conflicting current assertion discovered through an indexed entity edge forces semantic fallback at cap%i",async maxEntries=>{
+ const f=await directPublicFixture(undefined,1,false,maxEntries),writer=new ConvexMemoryRepository(f.ctx,f.reference,"write",f.ctx.db),source=await f.source("User prefers spring","edge-conflict"),lineage=source.lineage;
+ const fact={_id:"",factId:"edge-conflict-fact",tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!,ownerPrincipalId:f.reference.principalId,lineage,extractionPolicyVersion:"direct-test-v1",fact:"User prefers spring",subject:"user",predicate:"favorite season",object:"spring",factType:"preference" as const,confidence:99,sourceType:"manual" as const,tags:[],version:1,createdAt:clock,updatedAt:clock};
+ await writer.commitDerived({source:lineage,identity:{...lineage,stage:"facts",semanticPolicyVersion:"direct-test-v1"},facts:[fact],expectedFactVersions:{[fact.factId]:0}});
+ const result=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId}) as Awaited<ReturnType<CompleteRecallDelivery>>;
+ expect(calls).toBe(1);expect(result.memoryEffort?.retrievalRoute).toBe("semantic-v1");
+ expect(result.memoryEffort?.maxEntries).toBe(maxEntries);expect(result.items.length).toBeLessThanOrEqual(maxEntries);
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({slotReleased:true,resultAttachmentState:"attached"});
+ expect(f.rpc.indexOf("runtimeModelPolicy:captureTerminalEvidence")).toBeLessThan(f.rpc.indexOf("runtimeModelPolicy:attachTerminalResult"));
 });

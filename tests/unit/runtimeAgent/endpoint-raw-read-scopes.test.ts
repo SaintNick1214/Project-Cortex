@@ -10,10 +10,16 @@ import { assertNativeArgs } from "./native-arguments";
 
 const actualAuth = await import("../../../convex-dev/runtimeAuth");
 let enabled = true;
+let managedGraph = true;
 const contexts: Parameters<typeof actualAuth.createAuthorityReadScope>[0][] = [];
 jest.unstable_mockModule("../../../convex-dev/runtimeAuth", () => ({ ...actualAuth,
   createAuthorityReadScope: <Ctx extends Parameters<typeof actualAuth.createAuthorityReadScope>[0]>(ctx: Ctx, options?: Parameters<typeof actualAuth.createAuthorityReadScope>[1]) => {
     const scoped = enabled ? actualAuth.createAuthorityReadScope(ctx, options) : ctx;
+    contexts.push(scoped); return scoped;
+  },
+  createMemorySourceReadScope: <Ctx extends Parameters<typeof actualAuth.createMemorySourceReadScope>[0]>(ctx: Ctx) => {
+    const scoped = enabled ? managedGraph ? actualAuth.createMemorySourceReadScope(ctx)
+      : actualAuth.createAuthorityReadScope(ctx, { nativeTranscript: true, policyMetadata: true }) : ctx;
     contexts.push(scoped); return scoped;
   },
 }));
@@ -27,7 +33,7 @@ const runtime = await import("../../../convex-dev/runtimeAgent");
 const runs = await import("../../../convex-dev/runs");
 const memory = await import("../../../convex-dev/runtimeMemory");
 const transcript = await import("../../../convex-dev/runtimeTranscript");
-beforeEach(() => { enabled = true; contexts.length = 0; installIngestionMockRoot(); });
+beforeEach(() => { enabled = true; managedGraph = true; contexts.length = 0; installIngestionMockRoot(); });
 afterEach(() => { jest.restoreAllMocks(); });
 
 async function fixture() {
@@ -86,6 +92,7 @@ async function entry(f: Fixture, name: Entry) {
 }
 function state(f: Fixture) { return clone({ rows: f.db.rows, sequence: f.db.sequence, writes: f.db.writes, native: f.native, effects: f.effects, scheduled: f.scheduled }); }
 const authTables = new Set(["runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthGrants", "runtimeAuthScopes", "runtimeAuthTombstones"]);
+const managedTables = new Set(["runtimeMemorySources", "runtimeConversations", "runtimeTranscriptMessages", "runtimeRuns"]);
 function trace(f: Fixture) {
   const events: { method: string; table?: string; reference?: string; args?: unknown }[] = [];
   const query = f.db.query.bind(f.db), get = f.db.get.bind(f.db);
@@ -105,9 +112,10 @@ function trace(f: Fixture) {
   const native = (event: typeof events[number]) => event.reference?.endsWith('/messages/getMessagesByIds"}') === true;
   const counts = () => ({ authority: events.filter(e => e.table && authTables.has(e.table) && ["query", "get"].includes(e.method)).length,
     transcript: events.filter(native).length,
-    policyMetadata: events.filter(e => e.method === "query" && ["runtimeModelQualifications", "runtimeModelPolicies"].includes(e.table ?? "")).length });
+    policyMetadata: events.filter(e => e.method === "query" && ["runtimeModelQualifications", "runtimeModelPolicies"].includes(e.table ?? "")).length,
+    managedGraph: events.filter(e => e.method === "query" && managedTables.has(e.table ?? "")).length });
   const nonRaw = () => events.filter(e => !native(e) && !(e.table && (authTables.has(e.table)
-    || e.method === "query" && ["runtimeModelQualifications", "runtimeModelPolicies"].includes(e.table))));
+    || e.method === "query" && (["runtimeModelQualifications", "runtimeModelPolicies", "runtimeAgentDefinitions"].includes(e.table) || managedTables.has(e.table)))));
   return { events, counts, nonRaw };
 }
 async function rejection(f: Fixture, registration: unknown, args: unknown) {
@@ -123,6 +131,19 @@ it.each(["hydrateExecution", "recordOutput", "markVisible"] as const)("%s preser
   assertNativeArgs(registration, args); expect(await f.call(registration, args)).toEqual(expected); expect(state(f)).toEqual(expectedState); expect(observed.nonRaw()).toEqual(order);
   const scoped = observed.counts(); expect(scoped.authority).toBeLessThan(reference.authority); expect(scoped.transcript).toBeLessThan(reference.transcript);
   console.info(JSON.stringify({ type: "endpoint-raw-read-count", name, reference, scoped }));
+});
+it("visibility's same-native source rows reduce duplicate graph reads versus its previous raw scope", async () => {
+  const f = await fixture(), { registration, args } = await entry(f, "markVisible"), observed = trace(f), before = state(f);
+  const stop = Error("PREVIOUS_VISIBILITY_SCOPE_ROLLBACK"); let expected: unknown, expectedState: unknown;
+  managedGraph = false;
+  await expect(f.transaction(async () => { expected = await invoke(registration, f.ctx, args); expectedState = state(f); throw stop; })).rejects.toBe(stop);
+  const previous = observed.counts(), previousEvents = clone(observed.events); expect(state(f)).toEqual(before);
+  observed.events.length = 0; managedGraph = true;
+  expect(await f.call(registration, args)).toEqual(expected); expect(state(f)).toEqual(expectedState);
+  const current = observed.counts(); expect(current.managedGraph).toBeLessThan(previous.managedGraph);
+  const rawIdentity = (event: typeof observed.events[number]) => canonicalModelJson(event);
+  expect(new Set(observed.events.map(rawIdentity))).toEqual(new Set(previousEvents.map(rawIdentity)));
+  console.info(JSON.stringify({ type: "visibility-managed-source-raw-reads", previous, current, nativeLatency: "NOT_RUN" }));
 });
 it.each(["hydrateExecution", "recordOutput", "markVisible"] as const)("%s starts a detached fresh scope on every invocation", async name => {
   const f = await fixture(), { registration, args } = await entry(f, name), original = await f.call<Record<string, unknown>>(registration, args);
@@ -175,7 +196,13 @@ it("visibility's unchanged monotone update does no writes only after the origina
   f.db.table("runtimeModelAttempts")[0].state = "settled"; enabled = false; const expected = await rejection(f, registration, args); enabled = true;
   expect(await rejection(f, registration, args)).toEqual(expected); expect(expected.message).toContain("POLICY_DENIED");
 });
-it("finalDelivery stays outside the activated scopes", async () => {
+it("finalDelivery keeps its existing independent fresh scope and denies a later revoked actor", async () => {
   const f = await fixture(); contexts.length = 0;
-  expect(await f.call(memory.finalDelivery, { reference: f.reference, bindings: { sources: [], facts: [], vectors: [] } })).toEqual({ version: 1 }); expect(contexts).toEqual([]);
+  const args = { reference: f.reference, bindings: { sources: [], facts: [], vectors: [] } };
+  expect(await f.call(memory.finalDelivery, args)).toEqual({ version: 1 });
+  // This pre-existing endpoint already uses createMemorySourceReadScope; the
+  // expanded mock now records that factory as well as authority-only scopes.
+  expect(contexts).toHaveLength(1); const previous = contexts[0]; f.grant.revokedAt = clock;
+  const before = state(f); await expect(f.call(memory.finalDelivery, args)).rejects.toThrow("FORBIDDEN");
+  expect(contexts).toHaveLength(2); expect(contexts[1]).not.toBe(previous); expect(state(f)).toEqual(before);
 });

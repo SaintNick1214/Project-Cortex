@@ -73,8 +73,9 @@ function wireArray(input: unknown, maximum: number): unknown[] {
 export function runtimeMemoryEffortTrace(input: unknown): MemoryEffortTrace {
   try {
     const row = object(input);
-    exact(row, ["version", "policyVersion", "requestedEffort", "effectiveEffort", "maxDepth", "maxEntries", "maxContextTokens", "targetFirstAnswerMs", "reachedDepth", "visited", "expanded", "selected", "deduplicated", "entriesByKind", "selectedInputUnits", "durationMs", "stopReasons", "unavailableStages"]);
+    exact(row, ["version", "policyVersion", "requestedEffort", "effectiveEffort", "maxDepth", "maxEntries", "maxContextTokens", "targetFirstAnswerMs", "reachedDepth", "visited", "expanded", "selected", "deduplicated", "entriesByKind", "selectedInputUnits", "durationMs", "stopReasons", "unavailableStages"], ["retrievalRoute"]);
     if (row.version !== 1 || row.policyVersion !== "memory-effort-v1") invalid();
+    if (Object.prototype.hasOwnProperty.call(row, "retrievalRoute") && row.retrievalRoute !== "direct-facts-v1" && row.retrievalRoute !== "semantic-v1") invalid();
     for (const field of ["requestedEffort", "effectiveEffort"]) if (typeof row[field] !== "string") invalid();
     const requestedEffort = normalizeMemoryEffortRequest({effort:row.requestedEffort as MemoryEffortRequest["effort"]}).effort!;
     const effectiveEffort = normalizeMemoryEffortRequest({effort:row.effectiveEffort as MemoryEffortRequest["effort"]}).effort!;
@@ -89,7 +90,8 @@ export function runtimeMemoryEffortTrace(input: unknown): MemoryEffortTrace {
       maxContextTokens:row.maxContextTokens as number,targetFirstAnswerMs:row.targetFirstAnswerMs as number,reachedDepth:row.reachedDepth as number,
       visited:row.visited as number,expanded:row.expanded as number,selected:row.selected as number,deduplicated:row.deduplicated as number,
       entriesByKind:{memory:natural(kinds.memory),fact:natural(kinds.fact),pending:natural(kinds.pending),history:natural(kinds.history)},
-      selectedInputUnits:row.selectedInputUnits as number,durationMs:row.durationMs,stopReasons,unavailableStages};
+      selectedInputUnits:row.selectedInputUnits as number,durationMs:row.durationMs,stopReasons,unavailableStages,
+      ...(row.retrievalRoute === undefined ? {} : { retrievalRoute: row.retrievalRoute as "direct-facts-v1" | "semantic-v1" })};
   } catch { return invalid("INVALID_RESPONSE"); }
 }
 export function recallResult(input: unknown): RuntimeRecallResult {

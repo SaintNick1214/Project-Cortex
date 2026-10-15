@@ -28,7 +28,7 @@ export function sourceEvidenceNode(source:SourceContent,score=.65):MemoryEvidenc
     lineage:source.lineage,item:{type:"memory",id:source.lineage.sourceId,content:source.content,score,source:"graph-expanded"} };
 }
 export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemoryRepository, seeds:MemoryEvidenceNode[], policy:EffectiveMemoryEffortPolicy,
-  bindings:MemoryDeliveryBindings, eligible?:(node:MemoryEvidenceNode)=>Promise<boolean>) {
+  bindings:MemoryDeliveryBindings, eligible?:(node:MemoryEvidenceNode)=>Promise<boolean>, inspectFact?:(fact:DerivedFact)=>void) {
   const authority=await repository.authority(undefined,"read"), scope=repository.scope;
   async function optionalMemorySource(sourceId:string){
     try{return await repository.getSource(sourceId,"canViewMemories");}
@@ -47,7 +47,7 @@ export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemory
     if(canonicalMemoryValue(source.lineage)!==canonicalMemoryValue(node.lineage))memoryError("STALE_SOURCE","Traversal seed source changed");
     if(node.item.type==="fact") {const fact=await repository.getFact(node.item.id);if(!fact)return false;
       if(canonicalMemoryValue(fact)!==canonicalMemoryValue(node.item.fact))memoryError("STALE_SOURCE","Traversal seed fact changed");
-      await captureRecallFact(selectedBindings,fact,source);}
+      inspectFact?.(fact);await captureRecallFact(selectedBindings,fact,source);}
     else captureRecallSource(selectedBindings,source,"canViewMemories");
     candidateBindings.set(node.key,selectedBindings);if(!candidateNodes.has(node.key))candidateNodes.set(node.key,node);
     return true;
@@ -69,7 +69,7 @@ export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemory
       const source=await optionalMemorySource(node.lineage.sourceId);if(!source)return {edges,cursor:null,work:1};
       const rows=await ctx.db.query("facts").withIndex("by_runtime_source_fact",q=>{const range=q.eq("tenantId",scope.tenantId).eq("memorySpaceId",scope.memorySpaceId)
         .eq("lineage.sourceId",source.lineage.sourceId).eq("lineage.sourceRevision",source.lineage.sourceRevision);return state.cursor===null?range:range.gt("factId",state.cursor);}).take(limit);
-      for(const row of rows){const current=await repository.currentFact(row,authority);if(current){const next=factEvidenceNode(current,node.item.score*.98);if(await bind(next))edges.push({node:next,relationship:"derived-fact"});}}
+      for(const row of rows){const current=await repository.currentFact(row,authority);if(current){inspectFact?.(current);const next=factEvidenceNode(current,node.item.score*.98);if(await bind(next))edges.push({node:next,relationship:"derived-fact"});}}
       return {edges,cursor:rows.length<limit?null:JSON.stringify({phase:0,key:0,cursor:rows[rows.length-1]!.factId}),work:rows.length};
     }
     const keys=factEntityKeys(fact!);if(keys.length>64)unavailableStages.push("entity-projection-work-bound");
@@ -83,6 +83,9 @@ export async function traverseConvexMemory(ctx:QueryCtx, repository:ConvexMemory
       const current=await repository.getFact(link.factId);
       if(!current||current.version!==link.factVersion||current.lineage.sourceId!==link.sourceId||current.lineage.sourceEventId!==link.sourceEventId||current.lineage.sourceRevision!==link.sourceRevision
         ||!factEntityKeys(current).includes(entityKey))continue;
+      // Inspect every current indexed candidate before output/queue caps prune it.
+      // Only the private caller verdict survives; discarded fact text is not returned.
+      inspectFact?.(current);
       const next=factEvidenceNode(current,node.item.score*.98);if(await bind(next))edges.push({node:next,relationship:"exact-entity"});
     }
     const done=rows.length<limit;const nextKey=done?state.key+1:state.key;

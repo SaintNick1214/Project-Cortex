@@ -1,3 +1,5 @@
+import { sufficientDirectFactLookup, directFactTraversalCompatible, directFactTraversalComplete, DIRECT_FACT_RECALL_ROUTE } from "../src/domain/memory-direct-recall";
+import type { DerivedFact } from "../src/domain/contracts";
 import type { MemoryEffortRequest } from "../src/domain/memory-effort";
 import { resolveMemoryEffortPolicy,memoryEffortCandidateLimit } from "../src/domain/memory-effort";
 import { traverseConvexMemory,factEvidenceNode,sourceEvidenceNode } from "./runtimeMemoryTraversal";
@@ -106,7 +108,7 @@ export async function prepareRecallReadsHandler(nativeCtx:QueryCtx,a:ReadArgs) {
   return {resourceAccess:authority.resourceAccess};
 }
 export const prepareReads=internalQuery({args:readArgs,handler:prepareRecallReadsHandler});
-export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hits:{id:Id<'runtimeMemoryVectors'>;score:number}[]}) {
+export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hits:{id:Id<'runtimeMemoryVectors'>;score:number}[]},directFacts?:{facts:DerivedFact[];candidateWorkBound:boolean},inspectFact?:(fact:DerivedFact)=>void) {
   const ctx=createMemorySourceReadScope(nativeCtx),repository=readRepository(ctx,a);
   const bindings:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]};
   const sourceCtx=withNativeSnapshotReads(nativeCtx,ctx);
@@ -118,9 +120,9 @@ export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hi
       await captureRecallVectors(branch,matches,a.profile,{runBudgetId:a.runBudgetId});return {matches,bindings:branch};
     }),
     Promise.resolve().then(async()=>{
-      const candidates=a.input.memory===undefined?{facts:await repository.listFacts({limit:a.input.limit}),candidateWorkBound:false}:await repository.searchFactCandidates(a.input.text,directLimit(a.input)),facts=candidates.facts,branch:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]};
+      const candidates=directFacts??(a.input.memory===undefined?{facts:await repository.listFacts({limit:a.input.limit}),candidateWorkBound:false}:await repository.searchFactCandidates(a.input.text,directLimit(a.input))),facts=candidates.facts,branch:MemoryDeliveryBindings={sources:[],facts:[],vectors:[]};
       for(const fact of facts)await captureRecallFact(branch,fact,
-        await new ConvexMemoryRepository(sourceCtx,a.reference,'read').getSource(fact.lineage.sourceId));
+        await new ConvexMemoryRepository(sourceCtx,a.reference,'read').getSource(fact.lineage.sourceId,directFacts?'canViewFacts':undefined));
       await new ConvexMemoryRepository(nativeCtx,a.reference,'read').recheckAuthority();
       return {facts,bindings:branch,candidateWorkBound:candidates.candidateWorkBound};
     }),
@@ -135,17 +137,18 @@ export async function readRecallMatchesHandler(nativeCtx:QueryCtx,a:ReadArgs&{hi
   }
   // Original post-staged authority fence remains raw and current.
   await new ConvexMemoryRepository(nativeCtx,a.reference,'read').recheckAuthority();
-  const effortResult=a.input.memory===undefined?undefined:await traverseConvexMemory(sourceCtx,repository,[...matches.map(match=>({...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!})),...facts.map(fact=>factEvidenceNode(fact))],resolveMemoryEffortPolicy(a.input.memory),bindings);
+  const effortResult=a.input.memory===undefined?undefined:await traverseConvexMemory(sourceCtx,repository,[...matches.map(match=>({...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!})),...facts.map(fact=>factEvidenceNode(fact,directFacts?1:undefined))],resolveMemoryEffortPolicy(a.input.memory),bindings,undefined,inspectFact);
   if(effortResult)for(const stage of [...(factRead.value.candidateWorkBound?["direct-fact-candidate-work-bound"]:[]),...(a.hits.length===directLimit(a.input)?["direct-vector-candidate-work-bound"]:[])]){
     if(!effortResult.memoryEffort.unavailableStages.includes(stage))effortResult.memoryEffort.unavailableStages.push(stage);
     if(!effortResult.memoryEffort.stopReasons.includes("work"))effortResult.memoryEffort.stopReasons.push("work");
   }
   if(effortResult&&a.input.text.length>1024){effortResult.memoryEffort.unavailableStages.push("query-search-work-bound");effortResult.memoryEffort.stopReasons.push("work");}
+  if(effortResult)effortResult.memoryEffort.retrievalRoute=directFacts?DIRECT_FACT_RECALL_ROUTE:'semantic-v1';
   return {vectorItems:vectorRecallItems(matches),facts,bindings,...(effortResult?{effortResult}:{})};
 }
 export const readMatches=internalQuery({args:{...readArgs,hits:v.array(v.object({id:v.id('runtimeMemoryVectors'),score:v.number()}))},handler:readRecallMatchesHandler});
 /** Independent final mutation follows Action ranking; every source is read again. */
-export async function finalRecallDeliveryHandler(nativeCtx:MutationCtx,a:{reference:RuntimeAuthorityReference;bindings:MemoryDeliveryBindings}) {
+export async function finalRecallDeliveryHandler(nativeCtx:QueryCtx|MutationCtx,a:{reference:RuntimeAuthorityReference;bindings:MemoryDeliveryBindings}) {
   const ctx=createMemorySourceReadScope(nativeCtx);
   return await new ConvexMemoryRepository(ctx,a.reference,'read',undefined,{now:()=>Date.now()},
     (key,id)=>readCurrentEmbeddingProfile(ctx,a.reference,key,id)).checkDelivery(a.bindings,nativeCtx);
@@ -167,10 +170,32 @@ export async function finishPublicRecall(ctx:ActionCtx,a:ReadArgs,embedded:Await
   return await completeRecallDelivery({clock,finalDelivery:async()=>await ctx.runMutation(finalRecallDeliveryRef,{reference:a.reference,bindings:read.bindings})},
     a.input,a.profile.profileId,read.vectorItems,read.facts,read.effortResult,startedAt);
 }
+/** A direct miss is a discovery decision only. Errors propagate, and fallback
+ * keeps the exact original governed embedding operation/financial boundaries. */
+export async function readDirectPublicRecallHandler(nativeCtx:QueryCtx,a:Args){
+  if(a.input.memory===undefined)return null;
+  const ctx=createMemorySourceReadScope(nativeCtx),selected=await binding(ctx,a);
+  const repository=readRepository(ctx,{...a,profile:selected.profile});
+  await repository.assertReadAuthority();await repository.assertProfileReady(selected.profile,a.runBudgetId);
+  const candidates=await repository.searchFactCandidates(a.input.text,directLimit(a.input));
+  if(!sufficientDirectFactLookup(a.input.text,candidates,Date.now()))return null;
+  let compatible=true;
+  const read=await readRecallMatchesHandler(nativeCtx,{...a,profile:selected.profile,hits:[]},candidates,fact=>{compatible=compatible&&directFactTraversalCompatible(candidates.facts[0]!,[fact]);});
+  if(!read.effortResult?.items.some(item=>item.type==='fact'))return null;
+  if(!compatible||!directFactTraversalComplete(read.effortResult.memoryEffort))return null;
+  const delivery=await finalRecallDeliveryHandler(nativeCtx,{reference:a.reference,bindings:read.bindings});
+  return {read,delivery,profileId:selected.profile.profileId};
+}
+export const directReads=internalQuery({args,handler:readDirectPublicRecallHandler});
+const directReadsRef=makeFunctionReference('runtimeMemoryQuery:directReads') as unknown as FunctionReference<'query','internal',Args,Awaited<ReturnType<typeof readDirectPublicRecallHandler>>>;
 /** Budget creation/capture/attachment keep their original independent committed boundaries. */
 export async function recallPublicMemory(ctx:ActionCtx,reference:RuntimeAuthorityReference,repository:MemoryRepository,runBudgetId:string,input:Input,proposal:Awaited<ReturnType<typeof preparePublicRecallHandler>>) {
   if(proposal.kind==='refused')return throwRefusal(proposal.refusal);
   const native={reference,runBudgetId,input};
+  if(input.memory!==undefined){
+    const startedAt=Date.now(),direct=await ctx.runQuery(directReadsRef,native);
+    if(direct)return await completeRecallDelivery({clock:{now:()=>Date.now()},finalDelivery:async()=>direct.delivery},input,direct.profileId,direct.read.vectorItems,direct.read.facts,direct.read.effortResult,startedAt);
+  }
   const model=createGatewayMemoryModel(ctx,repository,{runBudgetId,queryEmbedding:{binding:proposal.binding,requestCanonical:canonicalModelJson(proposal.request),resolutions:proposal.resolutions,
     refresh:async()=>{const next=await ctx.runQuery(publicRecallPreparation,native);if(next.kind==='refused')return throwRefusal(next.refusal);return next.resolutions[1];},
     admitAndCheckpoint:async request=>{

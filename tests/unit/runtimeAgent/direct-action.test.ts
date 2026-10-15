@@ -13,6 +13,7 @@ const agentModule = await import("@convex-dev/agent");
 let active: Awaited<ReturnType<typeof fixture>>, composition: GatewayComposition, binding: GatewayBinding, resolution: GatewayResolution;
 const assembledPrompts: unknown[] = [];
 let providerCalls = 0, completionCalls = 0, beforeDispatch: (() => void) | undefined;
+let gatewayController=new AbortController();
 let tamperRequest: ((request: ModelCallRequest) => void) | undefined;
 let mode: "final" | "tool" | "provider-failure" = "final";
 const workflows: unknown[] = []; let workflowFailure = false;
@@ -58,9 +59,9 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
 } }));
 const gatewayModule = await import("../../../convex-dev/runtimeGateway");
 jest.unstable_mockModule("../../../convex-dev/runtimeGateway", () => ({ ...gatewayModule, createGovernedGatewayModel: async (next: GatewayComposition, nextBinding: GatewayBinding) => {
-  composition = next; binding = nextBinding; resolution = await next.ledger.resolve(nextBinding);
+  composition = next; binding = nextBinding; resolution = await next.ledger.resolve(nextBinding);gatewayController=new AbortController();
   return { model: { specificationVersion: "v4", provider: "controlled", modelId: "controlled/model", doStream: async () => {}, doGenerate: async () => {} },
-    lifecycle: { complete: async () => { completionCalls++; }, signal: new AbortController().signal } };
+    lifecycle: { complete: async () => { completionCalls++; }, signal: gatewayController.signal } };
 } }));
 const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
 const { clone, ledger, clock } = await import("../runtimeTranscript/fixture");
@@ -272,4 +273,46 @@ it("pinned V8 ambiguous dispatch retains UNKNOWN and duplicate cannot retry paid
  expect(f.db.table("runtimeAgentExecutions")[0].state).toBe("unknown");expect(f.db.table("runtimeAgentOperations")[0].state).toBe("unknown");
  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({state:"dispatch_pending",slotReleased:false});
  await invoke(runtime.executeDirectV8,f.ctx,args);expect(providerCalls).toBe(1);
+});
+
+async function contend(f:Fixture,onRefusal:()=>void,simulateOcc=false){
+ const mutation=f.ctx.runMutation.bind(f.ctx),bodies:unknown[]=[];let refusals=0,occ=simulateOcc;
+ const fill=()=>{const account=f.db.table("runtimeBudgetAccounts").find(row=>row.kind==="tenant")!;account.activeConcurrency=account.concurrencyLimit;};
+ if(!simulateOcc)beforeDispatch=fill;
+ f.ctx.runMutation=(async(ref,input)=>{
+  if(getFunctionName(ref)!=="runtimeAgent:admitPreparedModelOperationV8")return mutation(ref,input);
+  bodies.push(clone(input));
+  if(occ){occ=false;const rollback=Error("CONTROLLED_OCC_ROLLBACK");
+   await expect(f.transaction(async()=>{expect(await mutation(ref,input)).toMatchObject({permit:{dispatchPermit:true}});throw rollback;})).rejects.toBe(rollback);
+   expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);fill();
+  }
+  try{return await mutation(ref,input);}catch(error){
+   if(error instanceof ConvexError&&error.data.capacity?.reason==="concurrency"){
+    refusals++;expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);expect(f.db.table("runtimeModelOperations")).toHaveLength(0);onRefusal();
+   }throw error;
+  }
+ }) as MutationCtx["runMutation"];
+ return {bodies,refusals:()=>refusals};
+}
+it("V8 OCC-style rollback then real unreserved concurrency waits for released capacity and dispatches exactly once",async()=>{
+ const f=await fixture(false,true),args=await f.start(),wait=await contend(f,()=>{f.db.table("runtimeBudgetAccounts").find(row=>row.kind==="tenant")!.activeConcurrency=0;},true);
+ await invoke(runtime.executeDirectV8,f.ctx,args);expect(wait.refusals()).toBe(1);expect(wait.bodies).toHaveLength(2);expect(wait.bodies[1]).toEqual(wait.bodies[0]);expect(providerCalls).toBe(1);expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);expect(f.db.table("runtimeRuns")[0].responseStatus).toBe("complete");
+ const before=state(f);await invoke(runtime.executeDirectV8,f.ctx,args);expect(state(f)).toEqual(before);expect(providerCalls).toBe(1);
+});
+it.each(["money","account","window"])("V8 %s refusal never enters native capacity waiting or paid dispatch",async fault=>{
+ const f=await fixture(false,true),args=await f.start(),mutation=f.ctx.runMutation.bind(f.ctx);let admissions=0;
+ beforeDispatch=()=>{const tenant=f.db.table("runtimeBudgetAccounts").find(row=>row.kind==="tenant")!;if(fault==="money")tenant.uncertainUnits=tenant.limitUnits;if(fault==="account")tenant.cancelled=true;if(fault==="window")tenant.windowEnd=clock;};
+ f.ctx.runMutation=(async(ref,input)=>{if(getFunctionName(ref)==="runtimeAgent:admitPreparedModelOperationV8")admissions++;return mutation(ref,input);}) as MutationCtx["runMutation"];
+ await expect(invoke(runtime.executeDirectV8,f.ctx,args)).rejects.toBeInstanceOf(ConvexError);expect(admissions).toBe(1);expect(providerCalls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it.each(["cancel","source","deadline","abort"])("V8 capacity waiting stops on fresh %s without any provider effect",async fault=>{
+ const f=await fixture(false,true);if(fault==="source"){const source=await f.source("Current waiting evidence","wait-source");await ingestion.enqueueSourceEvent(f.ctx,f.reference,source);}const args=await f.start();
+ const wait=await contend(f,()=>{
+  f.db.table("runtimeBudgetAccounts").find(row=>row.kind==="tenant")!.activeConcurrency=0;
+  if(fault==="cancel")f.db.table("runtimeRuns")[0].cancellationRequestedAt=clock;
+  if(fault==="source")f.db.table("runtimeMemorySources").find(row=>(row.lineage as {sourceId:string}).sourceId==="wait-source")!.contentHash="edited-during-wait";
+  if(fault==="deadline")jest.spyOn(Date,"now").mockReturnValue(clock+resolution.snapshot.limits.timeoutMs+1);
+  if(fault==="abort")gatewayController.abort();
+ });
+ await expect(invoke(runtime.executeDirectV8,f.ctx,args)).rejects.toThrow();expect(wait.refusals()).toBe(1);expect(wait.bodies.length).toBe(fault==="deadline"||fault==="abort"?1:2);expect(providerCalls).toBe(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
 });

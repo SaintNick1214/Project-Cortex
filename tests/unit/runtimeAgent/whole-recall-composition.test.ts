@@ -41,14 +41,14 @@ const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = aw
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
 beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; });
 afterEach(() => { jest.restoreAllMocks(); });
-async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number) {
+async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number,directLookup=false) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
   const prepared = await prepareSourceContent(scope, explicitSourceLineage(scope, "whole-source"), "My favorite season is autumn", { now: () => clock });
   await writer.putSource(prepared.source);await ingestion.enqueueSourceEvent(f.ctx, f.reference, prepared.source);
   const source = { sourceId: prepared.source.lineage.sourceId, sourceEventId: prepared.source.lineage.sourceEventId, sourceRevision: 1 };
   const identity = { ...source, stage: "facts" as const, semanticPolicyVersion: "policy-v1" };
   const fact: DerivedFact = { _id: "", factId: "whole-fact", tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId,
-    ownerPrincipalId: scope.principalId, lineage: prepared.source.lineage, extractionPolicyVersion: "policy-v1", fact: "User prefers autumn",
+    ownerPrincipalId: scope.principalId, lineage: prepared.source.lineage, extractionPolicyVersion: "policy-v1", fact: directLookup?"User favorite season is autumn":"User prefers autumn",...(directLookup?{subject:"user",predicate:"favorite season",object:"autumn"}:{}),
     factType: "preference", confidence: 91, sourceType: "manual", tags: [], version: 1, createdAt: clock, updatedAt: clock };
   await writer.commitDerived({ source, identity, chunks: prepared.chunks, vectors: [{ ...source, vectorId: "whole-vector", chunkId: prepared.chunks[0]!.chunkId,
     tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId, profile, embedding: Array.from({ length: 1536 }, (_, i) => i === 0 ? 1 : 0), processingReceiptId: await processingIdentityKey(identity) }],
@@ -70,7 +70,7 @@ async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"
   const published = v8 ? await f.call<{agentId:string;version:number}>(definitions.publishVersion, { memorySpaceId:"space-a",clientMutationId:"v8-recall-read-scope",expectedPreviousVersion:0,
     definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:effortAware?await definitions.executableRegistryHashV4():await definitions.executableRegistryHashV3(),handlerVersion:effortAware?2:1,
       inputSelection:effortAware?{version:2,...(seedWork===undefined?{}:{effort:{version:1,maxWork:seedWork}})}:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}} }) : undefined;
-  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: { ...f.request(), ...(published ? {agentId:published.agentId,agentVersion:published.version,...(effortAware?{memory:{effort}}:{})}: {}) } });await f.call(agent.start, { runId: run.runId });
+  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: { ...f.request(), ...(directLookup?{parts:[{type:"text" as const,text:"What is my favorite season?"}]}:{}), ...(published ? {agentId:published.agentId,agentVersion:published.version,...(effortAware?{memory:{effort}}:{})}: {}) } });await f.call(agent.start, { runId: run.runId });
   const owned = f.db.table("runtimeAgentExecutions")[0];
   const attempt = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };await f.call(agent.startContext, attempt);
   const current = await agent.executionContext(f.ctx, attempt);
@@ -737,4 +737,34 @@ it.each(["edit", "revoke"])("K29 independent native save still sees %s after a s
   const before = wholeState(f);
   await expect(f.call(agent.saveContextV8, { ...f.attempt, context: "", entries: [], witnesses: read.read.witnesses, completeness: "complete" })).rejects.toThrow();
   expect(wholeState(f)).toEqual(before);
+});
+
+function directAdmissionArgs(f:Fixture,candidate:Extract<Awaited<ReturnType<typeof agent.prepareResolvedModelCandidateV8Handler>>,{state:"started"}>){
+ return {...f.attempt,ordinal:0,operationId:candidate.op.operationId,requestCanonical:candidate.op.nativeRequestCanonical!,snapshotCanonical:canonicalModelJson(candidate.governedResolution.snapshot),bindingCanonical:canonicalModelJson({reference:f.reference,operationKey:"agent.respond",runBudgetId:candidate.current.run.runBudgetId,semanticId:candidate.op.semanticId,ordinal:0})};
+}
+it("direct V8 native parent uses actual indexed facts and depth2 source without preparing or billing an embedding",async()=>{
+ const f=await fixture(true,true,"fast",0,undefined,true),before=wholeState(f);
+ const parent=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>>(agent.contextInputsAndEmbeddingV8,f.attempt);
+ expect(parent.direct).toBeDefined();expect(parent.proposal).toBeUndefined();expect(wholeState(f)).toEqual(before);
+ expect(parent.direct!.read.effortResult!.memoryEffort).toMatchObject({retrievalRoute:"direct-facts-v1",requestedEffort:"fast",maxDepth:2});
+ expect(parent.direct!.read.effortResult!.items).toEqual(expect.arrayContaining([expect.objectContaining({id:"whole-fact",content:"User favorite season is autumn",retrieval:expect.objectContaining({depth:1})}),expect.objectContaining({type:"memory",retrieval:expect.objectContaining({depth:2})})]));
+ let semanticCalls=0;
+ const candidate=await agent.prepareContextV8Handler(f.action,f.attempt,async()=>{semanticCalls++;throw Error("Direct sufficient evidence must not embed");},true);
+ expect(semanticCalls).toBe(0);expect(candidate?.state).toBe("started");if(candidate?.state!=="started")throw Error("Expected real prepared dispatch candidate");
+ expect(candidate.current.execution.contextCanonical).toContain("autumn");expect(candidate.current.execution.sourceWitnesses.length).toBeGreaterThan(0);
+ expect(JSON.parse(candidate.current.run.memoryEffortTraceCanonical!)).toMatchObject({retrievalRoute:"direct-facts-v1"});expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+ expect(await f.call(agent.admitPreparedModelOperationV8,directAdmissionArgs(f,candidate))).toMatchObject({admission:{status:"reserved"},permit:{dispatchPermit:true}});expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+});
+it.each(["revoke","edit"])("direct evidence still refuses %s before dispatch preparation and exposes no stale context",async fault=>{
+ const f=await fixture(true,true,"normal",0,undefined,true);
+ const candidate=await agent.prepareContextV8Handler(f.action,f.attempt,async()=>{throw Error("Unexpected semantic call");},true);if(candidate?.state!=="started")throw Error("Expected real direct prepared candidate");
+ if(fault==="revoke")f.grant.revokedAt=clock;else f.db.table("runtimeMemorySources")[0]!.contentHash="changed";
+ await expect(f.call(agent.admitPreparedModelOperationV8,directAdmissionArgs(f,candidate))).rejects.toMatchObject({data:{code:fault==="revoke"?"FORBIDDEN":"STALE_CONTEXT"}});expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+});
+it("ambiguous direct facts retain the original semantic proposal and real entry/work ceilings",async()=>{
+ const f=await fixture(true,true,"fast",0,undefined,true),row=f.db.table("facts")[0]!;
+ row.supersedes="older-fact";
+ const parent=await f.call<Awaited<ReturnType<typeof agent.contextInputsAndEmbeddingV8Handler>>>(agent.contextInputsAndEmbeddingV8,f.attempt);
+ expect(parent.direct).toBeUndefined();expect(parent.proposal?.request.purpose).toBe("embedding.query");expect(parent.proposal?.request.texts).toEqual(["What is my favorite season?"]);
+ expect(parent.inputs.current.snapshot.version===8&&parent.inputs.current.snapshot.inputSelection.effort?.maxEntries).toBe(4);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
 });

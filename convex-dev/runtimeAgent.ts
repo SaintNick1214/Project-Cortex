@@ -1,3 +1,4 @@
+import { readDirectAgentRecallV8Handler, finishDirectAgentRecallV8 } from "./runtimeAgentRecall";
 import { memoryEffortCandidateLimit } from "../src/domain/memory-effort";
 import { modelInputHistoryRelevance } from "../src/domain/model-input-selection";
 import { selectedPolicyForRun } from "./runtimeTranscript";
@@ -41,7 +42,7 @@ import { currentRun, currentControlRun, activeAttempt, publicRunCurrent } from "
 import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, hydrateSelectedCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
-import { recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads, withNativeSnapshotReads } from "./runtimeAuth";
+import { recheckAuthority, createMemorySourceReadScope, createAuthorityReadScope, createV8AuthorityReadScope, freshNativeTranscriptReads, freshPolicyMetadataReads, withNativeSnapshotReads } from "./runtimeAuth";
 import { createBackendGatewayComposition, withV8GatewayTerminalPorts } from "./runtimeGatewayBackend";
 import type { GatewayAdmissionCheckpoint, GatewayLedgerPort } from "./runtimeGateway";
 import { admitHandler, checkpointHandler, resolveHandler, readCurrentEmbeddingProfile, attachTerminalResultHandler, MODEL_LEDGER_STORAGE_LIMITS } from "./runtimeModelPolicy";
@@ -1003,7 +1004,7 @@ export const admitPreparedModelOperationV8 = internalMutation({ args: { ...agent
 const admitPreparedModelOperationV8Ref = ref<"mutation", Parameters<typeof admitPreparedModelOperationHandler>[1], GatewayAdmissionCheckpoint>("mutation", "runtimeAgent:admitPreparedModelOperationV8");
 
 export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v.array(v.any()) }, handler: async (nativeCtx, args) => {
-  const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true });
+  const ctx = createMemorySourceReadScope(nativeCtx);
   const current = await executionContext(ctx, args); if (args.parts.length > 64) transcriptDenied("INVALID_INPUT");
   const tools = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", args.reference.tenantId).eq("memorySpaceId", args.reference.memorySpaceId!)
     .eq("runId", args.runId).eq("attemptNumber", args.attemptNumber).eq("kind", "tool")).take(33);
@@ -1032,6 +1033,38 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
   const prepared = await ctx.runMutation(refs.prepareModelOperation, { ...attempt, ordinal: args.ordinal });
   return await executePreparedModelStep(ctx, args, prepared);
 }
+type AgentCapacityIdentity=Pick<import("./runtimeModelPolicy").UnreservedCapacityRefusal,"runBudgetId"|"semanticId"|"ordinal">;
+function unreservedAgentConcurrency(error:unknown, expected:AgentCapacityIdentity):boolean {
+  if(!(error instanceof ConvexError))return false;
+  const data=Object.getOwnPropertyDescriptor(error,"data")?.value;
+  if(!data||typeof data!=="object"||Object.getOwnPropertyDescriptor(data,"code")?.value!=="BUDGET_EXCEEDED"
+    ||Object.getOwnPropertyDescriptor(data,"outcome")?.value!=="not_dispatched")return false;
+  const capacity=Object.getOwnPropertyDescriptor(data,"capacity")?.value;
+  if(!capacity||typeof capacity!=="object"||Array.isArray(capacity)
+    ||Object.keys(capacity).sort().join(",")!=="operationKey,ordinal,origin,reason,runBudgetId,semanticId,version")return false;
+  const read=(key:string)=>Object.getOwnPropertyDescriptor(capacity,key)?.value;
+  return read("version")===1&&read("origin")==="unreserved-admission"&&read("reason")==="concurrency"&&read("operationKey")==="agent.respond"
+    &&read("runBudgetId")===expected.runBudgetId&&read("semanticId")===expected.semanticId&&read("ordinal")===expected.ordinal;
+}
+/** Only an exact unreserved native concurrency refusal can wait. Every next
+ * invocation reruns the original fresh Agent/body/policy/ledger checks; an
+ * existing reserved/inflight/UNKNOWN operation can never become a paid retry. */
+async function admitAgentWithCapacityWait<T>(invoke:()=>Promise<T>,expected:AgentCapacityIdentity,timeoutMs:number,signal?:AbortSignal):Promise<T>{
+  const deadline=Date.now()+timeoutMs;
+  for(let wakes=0;;wakes++){
+    if(signal?.aborted||Date.now()>=deadline)throw new GatewayDispatchError("RUN_CANCELLED");
+    try{return await invoke();}catch(error){
+      if(!unreservedAgentConcurrency(error,expected)||wakes>=64)throw error;
+      const remaining=deadline-Date.now();if(signal?.aborted||remaining<=0)throw new GatewayDispatchError("RUN_CANCELLED");
+      await new Promise<void>((resolve,reject)=>{
+        const finish=(error?:Error)=>{clearTimeout(timer);signal?.removeEventListener("abort",abort);if(error)reject(error);else resolve();};
+        const abort=()=>finish(new GatewayDispatchError("RUN_CANCELLED"));
+        const timer=setTimeout(()=>finish(),Math.min(remaining,Math.min(1000,100*2**Math.min(wakes,4))));
+        signal?.addEventListener("abort",abort,{once:true});if(signal?.aborted)abort();
+      });
+    }
+  }
+}
 async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordinal: number }, prepared: Awaited<ReturnType<typeof prepareModelOperationHandler>> | PreparedModelCandidate,
   proposal?: { initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>; requestPreflight?: true }): Promise<StepResult> {
   const attempt = attemptArgs(args);
@@ -1043,11 +1076,13 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
     if (!proposal && (canonicalModelJson(request.reference) !== canonicalModelJson(args.reference) || request.operationKey !== "agent.respond"
       || request.runBudgetId !== current.run.runBudgetId || request.semanticId !== op.semanticId || request.ordinal !== args.ordinal
       || request.source !== undefined || request.parentOperationId !== undefined)) transcriptDenied("POLICY_DENIED");
-    if (proposal) return await ctx.runMutation(current.snapshot.version === 8 ? admitPreparedModelOperationV8Ref : refs.admitPreparedModelOperation, { ...attempt, operationId: op.operationId, ordinal: args.ordinal,
-      requestCanonical: request.requestCanonical, snapshotCanonical: request.snapshotCanonical,
-      bindingCanonical: canonicalModelJson({ reference: request.reference, operationKey: request.operationKey, runBudgetId: request.runBudgetId,
-        semanticId: request.semanticId, ordinal: request.ordinal, ...(request.source !== undefined ? { source: request.source } : {}),
-        ...(request.parentOperationId !== undefined ? { parentOperationId: request.parentOperationId } : {}) }) });
+    if (proposal) {
+      const native={ ...attempt, operationId: op.operationId, ordinal: args.ordinal,requestCanonical: request.requestCanonical, snapshotCanonical: request.snapshotCanonical,
+        bindingCanonical: canonicalModelJson({reference:request.reference,operationKey:request.operationKey,runBudgetId:request.runBudgetId,semanticId:request.semanticId,ordinal:request.ordinal,
+          ...(request.source!==undefined?{source:request.source}:{}),...(request.parentOperationId!==undefined?{parentOperationId:request.parentOperationId}:{})}) };
+      const invoke=()=>ctx.runMutation(current.snapshot.version===8?admitPreparedModelOperationV8Ref:refs.admitPreparedModelOperation,native);
+      return current.snapshot.version===8?await admitAgentWithCapacityWait(invoke,{runBudgetId:current.run.runBudgetId,semanticId:op.semanticId,ordinal:args.ordinal},resolution.snapshot.limits.timeoutMs,admissionSignal):await invoke();
+    }
     return await ctx.runMutation(refs.admitModelOperation, { ...attempt, operationId: op.operationId, ordinal: args.ordinal,
       requestCanonical: request.requestCanonical, snapshotCanonical: request.snapshotCanonical });
   }, current.snapshot.version === 8 ? { attachTerminalResult: async request =>
@@ -1071,6 +1106,7 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
     attachTerminalResult: async request => { if (current.snapshot.version !== 8) await guard(); return await base.ledger.attachTerminalResult(request); },
   } }, { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId,
     semanticId: op.semanticId, ordinal: args.ordinal });
+  const admissionSignal=governed.lifecycle.signal;
   let cancellationBridge: ReturnType<typeof createAgentGatewayCancellationBridge> | undefined;
   let chunkQueue = Promise.resolve();
   try {
@@ -1851,6 +1887,11 @@ export async function contextInputsAndEmbeddingV8Handler(nativeCtx: QueryCtx, ar
   const text = inputs.current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
   const input = { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: memoryEffortCandidateLimit(inputs.current.snapshot.version===8?inputs.current.snapshot.inputSelection.effort:undefined), ...(inputs.current.snapshot.version===8&&inputs.current.snapshot.inputSelection.version===2 ? {memory:{effort:inputs.current.snapshot.inputSelection.effort!.requestedEffort}} : {}) };
+  if(inputs.current.snapshot.version===8&&inputs.current.snapshot.inputSelection.version===2){
+    const profile=await readCurrentEmbeddingProfile(ctx,args.reference,"embedding.query",inputs.current.run.runBudgetId);
+    const direct=await readDirectAgentRecallV8Handler(ctx,{...args,input,profile,selection:{cutoff:inputs.current.snapshot.ingestionCutoff.sequence,boundary:inputs.boundary,excludedSourceKeys:[...inputs.represented,...inputs.pending.sourceKeys]}});
+    if(direct)return {inputs,direct};
+  }
   const proposal = await prepareAgentQueryEmbeddingHandler(ctx, { ...args, input }, 8);
   return { inputs, proposal };
 }
@@ -1915,6 +1956,7 @@ function selectedPendingEntries(pending: Awaited<ReturnType<typeof contextInputs
 }
 
 export async function prepareContextV8Handler(ctx: ActionCtx, args: Attempt, recall?: (repository: Parameters<typeof recallAgentMemory>[2], input: Parameters<typeof recallAgentMemory>[4], selection?: AgentRecallSelection, proposal?: AgentQueryEmbeddingProposal) => ReturnType<typeof recallAgentMemory>, privateComposition = false): Promise<null | PreparedModelCandidate> {
+  const directStartedAt=Date.now();
   const parent = privateComposition ? await ctx.runQuery(contextInputsAndEmbeddingV8Ref, args) : undefined;
   const inputs = parent ? parent.inputs : await ctx.runQuery(contextInputsV8Ref, args);
   const invokeRecall = recall && parent?.proposal
@@ -1993,7 +2035,13 @@ export async function prepareContextV8Handler(ctx: ActionCtx, args: Attempt, rec
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
   const availability = inputs.availability;
   traceRuntimePhase(args.runId, args.attemptNumber, availability.empty ? "context.indexed.empty" : "context.recall.begin");
-  const result = availability.empty ? { context: "" } : invokeRecall ? await invokeRecall(privateComposition ? repository : scoped,
+  const directSelection:AgentRecallSelection={cutoff,boundary,excludedSourceKeys:[...excluded],onSelected:selected=>{
+    sourceScores=selected.sourceScores??[];itemLineages=selected.itemLineages??[];
+    for(const witness of selected.witnesses)witnesses.set(witness.sourceId,witness);
+    for(const [key,lineage] of selected.provenance)provenance.set(key,lineage);
+  }};
+  const directInput={text,requestId:`context:${await semanticHash(canonicalModelJson([args.runId,args.attemptNumber]))}`,limit:memoryEffortCandidateLimit(current.snapshot.version===8?current.snapshot.inputSelection.effort:undefined)};
+  const result = availability.empty ? { context: "" } : parent?.direct ? await finishDirectAgentRecallV8({now:()=>Date.now()},directInput,parent.direct,directSelection,directStartedAt) : invokeRecall ? await invokeRecall(privateComposition ? repository : scoped,
     { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: memoryEffortCandidateLimit(current.snapshot.version===8?current.snapshot.inputSelection.effort:undefined), ...(current.snapshot.version===8&&current.snapshot.inputSelection.version===2 ? {memory:{effort:current.snapshot.inputSelection.effort!.requestedEffort}} : {}) }, privateComposition ? withPrivateInlineAgentSelection({ cutoff, boundary, excludedSourceKeys: [...excluded],
       onSelected: selected => { sourceScores = selected.sourceScores ?? []; itemLineages = selected.itemLineages ?? []; for (const witness of selected.witnesses) witnesses.set(witness.sourceId, witness);
         for (const [key, lineage] of selected.provenance) provenance.set(key, lineage); } }) : undefined) : await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },

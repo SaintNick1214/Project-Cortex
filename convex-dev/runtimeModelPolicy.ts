@@ -829,7 +829,9 @@ export const checkpoint = internalMutation({ args: checkpointArgs, handler: (ctx
 export const checkpointRecall = internalMutation({ args: checkpointArgs,
   handler: (ctx, args) => checkpointHandler(createMemorySourceReadScope(ctx), args) });
 export const markVisible = internalMutation({ args: { ...attemptArgs, ...visibilityFields }, handler: async (nativeCtx, args) => {
-  const ctx = createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true });
+  // Raw ancestry may repeat inside this one native fence. Every delta still
+  // re-enters currentOperation with fresh invocation-local readers.
+  const ctx = createMemorySourceReadScope(nativeCtx);
   const { attempt, operation } = await attemptContext(ctx, args.attemptId);
   await currentOperation(ctx, args.reference, operation);
   if (attempt.state !== "dispatch_pending" && attempt.state !== "uncertain") fail("POLICY_DENIED");

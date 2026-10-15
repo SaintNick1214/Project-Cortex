@@ -1,0 +1,389 @@
+{
+  "version": 1,
+  "recordedAt": "2026-10-15T02:00:36.574809+00:00",
+  "owner": "/root/memory_effort_native_reads",
+  "repository": "SaintNick1214/Project-Cortex",
+  "baseCommit": "f87d79a2687cfa5f2814f4136c049b4e88a1ae88",
+  "status": "SOURCE_AND_FOCUSED_CHECKS_COMPLETE_PENDING_ROOT_REVIEW_AND_HOSTED_QUALIFICATION",
+  "sourceFreeze": [
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "sha256": "6d2b11fbeb6c5ed72ab80bb64254579fa079d1869ab7f71bd6d96899390375d6"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "a78c7c7c4c036b65dd74b6aad401c4c6ed1eae325bc6b59ccb8bffa51a7b8e70"
+    },
+    {
+      "path": "src/client-runtime/validation.ts",
+      "sha256": "ff8c40bd31e6cba7c0cd470a9e56f8578e0b2c837c686be910af396e731f395b"
+    },
+    {
+      "path": "tests/unit/client-runtime/admission-native.test.ts",
+      "sha256": "24b74294d1c825fef9238ebd658e4e22416d39f991dee1813957f567a5e190c1"
+    },
+    {
+      "path": "tests/unit/client-runtime/client.test.ts",
+      "sha256": "56a20fc35901648ecb8863d7523e9ea5101a048c8a844851952ed7d213a6e4b4"
+    },
+    {
+      "path": "tests/unit/client-runtime/session-native.test.ts",
+      "sha256": "717581170583980450ef8a82661aeb10c5826227aef4c05908700752a4d795e3"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+      "sha256": "8b0a5999945d2bfeadfd877491f2628660da5bb9197c76881fab0422656c7124"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "32d023eee1d4398a3ab53c7a4a17ebf2db5eb0654863c6527d732f45b2c70e65"
+    }
+  ],
+  "unchangedRawReaderKernel": {
+    "path": "convex-dev/runtimeAuth.ts",
+    "sha256": "4b82c9e7f73eeaa373ed65e4b43d67c2711a8b7232ef6183e9e3505f4046a605",
+    "modified": false
+  },
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "changes": [
+    "Standalone session registration uses fresh createAuthorityReadScope in each native invocation",
+    "Only existing submitAndStartEnvelope opts into createV8AuthorityReadScope with managed sources; original body/effects and all guards retained",
+    "markVisible uses existing createMemorySourceReadScope while every-delta currentOperation and monotone visibility rules remain",
+    "Strict public trace parser accepts only optional direct-facts-v1 or semantic-v1; omitted legacy field remains omitted"
+  ],
+  "controlledReadCounts": {
+    "session": {
+      "previous": 16,
+      "current": 10
+    },
+    "admissionQueryAndComponent": {
+      "previous": 167,
+      "current": 156
+    },
+    "visibility": {
+      "previousGraph": 6,
+      "currentGraph": 5,
+      "previousPolicy": 9,
+      "currentPolicy": 7
+    },
+    "nativeSpeedClaim": false
+  },
+  "checks": {
+    "unitInvocations": [
+      {
+        "name": "tests1",
+        "receipt": "memory-effort-native-session-tests1.json",
+        "success": true,
+        "suites": 19,
+        "passed": 654,
+        "failed": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "name": "visibility-tests1",
+        "receipt": "memory-effort-native-session-visibility-tests1.json",
+        "success": false,
+        "suites": 1,
+        "passed": 26,
+        "failed": 1,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "name": "tests2",
+        "receipt": "memory-effort-native-session-tests2.json",
+        "success": false,
+        "suites": 24,
+        "passed": 1152,
+        "failed": 1,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "name": "tests3",
+        "receipt": "memory-effort-native-session-tests3.json",
+        "success": true,
+        "suites": 2,
+        "passed": 240,
+        "failed": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    ],
+    "finalSuiteComposition": {
+      "suites": 24,
+      "tests": 1154,
+      "passed": 1154,
+      "failed": 0,
+      "skipped": 0,
+      "singleInvocation": false,
+      "note": "Latest2 changed suites from tests3 plus unchanged passing suites from tests2; no failed result relabeled. Earlier failed attempts retained.",
+      "results": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 27,
+          "passed": 27,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/session-native.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 8,
+          "passed": 8,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 201,
+          "passed": 201,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+          "receipt": "memory-effort-native-session-tests3.json",
+          "tests": 198,
+          "passed": 198,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/observation-native.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 47,
+          "passed": 47,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/admission-native.test.ts",
+          "receipt": "memory-effort-native-session-tests3.json",
+          "tests": 42,
+          "passed": 42,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/authority-read-scope.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 31,
+          "passed": 31,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 28,
+          "passed": 28,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 45,
+          "passed": 45,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/assets.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 37,
+          "passed": 37,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 14,
+          "passed": 14,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/inventory.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 64,
+          "passed": 64,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/client.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 109,
+          "passed": 109,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 67,
+          "passed": 67,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 13,
+          "passed": 13,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 18,
+          "passed": 18,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/v8-read-scope.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 43,
+          "passed": 43,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/content.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 26,
+          "passed": 26,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/authentication-denial.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 15,
+          "passed": 15,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/media.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 21,
+          "passed": 21,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/extensions.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 27,
+          "passed": 27,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/observe-delivery.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 2,
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/provisioning.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 17,
+          "passed": 17,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/authority.test.ts",
+          "receipt": "memory-effort-native-session-tests2.json",
+          "tests": 54,
+          "passed": 54,
+          "failed": 0,
+          "skipped": 0
+        }
+      ]
+    },
+    "typescript": {
+      "status": "PASS",
+      "latestReceipt": "memory-effort-native-session-types4.log",
+      "latestObservedExit": 0,
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit",
+      "note": "Reran once after backend owner corrected InstanceType fixture; types1/types3 failures remain preserved."
+    },
+    "lintTypes": {
+      "exitCode": 0,
+      "log": "memory-effort-native-session-lint-types2.log"
+    },
+    "affectedEslint": {
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 2,
+      "preExistingWarnings": [
+        "src/client-runtime/validation.ts22 unsafe assignment",
+        "src/client-runtime/validation.ts23 unsafe assignment"
+      ],
+      "log": "memory-effort-native-session-eslint3.log"
+    },
+    "diffCheck": {
+      "exitCode": 0
+    }
+  },
+  "preservedFailures": [
+    {
+      "receipt": "memory-effort-native-session-types1.log",
+      "exitCode": 2,
+      "reason": "Readonly RuntimeSession.userId fixture assignment; changed test to Reflect.set while preserving readonly public type and subsequent fresh-session assertion"
+    },
+    {
+      "receipt": "memory-effort-native-session-visibility-tests1.json",
+      "exitCode": 1,
+      "reason": "Expanded mock newly recorded the pre-existing finalDelivery createMemorySourceReadScope call; fixed observation to verify independent fresh invocation scope and later revoke denial; product finalDelivery unchanged"
+    },
+    {
+      "receipt": "memory-effort-native-session-tests2.json",
+      "exitCode": 1,
+      "reason": "Pre-existing schema inventory omitted committed runtimeMemoryFactEntities. Added exact expected member and all3 current indexes; schema unchanged. Final rerun passed."
+    },
+    {
+      "receipt": "memory-effort-native-session-types3.log",
+      "exitCode": 2,
+      "reason": "Concurrent backend-owned test type error; owner corrected dynamic-import fixture with InstanceType. Fresh full TypeScript run types4 passed; prior failure preserved."
+    }
+  ],
+  "scopeResults": {
+    "exactActorAndDeadline": true,
+    "duplicateRawReadsReduced": true,
+    "freshNextRpcRevocationAndExpiry": true,
+    "immutableActorScopeGenerationAndOutputSuppression": true,
+    "currentV8AdmissionExactParityAndEffects": true,
+    "legacyAdmissionParityAndRollback": true,
+    "everyDeltaCurrentAuthorityAndSourceChecks": true,
+    "unknownChildWriterEpochRegressions": true,
+    "optionalTraceEnumAndLegacyShape": true,
+    "observeEnvelopeModified": false,
+    "clientPostIoFenceModified": false,
+    "financialCommitSplitModified": false,
+    "rawReaderKernelModified": false
+  },
+  "integration": "NOT_RUN_BY_CHILD",
+  "services": 0,
+  "inference": 0,
+  "commits": 0,
+  "githubCalls": 0,
+  "independentReview": "PENDING_ROOT_COHERENT_BATCH",
+  "sourceFreezeReverifiedAt": "2026-10-15T02:00:36.574809+00:00"
+}

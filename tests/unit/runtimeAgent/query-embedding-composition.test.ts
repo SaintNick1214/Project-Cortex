@@ -6,6 +6,7 @@ import type { EmbeddingModelV4 } from "@ai-sdk/provider";
 import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
 import { DEFAULT_EMBEDDING_PROFILE as profile, LARGE_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
+import type { MemoryEffortTrace } from "../../../src/domain/memory-effort";
 import { assertNativeArgs } from "./native-arguments";
 
 let nativeCalls = 0;
@@ -19,21 +20,22 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
   define(input: { handler: unknown }) { return { _handler: input.handler }; }
   async start() { return "workflow:query-embedding"; }
 } }));
-const { ingestionFixture, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
+const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
 const { ledger, runs, clone, clock, definitions } = await import("../runtimeTranscript/fixture");
 const agent = await import("../../../convex-dev/runtimeAgent");
 const query = await import("../../../convex-dev/runtimeAgentQueryEmbedding");
 const memory = await import("../../../convex-dev/runtimeMemory");
+const wholeRecall = await import("../../../convex-dev/runtimeAgentRecall");
 const { ConvexMemoryRepository, createActionMemoryRepository } = await import("../../../convex-dev/runtimeMemoryRepository");
 const { readCurrentEmbeddingProfile, resolveHandler } = await import("../../../convex-dev/runtimeModelPolicy");
 const { createGatewayMemoryModel } = await import("../../../convex-dev/runtimeMemoryGateway");
 const { recallMemory } = await import("../../../convex-dev/runtimeMemoryServices");
 beforeEach(() => { nativeCalls = 0; installIngestionMockRoot(); });
 afterEach(() => { jest.restoreAllMocks(); });
-async function fixture(v8 = false) {
+async function fixture(v8 = false, lowCapConflict = false) {
   const f = await ingestionFixture(), oldQuery = f.ctx.runQuery.bind(f.ctx), oldMutation = f.ctx.runMutation.bind(f.ctx);
   const calls: string[] = [];
-  const names = { runtimeAgent: agent, runtimeAgentQueryEmbedding: query, runtimeModelPolicy: ledger, runtimeMemory: memory, runs };
+  const names = { runtimeAgent: agent, runtimeAgentQueryEmbedding: query, runtimeAgentRecall: wholeRecall, runtimeModelPolicy: ledger, runtimeMemory: memory, runs };
   function registration(ref: Parameters<typeof getFunctionName>[0]) {
     let name = ""; try { name = getFunctionName(ref); } catch { return undefined; }
     const [module, method] = name.split(":");
@@ -52,16 +54,26 @@ async function fixture(v8 = false) {
     return f.transaction(async () => { if (["runtimeModelPolicy:checkpoint", "runtimeModelPolicy:checkpointRecall"].includes(found.name) && checkpointFault) await checkpointFault();
       return invoke(found.value, f.ctx, args); });
   }) as MutationCtx["runMutation"];
+  if(lowCapConflict){
+    const writer=new ConvexMemoryRepository(f.ctx,f.reference,"write",f.ctx.db);
+    for(const [id,text,object] of [["literal","User favorite season is autumn","autumn"],["conflict","User prefers spring","spring"]]){
+      const source=await f.source(text!,`low-cap-${id}`),lineage=source.lineage;
+      await ingestion.enqueueSourceEvent(f.ctx,f.reference,source);
+      const fact={_id:"",factId:`low-cap-${id}`,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId!,ownerPrincipalId:f.reference.principalId,lineage,extractionPolicyVersion:"low-cap-v1",fact:text!,subject:"user",predicate:"favorite season",object:object!,factType:"preference" as const,confidence:1,sourceType:"manual" as const,tags:[],version:1,createdAt:clock,updatedAt:clock};
+      await writer.commitDerived({source:lineage,identity:{...lineage,stage:"facts",semanticPolicyVersion:"low-cap-v1"},facts:[fact],expectedFactVersions:{[fact.factId]:0}});
+    }
+    for(const event of f.db.table("runtimeIngestionEvents"))Object.assign(event,{factsState:"complete",vectorsState:"complete",vectorProfilesComplete:[profile.profileId]});
+  }
   const published=v8?await f.call<{agentId:string;version:number}>(definitions.publishVersion,{memorySpaceId:"space-a",clientMutationId:"v8-query-reader",expectedPreviousVersion:0,
-    definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:await definitions.executableRegistryHashV3(),
-      inputSelection:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}}}):undefined;
-  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: {...f.request(),...(published?{agentId:published.agentId,agentVersion:published.version}:{})} });
+    definitionInput:{...f.definitionInput,context:{...f.definitionInput.context,handlerId:"cortex.transcript.relevant",registryHash:lowCapConflict?await definitions.executableRegistryHashV4():await definitions.executableRegistryHashV3(),handlerVersion:lowCapConflict?2:1,
+      inputSelection:lowCapConflict?{version:2}:{version:1,recentMessages:4,relevantMemories:4,relevantFacts:4,pendingEntries:4,maxMessages:16}}}}):undefined;
+  const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: {...f.request(),...(lowCapConflict?{parts:[{type:"text" as const,text:"What is my favorite season?"}],memory:{effort:"fast" as const,maxEntries:1}}:{}),...(published?{agentId:published.agentId,agentVersion:published.version}:{})} });
   await f.call(agent.start, { runId: run.runId });
   const owned = f.db.table("runtimeAgentExecutions")[0], attempt = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
   await f.call(agent.startContext, attempt);
   const current = await agent.executionContext(f.ctx, attempt);
   const text = current.messages.filter(m => m.role === "user").slice(-1).map(m => typeof m.content === "string" ? m.content : m.content.filter(p => p.type === "text").map(p => p.text).join("\n")).join("\n");
-  const input = { text, requestId: `context:${await semanticHash(canonicalModelJson([run.runId, 1]))}`, limit: 10 };
+  const input = { text, requestId: `context:${await semanticHash(canonicalModelJson([run.runId, 1]))}`, limit: lowCapConflict?(await import("../../../src/domain/memory-effort")).memoryEffortCandidateLimit(current.snapshot.version===8?current.snapshot.inputSelection.effort:undefined):10,...(lowCapConflict?{memory:{effort:"fast" as const}}:{}) };
   const repository = createActionMemoryRepository({ ...f.ctx, vectorSearch: async () => [] } as unknown as ActionCtx, f.reference, "read");
   const action = { ...f.ctx, vectorSearch: async () => [] } as unknown as ActionCtx;
   const state = () => clone({ rows: new Map([...f.db.rows].filter(([, rows]) => rows.length)), writes: f.db.writes, native: f.native, effects: f.effects, scheduled: f.scheduled });
@@ -287,4 +299,18 @@ it('K28 scoped recall checkpoint runs the same original guard/accounting body wi
   expect(outcomes[1]!.component.length).toBeLessThan(outcomes[0]!.component.length);
   console.info(JSON.stringify({type:'k28-controlled-query-checkpoint',oldReads:outcomes[0]!.reads,newReads:outcomes[1]!.reads,
     oldComponentQueries:outcomes[0]!.component.length,newComponentQueries:outcomes[1]!.component.length,financialReadSequenceEqual:true,nativeLatency:'UNAVAILABLE'}));
+});
+
+it("actual Agent cap1 indexed conflict keeps the single governed semantic fallback and original ceiling",async()=>{
+  const f=await fixture(true,true);
+  const candidate=await agent.prepareContextV8Handler(f.action,f.attempt,(repository,input,selection,proposal)=>query.recallAgentMemoryV8(f.action,f.attempt,repository,{now:()=>clock},input,selection,proposal),true);
+  expect(candidate).not.toBeNull();expect(nativeCalls).toBe(1);
+  const current=await agent.executionContext(f.ctx,f.attempt);
+  expect(current.snapshot.version).toBe(8);if(current.snapshot.version!==8)throw Error("Expected V8");
+  const trace=JSON.parse(current.run.memoryEffortTraceCanonical!) as MemoryEffortTrace;
+  expect(trace).toMatchObject({retrievalRoute:"semantic-v1",maxEntries:1});expect(trace.selected).toBeLessThanOrEqual(1);
+  expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({slotReleased:true,resultAttachmentState:"attached"});
+  expect(f.calls.filter(name=>name==="runtimeAgentQueryEmbedding:admitV8")).toHaveLength(1);
+  expect(f.calls.indexOf("runtimeModelPolicy:captureTerminalEvidenceV8")).toBeLessThan(f.calls.indexOf("runtimeModelPolicy:attachTerminalResultV8"));
 });

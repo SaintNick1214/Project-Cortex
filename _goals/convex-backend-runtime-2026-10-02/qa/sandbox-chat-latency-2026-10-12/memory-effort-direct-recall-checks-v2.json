@@ -1,0 +1,229 @@
+{
+  "status": "IMPLEMENTATION_CHECKS_COMPLETE_REVIEW_V2_PENDING",
+  "baseHead": "f87d79a2687cfa5f2814f4136c049b4e88a1ae88",
+  "request": "DIRECT-LOWCAP-CONFLICT from independent review v1",
+  "ownedHashes": {
+    "convex-dev/runtimeAgent.ts": "adb02feaa978fec727b5b4f7efa173967205df861b7f3a0c408b50e11ed3ecc1",
+    "convex-dev/runtimeAgentRecall.ts": "e8857bc401dd800e5e7773874dc1b7ed3b2858f0cff68069de726f037bb158ee",
+    "convex-dev/runtimeMemoryQuery.ts": "971fa72b6a5e8648615a743f800051aa8c464dc264a7b7d3649cee4c0c84743e",
+    "src/domain/memory-effort.ts": "a2115c0bdbc5d0d61074f34a6277a90268d9b500510ecb03de6ec3496ae9de39",
+    "src/domain/memory-direct-recall.ts": "6653f5cc14f1ca88e0fb20feca82b2d8b683dcf5be49389e6682fcba7991566e",
+    "tests/unit/runtimeAgent/direct-action.test.ts": "ca5b51baadb3ce4ed5977793c16cebc6877c3224b3efffecea874e216a1bc6f5",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "7bab127a3430af795873e4c53781cdf56f80052ee6d5e748a54bbffe874b7e02",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "a927a94c2052c7282cf99fbc44ae3f3da91ca5ba98b9004747dd636b95521858",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "46180ff5573ca7d3226456bb543e05dc15d27fcc82f405c8f8c562d37acee0a0",
+    "convex-dev/runtimeMemoryTraversal.ts": "ab7becf5485e364d398ffc2f85339fd850fe4a6296c5fe5fb6aeb78fe388fd70",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "d5d7307b453faf1c405ba1eb2c8090e58778f304ef17044782737435dcdae80b",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts": "8fe2bef7a024f9a94a4a956313ddfeedd0fd8c4221324316dd4688d4b5104253"
+  },
+  "changedSinceV1": [
+    "convex-dev/runtimeAgentRecall.ts",
+    "convex-dev/runtimeMemoryQuery.ts",
+    "src/domain/memory-direct-recall.ts",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "convex-dev/runtimeMemoryTraversal.ts",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts"
+  ],
+  "checks": {
+    "lowcap-red1": {
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "--testNamePattern",
+        "indexed.*conflict|conflicting current assertion",
+        "--runInBand",
+        "--forceExit=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "naturalExit": true,
+      "durationSeconds": 6.487986041000113,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-red1.log"
+    },
+    "lowcap-tests1": {
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--runInBand",
+        "--forceExit=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 28.47497591690626,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-tests1.log"
+    },
+    "lowcap-tsc1": {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 25.056298709008843,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-tsc1.log"
+    },
+    "lowcap-lint1": {
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "src/domain/memory-effort.ts",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeAgent/direct-action.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "naturalExit": true,
+      "durationSeconds": 14.207287166034803,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-lint1.log"
+    },
+    "lowcap-lint2": {
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "src/domain/memory-effort.ts",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeAgent/direct-action.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 11.050788415945135,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-lint2.log"
+    },
+    "lowcap-tests2": {
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "--runInBand",
+        "--forceExit=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 7.8074624999426305,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-tests2.log"
+    },
+    "lowcap-tsc2": {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 18.55474420893006,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-tsc2.log"
+    }
+  },
+  "diffCheck": {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "convex-dev/runtimeAgent.ts",
+      "convex-dev/runtimeAgentRecall.ts",
+      "convex-dev/runtimeMemoryQuery.ts",
+      "src/domain/memory-effort.ts",
+      "src/domain/memory-direct-recall.ts",
+      "tests/unit/runtimeAgent/direct-action.test.ts",
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+      "tests/unit/runtimeMemory/query-composition.test.ts",
+      "convex-dev/runtimeMemoryTraversal.ts",
+      "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "tests/unit/runtimeMemory/memory-traversal.test.ts"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "finalTests": {
+    "primary": {
+      "passed": 247,
+      "suites": 5,
+      "skipped": 0,
+      "naturalExit": true,
+      "source": "lowcap-tests1 official Jest footer"
+    },
+    "afterLintOnlyTraversalAssertions": {
+      "passed": 15,
+      "suites": 1,
+      "skipped": 0,
+      "naturalExit": true,
+      "source": "lowcap-tests2 official Jest footer"
+    },
+    "notAdditiveCount": true
+  },
+  "behavior": {
+    "privateVerdict": "Every authorized current seed/derived/indexed fact is inspected before selection/queue pruning; callbacks return no fact payload across the RPC. Only the compatibility boolean survives in the direct caller.",
+    "bounds": "entries/input/work/deadline/cancellation/relevance/unavailable or any unavailable stage retain original semantic discovery; configured depth horizon remains intentional bounded traversal, not semantic corpus exhaustion.",
+    "publicAndAgent": "cap1 exact-entity conflict uses precisely one original governed embedding, selected<=1 and maxEntries1, one released/attached attempt and capture before attachment. Agent test executes actual prepareContextV8Handler through actual Gateway middleware with only native component/provider peers controlled.",
+    "resourcePrivacy": "Only selected evidence plus necessary bridges remain in output and delivery bindings; omitted fact payload stays inside the native read.",
+    "legacy": "No legacy behavior, request schema, financial boundaries, ceilings, route enum or depth policy change."
+  },
+  "firstFailuresPreserved": [
+    "memory-effort-direct-independent-review-v1.md",
+    "memory-effort-direct-independent-review-v1.json",
+    "memory-effort-direct-recall-lowcap-red1.log",
+    "memory-effort-direct-recall-lowcap-red1.json",
+    "memory-effort-direct-recall-lowcap-lint1.log",
+    "memory-effort-direct-recall-lowcap-lint1.json"
+  ],
+  "limitations": [
+    "Controlled unit/native composition only; no changed-source hosted latency/installed consumer qualification.",
+    "Source build/contracts remain Root-owned and require new frozen candidate build after this product repair.",
+    "No services, models, commits, packages or GitHub actions executed."
+  ],
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "path": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "sourceFrozen": true
+}

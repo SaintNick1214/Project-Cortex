@@ -1,0 +1,376 @@
+{
+  "version": 2,
+  "reviewer": "/root/memory_effort_direct_review",
+  "independentNonAuthor": true,
+  "recordedAt": "2026-10-15T02:22:26.846994+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "f87d79a2687cfa5f2814f4136c049b4e88a1ae88",
+  "verdict": "PASS",
+  "scope": "Source/test acceptance of coherent repair batch only: original17 frozen files plus3 newly affected traversal/composition files. No aggregate goal, actual hosted latency or installed-consumer acceptance.",
+  "policy": "acceptance-policy.md v2: requirement/test/completeness4; code/pattern3. One reviewer reused for focused repair check; v1 NEEDSREVISION remains unchanged.",
+  "dimensions": {
+    "requirementFulfillment": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "codeQuality": 3,
+    "patternAdherence": 3
+  },
+  "average": 3.6,
+  "unresolvedConcreteBreakingFindings": 0,
+  "newFindings": [],
+  "resolvedFindings": [
+    {
+      "id": "DIRECT-LOWCAP-CONFLICT",
+      "priorVerdict": "NEEDSREVISION",
+      "status": "RESOLVED_IN_CURRENT_HASHED_SOURCE",
+      "implementationEvidence": [
+        {
+          "path": "convex-dev/runtimeMemoryTraversal.ts",
+          "lines": [
+            50,
+            72,
+            88
+          ],
+          "observation": "Private observer receives authorized current seed, derived and indexed fact candidates before output/queue pruning. Existing current source/fact checks precede inspection; facts are not returned in new metadata."
+        },
+        {
+          "path": "convex-dev/runtimeAgentRecall.ts",
+          "lines": [
+            239,
+            240,
+            242
+          ],
+          "observation": "Direct caller accumulates only monotone compatible boolean and refuses incomplete traversal before final delivery."
+        },
+        {
+          "path": "convex-dev/runtimeMemoryQuery.ts",
+          "lines": [
+            182,
+            183,
+            185
+          ],
+          "observation": "Public direct caller uses same private compatibility and completeness decisions; no source/authority exception catch converts errors into fallback."
+        },
+        {
+          "path": "src/domain/memory-direct-recall.ts",
+          "line": 52,
+          "observation": "Only exhausted/configured depth stops with no unavailable stages can justify direct sufficiency. Entries/input/work/deadline/cancellation/relevance/unavailable retain semantic discovery."
+        }
+      ],
+      "regressionEvidence": [
+        {
+          "path": "tests/unit/runtimeMemory/query-composition.test.ts",
+          "line": 341,
+          "outcome": "Public cap1/cap4 indexed conflict uses exactly1 embedding, semantic-v1, original cap, <=cap output, one released/attached attempt, capture before attachment."
+        },
+        {
+          "path": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+          "line": 304,
+          "outcome": "Actual prepareContextV8 composition with requested Fast/maxEntries1 uses exactly1 controlled native embedding/admitV8, semantic-v1 and <=1 selected entry; capture and attachment remain separate."
+        },
+        {
+          "path": "tests/unit/runtimeMemory/memory-traversal.test.ts",
+          "line": 18,
+          "outcome": "Observer sees omitted f2 while only f1 remains in result/bindings; omitted private text is absent."
+        },
+        {
+          "path": "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+          "line": 17,
+          "outcome": "Discovered conflicting/corrected evidence is incompatible; each incomplete stop and unavailable stage refuses direct eligibility."
+        }
+      ],
+      "beforeAfterReceipts": {
+        "before": "memory-effort-direct-recall-lowcap-red1.log:2 genuine cap1 failures,1 cap4 pass,99 deliberately unselected/skipped; not qualification evidence",
+        "after": "memory-effort-direct-recall-lowcap-tests1.log:247/247 in5 suites, zero skips; original public+Agent regression outcomes green"
+      },
+      "reviewerReadOnlyReproduction": {
+        "method": "Re-executed preserved v1 in-memory domain reproduction against actual current source plus new completeness guard; no files/services mutated.",
+        "exitCode": 0,
+        "observed": {
+          "literalSufficient": true,
+          "discovered": [
+            "conflict"
+          ],
+          "selected": [
+            "seed"
+          ],
+          "visited": 2,
+          "expanded": 2,
+          "stopReasons": [
+            "entries"
+          ],
+          "selectedOnlyCompatibility": true,
+          "newTraversalComplete": false,
+          "compatibilityIncludingDiscoveredFact": false,
+          "patchedDirectEligible": false
+        }
+      }
+    }
+  ],
+  "checksReviewed": {
+    "affectedRepairTests": {
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--runInBand",
+        "--forceExit=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 28.47497591690626,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-tests1.log"
+    },
+    "afterLintOnlyTestCleanup": {
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "--runInBand",
+        "--forceExit=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 7.8074624999426305,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-tests2.log"
+    },
+    "fullRootTypecheck": {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 18.55474420893006,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-tsc2.log"
+    },
+    "strictOwned12FileLint": {
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "src/domain/memory-effort.ts",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeAgent/direct-action.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 11.050788415945135,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-recall-lowcap-lint2.log"
+    },
+    "diffCheck": {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "src/domain/memory-effort.ts",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeAgent/direct-action.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "counts": {
+      "repairTests": 247,
+      "repairSuites": 5,
+      "skipped": 0,
+      "naturalExit": true,
+      "latestOverlappingTraversalRerun": 15,
+      "totalsAreNotAdditive": true
+    },
+    "rootPostRepair": {
+      "at": "2026-10-15T02:19:20.187Z",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "reason": "Changed private traversal conflict detection after initial root quality gate",
+      "backend": {
+        "chunk_id": "c4b083",
+        "wall_time_seconds": 4.34792875,
+        "exit_code": 0,
+        "original_token_count": 52,
+        "output": "npm notice run @cortexmemory/sdk@0.39.0 build:backend\nnpm notice run node scripts/backend/build-distribution.mjs\nBuilt cortex-backend-v1-sdk-0.39.0: 174 source files, 79 tables, 2 components; no deployment.\n"
+      },
+      "contracts": {
+        "chunk_id": "5cc1bd",
+        "wall_time_seconds": 4.042225625,
+        "exit_code": 0,
+        "original_token_count": 63,
+        "output": "npm notice run @cortexmemory/sdk@0.39.0 test:contracts\nnpm notice run node scripts/verify-public-contracts.mjs\nPacked root/runtime/graph ESM+CJS, backend manifest bytes, consumer declarations, URL round trips and root/runtime browser execution passed.\n"
+      },
+      "earlierSdkBuild": "memory-effort-direct-root-build.exit.json; SDK/parser files unchanged by low-cap repair",
+      "earlierRootLint": "memory-effort-direct-root-lint.exit.json; affected current backend strict lint pending"
+    },
+    "priorUnchangedEvidence": {
+      "directCapacityTests": "Original223/4 receipt includes unchanged direct-action/capacity-wait suite; not repeated without changes.",
+      "companion": "1,154tests/24suites composed unchanged passing suites plus final240/2 rerun; no single1154 invocation claimed. All8 hashes unchanged.",
+      "sdkBuildAndFullLint": "Prior root SDK/client build and243warning/0error full lint remain as scoped unchanged evidence. Current affected strict lint passed0warnings.",
+      "earlierFailures": "Original v1, before-fix cap1 test failures and strict lint warning receipts remain preserved."
+    }
+  },
+  "sourceAndTestHashes": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "adb02feaa978fec727b5b4f7efa173967205df861b7f3a0c408b50e11ed3ecc1",
+      "matchesFreeze": true
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "e8857bc401dd800e5e7773874dc1b7ed3b2858f0cff68069de726f037bb158ee",
+      "matchesFreeze": true
+    },
+    {
+      "path": "convex-dev/runtimeMemoryQuery.ts",
+      "sha256": "971fa72b6a5e8648615a743f800051aa8c464dc264a7b7d3649cee4c0c84743e",
+      "matchesFreeze": true
+    },
+    {
+      "path": "src/domain/memory-effort.ts",
+      "sha256": "a2115c0bdbc5d0d61074f34a6277a90268d9b500510ecb03de6ec3496ae9de39",
+      "matchesFreeze": true
+    },
+    {
+      "path": "src/domain/memory-direct-recall.ts",
+      "sha256": "6653f5cc14f1ca88e0fb20feca82b2d8b683dcf5be49389e6682fcba7991566e",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/direct-action.test.ts",
+      "sha256": "ca5b51baadb3ce4ed5977793c16cebc6877c3224b3efffecea874e216a1bc6f5",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "7bab127a3430af795873e4c53781cdf56f80052ee6d5e748a54bbffe874b7e02",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+      "sha256": "a927a94c2052c7282cf99fbc44ae3f3da91ca5ba98b9004747dd636b95521858",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "sha256": "46180ff5573ca7d3226456bb543e05dc15d27fcc82f405c8f8c562d37acee0a0",
+      "matchesFreeze": true
+    },
+    {
+      "path": "convex-dev/runtimeMemoryTraversal.ts",
+      "sha256": "ab7becf5485e364d398ffc2f85339fd850fe4a6296c5fe5fb6aeb78fe388fd70",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "sha256": "d5d7307b453faf1c405ba1eb2c8090e58778f304ef17044782737435dcdae80b",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeMemory/memory-traversal.test.ts",
+      "sha256": "8fe2bef7a024f9a94a4a956313ddfeedd0fd8c4221324316dd4688d4b5104253",
+      "matchesFreeze": true
+    },
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "sha256": "6d2b11fbeb6c5ed72ab80bb64254579fa079d1869ab7f71bd6d96899390375d6",
+      "matchesFreeze": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "a78c7c7c4c036b65dd74b6aad401c4c6ed1eae325bc6b59ccb8bffa51a7b8e70",
+      "matchesFreeze": true
+    },
+    {
+      "path": "src/client-runtime/validation.ts",
+      "sha256": "ff8c40bd31e6cba7c0cd470a9e56f8578e0b2c837c686be910af396e731f395b",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/client-runtime/admission-native.test.ts",
+      "sha256": "24b74294d1c825fef9238ebd658e4e22416d39f991dee1813957f567a5e190c1",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/client-runtime/client.test.ts",
+      "sha256": "56a20fc35901648ecb8863d7523e9ea5101a048c8a844851952ed7d213a6e4b4",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/client-runtime/session-native.test.ts",
+      "sha256": "717581170583980450ef8a82661aeb10c5826227aef4c05908700752a4d795e3",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+      "sha256": "8b0a5999945d2bfeadfd877491f2628660da5bb9197c76881fab0422656c7124",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "32d023eee1d4398a3ab53c7a4a17ebf2db5eb0654863c6527d732f45b2c70e65",
+      "matchesFreeze": true
+    }
+  ],
+  "unchangedSupportingFiles": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "4b82c9e7f73eeaa373ed65e4b43d67c2711a8b7232ef6183e9e3505f4046a605"
+    },
+    {
+      "path": "src/domain/memory-traversal.ts",
+      "sha256": "c0e51bfc3ca85d702803c6d855d1edc6569f88d7d96e611d1e7bc5a71fa3631d"
+    }
+  ],
+  "v1PreservedSha256": {
+    "memory-effort-direct-independent-review-v1.md": "1c4ed2bf19cbf2d044f5317bb5099b03fadf3219c3b89a4be7fece1fb28e1c54",
+    "memory-effort-direct-independent-review-v1.json": "3c499e48af1741a1745f69a2671cf9665d2f18c28769f423e439cde746aa6161"
+  },
+  "priorFindingsRetainedAsCurrentObservations": [
+    "Exact trusted unreserved concurrency waiting, same body/run/semantic/ordinal, original Gateway signal/timeout, fresh native guards and no paid provider retry remain unchanged from v1 review.",
+    "Invocation-local raw reuse and unknown/child/failed writer invalidation remain unchanged; no permission decision cache introduced. Independent SDK post-I/O actor/generation/session/expiry checks remain.",
+    "Strict optional retrievalRoute enum, getter refusal and legacy omission remain unchanged.",
+    "Whole-input fitting, native body pin and qualified final model admission still apply. Canonical history, configured models, source/tombstone/fact fences and separate financial capture/attachment remain."
+  ],
+  "limitations": [
+    "PASS applies only to the current20-file source/test batch and resolved finding.",
+    "Current-candidate real Fast3s/Normal6s/High8s/Max30s hosted submit-to-visible-text, CLI/Chat installed outcomes and final independent goal audit remain pending.",
+    "Historical f87 misses/warm concurrency failure remain failures; this review supplies no new live performance evidence. Video remains deferred.",
+    "Reviewer performed no services, inference, native mutation, product edit, commit or GitHub action. Only permitted review artifacts written. No additional full-goal/census/controller gate requested."
+  ]
+}

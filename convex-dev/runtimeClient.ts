@@ -9,7 +9,7 @@ import { canonicalModelJson } from "../src/domain/model-policy";
 import { semanticHash } from "../src/domain/profile";
 import { getHandler, submitHandler } from "./runs";
 import { transcriptDenied } from "./runtimeTranscript";
-import { createAuthorityReadScope, createMemorySourceReadScope, withNativeSnapshotReads } from "./runtimeAuth";
+import { createAuthorityReadScope, createMemorySourceReadScope, createV8AuthorityReadScope, withNativeSnapshotReads } from "./runtimeAuth";
 import { traceRuntimeMutationSpan } from "./runtimeLatencyTrace";
 
 type Selectors = { tenantId?: string; memorySpaceId?: string };
@@ -48,7 +48,8 @@ export async function sessionHandler(ctx: MutationCtx, args: Selectors) {
 }
 export const session = mutation({
   args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
-  handler: sessionHandler,
+  // One fresh native invocation; predicates and the SDK's post-I/O RPC remain.
+  handler: (ctx, args) => sessionHandler(createAuthorityReadScope(ctx), args),
 });
 
 /** Preserve the original SDK pre-session predicate in the admission transaction.
@@ -65,7 +66,9 @@ export async function submitAndStartEnvelopeHandler(ctx: MutationCtx, args: Sele
 }
 export const submitAndStartEnvelope = mutation({
   args: { request: v.any(), streaming: v.optional(v.boolean()), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
-  handler: (ctx, args) => submitAndStartEnvelopeHandler(createAuthorityReadScope(ctx, { policyMetadata: true, nativeTranscript: true }), args),
+  // Only exact native control writers retain raw rows. Source/security/unknown
+  // and component writers still invalidate; no verdict survives an invocation.
+  handler: (ctx, args) => submitAndStartEnvelopeHandler(createV8AuthorityReadScope(ctx, { managedSources: true }), args),
 });
 
 type ObservationHandle = { version: 1; tenantId: string; memorySpaceId: string; principalId: string;

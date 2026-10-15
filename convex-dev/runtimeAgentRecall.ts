@@ -1,3 +1,4 @@
+import { sufficientDirectFactLookup, directFactTraversalCompatible, directFactTraversalComplete, DIRECT_FACT_RECALL_ROUTE } from "../src/domain/memory-direct-recall";
 import type { MemoryEffortRequest } from "../src/domain/memory-effort";
 import { traverseConvexMemory,factEvidenceNode,sourceEvidenceNode } from "./runtimeMemoryTraversal";
 import { memoryEffortRequest } from "./runtimeMemorySchema";
@@ -78,7 +79,7 @@ export async function prepareReadsHandler(nativeCtx: QueryCtx, args: Args, expec
 }
 export const prepareReads = internalQuery({ args: nativeArgs, handler: prepareReadsHandler });
 
-export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }, expectedVersion?: 8, invocationScope?: QueryCtx) {
+export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hits: { id: Id<"runtimeMemoryVectors">; score: number }[]; factPlan: FactPlan }, expectedVersion?: 8, invocationScope?: QueryCtx, directFacts = false, inspectFact?:(fact:DerivedFact)=>void) {
   const ctx = invocationScope ?? (expectedVersion === 8 ? createV8AuthorityReadScope(nativeCtx, { managedSources: true }) : createAuthorityReadScope(nativeCtx, { nativeTranscript: true, policyMetadata: true }));
   const { current, repository } = await currentRead(ctx, args, expectedVersion), bindings = emptyBindings();
   // Only this exact native owner shares raw rows across source traversals.
@@ -117,12 +118,12 @@ export async function readMatchesHandler(nativeCtx: QueryCtx, args: Args & { hit
   for (const source of factBindings.sources) if (!bindings.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(source))) bindings.sources.push(source);
   for (const fact of factBindings.facts) if (!bindings.facts.some(value => value.factId === fact.factId && value.payloadHash === fact.payloadHash)) bindings.facts.push(fact);
   const effort=current.snapshot.version===8?current.snapshot.inputSelection.effort:undefined;
-  const effortResult=effort?await traverseConvexMemory(sourceCtx,repository,[...selectedVectors.selectedIndexes.map(index=>{const match=matches[index]!;return {...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!};}),...selectedFacts.selectedIndexes.map(index=>factEvidenceNode(facts[index]!))],effort,bindings,async node=>{
+  const effortResult=effort?await traverseConvexMemory(sourceCtx,repository,[...selectedVectors.selectedIndexes.map(index=>{const match=matches[index]!;return {...sourceEvidenceNode(match.source,match.score),item:vectorRecallItems([match])[0]!};}),...selectedFacts.selectedIndexes.map(index=>factEvidenceNode(facts[index]!,directFacts?1:undefined))],effort,bindings,async node=>{
     const selected=await contextSourceBatchHandler(sourceCtx,{reference:args.reference,...args.selection,permission:node.item.type==="fact"?"canViewFacts":"canViewMemories",witnesses:[],priorWitnesses:witnesses.has(node.lineage.sourceId)?[witnesses.get(node.lineage.sourceId)!]:[],items:[{sourceId:node.lineage.sourceId,expected:{sourceEventId:node.lineage.sourceEventId,sourceRevision:node.lineage.sourceRevision}}]});
     for(const next of selected.witnesses){const merged=mergeContextWitness(witnesses.get(next.sourceId),next);if(!merged)memoryError("STALE_CONTEXT","Traversal source changed");witnesses.set(next.sourceId,merged);}
     for(const [key,lineage] of selected.provenance)provenance.set(key,lineage);
     return selected.selectedIndexes.length===1;
-  }):undefined;
+  },inspectFact):undefined;
   if(effortResult){
     for(const stage of [...(args.factPlan.candidateWorkBound?["direct-fact-candidate-work-bound"]:[]),...(args.hits.length===args.input.limit?["direct-vector-candidate-work-bound"]:[])]){
       if(!effortResult.memoryEffort.unavailableStages.includes(stage))effortResult.memoryEffort.unavailableStages.push(stage);
@@ -170,7 +171,7 @@ export const readMatchesV8 = internalQuery({ args: { ...nativeArgs, hits: v.arra
   handler: (ctx, args) => readMatchesHandler(ctx, args, 8) });
 /** Same consumed-row predicates and final unscoped grant/deadline fence. Only
  * the original profile helper executes locally instead of in a child query. */
-export async function finalDeliveryV8Handler(nativeCtx: MutationCtx, args: { reference: AgentQueryEmbeddingAttempt["reference"]; bindings: MemoryDeliveryBindings }, invocationScope?: MutationCtx) {
+export async function finalDeliveryV8Handler(nativeCtx: QueryCtx | MutationCtx, args: { reference: AgentQueryEmbeddingAttempt["reference"]; bindings: MemoryDeliveryBindings }, invocationScope?: QueryCtx | MutationCtx) {
   const ctx = invocationScope ?? createV8AuthorityReadScope(nativeCtx, { managedSources: true });
   // The original final resource pass begins with fresh raw ancestry rows.
   freshManagedSourceReads(ctx);
@@ -216,10 +217,35 @@ export async function finishAgentRecallV8(ctx: ActionCtx, attempt: AgentQueryEmb
   const combined = (selection as AgentRecallSelection & { [privateInlineSelection]?: true })[privateInlineSelection]
     ? await ctx.runMutation(matchesDeliveryV8Ref, nativeArgs) : undefined;
   const read = combined ? combined.read : await ctx.runQuery(matchesV8Ref, nativeArgs);
+  if(read.effortResult)read.effortResult.memoryEffort.retrievalRoute="semantic-v1";
   onSelected({ witnesses: read.witnesses, provenance: read.provenance, sourceScores: read.sourceScores, itemLineages: read.itemLineages });
   return await completeRecallDelivery({ clock, finalDelivery: async () => {
     if (!combined) return await ctx.runMutation(deliveryV8Ref, { reference: attempt.reference, bindings: read.bindings });
     if (combined.refusal !== undefined) throwRefusal(combined.refusal);
     return combined.delivery;
   } }, input, profile.profileId, read.vectorItems, read.facts,read.effortResult,startedAt);
+}
+
+/** Effort-aware V8 only: scoped native facts, existing real source traversal and
+ * final raw delivery predicates. No model proposal, reservation or vector query. */
+export async function readDirectAgentRecallV8Handler(nativeCtx: QueryCtx, args: Args) {
+  const ctx=createV8AuthorityReadScope(nativeCtx,{managedSources:true});
+  const {current,repository}=await currentRead(ctx,args,8);
+  if(current.snapshot.version!==8||current.snapshot.inputSelection.version!==2)return undefined;
+  const candidates=await repository.searchFactCandidates(args.input.text,args.input.limit);
+  if(!sufficientDirectFactLookup(args.input.text,candidates,Date.now()))return undefined;
+  const bindings=emptyBindings();
+  for(const fact of candidates.facts)await captureRecallFact(bindings,fact,await repository.getSource(fact.lineage.sourceId,"canViewFacts"));
+  let compatible=true;
+  const read=await readMatchesHandler(nativeCtx,{...args,hits:[],factPlan:{kind:"ready",facts:candidates.facts,bindings}},8,ctx,true,fact=>{compatible=compatible&&directFactTraversalCompatible(candidates.facts[0]!,[fact]);});
+  if(!read.effortResult?.items.some(item=>item.type==="fact"))return undefined;
+  if(!compatible||!directFactTraversalComplete(read.effortResult.memoryEffort))return undefined;
+  read.effortResult.memoryEffort.retrievalRoute=DIRECT_FACT_RECALL_ROUTE;
+  const delivery=await finalDeliveryV8Handler(nativeCtx,{reference:args.reference,bindings:read.bindings},ctx);
+  return {read,delivery,profileId:args.profile.profileId};
+}
+export async function finishDirectAgentRecallV8(clock:DomainClock,input:Input,selected:NonNullable<Awaited<ReturnType<typeof readDirectAgentRecallV8Handler>>>,selection:AgentRecallSelection,startedAt:number){
+  const {read}=selected;
+  selection.onSelected({witnesses:read.witnesses,provenance:read.provenance,sourceScores:read.sourceScores,itemLineages:read.itemLineages});
+  return await completeRecallDelivery({clock,finalDelivery:async()=>selected.delivery},input,selected.profileId,read.vectorItems,read.facts,read.effortResult,startedAt);
 }

@@ -17,6 +17,8 @@ export interface EffectiveMemoryEffortPolicy {
 }
 export type MemoryEffortStopReason = "exhausted" | "depth" | "relevance" | "entries" | "input" | "deadline" | "work" | "cancellation" | "unavailable";
 export interface MemoryEffortTrace {
+  /** Discovery route only; direct facts do not imply semantic corpus exhaustion. */
+  retrievalRoute?: "direct-facts-v1" | "semantic-v1";
   version: 1; policyVersion: "memory-effort-v1"; requestedEffort: MemoryEffort; effectiveEffort: MemoryEffort;
   maxDepth: number | null; maxEntries: number | null; maxContextTokens: number; targetFirstAnswerMs: number;
   reachedDepth: number; visited: number; expanded: number; selected: number; deduplicated: number;

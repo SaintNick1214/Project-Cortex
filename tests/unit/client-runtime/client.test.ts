@@ -616,19 +616,26 @@ describe("memory effort public runtime contract",()=>{
     try{const result=await f.client.recall({text:"facts",requestId:"attribution",memory:{effort:"max"}});expect(result.items).toEqual([item]);expect(result.items[0]?.retrieval?.path).not.toBe(item.retrieval!.path);}
     finally{await f.client.close();}
   });
-  it("projects server trace through admission and recall without private metadata",async()=>{
-    const f=fixture(),trace={...emptyMemoryEffortTrace(resolveMemoryEffortPolicy({effort:"max"})),reachedDepth:10,visited:12,selected:10,stopReasons:["work" as const],unavailableStages:["external_graph"]};
+  it.each([undefined,"direct-facts-v1","semantic-v1"] as const)("projects server trace through admission and recall without private metadata (route=%s)",async retrievalRoute=>{
+    const f=fixture(),trace={...emptyMemoryEffortTrace(resolveMemoryEffortPolicy({effort:"max"})),reachedDepth:10,visited:12,selected:10,stopReasons:["work" as const],unavailableStages:["external_graph"],...(retrievalRoute===undefined?{}:{retrievalRoute})};
     const original=f.mutation.getMockImplementation()!;
     f.mutation.mockImplementation(async(ref,args)=>getFunctionName(ref)==="runtimeClient:submitAndStartEnvelope"?{version:1,session:verified,admission:{version:1,run:{...value,memoryEffort:trace},start:{runId:value.runId,attemptNumber:value.attemptNumber,state:"ready"}}}:original(ref,args));
     f.action.mockImplementation(async()=>Object.assign({items:[],context:"",profileId:"profile"},{memoryEffort:trace}));
     try {
       const admission=await f.client.submitAndStart({...request,memory:{effort:"max"}}),recall=await f.client.recall({text:"facts",requestId:"trace"});
       expect(admission.run.memoryEffort).toEqual(trace);expect(recall.memoryEffort).toEqual(trace);
+      expect(Object.prototype.hasOwnProperty.call(recall.memoryEffort,"retrievalRoute")).toBe(retrievalRoute!==undefined);
       expect(admission.run.memoryEffort).not.toBe(trace);expect(admission.run.memoryEffort?.stopReasons).not.toBe(trace.stopReasons);
       expect(()=>runtimeMemoryEffortTrace({...trace,evidenceText:"PRIVATE_TEXT"})).toThrow("INVALID_RESPONSE");
       expect(()=>runtimeMemoryEffortTrace({...trace,unavailableStages:Array(17).fill("stage")})).toThrow("INVALID_RESPONSE");
       expect(()=>runtimeMemoryEffortTrace({...trace,stopReasons:["complete"]})).toThrow("INVALID_RESPONSE");
     }finally{await f.client.close();}
+  });
+  it("refuses unknown, explicitly undefined and accessor retrieval routes without invoking user code",()=>{
+    const trace=emptyMemoryEffortTrace(resolveMemoryEffortPolicy()),getter=jest.fn(()=>"direct-facts-v1");
+    for(const retrievalRoute of ["direct-facts",undefined,null])expect(()=>runtimeMemoryEffortTrace({...trace,retrievalRoute})).toThrow("INVALID_RESPONSE");
+    expect(()=>runtimeMemoryEffortTrace(Object.defineProperty({...trace},"retrievalRoute",{enumerable:true,get:getter}))).toThrow("INVALID_RESPONSE");
+    expect(getter).not.toHaveBeenCalled();
   });
 });
 
