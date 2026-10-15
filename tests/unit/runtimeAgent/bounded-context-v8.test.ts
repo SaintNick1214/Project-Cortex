@@ -4,6 +4,7 @@ import {getFunctionName} from "convex/server";
 import type {MessageDoc} from "@convex-dev/agent";
 import {serializeMessage,fetchContextWithPrompt} from "@convex-dev/agent";
 import {checkAssembledAgentModelInput} from "../../../convex-dev/runtimeGateway";
+import {buildV8AgentMessages} from "../../../convex-dev/runtimeAgentContext";
 import type {MutationCtx} from "../../../convex-dev/_generated/server";
 import {canonicalModelJson} from "../../../src/domain/model-policy";
 import {assertNativeArgs} from "./native-arguments";
@@ -26,7 +27,7 @@ async function fixture(options:{effort?:boolean;strict?:boolean;inputLimit?:numb
  async function start(text="Hello world!",conversationId?:string){const run=await f.call<ReturnType<typeof runs.publicRun>>(runs.submit,{request:request("v8-first",conversationId,text)});await f.call(agent.start,{runId:run.runId});const owned=f.db.table("runtimeAgentExecutions")[0]!;return {run,owned,attempt:{reference:f.reference,runId:run.runId,attemptNumber:1,leaseVersion:owned.leaseVersion as number}};}
  return {...f,calls,request,start,get grant(){return f.grant;}};
 }
-it("new definition actually selects V8 direct scheduling; old definitions stay on V6",async()=>{const f=await fixture(),{run,owned}=await f.start();expect(f.db.table("runtimeRuns")[0]).toMatchObject({modelInputVersion:8});expect(owned.executionMode).toBe("direct-v8");expect(f.scheduled.map(v=>v.name)).toContain("runtimeAgent:executeDirectV8");expect(f.calls).toContain("runs:claimNextV8");expect(JSON.parse(f.db.table("runtimeRuns")[0]!.snapshotCanonical as string)).toMatchObject({version:8,inputSelection:{coverage:"selected"}});expect(run.inputMessageIds).toHaveLength(1);
+it("new definition actually selects V8 direct scheduling; old definitions stay on V6",async()=>{const f=await fixture(),{run,owned}=await f.start();expect(f.db.table("runtimeRuns")[0]).toMatchObject({modelInputVersion:8});expect(owned.executionMode).toBe("direct-v8");expect(f.scheduled.map(v=>v.name)).toContain("runtimeAgent:executeDirectV8");expect(f.calls.filter(name=>name==="runs:claimNextV8")).toEqual([]);expect(JSON.parse(f.db.table("runtimeRuns")[0]!.snapshotCanonical as string)).toMatchObject({version:8,inputSelection:{coverage:"selected"}});expect(run.inputMessageIds).toHaveLength(1);
  const legacy=await ingestionFixture(),mutation=legacy.ctx.runMutation.bind(legacy.ctx);legacy.ctx.runMutation=(async(ref,args)=>{let name="";try{name=getFunctionName(ref);}catch{return mutation(ref,args);}return name==="runs:claimNext"?legacy.call(runs.claimNext,args):mutation(ref,args);}) as MutationCtx["runMutation"];const old=await legacy.run();await legacy.call(agent.start,{runId:old.runId});expect(legacy.db.table("runtimeAgentExecutions")[0]!.executionMode).toBe("direct-v6");expect(JSON.parse(legacy.db.table("runtimeRuns")[0]!.snapshotCanonical as string).version).toBe(1);});
 it("effort-aware definitions pin Normal by default on existing V8, bind changed request effort, and keep legacy refusal explicit",async()=>{
  const f=await fixture({effort:true}),{run,attempt}=await f.start();const snapshot=JSON.parse(f.db.table("runtimeRuns")[0]!.snapshotCanonical as string);
@@ -226,4 +227,53 @@ it("V8 pending failure skips embedding preparation and Action commits the origin
  expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({contextState:"failed",contextCompleteness:"incomplete",contextFailureCode:"CONTEXT_OVERFLOW"});
  expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);expect(f.db.table("runtimeAgentOperations")).toHaveLength(0);
  expect(embeddingGuard).not.toHaveBeenCalled();
+});
+
+async function compactPreparedFixture(){
+ const f=await fixture({effort:true,inputLimit:32768}),source=await f.source("My favorite fruit is apricot.","compaction-original-source");
+ const {attempt,owned}=await f.start("What is my favorite fruit?");await f.call(agent.startContext,attempt);
+ const entry={key:"memory:compaction",kind:"memory" as const,relevance:.8,text:`Indexed Cortex memory (untrusted evidence):\n## Relevant Context\n\n### Conversation History\n[user]: ${source.content}\nSource roles and trust: ${canonicalModelJson([source.lineage,source.lineage])}`};
+ const witness={sourceId:source.lineage.sourceId,sourceEventId:source.lineage.sourceEventId,sourceRevision:source.lineage.sourceRevision,contentHash:source.contentHash,permissions:["canViewMemories" as const]};
+ await f.call(agent.saveContextV8,{...attempt,context:entry.text,entries:[entry],witnesses:[witness],completeness:"complete"});
+ const candidate=await f.call<Awaited<ReturnType<typeof agent.prepareResolvedModelCandidateV8Handler>>>(agent.prepareResolvedModelCandidateV8,{...attempt,ordinal:0});
+ if(candidate.state!=="started")throw Error("Expected compact V2 proposal");
+ const binding={reference:attempt.reference,operationKey:"agent.respond" as const,runBudgetId:candidate.current.run.runBudgetId,semanticId:candidate.op.semanticId,ordinal:0};
+ const native={...attempt,ordinal:0,operationId:candidate.op.operationId,requestCanonical:candidate.op.nativeRequestCanonical!,snapshotCanonical:canonicalModelJson(candidate.governedResolution.snapshot),bindingCanonical:canonicalModelJson(binding)};
+ return {f,source,attempt,owned,entry,witness,candidate,binding,native};
+}
+it("V2 native preflight/admission pins projected bytes while original entries, raw binding and full witnesses remain intact",async()=>{
+ const {f,owned,entry,witness,candidate,binding,native}=await compactPreparedFixture();
+ const saved=f.db.table("runtimeAgentExecutions").find(row=>row._id===owned._id)!;
+ expect(saved.modelInputEntries).toEqual([entry]);expect(saved.contextCanonical).toBe(entry.text);expect(saved.sourceWitnesses).toEqual([witness]);
+ expect(JSON.parse(f.db.table("runtimeAgentOperations").find(row=>row.operationId===candidate.op.operationId)!.requestCanonical as string).context).toBe(entry.text);
+ expect(native.requestCanonical).toContain("apricot");expect(native.requestCanonical).not.toContain("Source roles and trust:");expect(native.requestCanonical).not.toContain("sourceEventId");
+ const built=buildV8AgentMessages(candidate.current.messages,candidate.current.execution.contextCanonical??"",{version:2,entries:candidate.current.execution.modelInputEntries??[],entryKeys:candidate.current.execution.modelInputSelection!.entryKeys});
+ const checked=await checkAssembledAgentModelInput({messages:built,context:"",instructions:candidate.current.definition.instructions.text,tools:[],maxOutputTokens:256},candidate.governedResolution,binding);
+ expect(checked).toMatchObject({supported:true,withinBound:true});if(!checked.supported||!checked.withinBound)throw Error("Expected actual SDK fit");expect(checked.requestCanonical).toBe(native.requestCanonical);
+ const admitted=await f.call<{admission:{status:string;requestCanonical:string}}>(agent.admitPreparedModelOperationV8,native);
+ expect(admitted.admission.status).toBe("reserved");
+ const storedAttempt=f.db.table("runtimeModelAttempts")[0]!;
+ // Native admission replaces only the pending child identity with the original
+ // server-derived child id. Every model-body byte remains the preflight body.
+ expect(storedAttempt.childCallId).toMatch(/^[a-f0-9]{64}$/);
+ const admittedCanonical=canonicalModelJson({...JSON.parse(native.requestCanonical),childCallId:storedAttempt.childCallId});
+ expect(admitted.admission.requestCanonical).toBe(admittedCanonical);
+ expect(canonicalModelJson(JSON.parse(storedAttempt.canonical as string).request)).toBe(admittedCanonical);
+ expect(JSON.parse(storedAttempt.inputProofCanonical as string).requestCanonical).toBe(admittedCanonical);
+ expect(f.db.table("runtimeAgentExecutions").find(row=>row._id===owned._id)!.modelInputEntries).toEqual([entry]);
+ expect(f.db.table("runtimeAgentExecutions").find(row=>row._id===owned._id)!.sourceWitnesses).toEqual([witness]);
+});
+it.each(["source-hash","source-revision","source-tombstone","grant","qualification","cancel","body"] as const)("V2 projection cannot authorize changed %s at the fresh native admission fence",async fault=>{
+ const {f,source,native}=await compactPreparedFixture();
+ const row=f.db.table("runtimeMemorySources").find(value=>(value.lineage as typeof source.lineage).sourceId===source.lineage.sourceId)!;
+ if(fault==="source-hash")row.contentHash="changed";
+ if(fault==="source-revision")(row.lineage as typeof source.lineage).sourceRevision++;
+ if(fault==="source-tombstone")f.db.seed("runtimeAuthTombstones",{tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId,resourceType:"source",resourceId:source.lineage.sourceId,deletedAt:clock});
+ if(fault==="grant")f.grant.revokedAt=clock;
+ if(fault==="qualification")f.db.table("runtimeModelQualifications")[0]!.revokedAt=clock;
+ if(fault==="cancel")f.db.table("runtimeRuns")[0]!.cancellationRequestedAt=clock;
+ if(fault==="body")native.requestCanonical=native.requestCanonical.replace("apricot","plum");
+ await expect(f.call(agent.admitPreparedModelOperationV8,native)).rejects.toThrow();
+ expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+ expect(f.db.table("runtimeAgentExecutions")[0]!.sourceWitnesses).toHaveLength(1);
 });

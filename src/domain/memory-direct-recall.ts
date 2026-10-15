@@ -6,6 +6,19 @@ import type { MemoryEffortTrace } from "./memory-effort.js";
 export const DIRECT_FACT_RECALL_ROUTE = "direct-facts-v1" as const;
 const words = (value: string) => value.normalize("NFC").toLocaleLowerCase("en-US").match(/[\p{L}\p{N}]+/gu) ?? [];
 const ambiguous = new Set(["and", "or", "not", "no", "now", "formerly", "previously", "instead", "before", "after", "latest", "current", "all", "any", "other", "thing", "things", "information", "details", "memory", "memories", "facts", "about", "prefer"]);
+const selfPrefixes=["the user s","the user","user s","user","my"];
+/** Compare only explicit assertion heads. Predicate labels do not establish
+ * whether two facts concern different literal properties. Unknown heads retain
+ * semantic discovery rather than treating differing labels as disjoint. */
+function literalAssertionHead(text:string):string|undefined {
+  const statement=words(text),copula=statement.findIndex(word=>word==="is"||word==="are");
+  if(copula<2||copula===statement.length-1||statement.some(word=>ambiguous.has(word)))return undefined;
+  const head=statement.slice(0,copula);
+  for(const prefix of selfPrefixes){const parts=words(prefix);if(parts.every((word,index)=>head[index]===word)){
+    const property=head.slice(parts.length);return property.length>=2?`self:${property.join(" ")}`:undefined;
+  }}
+  return `named:${(head[0]==="the"?head.slice(1):head).join(" ")}`;
+}
 export function sufficientDirectFactLookup(text: string, candidates: { facts: readonly DerivedFact[]; candidateWorkBound: boolean }, now: number): boolean {
   if (text.length > 1024 || candidates.candidateWorkBound || candidates.facts.length !== 1) return false;
   // One explicit property lookup only. Compound requests, conversational asks,
@@ -26,12 +39,15 @@ export function sufficientDirectFactLookup(text: string, candidates: { facts: re
   }
   const subject=words(fact.subject??"").join(" "),predicate=words(fact.predicate??"").join(" ");
   const self=query[1]!.toLowerCase()==="my";
-  const prefixes=self?["my","user","user s","the user","the user s"].map(prefix=>prefix+" "+phrase):[phrase,"the "+phrase];
+  const prefixes=self?selfPrefixes.map(prefix=>prefix+" "+phrase):[phrase,"the "+phrase];
   const values=prefixes.map(valueAfter).filter((value):value is string=>value!==undefined);
   if(!values.length)return false;
   if(fact.subject||fact.predicate||fact.object){
     if(!fact.object?.trim()||fact.object.length>512||!predicate)return false;
-    if(self){if(!["user","the user","i","me","my",words(fact.ownerPrincipalId).join(" ")].includes(subject)||predicate!==phrase)return false;}
+    // The exact literal assertion above proves the requested property. A broad
+    // extracted predicate such as "prefers" supplies no alias/synonym proof;
+    // owned subject and the value must still agree with that assertion.
+    if(self){if(!["user","the user","i","me","my",words(fact.ownerPrincipalId).join(" ")].includes(subject))return false;}
     else if(!subject||`${subject} ${predicate}`!==phrase)return false;
     return values.includes(words(fact.object).join(" "));
   }
@@ -40,10 +56,14 @@ export function sufficientDirectFactLookup(text: string, candidates: { facts: re
 
 /** A second assertion about the same literal property, or corrected evidence
  * found through a real indexed edge, also requires semantic discovery. */
-export function directFactTraversalCompatible(seed:DerivedFact,facts:readonly Pick<DerivedFact,"factId"|"subject"|"predicate"|"version"|"supersedes"|"supersededBy"|"supersedesEndpoint"|"supersededByEndpoint"|"historyReceipt"|"createdAt"|"updatedAt">[]):boolean {
-  return facts.every(fact=>fact.version===1&&!fact.supersedes&&!fact.supersededBy&&!fact.supersedesEndpoint&&!fact.supersededByEndpoint&&!fact.historyReceipt&&fact.updatedAt===fact.createdAt
-    &&(fact.factId===seed.factId||!!seed.predicate&&words(fact.subject??"").join(" ")!==words(seed.subject??"").join(" ")
-      ||!!seed.predicate&&words(fact.predicate??"").join(" ")!==words(seed.predicate).join(" ")));
+export function directFactTraversalCompatible(seed:DerivedFact,facts:readonly Pick<DerivedFact,"factId"|"fact"|"subject"|"predicate"|"version"|"supersedes"|"supersededBy"|"supersedesEndpoint"|"supersededByEndpoint"|"historyReceipt"|"createdAt"|"updatedAt">[]):boolean {
+  const seedHead=literalAssertionHead(seed.fact);
+  return facts.every(fact=>{
+    const head=literalAssertionHead(fact.fact);
+    return fact.version===1&&!fact.supersedes&&!fact.supersededBy&&!fact.supersedesEndpoint&&!fact.supersededByEndpoint&&!fact.historyReceipt&&fact.updatedAt===fact.createdAt
+      &&(fact.factId===seed.factId||seedHead!==undefined&&head!==undefined&&head!==seedHead
+        &&!!seed.predicate&&(words(fact.subject??"").join(" ")!==words(seed.subject??"").join(" ")||words(fact.predicate??"").join(" ")!==words(seed.predicate).join(" ")));
+  });
 }
 
 /** A configured hop horizon is deliberate bounded discovery. Other traversal

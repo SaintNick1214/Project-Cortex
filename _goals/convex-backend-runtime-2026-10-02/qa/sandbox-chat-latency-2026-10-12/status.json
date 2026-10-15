@@ -1,6 +1,6 @@
 {
   "scope": "Sandbox chat latency repair and canonical demo reuse",
-  "phase": "EFFORT_SOURCE_ACCEPTED_INSTALLED_NATIVE_QUALIFICATION_NEXT",
+  "phase": "DIRECT_CANDIDATE_BROWSER_CLIENT_QUALIFICATION",
   "complete": 4,
   "total": 6,
   "percent": 66.7,
@@ -12,7 +12,7 @@
     "browserLatencyMeasured": false
   },
   "activeUserEnvironmentPreserved": null,
-  "updatedAt": "2026-10-14T23:54:18.793339+00:00",
+  "updatedAt": "2026-10-15T03:47:46.991Z",
   "metricVersion": 3,
   "userEnvironmentHistory": {
     "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
@@ -51,7 +51,7 @@
       "nativeAcceptance": false
     }
   ],
-  "primaryLatencyTarget": "Hosted submit to first visible model answer by effort: Fast3s/Normal6s/High8s/Max30s; Normal4hops default (design only)",
+  "primaryLatencyTarget": "Hosted submit to first visible model answer: Fast2hops/3s;Normal4hops/6s default;High8hops/8s;Max30s, bounded by qualified context and governance. Implementation accepted at source/test level; installed qualification pending.",
   "actualFailedEnvironment": {
     "id": "8a1aa585-aff0-4383-acda-c221c6d405e1",
     "database": "energized-wildcat-602",
@@ -74,47 +74,70 @@
     "evidence": "browser/k11-readiness-observation.json"
   },
   "currentEnvironment": {
-    "observedAt": "2026-10-14T21:39:38.903Z",
-    "sessionId": "ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
-    "state": "READY",
-    "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+    "state": "CLEANED",
+    "sessionId": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+    "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-direct-2026-10-14",
     "target": {
-      "id": 6178760,
-      "name": "savory-pheasant-21",
+      "id": 6184997,
+      "name": "fine-chickadee-10",
       "kind": "cloud",
       "teamId": 325340,
       "projectId": 3200658,
-      "reference": "dev/cortex-sandbox-ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
+      "reference": "dev/cortex-sandbox-c6a1903b-d656-4e15-806f-4f92defb0bf0",
       "deploymentType": "dev",
       "isDefault": false,
-      "expiresAt": 1792618565952,
-      "deploymentUrl": "https://savory-pheasant-21.convex.cloud",
+      "expiresAt": 1792636452715,
+      "deploymentUrl": "https://fine-chickadee-10.convex.cloud",
       "disposable": true,
       "serverExpiryVerified": true
     },
-    "ports": {
-      "web": 3382,
-      "basic": 3383
-    },
     "container": {
-      "name": "cortex-sandbox-ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
-      "imageId": "sha256:8d1afbb653dbcfa5c1592b79831502be3ac7f7e5ee51ee6ceaa7a96703e22fbd",
+      "name": "cortex-sandbox-c6a1903b-d656-4e15-806f-4f92defb0bf0",
+      "imageId": "sha256:de7b73132cd6af5cdb5b4286283f5ef48a626eb75adc33006c3308865b333447",
       "labels": {
-        "dev.cortex.disposable-sandbox": "ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
-        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2"
+        "dev.cortex.disposable-sandbox": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/c6a1903b-d656-4e15-806f-4f92defb0bf0"
       },
-      "id": "aa3a58a73a1f3b9c2822200c5c2406ec5c1c927eaa237b52d53b7fefa848a3e9"
+      "id": "d356690038f4b8f7de35425dfaea804353ddae4d39215243c7ab8b49d9c36777"
     },
-    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-native-snapshot-2026-10-14",
-    "launcherSession": 18395,
-    "launcherPid": 94766,
+    "ports": {
+      "web": 3326,
+      "basic": 3327
+    },
+    "launcherPid": 71456,
+    "rootExecSession": 52865,
     "startupFixedQualification": "8/8ACTUAL_PASS",
-    "nativeQualified": false,
-    "generation": "K29",
-    "backendTrace": "ENABLED_READBACK1_BEFORE_MEASURED_TURNS",
-    "launcherChildExit": "UNKNOWN_INTERRUPTED; original process absent; no direct exit receipt",
-    "nativeSLOQualified": false,
-    "authRecoveryV2": "PASS owner/expired/invalid;107freshguards;data+financeunchanged;directexit0/allclientsclosed"
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "0582db9f24bf770090fa081630e4077b6c54539183fd696059895faedec0e08d",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "d1ade277e7c857ef29a74e8af633db9b2ba7a771efea47126270e982826bceae",
+    "runtimeReadySha256": "7773610d80cf5bf8e896b1b15874bd31b944d336d894aed0ab884545d986b0e8",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T02:42:11.635Z",
+    "effortProfileRuntimeAcceptance": false,
+    "manifestSha256": "d13d8f35da717b84aad3e7d637ed6e63636e5d4e9d7fa26faedac54b1a4abf66",
+    "backendManifestSha256": "c5d5341860fa804895964f361b1ed5db7b4abf4438f6bbf4f13db61df832c712",
+    "cleanup": {
+      "directLauncherExit": 130,
+      "receipt": "memory-effort-direct-native-cleanup-1792034728868.json",
+      "freshAbsenceChecks": 21,
+      "cloudContainerPrivateFilesAndProcessesAbsent": true
+    }
   },
   "actualSamples": {
     "generation": "K21",
@@ -138,10 +161,9 @@
     "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
   },
   "pendingRepairs": [
-    "Reduce measured backend pre-dispatch preparation (2087\u20136949ms) and protected delivery while retaining all current authority/source/accounting predicates and fresh boundaries",
-    "Fresh installed hosted sub1000ms and semantic qualification",
-    "Unqualified in-plan new-target UPDATE/SUPERSEDE remains disclosed",
-    "Independent final audit"
+    "Current hosted Fast/Normal latency misses and Max/warm useful-fact omission; source repairs awaiting combined review and new installed outcomes",
+    "Five actual question extraction dead letters require additive strict-schema Gateway contract and real qualification",
+    "Actual changed-candidate tool approval/cancel, protected output, CLI/demo installed checks, cleanup, docs and independent final audit"
   ],
   "refinements": [
     {
@@ -543,8 +565,8 @@
         "pass": 8,
         "fail": 2,
         "failures": [
-          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
-          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
+          "expiredvalidsignature→AUTHENTICATION_TIMEOUT",
+          "invalidsignature→AUTHENTICATION_TIMEOUT"
         ],
         "noAccessDelivered": true,
         "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
@@ -578,8 +600,8 @@
       "priorAuthenticationExpectedCodeFailures": {
         "generation": "K9",
         "failures": [
-          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
-          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
+          "expired valid signature → AUTHENTICATION_TIMEOUT",
+          "invalid signature → AUTHENTICATION_TIMEOUT"
         ],
         "notRerun": true
       },
@@ -601,7 +623,7 @@
       },
       "toolInclusiveSupplement": {
         "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
-        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1–9 PASS",
         "originalGenericFailPreserved": true
       }
     }
@@ -1964,7 +1986,7 @@
     }
   },
   "memoryEffortExecution": {
-    "state": "SOURCE_ACCEPTED_PACKAGING",
+    "state": "ACTUAL_PUBLIC_FOUR_MODES_PASS_BROWSER_FAST_TARGET_FAIL",
     "goalReview": "PASS4.4",
     "plan": "modified-goal-execution-v4.md",
     "backendExecutor": "memory_effort_backend",
@@ -1972,7 +1994,988 @@
     "publicContract": "src/domain/memory-effort.ts",
     "sourceAcceptance": true,
     "nativeAcceptance": false,
-    "chatNativeCodegen": "PENDING_GENUINE_NATIVE_GENERATION_AND_FULL_TYPES_BUILD",
-    "sourceReview": "memory-effort-joint-source-review.json"
+    "chatNativeCodegen": "GENUINE_INSTALLED_CODEGEN_ES2021_FULL_BUILD_PASS",
+    "sourceReview": "memory-effort-joint-source-review.json",
+    "sourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+    "topologyReceipt": "memory-effort-hosted-topology-1792022915539.json",
+    "topologyChecks": 49,
+    "topologyInferenceCalls": 0,
+    "firstLaunch": {
+      "sessionId": "6cc4c640-3af8-419a-a7ed-5288c0ffc981",
+      "exitCode": 1,
+      "failure": "Temporary QA fixture type errors",
+      "paidCalls": 0,
+      "cleanup": "ABSENT_FRESH_VERIFICATION",
+      "receipt": "memory-effort-launcher-first-cleanup.json"
+    },
+    "currentProductCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3"
+  },
+  "currentOwnedEnvironment": null,
+  "installedNativeFindings": [
+    {
+      "code": "CHAT_ES2021_OBJECT_HASOWN",
+      "state": "SOURCE_FIXED_INDEPENDENT_PASS_NATIVE_REQUALIFICATION_PENDING",
+      "report": "memory-effort-e1-es2021-report.md"
+    },
+    {
+      "code": "INGESTION_CLAIM_OCC_BECOMES_PERMANENT_FAILURE",
+      "state": "SOURCE_FIXED_INDEPENDENT_PASS_NATIVE_REQUALIFICATION_PENDING",
+      "raw": "memory-effort-service-log-snapshot-public-post-ordinary-1792023370350.json",
+      "failurePreserved": "memory-effort-native-regression-1792023230933.json",
+      "modelDispatchForFailedStage": false
+    }
+  ],
+  "repairProductCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
+  "repairReview": {
+    "verdict": "PASS4.0",
+    "receipt": "memory-effort-repair-independent-review.json",
+    "nativeQualification": false
+  },
+  "previousEffortCandidate": {
+    "sessionId": "53bda5ed-0c61-4308-b0d6-7b8a6e2cf34e",
+    "state": "CLEANED",
+    "sourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+    "target": {
+      "id": 6181963,
+      "name": "efficient-perch-912",
+      "teamId": 325340,
+      "projectId": 3200658
+    },
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "nativeTopology": "49checksPASS/0inference",
+    "ordinaryCapture": "FAIL_INDEXING_ADMISSION_FAILED_OCC_ROLLBACK_BEFORE_MODEL_DISPATCH",
+    "effortRecall": "0/4NOT_RUN_DEPENDENT_GATE",
+    "actualLauncherExit": 130,
+    "cleanupReceipt": "memory-effort-native-first-cleanup.json"
+  },
+  "repairPackaging": {
+    "status": "PASS",
+    "sourceCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
+    "review": "memory-effort-repair-independent-review.json",
+    "receipt": "memory-effort-repair-kit-checks/packaging-final-receipt.json",
+    "launcherTests": 72,
+    "packedConsumers": 4
+  },
+  "actualEffortRepair": {
+    "sourceCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
+    "nativeOrdinary": {
+      "captureReplayConflictIsolation": "PASS",
+      "captureBackground": "6/6ACTUAL_CALLS_TERMINAL_ONE_ATTEMPT",
+      "watermarks": "facts/vectors4of4",
+      "fastNormalHigh": "PASS",
+      "maxExplicitLimit100": "POSITIVE_RETURN_QA_WRONG_EXPECTATION_PRESERVED",
+      "maxUnbounded": "PASS51CHECKS",
+      "maxUnboundedReceipt": "memory-effort-repair-native-max-unbounded-report.json",
+      "originalReceipt": "memory-effort-repair-native-regression-1792024801847.json"
+    },
+    "browser": [
+      {
+        "effort": "normal",
+        "condition": "empty-first",
+        "firstVisibleAfterPaintMs": 3292.8,
+        "targetMs": 6000,
+        "pass": true,
+        "runId": "run:3455c487fb12daf56d453898e828cd8bbcef6c9b7e548e02e247068afa2b06e6",
+        "memory": "complete",
+        "receipt": "memory-effort-repair-browser-normal-seed.logs.json"
+      },
+      {
+        "effort": "fast",
+        "condition": "populated-fresh-conversation",
+        "firstVisibleAfterPaintMs": 7761.3,
+        "targetMs": 3000,
+        "pass": false,
+        "runId": "run:2254c956677050e001c9f02b8d64d936f2be58bd8bf96345d3650a70cc7d6ecc",
+        "answer": "correct_apricot",
+        "memory": "failed_INVALID_CONFIRMED_MODEL_OUTPUT",
+        "receipt": "memory-effort-repair-browser-fast.logs.json"
+      }
+    ],
+    "upstreamExtraction": {
+      "output": "{\"facts\":[],\"relations\":[]}",
+      "correctStrictProducerContract": true,
+      "parserRejectedExtraRootField": true,
+      "paidRetry": false,
+      "watermarkHolePreserved": true,
+      "diagnosis": "memory-effort-repair-browser-extract-diagnosis-report.json"
+    },
+    "furtherPaidSubmissions": "HELD_FOR_MEASURED_LATENCY_TRIAGE",
+    "requiredIntegrationAccepted": false,
+    "finalFinancial": {
+      "operations": 29,
+      "firstAttempts": 29,
+      "activeSlots": 0,
+      "reserved": 0,
+      "runUnknownLiabilityMicroUsd": 4800000,
+      "mirroredTenantNotAdded": true,
+      "actualCharges": "UNKNOWN",
+      "receipt": "memory-effort-repair-final-report.json"
+    },
+    "cleanup": {
+      "state": "ABSENT_FRESH_VERIFICATION",
+      "checks": 21,
+      "launcherExit": 130,
+      "receipt": "memory-effort-repair-final-cleanup-1792026385329.json",
+      "chatDirectExit": "UNKNOWN; fresh PID/HTTP absence verified"
+    }
+  },
+  "latencyRepair": {
+    "sourceCommit": "f87d79a2687cfa5f2814f4136c049b4e88a1ae88",
+    "sourceAcceptance": "PASS4.0",
+    "review": "memory-effort-latency-independent-review.json",
+    "sourcePercent": 100,
+    "tests": 514,
+    "suites": 14,
+    "skips": 0,
+    "breakingFindings": 0,
+    "rootLint": {
+      "exit": 0,
+      "warnings": 243
+    },
+    "backendBuildExit": 0,
+    "publicContractsExit": 0,
+    "packaging": "PASS_THREE_BUILDS_FOUR_PACKS_FOUR_CONSUMERS_IMAGE",
+    "nativeQualification": "ACTUAL_RELEVANT_OUTCOMES_CAPTURED; LATENCY_AND_CONCURRENCY_REPAIR_OPEN",
+    "hostedSpeedClaim": false,
+    "launcherTests": 125,
+    "launcherSkips": 0,
+    "launcherDryRun": "PASS; original invalid combined flags failure retained",
+    "readyReceipt": "memory-effort-latency-environment-ready.json",
+    "actualNative": {
+      "receipt": "memory-effort-latency-native-regression-report.json",
+      "checks": 309,
+      "topology": {
+        "status": "PASS",
+        "checks": 47,
+        "operations": 23,
+        "inferenceCalls": 0,
+        "depths": {
+          "fast": {
+            "reachedDepth": 2,
+            "selected": 3,
+            "maxDepth": 2,
+            "maxEntries": 4
+          },
+          "normal": {
+            "reachedDepth": 4,
+            "selected": 7,
+            "maxDepth": 4,
+            "maxEntries": 8
+          },
+          "high": {
+            "reachedDepth": 8,
+            "selected": 15,
+            "maxDepth": 8,
+            "maxEntries": 16
+          },
+          "max": {
+            "reachedDepth": 13,
+            "selected": 24,
+            "maxDepth": null,
+            "maxEntries": null
+          }
+        },
+        "kind": "ACTUAL_LOGICAL_FACT_EVIDENCE_TOPOLOGY_NOT_INGESTION",
+        "boundaries": "Native fixed-transaction-clock traversal with actual separate elapsed coordinator intervals. Fact-evidence bridge changes do not claim canonical transcript bridge mutation or physical raw-read count/latency proof."
+      },
+      "readiness": {
+        "cutoff": 4,
+        "elapsedMs": 9395.341708,
+        "facts": {
+          "cutoff": 4,
+          "indexedThrough": 4,
+          "complete": true,
+          "hole": null
+        },
+        "vectors": {
+          "cutoff": 4,
+          "indexedThrough": 4,
+          "complete": true,
+          "hole": null
+        }
+      },
+      "modes": {
+        "fast": {
+          "apiElapsedMs": 2417.6888340000005,
+          "retrievalDurationMs": 558,
+          "selected": 4,
+          "reachedDepth": 1,
+          "maxDepth": 2,
+          "maxEntries": 4,
+          "selectedInputUnits": 851,
+          "maxContextTokens": 32768,
+          "stopReasons": [
+            "entries"
+          ],
+          "unavailableStages": [],
+          "positiveOwnedCoralFact": true
+        },
+        "normal": {
+          "apiElapsedMs": 2428.5605829999986,
+          "retrievalDurationMs": 667,
+          "selected": 6,
+          "reachedDepth": 1,
+          "maxDepth": 4,
+          "maxEntries": 8,
+          "selectedInputUnits": 1277,
+          "maxContextTokens": 32768,
+          "stopReasons": [
+            "exhausted"
+          ],
+          "unavailableStages": [],
+          "positiveOwnedCoralFact": true
+        },
+        "high": {
+          "apiElapsedMs": 2314.673791999994,
+          "retrievalDurationMs": 548,
+          "selected": 6,
+          "reachedDepth": 1,
+          "maxDepth": 8,
+          "maxEntries": 16,
+          "selectedInputUnits": 1277,
+          "maxContextTokens": 32768,
+          "stopReasons": [
+            "exhausted"
+          ],
+          "unavailableStages": [],
+          "positiveOwnedCoralFact": true
+        },
+        "max": {
+          "apiElapsedMs": 2389.5430840000045,
+          "retrievalDurationMs": 621,
+          "selected": 6,
+          "reachedDepth": 1,
+          "maxDepth": null,
+          "maxEntries": null,
+          "selectedInputUnits": 1277,
+          "maxContextTokens": 32768,
+          "stopReasons": [
+            "exhausted"
+          ],
+          "unavailableStages": [],
+          "positiveOwnedCoralFact": true
+        }
+      },
+      "financial": {
+        "operationCount": 10,
+        "attemptCount": 10,
+        "operationKinds": {
+          "embedding.query": 4,
+          "embedding.memory": 4,
+          "memory.extract": 2
+        },
+        "allAttemptsFirst": true,
+        "allOutputsConfirmedAttachedUsageComplete": true,
+        "activeConcurrency": 0,
+        "reservedUnits": 0,
+        "unknownLiabilityMicroUsd": 1000000,
+        "unknownLiabilityUsd": 1,
+        "aggregateUsdComplete": false,
+        "monetaryMeaning": "Regression-scope liability only. Exact provider cost unavailable, so financial state remains uncertain despite confirmed terminal output; mirrored tenant liability is not added twice.",
+        "paidRetries": 0,
+        "secondaryPaidCalls": 0
+      },
+      "clientsClosed": true
+    },
+    "browser": [
+      {
+        "effort": "normal",
+        "condition": "empty-first",
+        "targetMs": 6000,
+        "runId": "run:3e59228d9e52a77671b7c33a6901a0dad9a680f7dfdaa2d3bff3f0f241ef0661",
+        "firstAfterPaintMs": 3279.100000023842,
+        "visibility": "visible",
+        "timingPass": true,
+        "excludedFromTimingGate": false
+      },
+      {
+        "effort": "fast",
+        "condition": "populated-fresh-conversation",
+        "targetMs": 3000,
+        "runId": "run:292881c1ea0174bc52f5462fdeeb5b385d330f75750a4bf171d31e87e36aa023",
+        "firstAfterPaintMs": 5762.299999952316,
+        "visibility": "visible",
+        "timingPass": false,
+        "excludedFromTimingGate": false
+      },
+      {
+        "effort": "normal",
+        "condition": "populated-fresh-conversation",
+        "targetMs": 6000,
+        "runId": "run:0f11250e9c1cae04c237610d0d5574e973eef33a828b367321623909c9e75a01",
+        "firstAfterPaintMs": 6445.200000047684,
+        "visibility": "visible",
+        "timingPass": false,
+        "excludedFromTimingGate": false
+      },
+      {
+        "effort": "high",
+        "condition": "human-tool-approval",
+        "targetMs": 8000,
+        "runId": "run:33433520fabd013bd216ade408f956f4db12025ad19055fed80bdba7813591b2",
+        "firstAfterPaintMs": 62810.10000002384,
+        "visibility": "visible",
+        "timingPass": null,
+        "excludedFromTimingGate": true
+      },
+      {
+        "effort": "max",
+        "condition": "populated-fresh-conversation",
+        "targetMs": 30000,
+        "runId": "run:c4e74313c3d3824fe339cd9db8ba427449c53a278f2eda859bde28ccf7736ea4",
+        "firstAfterPaintMs": 6478.400000095367,
+        "visibility": "visible",
+        "timingPass": true,
+        "excludedFromTimingGate": false
+      },
+      {
+        "effort": "normal",
+        "condition": "warm-same-conversation",
+        "targetMs": 6000,
+        "runId": "run:a53715e86228fb84647e993c7f68710103a51e6a9f9c77ee6238c4509c602efc",
+        "firstAfterPaintMs": null,
+        "visibility": null,
+        "timingPass": false,
+        "excludedFromTimingGate": false
+      }
+    ],
+    "installedChat": {
+      "codegen": "PASS_GENUINE_ES2021",
+      "fullTypes": "PASS",
+      "productionBuild": "PASS",
+      "browser": "DEFERRED_TO_CHANGED_CANDIDATE; signed-out desktop/phone UI checked, no model submission",
+      "url": "http://127.0.0.1:60118",
+      "ownerPid": 31639,
+      "childPid": 31649,
+      "execSession": 57342,
+      "cleanup": "CONFIRMED_OWNER_CHILD_ABSENT_ORIGINAL_EXEC_EXIT0"
+    },
+    "warmFailure": {
+      "code": "BUDGET_EXCEEDED",
+      "uiFailure": "INTERRUPTED_REQUIRES_RECONCILIATION",
+      "capacityReason": "concurrency",
+      "outcome": "not_dispatched",
+      "mainPaidAttempts": 0,
+      "firstText": false,
+      "paidRetries": 0,
+      "diagnosis": "CONFIRMED_NATIVE_STRUCTURED_ERROR",
+      "receipt": "memory-effort-latency-final-warm-capacity-1792029177578.json"
+    },
+    "browserSummary": "memory-effort-latency-browser-current-summary.json",
+    "browserCleanup": {
+      "ownedTabsClosed": true,
+      "signedOut": true,
+      "jwtInMemory": false,
+      "clipboard": "untouched",
+      "viewportReset": true
+    },
+    "nextBatch": "Bounded direct-index evidence with governed semantic fallback; same-native raw reuse; safe original concurrency wait before billable admission",
+    "actualFinal": {
+      "receipt": "memory-effort-latency-final-report.json",
+      "checks": 129,
+      "modelOperations": 51,
+      "firstAttempts": 51,
+      "terminalConfirmedAttached": true,
+      "activeConcurrency": 0,
+      "reservedUnits": 0,
+      "unknownLiabilityUsd": 7,
+      "actualCharges": "UNKNOWN",
+      "manualRunAccountsUsd": 3.3,
+      "regressionRunAccountsUsd": 1,
+      "startupRunAccountsUsd": 2.7,
+      "tenantMirrorsAddedTwice": false,
+      "paidRetries": 0,
+      "highTool": "one approved completed read-only memory recall; no duplicate run",
+      "finalWatermark": {
+        "cutoff": 11,
+        "facts": 2,
+        "vectors": 2,
+        "hole": 3
+      },
+      "clientProcessCleanup": "memory-effort-latency-chat-cleanup.json"
+    },
+    "nextSourceBatch": {
+      "implementation": "COMPLETE",
+      "review": "PASS_SOURCE_TESTS_ONLY",
+      "reviewReceipt": "memory-effort-direct-independent-review-v2.json",
+      "finding": "A discovered conflicting fact omitted by maxEntries1 must still prevent direct-only route",
+      "currentRootQuality": {
+        "build": 0,
+        "backendFiles": 174,
+        "tables": 79,
+        "components": 2,
+        "lint": 0,
+        "warnings": 243,
+        "contracts": 0
+      },
+      "changedCandidateRuntime": "NOT_RUN",
+      "commit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+      "push": "ENTIRE_CONFIRMED",
+      "sourceTask": {
+        "completed": 3,
+        "total": 3,
+        "percent": 100,
+        "scope": "Source implementation, affected checks and independent review only"
+      }
+    }
+  },
+  "entireMirror": {
+    "remote": "entire",
+    "repository": "cortex-memory/cortex",
+    "continuationHead": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+    "pushExit": 0,
+    "pushResult": "Branch advanced f87d79a26 to064e21be1",
+    "fetchedDev": "46013de5919a72ecdbf55d02486aaaa7994cb79f",
+    "devAncestor": true,
+    "currentSdkCliProvider": "0.39.0",
+    "devSdkCliProvider": "0.36.0",
+    "githubCalls": 0
+  },
+  "directCandidate": {
+    "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+    "packaging": "PASS",
+    "launcherIntegration": "PASS",
+    "launcherTests": 126,
+    "packagingReceipt": "memory-effort-direct-packaging-report.json",
+    "launcherReceipt": "memory-effort-direct-launcher-checks.json",
+    "sessionId": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+    "target": {
+      "id": 6184997,
+      "name": "fine-chickadee-10",
+      "teamId": 325340,
+      "projectId": 3200658
+    },
+    "launcherPid": 71456,
+    "rootExecSession": 52865,
+    "actualRuntime": "COMPLETED_WITH_RECORDED_CONTEXT_INDEXING_AND_LATENCY_FAILURES",
+    "effortLatencyAcceptance": false,
+    "readyReceipt": "memory-effort-direct-environment-ready.json",
+    "traceReceipt": "memory-effort-direct-kit-backend-trace-enabled.json",
+    "nativeReceipt": "memory-effort-direct-native-report.json",
+    "nativeChecks": {
+      "ordinary": 338,
+      "topology": 47,
+      "exitCode": 0,
+      "paidRetries": 0,
+      "activeConcurrency": 0,
+      "reservedUnits": 0,
+      "unknownLiabilityMicroUsd": 1000000
+    },
+    "browser": {
+      "version": 1,
+      "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+      "sessionId": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+      "status": "ACTUAL_RESULTS_RETAINED_REPAIR_REQUIRED",
+      "rows": [
+        {
+          "label": "normal-seed",
+          "effort": "normal",
+          "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789",
+          "targetMs": 6000,
+          "correctApricot": true,
+          "memory": "complete",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 948.3000000715256,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 3070.899999976158,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 3093.899999976158,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 6289.5,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 6294,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 6294.800000071526,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            }
+          ],
+          "firstAfterPaintMs": 3093.899999976158,
+          "visibility": "visible",
+          "timingPass": true,
+          "receipt": "memory-effort-direct-browser-normal-seed.logs.json"
+        },
+        {
+          "label": "fast",
+          "effort": "fast",
+          "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066",
+          "targetMs": 3000,
+          "correctApricot": true,
+          "memory": "failed",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 2085.100000023842,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 6349.399999976158,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 6376.5,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 12427.800000071526,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 12432,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 12432.300000071526,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            }
+          ],
+          "firstAfterPaintMs": 6376.5,
+          "visibility": "visible",
+          "timingPass": false,
+          "receipt": "memory-effort-direct-browser-fast.logs.json"
+        },
+        {
+          "label": "normal",
+          "effort": "normal",
+          "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657",
+          "targetMs": 6000,
+          "correctApricot": true,
+          "memory": "failed",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 1367.2000000476837,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 5988.399999976158,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 6010.800000071526,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 9542.600000023842,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 9547.300000071526,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 9547.899999976158,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            }
+          ],
+          "firstAfterPaintMs": 6010.800000071526,
+          "visibility": "visible",
+          "timingPass": false,
+          "receipt": "memory-effort-direct-browser-normal.logs.json"
+        },
+        {
+          "label": "high",
+          "effort": "high",
+          "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c",
+          "targetMs": 8000,
+          "correctApricot": true,
+          "memory": "complete",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 1230.7999999523163,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 6086.599999904633,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 6111.099999904633,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 9925,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 9928.899999976158,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 9929.5,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            }
+          ],
+          "firstAfterPaintMs": 6111.099999904633,
+          "visibility": "visible",
+          "timingPass": true,
+          "receipt": "memory-effort-direct-browser-high.logs.json"
+        },
+        {
+          "label": "max",
+          "effort": "max",
+          "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8",
+          "targetMs": 30000,
+          "correctApricot": false,
+          "memory": "failed",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 1369.7999999523163,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 6617.700000047684,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 6644,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 12141.5,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 12145.399999976158,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 12145.700000047684,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            }
+          ],
+          "firstAfterPaintMs": 6644,
+          "visibility": "visible",
+          "timingPass": true,
+          "receipt": "memory-effort-direct-browser-max.logs.json"
+        },
+        {
+          "label": "normal-warm",
+          "effort": "normal",
+          "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175",
+          "targetMs": 6000,
+          "correctApricot": false,
+          "memory": "failed",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 1239.2000000476837,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 9910,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 9927.300000071526,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 15052.800000071526,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 15057.800000071526,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 15058.200000047684,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            }
+          ],
+          "firstAfterPaintMs": 9927.300000071526,
+          "visibility": "visible",
+          "timingPass": false,
+          "receipt": "memory-effort-direct-browser-normal-warm.logs.json"
+        }
+      ],
+      "publicRecall": {
+        "positiveApricotFact": true,
+        "itemCount": 8,
+        "effort": "normal",
+        "receipt": "memory-effort-direct-browser-public-recall.ax.txt"
+      },
+      "paidRetries": 0,
+      "note": "Timing is separate from correctness and asynchronous memory. Max timing alone cannot qualify its incorrect answer; no newcandidate source acceptance inferred.",
+      "selectorWaitFailures": {
+        "count": 2,
+        "advertisedFastWaitTimeoutMs": 30000,
+        "approximateFastToolCallWallMs": 3040.5,
+        "runResubmissions": 0,
+        "items": [
+          {
+            "scenario": "Fast completion selector",
+            "kind": "tool wait returned before advertised timeout",
+            "approximateToolCallWallMs": 3040.5,
+            "subsequentRunObserved": true
+          },
+          {
+            "scenario": "preapproval fixture",
+            "kind": "wrong operator label Approve input; actual label Approve submitted message",
+            "approvalClicked": false
+          }
+        ],
+        "note": "Tool-call wall time is not an exact configured deadline; neither observation caused a run resubmission."
+      }
+    },
+    "cli": {
+      "receipt": "memory-effort-direct-cli-observation.json",
+      "normalFirstPrintedMs": [
+        9527.567337,
+        10311.963921
+      ],
+      "warmContextMissing": true,
+      "naturalExit": 0
+    },
+    "installedChat": {
+      "receipt": "memory-effort-direct-chat-report.md",
+      "positiveCello": true,
+      "response": "complete",
+      "memory": "complete",
+      "reconnectAttach": true,
+      "phoneWidth": 393,
+      "latencyMs": null,
+      "cleanup": "memory-effort-direct-chat-cleanup.json"
+    },
+    "finalSnapshot": {
+      "receipt": "memory-effort-direct-final-snapshot-report.md",
+      "originalExit": 1,
+      "originalUnmetCheck": "event one exact current source 19",
+      "explanation": "Awaiting-approval cancelled event intentionally has no approved derived source; original approved-source collector assumption preserved. No third service collection.",
+      "operations": 67,
+      "attempts": 67,
+      "activeConcurrency": 0,
+      "reservedUnits": 0,
+      "unknownLiabilityMicroUsd": 8600000,
+      "actualCharges": "UNKNOWN",
+      "failedExtractEvents": [
+        3,
+        5,
+        9,
+        11,
+        17
+      ],
+      "manualFactsThrough": 2,
+      "manualVectorsThrough": 2,
+      "manualCutoff": 19,
+      "preApprovalCancelModelAttempts": 0,
+      "preApprovalCancelToolEffects": 0
+    },
+    "cleanup": {
+      "directLauncherExit": 130,
+      "receipt": "memory-effort-direct-native-cleanup-1792034728868.json",
+      "freshAbsenceChecks": 21,
+      "cloudContainerPrivateFilesAndProcessesAbsent": true
+    }
+  },
+  "previousLatencyCandidate": {
+    "state": "CLEANED",
+    "sessionId": "a8fa8264-62b4-4aeb-9cb8-a1079620f5b2",
+    "sourceCommit": "f87d79a2687cfa5f2814f4136c049b4e88a1ae88",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-latency-2026-10-14",
+    "target": {
+      "id": 6183373,
+      "name": "rare-butterfly-916",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-a8fa8264-62b4-4aeb-9cb8-a1079620f5b2",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1792632096151,
+      "deploymentUrl": "https://rare-butterfly-916.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    "container": {
+      "name": "cortex-sandbox-a8fa8264-62b4-4aeb-9cb8-a1079620f5b2",
+      "imageId": "sha256:65cf10a7ae445b86f82287dd5af4cfc7317815d8a25df7f7122e3f31c3bf5a5b",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "a8fa8264-62b4-4aeb-9cb8-a1079620f5b2",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/a8fa8264-62b4-4aeb-9cb8-a1079620f5b2"
+      },
+      "id": "2557ad812d43989be039230d98ff34184c5993d2211e84f4c001aed6cabb5a69"
+    },
+    "ports": {
+      "web": 3308,
+      "basic": 3309
+    },
+    "launcherPid": 29922,
+    "rootExecSession": 9767,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "04dbb6cbe6689cf6b46b8e1b8ae93c10ec44f4ed4521c4ff711dc1c7c15e12e0",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "69b5fabade478b8f6c7133cdd1dd3bf5095396c9380b5f0b92bc836d17381da5",
+    "runtimeReadySha256": "5540d438603dff48484b7b5672eb923ec468a174352d016b1c18d05521280143",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T01:25:19.363Z",
+    "effortProfileRuntimeAcceptance": false,
+    "cleanup": {
+      "directLauncherExit": 130,
+      "receipt": "memory-effort-latency-native-cleanup-1792029564675.json",
+      "freshAbsenceChecks": 21,
+      "cloudContainerPrivateFilesAndProcessesAbsent": true
+    }
+  },
+  "repairBatch": {
+    "scope": "Source implementations and affected checks; acceptance/hosted outcomes separate",
+    "checksComplete": 5,
+    "total": 5,
+    "percent": 100,
+    "independentReview": "PASS_SOURCE_ONLY_4.0",
+    "hostedQualification": "NOT_RUN",
+    "repairs": [
+      {
+        "name": "literal fact eligibility",
+        "status": "SOURCE_CHECKS_PASS",
+        "receipt": "memory-effort-direct-literal-report.md"
+      },
+      {
+        "name": "native claim composition",
+        "status": "SOURCE_CHECKS_PASS",
+        "receipt": "memory-effort-native-claim-report.md"
+      },
+      {
+        "name": "V2 model-facing context compaction",
+        "status": "SOURCE_CHECKS_PASS",
+        "receipt": "memory-effort-context-compaction-report.md"
+      },
+      {
+        "name": "cancel terminal observation",
+        "status": "SOURCE_CHECKS_PASS",
+        "tests": 49,
+        "receipt": "memory-effort-cancel-report.md"
+      },
+      {
+        "name": "strict JSON-schema extraction successor",
+        "status": "SOURCE_CHECKS_PASS",
+        "receipt": "memory-effort-strict-schema-report.md",
+        "launcherReceipt": "memory-effort-strict-launcher-report.md"
+      }
+    ],
+    "reviewReceipt": "memory-effort-compact-independent-review.json",
+    "sourcePercent": 100,
+    "combinedQuality": {
+      "build": 0,
+      "contracts": 0,
+      "types": 0,
+      "lint": 0,
+      "lintWarnings": 241,
+      "providerUnit": 312,
+      "providerMockedIntegration": 74,
+      "docsBuild": 0
+    }
+  },
+  "metricName": "Modified memory-effort and hosted-latency follow-up",
+  "baseGoalHistory": {
+    "receipt": "../video-deferral-2026-10-11/status.json",
+    "nonVideoScopePreviouslyAccepted": true,
+    "currentChangedSourceFinalAcceptance": false
   }
 }

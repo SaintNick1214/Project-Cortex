@@ -261,7 +261,10 @@ export const claimNext = internalMutation({ args: { reference: runtimeAuthorityR
   return { runId: row.runId, attemptNumber: attempt, leaseVersion, runBudgetId: row.runBudgetId, snapshot };
 } });
 /** Fresh selected-input claim; the original claim registration/journals remain unchanged. */
-export const claimNextV8 = internalMutation({ args: { reference: runtimeAuthorityReference, conversationId: v.string(), leaseMs: v.optional(v.number()) }, handler: async (ctx, args) => {
+export async function claimNextV8Handler(ctx: MutationCtx, args: { reference: RuntimeAuthorityReference; conversationId: string; leaseMs?: number }): Promise<
+  { runId: string; attemptNumber: number; leaseVersion: number; runBudgetId: string; snapshot: Awaited<ReturnType<typeof captureSelectedCutoff>> }
+  | { runId: string; failureCode: "CONTEXT_LIMIT_EXCEEDED" } | null
+> {
   const conversation = await conversationById(ctx, args.reference, args.conversationId); if (!conversation) transcriptDenied();
   await checkConversation(ctx, args.reference, conversation, "run");
   const row = await queueHead(ctx, conversation);
@@ -284,7 +287,8 @@ export const claimNextV8 = internalMutation({ args: { reference: runtimeAuthorit
   await ctx.db.insert("runtimeRunAttempts", { tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, runId: row.runId,
     attemptNumber: attempt, leaseVersion, historyRevision: executionRevision(conversation), status: "running", startedAt: now });
   return { runId: row.runId, attemptNumber: attempt, leaseVersion, runBudgetId: row.runBudgetId, snapshot };
-} });
+}
+export const claimNextV8 = internalMutation({ args: { reference: runtimeAuthorityReference, conversationId: v.string(), leaseMs: v.optional(v.number()) }, handler: claimNextV8Handler });
 const attemptArgs = { reference: runtimeAuthorityReference, runId: v.string(), attemptNumber: v.number(), leaseVersion: v.number() };
 export async function activeAttempt(ctx: Pick<QueryCtx, "db">, args: { reference: RuntimeAuthorityReference; runId: string; attemptNumber: number; leaseVersion: number }) {
   const current = await currentRun(ctx, args.reference, args.runId, "run"); const row = current.row;

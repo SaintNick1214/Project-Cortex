@@ -13,6 +13,9 @@ const run: RuntimeRun = { version: 1, runId: "run", conversationId: "conversatio
 function fixture(memory?:MemoryEffortRequest) {
   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
   const client = { submitAndStart: jest.fn(async (_request: TextSubmitV1, _options: { streaming?: boolean }) => ({ handle, run, start: { runId: run.runId, attemptNumber: 1, state: "ready" as const } })), submit: jest.fn(async (_request: TextSubmitV1) => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+    observe: jest.fn(async (_handle: RuntimeRunHandle, _options: { cursor?: { attemptNumber: number; sequence: number }; finalOnly?: boolean }): Promise<RuntimeObservation> => ({
+      run: { ...run, responseStatus: "cancelled", cancellationRequested: true, failureCode: "CANCELLED" }, state: "cancelled", parts: [], cursor: 0, approvals: [],
+    })),
     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
@@ -170,6 +173,94 @@ describe("AI SDK 7 remote transport", () => {
   it("explicit stop calls server cancellation while disconnect only closes the local observer", async () => {
     const f = fixture(); const stream = await f.transport.sendMessages(send()); await f.transport.stop(); await drain(stream);
     expect(f.client.cancel).toHaveBeenCalledTimes(1); expect(f.client.cancel).toHaveBeenCalledWith(handle); expect(f.subscriptions[0].closed).toBe(true);
+  });
+  it("stop projects a fresh cancelled observation before closing a waiting-approval attachment", async () => {
+    const f = fixture(); f.transport.attach(handle); const stream = await f.transport.reconnectToStream({ chatId: "chat" });
+    f.update([{ sequence: 1, part: { type: "tool", toolCallId: "call", name: "memory_recall", phase: "requested" } }], "waiting_approval");
+    const observed: RuntimeObservation = { run: { ...run, responseStatus: "cancelled", cancellationRequested: true, failureCode: "CANCELLED" },
+      state: "cancelled", parts: [{ sequence: 2, part: { type: "status", state: "cancelled" } }], cursor: 2, approvals: [] };
+    f.client.observe.mockImplementationOnce(async () => { expect(f.subscriptions[0].closed).toBe(false); return observed; });
+    await f.transport.stop();
+    const messages: UIMessage[] = []; for await (const message of readUIMessageStream({ stream: stream! })) messages.push(message);
+    expect(f.client.observe).toHaveBeenCalledTimes(1);
+    expect(f.client.observe).toHaveBeenCalledWith(handle, { cursor: { attemptNumber: 1, sequence: 1 }, finalOnly: undefined });
+    expect(f.client.cancel.mock.invocationCallOrder[0]).toBeLessThan(f.client.observe.mock.invocationCallOrder[0]);
+    expect(f.onObservation).toHaveBeenLastCalledWith(observed);
+    expect(messages.at(-1)?.metadata).toMatchObject({ runId: handle.runId, responseStatus: "cancelled", failureCode: "CANCELLED", cursor: 2 });
+    expect(f.transport.state).toMatchObject({ attemptNumber: 1, cursor: 2 }); expect(f.subscriptions[0].closed).toBe(true);
+    expect(f.client.submitAndStart).not.toHaveBeenCalled(); expect(f.client.start).not.toHaveBeenCalled(); expect(f.client.approveTool).not.toHaveBeenCalled();
+  });
+  it("stop reports the actual observed state rather than fabricating cancellation", async () => {
+    const f = fixture(); f.transport.attach(handle);
+    const observed: RuntimeObservation = { run, state: "running", parts: [], cursor: 0, approvals: [] };
+    f.client.observe.mockResolvedValueOnce(observed); await f.transport.stop();
+    expect(f.onObservation).toHaveBeenCalledTimes(1); expect(f.onObservation).toHaveBeenCalledWith(observed); expect(f.transport.run).toEqual(handle);
+    expect(f.client.submitAndStart).not.toHaveBeenCalled(); expect(f.client.start).not.toHaveBeenCalled();
+  });
+  it("cancel failure propagates without observing, publishing terminal metadata, or closing the observer", async () => {
+    const f = fixture(), error = new CortexRuntimeError("FORBIDDEN"); const stream = await f.transport.sendMessages(send());
+    f.client.cancel.mockRejectedValueOnce(error); await expect(f.transport.stop()).rejects.toBe(error);
+    expect(f.client.observe).not.toHaveBeenCalled(); expect(f.onObservation).not.toHaveBeenCalled(); expect(f.subscriptions[0].closed).toBe(false);
+    f.transport.disconnect(); await drain(stream);
+  });
+  it("fresh observation failure propagates without publishing cached or invented metadata", async () => {
+    const f = fixture(), error = new CortexRuntimeError("SESSION_CHANGED", "uncertain"); const stream = await f.transport.sendMessages(send());
+    f.client.observe.mockRejectedValueOnce(error); await expect(f.transport.stop()).rejects.toBe(error);
+    expect(f.client.cancel).toHaveBeenCalledTimes(1); expect(f.onObservation).not.toHaveBeenCalled(); expect(f.subscriptions[0].closed).toBe(false);
+    f.transport.disconnect(); await drain(stream);
+  });
+  it.each([false, true])("stop uses actual SDK observation and its fresh post-I/O session fence (changed=%s)", async changed => {
+    const calls: string[] = [], session = { version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "owner", userId: "owner" };
+    const observed: RuntimeObservation = { run: { ...run, responseStatus: "cancelled", cancellationRequested: true, failureCode: "CANCELLED" },
+      state: "cancelled", parts: [], cursor: 0, approvals: [] };
+    const port = {
+      setAuth: (_fetcher: unknown, ready: (accepted: boolean) => void) => ready(true),
+      mutation: async (ref: Parameters<RuntimeClientPort["mutation"]>[0], args: Record<string, unknown>) => {
+        const name = getFunctionName(ref); calls.push(name);
+        if (name === "runtimeClient:session") return changed && calls.includes("runtimeClient:observeEnvelope") ? { ...session, principalId: "other" } : session;
+        if (name === "runtimeAgent:cancel") { expect(args).toEqual({ tenantId: "tenant", memorySpaceId: "space", runId: "run" }); return { cancelled: true }; }
+        if (name === "runtimeClient:observeEnvelope") {
+          expect(args).toEqual({ afterSequence: 0, limit: 100, finalOnly: true, handle });
+          return { version: 1, session, observation: observed };
+        }
+        throw new Error("UNEXPECTED_RPC");
+      },
+      query: async () => { throw new Error("PRIVATE_QUERY_PROHIBITED"); },
+      action: async () => { throw new Error("PAID_CALL_PROHIBITED"); }, close: async () => {},
+    } as unknown as RuntimeClientPort;
+    const client = new CortexRuntimeClient({ deploymentUrl: "https://unit.invalid", fetchToken: async () => "opaque", client: port });
+    const onObservation = jest.fn();
+    try {
+      const transport = new CortexRemoteTransport({ client, agentId: "agent", agentVersion: 1, finalOnly: true, onObservation }); transport.attach(handle);
+      if (changed) { await expect(transport.stop()).rejects.toMatchObject({ code: "SESSION_CHANGED", outcome: "uncertain" }); expect(onObservation).not.toHaveBeenCalled(); }
+      else { await transport.stop(); expect(onObservation).toHaveBeenCalledTimes(1); expect(onObservation).toHaveBeenCalledWith(observed); }
+      // A newly attached handle has attempt 0; the SDK resets the cursor after
+      // observing the canonical attempt. Every observation retains its session fence.
+      expect(calls).toEqual(["runtimeClient:session", "runtimeAgent:cancel", "runtimeClient:session", "runtimeClient:observeEnvelope", "runtimeClient:session",
+        ...(changed ? [] : ["runtimeClient:observeEnvelope", "runtimeClient:session"])]);
+    } finally { await client.close(); }
+  });
+  it.each(["attach", "conversation", "reconnect"] as const)("does not observe or close a new %s while cancellation is pending", async change => {
+    const f = fixture(); const first = await f.transport.sendMessages(send()); let release = () => {};
+    f.client.cancel.mockImplementationOnce(async () => await new Promise(resolve => { release = () => resolve({ cancelled: true }); }));
+    const pending = f.transport.stop();
+    if (change === "attach") f.transport.attach(handle);
+    if (change === "conversation") { f.transport.setConversation("other"); f.transport.attach({ ...handle, runId: "other", conversationId: "other" }); }
+    const resumed = await f.transport.reconnectToStream({ chatId: "chat" });
+    release(); await pending;
+    expect(f.client.observe).not.toHaveBeenCalled(); expect(f.onObservation).not.toHaveBeenCalled(); expect(f.subscriptions[1].closed).toBe(false);
+    f.transport.disconnect(); await drain(first); await drain(resumed!);
+  });
+  it.each(["attach", "conversation", "reconnect"] as const)("does not publish or close a new %s while fresh observation is pending", async change => {
+    const f = fixture(); const first = await f.transport.sendMessages(send()); let release = (_value: RuntimeObservation) => {};
+    f.client.observe.mockImplementationOnce(async () => await new Promise(resolve => { release = resolve; }));
+    const pending = f.transport.stop(); await Promise.resolve(); expect(f.client.observe).toHaveBeenCalledTimes(1);
+    if (change === "attach") f.transport.attach(handle);
+    if (change === "conversation") { f.transport.setConversation("other"); f.transport.attach({ ...handle, runId: "other", conversationId: "other" }); }
+    const resumed = await f.transport.reconnectToStream({ chatId: "chat" });
+    release({ run: { ...run, responseStatus: "cancelled" }, state: "cancelled", parts: [], cursor: 0, approvals: [] }); await pending;
+    expect(f.onObservation).not.toHaveBeenCalled(); expect(f.subscriptions[1].closed).toBe(false);
+    f.transport.disconnect(); await drain(first); await drain(resumed!);
   });
   it("AI SDK abort stops remote run with a typed abort and closes owned observer", async () => {
     const f = fixture(), abort = new AbortController(); const stream = await f.transport.sendMessages({ ...send(), abortSignal: abort.signal }); abort.abort(); const chunks = await drain(stream);

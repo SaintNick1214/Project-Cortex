@@ -13,7 +13,7 @@ import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
 import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../src/domain/conflicts";
-import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound } from "../src/domain/model-policy";
+import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, MEMORY_JSON_SCHEMA_CONTRACT, memoryJsonSchemaInputBound } from "../src/domain/model-policy";
 import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord, TrustedModelPolicyContext } from "../src/domain/model-policy";
 import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
@@ -152,6 +152,18 @@ function validManifest(manifest: DeploymentPolicyManifest | undefined): asserts 
     integer(proof.resultBound.maximumPrivateResultBytes, 1); integer(proof.resultBound.maximumOutputTokens);
     integer(proof.inputBound.revision, 1); integer(proof.checkedAt); integer(proof.expiresAt, 1);
     if (proof.checkedAt >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
+    if (proof.inputBound.featureEnvelope === MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_SCHEMA_CONTRACT.inputRule
+      || qualification.boundRevision === MEMORY_JSON_SCHEMA_CONTRACT.boundRevision) {
+      if (proof.inputBound.featureEnvelope !== MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_SCHEMA_CONTRACT.inputRule
+        || proof.inputBound.revision !== 1 || qualification.boundRevision !== MEMORY_JSON_SCHEMA_CONTRACT.boundRevision
+        || proof.nativeInterface !== "chat" || proof.modelId !== MEMORY_JSON_SCHEMA_CONTRACT.modelId
+        || !qualification.capabilities.includes("structured") || qualification.capabilities.includes("tools") || qualification.allowedOptions.length
+        || qualification.limits.inputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumInputTokens || qualification.limits.contextTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumContextTokens
+        || qualification.limits.outputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumOutputTokens || qualification.limits.toolSteps
+        || qualification.limits.timeoutMs > 60000
+        || qualification.costBound.maximumCostUnits !== MEMORY_JSON_SCHEMA_CONTRACT.maximumCostUnits
+        || !proof.resultBound.maximumOutputTokens || proof.resultBound.maximumOutputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumOutputTokens || proof.supportsStream) fail("CAPABILITY_UNAVAILABLE");
+    }
     if (proof.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_OBJECT_CONTRACT.inputRule
       || qualification.boundRevision === MEMORY_JSON_OBJECT_CONTRACT.boundRevision) {
       if (proof.inputBound.featureEnvelope !== MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_OBJECT_CONTRACT.inputRule
@@ -571,6 +583,17 @@ export const resolve = internalQuery({ args: resolveArgs, handler: (ctx, args) =
 /** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
 export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, request: ReturnType<typeof validateModelRequest>["request"]): number {
   if (request.outputTokens > proof.resultBound.maximumOutputTokens || (proof.nativeInterface === "embedding" && request.texts.length > proof.resultBound.maximumEmbeddingValues)) fail("POLICY_DENIED");
+  if (proof.inputBound.featureEnvelope === MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_SCHEMA_CONTRACT.inputRule) {
+    if (proof.inputBound.featureEnvelope !== MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_SCHEMA_CONTRACT.inputRule
+      || proof.inputBound.revision !== 1 || proof.boundRevision !== MEMORY_JSON_SCHEMA_CONTRACT.boundRevision
+      || proof.nativeInterface !== "chat" || proof.modelId !== MEMORY_JSON_SCHEMA_CONTRACT.modelId
+      || request.promptVersion !== MEMORY_JSON_SCHEMA_CONTRACT.promptVersion || request.schemaVersion !== MEMORY_JSON_SCHEMA_CONTRACT.schemaVersion
+      || request.toolRegistryVersion !== MEMORY_JSON_SCHEMA_CONTRACT.toolRegistryVersion || !request.responseFormat
+      || canonical(request.responseFormat) !== canonical(MEMORY_JSON_SCHEMA_CONTRACT.responseFormat) || canonical(request.outputSchema) !== canonical(FACTS_JSON_SCHEMA)
+      || request.tools.length || request.toolChoice || request.toolSteps || request.media || request.profile || request.batch
+      || canonical(request.options) !== '{"maxRetries":0}') fail("CAPABILITY_UNAVAILABLE");
+    return domainControl(() => memoryJsonSchemaInputBound(request.messages, request.outputTokens));
+  }
   if (proof.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_OBJECT_CONTRACT.inputRule) {
     if (proof.inputBound.featureEnvelope !== MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_OBJECT_CONTRACT.inputRule
       || proof.inputBound.revision !== 1 || proof.boundRevision !== MEMORY_JSON_OBJECT_CONTRACT.boundRevision

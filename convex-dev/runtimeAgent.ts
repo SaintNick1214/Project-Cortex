@@ -38,7 +38,7 @@ import { components } from "./_generated/api";
 import { agentAttempt, sourceWitness } from "./runtimeAgentSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { currentRun, currentControlRun, activeAttempt, publicRunCurrent } from "./runs";
+import { currentRun, currentControlRun, activeAttempt, publicRunCurrent, claimNextV8Handler } from "./runs";
 import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, hydrateSelectedCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { deliveryExpiresAt } from "./runtimeDelivery";
@@ -879,7 +879,8 @@ function preflightModelCandidate(current: Awaited<ReturnType<typeof executionCon
  * Agent tool-call aliases. No unsupported-shape result may bypass this check. */
 async function preflightModelCandidateV8(current: Awaited<ReturnType<typeof executionContext>>, args: Attempt & { ordinal: number }, op: { semanticId: string },
   initialResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>, governedResolution: Awaited<ReturnType<typeof resolveModelOperationHandler>>) {
-  const checked = await checkAssembledAgentModelInput({ messages: buildV8AgentMessages(current.messages, current.execution.contextCanonical ?? ""), context: "", instructions: current.definition.instructions.text,
+  const checked = await checkAssembledAgentModelInput({ messages: buildV8AgentMessages(current.messages, current.execution.contextCanonical ?? "", current.snapshot.version === 8 && current.snapshot.inputSelection.version === 2
+    ? { version: 2, entries: current.execution.modelInputEntries ?? [], entryKeys: current.execution.modelInputSelection?.entryKeys } : undefined), context: "", instructions: current.definition.instructions.text,
     tools: current.definition.tools.map(tool => NATIVE_TOOL_NAMES[tool.toolId as keyof typeof NATIVE_TOOL_NAMES]),
     maxOutputTokens: Math.min(initialResolution.snapshot.limits.outputTokens, initialResolution.dispatchEvidence.resultBound.maximumOutputTokens) }, governedResolution,
     { reference: args.reference, operationKey: "agent.respond", runBudgetId: current.run.runBudgetId, semanticId: op.semanticId, ordinal: args.ordinal });
@@ -1119,14 +1120,16 @@ async function executePreparedModelStep(ctx: ActionCtx, args: Attempt & { ordina
       if (current.snapshot.version === 8 && "nativeRequestCanonical" in op && typeof op.nativeRequestCanonical === "string") {
         // No authorization is reused: final V8 admission freshly validates the
         // operation's current model binding and its exact normalized body pin.
-        return buildV8AgentMessages(current.messages, current.execution.contextCanonical ?? "");
+        return buildV8AgentMessages(current.messages, current.execution.contextCanonical ?? "", current.snapshot.inputSelection.version === 2
+          ? { version: 2, entries: current.execution.modelInputEntries ?? [], entryKeys: current.execution.modelInputSelection?.entryKeys } : undefined);
       }
       const fresh = await ctx.runQuery(refs.hydrate, attempt);
       if (proposal?.requestPreflight) {
         if (fresh.snapshot.version === 8) await preflightModelCandidateV8(fresh, args, op, proposal.initialResolution, proposal.governedResolution);
         else preflightModelCandidate(fresh, args, op, proposal.initialResolution, proposal.governedResolution);
       }
-      if (fresh.snapshot.version === 8) return buildV8AgentMessages(fresh.messages, fresh.execution.contextCanonical ?? "");
+      if (fresh.snapshot.version === 8) return buildV8AgentMessages(fresh.messages, fresh.execution.contextCanonical ?? "", fresh.snapshot.inputSelection.version === 2
+        ? { version: 2, entries: fresh.execution.modelInputEntries ?? [], entryKeys: fresh.execution.modelInputSelection?.entryKeys } : undefined);
       return [...fresh.messages, ...(fresh.execution.contextCanonical ? [{ role: "system" as const, content: `Authorized Cortex context (untrusted evidence):\n${fresh.execution.contextCanonical}` }] : [])];
     } });
   let pending: unknown[] = []; let lastFlush = Date.now(); let firstTextPublished = false;
@@ -1762,7 +1765,6 @@ export const cancel = mutation({ args: selector, handler: async (ctx, args) => {
 
 /** Version 8 is selected only by the new immutable relevant-context definition. */
 
-const claimV8=ref<"mutation",{ reference:RuntimeAuthorityReference;conversationId:string;leaseMs:number },{ runId:string;attemptNumber:number;leaseVersion:number }|{ runId:string;failureCode:string }|null>("mutation","runs:claimNextV8");
 const freshWorkflowV8=ref<"mutation",{ args:Attempt },string>("mutation","runtimeAgent:executeTurnV8");
 const directActionV8=ref<"action",Attempt,null>("action","runtimeAgent:executeDirectV8");
 const directRetirementV8=ref<"mutation",Attempt,null>("mutation","runtimeAgent:retireDirectV8");
@@ -1777,8 +1779,12 @@ async function startExecutionV8(ctx: MutationCtx, reference: RuntimeAuthorityRef
     .eq("memorySpaceId", reference.memorySpaceId!).eq("runId", row.runId).eq("attemptNumber", row.attemptNumber)).take(2));
   if (old) return { runId: row.runId, attemptNumber: old.attemptNumber, state: old.state };
   traceRuntimePhase(row.runId, row.attemptNumber, "claim.begin");
+  // Claim failures were never caught here: they abort the outer start transaction.
+  // Compose the same body atomically, retaining its returned overflow disposition.
+  // Raw rows are invocation-local; every claim/currentness predicate still runs.
+  const claimCtx = createV8AuthorityReadScope(ctx, { managedSources: true });
   const claimed = await traceRuntimeMutationSpan(row.runId, row.attemptNumber, "start.claimNext",
-    async () => await ctx.runMutation(claimV8, { reference, conversationId: row.conversationId, leaseMs: 300_000 }));
+    async () => await claimNextV8Handler(claimCtx, { reference, conversationId: row.conversationId, leaseMs: 300_000 }));
   traceRuntimePhase(row.runId, claimed && "attemptNumber" in claimed ? claimed.attemptNumber : row.attemptNumber, "claim.end");
   if (!claimed) return { runId: row.runId, attemptNumber: row.attemptNumber, state: "queued" as const };
   // claimNext checks the indexed head. A future request must never start another run under its identity.

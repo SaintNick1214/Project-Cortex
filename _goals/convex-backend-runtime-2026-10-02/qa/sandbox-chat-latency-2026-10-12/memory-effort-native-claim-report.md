@@ -1,0 +1,21 @@
+# Same-transaction V8 claim composition
+
+Status: source frozen, affected implementation checks PASS; one later coherent independent review/build/hosted qualification remains pending. Base064e21be. No performance/SLO acceptance is claimed.
+
+`runs.ts` exposes the exact original claim body as `claimNextV8Handler`, with explicit success/failure/null typing; the existing internal mutation retains its validator and invokes that body. `runtimeAgent.ts` calls it inside the existing V8 start transaction under the invocation-local V8 raw reader. The removed registered child call and its raw-scope invalidation no longer form a boundary. Every original guard and write remains. No public endpoint, table or module was added; legacy claim/start and strict Workflow layout remain unchanged.
+
+Before editing, inspection showed the parent never caught errors from the former child. Those errors already abort the parent, so the composed body preserves complete outer rollback. The nonthrowing overflow path still cancels the original budget, retires the queued work with CONTEXT_LIMIT_EXCEEDED, schedules recovery and returns failureCode; parent returns that terminal state without throwing. Existing nested cancellation and official Agent component calls remain. The claim body is byte-for-byte identical to064 (SHA564f31932af18804d7e60403466f121e165676d04904b8b79cab5b767983c712). No permission decision or output crosses native calls in a cache.
+
+The new13-test suite executes real handlers against the existing transactional native fixture and compares the former registered-child control with composition. It covers ordinary and strict layout/results/exact durable effects, one claim/dispatch on replay, queue head identity/order, approval, managed input lock, lease validation, snapshot overflow terminal disposition, grant/definition/canonical-bridge/outbox writers invalidating raw state, and opaque post-claim/scheduler failures rolling back input/budget/outbox/attempts/schedules. Full original claim, canonical and fresh authority predicates execute in both modes. This fixture is not actual hosted OCC or latency proof.
+
+Observed affected checks under pinned Node24.15.0/npm12.2.0:
+
+- 238/238 tests in7 suites, zero skips, natural exit30.735s. Includes client admission/native V8 and legacy, actual installed Workflow start, existing V8 preparation/read retention, native transcript parents, whole recall composition and transcript contracts. Official Jest footer is238; custom reporter's219 is not the count.
+- Final full root TypeScript exit0,43.395s. An initial inferred-union optional attemptNumber error is preserved; exact explicit return typing fixes it without assertions/casts or runtime/body changes.
+- Strict lint for the3 owned files exit0,zero warnings/errors,9.583s. Owned diff check exit0.
+
+The first test receipt preserves2 fixture failures: it incorrectly assumed replay performs no writes. Original start performs one idempotent executionRequested patch. The correction compares the full nested-control replay result and effects, including that same patch, while still requiring one claim/dispatch and unchanged rows. No product behavior was weakened to satisfy it. After the238-test run, only erased TypeScript return/generic annotations changed; final full TypeScript and lint cover them. No broader passing tests were repeated.
+
+Exact commands/direct exits/raw logs are in `memory-effort-native-claim-checks.json`; frozen3file hashes are in `memory-effort-native-claim-owned-hashes.json`; the complete2product+newtest diff is preserved in `memory-effort-native-claim-source.patch`. This stage changes only runtimeAgent.ts,runs.ts and new tests/unit/runtimeAgent/native-claim-composition.test.ts. No builds, services, paid calls, P/W edits or commits occurred. Installed064DB/container/Chat remain unchanged; Chat owner77027/child77037 exec13870 continues for Root QA.
+
+The old native claim460.7ms is the affected span, not a projected saving: required DB/predicate work remains. RuntimeAgent ownership is explicitly released after this freeze to Root's context renderer executor for minimal separate V2 wiring; preserve this archived claim diff in the later coherent review. That later joint file hash will naturally differ from this stage freeze.

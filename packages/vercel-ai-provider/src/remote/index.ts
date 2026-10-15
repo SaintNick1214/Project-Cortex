@@ -33,6 +33,7 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
   private conversationId?: string;
   private readonly replays = new Map<string, Replay>();
   private closeObservation?: () => void;
+  private updateObservation?: (observation: RuntimeObservation) => void;
   constructor(private readonly options: CortexRemoteTransportOptions) {
     this.conversationId = options.conversationId;
     const memory=Object.getOwnPropertyDescriptor(options,"memory");
@@ -54,7 +55,21 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
   get state(): CortexRemoteState | undefined { return this.current ? { ...this.current, handle: { ...this.current.handle }, projections: this.current.projections?.map(part => ({ ...part })) } : undefined; }
   /** Close only this browser observation. The Workflow and other observers continue. */
   disconnect(): void { this.closeObservation?.(); }
-  async stop(): Promise<void> { const handle = this.run; if (handle) await this.options.client.cancel(handle); this.disconnect(); }
+  async stop(): Promise<void> {
+    const state = this.current, close = this.closeObservation, update = this.updateObservation;
+    if (!state) { close?.(); return; }
+    const attached = () => this.current === state && this.closeObservation === close && this.updateObservation === update;
+    await this.options.client.cancel(state.handle);
+    if (!attached()) return;
+    // Cancellation acknowledgement is not terminal run metadata. Observe with fresh
+    // SDK authorization, and never publish into or disconnect a replacement attachment.
+    const observation = await this.options.client.observe(state.handle, {
+      cursor: { attemptNumber: state.attemptNumber, sequence: state.cursor }, finalOnly: this.options.finalOnly,
+    });
+    if (!attached()) return;
+    try { if (update) update(observation); else this.options.onObservation?.(observation); }
+    finally { close?.(); }
+  }
   async approveInput(): Promise<void> { const handle = this.requireRun(); await this.options.client.approveInput(handle); await this.options.client.start(handle, { streaming: !this.options.finalOnly }); }
   async approveTool(approval: RuntimeToolApproval): Promise<void> { await this.options.client.approveTool(this.requireRun(), approval); }
   /** Attach a server-verified handle without submitting or starting any work. */
@@ -126,8 +141,8 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
       cursor: state.cursor, responseStatus: observation.run.responseStatus, memoryStatus: observation.run.memoryStatus,
       graphStatus: observation.run.graphStatus, contextCompleteness: observation.run.contextCompleteness, failureCode: observation.run.failureCode, contextFailureCode: observation.run.contextFailureCode, ...(observation.run.memoryEffort===undefined?{}:{memoryEffort:observation.run.memoryEffort}) });
     return new ReadableStream<UIMessageChunk>({ start: controller => {
-      const close = () => { if (!active) return; active = false; stop(); signal?.removeEventListener("abort", abort); if (this.closeObservation === close) this.closeObservation = undefined; controller.close(); };
-      const fail = (error: unknown) => { if (!active) return; active = false; stop(); signal?.removeEventListener("abort", abort); if (this.closeObservation === close) this.closeObservation = undefined;
+      const close = () => { if (!active) return; active = false; stop(); signal?.removeEventListener("abort", abort); if (this.closeObservation === close) { this.closeObservation = undefined; this.updateObservation = undefined; } controller.close(); };
+      const fail = (error: unknown) => { if (!active) return; active = false; stop(); signal?.removeEventListener("abort", abort); if (this.closeObservation === close) { this.closeObservation = undefined; this.updateObservation = undefined; }
         controller.error(error instanceof CortexRuntimeError ? error : new CortexRuntimeError("TRANSPORT_ERROR", "uncertain")); };
       const abort = () => { void this.options.client.cancel(handle).then(() => { if (active) controller.enqueue({ type: "abort", reason: "CANCELLED" }); close(); }).catch(fail); };
       const resetText = (text: string) => {
@@ -152,14 +167,7 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
         else { if (prior.length >= 256) throw new CortexRuntimeError("PROJECTION_LIMIT_EXCEEDED"); prior.push({ ...part }); }
         state.projections = prior;
       };
-      this.closeObservation = close;
-      controller.enqueue({ type: "start", messageId: `cortex:${handle.runId}:assistant` });
-      // Clear an interrupted local projection immediately. Retained text is private until
-      // the current evidence-authorized observation (not metadata get) confirms this attempt.
-      resetText("");
-      signal?.addEventListener("abort", abort, { once: true });
-      if (signal?.aborted) { abort(); return; }
-      stop = this.options.client.watchObservation(handle, observation => {
+      const update = (observation: RuntimeObservation) => {
         if (!active) return;
         if (observation.run.attemptNumber !== state.attemptNumber) {
           state.attemptNumber = observation.run.attemptNumber; state.cursor = 0; state.text = ""; state.finalText = ""; state.finalTextStarted = false; state.projections = []; resetText("");
@@ -195,7 +203,15 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
           else if (observation.run.responseStatus === "failed") controller.enqueue({ type: "error", errorText: observation.run.failureCode ?? "RUNTIME_OUTPUT_FAILED" });
           controller.enqueue({ type: "finish", finishReason: observation.run.responseStatus === "complete" ? "stop" : "error", messageMetadata: value }); close();
         }
-      }, fail, { cursor: { attemptNumber: state.attemptNumber, sequence: state.cursor }, finalOnly: this.options.finalOnly });
+      };
+      this.closeObservation = close; this.updateObservation = update;
+      controller.enqueue({ type: "start", messageId: `cortex:${handle.runId}:assistant` });
+      // Clear an interrupted local projection immediately. Retained text is private until
+      // the current evidence-authorized observation (not metadata get) confirms this attempt.
+      resetText("");
+      signal?.addEventListener("abort", abort, { once: true });
+      if (signal?.aborted) { abort(); return; }
+      stop = this.options.client.watchObservation(handle, update, fail, { cursor: { attemptNumber: state.attemptNumber, sequence: state.cursor }, finalOnly: this.options.finalOnly });
       if (!active) stop();
     }, cancel: () => { this.disconnect(); } });
   }

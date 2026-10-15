@@ -1,0 +1,525 @@
+{
+  "version": 1,
+  "status": "COLLECTED_WITH_RETAINED_PRODUCT_FAILURES_NO_ACCEPTANCE",
+  "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+  "sessionId": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+  "originalReceipt": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-final-snapshot-1792034652306.json",
+    "sha256": "340feb8502242b6d59c9f5d8736fdefc29d39a7be1f4c3c88cd47772db3f72f6",
+    "status": "OBSERVED_WITH_UNMET_VERIFIER_CHECKS",
+    "unchanged": true
+  },
+  "liveCollectionReperformed": false,
+  "serviceCalls": 0,
+  "mutations": 0,
+  "modelCalls": 0,
+  "originalChecks": {
+    "passed": 196,
+    "unmet": [
+      "event one exact current source 19"
+    ]
+  },
+  "source19Evaluation": {
+    "classification": "VERIFIER_ASSUMED_APPROVED_EVENT_SOURCE_FOR_UNAPPROVED_CANCELLED_INPUT",
+    "event": {
+      "runId": "run:cdc4ef2905e89709773a64a8e98bdb96c4930fb400bc02c633c2a2049f867501",
+      "label": "browser-preapproval-cancel",
+      "eventSequence": 19,
+      "role": "user",
+      "trust": "user_assertion",
+      "eligibility": "awaiting_approval",
+      "factsState": "pending",
+      "vectorsState": "pending",
+      "sourceRevision": 1,
+      "sourceContentHash": "b80deacca7c54facac777220fe28de1f88b35849bdacd3d95b072b7aa0cb02ec",
+      "profileId": "cortex-text-small-1536-v1",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "pending",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792034029408
+        },
+        {
+          "stage": "facts",
+          "state": "pending",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792034029408
+        },
+        {
+          "stage": "extract",
+          "state": "pending",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792034029408
+        }
+      ]
+    },
+    "run": {
+      "label": "browser-preapproval-cancel",
+      "client": "browser",
+      "runId": "run:cdc4ef2905e89709773a64a8e98bdb96c4930fb400bc02c633c2a2049f867501",
+      "scopeSha256": "05759d33c6f296d9057a4383fc8399a97b5f8b414d63deac2bdb5f954560e6c3",
+      "responseStatus": "cancelled",
+      "failureCode": "CANCELLED",
+      "modelInputVersion": 8,
+      "attemptNumber": 0,
+      "nativeRunAttemptCount": 0,
+      "agentOperationCount": 0,
+      "nativeModelOperationCount": 0,
+      "nativeModelAttemptCount": 0,
+      "queueSequence": 1,
+      "inputMessageCount": 1,
+      "outputMessageCount": 0,
+      "nativeRunIdentityCopies": 1,
+      "publicationCopies": 0,
+      "progress": [],
+      "execution": [],
+      "tools": [],
+      "modelOperationKinds": [],
+      "agentModelOps": [],
+      "createdAt": 1792034029408,
+      "updatedAt": 1792034097800
+    },
+    "sourceRows": 0,
+    "sourceRowsProof": "Collector pushes the event and continues before chunk/currentness fields only when sourceRows[0] is absent; fields are absent and collection reached stable final read.",
+    "installedSource": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-direct-chat-installed/app/node_modules/.pnpm/@cortexmemory+sdk@file+..+..+..+..+..+..+..+..+Project-Cortex-Proofs+manual-sandbox-mem_5c2ff029daf383e75306b321dc6f30e8/node_modules/@cortexmemory/sdk/dist/backend/v1/runtimeTranscript.ts",
+      "sha256": "935fda9aa0acc4184752d3ad254188cbfca66a66f5886b4d9a9028658bd5123d",
+      "sourcePath": "convex-dev/runtimeTranscript.ts",
+      "approvedSourceGuard": "if (!bridge.approved || !text.trim()) return;",
+      "pendingEventEligibility": "state === \"pending\" ? \"awaiting_approval\" : \"eligible\""
+    },
+    "interpretation": "An unapproved input creates an awaiting_approval event but sourceWrite returns before derived-source insertion. Cancellation attempt0 has no model/tool work. No new current positive source is expected; original unmet verifier check remains preserved."
+  },
+  "financial": {
+    "allTarget": {
+      "operationCount": 67,
+      "attemptCount": 67,
+      "operationKinds": {
+        "embedding.memory": 18,
+        "agent.respond": 11,
+        "memory.extract": 12,
+        "embedding.query": 14,
+        "conversation.title": 8,
+        "facts.resolve": 2,
+        "media.image.generate": 1,
+        "artifact.text": 1
+      },
+      "runAccountTotals": {
+        "accountCount": 45,
+        "unknownLiabilityUnits": 8600000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "tenantAccountTotals": {
+        "accountCount": 2,
+        "unknownLiabilityUnits": 8600000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "firstAttempts": 67,
+      "terminalEvidenceCount": 67,
+      "retainedResultCount": 67,
+      "attachedResultCount": 67,
+      "releasedSlots": 67,
+      "completeQualifiedChatEmbeddingUsage": 66,
+      "usageHelperNotApplicable": [
+        {
+          "nativeInterface": "image",
+          "state": "uncertain"
+        }
+      ],
+      "aggregateUsdComplete": false
+    },
+    "manual": {
+      "operationCount": 49,
+      "attemptCount": 49,
+      "operationKinds": {
+        "embedding.memory": 13,
+        "agent.respond": 9,
+        "memory.extract": 9,
+        "embedding.query": 9,
+        "conversation.title": 7,
+        "facts.resolve": 2
+      },
+      "runAccountTotals": {
+        "accountCount": 28,
+        "unknownLiabilityUnits": 4900000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "tenantAccountTotals": {
+        "accountCount": 0,
+        "unknownLiabilityUnits": 0,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "firstAttempts": 49,
+      "terminalEvidenceCount": 49,
+      "retainedResultCount": 49,
+      "attachedResultCount": 49,
+      "releasedSlots": 49,
+      "completeQualifiedChatEmbeddingUsage": 49,
+      "usageHelperNotApplicable": [],
+      "aggregateUsdComplete": false
+    },
+    "regression": {
+      "operationCount": 10,
+      "attemptCount": 10,
+      "operationKinds": {
+        "embedding.query": 4,
+        "embedding.memory": 4,
+        "memory.extract": 2
+      },
+      "runAccountTotals": {
+        "accountCount": 8,
+        "unknownLiabilityUnits": 1000000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "tenantAccountTotals": {
+        "accountCount": 0,
+        "unknownLiabilityUnits": 0,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "firstAttempts": 10,
+      "terminalEvidenceCount": 10,
+      "retainedResultCount": 10,
+      "attachedResultCount": 10,
+      "releasedSlots": 10,
+      "completeQualifiedChatEmbeddingUsage": 10,
+      "usageHelperNotApplicable": [],
+      "aggregateUsdComplete": false
+    },
+    "startupOther": {
+      "operationCount": 8,
+      "attemptCount": 8,
+      "operationKinds": {
+        "media.image.generate": 1,
+        "agent.respond": 2,
+        "embedding.query": 1,
+        "embedding.memory": 1,
+        "conversation.title": 1,
+        "artifact.text": 1,
+        "memory.extract": 1
+      },
+      "runAccountTotals": {
+        "accountCount": 8,
+        "unknownLiabilityUnits": 2700000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "tenantAccountTotals": {
+        "accountCount": 0,
+        "unknownLiabilityUnits": 0,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "firstAttempts": 8,
+      "terminalEvidenceCount": 8,
+      "retainedResultCount": 8,
+      "attachedResultCount": 8,
+      "releasedSlots": 8,
+      "completeQualifiedChatEmbeddingUsage": 7,
+      "usageHelperNotApplicable": [
+        {
+          "nativeInterface": "image",
+          "state": "uncertain"
+        }
+      ],
+      "aggregateUsdComplete": false
+    }
+  },
+  "distinctTenantMirrors": [
+    {
+      "tenantSha256": "cd08334c9e98a85c373959bc3f24c91d2caf96c26a38b03d4dd7f2ab24a2fc7f",
+      "runAccountTotals": {
+        "accountCount": 37,
+        "unknownLiabilityUnits": 5900000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "mirroredTenantAccounts": [
+        {
+          "uncertainUnits": 5900000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "limitUnits": 10000000,
+          "current": true
+        }
+      ]
+    },
+    {
+      "tenantSha256": "d1ffbb4c9a86bc8c95bb0328cbcfdf1405f3c54e73eea671ca8292e5ea684a2d",
+      "runAccountTotals": {
+        "accountCount": 8,
+        "unknownLiabilityUnits": 2700000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "mirroredTenantAccounts": [
+        {
+          "uncertainUnits": 2700000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "limitUnits": 10000000,
+          "current": true
+        }
+      ]
+    }
+  ],
+  "watermarks": [
+    {
+      "scopeSha256": "05759d33c6f296d9057a4383fc8399a97b5f8b414d63deac2bdb5f954560e6c3",
+      "sequence": 19,
+      "factsThrough": 2,
+      "vectorsThrough": 2,
+      "vectorProfileThrough": {
+        "cortex-text-large-3072-v1": 0,
+        "cortex-text-small-1536-v1": 2
+      },
+      "updatedAt": 1792034030598,
+      "incompleteEvents": [
+        {
+          "runId": "run:cdc4ef2905e89709773a64a8e98bdb96c4930fb400bc02c633c2a2049f867501",
+          "eventSequence": 19,
+          "factsState": "pending",
+          "vectorsState": "pending"
+        },
+        {
+          "runId": "run:681f3664c187ce21df10a4c02e5c9087857be99c7849a41f1177419bea661853",
+          "eventSequence": 17,
+          "factsState": "dead_letter",
+          "vectorsState": "pending"
+        },
+        {
+          "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175",
+          "eventSequence": 11,
+          "factsState": "dead_letter",
+          "vectorsState": "pending"
+        },
+        {
+          "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8",
+          "eventSequence": 9,
+          "factsState": "dead_letter",
+          "vectorsState": "pending"
+        },
+        {
+          "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657",
+          "eventSequence": 5,
+          "factsState": "dead_letter",
+          "vectorsState": "pending"
+        },
+        {
+          "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066",
+          "eventSequence": 3,
+          "factsState": "dead_letter",
+          "vectorsState": "pending"
+        }
+      ]
+    },
+    {
+      "scopeSha256": "5ea2c8b256ce1a8e9740a2c4123863e67a23c4d7307943767cebe6b245ffcd34",
+      "sequence": 4,
+      "factsThrough": 4,
+      "vectorsThrough": 4,
+      "vectorProfileThrough": {
+        "cortex-text-large-3072-v1": 0,
+        "cortex-text-small-1536-v1": 4
+      },
+      "updatedAt": 1792032240557,
+      "incompleteEvents": []
+    }
+  ],
+  "retainedRegression": [
+    {
+      "label": "native-public-capture-recall",
+      "scopeSha256": "5ea2c8b256ce1a8e9740a2c4123863e67a23c4d7307943767cebe6b245ffcd34",
+      "captures": 2,
+      "captureMessageRows": 4,
+      "transcriptRows": 4,
+      "sourceRows": 4,
+      "vectorRows": 4,
+      "intentionalSourceTombstones": 1,
+      "revokedOwnedGrants": 1,
+      "originalNativeReceipt": "memory-effort-direct-native-regression-1792032196134.json",
+      "intentionallyFenced": true,
+      "phaseMeaning": "Counts observed now. Any earlier positive/current proof is scoped to the named prior receipt; intentional later fences do not create fresh positive-current evidence. No fixed retained count or new recall is asserted."
+    }
+  ],
+  "failedIngestion": [
+    {
+      "runId": "run:681f3664c187ce21df10a4c02e5c9087857be99c7849a41f1177419bea661853",
+      "eventSequence": 17,
+      "stage": "extract",
+      "state": "dead_letter",
+      "attempt": 1,
+      "failureCode": "INVALID_CONFIRMED_MODEL_OUTPUT",
+      "receiptPresent": false,
+      "updatedAt": 1792033181430
+    },
+    {
+      "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175",
+      "eventSequence": 11,
+      "stage": "extract",
+      "state": "dead_letter",
+      "attempt": 1,
+      "failureCode": "INVALID_CONFIRMED_MODEL_OUTPUT",
+      "receiptPresent": false,
+      "updatedAt": 1792032799308
+    },
+    {
+      "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8",
+      "eventSequence": 9,
+      "stage": "extract",
+      "state": "dead_letter",
+      "attempt": 1,
+      "failureCode": "INVALID_CONFIRMED_MODEL_OUTPUT",
+      "receiptPresent": false,
+      "updatedAt": 1792032635759
+    },
+    {
+      "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657",
+      "eventSequence": 5,
+      "stage": "extract",
+      "state": "dead_letter",
+      "attempt": 1,
+      "failureCode": "INVALID_CONFIRMED_MODEL_OUTPUT",
+      "receiptPresent": false,
+      "updatedAt": 1792032490010
+    },
+    {
+      "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066",
+      "eventSequence": 3,
+      "stage": "extract",
+      "state": "dead_letter",
+      "attempt": 1,
+      "failureCode": "INVALID_CONFIRMED_MODEL_OUTPUT",
+      "receiptPresent": false,
+      "updatedAt": 1792032358462
+    }
+  ],
+  "runOutcomes": [
+    {
+      "label": "browser-preapproval-cancel",
+      "runId": "run:cdc4ef2905e89709773a64a8e98bdb96c4930fb400bc02c633c2a2049f867501",
+      "responseStatus": "cancelled",
+      "attemptNumber": 0,
+      "memoryStatus": []
+    },
+    {
+      "label": "cli-normal-warm-missing-context",
+      "runId": "run:681f3664c187ce21df10a4c02e5c9087857be99c7849a41f1177419bea661853",
+      "responseStatus": "complete",
+      "attemptNumber": 1,
+      "memoryStatus": [
+        "failed"
+      ]
+    },
+    {
+      "label": "cli-normal-seed",
+      "runId": "run:731950a14d5efd29b192386a9738091f32382f8d7e281782bb7292890b2906b2",
+      "responseStatus": "complete",
+      "attemptNumber": 1,
+      "memoryStatus": [
+        "complete"
+      ]
+    },
+    {
+      "label": "chat-normal-seed",
+      "runId": "run:4e9b328b14fad97f22211ceef493742785aa9920ba5ee910cf4d6086bde2cfc2",
+      "responseStatus": "complete",
+      "attemptNumber": 1,
+      "memoryStatus": [
+        "complete"
+      ]
+    },
+    {
+      "label": "browser-normal-warm-missing-context",
+      "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175",
+      "responseStatus": "complete",
+      "attemptNumber": 1,
+      "memoryStatus": [
+        "failed"
+      ]
+    },
+    {
+      "label": "browser-max-missing-context",
+      "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8",
+      "responseStatus": "complete",
+      "attemptNumber": 1,
+      "memoryStatus": [
+        "failed"
+      ]
+    },
+    {
+      "label": "browser-high",
+      "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c",
+      "responseStatus": "complete",
+      "attemptNumber": 1,
+      "memoryStatus": [
+        "complete"
+      ]
+    },
+    {
+      "label": "browser-normal-recall",
+      "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657",
+      "responseStatus": "complete",
+      "attemptNumber": 1,
+      "memoryStatus": [
+        "failed"
+      ]
+    },
+    {
+      "label": "browser-fast",
+      "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066",
+      "responseStatus": "complete",
+      "attemptNumber": 1,
+      "memoryStatus": [
+        "failed"
+      ]
+    },
+    {
+      "label": "browser-normal-seed",
+      "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789",
+      "responseStatus": "complete",
+      "attemptNumber": 1,
+      "memoryStatus": [
+        "complete"
+      ]
+    }
+  ],
+  "evidenceCounts": {
+    "selectedRuns": 10,
+    "canonicalNativeRows": 19,
+    "freshCurrentSourceEvents": 18,
+    "complete1536NativeVectorMatches": 13,
+    "completeTableReads": 36
+  },
+  "limitations": [
+    "Original raw status remains OBSERVED_WITH_UNMET_VERIFIER_CHECKS and direct exit1; local explanation does not turn product failures into PASS.",
+    "Five invalid-confirmed-output extraction dead letters and their watermark holes remain product failures.",
+    "No approved tool case was supplied; no new tool approval coverage asserted.",
+    "Retained intentionally fenced regression counts do not rerun earlier positive currentness.",
+    "Unique run accounts and mirrored tenant obligations are separate views, never additive.",
+    "Stable sampled tables are not a globally atomic transaction; source/title/reranking/provider latency not remeasured.",
+    "Resource cleanup remains Root-owned."
+  ],
+  "clientsClosed": true,
+  "stableAcrossCollection": true,
+  "recordedAt": "2026-10-15T03:26:38.103Z"
+}

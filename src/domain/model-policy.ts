@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { TrustedMemoryScope } from "./contracts.js";
 import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, embeddingProfileForModel, normalizeSourceText, semanticHash } from "./profile.js";
 import { mediaEnvelopeSchema } from "./media-schemas.js";
+import { FACTS_JSON_SCHEMA, FACTS_NATIVE_JSON_SCHEMA_V1 } from "./extraction.js";
 
 /** Pure contracts: only a verified backend lookup may supply policy and qualifications. */
 export const MODEL_OPERATION_KEYS = Object.freeze([
@@ -25,6 +26,16 @@ export const MEMORY_JSON_OBJECT_CONTRACT = Object.freeze({
   boundRevision: "memory-json-object-8192-512-v1",
   maximumInputTokens: 8192, maximumContextTokens: 16384, maximumOutputTokens: 512,
   maximumPrivateResultBytes: 60000, maximumCostUnits: 100000,
+} as const);
+/** Prospective successor: only a separately observed qualification can select
+ * this wire format. The v5 source prompt and facts-v1 parser are unchanged. */
+export const MEMORY_JSON_SCHEMA_CONTRACT = freeze({
+  ...MEMORY_JSON_OBJECT_CONTRACT,
+  featureEnvelope: "memory-extract-json-schema-v1",
+  inputRule: "memory-json-schema-chat-utf8-v1",
+  boundRevision: "memory-json-schema-8192-512-v1",
+  responseFormat: { type: "json" as const,
+    schema: JSON.parse(JSON.stringify(FACTS_NATIVE_JSON_SCHEMA_V1)) as Record<string, unknown>, name: "cortex_facts_v1" },
 } as const);
 export const MODEL_OPERATION_REGISTRY = Object.freeze(Object.fromEntries(MODEL_OPERATION_KEYS.map((key) => [key, Object.freeze({
   key,
@@ -307,7 +318,8 @@ const requestSchema = z.object({
   toolChoice: z.discriminatedUnion("type", [z.object({ type: z.literal("auto") }).strict(), z.object({ type: z.literal("none") }).strict(),
     z.object({ type: z.literal("required") }).strict(), z.object({ type: z.literal("tool"), toolName: nonempty }).strict()]).optional(),
   outputSchema: canonicalRecordSchema.optional(),
-  responseFormat: z.object({ type: z.literal("json") }).strict().optional(),
+  responseFormat: z.union([z.object({ type: z.literal("json") }).strict(),
+    z.object({ type: z.literal("json"), schema: canonicalRecordSchema, name: nonempty }).strict()]).optional(),
   options: z.object({ maxRetries: z.literal(0), temperature: z.number().finite().min(0).max(2).optional(),
     topP: z.number().finite().min(0).max(1).optional(), seed: integer.optional(),
     stopSequences: z.array(z.string().min(1).max(256)).max(16).optional(),
@@ -340,6 +352,17 @@ export function memoryJsonObjectRequestBody(messages: ModelCallRequest["messages
 }
 export function memoryJsonObjectInputBound(messages: ModelCallRequest["messages"], outputTokens: number): number {
   return new TextEncoder().encode(JSON.stringify(memoryJsonObjectRequestBody(messages, outputTokens))).length + 9;
+}
+/** Exact official compatible-provider strict-schema body, including every schema
+ * byte in the independently governed input bound. */
+export function memoryJsonSchemaRequestBody(messages: ModelCallRequest["messages"], outputTokens: number) {
+  const body = memoryJsonObjectRequestBody(messages, outputTokens);
+  return freeze({ ...body, response_format: { type: "json_schema" as const,
+    json_schema: { schema: MEMORY_JSON_SCHEMA_CONTRACT.responseFormat.schema, strict: true as const,
+      name: MEMORY_JSON_SCHEMA_CONTRACT.responseFormat.name } } });
+}
+export function memoryJsonSchemaInputBound(messages: ModelCallRequest["messages"], outputTokens: number): number {
+  return new TextEncoder().encode(JSON.stringify(memoryJsonSchemaRequestBody(messages, outputTokens))).length + 9;
 }
 export interface ValidatedModelRequest {
   readonly request: Readonly<ModelCallRequest>;
@@ -379,8 +402,23 @@ function validateRequest(snapshot: ModelPolicySnapshotV1, input: unknown, diagno
   for (const key of ["promptVersion", "schemaVersion", "extractionVersion", "toolRegistryVersion"] as const) {
     if (request[key] !== snapshot.pins[key]) deny("request changed pinned versions");
   }
-  const jsonObject = snapshot.pins.promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion
-    || snapshot.pins.boundRevision === MEMORY_JSON_OBJECT_CONTRACT.boundRevision || request.responseFormat !== undefined;
+  const jsonSchema = snapshot.pins.boundRevision === MEMORY_JSON_SCHEMA_CONTRACT.boundRevision;
+  if (jsonSchema) {
+    if (snapshot.operationKey !== "memory.extract" || snapshot.nativeInterface !== "chat"
+      || snapshot.modelId !== MEMORY_JSON_SCHEMA_CONTRACT.modelId
+      || snapshot.pins.promptVersion !== MEMORY_JSON_SCHEMA_CONTRACT.promptVersion
+      || snapshot.pins.schemaVersion !== MEMORY_JSON_SCHEMA_CONTRACT.schemaVersion
+      || snapshot.pins.toolRegistryVersion !== MEMORY_JSON_SCHEMA_CONTRACT.toolRegistryVersion
+      || canonicalModelJson(request.responseFormat) !== canonicalModelJson(MEMORY_JSON_SCHEMA_CONTRACT.responseFormat)
+      || canonicalModelJson(request.outputSchema) !== canonicalModelJson(FACTS_JSON_SCHEMA)
+      || request.tools.length || request.toolChoice || request.toolSteps || request.media || request.profile || request.batch
+      || canonicalModelJson(request.options) !== '{"maxRetries":0}') deny("JSON-schema extraction contract mismatch");
+    memoryJsonSchemaRequestBody(request.messages, request.outputTokens);
+    if (request.inputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumInputTokens
+      || request.inputTokens + request.outputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumContextTokens) deny("JSON-schema request exceeds bounded limits");
+  }
+  const jsonObject = !jsonSchema && (snapshot.pins.promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion
+    || snapshot.pins.boundRevision === MEMORY_JSON_OBJECT_CONTRACT.boundRevision || request.responseFormat !== undefined);
   if (jsonObject) {
     if (snapshot.operationKey !== "memory.extract" || snapshot.nativeInterface !== "chat"
       || snapshot.modelId !== MEMORY_JSON_OBJECT_CONTRACT.modelId

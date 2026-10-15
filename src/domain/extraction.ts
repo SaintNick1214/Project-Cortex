@@ -56,6 +56,24 @@ export const FACTS_JSON_SCHEMA = {
   },
 } as const;
 
+/** Native strict-schema equivalent of facts-v1. Optional fullValue is expressed
+ * as two closed object variants; the semantic schema and parser stay unchanged. */
+export const FACTS_NATIVE_JSON_SCHEMA_V1 = {
+  ...FACTS_JSON_SCHEMA,
+  properties: { facts: { ...FACTS_JSON_SCHEMA.properties.facts,
+    items: { ...FACTS_JSON_SCHEMA.properties.facts.items,
+      properties: { ...FACTS_JSON_SCHEMA.properties.facts.items.properties,
+        entities: { type: "array", items: { anyOf: [
+          { type: "object", additionalProperties: false, required: ["name", "type"],
+            properties: { name: FACTS_JSON_SCHEMA.properties.facts.items.properties.entities.items.properties.name,
+              type: FACTS_JSON_SCHEMA.properties.facts.items.properties.entities.items.properties.type } },
+          { ...FACTS_JSON_SCHEMA.properties.facts.items.properties.entities.items, required: ["name", "type", "fullValue"] },
+        ] } },
+      },
+    },
+  } },
+} as const;
+
 /**
  * Relation triple for knowledge graph edges
  */
