@@ -91,7 +91,7 @@ export async function hashV8CanonicalBytes(ctx: Pick<QueryCtx, "db"> | undefined
 interface ManagedSourceReader {
   sources(tenantId: string, memorySpaceId: string, sourceId: string): Promise<Doc<"runtimeMemorySources">[]>;
   sourceUnique?(tenantId: string, memorySpaceId: string, sourceId: string): Promise<Doc<"runtimeMemorySources"> | null>;
-  conversations(tenantId: string, memorySpaceId: string, conversationId: string): Promise<Doc<"runtimeConversations">[]>;
+  conversations(tenantId: string, memorySpaceId: string, conversationId: string, invoke?: () => Promise<Doc<"runtimeConversations">[]>): Promise<Doc<"runtimeConversations">[]>;
   bridges(tenantId: string, memorySpaceId: string, nativeMessageId: string): Promise<Doc<"runtimeTranscriptMessages">[]>;
   runs(tenantId: string, memorySpaceId: string, runId: string): Promise<Doc<"runtimeRuns">[]>;
   fresh(): void;
@@ -117,6 +117,15 @@ export async function readManagedConversationRows(ctx: Pick<QueryCtx, "db">, ten
   const reader = (ctx as ManagedSourceContext)[managedSourceReadScope];
   return reader ? await reader.conversations(tenantId, memorySpaceId, conversationId)
     : await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("conversationId", conversationId)).take(2);
+}
+/** Only the exact private V8 owner can retain this canonical transcript lookup.
+ * Construct its original query on every call; alias fallback and all current
+ * conversation predicates remain with the caller. Views retain physical reads. */
+export async function readV8ConversationRows(ctx: Pick<QueryCtx, "db">, tenantId: string, memorySpaceId: string, conversationId: string): Promise<Doc<"runtimeConversations">[]> {
+  const query = ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", tenantId)
+    .eq("memorySpaceId", memorySpaceId).eq("conversationId", conversationId));
+  const reader = ownAgentControlReader(ctx) ? (ctx as ManagedSourceContext)[managedSourceReadScope] : undefined;
+  return reader ? await reader.conversations(tenantId, memorySpaceId, conversationId, () => query.take(2)) : await query.take(2);
 }
 export async function readManagedTranscriptBridgeRows(ctx: Pick<QueryCtx, "db">, tenantId: string, memorySpaceId: string, nativeMessageId: string): Promise<Doc<"runtimeTranscriptMessages">[]> {
   const reader = (ctx as ManagedSourceContext)[managedSourceReadScope];
@@ -504,8 +513,8 @@ function createRawReadScope<Ctx extends Pick<QueryCtx, "db">>(ctx: Ctx, options:
       await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("lineage.sourceId", sourceId)).take(2)),
     ...(v8 ? { sourceUnique: (tenantId: string, memorySpaceId: string, sourceId: string) => readGraph("source", [tenantId, memorySpaceId, sourceId], async () =>
       await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("lineage.sourceId", sourceId)).unique(), "source.unique") } : {}),
-    conversations: (tenantId: string, memorySpaceId: string, conversationId: string) => readGraph("conversation", [tenantId, memorySpaceId, conversationId], async () =>
-      await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("conversationId", conversationId)).take(2)),
+    conversations: (tenantId: string, memorySpaceId: string, conversationId: string, invoke?: () => Promise<Doc<"runtimeConversations">[]>) => readGraph("conversation", [tenantId, memorySpaceId, conversationId], invoke ?? (async () =>
+      await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("conversationId", conversationId)).take(2))),
     bridges: (tenantId: string, memorySpaceId: string, nativeMessageId: string) => readGraph("bridge", [tenantId, memorySpaceId, nativeMessageId], async () =>
       await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("nativeMessageId", nativeMessageId)).take(2)),
     runs: (tenantId: string, memorySpaceId: string, runId: string) => readGraph("run", [tenantId, memorySpaceId, runId], async () =>

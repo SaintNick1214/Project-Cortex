@@ -7,9 +7,13 @@ import {canonicalModelJson} from "../../../src/domain/model-policy";
 import {contextSourceKey} from "../../../src/domain/memory-context";
 import {assertNativeArgs} from "./native-arguments";
 let enabled=true,snapshotReads=true,isolateNewControls=false;
+let conversationReuse=true;
 let atSnapshot:((nativeCtx:MutationCtx,parent:MutationCtx)=>void)|undefined;
 const auth=await import("../../../convex-dev/runtimeAuth");
 jest.unstable_mockModule("../../../convex-dev/runtimeAuth",()=>({...auth,
+  // Only named historical mechanism comparisons isolate the new canonical
+  // terminal reuse; current registered on/off behavior has a separate oracle.
+  readV8ConversationRows:(...args:Parameters<typeof auth.readV8ConversationRows>)=>auth.readV8ConversationRows(conversationReuse?args[0]:{...args[0]},args[1],args[2],args[3]),
   // Isolate the older authority/metadata/transcript retention comparison.
   // The new control/hash family has its own registered full-output/read oracle.
   readV8AgentExecutionRows:(...args:Parameters<typeof auth.readV8AgentExecutionRows>)=>auth.readV8AgentExecutionRows(isolateNewControls?{...args[0]}:args[0],args[1],args[2],args[3],args[4]),
@@ -36,7 +40,7 @@ const {ingestionFixture,installIngestionMockRoot,invoke}=await import("../runtim
 const {definitions,runs,ledger,clone,clock}=await import("../runtimeTranscript/fixture");
 const agent=await import("../../../convex-dev/runtimeAgent");
 const context=await import("../../../convex-dev/runtimeMemoryContext");
-beforeEach(()=>{installIngestionMockRoot();enabled=true;snapshotReads=true;isolateNewControls=false;atSnapshot=undefined;});afterEach(()=>{jest.restoreAllMocks();});
+beforeEach(()=>{installIngestionMockRoot();enabled=true;snapshotReads=true;isolateNewControls=false;conversationReuse=true;atSnapshot=undefined;});afterEach(()=>{conversationReuse=true;jest.restoreAllMocks();});
 async function fixture(){
  const f=await ingestionFixture(),oldMutation=f.ctx.runMutation.bind(f.ctx),oldQuery=f.ctx.runQuery.bind(f.ctx),calls:string[]=[];
  const resolve=(name:string)=>name.startsWith("runtimeAgent:")?agent[name.split(":")[1] as keyof typeof agent]:name.startsWith("runs:")?runs[name.split(":")[1] as keyof typeof runs]:undefined;
@@ -69,6 +73,7 @@ function instrument(f:Awaited<ReturnType<typeof fixture>>){
    stateReads:()=>clone(reads.filter(value=>!retained(value.table)&&!rawRun(value)&&!(value.table==="runtimeTranscriptMessages"&&value.index==="by_native")))};
 }
 it("actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups",async()=>{
+ conversationReuse=false; // Preserve this historical authority/metadata comparison.
  isolateNewControls=true;
  const f=await fixture(),before=f.state(),observed=instrument(f);enabled=false;
  const original=await f.call(agent.prepareDirectTurnV8,f.attempt),after=f.state(),control=observed.counts(),nonControl=observed.stateReads(),runIdentities=observed.runIdentities();
@@ -113,6 +118,7 @@ async function admission(f:Awaited<ReturnType<typeof fixture>>){
    bindingCanonical:canonicalModelJson({reference:f.reference,operationKey:"agent.respond",runBudgetId:prepared.current.run.runBudgetId,semanticId:prepared.op.semanticId,ordinal:0})};
 }
 it("financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read",async()=>{
+ conversationReuse=false; // Preserve this historical financial-row comparison.
  isolateNewControls=true;
  const f=await fixture(),args=await admission(f),before=f.state(),observed=instrument(f);enabled=false;
  const original=await f.call<GatewayAdmissionCheckpoint>(agent.admitPreparedModelOperationV8,args),after=f.state(),control=observed.counts(),nonControl=observed.stateReads(),runIdentities=observed.runIdentities();
@@ -135,6 +141,7 @@ it.each(["budget","revocation","lease","binding","body"])("current %s still reje
 
 
 it("K29 exact-owner direct empty parent reruns save predicates with identical outcome/state and fewer raw rereads",async()=>{
+ conversationReuse=false; // Preserve this historical snapshot-view comparison.
  isolateNewControls=true;
  const f=await fixture(),before=f.state(),observed=instrument(f),queryPort=f.ctx.runQuery.bind(f.ctx),components:string[]=[];
  f.ctx.runQuery=(async(ref,args)=>{let name='component';try{name=getFunctionName(ref);}catch{/* controlled official component identity */}components.push(name);return queryPort(ref,args);}) as MutationCtx['runQuery'];

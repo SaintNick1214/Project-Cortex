@@ -21,7 +21,7 @@ import { boundedIdentifier, clientRequestKey, comparePosition, normalizeTextSubm
 import type { CutoffV1, CutoffV8, ExecutionCutoff, MessagePin, PublicTranscriptMessage } from "../src/domain/transcript";
 import { dataAuthorityReference, managedConversationAccess, requireDataAuthority, recheckDataAuthority } from "./runtimeDataAuth";
 import type { ScopedDataAuthority } from "./runtimeDataAuth";
-import { readNativeTranscriptMessages, recheckAuthority, readManagedTranscriptBridgeRows, readV8AgentExecutionRows, hashV8CanonicalBytes } from "./runtimeAuth";
+import { readNativeTranscriptMessages, recheckAuthority, readManagedTranscriptBridgeRows, readV8AgentExecutionRows, readV8ConversationRows, hashV8CanonicalBytes } from "./runtimeAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
@@ -42,8 +42,7 @@ export function transcriptDenied(code = "FORBIDDEN"): never {
 }
 export function singleTranscript<T>(rows: T[]): T | undefined { if (rows.length > 1) transcriptDenied("TRANSCRIPT_CONFLICT"); return rows[0]; }
 export async function conversationById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, conversationId: string) {
-  const direct = singleTranscript(await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", reference.tenantId)
-    .eq("memorySpaceId", reference.memorySpaceId!).eq("conversationId", conversationId)).take(2));
+  const direct = singleTranscript(await readV8ConversationRows(ctx, reference.tenantId, reference.memorySpaceId!, conversationId));
   return direct ?? singleTranscript(await ctx.db.query("runtimeConversations").withIndex("by_scoped_alias", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!).eq("legacyConversationId", conversationId)).take(2));
 }

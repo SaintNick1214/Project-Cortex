@@ -1,0 +1,527 @@
+{
+  "version": 1,
+  "subject": "Coherent literal/conversation/Chat/catalog/prompt/docs repair batch",
+  "role": "fresh independent non-author reviewer; no product/test/config authorship",
+  "verdict": "PASS",
+  "gate": "SOURCE_TEST_CONFIG_ONLY",
+  "policy": "goal acceptance-policyv2 overrides stricter judge-task thresholds",
+  "baseHead": "8d3c370fd67759b2f821cb0ff06ce5ab55ea5399",
+  "manifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-coherent-source-hashes-v2.json",
+    "sha256": "0e86484798279face732f105d02e8b58d48949295d8b31d41a0b9428b7c15207",
+    "fileCount": 42
+  },
+  "originalManifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-coherent-source-hashes.json",
+    "sha256": "023711aaa1cce903e1d23d01864ea126e4ac87203dee51f90cd9a694d07be67f",
+    "fileCount": 42
+  },
+  "candidateBeforeAfter": {
+    "beforeAll42MatchOriginal": true,
+    "afterAll42MatchV2": true,
+    "changedDuringReview": [
+      "scripts/install-ci-demo.test.mjs"
+    ],
+    "authorizedChange": "only stale unsupported test fixture1.5.1to1.5.2; original manifest/failure retained",
+    "beforeReceipt": "memory-effort-evidence-independent-review-before.json",
+    "afterReceipt": "memory-effort-evidence-independent-review-after.json",
+    "baseComparison": {
+      "same": 20,
+      "different": 18,
+      "absent": 4
+    },
+    "diffHeadChangedFilesVerified": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/execution-progress.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/outcome-matrix.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/completion-notices.jsonl",
+      "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k11-expired-auth-source-investigation.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-design-2026-10-14.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/status.json",
+      "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/workflow-trace-repair-report.md",
+      "convex-dev/runtimeAgentRecall.ts",
+      "convex-dev/runtimeAuth.ts",
+      "convex-dev/runtimeMemoryQuery.ts",
+      "convex-dev/runtimeTranscript.ts",
+      "package-lock.json",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/package.json",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+      "packages/cortex-templates/catalog.json",
+      "packages/cortex-templates/package.json",
+      "scripts/install-ci-demo.mjs",
+      "scripts/install-ci-demo.test.mjs",
+      "src/domain/memory-direct-recall.ts",
+      "src/domain/memory-effort.ts",
+      "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "tests/unit/runtimeMemory/direct-fact-rule.test.ts"
+    ],
+    "allCurrentExternalMatch": true
+  },
+  "external": {
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs": {
+      "expected": "254dbd8579980d971e425027d45bcbf2c4f631c10467d9841dea697c7c24ffc6",
+      "actual": "254dbd8579980d971e425027d45bcbf2c4f631c10467d9841dea697c7c24ffc6",
+      "matches": true
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx": {
+      "expected": "55c426a5edd9a1c91b943fdbfb8720643d39255fcc9dda4665099273fd2b9874",
+      "actual": "55c426a5edd9a1c91b943fdbfb8720643d39255fcc9dda4665099273fd2b9874",
+      "matches": true
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx": {
+      "expected": "c7566d00f453e66f787ae6cd0ff0861c069e08b880d8e0cb50423c845af537cf",
+      "actual": "c7566d00f453e66f787ae6cd0ff0861c069e08b880d8e0cb50423c845af537cf",
+      "matches": true
+    }
+  },
+  "historical21Closure": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-query-read-coherent-source-hashes.json",
+    "sha256": "2c97e9d0659ea0e28d1e54bc7cd5fbba2ac2b98ffb2d87803b854e8b26fce50a",
+    "fileCount": 21,
+    "claim": "retained historical bounded closure, not all-source census"
+  },
+  "requirements": [
+    {
+      "id": "literal-v2",
+      "status": "PASS_SOURCE_CONTROLLED",
+      "evidence": [
+        "src/domain/memory-effort.ts:62",
+        "src/domain/memory-direct-recall.ts:83-132",
+        "convex-dev/runtimeMemoryQuery.ts:182-204",
+        "convex-dev/runtimeAgentRecall.ts:232-262",
+        "tests/unit/runtimeMemory/literal-question-source-proof.test.ts:97-227"
+      ],
+      "finding": "New snapshots pin2; v1/omission retain their old singleton/same-source rules and old proof object. Apricot separate pure-question existence and coral exact same-source finite prefers projection qualify only with pristine current owner/scope/event/revision-bound authorized sources. Every candidate remains traversed and bound; unknown/conflict/edit/expiry/revision/foreign/partial cases retain semantic fallback or original denial. Source locations are bounded/deduplicated, never authority."
+    },
+    {
+      "id": "private-conversation",
+      "status": "PASS_SOURCE_CONTROLLED",
+      "evidence": [
+        "convex-dev/runtimeAuth.ts:64-68,124-129,411-421,444-459,516-517",
+        "convex-dev/runtimeTranscript.ts:44-48",
+        "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts"
+      ],
+      "finding": "Only exact own privateV8 owner with existing managed raw family reuses canonical take2 terminal. Original query predicates construct on every call; alias physical reads/order, duplicate errors, detached clones, shared entry/byte bounds and all writer/cold fences remain. Controlled complete pipeline outputs/body/state/effects/ordered guards/noncandidate reads match; recent20to2 and indexed30to5 canonical takes establish no hosted gain."
+    },
+    {
+      "id": "historical-tests",
+      "status": "PASS_SOURCE_CONTROLLED",
+      "evidence": [
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:7-44,73-76,118-122,141-145",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts:19-32,70-75,541-781",
+        "memory-effort-evidence-independent-review-backend.jest.json"
+      ],
+      "finding": "Named test-local booleans disable only the newly added conversation terminal reuse through unbranded context copies in12 old physical mechanism comparisons; reset after each. All old assertions/cases remain, with no new production flag or source/stack transform. New combined registered pipeline covers enabled candidate across context/preflight/preparation/read-delivery/save. Invalid initial within-readonly-query grant injection was replaced with real between-query/preparation and after-save/before-admission revocations; no production authority loosening."
+    },
+    {
+      "id": "chat-trace",
+      "status": "PASS_SOURCE_CONTROLLED",
+      "evidence": [
+        "packages/cortex-cli/templates/chat-sdk-quickstart/lib/chat-latency.ts",
+        "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx:32-54,90-99,223,641-665,695",
+        "memory-effort-evidence-independent-review-chat.vitest.json",
+        "memory-effort-evidence-chat-closure-types.json"
+      ],
+      "finding": "Same metadata-only submit/ReactDOMcommit/double-animation-frame clock as canonical Vercel consumer. Generation/cancellation suppress old paint callbacks on new submit/signout/unmount. Disabled trace calls no clock/emitter/paint ports; completion IDs prevent stale completion attribution; no private text or second app model/memory/tool loop. Independent18 tests pass.428-file changed frontend/test closure has zero diagnostics; genuine new installed full codegen/types/build remains pending."
+    },
+    {
+      "id": "catalog-installer",
+      "status": "PASS_SOURCE_CONTROLLED_AFTER_REPAIR",
+      "evidence": [
+        "memory-effort-evidence-independent-review-integrity.json",
+        "memory-effort-evidence-independent-review-payload-wiring.json",
+        "scripts/install-ci-demo.mjs:11,72",
+        "scripts/install-ci-demo.test.mjs:114-126,155-164",
+        "memory-effort-evidence-independent-review-installer-repair.log",
+        "memory-effort-evidence-ci-installer-repair.json"
+      ],
+      "finding": "Unpublished catalog1.4.1 appends Chat1.5.1. All18 old metadata entries exactly equal, tracked payload diff empty; actual hashes/bytes/aggregate match all19 entries. New263 files have no missing/extra payload files; all5 changed Chat files exactly match payload copies. Reviewer found stale negative1.5.1, then verified exact replacement1.5.2 and independent2of2 rerun; all rejection assertions retained. Root full installer28of28 retained as separate author evidence."
+    },
+    {
+      "id": "prompt-v3",
+      "status": "PASS_CONFIG_SOURCE_ONLY",
+      "evidence": [
+        "memory-effort-evidence-prompt-v3.patch",
+        "memory-effort-evidence-independent-review-integrity.json",
+        "memory-effort-query-read-cleanup-1792076316728.json"
+      ],
+      "finding": "Actual single prompt/version line answers known authorized history directly and acknowledges automatically captured/queued ordinary preferences without textual remember permission. Explicit memory tools still need explicit request and normal approval; no indexing-complete claim, image expansion or video promise. Reversing only that one line exactly reproduces before-file hash, proving startup8calls/2.7MUNKNOWN/auth/caps/no-retries unchanged. Existing Pprocedure digest must be updated before any startup; no procedure-preparation judgment or runtime qualification performed."
+    },
+    {
+      "id": "website",
+      "status": "PASS_DOCS_SOURCE",
+      "evidence": [
+        "memory-effort-evidence-docs-update.json",
+        "memory-effort-query-read-closed-window.md",
+        "memory-effort-query-read-closed-window.json",
+        "memory-effort-evidence-docs-checks.json",
+        "memory-effort-evidence-independent-review-integrity.json"
+      ],
+      "finding": "Both owned pages state latest closed8d timing2of6/cleanrecall4of5, CLI/native misses, unmeasured Chat paint, original readonly30s failure/writeNOT_STARTED,287checks/oneunmet,78operations/78attempts/9.7MUNKNOWN and ABSENT21.5aeb/ef094/older history remains. All14 unrelated dirty hashes match. Docs type/build observed exit0; no new hosted savings or goal completion claim."
+    }
+  ],
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4,
+    "average": 4.0
+  },
+  "unresolvedBreakingFindings": 0,
+  "unresolvedImportantFindings": 0,
+  "closedFindings": [
+    {
+      "severity": "important",
+      "path": "scripts/install-ci-demo.test.mjs:158-159",
+      "initialObserved": "new1.5.1 positivePASS and oldunsupported1.5.1 negativeFAIL;2selected1pass1fail exit1",
+      "fix": "replace unsupported1.5.1 with unsupported1.5.2; original negative assertions preserved",
+      "retest": "same independent selected pair2of2 zero skips exit0; Root fullfile28of28 zero skips exit0",
+      "sourceAfterSha256": "360f6688b093c396f7f811edbedaf28a699363926aa7fa44fa48174f0f351019",
+      "initialReceipt": {
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "--test",
+          "--test-name-pattern",
+          "^(1\\.5\\.1 runtime preparation|unreviewed template versions)",
+          "scripts/install-ci-demo.test.mjs"
+        ],
+        "exitCode": 1,
+        "elapsedSeconds": 0.12595787499594735,
+        "naturalProcessJoin": true,
+        "scope": "two selected runtime composer tests, no package installation"
+      },
+      "repairReceipt": {
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "--test",
+          "--test-name-pattern",
+          "^(1\\.5\\.1 runtime preparation|unreviewed template versions)",
+          "scripts/install-ci-demo.test.mjs"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 0.07681083399802446,
+        "naturalProcessJoin": true,
+        "scope": "two selected runtime composer tests, no package installation"
+      }
+    }
+  ],
+  "independentChecks": {
+    "backend": {
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "jest.config.mjs",
+        "--runInBand",
+        "--forceExit=false",
+        "--cache=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/literal-question-source-proof.test.ts",
+        "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+        "--json",
+        "--outputFile",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-independent-review-backend.jest.json"
+      ],
+      "versions": {
+        "node": "v24.15.0",
+        "npm": "12.2.0"
+      },
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "CONVEX_TEST_MODE": "local",
+        "sensitiveServiceVariables": "removed without printing"
+      },
+      "startedAt": "2026-10-15T15:22:42.624580+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 28.977631333000318,
+      "naturalProcessJoin": true,
+      "summary": {
+        "numTotalTestSuites": 6,
+        "numPassedTestSuites": 6,
+        "numFailedTestSuites": 0,
+        "numPendingTestSuites": 0,
+        "numTotalTests": 412,
+        "numPassedTests": 412,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "numTodoTests": 0,
+        "success": true
+      },
+      "suites": [
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+          "status": "passed",
+          "total": 141,
+          "passed": 141,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+          "status": "passed",
+          "total": 67,
+          "passed": 67,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts",
+          "status": "passed",
+          "total": 29,
+          "passed": 29,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+          "status": "passed",
+          "total": 111,
+          "passed": 111,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/literal-question-source-proof.test.ts",
+          "status": "passed",
+          "total": 47,
+          "passed": 47,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+          "status": "passed",
+          "total": 17,
+          "passed": 17,
+          "skipped": 0
+        }
+      ]
+    },
+    "chat": {
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/unit/chat-latency.test.ts",
+        "tests/unit/runtime-auth-race.test.ts",
+        "--no-cache",
+        "--configLoader",
+        "runner",
+        "--no-file-parallelism",
+        "--maxWorkers",
+        "1",
+        "--reporter",
+        "default",
+        "--reporter",
+        "json",
+        "--outputFile.json",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-independent-review-chat.vitest.json"
+      ],
+      "startedAt": "2026-10-15T15:23:58.156298+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 1.3753550840046955,
+      "naturalProcessJoin": true,
+      "summary": {
+        "numTotalTestSuites": 3,
+        "numPassedTestSuites": 3,
+        "numFailedTestSuites": 0,
+        "numPendingTestSuites": 0,
+        "numTotalTests": 18,
+        "numPassedTests": 18,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "numTodoTests": 0,
+        "success": true
+      },
+      "discoveredFiles": [
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/chat-latency.test.ts",
+          "status": "passed",
+          "tests": 5
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+          "status": "passed",
+          "tests": 13
+        }
+      ]
+    },
+    "installerInitialFailure": {
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--test",
+        "--test-name-pattern",
+        "^(1\\.5\\.1 runtime preparation|unreviewed template versions)",
+        "scripts/install-ci-demo.test.mjs"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 0.12595787499594735,
+      "naturalProcessJoin": true,
+      "scope": "two selected runtime composer tests, no package installation"
+    },
+    "installerAfterRepair": {
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--test",
+        "--test-name-pattern",
+        "^(1\\.5\\.1 runtime preparation|unreviewed template versions)",
+        "scripts/install-ci-demo.test.mjs"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.07681083399802446,
+      "naturalProcessJoin": true,
+      "scope": "two selected runtime composer tests, no package installation"
+    },
+    "integrity": "memory-effort-evidence-independent-review-integrity.json",
+    "payloadWiring": "memory-effort-evidence-independent-review-payload-wiring.json",
+    "receiptIndex": "memory-effort-evidence-independent-review-receipt-index.json"
+  },
+  "catalog": {
+    "old18MetadataExactlyEqual": true,
+    "trackedPayloadDiffEmpty": true,
+    "all19ActualHashAggregatesMatch": true,
+    "newPayload": {
+      "id": "chat-sdk",
+      "version": "1.5.1",
+      "fileCount": 263,
+      "allContentHashesMatch": true,
+      "issues": [],
+      "extraFiles": [],
+      "missingFiles": [],
+      "payloadHashExpected": "e3dff7c14015bbe9b19a395f1fb95de1dffc2a897d52a16de5cc40c2121b18f2",
+      "payloadHashActual": "e3dff7c14015bbe9b19a395f1fb95de1dffc2a897d52a16de5cc40c2121b18f2",
+      "payloadHashMatches": true
+    },
+    "changedChatFilesMatchPayload": true
+  },
+  "limitations": [
+    "This is one fresh non-author coherent source/test/config review with one narrow author correction during the same review. It does not rejudge the accepted17 original tasks or acceptance-policy/goal plan.",
+    "No services, inference, deployment, browser, installation, package build/pack, Git mutation, P/W write or other-chat messaging was performed by this reviewer. Only new independent-review-prefixed Q evidence/logs and disposable test fixtures were written.",
+    "All reviewer test children joined naturally. The prior cleanup receipt asserts ABSENT with21 checks and closed clients; no fresh Docker/management/service query was issued during this read-only review.",
+    "No new installed candidate, live SLO, real Chat paint or final audit PASS. Genuine new Chat codegen/full types/build, required actual installed positive/negative/profile/tool/browser outcomes, measured latency and final independent audit remain open. Goal stays4of6=66.7percent.",
+    "Full local Chat tsc failure remains:60 old chatData errors from stale untracked generated core-table types. The read-only baseline probe additionally had2 identical CWD type lookup errors and is explicitly notPASS. Correct-CWD428-file changed import closure has zero diagnostics, without source/generated edits.",
+    "Chat whole-source lint is observed exit0 with164 warnings; this is not warning-free lint. Root SDK build/contracts, root types/affected strict lint, catalog24/types/lint, CLI catalog68 and docs type/build are examined author/Root receipts, not independently re-executed here.",
+    "Author affected22-suite run remains947pass/3fail; repaired preparation17 subsequently passes. Applicable union is950 unique tests across22 suites (933 unchanged passing cases plus17 repaired), no single22-suite all-green run. Author literal304 overlaps other coverage and is not added. Reviewer independently ran412 backend+18 Chat; installer selected2 is separate.",
+    "The42-path manifest is a bounded source/test/manifest closure, not a census of every source file. The historical21-path closure is retained unchanged as evidence.20 current manifest paths equal baseHEAD,18 differ and4 are absent atHEAD; these are not claims that all42 equal base bytes.",
+    "The original saved apricot/coral subsets explain concrete v1 proof misses; exact historical search selector IDs/order and original authorization snapshot were not retained. Controlled fixture success does not establish original-run causality or hosted savings.",
+    "Configured ESLint ignores scripts/install-ci-demo.test.mjs. Root reported the targeted max-warnings0 invocation exits1 solely on the ignored-file warning; this is not a lint PASS for that test file. No source defect is inferred from inapplicable lint selection."
+  ],
+  "goal": {
+    "completed": 4,
+    "total": 6,
+    "percent": 66.7,
+    "installedLatencyAcceptance": false,
+    "finalGoalAudit": false
+  },
+  "createdAt": "2026-10-15T15:33:50.955169+00:00",
+  "dimensionScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "averageScore": 4.0,
+  "sourceHashesBefore": {
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAuth.ts": "b830ece95b342f505b7e81000d2bd675d6dac1caa923f7e3ed78075e7dfb28b6",
+    "convex-dev/runtimeGateway.ts": "3bdc339a7da20a15577159127c2b65c6f33f43c40ee258a5b8a0ec012cff1bc1",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeMemoryRepository.ts": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0",
+    "convex-dev/runtimeTranscript.ts": "e30f192a7e0a30e3704b34cdc6a6b4631b7c040b28c15a0dd009f190ed65ae13",
+    "package-lock.json": "50c327af61738f9a64dc6a9dc32dbff8ae45afc6ada612d3dac294901fec9638",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example": "aa9c7f0ac677b73b3f70bfd66c03e2422fe6e6846da6f3b44afca9cada0a5def",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx": "53e8f401d6a00747ef9d6b32c54d4cbba8c3c7484d49164a96681e943d3dad18",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/lib/chat-latency.ts": null,
+    "packages/cortex-cli/templates/chat-sdk-quickstart/package.json": "f518b0dc906073d8ed3b0f47f9ccae1447fed213a7542b635cb19a35cc914ecf",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/chat-latency.test.ts": null,
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts": "6aabc66e66ebe99e0e4c19b549f79affd16ea71495071445a3d246a9311127c6",
+    "packages/cortex-templates/catalog.json": "39cb83f8f26845b533ad8f9bd723141ae30f742378d79fd23cfda06d8e66b343",
+    "packages/cortex-templates/package.json": "bede5c9b41847032200a884f464eda3b38ca743f1779a325f2091676c86f574e",
+    "scripts/install-ci-demo.mjs": "cd87762414060ffc3b7ad0c90cb91cf50e1097acd49f4fe79ed37730cb7a63c0",
+    "scripts/install-ci-demo.test.mjs": "915bd4b908411eaa9f7eccc37cd5d55194921c5c11bc2bfb6395342dd2725cb5",
+    "src/domain/memory-direct-recall.ts": "7c93979d1e161ee0ec2c94da382b667cf2b08f561f401626b53bc94acdd2ea56",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "8423001d50964c517e9501cf4bc35fd4d53135686becd74d6544b3b3aa5cd598",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "2f70fb8165d5414abcf90709ca40b7498578ab72aa4b4c61347accc0abecc1bb",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "b8db94f90339eeb0d7083f845be89a9f7f36f9172794ff921899d469e42d5f48",
+    "tests/unit/runtimeMemory/literal-question-source-proof.test.ts": null,
+    "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts": null,
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "sourceHashesBeforeDefinition": "Actual HEAD8d3c370 base bytes; null means absent at HEAD. Not the pre-review candidate.",
+  "sourceHashesAfter": {
+    "convex-dev/runtimeAgentRecall.ts": "32c24c9cb2081ca2cc83170ee0745c0d4415f8478f829535ca88d575b9c2b0f8",
+    "convex-dev/runtimeAuth.ts": "2a6620d44cfd3167fdb71b220662780f84d806f0072c3732206204bcd3aab167",
+    "convex-dev/runtimeGateway.ts": "3bdc339a7da20a15577159127c2b65c6f33f43c40ee258a5b8a0ec012cff1bc1",
+    "convex-dev/runtimeMemoryQuery.ts": "28ac320c60be6d0cc181c320e1c1e0925a18711da99597550c10890c40ce0332",
+    "convex-dev/runtimeMemoryRepository.ts": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0",
+    "convex-dev/runtimeTranscript.ts": "45a488673dcd0a4bb06e23b9c00f32736f9676437aed4fe223a61e17832fe593",
+    "package-lock.json": "7b8539717c90c6da3f4df8fc90adb8904f57ae9676213d6d7d8c1bcf555bd52a",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example": "6f21cf2c1e55f78b46d7ad034e8ac94f2c2db9b1dc0db6fa8b16d2c9a832e8d2",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx": "1d5c59d7805521dca96458de0d7e9d993383b22cb227652bbcdc69647762c89b",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/lib/chat-latency.ts": "f97e7883b3baf2c48fde7dec84574cdb8588b71e1d4b75103eb64c39717e23ea",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/package.json": "bd056eb5c61a4b3a4729f43d1b19281b4ba1ed72ca4bf0821146fb0ddd73efe7",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/chat-latency.test.ts": "a60ffc1f62e41f4242e06d4e121fa66dcaf921dab32a6d235fe1ee9ea09c6d62",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts": "4896d2735600df9a6f862379d89099fe262872431e2eea1d61033bcb98e42479",
+    "packages/cortex-templates/catalog.json": "3593ffae0ced7bc8aa78ca628ef91c40e5cc9e1ae579c4dfb102d4e0ae0eb4b1",
+    "packages/cortex-templates/package.json": "41e3664564825b86d11a866fcdc28d78aa47a77ac62f495ad04779f3d4ba28be",
+    "scripts/install-ci-demo.mjs": "2c12b11304adeec84a41d972e3db1c9db98f4972a73b757fa590ff6281718e1f",
+    "scripts/install-ci-demo.test.mjs": "360f6688b093c396f7f811edbedaf28a699363926aa7fa44fa48174f0f351019",
+    "src/domain/memory-direct-recall.ts": "70b4bd5fd8d018fc8ddde4bf5876c7b7a129684eae438ad55cf5c775f5ed2658",
+    "src/domain/memory-effort.ts": "72e5488e5ed0136ee79b18b281b44c5dc8192c24c27f3bb8d9b1ff672a883a27",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "b0f3dda317457590ac99939ba17bce7a669050c6db95d2b23d2c4bd315aae326",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "147c76e394f27a06c44c01fcc7016d1137f613436d936d67b8505402e95a9d1e",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "0f1d3165f47ea493d99196f8d441ddc2cecb7baf3a1a39f7360ae0f50e769a9a",
+    "tests/unit/runtimeMemory/literal-question-source-proof.test.ts": "0d63dd88a3113eba6676f2b74499b83062313426b6d5c939900a034066cedcff",
+    "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts": "86500aaccd645a9930ef88e336a75a28030238109095df8fb541d9836dcd86cc",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "allSourcesStable": true,
+  "allSourcesStableDefinition": "All42 final current source hashes match the accepted final v2 manifest. Does not mean equality to baseHEAD or original pre-correction candidate; the one authorized test fixture change remains recorded in candidateBeforeAfter.",
+  "reviewStartCandidateAllSameAsFinal": false
+}

@@ -1,4 +1,4 @@
-import { proveDirectFactLookup, directFactLookupSourceId, directFactProofCompatible, directFactTraversalComplete, DIRECT_FACT_RECALL_ROUTE } from "../src/domain/memory-direct-recall";
+import { proveDirectFactLookup, directFactLookupSourceIds, directFactProofCompatible, directFactTraversalComplete, DIRECT_FACT_RECALL_ROUTE } from "../src/domain/memory-direct-recall";
 import type { DerivedFact } from "../src/domain/contracts";
 import type { MemoryEffortRequest } from "../src/domain/memory-effort";
 import { resolveMemoryEffortPolicy,memoryEffortCandidateLimit } from "../src/domain/memory-effort";
@@ -182,9 +182,9 @@ export async function readDirectPublicRecallHandler(nativeCtx:QueryCtx,a:Args&{r
   await repository.assertReadAuthority();await repository.assertProfileReady(selected.profile,a.runBudgetId);
   const candidates=await repository.searchFactCandidates(a.input.text,directLimit(a.input));
   const proofVersion=resolveMemoryEffortPolicy(a.input.memory).literalSourceProofVersion;
-  const sourceId=directFactLookupSourceId(a.input.text,candidates,Date.now(),proofVersion);
-  const source=sourceId===undefined?undefined:await repository.getSource(sourceId,'canViewFacts');
-  const proof=proveDirectFactLookup(a.input.text,candidates,Date.now(),proofVersion,source??undefined),sufficient=proof!==undefined;
+  const sourceIds=directFactLookupSourceIds(a.input.text,candidates,Date.now(),proofVersion);
+  const sources=await Promise.all(sourceIds.map(sourceId=>repository.getSource(sourceId,'canViewFacts')));
+  const proof=proveDirectFactLookup(a.input.text,candidates,Date.now(),proofVersion,sources.filter(source=>source!==null&&source!==undefined)),sufficient=proof!==undefined;
   traceRuntimePhase(a.runBudgetId,1,`recall.direct.candidates.${candidates.candidateWorkBound?'work-bound':sufficient?'sufficient':'insufficient'}`,{selectedFacts:candidates.facts.length});
   if(!proof)return null;
   let compatible=true;

@@ -19,9 +19,14 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
 let nativeSnapshotReads = true;
 let controlReuse = true;
 let querySourceReuse = true;
+let conversationReuse = true;
 const controlPredicates: unknown[] = [];
 const originalAuth = await import("../../../convex-dev/runtimeAuth");
 jest.unstable_mockModule("../../../convex-dev/runtimeAuth", () => ({ ...originalAuth,
+  // Named historical mechanism comparisons retain their original canonical
+  // terminals. The new registered pipeline differential covers this route on/off.
+  readV8ConversationRows: async (...args: Parameters<typeof originalAuth.readV8ConversationRows>) =>
+    originalAuth.readV8ConversationRows(conversationReuse ? args[0] : { ...args[0] }, args[1], args[2], args[3]),
   readManagedSourceUniqueRow: async (...args: Parameters<typeof originalAuth.readManagedSourceUniqueRow>) => {
     const caller = new Error().stack?.split("\n").find(line => line.includes("ConvexMemoryRepository.")) ?? "";
     const candidate = /ConvexMemoryRepository\.(visibleSource|hydrateVectorCandidates)\b/.test(caller);
@@ -65,8 +70,8 @@ const memory = await import("../../../convex-dev/runtimeMemory");
 const { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } = await import("../../../convex-dev/runtimeMemoryRepository");
 const {replaceFactEntityLinks}=await import("../../../convex-dev/runtimeMemoryTraversal");
 const { explicitSourceLineage, vectorRecallItems, completeRecallDelivery } = await import("../../../convex-dev/runtimeMemoryServices");
-beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; controlReuse = true; querySourceReuse = true; controlPredicates.length = 0; });
-afterEach(() => { jest.restoreAllMocks(); });
+beforeEach(() => { installIngestionMockRoot(); nativeSnapshotReads = true; controlReuse = true; querySourceReuse = true; conversationReuse = true; controlPredicates.length = 0; });
+afterEach(() => { conversationReuse = true; jest.restoreAllMocks(); });
 async function fixture(v8 = false,effortAware=false,effort:"normal"|"fast"|"max"="normal",independentSeeds=0,seedWork?:number,directLookup:boolean|"fruit"=false,repeatedQuestions=0,linkedConflict=false,observedProjections:boolean|"contradiction"|"canonical-mismatch"|"singleton"=false,observedQuery?:string,requestedMaxEntries?:number) {
   const f = await ingestionFixture(), scope = memoryScope(f.reference), writer = new ConvexMemoryRepository(f.ctx, f.reference, "write", f.ctx.db);
   const observedContent=observedProjections==="canonical-mismatch"?"My favorite fruit is pear.":"My favorite fruit is apricot.";
@@ -536,6 +541,7 @@ it("shared native parent keeps the final raw revocation fence and fresh save rec
 });
 
 it("same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal",async()=>{
+ conversationReuse=false; // Isolate the original snapshot-parent physical-read comparison.
  controlReuse=false; // Isolate the original snapshot-parent retention mechanism.
  querySourceReuse=false; // This historical physical-read comparison also isolates the later two-callsite source reuse.
  const f=await fixture(true),get=f.db.get.bind(f.db),query=f.db.query.bind(f.db),seen:{table:string;id:string}[]=[],queries:{table:string;index?:string;keys:unknown[];limit?:number}[]=[];
@@ -655,6 +661,7 @@ it("whole registered recall and save/candidate retain exact guards/model/state w
     oldDigests, newDigests: crypto.mock.calls.length, exactOutputStatePredicatesAndOtherReads: true, hostedLatency: "NOT_RUN" }));
 });
 it.each([true, false])("V8 real shared=%s ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads", async shared => {
+  conversationReuse = false; // Isolate this historical graph-reader comparison.
   const f = await ancestryFixture(shared), args = { ...f.args, hits: f.hits, factPlan: (await plan(f)).factPlan }, before = wholeState(f);
   const observed = instrumentGraphReads(f), originalScope = createV8AuthorityReadScope(f.ctx);
   const read = await whole.readMatchesHandler(f.ctx, args, 8, originalScope);
@@ -706,6 +713,7 @@ it.each(["edit", "revoke"])("final resource boundary freshly sees a late %s afte
 });
 
 it.each([true, false])("atomic save/candidate shared=%s ancestry reduces raw reads while keeping exact writes and state", async shared => {
+  conversationReuse = false; // Isolate this historical graph-reader comparison.
   const f = await ancestryFixture(shared), save = { ...f.attempt, context: "", entries: [], witnesses: [f.topWitness], completeness: "complete" as const };
   const before = { ...wholeState(f), sequence: f.db.sequence }, observed = instrumentGraphReads(f), callsBefore = f.calls.length;
   const restore = () => { f.db.rows = clone(before.rows); f.db.writes = before.writes; f.db.sequence = before.sequence;
@@ -743,6 +751,7 @@ function k26GraphScope(ctx: MutationCtx) {
 }
 const uniqueRawReads = (reads: GraphRead[]) => [...new Set(reads.map(row => JSON.stringify(graphReadIdentity(row))))].sort();
 it.each([true, false])("K27 incremental K26 read/delivery comparison shared=%s retains all outcomes and raw identities", async shared => {
+  conversationReuse = false; // Isolate this historical traversal-reader comparison.
   controlReuse = false; // Keep this historical raw-family comparison isolated.
   // This historical comparison keeps the K27 graph-only source view on both sides.
   nativeSnapshotReads = false;
@@ -763,6 +772,7 @@ it.each([true, false])("K27 incremental K26 read/delivery comparison shared=%s r
     optimized: { total: optimized.length, documents: optimized.reduce((n,r)=>n+r.documents,0) }, uniqueRawIdentitySetEqual: true, applicationWrites: 0, nativeLatency: "UNAVAILABLE" }));
 });
 it.each([true, false])("K27 incremental K26 atomic save/candidate comparison shared=%s preserves state and complete native readset", async shared => {
+  conversationReuse = false; // Isolate this historical traversal-reader comparison.
   controlReuse = false; // Full control/hash behavior is compared separately above.
   const f = await ancestryFixture(shared), save = { ...f.attempt, context: "", entries: [], witnesses: [f.topWitness], completeness: "complete" as const };
   const before = { ...wholeState(f), sequence: f.db.sequence }, observed = instrumentGraphReads(f), callsBefore = f.calls.length;

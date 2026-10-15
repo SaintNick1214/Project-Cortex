@@ -10,7 +10,15 @@ import type {
 } from "@cortexmemory/sdk/runtime";
 import { CortexRuntimeClient } from "@cortexmemory/sdk/runtime";
 import { CortexRemoteTransport } from "@cortexmemory/vercel-ai-provider/remote";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { createChatLatencyTrace } from "../lib/chat-latency";
 import {
   MemoryEffortControl,
   MemoryEffortStatus,
@@ -21,6 +29,29 @@ export function RuntimeChatSDK({
 }: {
   conversationId?: string;
 }) {
+  const latency = useMemo(
+    () =>
+      createChatLatencyTrace(
+        process.env.NEXT_PUBLIC_CORTEX_LATENCY_TRACE === "1",
+        {
+          afterPaint: (callback) => {
+            let second = 0;
+            const first = requestAnimationFrame(() => {
+              second = requestAnimationFrame(callback);
+            });
+            return () => {
+              cancelAnimationFrame(first);
+              cancelAnimationFrame(second);
+            };
+          },
+          emit: (event) => console.log(JSON.stringify(event)),
+          now: () => performance.now(),
+          visibility: () => document.visibilityState,
+        }
+      ),
+    []
+  );
+  useEffect(() => () => latency.dispose(), [latency]);
   const [effort, setEffort] = useState<MemoryEffort>("normal");
   const [effortSupported, setEffortSupported] = useState(false);
   const [token, setToken] = useState("");
@@ -56,6 +87,7 @@ export function RuntimeChatSDK({
     []
   );
   const clear = useCallback(() => {
+    latency.dispose();
     setObservation(undefined);
     setRun(undefined);
     setHandle(undefined);
@@ -64,7 +96,7 @@ export function RuntimeChatSDK({
     setRecall("");
     setReadiness("");
     setIdentity("");
-  }, []);
+  }, [latency]);
   const disconnect = useCallback(async () => {
     attemptRef.current += 1;
     readEpochRef.current += 1;
@@ -188,6 +220,7 @@ export function RuntimeChatSDK({
         },
         onRun: (value) => {
           if (attemptRef.current === attempt) {
+            latency.bind(value.runId);
             setHandle(value);
           }
         },
@@ -444,6 +477,7 @@ export function RuntimeChatSDK({
             connection={connection}
             effort={effort}
             effortSupported={effortSupported}
+            latency={latency}
             onError={protectedFailure}
             run={run}
             setEffort={setEffort}
@@ -592,18 +626,43 @@ function ChatPanel({
   setEffort,
   effortSupported,
   run,
+  latency,
 }: {
   effort: MemoryEffort;
   setEffort: (value: MemoryEffort) => void;
   effortSupported: boolean;
   run?: RuntimeRun;
+  latency: ReturnType<typeof createChatLatencyTrace>;
   connection: { client: CortexRuntimeClient; transport: CortexRemoteTransport };
   onError: (error: unknown) => void;
 }) {
   const { messages, sendMessage, status, resumeStream, setMessages } = useChat({
-    onError,
+    onError: (error) => {
+      latency.failed();
+      onError(error);
+    },
+    onFinish: (result) => {
+      if (
+        !result.isAbort &&
+        !result.isDisconnect &&
+        !result.isError &&
+        result.finishReason === "stop"
+      ) {
+        latency.transportComplete(result.message.id);
+      }
+    },
     transport: connection.transport,
   });
+  // Transport completion changes status after onFinish even if the message array stays unchanged.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: recheck the final committed answer after transport completion.
+  useLayoutEffect(() => {
+    latency.committed(messages);
+  }, [latency, messages, status]);
+  useLayoutEffect(() => {
+    if (run?.responseStatus === "complete") {
+      latency.responseStatusComplete(run.runId);
+    }
+  }, [latency, run?.runId, run?.responseStatus]);
   const [text, setText] = useState("");
   const [runId, setRunId] = useState("");
   return (
@@ -633,6 +692,7 @@ function ChatPanel({
         onSubmit={(event) => {
           event.preventDefault();
           if (text.trim()) {
+            latency.begin(messages.length);
             sendMessage(
               { text },
               effortSupported ? { body: { memory: { effort } } } : undefined

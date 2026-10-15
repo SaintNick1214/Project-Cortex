@@ -1,3 +1,5 @@
+import type { RuntimeRunHandle } from "@cortexmemory/sdk/runtime";
+import type { UIMessage } from "ai";
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -15,14 +17,16 @@ const fixtures = vi.hoisted(() => ({
     };
     onAuthChange: (authenticated: boolean) => void;
   }>,
+  messages: [] as UIMessage[],
   sendMessage: vi.fn(
     async (_message: unknown, _options?: unknown) => undefined
   ),
+  transportOptions: [] as Array<{ onRun: (handle: RuntimeRunHandle) => void }>,
   transports: vi.fn(),
 }));
 vi.mock("@ai-sdk/react", () => ({
   useChat: () => ({
-    messages: [],
+    messages: fixtures.messages,
     resumeStream: vi.fn(),
     sendMessage: fixtures.sendMessage,
     setMessages: vi.fn(),
@@ -32,7 +36,8 @@ vi.mock("@ai-sdk/react", () => ({
 vi.mock("@cortexmemory/vercel-ai-provider/remote", () => ({
   CortexRemoteTransport: class {
     disconnect = vi.fn();
-    constructor() {
+    constructor(options: { onRun: (handle: RuntimeRunHandle) => void }) {
+      fixtures.transportOptions.push(options);
       fixtures.transports();
     }
   },
@@ -43,6 +48,9 @@ vi.mock("@cortexmemory/sdk/runtime", () => ({
     definition = Promise.withResolvers<unknown>();
     getDefinition = vi.fn(() => this.definition.promise);
     listContentJobs = vi.fn().mockResolvedValue([]);
+    watchRun = vi.fn(() => () => {
+      /* The fixture owns no subscription. */
+    });
     refreshAuth = vi.fn().mockResolvedValue(undefined);
     session = vi.fn().mockResolvedValue({
       memorySpaceId: "space",
@@ -57,12 +65,18 @@ vi.mock("@cortexmemory/sdk/runtime", () => ({
   },
 }));
 beforeEach(() => {
+  fixtures.messages = [];
+  fixtures.transportOptions.length = 0;
   fixtures.clients.length = 0;
   fixtures.transports.mockClear();
   fixtures.sendMessage.mockClear();
   vi.stubEnv("NEXT_PUBLIC_CONVEX_URL", "https://fixture.convex.cloud");
 });
-afterEach(() => vi.unstubAllEnvs());
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
 async function mount() {
   const element = document.createElement("div");
@@ -77,7 +91,9 @@ async function mount() {
     await act(async () => root.unmount());
     element.remove();
   };
-  return { button, close, element };
+  const rerender = () =>
+    act(async () => root.render(createElement(RuntimeChatSDK)));
+  return { button, close, element, rerender };
 }
 
 it("sign-out closes a pending connection and withholds its late protected definition", async () => {
@@ -386,6 +402,124 @@ it("old Chat Agent definitions expose legacy selection and disable unsupported e
       "This Agent version uses legacy memory selection"
     );
     expect(fixtures.sendMessage).not.toHaveBeenCalled();
+  } finally {
+    await ui.close();
+  }
+});
+
+it("traces a real ChatPanel submit and committed answer, and fences paint after sign-out", async () => {
+  vi.stubEnv("NEXT_PUBLIC_CORTEX_LATENCY_TRACE", "1");
+  const frames: FrameRequestCallback[] = [];
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    frames.push(callback);
+    return frames.length;
+  });
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
+  const output = vi.spyOn(console, "log").mockImplementation(() => {
+    /* Capture diagnostics without printing private fixture text. */
+  });
+  const ui = await mount();
+  try {
+    await act(async () => ui.button("Connect").click());
+    await act(async () =>
+      fixtures.clients[0]!.definition.resolve({
+        agentId: "current",
+        inputSelectionVersion: 2,
+        memoryEffortPolicyVersion: 1,
+      })
+    );
+    const send = async (text: string) => {
+      const input = ui.element.querySelector<HTMLTextAreaElement>(
+        'textarea[aria-label="Message"]'
+      )!;
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(
+          HTMLTextAreaElement.prototype,
+          "value"
+        )!.set!.call(input, text);
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      await act(async () =>
+        input
+          .closest("form")!
+          .dispatchEvent(
+            new Event("submit", { bubbles: true, cancelable: true })
+          )
+      );
+    };
+    const runId = `run:${"c".repeat(64)}`;
+    const handle: RuntimeRunHandle = {
+      agentId: "current",
+      agentVersion: 1,
+      conversationId: "conversation",
+      definitionHash: "d".repeat(64),
+      memorySpaceId: "space",
+      principalId: "private-principal",
+      runId,
+      tenantId: "tenant",
+      version: 1,
+    };
+    await send("PRIVATE_PROMPT");
+    await act(async () => fixtures.transportOptions[0]!.onRun(handle));
+    fixtures.messages = [
+      {
+        id: "user",
+        parts: [{ text: "PRIVATE_PROMPT", type: "text" }],
+        role: "user",
+      },
+      {
+        id: `cortex:${runId}:assistant`,
+        parts: [{ text: "PRIVATE_REPLY", type: "text" }],
+        role: "assistant",
+      },
+    ];
+    await ui.rerender();
+    const events = () =>
+      output.mock.calls.map(
+        ([value]) =>
+          JSON.parse(String(value)) as {
+            phase: string;
+            elapsedMs: number;
+            runId?: string;
+          }
+      );
+    expect(ui.element.textContent).toContain("PRIVATE_REPLY");
+    expect(events().map((event) => event.phase)).toEqual([
+      "submit",
+      "admission.delivered",
+      "first-text.dom-commit",
+    ]);
+    frames[0]!(0);
+    frames[1]!(0);
+    expect(events().at(-1)).toMatchObject({
+      phase: "first-text.after-paint",
+      runId,
+    });
+    expect(events().at(-1)!.elapsedMs).toBeGreaterThanOrEqual(0);
+    expect(JSON.stringify(events())).not.toMatch(/PRIVATE_|private-principal/);
+    await send("PRIVATE_SECOND_PROMPT");
+    fixtures.messages = [
+      ...fixtures.messages,
+      {
+        id: "next-user",
+        parts: [{ text: "PRIVATE_SECOND_PROMPT", type: "text" }],
+        role: "user",
+      },
+      {
+        id: "next-assistant",
+        parts: [{ text: "PRIVATE_SECOND_REPLY", type: "text" }],
+        role: "assistant",
+      },
+    ];
+    await ui.rerender();
+    expect(frames).toHaveLength(3);
+    await act(async () => ui.button("Sign out").click());
+    frames[2]!(0);
+    frames[3]!(0);
+    expect(
+      events().filter((event) => event.phase === "first-text.after-paint")
+    ).toHaveLength(1);
+    expect(ui.element.querySelector('[aria-label="Remote chat"]')).toBeNull();
   } finally {
     await ui.close();
   }

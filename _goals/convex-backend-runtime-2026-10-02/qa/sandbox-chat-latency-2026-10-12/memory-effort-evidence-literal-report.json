@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "task": "literal evidence proof version 2",
+  "repository": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baselineCommit": "8d3c370fd67759b2f821cb0ff06ce5ab55ea5399",
+  "scope": "source and controlled native handler tests only; no hosted latency or full-goal acceptance",
+  "completedAt": "2026-10-15T15:12:22.742565+00:00",
+  "changedFiles": {
+    "src/domain/memory-direct-recall.ts": "70b4bd5fd8d018fc8ddde4bf5876c7b7a129684eae438ad55cf5c775f5ed2658",
+    "src/domain/memory-effort.ts": "72e5488e5ed0136ee79b18b281b44c5dc8192c24c27f3bb8d9b1ff672a883a27",
+    "convex-dev/runtimeAgentRecall.ts": "32c24c9cb2081ca2cc83170ee0745c0d4415f8478f829535ca88d575b9c2b0f8",
+    "convex-dev/runtimeMemoryQuery.ts": "28ac320c60be6d0cc181c320e1c1e0925a18711da99597550c10890c40ce0332",
+    "tests/unit/runtimeMemory/literal-question-source-proof.test.ts": "0d63dd88a3113eba6676f2b74499b83062313426b6d5c939900a034066cedcff",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "0f1d3165f47ea493d99196f8d441ddc2cecb7baf3a1a39f7360ae0f50e769a9a"
+  },
+  "checks": [
+    {
+      "name": "tests-final",
+      "status": "PASS",
+      "observedExitCode": 0,
+      "tests": 304,
+      "log": "memory-effort-evidence-literal-tests-final.log",
+      "logSha256": "6054e71b8c6efe0e9e2eaf2c08efe9cbec5b414f339a7a11531ee140fc178f8f"
+    },
+    {
+      "name": "types-checked",
+      "status": "PASS",
+      "observedExitCode": 0,
+      "tests": null,
+      "log": "memory-effort-evidence-literal-types-checked.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-checked",
+      "status": "PASS",
+      "observedExitCode": 0,
+      "tests": null,
+      "log": "memory-effort-evidence-literal-lint-checked.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "finalSelectedSuites": 6,
+  "newSuiteCases": 47,
+  "originalDirectRules": 111,
+  "publicCompositionCases": 96,
+  "jestConfiguredForceExit": true,
+  "liveServiceCalls": 0,
+  "paidInference": 0,
+  "gitMutations": 0,
+  "noHostedSpeedClaim": true,
+  "retainedFailures": [
+    "initial and no-watchman invocations exited at missing CONVEX_URL environment precondition; no test acceptance",
+    "tests-first 18 failures from new harness omissions; original domain111 pass",
+    "tests-repair1 11 new-harness expectation/provider failures",
+    "tests-repair2 only one impossible raw grant mutation-in-read-only-query refusal expectation failed,36 others pass",
+    "raw-grant-diagnosis historical pin1 singleton and new pin2 question proof both retain same query snapshot result; selected1 passes37 intentionally notselected, no fullsuite claim",
+    "tests-affected 9 physical conversation-read oracle failures in concurrent independent author change,3 other suites pass386/395 overall; owner/Root notified; not relabeled"
+  ],
+  "deferred": [
+    "Root independent coherent batch review",
+    "Root SDK/backend build and packed public contracts",
+    "conversation author whole-recall historical oracle repair/run",
+    "disposable hosted verification and latency targets"
+  ]
+}

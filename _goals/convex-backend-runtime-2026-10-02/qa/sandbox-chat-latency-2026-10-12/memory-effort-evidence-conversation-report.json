@@ -1,0 +1,413 @@
+{
+  "status": "AUTHOR_COMPLETE_FROZEN_PENDING_ONE_INDEPENDENT_BATCH_REVIEW",
+  "baseline": "8d3c370fd67759b2f821cb0ff06ce5ab55ea5399",
+  "manifest": "memory-effort-evidence-conversation-source-hashes.json",
+  "sourceFiles": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "2a6620d44cfd3167fdb71b220662780f84d806f0072c3732206204bcd3aab167",
+      "bytes": 61977
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "sha256": "45a488673dcd0a4bb06e23b9c00f32736f9676437aed4fe223a61e17832fe593",
+      "bytes": 64851
+    }
+  ],
+  "testFiles": [
+    {
+      "path": "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts",
+      "sha256": "86500aaccd645a9930ef88e336a75a28030238109095df8fb541d9836dcd86cc",
+      "bytes": 27042
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "147c76e394f27a06c44c01fcc7016d1137f613436d936d67b8505402e95a9d1e",
+      "bytes": 107752
+    },
+    {
+      "path": "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+      "sha256": "b0f3dda317457590ac99939ba17bce7a669050c6db95d2b23d2c4bd315aae326",
+      "bytes": 21565
+    }
+  ],
+  "change": "conversationById constructs its original canonical by_scoped_id query and retains only take(2) raw rows through the existing conversation family for the exact returned private V8 owner. Alias fallback stays a physical take(2).",
+  "physicalDifferentials": [
+    {
+      "type": "private-canonical-conversation",
+      "indexed": false,
+      "originalCanonicalTakes": 20,
+      "reusedCanonicalTakes": 2,
+      "noncanonicalReads": 150,
+      "originalByStage": {
+        "runtimeAgent:contextInputsAndEmbeddingV8": 8,
+        "runtimeAgent:saveAndPrepareContextV8": 12
+      },
+      "reusedByStage": {
+        "runtimeAgent:contextInputsAndEmbeddingV8": 1,
+        "runtimeAgent:saveAndPrepareContextV8": 1
+      },
+      "finalColdFences": 0,
+      "exactOutputBodyStateEffectsOrderedGuards": true,
+      "inferenceCalls": 0,
+      "hostedLatency": "NOT_RUN"
+    },
+    {
+      "type": "private-canonical-conversation",
+      "indexed": true,
+      "originalCanonicalTakes": 30,
+      "reusedCanonicalTakes": 5,
+      "noncanonicalReads": 341,
+      "originalByStage": {
+        "runtimeAgent:contextInputsAndEmbeddingV8": 15,
+        "runtimeAgentRecall:prepareReadsV8": 2,
+        "runtimeAgentRecall:readMatchesAndDeliveryV8": 3,
+        "runtimeAgent:saveAndPrepareContextV8": 10
+      },
+      "reusedByStage": {
+        "runtimeAgent:contextInputsAndEmbeddingV8": 1,
+        "runtimeAgentRecall:prepareReadsV8": 1,
+        "runtimeAgentRecall:readMatchesAndDeliveryV8": 2,
+        "runtimeAgent:saveAndPrepareContextV8": 1
+      },
+      "finalColdFences": 1,
+      "exactOutputBodyStateEffectsOrderedGuards": true,
+      "inferenceCalls": 0,
+      "hostedLatency": "NOT_RUN"
+    }
+  ],
+  "preserved": [
+    "Original ordered query constraints, take(2), duplicate first refusal and error identity.",
+    "All authority, tenant/space, grant/share/retention, lease/cancel, source and model-policy predicates; every noncandidate physical terminal in registered A/B.",
+    "Same registered model body/output, DB rows/writes, component effects, native calls and ordered authority guards.",
+    "Private owner identity and existing shared512entry/1000000byte accounting, detached clones, errors uncached, writer/epoch/inflight fencing and original cold final delivery.",
+    "No public/v7/default/unbranded or empty-save snapshot-view opt-in; no serialized flag or cross-native cache."
+  ],
+  "checks": {
+    "focused-initial": {
+      "exitCode": 1,
+      "naturalExit": true,
+      "forceExit": false,
+      "passed": 25,
+      "failed": 4,
+      "skipped": 0,
+      "testSha256": "83b03303c5906a8dc2789f6b62949c3527b0d19287699db12aa3d3f01fbd5e16",
+      "log": "memory-effort-evidence-conversation-focused-initial.log",
+      "jest": "memory-effort-evidence-conversation-focused-initial.jest.json"
+    },
+    "focused-v2": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-conversation-jest.config.mjs",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts",
+        "--json",
+        "--outputFile",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-conversation-focused-v2.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "naturalExit": true,
+      "seconds": 6.40247106552124,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "focused-v3": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-conversation-jest.config.mjs",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts",
+        "--json",
+        "--outputFile",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-conversation-focused-v3.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "seconds": 7.338251113891602,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "affected-final": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-conversation-jest.config.mjs",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+        "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeMemory/parallel-recall.test.ts",
+        "tests/unit/runtimeMemory/public-functional.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeAgent/v8-control-read-composition.test.ts",
+        "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "tests/unit/runtimeMemory/remember-deadline.test.ts",
+        "tests/unit/runtimeMemory/query-source-read-reuse.test.ts",
+        "tests/unit/runtimeTranscript/contracts.test.ts",
+        "tests/unit/runtimeTranscript/managed.test.ts",
+        "tests/unit/runtimeAuth/v8-read-scope.test.ts",
+        "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+        "--json",
+        "--outputFile",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-conversation-affected-final.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "naturalExit": true,
+      "seconds": 58.92266798019409,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "affected-repair-v2": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-conversation-jest.config.mjs",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "--json",
+        "--outputFile",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-conversation-affected-repair-v2.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "seconds": 5.387032747268677,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "types": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 2,
+      "naturalExit": true,
+      "seconds": 13.345550060272217,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "types-final": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "seconds": 14.933425188064575,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "lint": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--max-warnings",
+        "0",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeTranscript.ts",
+        "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "naturalExit": true,
+      "seconds": 6.1143810749053955,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "lint-final": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--max-warnings",
+        "0",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeTranscript.ts",
+        "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "seconds": 6.9247612953186035,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "lint-repair-v2": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--max-warnings",
+        "0",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "naturalExit": true,
+      "seconds": 3.8528311252593994,
+      "forceExit": false,
+      "target": "explicit dead local http://127.0.0.1:9"
+    },
+    "diff-check": {
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "results": [
+        {
+          "command": [
+            "git",
+            "diff",
+            "--check",
+            "--",
+            "convex-dev/runtimeAuth.ts",
+            "convex-dev/runtimeTranscript.ts",
+            "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+          ],
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "git",
+            "diff",
+            "--no-index",
+            "--check",
+            "/dev/null",
+            "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts"
+          ],
+          "exitCode": 3
+        }
+      ],
+      "naturalExit": true
+    },
+    "diff-check-v2": {
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "results": [
+        {
+          "command": [
+            "git",
+            "diff",
+            "--check",
+            "--",
+            "convex-dev/runtimeAuth.ts",
+            "convex-dev/runtimeTranscript.ts",
+            "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+          ],
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "git",
+            "diff",
+            "--no-index",
+            "--check",
+            "/dev/null",
+            "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts"
+          ],
+          "exitCode": 1
+        }
+      ],
+      "naturalExit": true
+    },
+    "diff-check-final": {
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "results": [
+        {
+          "command": [
+            "git",
+            "diff",
+            "--check",
+            "--",
+            "convex-dev/runtimeAuth.ts",
+            "convex-dev/runtimeTranscript.ts",
+            "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+            "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts"
+          ],
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "git",
+            "diff",
+            "--no-index",
+            "--no-exit-code",
+            "--check",
+            "/dev/null",
+            "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts"
+          ],
+          "exitCode": 1
+        }
+      ],
+      "naturalExit": true
+    }
+  },
+  "finalApplicableCoverage": {
+    "uniqueSuites": 22,
+    "uniqueTests": 950,
+    "unchangedSuitesPreviouslyPassed": 21,
+    "unchangedTestsPreviouslyPassed": 933,
+    "repairedSuitesLatestPassed": 1,
+    "repairedTestsLatestPassed": 17,
+    "singleAllGreen22SuiteRun": false,
+    "failed": 0,
+    "skipped": 0,
+    "forceExit": false,
+    "target": "explicit dead local http://127.0.0.1:9"
+  },
+  "historicalMechanismIsolation": {
+    "priorObservedFailure": "Literal author original affected receipt memory-effort-evidence-literal-tests-affected.log preserves nine historical comparison failures. Own first22-suite receipt preserves947pass/3fail.",
+    "authorizedFilesAndInstances": {
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts": 9,
+      "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": 3
+    },
+    "scope": "Named test-local readV8ConversationRows toggle only; reset before/after each case. All existing cases/assertions preserved. Other semantic/security/financial cases and new registered A/B retain the actual candidate.",
+    "reason": "The old observers record query construction as a physical read; original query construction now intentionally has no terminal on a reused row. Their historical physical-order mechanisms are isolated rather than changing expected mutable rows or excluding observed reads."
+  },
+  "reusedSafetyCoverage": {
+    "tests/unit/runtimeAuth/managed-source-read-scope.test.ts": "Existing shared raw family writer/source/bridge/conversation/run invalidations, traversal clocks, component/fluent/unknown/failed and pending writer epochs.",
+    "tests/unit/runtimeMemory/source-root-read-scope.test.ts": "Existing shared raw family bounds/clone/error/null/isolation and writer race safety.",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "All other actual current-path security/financial/empty-save writer and clock negatives remain candidate-enabled.",
+    "tests/unit/runtimeTranscript/managed.test.ts": "Original canonical transcript/alias/edit/access behavior."
+  },
+  "failuresPreserved": [
+    "Focused initial25pass/4fail: new fixture self-recursive nested spy caused error/late-read timeout, original alias read after delete was uncounted, budget proposal incorrectly expected admission refusal.",
+    "Focusedv2 28pass/1fail: budget poison was applied before the run account existed. Repaired by asserting actual prepared run account and poisoning before original financial admission.",
+    "Initial types exit2 belonged to concurrent literal author DirectFactLookupProof narrowing; owned paths had no type errors. Final root types passes after their repair.",
+    "Initial lint unused type-only variable repaired.",
+    "Initial untracked-file whitespace check found one extra blank EOF line, removed without semantic test change. Git no-index clean diff exits1 for differences-present; final log empty, tracked diff --check exits0."
+  ],
+  "limits": [
+    "Controlled native handler/DB/component evidence only; no hosted latency or SLO gain established.",
+    "No service, model, build, deploy, pack, Git mutation, P or W changes by this task.",
+    "Root owns one coherent independent review and future installed qualification. No new review/controller layer."
+  ]
+}
