@@ -1,0 +1,4228 @@
+{
+  "version": 1,
+  "status": "VERIFIED_SELECTED_SNAPSHOT_NO_OBSERVED_FAILURE",
+  "mode": "FINAL_ROOT_SELECTED_RUNS_AND_DISTINCT_TARGET_FINANCE_READ_ONLY",
+  "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+  "imageId": "sha256:bdba8702da9e56bb5e4556109e82214b31369d7c460531cc26ea97d8404ccea2",
+  "modelCalls": 0,
+  "retries": 0,
+  "mutations": 0,
+  "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+  "results": [],
+  "tableSnapshots": [
+    {
+      "table": "runtimeRuns",
+      "began": 1792088353576,
+      "ended": 1792088353978,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeRunAttempts",
+      "began": 1792088353978,
+      "ended": 1792088354091,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeRunOutbox",
+      "began": 1792088354091,
+      "ended": 1792088354197,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeAgentExecutions",
+      "began": 1792088354197,
+      "ended": 1792088354304,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeAgentOperations",
+      "began": 1792088354304,
+      "ended": 1792088354396,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeAgentIngestion",
+      "began": 1792088354396,
+      "ended": 1792088354494,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeRunMemoryProgress",
+      "began": 1792088354494,
+      "ended": 1792088354592,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeConversations",
+      "began": 1792088354592,
+      "ended": 1792088354689,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeTranscriptMessages",
+      "began": 1792088354689,
+      "ended": 1792088354780,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeIngestionEvents",
+      "began": 1792088354780,
+      "ended": 1792088354883,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeIngestionStages",
+      "began": 1792088354883,
+      "ended": 1792088355157,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeIngestionJobs",
+      "began": 1792088355157,
+      "ended": 1792088355257,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeIngestionScopes",
+      "began": 1792088355257,
+      "ended": 1792088355356,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeMemoryCaptures",
+      "began": 1792088355356,
+      "ended": 1792088355456,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeMemoryCaptureMessages",
+      "began": 1792088355456,
+      "ended": 1792088355558,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeMemorySources",
+      "began": 1792088355558,
+      "ended": 1792088355649,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeMemoryChunks",
+      "began": 1792088355649,
+      "ended": 1792088355752,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeMemoryVectors",
+      "began": 1792088355752,
+      "ended": 1792088355888,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeMemoryVectorGenerations",
+      "began": 1792088355888,
+      "ended": 1792088355999,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeMemoryReceipts",
+      "began": 1792088355999,
+      "ended": 1792088356122,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "facts",
+      "began": 1792088356122,
+      "ended": 1792088356233,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeModelOperations",
+      "began": 1792088356233,
+      "ended": 1792088356338,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeModelAttempts",
+      "began": 1792088356338,
+      "ended": 1792088356551,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeBudgetAccounts",
+      "began": 1792088356551,
+      "ended": 1792088356651,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeAuthGrants",
+      "began": 1792088356651,
+      "ended": 1792088356753,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeAuthPrincipals",
+      "began": 1792088356753,
+      "ended": 1792088356853,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeAuthMemberships",
+      "began": 1792088356853,
+      "ended": 1792088356949,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeAuthScopes",
+      "began": 1792088356949,
+      "ended": 1792088357049,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeAuthTombstones",
+      "began": 1792088357049,
+      "ended": 1792088357148,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "messages",
+      "began": 1792088357148,
+      "ended": 1792088357244,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeRuns",
+      "began": 1792088358753,
+      "ended": 1792088358846,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeIngestionEvents",
+      "began": 1792088358846,
+      "ended": 1792088358940,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeIngestionStages",
+      "began": 1792088358940,
+      "ended": 1792088359264,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeModelOperations",
+      "began": 1792088359264,
+      "ended": 1792088359366,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeModelAttempts",
+      "began": 1792088359366,
+      "ended": 1792088359570,
+      "completeBoundedRead": true
+    },
+    {
+      "table": "runtimeBudgetAccounts",
+      "began": 1792088359570,
+      "ended": 1792088359670,
+      "completeBoundedRead": true
+    }
+  ],
+  "clientsClosed": true,
+  "selection": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-final-selection.json",
+    "sha256": "0247829e4cd3abad86f3cc0ffedcde8849dd3e38787fbec11d0958396198764a",
+    "runCount": 3
+  },
+  "verifiedTarget": {
+    "id": 6201117,
+    "name": "quaint-seal-974",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "verifiedAt": 1792088353539
+  },
+  "checks": [
+    "all target operations have one first attempt",
+    "all actual native attempt slots released",
+    "confirmed native outputs captured attached and complete usage",
+    "all actual target accounts quiet under retained caps",
+    "unapproved-write-tool-cancelled exact request identity has one native run",
+    "unapproved-write-tool-cancelled one original run attempt",
+    "unapproved-write-tool-cancelled declared actual response outcome preserved",
+    "unapproved-write-tool-cancelled canonical published input/output identifiers bridged once",
+    "unapproved-write-tool-cancelled native canonical row/bridge exact",
+    "unapproved-write-tool-cancelled canonical source hashes/origin exact",
+    "unapproved-write-tool-cancelled exact selected unapproved write tool and internally derived native conversation",
+    "unapproved-write-tool-cancelled actual cancelled tool run has zero approval result native tool message or owned effect",
+    "unapproved-write-tool-cancelled cancelled tool retains one model0 and no continuation or final assistant output",
+    "unapproved-write-tool-cancelled derived cancelled conversation has zero approved tool effect",
+    "unapproved-write-tool-cancelled cancelled tool ordinary approved-input memory complete",
+    "approved-readonly-recall exact request identity has one native run",
+    "approved-readonly-recall one original run attempt",
+    "approved-readonly-recall declared actual response outcome preserved",
+    "approved-readonly-recall canonical published input/output identifiers bridged once",
+    "approved-readonly-recall one final ingestion publication",
+    "approved-readonly-recall native canonical row/bridge exact",
+    "approved-readonly-recall canonical source hashes/origin exact",
+    "approved-readonly-recall native canonical row/bridge exact",
+    "approved-readonly-recall native canonical row/bridge exact",
+    "approved-readonly-recall native canonical row/bridge exact",
+    "approved-readonly-recall canonical source hashes/origin exact",
+    "approved-readonly-recall one complete approved readonly tool",
+    "approved memory recall has one durable native tool result",
+    "approved-readonly-recall declared positive answer marker present",
+    "browser-normal-seed exact request identity has one native run",
+    "browser-normal-seed one original run attempt",
+    "browser-normal-seed declared actual response outcome preserved",
+    "browser-normal-seed canonical published input/output identifiers bridged once",
+    "browser-normal-seed one final ingestion publication",
+    "browser-normal-seed native canonical row/bridge exact",
+    "browser-normal-seed canonical source hashes/origin exact",
+    "browser-normal-seed native canonical row/bridge exact",
+    "browser-normal-seed canonical source hashes/origin exact",
+    "browser-normal-seed exact approved canonical input matches Root selection",
+    "browser-normal-seed genuine nonempty canonical assistant answer",
+    "browser-normal-seed ordinary memory complete",
+    "browser-normal-seed actual requested/effective effort matches Root selection",
+    "browser-normal-seed declared positive answer marker present",
+    "event one exact current source 5",
+    "event source hash recomputes 5",
+    "event actual fresh source authority/currentness 5",
+    "complete1536vector counts and generation 5",
+    "one receipt and actual embedding attempt 5",
+    "exact native/receipt/current chunk1536vector match 5",
+    "event one exact current source 4",
+    "event source hash recomputes 4",
+    "event actual fresh source authority/currentness 4",
+    "complete1536vector counts and generation 4",
+    "one receipt and actual embedding attempt 4",
+    "exact native/receipt/current chunk1536vector match 4",
+    "event one exact current source 3",
+    "event source hash recomputes 3",
+    "event actual fresh source authority/currentness 3",
+    "complete1536vector counts and generation 3",
+    "one receipt and actual embedding attempt 3",
+    "exact native/receipt/current chunk1536vector match 3",
+    "event current managed profile 2",
+    "event ordinary facts/vectors complete or intentionally skipped 2",
+    "event one exact current source 2",
+    "event source hash recomputes 2",
+    "event actual fresh source authority/currentness 2",
+    "complete1536vector counts and generation 2",
+    "one receipt and actual embedding attempt 2",
+    "exact native/receipt/current chunk1536vector match 2",
+    "event current managed profile 1",
+    "event ordinary facts/vectors complete or intentionally skipped 1",
+    "event one exact current source 1",
+    "event source hash recomputes 1",
+    "event actual fresh source authority/currentness 1",
+    "complete1536vector counts and generation 1",
+    "one receipt and actual embedding attempt 1",
+    "exact native/receipt/current chunk1536vector match 1",
+    "facts watermark does not cross actual incomplete event e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+    "vectors watermark does not cross actual incomplete event e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+    "facts watermark does not cross actual incomplete event bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+    "vectors watermark does not cross actual incomplete event bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+    "run/ingestion/financial rows stable across final collection"
+  ],
+  "unmetChecks": [],
+  "installedBackend": {
+    "fileCount": 174,
+    "tableCount": 79,
+    "manifestSha256": "327e297e95948f127f51fa0d79fb6afb7a0281cf99066264a2ec75e3e57f737c"
+  },
+  "financial": {
+    "allTarget": {
+      "operationCount": 35,
+      "attemptCount": 35,
+      "operationKinds": {
+        "embedding.memory": 11,
+        "facts.resolve": 2,
+        "memory.extract": 7,
+        "agent.respond": 6,
+        "embedding.query": 4,
+        "conversation.title": 3,
+        "media.image.generate": 1,
+        "artifact.text": 1
+      },
+      "operations": [
+        {
+          "operationIdSha256": "52ae65a9fdb08f42c2b0f7f2da1486d1dfe6a0382940720a01f985bc020f9eef",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088228185
+        },
+        {
+          "operationIdSha256": "3cb187b1afe365d0ebdca17cb3e4b699167103e9b498138340bb16f6e21188d7",
+          "operationKey": "facts.resolve",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088224716
+        },
+        {
+          "operationIdSha256": "3b445487cc8755f77486110b7e2b9beafb2ebf9995005d84a1b3e570eb5a294f",
+          "operationKey": "facts.resolve",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088222536
+        },
+        {
+          "operationIdSha256": "f2748750d56c982b86d7e2b0a1690134cf08e023f90c55eb506c6325c01e2970",
+          "operationKey": "memory.extract",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088218728
+        },
+        {
+          "operationIdSha256": "229e2ac23aa49709185872d295164bb46b260dbf4922b539fe2983ce98ea7a39",
+          "operationKey": "agent.respond",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "f4bfd1a75a5dc6d999e3137d670fb6b98be6659de2e6d177d2011313e96cdccc",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088217072
+        },
+        {
+          "operationIdSha256": "a3b771d9ba20b0aa97086c358b0f9d0c1af5a305de41bf4fe407b19bfcf23952",
+          "operationKey": "embedding.query",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "f4bfd1a75a5dc6d999e3137d670fb6b98be6659de2e6d177d2011313e96cdccc",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088214836
+        },
+        {
+          "operationIdSha256": "96e2214b01a67a0eee2d45b0b6432396b7ab8eb243d034bf9a89162fa2ed92f4",
+          "operationKey": "conversation.title",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088211193
+        },
+        {
+          "operationIdSha256": "e82eacfc2c343cc69d24a31f5d4964f31059a1b996552b6a29ba891714e97792",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "577082cdb689f604b44f3361ee5d2a37674b312aac3f7f2bf7034c275f709da8",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088207730
+        },
+        {
+          "operationIdSha256": "1239209ea8f94391212208938f16b36bb7b8a3801c197e9e1be6816c1f1ca71a",
+          "operationKey": "agent.respond",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088203672
+        },
+        {
+          "operationIdSha256": "6b1ef5877e0c797a0babe2f92fff4fb9caf1f96dcd39ccc049f0c3dc7a388291",
+          "operationKey": "embedding.query",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088199102
+        },
+        {
+          "operationIdSha256": "cf3c597f16563a8e530b7d020eb1ef8aa0fd578f339d921ce43633f9f0ed066b",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "1e81c8a2ed717bd09e77a8244b7e0ee2df879806208831cd3db43791d639655b",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088192428
+        },
+        {
+          "operationIdSha256": "839456a8937377b57415fc63a3f36651b7d3ee153e8aa6cff3343e5ffe9cac6e",
+          "operationKey": "memory.extract",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "1e81c8a2ed717bd09e77a8244b7e0ee2df879806208831cd3db43791d639655b",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088188577
+        },
+        {
+          "operationIdSha256": "4e8cf9c9439a4e4c2c5407038ad639a1155d082e920d00e209eea5afe5c48af3",
+          "operationKey": "agent.respond",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088186308
+        },
+        {
+          "operationIdSha256": "495f8679a0df200e4675dc3c86943c803bd04124ba402493a98432faa420424c",
+          "operationKey": "embedding.query",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088184307
+        },
+        {
+          "operationIdSha256": "e21363c5ffc84f5369ce02d8545571ecb9c0185d0c85c5c5f3a1e17ee71fbcb2",
+          "operationKey": "conversation.title",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "103740e92c5dff3134ff467ca71778c12324deabb43313df0494107be70658fa",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088026173
+        },
+        {
+          "operationIdSha256": "dcc4ab7632165f712e76adad1feaddeec29d5a9835309163701061cb3d2bc81c",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "402406f518421557fa3f45be17d66e1ecb726e4cf7c64894e04bc3436f115a26",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088024507
+        },
+        {
+          "operationIdSha256": "fd983ccc60e954d35d45e6621f3f550ea644973b01861bb0524fa1fbe686f17d",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "7f12e5c5f48612107a785f921c354465302328cb7ce65f2fc82c34548afee4a1",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088021639
+        },
+        {
+          "operationIdSha256": "5dcfdb985c8955f55a555c2133115b50785733033426d6fae6ea113368a3620a",
+          "operationKey": "memory.extract",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "402406f518421557fa3f45be17d66e1ecb726e4cf7c64894e04bc3436f115a26",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088019977
+        },
+        {
+          "operationIdSha256": "58499e00dcc09eb9521ade599fbeb812ef85b85ab94946a09cc7afab4e432eed",
+          "operationKey": "agent.respond",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "103740e92c5dff3134ff467ca71778c12324deabb43313df0494107be70658fa",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088016298
+        },
+        {
+          "operationIdSha256": "f597e72ff8c2527cc0c1b271d3f299543e09154e7f5c5e70317d8b8d5440b741",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "44478001f1c19752142228bee9c696b2d0c7bd43c3d90e77d700499770393c1d",
+          "runAccountSha256": "cd8d5eee75a2c58977118bcc3e481bf27ab638d4f037e2fe9568c1e9776f22b8",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087931847
+        },
+        {
+          "operationIdSha256": "057ab898650a2be0010da29def2195e5a80e87afc49e013eb48ba69ec5e7d779",
+          "operationKey": "memory.extract",
+          "scopeSha256": "44478001f1c19752142228bee9c696b2d0c7bd43c3d90e77d700499770393c1d",
+          "runAccountSha256": "cd8d5eee75a2c58977118bcc3e481bf27ab638d4f037e2fe9568c1e9776f22b8",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087927773
+        },
+        {
+          "operationIdSha256": "5ea655aaa0448e6c62f06a3aeebd449f902d7f6943a14ec2b21cc4bf424c4770",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "d09decb5fe7c3000353fb231f80273d8980694595bdb185dd40105a74dad423c",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087877939
+        },
+        {
+          "operationIdSha256": "25b126512b1f99f018c636bf5b0891d1349212004d5c9cbb9df18d19b742f798",
+          "operationKey": "memory.extract",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "d09decb5fe7c3000353fb231f80273d8980694595bdb185dd40105a74dad423c",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087874043
+        },
+        {
+          "operationIdSha256": "dd8ee1d0b621f04946343189f22bb6c83b1ba7f468d06d65dbd17df71719a311",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "0963ed6317f9091fa4442f7415249eb1a881f4563573c646469fba250f89933e",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087873803
+        },
+        {
+          "operationIdSha256": "014e797070f6fea83a0dc0931c4067f1c73511a95a87cf2e29ce4c4452c61672",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "e52651d03aa8722aa6dbfdc6c2a751f295a069af649ab07475c6d0825fde6517",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087866137
+        },
+        {
+          "operationIdSha256": "2ef1c3135568b246633c92723ccb088ea5cafcff2f434bb129deb2951c2269c1",
+          "operationKey": "memory.extract",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "e52651d03aa8722aa6dbfdc6c2a751f295a069af649ab07475c6d0825fde6517",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087861730
+        },
+        {
+          "operationIdSha256": "3df7a57fb47cc412287bedb3ae28562d5106105ea0a74a81671e758b83187ddb",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "3f2b84fe33a76a9022d93d08cab11af43987ff01a0a91fbba4496cd47eca412a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087861295
+        },
+        {
+          "operationIdSha256": "6fa4b2e701acd42db2746020ec5d03877287cd27e496ebf8b5876c7fb26f52b7",
+          "operationKey": "media.image.generate",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "86749aa63d02553e2877949370ee66e463cec4b163b5d898b22cc7c78c2d7432",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 2000000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087723454
+        },
+        {
+          "operationIdSha256": "c64ad0399c1ddc8c17892f7bc9f371c1ba700b78effb29760f1b649f503f72c0",
+          "operationKey": "agent.respond",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "493d7d21e7d4ceda2de95947661f5ed8a8305a02b299461aad37ae19b9ade9a7",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087719259
+        },
+        {
+          "operationIdSha256": "1d14185f6499fe5c70d4e421c92c9df7e130db1904f2b75d80324ef60ad153bc",
+          "operationKey": "agent.respond",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "ec7077b3c659f4e68482ab5f9f77fe2fe68ad74d791c248c75005cf624ecb0ac",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087715957
+        },
+        {
+          "operationIdSha256": "ef6778fdddd7dec89d595980cc67c39a57ab99d3f6897ab75b71df35a5bf11d0",
+          "operationKey": "embedding.query",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "0275aab825ebf2105e640a2ce7fac789ee256669064c5f9769da08bb1ad8f211",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087713060
+        },
+        {
+          "operationIdSha256": "3b9d3a0f56b55d4cb9e905ebc8c66a7eb26430221bfb82c61580c32eb1ee5122",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "8ad3ebd8f2cc065e20af3bb3825dce38bcfa53494199dd712b87ab07686293b7",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087710242
+        },
+        {
+          "operationIdSha256": "d11e75a2886d863e0a216ad054a53f8a53e71ac0dfecf78670f3ef523a0c92a8",
+          "operationKey": "conversation.title",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "45963790c3485fc05f537a76ab5ec559a417fcba07102d4cdcee28a1e65d8599",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087706858
+        },
+        {
+          "operationIdSha256": "c686394742556bc660b8f01c5589b7d697d245227ceac7f97eaa31635a31f9ae",
+          "operationKey": "artifact.text",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "e84d6825dedae26972fcad13f49638267665a061c9cfc5943f042f1592ba377b",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087703202
+        },
+        {
+          "operationIdSha256": "0659ad4d7476d07cbca1a4bb967ca47d23ae25e9744d6d1e9aa423602e907217",
+          "operationKey": "memory.extract",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "7335f5baaa0707e47a6c5128b08915909213a1d923c148a1d2274f7c313c1025",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087699609
+        }
+      ],
+      "attempts": [
+        {
+          "operationIdSha256": "52ae65a9fdb08f42c2b0f7f2da1486d1dfe6a0382940720a01f985bc020f9eef",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 18,
+            "totalTokens": 18
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "3cb187b1afe365d0ebdca17cb3e4b699167103e9b498138340bb16f6e21188d7",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 1024,
+            "inputTokens": 1767,
+            "outputTokens": 60,
+            "reasoningTokens": 0,
+            "totalTokens": 1827
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "3b445487cc8755f77486110b7e2b9beafb2ebf9995005d84a1b3e570eb5a294f",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1635,
+            "outputTokens": 59,
+            "reasoningTokens": 0,
+            "totalTokens": 1694
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "f2748750d56c982b86d7e2b0a1690134cf08e023f90c55eb506c6325c01e2970",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1126,
+            "outputTokens": 97,
+            "reasoningTokens": 0,
+            "totalTokens": 1223
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "229e2ac23aa49709185872d295164bb46b260dbf4922b539fe2983ce98ea7a39",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1041,
+            "outputTokens": 20,
+            "reasoningTokens": 0,
+            "totalTokens": 1061
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "a3b771d9ba20b0aa97086c358b0f9d0c1af5a305de41bf4fe407b19bfcf23952",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 18,
+            "totalTokens": 18
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "96e2214b01a67a0eee2d45b0b6432396b7ab8eb243d034bf9a89162fa2ed92f4",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 170,
+            "outputTokens": 6,
+            "reasoningTokens": 0,
+            "totalTokens": 176
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "e82eacfc2c343cc69d24a31f5d4964f31059a1b996552b6a29ba891714e97792",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 7,
+            "totalTokens": 7
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "1239209ea8f94391212208938f16b36bb7b8a3801c197e9e1be6816c1f1ca71a",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 877,
+            "outputTokens": 8,
+            "reasoningTokens": 0,
+            "totalTokens": 885
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "6b1ef5877e0c797a0babe2f92fff4fb9caf1f96dcd39ccc049f0c3dc7a388291",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 2,
+            "totalTokens": 2
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "cf3c597f16563a8e530b7d020eb1ef8aa0fd578f339d921ce43633f9f0ed066b",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 21,
+            "totalTokens": 21
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "839456a8937377b57415fc63a3f36651b7d3ee153e8aa6cff3343e5ffe9cac6e",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1144,
+            "outputTokens": 4,
+            "reasoningTokens": 0,
+            "totalTokens": 1148
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "4e8cf9c9439a4e4c2c5407038ad639a1155d082e920d00e209eea5afe5c48af3",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 800,
+            "outputTokens": 20,
+            "reasoningTokens": 0,
+            "totalTokens": 820
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "495f8679a0df200e4675dc3c86943c803bd04124ba402493a98432faa420424c",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 21,
+            "totalTokens": 21
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "e21363c5ffc84f5369ce02d8545571ecb9c0185d0c85c5c5f3a1e17ee71fbcb2",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 155,
+            "outputTokens": 3,
+            "reasoningTokens": 0,
+            "totalTokens": 158
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "dcc4ab7632165f712e76adad1feaddeec29d5a9835309163701061cb3d2bc81c",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 7,
+            "totalTokens": 7
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "fd983ccc60e954d35d45e6621f3f550ea644973b01861bb0524fa1fbe686f17d",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 10,
+            "totalTokens": 10
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "5dcfdb985c8955f55a555c2133115b50785733033426d6fae6ea113368a3620a",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1129,
+            "outputTokens": 60,
+            "reasoningTokens": 0,
+            "totalTokens": 1189
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "58499e00dcc09eb9521ade599fbeb812ef85b85ab94946a09cc7afab4e432eed",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 204,
+            "outputTokens": 10,
+            "reasoningTokens": 0,
+            "totalTokens": 214
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "f597e72ff8c2527cc0c1b271d3f299543e09154e7f5c5e70317d8b8d5440b741",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 10,
+            "totalTokens": 10
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "057ab898650a2be0010da29def2195e5a80e87afc49e013eb48ba69ec5e7d779",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1123,
+            "outputTokens": 114,
+            "reasoningTokens": 0,
+            "totalTokens": 1237
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "5ea655aaa0448e6c62f06a3aeebd449f902d7f6943a14ec2b21cc4bf424c4770",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 6,
+            "totalTokens": 6
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "25b126512b1f99f018c636bf5b0891d1349212004d5c9cbb9df18d19b742f798",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1122,
+            "outputTokens": 51,
+            "reasoningTokens": 0,
+            "totalTokens": 1173
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "dd8ee1d0b621f04946343189f22bb6c83b1ba7f468d06d65dbd17df71719a311",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 5,
+            "totalTokens": 5
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "014e797070f6fea83a0dc0931c4067f1c73511a95a87cf2e29ce4c4452c61672",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 6,
+            "totalTokens": 6
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "2ef1c3135568b246633c92723ccb088ea5cafcff2f434bb129deb2951c2269c1",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1116,
+            "outputTokens": 51,
+            "reasoningTokens": 0,
+            "totalTokens": 1167
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "3df7a57fb47cc412287bedb3ae28562d5106105ea0a74a81671e758b83187ddb",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 5,
+            "totalTokens": 5
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "6fa4b2e701acd42db2746020ec5d03877287cd27e496ebf8b5876c7fb26f52b7",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "image",
+          "usageComplete": false,
+          "usageHelperApplicable": false,
+          "reservationUnits": 2000000
+        },
+        {
+          "operationIdSha256": "c64ad0399c1ddc8c17892f7bc9f371c1ba700b78effb29760f1b649f503f72c0",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 266,
+            "outputTokens": 10,
+            "reasoningTokens": 0,
+            "totalTokens": 276
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "1d14185f6499fe5c70d4e421c92c9df7e130db1904f2b75d80324ef60ad153bc",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 269,
+            "outputTokens": 11,
+            "reasoningTokens": 0,
+            "totalTokens": 280
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "ef6778fdddd7dec89d595980cc67c39a57ab99d3f6897ab75b71df35a5bf11d0",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 8,
+            "totalTokens": 8
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "3b9d3a0f56b55d4cb9e905ebc8c66a7eb26430221bfb82c61580c32eb1ee5122",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 8,
+            "totalTokens": 8
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "d11e75a2886d863e0a216ad054a53f8a53e71ac0dfecf78670f3ef523a0c92a8",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 16,
+            "outputTokens": 4,
+            "reasoningTokens": 0,
+            "totalTokens": 20
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "c686394742556bc660b8f01c5589b7d697d245227ceac7f97eaa31635a31f9ae",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 19,
+            "outputTokens": 4,
+            "reasoningTokens": 0,
+            "totalTokens": 23
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "0659ad4d7476d07cbca1a4bb967ca47d23ae25e9744d6d1e9aa423602e907217",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1007,
+            "outputTokens": 4,
+            "reasoningTokens": 0,
+            "totalTokens": 1011
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        }
+      ],
+      "accounts": [
+        {
+          "accountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 400000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "f4bfd1a75a5dc6d999e3137d670fb6b98be6659de2e6d177d2011313e96cdccc",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": true,
+          "overrun": false
+        },
+        {
+          "accountSha256": "577082cdb689f604b44f3361ee5d2a37674b312aac3f7f2bf7034c275f709da8",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "1e81c8a2ed717bd09e77a8244b7e0ee2df879806208831cd3db43791d639655b",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 500000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "7f12e5c5f48612107a785f921c354465302328cb7ce65f2fc82c34548afee4a1",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "402406f518421557fa3f45be17d66e1ecb726e4cf7c64894e04bc3436f115a26",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "103740e92c5dff3134ff467ca71778c12324deabb43313df0494107be70658fa",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "cd8d5eee75a2c58977118bcc3e481bf27ab638d4f037e2fe9568c1e9776f22b8",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "a4d68ca2c52b474ab6999f644d8da5337bab848b6c6f5c8e28450fb010bbe0f9",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 0,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": true,
+          "overrun": false
+        },
+        {
+          "accountSha256": "120ae729a89aa5d909c45e479a38d330a2e3568c09ca931da9f39036a80b7384",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 0,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": true,
+          "overrun": false
+        },
+        {
+          "accountSha256": "4d7e611ebf4d9137743e2a94c60d4aedc2ee6c986dfe82893815d7f2b42ef573",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 0,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "50816125fc8c485fd33d960189e3d3843934b14f28c2ab1fb87d2b8209112250",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 0,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "60dc1a5deed1ecacd26b0c5018b0d61b71dadca117e607a238e2f256806fd283",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 0,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "1ed0a4aa2d0bd2077dbc4bedeab33c90daaaf589733857d5b711cc0011aa39cd",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 0,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "0963ed6317f9091fa4442f7415249eb1a881f4563573c646469fba250f89933e",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "d09decb5fe7c3000353fb231f80273d8980694595bdb185dd40105a74dad423c",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "e52651d03aa8722aa6dbfdc6c2a751f295a069af649ab07475c6d0825fde6517",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "3f2b84fe33a76a9022d93d08cab11af43987ff01a0a91fbba4496cd47eca412a",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "332927691db0cc0693f03f3cbc5621c3777a5dca3b1bd7749edad1a41d5f5914",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "tenant",
+          "limitUnits": 10000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 2700000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "86749aa63d02553e2877949370ee66e463cec4b163b5d898b22cc7c78c2d7432",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 2000000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "493d7d21e7d4ceda2de95947661f5ed8a8305a02b299461aad37ae19b9ade9a7",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "ec7077b3c659f4e68482ab5f9f77fe2fe68ad74d791c248c75005cf624ecb0ac",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "0275aab825ebf2105e640a2ce7fac789ee256669064c5f9769da08bb1ad8f211",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "8ad3ebd8f2cc065e20af3bb3825dce38bcfa53494199dd712b87ab07686293b7",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "45963790c3485fc05f537a76ab5ec559a417fcba07102d4cdcee28a1e65d8599",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "e84d6825dedae26972fcad13f49638267665a061c9cfc5943f042f1592ba377b",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "7335f5baaa0707e47a6c5128b08915909213a1d923c148a1d2274f7c313c1025",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "79c017f83cb98c896dbdcea72983ae5fa1d8f695b84503efe1401bb1a857a396",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "tenant",
+          "limitUnits": 10000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 2700000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        }
+      ],
+      "runAccountTotals": {
+        "accountCount": 27,
+        "unknownLiabilityUnits": 5400000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "tenantAccountTotals": {
+        "accountCount": 2,
+        "unknownLiabilityUnits": 5400000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "aggregateUsdComplete": false
+    },
+    "manual": {
+      "operationCount": 19,
+      "attemptCount": 19,
+      "operationKinds": {
+        "embedding.memory": 5,
+        "facts.resolve": 2,
+        "memory.extract": 3,
+        "agent.respond": 4,
+        "embedding.query": 3,
+        "conversation.title": 2
+      },
+      "operations": [
+        {
+          "operationIdSha256": "52ae65a9fdb08f42c2b0f7f2da1486d1dfe6a0382940720a01f985bc020f9eef",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088228185
+        },
+        {
+          "operationIdSha256": "3cb187b1afe365d0ebdca17cb3e4b699167103e9b498138340bb16f6e21188d7",
+          "operationKey": "facts.resolve",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088224716
+        },
+        {
+          "operationIdSha256": "3b445487cc8755f77486110b7e2b9beafb2ebf9995005d84a1b3e570eb5a294f",
+          "operationKey": "facts.resolve",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088222536
+        },
+        {
+          "operationIdSha256": "f2748750d56c982b86d7e2b0a1690134cf08e023f90c55eb506c6325c01e2970",
+          "operationKey": "memory.extract",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088218728
+        },
+        {
+          "operationIdSha256": "229e2ac23aa49709185872d295164bb46b260dbf4922b539fe2983ce98ea7a39",
+          "operationKey": "agent.respond",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "f4bfd1a75a5dc6d999e3137d670fb6b98be6659de2e6d177d2011313e96cdccc",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088217072
+        },
+        {
+          "operationIdSha256": "a3b771d9ba20b0aa97086c358b0f9d0c1af5a305de41bf4fe407b19bfcf23952",
+          "operationKey": "embedding.query",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "f4bfd1a75a5dc6d999e3137d670fb6b98be6659de2e6d177d2011313e96cdccc",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088214836
+        },
+        {
+          "operationIdSha256": "96e2214b01a67a0eee2d45b0b6432396b7ab8eb243d034bf9a89162fa2ed92f4",
+          "operationKey": "conversation.title",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088211193
+        },
+        {
+          "operationIdSha256": "e82eacfc2c343cc69d24a31f5d4964f31059a1b996552b6a29ba891714e97792",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "577082cdb689f604b44f3361ee5d2a37674b312aac3f7f2bf7034c275f709da8",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088207730
+        },
+        {
+          "operationIdSha256": "1239209ea8f94391212208938f16b36bb7b8a3801c197e9e1be6816c1f1ca71a",
+          "operationKey": "agent.respond",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088203672
+        },
+        {
+          "operationIdSha256": "6b1ef5877e0c797a0babe2f92fff4fb9caf1f96dcd39ccc049f0c3dc7a388291",
+          "operationKey": "embedding.query",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088199102
+        },
+        {
+          "operationIdSha256": "cf3c597f16563a8e530b7d020eb1ef8aa0fd578f339d921ce43633f9f0ed066b",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "1e81c8a2ed717bd09e77a8244b7e0ee2df879806208831cd3db43791d639655b",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088192428
+        },
+        {
+          "operationIdSha256": "839456a8937377b57415fc63a3f36651b7d3ee153e8aa6cff3343e5ffe9cac6e",
+          "operationKey": "memory.extract",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "1e81c8a2ed717bd09e77a8244b7e0ee2df879806208831cd3db43791d639655b",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088188577
+        },
+        {
+          "operationIdSha256": "4e8cf9c9439a4e4c2c5407038ad639a1155d082e920d00e209eea5afe5c48af3",
+          "operationKey": "agent.respond",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088186308
+        },
+        {
+          "operationIdSha256": "495f8679a0df200e4675dc3c86943c803bd04124ba402493a98432faa420424c",
+          "operationKey": "embedding.query",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088184307
+        },
+        {
+          "operationIdSha256": "e21363c5ffc84f5369ce02d8545571ecb9c0185d0c85c5c5f3a1e17ee71fbcb2",
+          "operationKey": "conversation.title",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "103740e92c5dff3134ff467ca71778c12324deabb43313df0494107be70658fa",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088026173
+        },
+        {
+          "operationIdSha256": "dcc4ab7632165f712e76adad1feaddeec29d5a9835309163701061cb3d2bc81c",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "402406f518421557fa3f45be17d66e1ecb726e4cf7c64894e04bc3436f115a26",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088024507
+        },
+        {
+          "operationIdSha256": "fd983ccc60e954d35d45e6621f3f550ea644973b01861bb0524fa1fbe686f17d",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "7f12e5c5f48612107a785f921c354465302328cb7ce65f2fc82c34548afee4a1",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088021639
+        },
+        {
+          "operationIdSha256": "5dcfdb985c8955f55a555c2133115b50785733033426d6fae6ea113368a3620a",
+          "operationKey": "memory.extract",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "402406f518421557fa3f45be17d66e1ecb726e4cf7c64894e04bc3436f115a26",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088019977
+        },
+        {
+          "operationIdSha256": "58499e00dcc09eb9521ade599fbeb812ef85b85ab94946a09cc7afab4e432eed",
+          "operationKey": "agent.respond",
+          "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+          "runAccountSha256": "103740e92c5dff3134ff467ca71778c12324deabb43313df0494107be70658fa",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792088016298
+        }
+      ],
+      "attempts": [
+        {
+          "operationIdSha256": "52ae65a9fdb08f42c2b0f7f2da1486d1dfe6a0382940720a01f985bc020f9eef",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 18,
+            "totalTokens": 18
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "3cb187b1afe365d0ebdca17cb3e4b699167103e9b498138340bb16f6e21188d7",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 1024,
+            "inputTokens": 1767,
+            "outputTokens": 60,
+            "reasoningTokens": 0,
+            "totalTokens": 1827
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "3b445487cc8755f77486110b7e2b9beafb2ebf9995005d84a1b3e570eb5a294f",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1635,
+            "outputTokens": 59,
+            "reasoningTokens": 0,
+            "totalTokens": 1694
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "f2748750d56c982b86d7e2b0a1690134cf08e023f90c55eb506c6325c01e2970",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1126,
+            "outputTokens": 97,
+            "reasoningTokens": 0,
+            "totalTokens": 1223
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "229e2ac23aa49709185872d295164bb46b260dbf4922b539fe2983ce98ea7a39",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1041,
+            "outputTokens": 20,
+            "reasoningTokens": 0,
+            "totalTokens": 1061
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "a3b771d9ba20b0aa97086c358b0f9d0c1af5a305de41bf4fe407b19bfcf23952",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 18,
+            "totalTokens": 18
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "96e2214b01a67a0eee2d45b0b6432396b7ab8eb243d034bf9a89162fa2ed92f4",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 170,
+            "outputTokens": 6,
+            "reasoningTokens": 0,
+            "totalTokens": 176
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "e82eacfc2c343cc69d24a31f5d4964f31059a1b996552b6a29ba891714e97792",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 7,
+            "totalTokens": 7
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "1239209ea8f94391212208938f16b36bb7b8a3801c197e9e1be6816c1f1ca71a",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 877,
+            "outputTokens": 8,
+            "reasoningTokens": 0,
+            "totalTokens": 885
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "6b1ef5877e0c797a0babe2f92fff4fb9caf1f96dcd39ccc049f0c3dc7a388291",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 2,
+            "totalTokens": 2
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "cf3c597f16563a8e530b7d020eb1ef8aa0fd578f339d921ce43633f9f0ed066b",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 21,
+            "totalTokens": 21
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "839456a8937377b57415fc63a3f36651b7d3ee153e8aa6cff3343e5ffe9cac6e",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1144,
+            "outputTokens": 4,
+            "reasoningTokens": 0,
+            "totalTokens": 1148
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "4e8cf9c9439a4e4c2c5407038ad639a1155d082e920d00e209eea5afe5c48af3",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 800,
+            "outputTokens": 20,
+            "reasoningTokens": 0,
+            "totalTokens": 820
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "495f8679a0df200e4675dc3c86943c803bd04124ba402493a98432faa420424c",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 21,
+            "totalTokens": 21
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "e21363c5ffc84f5369ce02d8545571ecb9c0185d0c85c5c5f3a1e17ee71fbcb2",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 155,
+            "outputTokens": 3,
+            "reasoningTokens": 0,
+            "totalTokens": 158
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "dcc4ab7632165f712e76adad1feaddeec29d5a9835309163701061cb3d2bc81c",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 7,
+            "totalTokens": 7
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "fd983ccc60e954d35d45e6621f3f550ea644973b01861bb0524fa1fbe686f17d",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 10,
+            "totalTokens": 10
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "5dcfdb985c8955f55a555c2133115b50785733033426d6fae6ea113368a3620a",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1129,
+            "outputTokens": 60,
+            "reasoningTokens": 0,
+            "totalTokens": 1189
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "58499e00dcc09eb9521ade599fbeb812ef85b85ab94946a09cc7afab4e432eed",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 204,
+            "outputTokens": 10,
+            "reasoningTokens": 0,
+            "totalTokens": 214
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        }
+      ],
+      "accounts": [
+        {
+          "accountSha256": "381a5164abfa834bd3e629a5f54e938df0872669c183e7848e60a29a3cc8998a",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 400000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "f4bfd1a75a5dc6d999e3137d670fb6b98be6659de2e6d177d2011313e96cdccc",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": true,
+          "overrun": false
+        },
+        {
+          "accountSha256": "577082cdb689f604b44f3361ee5d2a37674b312aac3f7f2bf7034c275f709da8",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "1e81c8a2ed717bd09e77a8244b7e0ee2df879806208831cd3db43791d639655b",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "ebbb1d42a353426d5b13d3c696a68a77bca0b634ecae6a7ac066f44b35e3de33",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 500000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "7f12e5c5f48612107a785f921c354465302328cb7ce65f2fc82c34548afee4a1",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "402406f518421557fa3f45be17d66e1ecb726e4cf7c64894e04bc3436f115a26",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "103740e92c5dff3134ff467ca71778c12324deabb43313df0494107be70658fa",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        }
+      ],
+      "runAccountTotals": {
+        "accountCount": 8,
+        "unknownLiabilityUnits": 1900000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "tenantAccountTotals": {
+        "accountCount": 0,
+        "unknownLiabilityUnits": 0,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "aggregateUsdComplete": false
+    },
+    "regression": {
+      "operationCount": 6,
+      "attemptCount": 6,
+      "operationKinds": {
+        "embedding.memory": 4,
+        "memory.extract": 2
+      },
+      "operations": [
+        {
+          "operationIdSha256": "5ea655aaa0448e6c62f06a3aeebd449f902d7f6943a14ec2b21cc4bf424c4770",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "d09decb5fe7c3000353fb231f80273d8980694595bdb185dd40105a74dad423c",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087877939
+        },
+        {
+          "operationIdSha256": "25b126512b1f99f018c636bf5b0891d1349212004d5c9cbb9df18d19b742f798",
+          "operationKey": "memory.extract",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "d09decb5fe7c3000353fb231f80273d8980694595bdb185dd40105a74dad423c",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087874043
+        },
+        {
+          "operationIdSha256": "dd8ee1d0b621f04946343189f22bb6c83b1ba7f468d06d65dbd17df71719a311",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "0963ed6317f9091fa4442f7415249eb1a881f4563573c646469fba250f89933e",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087873803
+        },
+        {
+          "operationIdSha256": "014e797070f6fea83a0dc0931c4067f1c73511a95a87cf2e29ce4c4452c61672",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "e52651d03aa8722aa6dbfdc6c2a751f295a069af649ab07475c6d0825fde6517",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087866137
+        },
+        {
+          "operationIdSha256": "2ef1c3135568b246633c92723ccb088ea5cafcff2f434bb129deb2951c2269c1",
+          "operationKey": "memory.extract",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "e52651d03aa8722aa6dbfdc6c2a751f295a069af649ab07475c6d0825fde6517",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087861730
+        },
+        {
+          "operationIdSha256": "3df7a57fb47cc412287bedb3ae28562d5106105ea0a74a81671e758b83187ddb",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+          "runAccountSha256": "3f2b84fe33a76a9022d93d08cab11af43987ff01a0a91fbba4496cd47eca412a",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087861295
+        }
+      ],
+      "attempts": [
+        {
+          "operationIdSha256": "5ea655aaa0448e6c62f06a3aeebd449f902d7f6943a14ec2b21cc4bf424c4770",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 6,
+            "totalTokens": 6
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "25b126512b1f99f018c636bf5b0891d1349212004d5c9cbb9df18d19b742f798",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1122,
+            "outputTokens": 51,
+            "reasoningTokens": 0,
+            "totalTokens": 1173
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "dd8ee1d0b621f04946343189f22bb6c83b1ba7f468d06d65dbd17df71719a311",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 5,
+            "totalTokens": 5
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "014e797070f6fea83a0dc0931c4067f1c73511a95a87cf2e29ce4c4452c61672",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 6,
+            "totalTokens": 6
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "2ef1c3135568b246633c92723ccb088ea5cafcff2f434bb129deb2951c2269c1",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1116,
+            "outputTokens": 51,
+            "reasoningTokens": 0,
+            "totalTokens": 1167
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "3df7a57fb47cc412287bedb3ae28562d5106105ea0a74a81671e758b83187ddb",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 5,
+            "totalTokens": 5
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        }
+      ],
+      "accounts": [
+        {
+          "accountSha256": "0963ed6317f9091fa4442f7415249eb1a881f4563573c646469fba250f89933e",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "d09decb5fe7c3000353fb231f80273d8980694595bdb185dd40105a74dad423c",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "e52651d03aa8722aa6dbfdc6c2a751f295a069af649ab07475c6d0825fde6517",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "3f2b84fe33a76a9022d93d08cab11af43987ff01a0a91fbba4496cd47eca412a",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        }
+      ],
+      "runAccountTotals": {
+        "accountCount": 4,
+        "unknownLiabilityUnits": 600000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "tenantAccountTotals": {
+        "accountCount": 0,
+        "unknownLiabilityUnits": 0,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "aggregateUsdComplete": false
+    },
+    "startupOther": {
+      "operationCount": 10,
+      "attemptCount": 10,
+      "operationKinds": {
+        "embedding.memory": 2,
+        "memory.extract": 2,
+        "media.image.generate": 1,
+        "agent.respond": 2,
+        "embedding.query": 1,
+        "conversation.title": 1,
+        "artifact.text": 1
+      },
+      "operations": [
+        {
+          "operationIdSha256": "f597e72ff8c2527cc0c1b271d3f299543e09154e7f5c5e70317d8b8d5440b741",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "44478001f1c19752142228bee9c696b2d0c7bd43c3d90e77d700499770393c1d",
+          "runAccountSha256": "cd8d5eee75a2c58977118bcc3e481bf27ab638d4f037e2fe9568c1e9776f22b8",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087931847
+        },
+        {
+          "operationIdSha256": "057ab898650a2be0010da29def2195e5a80e87afc49e013eb48ba69ec5e7d779",
+          "operationKey": "memory.extract",
+          "scopeSha256": "44478001f1c19752142228bee9c696b2d0c7bd43c3d90e77d700499770393c1d",
+          "runAccountSha256": "cd8d5eee75a2c58977118bcc3e481bf27ab638d4f037e2fe9568c1e9776f22b8",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087927773
+        },
+        {
+          "operationIdSha256": "6fa4b2e701acd42db2746020ec5d03877287cd27e496ebf8b5876c7fb26f52b7",
+          "operationKey": "media.image.generate",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "86749aa63d02553e2877949370ee66e463cec4b163b5d898b22cc7c78c2d7432",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 2000000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087723454
+        },
+        {
+          "operationIdSha256": "c64ad0399c1ddc8c17892f7bc9f371c1ba700b78effb29760f1b649f503f72c0",
+          "operationKey": "agent.respond",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "493d7d21e7d4ceda2de95947661f5ed8a8305a02b299461aad37ae19b9ade9a7",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087719259
+        },
+        {
+          "operationIdSha256": "1d14185f6499fe5c70d4e421c92c9df7e130db1904f2b75d80324ef60ad153bc",
+          "operationKey": "agent.respond",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "ec7077b3c659f4e68482ab5f9f77fe2fe68ad74d791c248c75005cf624ecb0ac",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087715957
+        },
+        {
+          "operationIdSha256": "ef6778fdddd7dec89d595980cc67c39a57ab99d3f6897ab75b71df35a5bf11d0",
+          "operationKey": "embedding.query",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "0275aab825ebf2105e640a2ce7fac789ee256669064c5f9769da08bb1ad8f211",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087713060
+        },
+        {
+          "operationIdSha256": "3b9d3a0f56b55d4cb9e905ebc8c66a7eb26430221bfb82c61580c32eb1ee5122",
+          "operationKey": "embedding.memory",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "8ad3ebd8f2cc065e20af3bb3825dce38bcfa53494199dd712b87ab07686293b7",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087710242
+        },
+        {
+          "operationIdSha256": "d11e75a2886d863e0a216ad054a53f8a53e71ac0dfecf78670f3ef523a0c92a8",
+          "operationKey": "conversation.title",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "45963790c3485fc05f537a76ab5ec559a417fcba07102d4cdcee28a1e65d8599",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087706858
+        },
+        {
+          "operationIdSha256": "c686394742556bc660b8f01c5589b7d697d245227ceac7f97eaa31635a31f9ae",
+          "operationKey": "artifact.text",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "e84d6825dedae26972fcad13f49638267665a061c9cfc5943f042f1592ba377b",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087703202
+        },
+        {
+          "operationIdSha256": "0659ad4d7476d07cbca1a4bb967ca47d23ae25e9744d6d1e9aa423602e907217",
+          "operationKey": "memory.extract",
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "runAccountSha256": "7335f5baaa0707e47a6c5128b08915909213a1d923c148a1d2274f7c313c1025",
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000,
+          "cancelled": false,
+          "overrun": false,
+          "createdAt": 1792087699609
+        }
+      ],
+      "attempts": [
+        {
+          "operationIdSha256": "f597e72ff8c2527cc0c1b271d3f299543e09154e7f5c5e70317d8b8d5440b741",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 10,
+            "totalTokens": 10
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "057ab898650a2be0010da29def2195e5a80e87afc49e013eb48ba69ec5e7d779",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1123,
+            "outputTokens": 114,
+            "reasoningTokens": 0,
+            "totalTokens": 1237
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "6fa4b2e701acd42db2746020ec5d03877287cd27e496ebf8b5876c7fb26f52b7",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "image",
+          "usageComplete": false,
+          "usageHelperApplicable": false,
+          "reservationUnits": 2000000
+        },
+        {
+          "operationIdSha256": "c64ad0399c1ddc8c17892f7bc9f371c1ba700b78effb29760f1b649f503f72c0",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 266,
+            "outputTokens": 10,
+            "reasoningTokens": 0,
+            "totalTokens": 276
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "1d14185f6499fe5c70d4e421c92c9df7e130db1904f2b75d80324ef60ad153bc",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 269,
+            "outputTokens": 11,
+            "reasoningTokens": 0,
+            "totalTokens": 280
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "ef6778fdddd7dec89d595980cc67c39a57ab99d3f6897ab75b71df35a5bf11d0",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 8,
+            "totalTokens": 8
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "3b9d3a0f56b55d4cb9e905ebc8c66a7eb26430221bfb82c61580c32eb1ee5122",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "embedding",
+          "usage": {
+            "inputTokens": 8,
+            "totalTokens": 8
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "d11e75a2886d863e0a216ad054a53f8a53e71ac0dfecf78670f3ef523a0c92a8",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 16,
+            "outputTokens": 4,
+            "reasoningTokens": 0,
+            "totalTokens": 20
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "c686394742556bc660b8f01c5589b7d697d245227ceac7f97eaa31635a31f9ae",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 19,
+            "outputTokens": 4,
+            "reasoningTokens": 0,
+            "totalTokens": 23
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        },
+        {
+          "operationIdSha256": "0659ad4d7476d07cbca1a4bb967ca47d23ae25e9744d6d1e9aa423602e907217",
+          "attemptNumber": 1,
+          "state": "uncertain",
+          "slotReleased": true,
+          "resultAttachmentState": "attached",
+          "resultWithheld": false,
+          "terminalOutcome": "confirmed",
+          "terminalEvidencePresent": true,
+          "retainedResultPresent": true,
+          "nativeInterface": "chat",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 1007,
+            "outputTokens": 4,
+            "reasoningTokens": 0,
+            "totalTokens": 1011
+          },
+          "usageComplete": true,
+          "usageHelperApplicable": true,
+          "reservationUnits": 100000
+        }
+      ],
+      "accounts": [
+        {
+          "accountSha256": "cd8d5eee75a2c58977118bcc3e481bf27ab638d4f037e2fe9568c1e9776f22b8",
+          "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 200000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "86749aa63d02553e2877949370ee66e463cec4b163b5d898b22cc7c78c2d7432",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 2000000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "493d7d21e7d4ceda2de95947661f5ed8a8305a02b299461aad37ae19b9ade9a7",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "ec7077b3c659f4e68482ab5f9f77fe2fe68ad74d791c248c75005cf624ecb0ac",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "0275aab825ebf2105e640a2ce7fac789ee256669064c5f9769da08bb1ad8f211",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "8ad3ebd8f2cc065e20af3bb3825dce38bcfa53494199dd712b87ab07686293b7",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "45963790c3485fc05f537a76ab5ec559a417fcba07102d4cdcee28a1e65d8599",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "e84d6825dedae26972fcad13f49638267665a061c9cfc5943f042f1592ba377b",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        },
+        {
+          "accountSha256": "7335f5baaa0707e47a6c5128b08915909213a1d923c148a1d2274f7c313c1025",
+          "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+          "kind": "run",
+          "limitUnits": 3000000,
+          "concurrencyLimit": 2,
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0,
+          "current": true,
+          "cancelled": false,
+          "overrun": false
+        }
+      ],
+      "runAccountTotals": {
+        "accountCount": 9,
+        "unknownLiabilityUnits": 2900000,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "tenantAccountTotals": {
+        "accountCount": 0,
+        "unknownLiabilityUnits": 0,
+        "reservedUnits": 0,
+        "activeConcurrency": 0,
+        "settledUnits": 0
+      },
+      "aggregateUsdComplete": false,
+      "classification": "Exact current-target operations outside Root-declared manual/regression scopes; no fictional fixed startup count asserted.",
+      "scopeBreakdown": [
+        {
+          "scopeSha256": "44478001f1c19752142228bee9c696b2d0c7bd43c3d90e77d700499770393c1d",
+          "operationCount": 2,
+          "attemptCount": 2,
+          "runAccountTotals": {
+            "accountCount": 1,
+            "unknownLiabilityUnits": 200000,
+            "reservedUnits": 0,
+            "activeConcurrency": 0,
+            "settledUnits": 0
+          },
+          "classification": "ACTUAL_REMAINDER_SCOPE_NO_FIXED_COUNT_ASSUMED"
+        },
+        {
+          "scopeSha256": "37382e6ba5bb868b43bca851c52ee1c41e45708576055969e5355a87335f16e6",
+          "operationCount": 8,
+          "attemptCount": 8,
+          "runAccountTotals": {
+            "accountCount": 8,
+            "unknownLiabilityUnits": 2700000,
+            "reservedUnits": 0,
+            "activeConcurrency": 0,
+            "settledUnits": 0
+          },
+          "classification": "ACTUAL_REMAINDER_SCOPE_NO_FIXED_COUNT_ASSUMED"
+        }
+      ]
+    },
+    "distinctTenants": [
+      {
+        "tenantSha256": "b8f06e18a1da6a2be2806e4cb8d0b6415919ae6ddd083d9cd6d9caeae4efdf86",
+        "runAccountTotals": {
+          "accountCount": 19,
+          "unknownLiabilityUnits": 2700000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0
+        },
+        "mirroredTenantAccounts": [
+          {
+            "uncertainUnits": 2700000,
+            "reservedUnits": 0,
+            "activeConcurrency": 0,
+            "limitUnits": 10000000,
+            "current": true
+          }
+        ]
+      },
+      {
+        "tenantSha256": "0216f1142b5540059265b4da505962a80774fc9b4ed17c841fb8d8da5e7c4ac6",
+        "runAccountTotals": {
+          "accountCount": 8,
+          "unknownLiabilityUnits": 2700000,
+          "reservedUnits": 0,
+          "activeConcurrency": 0,
+          "settledUnits": 0
+        },
+        "mirroredTenantAccounts": [
+          {
+            "uncertainUnits": 2700000,
+            "reservedUnits": 0,
+            "activeConcurrency": 0,
+            "limitUnits": 10000000,
+            "current": true
+          }
+        ]
+      }
+    ],
+    "monetaryUnit": "micro-USD",
+    "rule": "All-target and distinct-tenant run totals include every actual run account, including zero-operation accounts. Manual/regression/startupOther subgroups show accounts linked to their observed operations. Run-account totals count unique run accounts once. Tenant-account totals are mirrored control totals, separately reported and never added again. Financial uncertain state means exact cost UNKNOWN even when output is confirmed."
+  },
+  "runs": [
+    {
+      "label": "unapproved-write-tool-cancelled",
+      "purpose": "tool",
+      "answerMarkerCoverage": "NO_MARKER_SUPPLIED",
+      "client": "unspecified",
+      "runId": "run:0f56781cc2165592c6888bab81917fa96b618eb2b2806b4890427eba1e2aef3b",
+      "unapprovedTool": {
+        "toolName": "memory_remember",
+        "expectedOperationIdSha256": "329eaebfb4c036772ef9beed477fcd3fc3eb17c5b8cf50205354cc8bd74d05a1",
+        "actualOperationIdSha256": "329eaebfb4c036772ef9beed477fcd3fc3eb17c5b8cf50205354cc8bd74d05a1",
+        "operationIdMatched": true,
+        "conversationIdSha256": "89fd3971342700cf58a678b24e4195966f5979bcd1c7cae3b66cf20102cabeff",
+        "conversationDerivedFromNativeRun": true,
+        "conversationRunCount": 1,
+        "conversationToolCount": 1,
+        "conversationNativeToolMessages": 0,
+        "conversationOwnedToolEffects": 0,
+        "inputApprovalAndIngestion": "ORDINARY_CANONICAL_INPUT_REMAINS_SEPARATE_FROM_ZERO_TOOL_EFFECT",
+        "collectorDeadlineAcceptance": "NOT_REEVALUATED_OR_RELABELLED"
+      },
+      "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+      "responseStatus": "cancelled",
+      "failureCode": "CANCELLED",
+      "modelInputVersion": 8,
+      "attemptNumber": 1,
+      "nativeRunAttemptCount": 1,
+      "agentOperationCount": 2,
+      "nativeModelOperationCount": 2,
+      "nativeModelAttemptCount": 2,
+      "queueSequence": 1,
+      "inputMessageCount": 1,
+      "outputMessageCount": 0,
+      "nativeRunIdentityCopies": 1,
+      "publicationCopies": 0,
+      "progress": [
+        {
+          "memoryStatus": "complete",
+          "version": 2,
+          "updatedAt": 1792088229462
+        }
+      ],
+      "execution": [
+        {
+          "state": "cancelled",
+          "failureCode": "CANCELLED",
+          "contextState": "complete",
+          "nextModelStep": 1,
+          "toolCount": 1,
+          "savedMessageCount": 1,
+          "finalMessageCount": 0,
+          "updatedAt": 1792088226382
+        }
+      ],
+      "tools": [
+        {
+          "operationIdSha256": "329eaebfb4c036772ef9beed477fcd3fc3eb17c5b8cf50205354cc8bd74d05a1",
+          "toolName": "memory_remember",
+          "state": "waiting_approval",
+          "ordinal": 0,
+          "approvalPresent": false,
+          "resultPresent": false,
+          "nativeMessageCount": 0,
+          "ownedSourceEffectCount": 0,
+          "resultSourceIdSha256": null,
+          "resultReceiptIdSha256": null
+        }
+      ],
+      "modelOperationKinds": [
+        "agent.respond",
+        "embedding.query"
+      ],
+      "agentModelOps": [
+        {
+          "ordinal": 0,
+          "state": "complete",
+          "nativeModelOperationBound": true,
+          "nativeRequestPresent": true,
+          "resultPresent": true
+        }
+      ],
+      "memoryEffort": {
+        "deduplicated": 4,
+        "durationMs": 583,
+        "effectiveEffort": "normal",
+        "entriesByKind": {
+          "fact": 1,
+          "history": 0,
+          "memory": 4,
+          "pending": 0
+        },
+        "expanded": 7,
+        "maxContextTokens": 32768,
+        "maxDepth": 4,
+        "maxEntries": 8,
+        "policyVersion": "memory-effort-v1",
+        "reachedDepth": 1,
+        "requestedEffort": "normal",
+        "retrievalRoute": "semantic-v1",
+        "selected": 5,
+        "selectedInputUnits": 29990,
+        "stopReasons": [
+          "exhausted"
+        ],
+        "targetFirstAnswerMs": 6000,
+        "unavailableStages": [],
+        "version": 1,
+        "visited": 5
+      },
+      "createdAt": 1792088212529,
+      "updatedAt": 1792088226382
+    },
+    {
+      "label": "approved-readonly-recall",
+      "purpose": "tool",
+      "answerMarkerCoverage": "REQUIRED_AND_CHECKED",
+      "client": "unspecified",
+      "runId": "run:3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+      "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+      "responseStatus": "complete",
+      "modelInputVersion": 8,
+      "attemptNumber": 1,
+      "nativeRunAttemptCount": 1,
+      "agentOperationCount": 3,
+      "nativeModelOperationCount": 5,
+      "nativeModelAttemptCount": 5,
+      "queueSequence": 1,
+      "inputMessageCount": 1,
+      "outputMessageCount": 1,
+      "nativeRunIdentityCopies": 1,
+      "publicationCopies": 1,
+      "answerMarkerMatched": true,
+      "progress": [
+        {
+          "memoryStatus": "complete",
+          "version": 4,
+          "updatedAt": 1792088209188
+        }
+      ],
+      "execution": [
+        {
+          "state": "complete",
+          "contextState": "complete",
+          "nextModelStep": 2,
+          "toolCount": 1,
+          "savedMessageCount": 3,
+          "finalMessageCount": 1,
+          "updatedAt": 1792088206289
+        }
+      ],
+      "tools": [
+        {
+          "operationIdSha256": "5fc68014c371be9ebcdea986f4a424dc853515c8ca820fc73ad4379f52ab66e9",
+          "toolName": "memory_recall",
+          "state": "complete",
+          "ordinal": 0,
+          "approvalPresent": true,
+          "resultPresent": true,
+          "nativeMessageCount": 1,
+          "ownedSourceEffectCount": 0,
+          "resultSourceIdSha256": null,
+          "resultReceiptIdSha256": null
+        }
+      ],
+      "modelOperationKinds": [
+        "conversation.title",
+        "agent.respond",
+        "embedding.query",
+        "agent.respond",
+        "embedding.query"
+      ],
+      "agentModelOps": [
+        {
+          "ordinal": 1,
+          "state": "complete",
+          "nativeModelOperationBound": true,
+          "nativeRequestPresent": true,
+          "resultPresent": true
+        },
+        {
+          "ordinal": 0,
+          "state": "complete",
+          "nativeModelOperationBound": true,
+          "nativeRequestPresent": true,
+          "resultPresent": true
+        }
+      ],
+      "memoryEffort": {
+        "deduplicated": 4,
+        "durationMs": 518,
+        "effectiveEffort": "normal",
+        "entriesByKind": {
+          "fact": 1,
+          "history": 0,
+          "memory": 2,
+          "pending": 0
+        },
+        "expanded": 5,
+        "maxContextTokens": 32768,
+        "maxDepth": 4,
+        "maxEntries": 8,
+        "policyVersion": "memory-effort-v1",
+        "reachedDepth": 1,
+        "requestedEffort": "normal",
+        "retrievalRoute": "semantic-v1",
+        "selected": 3,
+        "selectedInputUnits": 28234,
+        "stopReasons": [
+          "exhausted"
+        ],
+        "targetFirstAnswerMs": 6000,
+        "unavailableStages": [],
+        "version": 1,
+        "visited": 3
+      },
+      "createdAt": 1792088182398,
+      "updatedAt": 1792088206289
+    },
+    {
+      "label": "browser-normal-seed",
+      "purpose": "seed",
+      "canonicalInputSha256": "f4741cc06e863c76194d15d5026887d75301972642aad29f26c73077d36b3352",
+      "answerMarkerCoverage": "REQUIRED_AND_CHECKED",
+      "client": "browser",
+      "runId": "run:2fd110d7c57f944dcef0f6063289cdd36da930524e70e8c3b8ff8c92d5ebeb14",
+      "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+      "responseStatus": "complete",
+      "modelInputVersion": 8,
+      "attemptNumber": 1,
+      "nativeRunAttemptCount": 1,
+      "agentOperationCount": 1,
+      "nativeModelOperationCount": 2,
+      "nativeModelAttemptCount": 2,
+      "queueSequence": 1,
+      "inputMessageCount": 1,
+      "outputMessageCount": 1,
+      "nativeRunIdentityCopies": 1,
+      "publicationCopies": 1,
+      "answerMarkerMatched": true,
+      "progress": [
+        {
+          "memoryStatus": "complete",
+          "version": 2,
+          "updatedAt": 1792088025903
+        }
+      ],
+      "execution": [
+        {
+          "state": "complete",
+          "contextState": "complete",
+          "nextModelStep": 1,
+          "toolCount": 0,
+          "savedMessageCount": 1,
+          "finalMessageCount": 1,
+          "updatedAt": 1792088020147
+        }
+      ],
+      "tools": [],
+      "modelOperationKinds": [
+        "conversation.title",
+        "agent.respond"
+      ],
+      "agentModelOps": [
+        {
+          "ordinal": 0,
+          "state": "complete",
+          "nativeModelOperationBound": true,
+          "nativeRequestPresent": true,
+          "resultPresent": true
+        }
+      ],
+      "memoryEffort": {
+        "deduplicated": 0,
+        "durationMs": 0,
+        "effectiveEffort": "normal",
+        "entriesByKind": {
+          "fact": 0,
+          "history": 0,
+          "memory": 0,
+          "pending": 0
+        },
+        "expanded": 0,
+        "maxContextTokens": 32768,
+        "maxDepth": 4,
+        "maxEntries": 8,
+        "policyVersion": "memory-effort-v1",
+        "reachedDepth": 0,
+        "requestedEffort": "normal",
+        "selected": 0,
+        "selectedInputUnits": 8766,
+        "stopReasons": [
+          "exhausted"
+        ],
+        "targetFirstAnswerMs": 6000,
+        "unavailableStages": [],
+        "version": 1,
+        "visited": 0
+      },
+      "createdAt": 1792088013826,
+      "updatedAt": 1792088020147
+    }
+  ],
+  "canonicalMessages": [
+    {
+      "runId": "run:0f56781cc2165592c6888bab81917fa96b618eb2b2806b4890427eba1e2aef3b",
+      "label": "unapproved-write-tool-cancelled",
+      "nativeMessageIdSha256": "578b12f2fe9dddb0bae6a62ee961d9c19b99cdab1bd29dfbe6ed12ad182f0a17",
+      "role": "user",
+      "approved": true,
+      "final": false,
+      "revision": 1,
+      "nativeContentHash": "d87dc08dac8bb6c701a3d1284266fe7ff38fcf2088a4bba80b4586a40e9b1808",
+      "fullNativeCanonicalSha256": "1a30405adc813a0ea3cbe4008d1f280c8bc6f05b2f49ff3a92d30ddd1a3d8a78",
+      "sourceContentHash": "8e4f916aac843823119ddfa09ebe9145ca78246561044d3fa500426b7c27bc21",
+      "sourcePresent": true,
+      "textBytes": 86,
+      "canonicalMatched": true
+    },
+    {
+      "runId": "run:3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+      "label": "approved-readonly-recall",
+      "nativeMessageIdSha256": "a6a186d302186c76e2c0f26a8cb177fa3e78c080971948526ffb3b9c401f72cd",
+      "role": "assistant",
+      "approved": true,
+      "final": true,
+      "revision": 1,
+      "nativeContentHash": "12936d54fdc3f758d88c326c92e553e6cd1aa4f0971a3ff978da8d28f8aa98fc",
+      "fullNativeCanonicalSha256": "041dfe56cc9b3e1ada78c2462e3c0722245f69fe51228b44681952ba5fb2afee",
+      "sourceContentHash": "44f98ce3c0e27aa93fa4ca53daf07b626f75a601605b05c8c1f68be65172d5b3",
+      "sourcePresent": true,
+      "textBytes": 31,
+      "declaredAnswerMarkerPresent": true,
+      "canonicalMatched": true
+    },
+    {
+      "runId": "run:3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+      "label": "approved-readonly-recall",
+      "nativeMessageIdSha256": "bcf78dcbeecbdc8429e2eabd91763f315e62c9758338388cdafce1d3849d2551",
+      "role": "tool",
+      "approved": true,
+      "final": false,
+      "revision": 1,
+      "nativeContentHash": "69af1a4e36365eadd24dd1712298472ccc613e81d6152a1e01ab4312c9ecafd8",
+      "fullNativeCanonicalSha256": "e72ff24dd1ed65342b28b0cbb7de4e274c2be736cb8b584e4db425e4401a2657",
+      "sourcePresent": false,
+      "textBytes": 0,
+      "declaredAnswerMarkerPresent": false,
+      "canonicalMatched": true
+    },
+    {
+      "runId": "run:3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+      "label": "approved-readonly-recall",
+      "nativeMessageIdSha256": "0dfcc789f53e429e168f0165da32a36f1f75bb7aa0743183e3d47a7d99e52237",
+      "role": "assistant",
+      "approved": true,
+      "final": false,
+      "revision": 1,
+      "nativeContentHash": "822aab69cd0fb2aaf8e31a0ca847b86cdba637df0e11e9a5465ea44f6ca3f615",
+      "fullNativeCanonicalSha256": "3b08277495a3b86cd1ae40ddb5ac42fa6febeec23c49b46677b1ed1e1d739b74",
+      "sourcePresent": false,
+      "textBytes": 0,
+      "declaredAnswerMarkerPresent": false,
+      "canonicalMatched": true
+    },
+    {
+      "runId": "run:3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+      "label": "approved-readonly-recall",
+      "nativeMessageIdSha256": "94f4a68da5518d9370bd15e2b4b849fd8b79d2ff20dc52d51d068a0fa7c5e025",
+      "role": "user",
+      "approved": true,
+      "final": false,
+      "revision": 1,
+      "nativeContentHash": "27c47443c9b391d1aa1a557db0f9fcf6fb17bbf2e1023e8ab6cc3948149a7998",
+      "fullNativeCanonicalSha256": "65b10a931210b759014bdccbbe6392bdcc06b01a33976655a21dda5a8521dde7",
+      "sourceContentHash": "80ca3e2f69794f24f436c8dfe2a2aaf8e634ca2274506701735e385d5712fb90",
+      "sourcePresent": true,
+      "textBytes": 104,
+      "declaredAnswerMarkerPresent": false,
+      "canonicalMatched": true
+    },
+    {
+      "runId": "run:2fd110d7c57f944dcef0f6063289cdd36da930524e70e8c3b8ff8c92d5ebeb14",
+      "label": "browser-normal-seed",
+      "nativeMessageIdSha256": "ec2b7e2a03630fea9252c12918c6ac114cd7743f59c95a2351d9f6de4f257e62",
+      "role": "assistant",
+      "approved": true,
+      "final": true,
+      "revision": 1,
+      "nativeContentHash": "157b9bed327afe89582cbdc22b75725ea2ce082dd86fb80d792c23efc4fe45c2",
+      "fullNativeCanonicalSha256": "4eeec948bf8ec9abede0de50234064a334d1218745f48d9129abba43020bb9dc",
+      "sourceContentHash": "5ff1e75cebc413035ca3be8df39687c2c89cfee97795575b8c52ad12c9218c63",
+      "sourcePresent": true,
+      "textBytes": 39,
+      "declaredAnswerMarkerPresent": true,
+      "canonicalMatched": true
+    },
+    {
+      "runId": "run:2fd110d7c57f944dcef0f6063289cdd36da930524e70e8c3b8ff8c92d5ebeb14",
+      "label": "browser-normal-seed",
+      "nativeMessageIdSha256": "c3798f0fda99613d433e395c025888cf9e9476491bd360fdeade0db4872d9ab4",
+      "role": "user",
+      "approved": true,
+      "final": false,
+      "revision": 1,
+      "nativeContentHash": "03fe039ae1bfe51eda1dc96dd6fbfdbdac2d71ba83335eb2723c17f511dbfe4b",
+      "fullNativeCanonicalSha256": "b4df2aeea506480b2539aeea5493ca7e522118dcefbe6394ef43d3ad247c14bb",
+      "sourceContentHash": "f4741cc06e863c76194d15d5026887d75301972642aad29f26c73077d36b3352",
+      "sourcePresent": true,
+      "textBytes": 29,
+      "declaredAnswerMarkerPresent": true,
+      "canonicalMatched": true
+    }
+  ],
+  "sourceEvents": [
+    {
+      "runId": "run:0f56781cc2165592c6888bab81917fa96b618eb2b2806b4890427eba1e2aef3b",
+      "label": "unapproved-write-tool-cancelled",
+      "eventSequence": 5,
+      "role": "user",
+      "trust": "user_assertion",
+      "eligibility": "eligible",
+      "factsState": "complete",
+      "vectorsState": "complete",
+      "sourceRevision": 1,
+      "sourceContentHash": "8e4f916aac843823119ddfa09ebe9145ca78246561044d3fa500426b7c27bc21",
+      "profileId": "cortex-text-small-1536-v1",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088229462
+        },
+        {
+          "stage": "facts",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088227119
+        },
+        {
+          "stage": "extract",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088221442
+        }
+      ],
+      "freshCurrentness": {
+        "status": "CURRENT",
+        "hashMatches": true,
+        "lineageMatches": true
+      },
+      "chunkCount": 1,
+      "vectorCount": 1,
+      "completedVectorNativeMatch": true,
+      "dimensions": 1536
+    },
+    {
+      "runId": "run:3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+      "label": "approved-readonly-recall",
+      "eventSequence": 4,
+      "role": "assistant",
+      "trust": "assistant_claim",
+      "eligibility": "eligible",
+      "factsState": "skipped",
+      "vectorsState": "complete",
+      "sourceRevision": 1,
+      "sourceContentHash": "44f98ce3c0e27aa93fa4ca53daf07b626f75a601605b05c8c1f68be65172d5b3",
+      "profileId": "cortex-text-small-1536-v1",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088209188
+        },
+        {
+          "stage": "facts",
+          "state": "skipped",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792088206289
+        },
+        {
+          "stage": "extract",
+          "state": "skipped",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792088206289
+        }
+      ],
+      "freshCurrentness": {
+        "status": "CURRENT",
+        "hashMatches": true,
+        "lineageMatches": true
+      },
+      "chunkCount": 1,
+      "vectorCount": 1,
+      "completedVectorNativeMatch": true,
+      "dimensions": 1536
+    },
+    {
+      "runId": "run:3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+      "label": "approved-readonly-recall",
+      "eventSequence": 3,
+      "role": "user",
+      "trust": "user_assertion",
+      "eligibility": "eligible",
+      "factsState": "complete",
+      "vectorsState": "complete",
+      "sourceRevision": 1,
+      "sourceContentHash": "80ca3e2f69794f24f436c8dfe2a2aaf8e634ca2274506701735e385d5712fb90",
+      "profileId": "cortex-text-small-1536-v1",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088193932
+        },
+        {
+          "stage": "facts",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088191333
+        },
+        {
+          "stage": "extract",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088190254
+        }
+      ],
+      "freshCurrentness": {
+        "status": "CURRENT",
+        "hashMatches": true,
+        "lineageMatches": true
+      },
+      "chunkCount": 1,
+      "vectorCount": 1,
+      "completedVectorNativeMatch": true,
+      "dimensions": 1536
+    },
+    {
+      "runId": "run:2fd110d7c57f944dcef0f6063289cdd36da930524e70e8c3b8ff8c92d5ebeb14",
+      "label": "browser-normal-seed",
+      "eventSequence": 2,
+      "role": "assistant",
+      "trust": "assistant_claim",
+      "eligibility": "eligible",
+      "factsState": "skipped",
+      "vectorsState": "complete",
+      "sourceRevision": 1,
+      "sourceContentHash": "5ff1e75cebc413035ca3be8df39687c2c89cfee97795575b8c52ad12c9218c63",
+      "profileId": "cortex-text-small-1536-v1",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088024035
+        },
+        {
+          "stage": "facts",
+          "state": "skipped",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792088020147
+        },
+        {
+          "stage": "extract",
+          "state": "skipped",
+          "attempt": 0,
+          "receiptPresent": false,
+          "updatedAt": 1792088020147
+        }
+      ],
+      "freshCurrentness": {
+        "status": "CURRENT",
+        "hashMatches": true,
+        "lineageMatches": true
+      },
+      "chunkCount": 1,
+      "vectorCount": 1,
+      "completedVectorNativeMatch": true,
+      "dimensions": 1536
+    },
+    {
+      "runId": "run:2fd110d7c57f944dcef0f6063289cdd36da930524e70e8c3b8ff8c92d5ebeb14",
+      "label": "browser-normal-seed",
+      "eventSequence": 1,
+      "role": "user",
+      "trust": "user_assertion",
+      "eligibility": "eligible",
+      "factsState": "complete",
+      "vectorsState": "complete",
+      "sourceRevision": 1,
+      "sourceContentHash": "f4741cc06e863c76194d15d5026887d75301972642aad29f26c73077d36b3352",
+      "profileId": "cortex-text-small-1536-v1",
+      "stages": [
+        {
+          "stage": "vectors",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088025903
+        },
+        {
+          "stage": "facts",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088023122
+        },
+        {
+          "stage": "extract",
+          "state": "complete",
+          "attempt": 1,
+          "receiptPresent": true,
+          "updatedAt": 1792088021869
+        }
+      ],
+      "freshCurrentness": {
+        "status": "CURRENT",
+        "hashMatches": true,
+        "lineageMatches": true
+      },
+      "chunkCount": 1,
+      "vectorCount": 1,
+      "completedVectorNativeMatch": true,
+      "dimensions": 1536
+    }
+  ],
+  "watermarks": [
+    {
+      "scopeSha256": "e4d2e57015e55ea586b9793b683894e22f45600a42fe9b9d17d972f31d08cc2c",
+      "sequence": 5,
+      "factsThrough": 5,
+      "vectorsThrough": 5,
+      "vectorProfileThrough": {
+        "cortex-text-large-3072-v1": 0,
+        "cortex-text-small-1536-v1": 5
+      },
+      "updatedAt": 1792088229823,
+      "incompleteEvents": []
+    },
+    {
+      "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+      "sequence": 4,
+      "factsThrough": 4,
+      "vectorsThrough": 4,
+      "vectorProfileThrough": {
+        "cortex-text-large-3072-v1": 0,
+        "cortex-text-small-1536-v1": 4
+      },
+      "updatedAt": 1792087944774,
+      "incompleteEvents": []
+    }
+  ],
+  "regressionRetained": [
+    {
+      "label": "native-profile-regression",
+      "scopeSha256": "bc7f90d280227d7bec3958ec34f7c62b1324f240b1a5bd725df30b0b4c03034b",
+      "captures": 2,
+      "captureMessageRows": 4,
+      "transcriptRows": 4,
+      "sourceRows": 4,
+      "vectorRows": 4,
+      "intentionalSourceTombstones": 1,
+      "revokedOwnedGrants": 1,
+      "originalNativeReceipt": "memory-effort-native-recall-native-regression-1792087842674.json",
+      "intentionallyFenced": true,
+      "phaseMeaning": "Counts observed now. Any earlier positive/current proof is scoped to the named prior receipt; intentional later fences do not create fresh positive-current evidence. No fixed retained count or new recall is asserted."
+    }
+  ],
+  "cancelledConversations": [],
+  "stableAcrossCollection": true,
+  "coverage": {
+    "freshCanonicalNativeReadback": "ACTUAL_CURRENT_SELECTION_ONLY_NO_HISTORICAL_CARRY_FORWARD",
+    "original3875NativePending": "HISTORICAL_NOT_COVERED",
+    "latencyAcceptance": "NOT_EVALUATED_USE_ORIGINAL_BROWSER_AND_CLI_MONOTONIC_RECEIPTS",
+    "seedEcho": "OPTIONAL_ONLY_WHEN_ROOT_SUPPLIES_MARKER",
+    "recallMarkers": "MANDATORY_FOR_EVERY_TRUE_RECALL",
+    "selectedRuns": 3,
+    "clients": {
+      "browser": {
+        "selectedRuns": 1,
+        "status": "ACTUAL_SELECTED_RUNS_READ"
+      },
+      "cli": {
+        "selectedRuns": 0,
+        "status": "NO_RUN_SUPPLIED"
+      },
+      "chat": {
+        "selectedRuns": 0,
+        "status": "NO_RUN_SUPPLIED"
+      }
+    },
+    "approvedReadonlyTool": "ACTUAL_SELECTED_APPROVAL_INSPECTED",
+    "unapprovedWriteTool": "ACTUAL_SELECTED_UNAPPROVED_WRITE_AND_DERIVED_CONVERSATION_INSPECTED",
+    "cancellation": "ACTUAL_SELECTED_CASE_INSPECTED",
+    "failedResponses": [],
+    "failedIngestion": [],
+    "unclassifiedStartupOtherObserved": true,
+    "regressionPositiveCurrentness": "Use exact earlier native receipt where later intentional fences prevent a new positive read; retained counts do not rerun that proof."
+  },
+  "finishedAt": 1792088359784,
+  "limits": "Final Root-declared quiet read, separately bounded complete <=256-row official table snapshots and fresh read-only source checks. Stable selected rows across collection, not a globally atomic transaction. Raw prompts/tool inputs/provider output/vectors/secrets never retained. Confirmed native outputs with UNKNOWN exact cost are not refunds. Actual failed responses/stages and watermark holes remain failures; no invalid output is normalized. Root owns resource cleanup."
+}

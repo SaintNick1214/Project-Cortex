@@ -1,0 +1,68 @@
+{
+  "state": "READY",
+  "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+  "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15",
+  "target": {
+    "id": 6201117,
+    "name": "quaint-seal-974",
+    "kind": "cloud",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-4c62e509-0275-4b98-a05b-9b81b66f3989",
+    "deploymentType": "dev",
+    "isDefault": false,
+    "expiresAt": 1792692459736,
+    "deploymentUrl": "https://quaint-seal-974.convex.cloud",
+    "disposable": true,
+    "serverExpiryVerified": true
+  },
+  "container": {
+    "name": "cortex-sandbox-4c62e509-0275-4b98-a05b-9b81b66f3989",
+    "imageId": "sha256:bdba8702da9e56bb5e4556109e82214b31369d7c460531cc26ea97d8404ccea2",
+    "labels": {
+      "dev.cortex.disposable-sandbox": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+      "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/4c62e509-0275-4b98-a05b-9b81b66f3989"
+    },
+    "id": "ecc26d71ec92934d3a9f5c5a3d8ebc18c88f8f9560a6e59515bbed98fbd588b2"
+  },
+  "ports": {
+    "web": 3256,
+    "basic": 3257
+  },
+  "launcherPid": 81800,
+  "rootExecSession": 48105,
+  "sourceManifestPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-coherent-source-hashes.json",
+  "sourceManifestSha256": "18c44da22844831af5ce087c7a429bf1ab8f134a1ddac3b4bb1176e1dde520a6",
+  "reviewPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review.json",
+  "reviewSha256": "603c18b128451d93f9501072cec14ce808e0722501c53b06b621907632423b42",
+  "startupFixedQualification": "8/8ACTUAL_PASS",
+  "startupBatch": {
+    "actualSuccessfulMethods": 8,
+    "dispatches": 8,
+    "fullUnknownLiabilityUnits": 2700000,
+    "activeConcurrency": 0,
+    "aggregateUsdComplete": false,
+    "perRunHumanReview": false,
+    "procedureApprovalDigest": "b9dae67dc95cb6e86bd7ad7ee00e8a948438250ee1383aab845c7a800092698c",
+    "immutableProcedureReviewedBeforeRun": true,
+    "freshActualOutcomes": true,
+    "oldQualificationDatesReused": false
+  },
+  "startupBatchSha256": "5fffe8de56b1de07b484ee7498edffd5e15b804343ffc9f2fd3026b220300bfd",
+  "startupStrictEmptyQuestion": true,
+  "startupExtractionSha256": "c09484b7f375a99d39734713de45312611f9ca894d56dc77756d3b09e26d088f",
+  "runtimeReadySha256": "5bede4abdc1a55554ff96be4efad0799fb84b1265e75660f43ccc3127e7a5a5b",
+  "managedDefaultProfile": true,
+  "capabilities": {
+    "inputSelectionVersion": 2,
+    "memoryEffortPolicyVersion": 1
+  },
+  "healthStatus": 200,
+  "readyAt": "2026-10-15T18:10:25.515Z",
+  "effortProfileRuntimeAcceptance": false,
+  "manifestSha256": "95565ebacc4920de2ab68ddbd41473cebe93dee678484bab137b819e2fc5f7da",
+  "backendManifestSha256": "327e297e95948f127f51fa0d79fb6afb7a0281cf99066264a2ec75e3e57f737c",
+  "backendFileCount": 174,
+  "modelCalls": 0
+}
