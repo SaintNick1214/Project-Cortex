@@ -1,0 +1,222 @@
+{
+  "observedAt": "2026-10-31T02:39:01.941432+00:00",
+  "candidateSha": "4722e1339d2b6bf6ad7e2260cd112bbc03074173",
+  "scope": "Anonymous registry manifest and config metadata only; no image layers pulled, no image/container run, no deployment.",
+  "conclusion": {
+    "change": "namespace only: get-convex -> convex",
+    "retainedIndexDigest": "sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4",
+    "linuxAmd64ManifestDigest": "sha256:b63de1f9bc72a868d9e979145200f46f10b965a1cae1ab2cc00462dcaf7e26ed",
+    "sourceRevision": "5c7cb5bc7db457290f1769f95f1d1340912f7fd7",
+    "sourceConvexPackageVersion": "1.46.0",
+    "versionCaution": "org.opencontainers.image.version=24.04 is inherited Ubuntu metadata, not the Convex runtime version. The image source revision is proven; runtime /version was not executed.",
+    "registryAvailability": true,
+    "liveContainerStartup": "NOT_EXECUTED"
+  },
+  "observations": [
+    {
+      "url": "https://ghcr.io/token?service=ghcr.io&scope=repository%3Aget-convex%2Fconvex-backend%3Apull",
+      "status": 403,
+      "body": "{\"errors\":[{\"code\":\"DENIED\",\"message\":\"requested access to the resource is denied\"}]}\n"
+    },
+    {
+      "url": "https://ghcr.io/v2/convex/convex-backend/manifests/sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4",
+      "status": 200,
+      "contentType": "application/vnd.oci.image.index.v1+json",
+      "registryDigest": "sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4",
+      "bodySha256": "sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4",
+      "manifest": {
+        "schemaVersion": 2,
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "manifests": [
+          {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 2760,
+            "digest": "sha256:b63de1f9bc72a868d9e979145200f46f10b965a1cae1ab2cc00462dcaf7e26ed",
+            "platform": {
+              "architecture": "amd64",
+              "os": "linux"
+            }
+          },
+          {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 2760,
+            "digest": "sha256:c991aea8c931ef4dda91c381dca59df39ee7756fb0fe924f847cbe14c4439c0b",
+            "platform": {
+              "architecture": "arm64",
+              "os": "linux"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://ghcr.io/v2/convex/convex-backend/manifests/sha256:b63de1f9bc72a868d9e979145200f46f10b965a1cae1ab2cc00462dcaf7e26ed",
+      "status": 200,
+      "contentType": "application/vnd.oci.image.manifest.v1+json",
+      "registryDigest": "sha256:b63de1f9bc72a868d9e979145200f46f10b965a1cae1ab2cc00462dcaf7e26ed",
+      "bodySha256": "sha256:b63de1f9bc72a868d9e979145200f46f10b965a1cae1ab2cc00462dcaf7e26ed",
+      "manifest": {
+        "schemaVersion": 2,
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "config": {
+          "mediaType": "application/vnd.oci.image.config.v1+json",
+          "digest": "sha256:aba8a7d9b8a19d36ccb6555c603cfbb0bf5dcdeb730e830d04e3af6b2a4464da",
+          "size": 5477
+        },
+        "layers": [
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:edd1ed89f0d443580bd42e5a10cd8736aba5a3438b2a0645c2ebb50119bb0eba",
+            "size": 29764116
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:a0e0a3d9ada2dae34efb7d083a588d29fe1c3c0349129dbb0ddc1f933f3ba02d",
+            "size": 96
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:cafd39e36809b487a4cbe678780065900ad76f4d0457152d66b8ee482cb5d0c2",
+            "size": 70214612
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:900b40427712601388ea21b0ba1773c524c36f19cc95f136415700af4ab18f18",
+            "size": 45135151
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:1de3c622bd9c7b1bd237c18f802f92d3282f437cf5e5e3a0a8282f5d9fc6eb32",
+            "size": 199
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:04284a50922f6869fbdc1da7c48c62ad42c42f0222aa8e683903546c71fedf32",
+            "size": 2386274
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:a83e2be3f1d1e1fe0d894bff93985603881ef9c28974afc21aa9dfc43a2cbeff",
+            "size": 169
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:e2ba7919c3cebf2d7b53136038a80608487f601eb64773de9454dec3dc36f501",
+            "size": 171
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:7fe18aa70cfc4d8795183204020ed001827165f93d4ec789ba2e0832c20ab957",
+            "size": 57711374
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:77fbf7e7341e850b86004c777920c9ebf11d19e900c018fbc04f07b875053b25",
+            "size": 747917
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:0be5448d97620edec0936b716bb965b4fd9d49168af4e14904b055cbb120d768",
+            "size": 535
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:886f4c27dc87d6f7784a54bb69a76834a92c3eb2b0d4864738a6165c808e6024",
+            "size": 1272
+          },
+          {
+            "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "digest": "sha256:c63f01db0f9f5c21857e7dd4baff64e6ba0c17666f2a7702d10ae3c16d32b4fe",
+            "size": 264
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://ghcr.io/v2/convex/convex-backend/blobs/sha256:aba8a7d9b8a19d36ccb6555c603cfbb0bf5dcdeb730e830d04e3af6b2a4464da",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "registryDigest": null,
+      "bodySha256": "sha256:aba8a7d9b8a19d36ccb6555c603cfbb0bf5dcdeb730e830d04e3af6b2a4464da",
+      "config": {
+        "architecture": "amd64",
+        "os": "linux",
+        "created": "2026-09-28T20:52:06.365265844Z",
+        "labels": {
+          "org.opencontainers.image.revision": "5c7cb5bc7db457290f1769f95f1d1340912f7fd7",
+          "org.opencontainers.image.version": "24.04",
+          "org.opencontainers.repository": "https://github.com/get-convex/convex-backend"
+        }
+      }
+    },
+    {
+      "url": "https://ghcr.io/v2/convex/convex-backend/manifests/5c7cb5bc7db457290f1769f95f1d1340912f7fd7",
+      "status": 200,
+      "contentType": "application/vnd.oci.image.index.v1+json",
+      "registryDigest": "sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4",
+      "bodySha256": "sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/convex/convex-backend/5c7cb5bc7db457290f1769f95f1d1340912f7fd7/npm-packages/convex/package.json",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "registryDigest": null,
+      "bodySha256": "sha256:3e42f297c263ba36561a55ee94a204ef931434d10ed0206e3b0394b4a1097088",
+      "package": {
+        "name": "convex",
+        "version": "1.46.0"
+      }
+    },
+    {
+      "url": "https://raw.githubusercontent.com/convex/convex-backend/main/.github/workflows/release_local_backend.yml",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "registryDigest": null,
+      "bodySha256": "sha256:e88cff10bab5e2cb2418a39eea7dddcf17ff608cb325bff324f8e0b188e6755b",
+      "publisherLines": [
+        "ghcr.io/convex/convex-backend",
+        "VERGEN_GIT_SHA=${{ github.sha }}"
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/convex/convex-backend/main/self-hosted/docker/docker-compose.yml",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "registryDigest": null,
+      "bodySha256": "sha256:62f5ea90733fc35e65cf9d9c62f0f66e4e0bbb0c89154183d6a3de32d22cecb4",
+      "imageLines": [
+        "image: ghcr.io/convex/convex-backend:latest",
+        "image: ghcr.io/convex/convex-dashboard:latest"
+      ]
+    }
+  ],
+  "validation": {
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
+    "node": "v24.15.0",
+    "npm": "12.2.0",
+    "tests": {
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --test tests/ci-pipeline.test.mjs scripts/ci/workflow-runtime-fixtures.test.mjs",
+      "exit": 0,
+      "tests": 66,
+      "pass": 66,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "durationMs": 2305.333417
+    },
+    "workflowAssertions": {
+      "exit": 0,
+      "namespaceOnlyByteDelta": true,
+      "threeExactImmutableServicePins": true,
+      "yamlParse": true,
+      "parsedEqualityExcludingAuthorizedNamespaceChange": true,
+      "definitions": 3,
+      "expandedJobCount": 5,
+      "digestUnchanged": true
+    },
+    "gitDiffCheck": {
+      "command": "git diff --check",
+      "exit": 0
+    }
+  }
+}

@@ -1,0 +1,665 @@
+(node:17030) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/user-export.test.ts (5.457 s)
+PASS tests/unit/runtimeAgent/context-source-composition.test.ts
+PASS tests/unit/runtimeAgent/turn-action.test.ts
+PASS tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ● Console
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"capture","original":{"total":122,"authority":91,"graph":3},"optimized":{"total":39,"authority":14,"graph":2},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:141:11
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"attach","original":{"total":118,"authority":91,"graph":3},"optimized":{"total":35,"authority":14,"graph":2},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:141:11
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":true,"original":{"total":70,"authority":24,"graph":23},"optimized":{"total":54,"authority":24,"graph":7},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:273:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":true,"original":{"total":66,"authority":24,"graph":23},"optimized":{"total":50,"authority":24,"graph":7},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:273:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":false,"original":{"total":74,"authority":28,"graph":23},"optimized":{"total":60,"authority":28,"graph":9},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:273:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":false,"original":{"total":70,"authority":28,"graph":23},"optimized":{"total":56,"authority":28,"graph":9},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:273:13
+
+PASS tests/unit/runtimeAgent/request-preflight.test.ts
+PASS tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+PASS tests/unit/runtimeMedia/recovery.test.ts
+PASS tests/unit/runtimeMedia/artifact-context.test.ts
+PASS tests/unit/runtimeMedia/jobs.test.ts
+PASS tests/unit/runtimeMedia/native-cost.test.ts
+PASS tests/unit/runtimeMedia/submission-port.test.ts
+PASS tests/unit/resilience-error-classification.test.ts (11.11 s)
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts (12.002 s)
+  ● Console
+
+    console.info
+      {"type":"whole-recall-physical-query-count","kind":"controlled-handler","outerCalls":["runtimeAgentRecall:prepareReads","runtimeAgentRecall:readMatches","runtimeMemory:finalDelivery"],"physicalQueries":{"runtimeAgentRecall:prepareReads":1,"_reference/childComponent/agent/messages/getMessagesByIds":4,"runtimeAgentRecall:readMatches":1,"runtimeModelPolicy:embeddingProfile":1},"embeddingProfileBeforeDelivery":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:227:11)
+
+    console.info
+      {"type":"k25-private-read-parent-counts","kind":"controlled-original-handlers","initial":{"oldGets":6,"newGets":3,"oldQueries":167,"newQueries":131},"tail":{"oldGets":15,"newGets":12,"oldQueries":92,"newQueries":71},"mutableReadSequencesEqual":true,"applicationWrites":0,"cloudLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:573:10)
+
+    console.info
+      {"type":"controlled-whole-recall-control-reuse","oldControlReads":45,"newControlReads":11,"oldDigests":412,"newDigests":327,"exactOutputStatePredicatesAndOtherReads":true,"hostedLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:660:11)
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":true,"original":{"queries":242,"graphQueries":161,"graphDocuments":161},"optimized":{"queries":95,"graphQueries":14,"graphDocuments":14},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:682:11
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":false,"original":{"queries":246,"graphQueries":161,"graphDocuments":161},"optimized":{"queries":103,"graphQueries":18,"graphDocuments":18},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:682:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":true,"original":{"total":341,"graphQueries":250},"optimized":{"total":99,"graphQueries":8},"exactStateAndMutableReadSequenceEqual":true,"atomicSaveAndPrepare":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:735:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":false,"original":{"total":345,"graphQueries":250},"optimized":{"total":105,"graphQueries":10},"exactStateAndMutableReadSequenceEqual":true,"atomicSaveAndPrepare":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:735:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":true,"baseline":{"total":541,"documents":294},"optimized":{"total":245,"documents":134},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:771:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":false,"baseline":{"total":549,"documents":298},"optimized":{"total":269,"documents":138},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:771:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":true,"baseline":{"total":99,"documents":70},"optimized":{"total":99,"documents":70},"uniqueRawIdentitySetEqual":true,"atomicSaveAndPrepare":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:792:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":false,"baseline":{"total":105,"documents":72},"optimized":{"total":105,"documents":72},"uniqueRawIdentitySetEqual":true,"atomicSaveAndPrepare":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:792:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":true,"plan":{"baseline":{"calls":97,"documents":52,"authority":60},"actual":{"calls":55,"documents":32,"authority":26}},"tail":{"baseline":{"calls":245,"documents":131,"authority":179},"actual":{"calls":95,"documents":63,"authority":43}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:823:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":false,"plan":{"baseline":{"calls":107,"documents":54,"authority":68},"actual":{"calls":61,"documents":34,"authority":30}},"tail":{"baseline":{"calls":269,"documents":135,"authority":199},"actual":{"calls":103,"documents":67,"authority":47}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:823:11
+
+PASS tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+PASS tests/unit/runtimeContent/jobs.test.ts (6.975 s)
+PASS tests/unit/runtimeAgent/direct-action.test.ts (6.173 s)
+PASS tests/unit/fact-history-provenance.test.ts
+PASS tests/unit/runtimeMemory/vector-delivery-batch.test.ts (6.363 s)
+  ● Console
+
+    console.info
+      {"type":"k27-public-final-delivery","shared":true,"baselineReads":61,"optimizedReads":59,"exactRawIdentitySet":true,"applicationWrites":0,"providerCalls":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:407:11
+
+    console.info
+      {"type":"k27-public-final-delivery","shared":false,"baselineReads":65,"optimizedReads":65,"exactRawIdentitySet":true,"applicationWrites":0,"providerCalls":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:407:11
+
+PASS tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+PASS tests/unit/attachments/sdk.test.ts
+PASS tests/unit/auth/credentials.test.ts
+PASS tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ● Console
+
+    console.info
+      {"type":"k28-controlled-query-checkpoint","oldReads":102,"newReads":96,"oldComponentQueries":3,"newComponentQueries":2,"financialReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/query-embedding-composition.test.ts:307:11)
+
+PASS tests/unit/domain-scope-backend.test.ts
+PASS tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+PASS tests/unit/runtime/model-policy-admission.test.ts
+PASS tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+PASS tests/unit/runtimeAgent/bounded-context-v8.test.ts
+PASS tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+  ● Console
+
+    console.info
+      {"type":"query-source-unique-reuse","baselineRootReads":33,"reusedRootReads":10,"exactOutputBodyStateGuardsAndOtherReads":true,"finalColdFences":1,"modelCalls":0,"hostedLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-source-read-reuse.test.ts:138:11)
+
+PASS tests/unit/runtimeMemory/literal-question-source-proof.test.ts
+PASS tests/unit/runtime/gateway-terminal-composition.test.ts
+PASS tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.info
+      {"type":"k27-public-fact-rpc-count","facts":3,"baselineFactAndSourceRPCs":4,"optimizedFactAndSourceRPCs":1,"providerCalls":1,"retries":0,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:153:11)
+
+    console.info
+      {"type":"k28-controlled-public-read-handoffs","oldCalls":["runtimeMemory:checkAuthority","runtimeMemory:readFacts","runtimeMemory:checkProfileReady","runtimeModelPolicy:embeddingProfile","runtimeMemory:readVectorMatches","runtimeModelPolicy:embeddingProfile","runtimeMemory:checkAuthority","runtimeMemory:finalDelivery","runtimeModelPolicy:embeddingProfile"],"newCalls":["runtimeMemoryQuery:prepareReads","runtimeMemoryQuery:readMatches","runtimeMemoryQuery:finalRecallDelivery"],"items":6,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:199:11)
+
+    console.info
+      {"type":"k29-current-a773-public-read-pipeline","hashBoundary":"HISTORICAL_WEBCRYPTO_ASYNC_STATIC_MECHANISM","baseline":{"calls":221,"documents":154,"authority":137},"actual":{"calls":167,"documents":124,"authority":83},"exactResultStateAndMutableReadOrder":true,"providerCalls":0,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:287:10)
+
+PASS tests/unit/runtimeIngestion/candidate-binding.test.ts
+PASS tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts
+  ● Console
+
+    console.info
+      {"type":"endpoint-raw-read-count","name":"hydrateExecution","reference":{"authority":66,"transcript":2,"policyMetadata":2,"managedGraph":5},"scoped":{"authority":16,"transcript":1,"policyMetadata":2,"managedGraph":5}}
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:133:11
+
+    console.info
+      {"type":"endpoint-raw-read-count","name":"recordOutput","reference":{"authority":66,"transcript":2,"policyMetadata":2,"managedGraph":5},"scoped":{"authority":16,"transcript":1,"policyMetadata":2,"managedGraph":4}}
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:133:11
+
+    console.info
+      {"type":"endpoint-raw-read-count","name":"markVisible","reference":{"authority":100,"transcript":2,"policyMetadata":11,"managedGraph":6},"scoped":{"authority":16,"transcript":1,"policyMetadata":7,"managedGraph":5}}
+
+      at tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:133:11
+
+    console.info
+      {"type":"visibility-managed-source-raw-reads","previous":{"authority":16,"transcript":1,"policyMetadata":9,"managedGraph":6},"current":{"authority":16,"transcript":1,"policyMetadata":7,"managedGraph":5},"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts:146:11)
+
+PASS tests/unit/runtimeAgent/context-routing.test.ts
+PASS tests/unit/runtimeAgent/v8-control-read-composition.test.ts
+  ● Console
+
+    console.log
+      {"runId":"run:ea9d23920330dd1e52d4501fd7905453e7a6cdda7d31dce049065504a6276afb","attemptNumber":0,"phase":"claim.begin","at":1000000}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.log
+      {"runId":"run:ea9d23920330dd1e52d4501fd7905453e7a6cdda7d31dce049065504a6276afb","attemptNumber":0,"phase":"start.claimNext.begin","at":1000000}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.log
+      {"runId":"run:ea9d23920330dd1e52d4501fd7905453e7a6cdda7d31dce049065504a6276afb","attemptNumber":0,"phase":"start.claimNext.end","at":1000000,"durationMs":3.6179169999959413}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.log
+      {"runId":"run:ea9d23920330dd1e52d4501fd7905453e7a6cdda7d31dce049065504a6276afb","attemptNumber":1,"phase":"claim.end","at":1000000}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.info
+      {"type":"controlled-v8-agent-control-reads","shape":{"pairs":0,"effort":"normal"},"oldExecution":25,"newExecution":9,"oldCandidate":34,"newCandidate":13,"oldDigests":302,"newDigests":242,"saveViewReads":5,"exactOutputStatePredicatesBuilders":true,"hostedLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/v8-control-read-composition.test.ts:110:10
+
+    console.log
+      {"runId":"run:e812c9d04b59c14944fc84e0ca5c9c2d6a8f3f2fbfc61514581eb8f7f79c9420","attemptNumber":0,"phase":"claim.begin","at":1000000}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.log
+      {"runId":"run:e812c9d04b59c14944fc84e0ca5c9c2d6a8f3f2fbfc61514581eb8f7f79c9420","attemptNumber":0,"phase":"start.claimNext.begin","at":1000000}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.log
+      {"runId":"run:e812c9d04b59c14944fc84e0ca5c9c2d6a8f3f2fbfc61514581eb8f7f79c9420","attemptNumber":0,"phase":"start.claimNext.end","at":1000000,"durationMs":2.727290999988327}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.log
+      {"runId":"run:e812c9d04b59c14944fc84e0ca5c9c2d6a8f3f2fbfc61514581eb8f7f79c9420","attemptNumber":1,"phase":"claim.end","at":1000000}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.info
+      {"type":"controlled-v8-agent-control-reads","shape":{"pairs":1,"effort":"fast"},"oldExecution":25,"newExecution":9,"oldCandidate":34,"newCandidate":13,"oldDigests":446,"newDigests":284,"saveViewReads":5,"exactOutputStatePredicatesBuilders":true,"hostedLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/v8-control-read-composition.test.ts:110:10
+
+    console.log
+      {"runId":"run:e812c9d04b59c14944fc84e0ca5c9c2d6a8f3f2fbfc61514581eb8f7f79c9420","attemptNumber":0,"phase":"claim.begin","at":1000000}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.log
+      {"runId":"run:e812c9d04b59c14944fc84e0ca5c9c2d6a8f3f2fbfc61514581eb8f7f79c9420","attemptNumber":0,"phase":"start.claimNext.begin","at":1000000}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.log
+      {"runId":"run:e812c9d04b59c14944fc84e0ca5c9c2d6a8f3f2fbfc61514581eb8f7f79c9420","attemptNumber":0,"phase":"start.claimNext.end","at":1000000,"durationMs":2.6462089999986347}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.log
+      {"runId":"run:e812c9d04b59c14944fc84e0ca5c9c2d6a8f3f2fbfc61514581eb8f7f79c9420","attemptNumber":1,"phase":"claim.end","at":1000000}
+
+      at traceRuntimePhase (convex-dev/runtimeLatencyTrace.ts:21:11)
+
+    console.info
+      {"type":"controlled-v8-agent-control-reads","shape":{"pairs":2,"effort":"normal"},"oldExecution":25,"newExecution":9,"oldCandidate":34,"newCandidate":13,"oldDigests":590,"newDigests":302,"saveViewReads":5,"exactOutputStatePredicatesBuilders":true,"hostedLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/v8-control-read-composition.test.ts:110:10
+
+PASS tests/unit/runtimeAgent/empty-context-inline.test.ts
+PASS tests/unit/runtimeAgent/turn-native-composition.test.ts
+PASS tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts
+  ● Console
+
+    console.info
+      {"type":"private-canonical-conversation","indexed":false,"originalCanonicalTakes":20,"reusedCanonicalTakes":2,"noncanonicalReads":150,"originalByStage":{"runtimeAgent:contextInputsAndEmbeddingV8":8,"runtimeAgent:saveAndPrepareContextV8":12},"reusedByStage":{"runtimeAgent:contextInputsAndEmbeddingV8":1,"runtimeAgent:saveAndPrepareContextV8":1},"finalColdFences":0,"exactOutputBodyStateEffectsOrderedGuards":true,"inferenceCalls":0,"hostedLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts:131:11
+
+    console.info
+      {"type":"private-canonical-conversation","indexed":true,"originalCanonicalTakes":30,"reusedCanonicalTakes":5,"noncanonicalReads":341,"originalByStage":{"runtimeAgent:contextInputsAndEmbeddingV8":15,"runtimeAgentRecall:prepareReadsV8":2,"runtimeAgentRecall:readMatchesAndDeliveryV8":3,"runtimeAgent:saveAndPrepareContextV8":10},"reusedByStage":{"runtimeAgent:contextInputsAndEmbeddingV8":1,"runtimeAgentRecall:prepareReadsV8":1,"runtimeAgentRecall:readMatchesAndDeliveryV8":2,"runtimeAgent:saveAndPrepareContextV8":1},"finalColdFences":1,"exactOutputBodyStateEffectsOrderedGuards":true,"inferenceCalls":0,"hostedLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts:131:11
+
+PASS tests/unit/runtimeAgent/context-policy-read.test.ts
+PASS tests/unit/runtimeUnavailableAuth/closure.test.ts
+PASS tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ● Console
+
+    console.info
+      {"type":"controlled-v8-preparation-read-count","original":{"total":407,"authority":84,"controlRuns":24},"optimized":{"total":185,"authority":14,"controlRuns":2},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:85:10)
+
+    console.info
+      {"type":"controlled-v8-financial-read-count","original":{"total":140,"authority":42,"controlRuns":6},"optimized":{"total":81,"authority":14,"controlRuns":1},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:130:10)
+
+    console.info
+      {"type":"k29-current-a773-direct-empty-parent","baseline":{"dbReads":311,"documents":232,"componentQueries":2,"tableQueries":[{"signature":"query:runtimeTranscriptMessages:by_native","calls":48,"documents":48},{"signature":"query:runtimeModelPolicies:by_scope_active","calls":44,"documents":8},{"signature":"query:runtimeAgentDefinitions:by_scoped_version","calls":33,"documents":33},{"signature":"query:runtimeAgentExecutions:by_attempt","calls":25,"documents":25},{"signature":"query:runtimeRunOutbox:by_run","calls":25,"documents":25},{"signature":"query:runtimeConversations:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeRunAttempts:by_run_attempt","calls":24,"documents":24},{"signature":"query:runtimeIngestionJobs:by_account","calls":13,"documents":0},{"signature":"query:runtimeModelQualifications:by_receipt","calls":10,"documents":10},{"signature":"query:runtimeBudgetAccounts:by_run","calls":9,"documents":9},{"signature":"query:runtimeRuns:by_run_account","calls":9,"documents":9},{"signature":"query:runtimeAgentOperations:by_attempt","calls":9,"documents":0},{"signature":"query:runtimeAuthTombstones:by_resource","calls":8,"documents":0},{"signature":"query:runtimeContentJobs:by_account","calls":8,"documents":0},{"signature":"query:runtimeIngestionEvents:by_owner_sequence","calls":5,"documents":5},{"signature":"query:runtimeAgentOperations:by_operation","calls":4,"documents":2},{"signature":"query:runtimeIngestionSequenceHeads:by_scope","calls":3,"documents":3},{"signature":"query:runtimeRuns:by_scoped_id","calls":2,"documents":2},{"signature":"query:runtimeAuthScopes:by_tenant_space","calls":2,"documents":2},{"signature":"query:runtimeMemoryVectorGenerations:by_owner","calls":2,"documents":0},{"signature":"get:runtimeAuthPrincipals:","calls":1,"documents":1},{"signature":"get:runtimeAuthMemberships:","calls":1,"documents":1},{"signature":"get:runtimeAuthGrants:","calls":1,"documents":1},{"signature":"query:runtimeAuthGrants:by_membership","calls":1,"documents":0}]},"actual":{"dbReads":185,"documents":144,"componentQueries":1,"tableQueries":[{"signature":"query:runtimeAgentExecutions:by_attempt","calls":25,"documents":25},{"signature":"query:runtimeRunOutbox:by_run","calls":25,"documents":25},{"signature":"query:runtimeConversations:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeRunAttempts:by_run_attempt","calls":24,"documents":24},{"signature":"query:runtimeIngestionJobs:by_account","calls":13,"documents":0},{"signature":"query:runtimeBudgetAccounts:by_run","calls":9,"documents":9},{"signature":"query:runtimeRuns:by_run_account","calls":9,"documents":9},{"signature":"query:runtimeAgentOperations:by_attempt","calls":9,"documents":0},{"signature":"query:runtimeAuthTombstones:by_resource","calls":8,"documents":0},{"signature":"query:runtimeContentJobs:by_account","calls":8,"documents":0},{"signature":"query:runtimeIngestionEvents:by_owner_sequence","calls":5,"documents":5},{"signature":"query:runtimeModelQualifications:by_receipt","calls":5,"documents":5},{"signature":"query:runtimeAgentOperations:by_operation","calls":4,"documents":2},{"signature":"query:runtimeIngestionSequenceHeads:by_scope","calls":3,"documents":3},{"signature":"query:runtimeRuns:by_scoped_id","calls":2,"documents":2},{"signature":"query:runtimeAuthScopes:by_tenant_space","calls":2,"documents":2},{"signature":"query:runtimeModelPolicies:by_scope_active","calls":2,"documents":4},{"signature":"query:runtimeMemoryVectorGenerations:by_owner","calls":2,"documents":0},{"signature":"get:runtimeAuthPrincipals:","calls":1,"documents":1},{"signature":"get:runtimeAuthMemberships:","calls":1,"documents":1},{"signature":"get:runtimeAuthGrants:","calls":1,"documents":1},{"signature":"query:runtimeAuthGrants:by_membership","calls":1,"documents":0},{"signature":"query:runtimeAgentDefinitions:by_scoped_version","calls":1,"documents":1},{"signature":"query:runtimeTranscriptMessages:by_native","calls":1,"documents":1}]},"exactResultStateAndMutableReadOrder":true,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:162:10)
+
+PASS tests/unit/runtimeAgent/turn-workflow.test.ts
+PASS tests/unit/runtime/gateway-dispatch.test.ts
+PASS tests/unit/runtimeAgent/context-source-batch.test.ts
+PASS tests/unit/graph/runtime-projection-connector.test.ts
+PASS tests/unit/client-runtime/admission-native.test.ts
+  ● Console
+
+    console.log
+      {"controlledAdmissionReads":{"original":167,"scoped":155,"originalRetainable":146,"scopedRetainable":134}}
+
+      at Object.<anonymous> (tests/unit/client-runtime/admission-native.test.ts:95:13)
+
+PASS tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+PASS tests/unit/runtimeAgent/context-latency.test.ts
+PASS tests/unit/scoped-cleanup-routing.test.ts
+PASS tests/unit/runtimeAgent/direct-workflow.test.ts
+PASS tests/unit/runtimeGraph/projection.test.ts
+PASS tests/unit/runtimeAgent/execution.test.ts
+PASS tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ● Console
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"facts","acceptedEntryScope":true,"unscopedAuthReads":50,"scopedAuthReads":20,"nonAuthReadWriteOrderEntries":4}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:104:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"vectors","acceptedEntryScope":true,"unscopedAuthReads":52,"scopedAuthReads":22,"nonAuthReadWriteOrderEntries":22}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:104:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"delivery","acceptedEntryScope":true,"unscopedAuthReads":223,"scopedAuthReads":37,"nonAuthReadWriteOrderEntries":34}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:104:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"profile","acceptedEntryScope":true,"unscopedAuthReads":28,"scopedAuthReads":18,"nonAuthReadWriteOrderEntries":9}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:104:11
+
+PASS tests/unit/runtime/gateway-qualification-registry.test.ts
+PASS tests/unit/runtimeAgent/inline-barrier.test.ts
+PASS tests/unit/runtimeArtifactAuth/inventory.test.ts
+PASS tests/unit/runtimeAgent/empty-context-workflow.test.ts
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+PASS tests/unit/runtimeIngestion/cached-compatibility.test.ts
+PASS tests/unit/runtimeAgent/checkpoint-composition.test.ts
+PASS tests/unit/runtimeAssets/lifecycle.test.ts
+PASS tests/unit/runtimeTranscript/managed.test.ts
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+PASS tests/unit/runtimeRegistryAuth/registered.test.ts
+PASS tests/unit/runtimeAgent/resolution-composition.test.ts
+PASS tests/unit/runtimeMemory/capture.test.ts
+PASS tests/unit/runtimeMemory/source-root-read-scope.test.ts
+  ● Console
+
+    console.info
+      {"type":"source-root-registered-save-candidate","baselineRootUniqueReads":62,"retainedRootUniqueReads":1,"exactOutputModelStatePredicatesAndMutableReads":true,"paidAttempts":0,"hostedLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/source-root-read-scope.test.ts:273:11)
+
+PASS tests/unit/runtimeDelivery/recall-delivery.test.ts
+PASS tests/unit/runtimeAgent/native-claim-composition.test.ts
+PASS tests/unit/runtime/memory-gateway.test.ts
+PASS tests/unit/action-data-reference.test.ts
+PASS tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+PASS tests/unit/runtimeAgent/start-native.test.ts
+  ● Console
+
+    console.info
+      {"type":"preparation-authority-fixture-count","unscoped":192,"scoped":28}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:194:11)
+
+PASS tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+PASS tests/unit/runtimeRegistryAuth/failureBoundary.test.ts
+PASS tests/unit/runtimeIngestion/context.test.ts
+PASS tests/unit/client-runtime/observation-native.test.ts
+  ● Console
+
+    console.log
+      {"controlledObservationReads":{"original":66,"scoped":27,"originalAuthority":62,"scopedAuthority":23}}
+
+      at Object.<anonymous> (tests/unit/client-runtime/observation-native.test.ts:202:13)
+
+    console.log
+      {"k29EnvelopeSnapshotReads":{"acceptedK28":43,"current":27,"acceptedAuthority":39,"currentAuthority":23}}
+
+      at Object.<anonymous> (tests/unit/client-runtime/observation-native.test.ts:214:13)
+
+PASS tests/unit/runtime/observed-json-qualifications.test.ts
+PASS tests/unit/runtimeIngestion/repeat-capture.test.ts
+PASS tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts
+PASS tests/unit/runtimeIngestion/client-extensions.test.ts
+PASS tests/unit/runtimeRuns/raw-run-read-reuse.test.ts
+  ● Console
+
+    console.info
+      {"type":"controlled-control-run-raw-reads","originalQueries":2,"scopedQueries":1,"originalDocuments":2,"scopedDocuments":1,"originalBytes":3588,"scopedBytes":1794,"nativeLatencyProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeRuns/raw-run-read-reuse.test.ts:44:11)
+
+PASS tests/unit/runtimeBeliefs/atomic.test.ts
+PASS tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ● Console
+
+    console.info
+      {"type":"k29-private-hydration-raw-messages","originalPhysical":4,"currentPhysical":1,"originalLogical":4,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/native-transcript-read-scope.test.ts:80:11)
+
+PASS tests/unit/runtimeRuns/cancelled-input-readiness.test.ts
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+PASS tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts
+PASS tests/unit/runtimeEndpointAuth/memory.test.ts
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+PASS tests/unit/runtimeRegistryAuth/catalog.test.ts
+PASS tests/unit/runtime/gateway-backend.test.ts
+PASS tests/unit/runtimeWorkerAuth/governance.test.ts
+PASS tests/unit/runtimeBeliefs/duplicate-candidates.test.ts
+PASS tests/unit/runtimeMemory/repository.test.ts
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+PASS tests/unit/runtimeMemory/query-embedding-tail.test.ts
+PASS tests/unit/runtime/observed-media-qualifications.test.ts
+PASS tests/unit/runtimeAgent/tool-context.test.ts
+PASS tests/unit/runtimeAuth/inventory.test.ts
+PASS tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+PASS tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+PASS tests/unit/runtimeMemory/memory-traversal.test.ts
+PASS tests/unit/reference-lifecycle.test.ts
+PASS tests/unit/runtime/observed-text-selectors.test.ts
+PASS tests/unit/runtimeEndpointAuth/facts.test.ts
+PASS tests/unit/client-runtime/assets.test.ts
+PASS tests/unit/runtimeIngestion/context-permissions.test.ts
+PASS tests/unit/runtimeAuth/authority-read-scope.test.ts
+PASS tests/unit/runtimeMemory/public-functional.test.ts
+PASS tests/unit/domain-erasure-scope.test.ts
+PASS tests/unit/runtimeMetadataAuth/handlers.test.ts
+PASS tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts
+PASS tests/unit/runtimeIngestion/foreground-priority.test.ts
+PASS tests/unit/runtimeIngestion/claim-recovery.test.ts
+PASS tests/unit/agentDefinitions/definitions.test.ts
+PASS tests/unit/runtime/observed-facts-selector.test.ts
+PASS tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+PASS tests/unit/admin-security.test.ts
+PASS tests/unit/runtimeRegistryAuth/adversarial.test.ts
+PASS tests/unit/runtimeMemory/profiles.test.ts
+PASS tests/unit/runtime/profile-policy-selection.test.ts
+PASS tests/unit/runtimeArtifactAuth/handlers.test.ts
+PASS tests/unit/runtimeIngestion/worker.test.ts
+PASS tests/unit/memory/recall/resultProcessor.test.ts
+PASS tests/unit/graph/runtime-projection-worker.test.ts
+PASS tests/unit/runtimeIngestion/sequence-head.test.ts
+PASS tests/unit/runtimeMemory/literal-property-ranking.test.ts
+PASS tests/unit/runtimeDelivery/public-payload.test.ts
+PASS tests/unit/reference-maintenance.test.ts
+PASS tests/unit/runtimeIngestion/progress-publication.test.ts
+PASS tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ● Console
+
+    console.info
+      {"type":"k29-profile-snapshot-reads","originalQueries":24,"currentQueries":12,"originalGets":6,"currentGets":3,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts:93:11)
+
+PASS tests/unit/runtimeRuns/admission.test.ts
+PASS tests/unit/domain/outcomes.test.ts
+PASS tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+  ● Console
+
+    console.info
+      {"type":"controlled-managed-source-graph-reads","originalGraphQueries":70,"scopedGraphQueries":17,"originalGraphDocuments":70,"scopedGraphDocuments":17,"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/managed-source-read-scope.test.ts:93:13)
+
+    console.info
+      {"type":"k27-traversal-raw-reads","shared":true,"baselineGets":120,"optimizedGets":6,"baselineQueries":255,"optimizedQueries":43,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:344:13
+
+    console.info
+      {"type":"k27-traversal-raw-reads","shared":false,"baselineGets":78,"optimizedGets":6,"baselineQueries":176,"optimizedQueries":42,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:344:13
+
+    console.info
+      {"type":"k29-native-snapshot-source-reads","shared":true,"originalGets":9,"currentGets":3,"originalQueries":57,"currentQueries":31,"uniqueGetIdentities":3,"uniqueQueryIdentities":31,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:390:13
+
+    console.info
+      {"type":"k29-native-snapshot-source-reads","shared":false,"originalGets":9,"currentGets":3,"originalQueries":56,"currentQueries":36,"uniqueGetIdentities":3,"uniqueQueryIdentities":36,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAuth/managed-source-read-scope.test.ts:390:13
+
+PASS tests/unit/runtime/observed-extraction-prompt.test.ts
+PASS tests/unit/runtime/observed-extraction-framing.test.ts
+PASS tests/unit/lifecycle.test.ts
+PASS tests/unit/runtimeMemory/services.test.ts
+PASS tests/unit/runtimeMemory/direct-fact-rule.test.ts
+PASS tests/unit/runtimeIngestion/shared-edit.test.ts
+PASS tests/unit/runtime/client-bootstrap.test.ts
+PASS tests/unit/graph-config.test.ts
+PASS tests/unit/runtimeIngestion/stages.test.ts
+PASS tests/unit/runtime/compact-executable-policy.test.ts
+PASS tests/unit/runtimeDelivery/asset-deadline.test.ts
+PASS tests/unit/runtimeRegistryAuth/admissionFailure.test.ts
+PASS tests/unit/runtimeMemory/parallel-recall.test.ts
+PASS tests/unit/runtimeDelivery/client-signal.test.ts
+PASS tests/unit/runtimeAuth/v8-read-scope.test.ts
+PASS tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+PASS tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts
+  ● Console
+
+    console.info
+      {"type":"k29-executable-metadata-validators","beforeQueries":22,"afterQueries":15,"definitionQueries":[3,1],"policyQueries":[7,2],"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts:60:11)
+
+PASS tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts
+PASS tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts
+PASS tests/unit/runtimeWorkerAuth/graph.test.ts
+PASS tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts
+PASS tests/unit/runtimeDelivery/legacy-search.test.ts
+PASS tests/unit/runtimeRegistryStats/registered.test.ts
+PASS tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+PASS tests/unit/client-runtime/session-native.test.ts
+  ● Console
+
+    console.info
+      {"controlledSessionReads":{"original":16,"current":10},"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/client-runtime/session-native.test.ts:28:13
+
+    console.info
+      {"controlledSessionReads":{"original":16,"current":10},"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/client-runtime/session-native.test.ts:28:13
+
+PASS tests/unit/runtimeMetadataAuth/native-errors.test.ts
+PASS tests/unit/runtimeAssets/distribution.test.ts
+PASS tests/unit/ci-reference-preparation.test.ts
+PASS tests/unit/runtime/strict-json-schema.test.ts
+PASS tests/unit/runtimeMemory/v8-control-read-scope.test.ts
+PASS tests/unit/memory-observer.test.ts
+PASS tests/unit/memory/recall/graphEnhancement.test.ts
+PASS tests/unit/domain-operations-backend.test.ts
+PASS tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+  ● Console
+
+    console.info
+      {"type":"native-transcript-read-count","name":"prepareTurnModel","referenceReads":32,"optimizedReads":9}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:56:149
+
+    console.info
+      {"type":"native-transcript-read-count","name":"prepareResolvedModelOperation","referenceReads":16,"optimizedReads":3}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:56:149
+
+    console.info
+      {"type":"native-transcript-read-count","name":"admitPreparedModelOperation","referenceReads":12,"optimizedReads":3}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:73:423)
+
+PASS tests/unit/dev-integration-distribution.test.ts
+PASS tests/unit/domain-erasure-projection-cost.test.ts
+PASS tests/unit/runtimeMedia/import-order.test.ts
+PASS tests/unit/domain/model-policy.test.ts
+PASS tests/unit/runtime/agent-request-preflight.test.ts
+PASS tests/unit/runtimeAgent/prompt-trust-v8.test.ts
+PASS tests/unit/runtimeAgent/request-preflight-workflow.test.ts
+PASS tests/unit/runtimeAgent/context-compaction.test.ts
+  ● Console
+
+    console.info
+      {"controlledOnly":true,"fixture":"owned-Max-1792033378697-sanitized","beforeInputUnits":29394,"afterInputUnits":30426,"selectedKinds":["memory","fact","memory","pending","pending"],"pendingSequences":[3,5],"providerCalls":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-compaction.test.ts:106:11)
+
+PASS tests/unit/operator-test-fixture.test.ts
+PASS tests/unit/domain/media-input.test.ts
+PASS tests/unit/domain/semantic-hash-standalone.test.ts
+PASS tests/unit/runtimeAgent/model-input-selection.test.ts
+PASS tests/unit/portable-crypto.test.ts
+PASS tests/unit/facts-discovery-scope.test.ts
+PASS tests/unit/client-runtime/client.test.ts
+PASS tests/unit/client-runtime/extensions.test.ts
+PASS tests/unit/users/schemas.test.ts
+PASS tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+PASS tests/unit/transport-initialization.test.ts
+PASS tests/unit/domain/profile.test.ts
+PASS tests/unit/client-runtime/media.test.ts
+PASS tests/unit/domain-erasure-http.test.ts
+PASS tests/unit/managed-graph-recall.test.ts
+PASS tests/unit/runtimeTranscript/contracts.test.ts
+PASS tests/unit/tenant-scope.test.ts
+PASS tests/unit/transport-logger.test.ts
+PASS tests/unit/facts-public-handler-selection.test.ts
+PASS tests/unit/sessions/validators.test.ts
+PASS tests/unit/domain-scope.test.ts
+PASS tests/unit/managed-graph-worker-lifecycle.test.ts
+PASS tests/unit/vector-store-scope.test.ts
+PASS tests/unit/immutable-history-scope.test.ts
+PASS tests/unit/artifacts/validators.test.ts
+PASS tests/unit/model-resolution.test.ts
+PASS tests/unit/attachments/validators.test.ts
+PASS tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+PASS tests/unit/domain-operations.test.ts
+PASS tests/unit/recall-limits.test.ts
+PASS tests/unit/attachments/upload.test.ts
+PASS tests/unit/memory-source-filter.test.ts
+PASS tests/unit/client-runtime/observe-delivery.test.ts
+PASS tests/unit/domain/semantic-hash.test.ts
+PASS tests/unit/user-profile-deletion-receipt.test.ts
+PASS tests/unit/runtimeAssets/action-delivery.test.ts
+PASS tests/unit/client-runtime/authentication-denial.test.ts
+PASS tests/unit/auth/context.test.ts
+PASS tests/unit/client-runtime/content.test.ts
+PASS tests/unit/runtimeMemory/memory-effort.test.ts
+PASS tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts
+PASS tests/unit/runtimeWorkerClient/governance.test.ts
+PASS tests/unit/domain-erasure.test.ts
+PASS tests/unit/dev-integration-memory-capability.test.ts
+PASS tests/unit/artifacts/backend.test.ts
+PASS tests/unit/domain/memory-context.test.ts
+PASS tests/unit/runtimeMemory/remember-deadline.test.ts
+PASS tests/unit/domain/sources.test.ts
+PASS tests/unit/domain-erasure-public.test.ts
+PASS tests/unit/vector-public-handler-selection.test.ts
+PASS tests/unit/managed-graph-scope.test.ts
+PASS tests/unit/dev-integration-backend-read.test.ts
+PASS tests/unit/managed-graph-erasure-preflight.test.ts
+PASS tests/unit/auth/validators.test.ts
+PASS tests/unit/managed-graph-schema-compatibility.test.ts
+PASS tests/unit/artifacts/sdk.test.ts
+PASS tests/unit/managed-graph-rebuild-pages.test.ts
+PASS tests/unit/ci-cleanup.test.ts
+PASS tests/unit/runtime/latency-trace.test.ts
+PASS tests/unit/runtimeAuth/authority.test.ts
+PASS tests/unit/runtime/output-projection.test.ts
+PASS tests/unit/user-data-scope.test.ts
+PASS tests/unit/types.test.ts
+PASS tests/unit/deployment-operator.test.ts
+
+Test Suites: 241 passed, 241 total
+Tests:       9955 passed, 9955 total
+Snapshots:   0 total
+Time:        164.411 s, estimated 391 s
+Ran all test suites within paths "tests/unit/action-data-reference.test.ts", "tests/unit/admin-security.test.ts", "tests/unit/agentDefinitions/definitions.test.ts", "tests/unit/artifacts/backend.test.ts", "tests/unit/artifacts/sdk.test.ts", "tests/unit/artifacts/validators.test.ts", "tests/unit/attachments/sdk.test.ts", "tests/unit/attachments/upload.test.ts", "tests/unit/attachments/validators.test.ts", "tests/unit/auth/context.test.ts", "tests/unit/auth/credentials.test.ts", "tests/unit/auth/validators.test.ts", "tests/unit/ci-cleanup.test.ts", "tests/unit/ci-reference-preparation.test.ts", "tests/unit/client-runtime/admission-native.test.ts", "tests/unit/client-runtime/assets.test.ts", "tests/unit/client-runtime/authentication-denial.test.ts", "tests/unit/client-runtime/client.test.ts", "tests/unit/client-runtime/content.test.ts", "tests/unit/client-runtime/extensions.test.ts", "tests/unit/client-runtime/media.test.ts", "tests/unit/client-runtime/observation-native.test.ts", "tests/unit/client-runtime/observe-delivery.test.ts", "tests/unit/client-runtime/session-native.test.ts", "tests/unit/deployment-operator.test.ts", "tests/unit/dev-integration-backend-read.test.ts", "tests/unit/dev-integration-distribution.test.ts", "tests/unit/dev-integration-memory-capability.test.ts", "tests/unit/domain-erasure-http.test.ts", "tests/unit/domain-erasure-projection-cost.test.ts", "tests/unit/domain-erasure-public.test.ts", "tests/unit/domain-erasure-scope.test.ts", "tests/unit/domain-erasure.test.ts", "tests/unit/domain-operations-backend.test.ts", "tests/unit/domain-operations.test.ts", "tests/unit/domain-scope-backend.test.ts", "tests/unit/domain-scope.test.ts", "tests/unit/domain/media-input.test.ts", "tests/unit/domain/memory-context.test.ts", "tests/unit/domain/model-policy.test.ts", "tests/unit/domain/outcomes.test.ts", "tests/unit/domain/profile.test.ts", "tests/unit/domain/semantic-hash-standalone.test.ts", "tests/unit/domain/semantic-hash.test.ts", "tests/unit/domain/sources.test.ts", "tests/unit/fact-history-provenance.test.ts", "tests/unit/facts-discovery-scope.test.ts", "tests/unit/facts-public-handler-selection.test.ts", "tests/unit/graph-config.test.ts", "tests/unit/graph/runtime-projection-connector.test.ts", "tests/unit/graph/runtime-projection-worker.test.ts", "tests/unit/immutable-history-scope.test.ts", "tests/unit/lifecycle.test.ts", "tests/unit/managed-graph-erasure-preflight.test.ts", "tests/unit/managed-graph-rebuild-pages.test.ts", "tests/unit/managed-graph-recall.test.ts", "tests/unit/managed-graph-schema-compatibility.test.ts", "tests/unit/managed-graph-scope.test.ts", "tests/unit/managed-graph-worker-lifecycle.test.ts", "tests/unit/memory-observer.test.ts", "tests/unit/memory-source-filter.test.ts", "tests/unit/memory/recall/graphEnhancement.test.ts", "tests/unit/memory/recall/resultProcessor.test.ts", "tests/unit/model-resolution.test.ts", "tests/unit/operator-test-fixture.test.ts", "tests/unit/portable-crypto.test.ts", "tests/unit/recall-limits.test.ts", "tests/unit/reference-lifecycle.test.ts", "tests/unit/reference-maintenance.test.ts", "tests/unit/resilience-error-classification.test.ts", "tests/unit/runtime/agent-request-preflight.test.ts", "tests/unit/runtime/client-bootstrap.test.ts", "tests/unit/runtime/compact-executable-policy.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/runtime/gateway-dispatch.test.ts", "tests/unit/runtime/gateway-qualification-registry.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts", "tests/unit/runtime/latency-trace.test.ts", "tests/unit/runtime/memory-gateway.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/observed-extraction-framing.test.ts", "tests/unit/runtime/observed-extraction-prompt.test.ts", "tests/unit/runtime/observed-facts-selector.test.ts", "tests/unit/runtime/observed-json-qualifications.test.ts", "tests/unit/runtime/observed-media-qualifications.test.ts", "tests/unit/runtime/observed-text-selectors.test.ts", "tests/unit/runtime/output-projection.test.ts", "tests/unit/runtime/profile-policy-selection.test.ts", "tests/unit/runtime/strict-json-schema.test.ts", "tests/unit/runtimeAgent/bounded-context-v8.test.ts", "tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts", "tests/unit/runtimeAgent/checkpoint-composition.test.ts", "tests/unit/runtimeAgent/context-compaction.test.ts", "tests/unit/runtimeAgent/context-latency.test.ts", "tests/unit/runtimeAgent/context-policy-read.test.ts", "tests/unit/runtimeAgent/context-routing.test.ts", "tests/unit/runtimeAgent/context-source-batch.test.ts", "tests/unit/runtimeAgent/context-source-composition.test.ts", "tests/unit/runtimeAgent/direct-action.test.ts", "tests/unit/runtimeAgent/direct-workflow.test.ts", "tests/unit/runtimeAgent/empty-context-inline.test.ts", "tests/unit/runtimeAgent/empty-context-workflow.test.ts", "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts", "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeAgent/inline-barrier.test.ts", "tests/unit/runtimeAgent/model-input-selection.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts", "tests/unit/runtimeAgent/native-claim-composition.test.ts", "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts", "tests/unit/runtimeAgent/prompt-trust-v8.test.ts", "tests/unit/runtimeAgent/query-embedding-composition.test.ts", "tests/unit/runtimeAgent/request-preflight-workflow.test.ts", "tests/unit/runtimeAgent/request-preflight.test.ts", "tests/unit/runtimeAgent/resolution-composition.test.ts", "tests/unit/runtimeAgent/start-native.test.ts", "tests/unit/runtimeAgent/tool-context.test.ts", "tests/unit/runtimeAgent/turn-action.test.ts", "tests/unit/runtimeAgent/turn-native-composition.test.ts", "tests/unit/runtimeAgent/turn-workflow.test.ts", "tests/unit/runtimeAgent/v8-control-read-composition.test.ts", "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts", "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts", "tests/unit/runtimeAgent/whole-recall-composition.test.ts", "tests/unit/runtimeArtifactAuth/admission-errors.test.ts", "tests/unit/runtimeArtifactAuth/handlers.test.ts", "tests/unit/runtimeArtifactAuth/inventory.test.ts", "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts", "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts", "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeAssets/action-delivery.test.ts", "tests/unit/runtimeAssets/distribution.test.ts", "tests/unit/runtimeAssets/lifecycle.test.ts", "tests/unit/runtimeAuth/authority-read-scope.test.ts", "tests/unit/runtimeAuth/authority.test.ts", "tests/unit/runtimeAuth/inventory.test.ts", "tests/unit/runtimeAuth/managed-source-read-scope.test.ts", "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts", "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts", "tests/unit/runtimeAuth/provisioning.test.ts", "tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts", "tests/unit/runtimeAuth/v8-read-scope.test.ts", "tests/unit/runtimeBeliefs/atomic.test.ts", "tests/unit/runtimeBeliefs/duplicate-candidates.test.ts", "tests/unit/runtimeContent/jobs.test.ts", "tests/unit/runtimeDelivery/asset-deadline.test.ts", "tests/unit/runtimeDelivery/client-signal.test.ts", "tests/unit/runtimeDelivery/legacy-search.test.ts", "tests/unit/runtimeDelivery/public-payload.test.ts", "tests/unit/runtimeDelivery/recall-delivery.test.ts", "tests/unit/runtimeEndpointAuth/facts.test.ts", "tests/unit/runtimeEndpointAuth/memory.test.ts", "tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts", "tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts", "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts", "tests/unit/runtimeGraph/projection.test.ts", "tests/unit/runtimeHistoryClient/operator-bridge.test.ts", "tests/unit/runtimeIngestion/cached-compatibility.test.ts", "tests/unit/runtimeIngestion/candidate-binding.test.ts", "tests/unit/runtimeIngestion/claim-recovery.test.ts", "tests/unit/runtimeIngestion/client-extensions.test.ts", "tests/unit/runtimeIngestion/context-permissions.test.ts", "tests/unit/runtimeIngestion/context.test.ts", "tests/unit/runtimeIngestion/foreground-priority.test.ts", "tests/unit/runtimeIngestion/framing-invalid-output.test.ts", "tests/unit/runtimeIngestion/progress-publication.test.ts", "tests/unit/runtimeIngestion/repeat-capture.test.ts", "tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts", "tests/unit/runtimeIngestion/sequence-head.test.ts", "tests/unit/runtimeIngestion/shared-edit.test.ts", "tests/unit/runtimeIngestion/stages.test.ts", "tests/unit/runtimeIngestion/worker.test.ts", "tests/unit/runtimeMedia/artifact-context.test.ts", "tests/unit/runtimeMedia/import-order.test.ts", "tests/unit/runtimeMedia/jobs.test.ts", "tests/unit/runtimeMedia/native-cost.test.ts", "tests/unit/runtimeMedia/recovery.test.ts", "tests/unit/runtimeMedia/submission-port.test.ts", "tests/unit/runtimeMemory/authority-scope-entries.test.ts", "tests/unit/runtimeMemory/capture.test.ts", "tests/unit/runtimeMemory/direct-fact-rule.test.ts", "tests/unit/runtimeMemory/literal-property-ranking.test.ts", "tests/unit/runtimeMemory/literal-question-source-proof.test.ts", "tests/unit/runtimeMemory/memory-effort.test.ts", "tests/unit/runtimeMemory/memory-traversal.test.ts", "tests/unit/runtimeMemory/parallel-recall.test.ts", "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts", "tests/unit/runtimeMemory/profiles.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts", "tests/unit/runtimeMemory/public-closure.test.ts", "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/query-composition.test.ts", "tests/unit/runtimeMemory/query-embedding-tail.test.ts", "tests/unit/runtimeMemory/query-source-read-reuse.test.ts", "tests/unit/runtimeMemory/remember-deadline.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeMemory/services.test.ts", "tests/unit/runtimeMemory/source-root-read-scope.test.ts", "tests/unit/runtimeMemory/v8-control-read-scope.test.ts", "tests/unit/runtimeMemory/vector-delivery-batch.test.ts", "tests/unit/runtimeMetadataAuth/handlers.test.ts", "tests/unit/runtimeMetadataAuth/native-errors.test.ts", "tests/unit/runtimeMetadataAuth/registrations.test.ts", "tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts", "tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts", "tests/unit/runtimeRegistryAuth/admissionFailure.test.ts", "tests/unit/runtimeRegistryAuth/adversarial.test.ts", "tests/unit/runtimeRegistryAuth/catalog.test.ts", "tests/unit/runtimeRegistryAuth/closureRepair.test.ts", "tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts", "tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts", "tests/unit/runtimeRegistryAuth/failureBoundary.test.ts", "tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts", "tests/unit/runtimeRegistryAuth/registered.test.ts", "tests/unit/runtimeRegistryClient/registry-bridge.test.ts", "tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts", "tests/unit/runtimeRegistryStats/registered.test.ts", "tests/unit/runtimeRuns/admission.test.ts", "tests/unit/runtimeRuns/cancelled-input-readiness.test.ts", "tests/unit/runtimeRuns/raw-run-read-reuse.test.ts", "tests/unit/runtimeTranscript/contracts.test.ts", "tests/unit/runtimeTranscript/managed.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts", "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts", "tests/unit/runtimeWorkerAuth/governance.test.ts", "tests/unit/runtimeWorkerAuth/graph.test.ts", "tests/unit/runtimeWorkerClient/governance.test.ts", "tests/unit/runtimeWorkerClient/metadata-consumers.test.ts", "tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts", "tests/unit/scoped-cleanup-routing.test.ts", "tests/unit/sessions/validators.test.ts", "tests/unit/tenant-scope.test.ts", "tests/unit/transport-initialization.test.ts", "tests/unit/transport-logger.test.ts", "tests/unit/types.test.ts", "tests/unit/user-data-scope.test.ts", "tests/unit/user-export.test.ts", "tests/unit/user-profile-deletion-receipt.test.ts", "tests/unit/users/schemas.test.ts", "tests/unit/vector-public-handler-selection.test.ts", "tests/unit/vector-store-scope.test.ts".

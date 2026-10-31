@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-31T02:25:10.776893+00:00",
+  "recordedAt": "2026-10-31T02:42:15.421507+00:00",
   "repository": "SaintNick1214/Project-Cortex",
   "visibility": "public",
   "baseBranch": "dev",
@@ -67,9 +67,10 @@
     }
   ],
   "remaining": [
-    "Fresh complete offline run in progress; initial discovery retained as diagnostic failure",
-    "Fresh exact-SHA GitHub functional/package/security checks",
-    "Actual current model qualification: configured revision16 all10 dispatch proofs expired October9-10; no date extension or expired-proof acceptance"
+    "Verify repaired exact-head PR checks",
+    "Fresh scoped CI deployment pair and keys in approved test project; verify identity/type/expiry and cleanup intent before creation, no production/default targets",
+    "Actual Gateway proof renewal preserving existing2M run caps and reachable V1 descriptor; no forged date extension",
+    "Rerun full service gate only after these actual prerequisites are corrected; retain previous failures"
   ],
   "receipts": [
     {
@@ -139,5 +140,60 @@
     "errors": 0,
     "warnings": 240,
     "log": "final-lint-pass.log"
+  },
+  "currentHead": "4722e1339d2b6bf6ad7e2260cd112bbc03074173",
+  "completeOffline": {
+    "command": "node scripts/ci-contract.mjs offline-unit",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "exit": 0,
+    "passedSuites": 241,
+    "totalSuites": 241,
+    "passedTests": 9955,
+    "totalTests": 9955,
+    "skippedTests": 0,
+    "elapsedSeconds": 164.411,
+    "log": "complete-offline-pass.log",
+    "rawSha256": "562791b5ae5ef2af8c0d581ffd1adbdf26d725587ace745e6b957f60e6d70ee2",
+    "note": "Exact CI sparse/current-head workflow remains the release gate; diagnostic full-run failures are retained separately."
+  },
+  "pullRequest": {
+    "url": "https://github.com/SaintNick1214/Project-Cortex/pull/135",
+    "state": "OPEN",
+    "draft": true,
+    "base": "dev",
+    "head": "4722e1339d2b6bf6ad7e2260cd112bbc03074173"
+  },
+  "currentRuns": {
+    "pullRequestChecks": 41159944198,
+    "fullServiceWorkflowDispatch": 41160021145,
+    "candidate": "4722e1339d2b6bf6ad7e2260cd112bbc03074173",
+    "state": "previous exact-head full service run failed; bounded corrections accepted; new source pending push"
+  },
+  "monitor": {
+    "automationId": "monitor-cortex-release-pr",
+    "status": "ACTIVE",
+    "intervalMinutes": 10,
+    "notifications": "meaningful changes only"
+  },
+  "securityAt4722": {
+    "run": 41159944200,
+    "conclusion": "success",
+    "scannerUploadsVerified": true
+  },
+  "newCIRepairPhase": {
+    "accepted": 2,
+    "total": 2,
+    "percent": 100,
+    "independentReviewer": "/root/release_ci_round2_review",
+    "score": 4
+  },
+  "managedCITargets": {
+    "steady-snake-253": "GET404",
+    "usable-sheep-908": "GET404",
+    "deployKey": "CI401invalid",
+    "cleanup": "failed, preserved",
+    "managementLogin": "read-only project access verified, no secrets printed"
   }
 }

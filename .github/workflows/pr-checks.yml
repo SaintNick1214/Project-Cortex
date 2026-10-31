@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       convex:
-        image: ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+        image: ghcr.io/convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
         env:
           CONVEX_CLOUD_ORIGIN: http://127.0.0.1:3210
           CONVEX_SITE_ORIGIN: http://127.0.0.1:3211
@@ -134,7 +134,7 @@ jobs:
       CORTEX_CI_NATIVE_OWNER: '${{ github.run_id }}-${{ github.run_attempt }}-native-ci'
     services:
       convex:
-        image: 'ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4'
+        image: 'ghcr.io/convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4'
         env:
           CONVEX_CLOUD_ORIGIN: 'http://127.0.0.1:3210'
           CONVEX_SITE_ORIGIN: 'http://127.0.0.1:3211'
@@ -246,7 +246,7 @@ jobs:
     timeout-minutes: 45
     services:
       convex:
-        image: 'ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4'
+        image: 'ghcr.io/convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4'
         env:
           CONVEX_CLOUD_ORIGIN: 'http://127.0.0.1:3210'
           CONVEX_SITE_ORIGIN: 'http://127.0.0.1:3211'
