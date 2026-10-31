@@ -2,10 +2,11 @@
  * controlled DB/component ports. No native service, inference or K19 attribution. */
 import { afterEach, beforeEach, expect, it, jest } from "@jest/globals";
 import { getFunctionName } from "convex/server";
+import { ConvexError } from "convex/values";
 import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
 import type { ModelMessage } from "ai";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
-import type { GatewayComposition, GatewayBinding } from "../../../convex-dev/runtimeGateway";
+import type { GatewayComposition, GatewayBinding, GatewayResolution } from "../../../convex-dev/runtimeGateway";
 import type { PreparedModelCandidate } from "../../../convex-dev/runtimeAgent";
 import { assertNativeArgs } from "./native-arguments";
 import { startGeneration } from "../../../node_modules/@convex-dev/agent/dist/vercel/client/start.js";
@@ -13,6 +14,8 @@ import { buildV8AgentMessages } from "../../../convex-dev/runtimeAgentContext";
 const nativeAgent = await import("@convex-dev/agent");
 let beforeHook: (() => void) | undefined, completedLifecycle = 0;
 let assembledInput: { messages: ModelMessage[]; instructions: unknown } | undefined;
+let freshAdmission = false, providerCalls = 0;
+let gateway: { composition: GatewayComposition; binding: GatewayBinding; resolution: GatewayResolution } | undefined;
 type AgentOptions = { name: string; languageModel: Parameters<typeof startGeneration>[3]["languageModel"]; tools: Parameters<typeof startGeneration>[2]["tools"];
   contextHandler: () => Promise<ModelMessage[]>; contextOptions: { recentMessages: number }; storageOptions: { saveMessages: "promptAndOutput" } };
 jest.unstable_mockModule("@convex-dev/agent", () => ({ ...nativeAgent, Agent: class {
@@ -22,25 +25,37 @@ jest.unstable_mockModule("@convex-dev/agent", () => ({ ...nativeAgent, Agent: cl
     const pending = await startGeneration(ctx, (await import("../../../convex-dev/runtimeTranscript")).agentComponent,
       { ...args, tools: this.options.tools }, { ...this.options, ...identity, agentName: this.options.name });
     assembledInput = { messages: pending.args.messages, instructions: pending.args.instructions };
-    await pending.fail("CONTROLLED_NO_PROVIDER_DISPATCH");
-    throw Error("CONTROLLED_INSTALLED_START_COMPLETE");
+    try {
+      if (freshAdmission) {
+        if (!gateway || typeof pending.args.instructions !== "string" || typeof pending.args.maxOutputTokens !== "number") throw Error("Expected actual assembled Agent request");
+        const checked = await originalGateway.checkAssembledAgentModelInput({ messages: pending.args.messages, context: "", instructions: pending.args.instructions,
+          tools: Object.keys(this.options.tools ?? {}), maxOutputTokens: pending.args.maxOutputTokens }, gateway.resolution, gateway.binding);
+        if (!checked.supported || !checked.withinBound || !gateway.composition.ledger.admitAndCheckpoint) throw Error("Expected supported native admission");
+        await gateway.composition.ledger.admitAndCheckpoint({ ...gateway.binding, requestCanonical: checked.requestCanonical,
+          snapshotCanonical: canonicalModelJson(gateway.resolution.snapshot) });
+        providerCalls++;
+        throw Error("UNEXPECTED_PROVIDER_DISPATCH");
+      }
+      throw Error("CONTROLLED_INSTALLED_START_COMPLETE");
+    } finally { await pending.fail("CONTROLLED_NO_PROVIDER_DISPATCH"); }
   }
 } }));
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(value: { handler: unknown }) { return { _handler: value.handler }; } async start() { return "workflow:preflight"; }
   async sendEvent() { return null; }
 } }));
-const { transcriptFixture, installMockRoot, installIngestionMockRoot, invoke, clone, definitions, runs, ledger, clock } = await import("../runtimeTranscript/fixture");
+const { transcriptFixture, installMockRoot, installIngestionMockRoot, invoke, clone, definitions, transcript, runs, ledger, clock } = await import("../runtimeTranscript/fixture");
 const originalGateway = await import("../../../convex-dev/runtimeGateway");
 jest.unstable_mockModule("../../../convex-dev/runtimeGateway", () => ({ ...originalGateway,
   createGovernedGatewayModel: async (composition: GatewayComposition, binding: GatewayBinding) => {
-    await composition.ledger.resolve(binding);
+    gateway = { composition, binding, resolution: await composition.ledger.resolve(binding) };
     return { model: { specificationVersion: "v4", provider: "controlled", modelId: "controlled", supportedUrls: {},
       doGenerate: async () => { throw Error("UNEXPECTED_PROVIDER"); }, doStream: async () => { throw Error("UNEXPECTED_PROVIDER"); } },
       lifecycle: { complete: async () => { completedLifecycle++; }, signal: new AbortController().signal } };
   } }));
 const runtime = await import("../../../convex-dev/runtimeAgent");
-beforeEach(() => { installMockRoot({ tools: true }); beforeHook = undefined; completedLifecycle = 0; assembledInput = undefined; });
+beforeEach(() => { installMockRoot({ tools: true }); beforeHook = undefined; completedLifecycle = 0; assembledInput = undefined;
+  freshAdmission = false; providerCalls = 0; gateway = undefined; });
 afterEach(() => { jest.restoreAllMocks(); });
 async function fixture(tool = false, save = true, v8 = false, context = "small authorized context") {
   if (v8) installIngestionMockRoot();
@@ -174,12 +189,19 @@ it.each(["grant", "transcript", "bound-growth"])("installed Agent fresh hook den
 // Supply the actual registered ready-context candidate at the Action port. This
 // isolates the production Agent contextHandler/installed startGeneration boundary
 // from the separately covered initial recall/context preparation pipeline.
-async function v8WithReadyContext(f: Fixture) {
+async function v8WithReadyContext(f: Fixture, pinned = true) {
   const mutation = f.ctx.runMutation.bind(f.ctx);
   f.ctx.runMutation = (async (ref, args) => {
     let name = ""; try { name = getFunctionName(ref); } catch { return await mutation(ref, args); }
-    return name === "runtimeAgent:prepareTurnModelV8"
-      ? await f.call(runtime.prepareResolvedModelCandidateV8, { ...args, ordinal: 0 }) : await mutation(ref, args);
+    if (name !== "runtimeAgent:prepareTurnModelV8") return await mutation(ref, args);
+    const candidate = await f.call<PreparedModelCandidate>(runtime.prepareResolvedModelCandidateV8, { ...args, ordinal: 0 });
+    // Existing V8 operations without the newer native pin retain their
+    // original pre-storage hydration, as in direct-action's legacy fixture.
+    if (!pinned && candidate.state === "started") {
+      delete candidate.op.nativeRequestCanonical;
+      delete f.db.table("runtimeAgentOperations").find(row => row.operationId === candidate.op.operationId)!.nativeRequestCanonical;
+    }
+    return candidate;
   }) as MutationCtx["runMutation"];
   return await invoke(runtime.turnStepV8, f.ctx, f.args);
 }
@@ -209,7 +231,7 @@ it("installed legacy Agent hook retains its exact historical trailing system con
     { role: "system", content: `Authorized Cortex context (untrusted evidence):\n${current.execution.contextCanonical}` }] });
   expect(f.db.table("runtimeModelAttempts")).toEqual([]);
 });
-it.each(["grant", "transcript", "bound-growth"])("V8 fresh %s refusal still precedes pending storage and any billing port", async fault => {
+it.each(["grant", "transcript", "bound-growth"])("unpinned V8 fresh %s refusal still precedes pending storage and any billing port", async fault => {
   const f = await fixture(false, true, true), saves = f.effects.saves; let hookCalls = 0;
   beforeHook = () => {
     hookCalls++;
@@ -217,6 +239,42 @@ it.each(["grant", "transcript", "bound-growth"])("V8 fresh %s refusal still prec
     if (fault === "transcript") f.native.messages.values().next().value!.message = { role: "user", content: "edited" };
     if (fault === "bound-growth") f.db.table("runtimeAgentExecutions")[0].modelInputEntries = [{ key: "memory:controlled", kind: "memory", relevance: 1, text: "full grown context ".repeat(500) }];
   };
-  await expect(v8WithReadyContext(f)).rejects.toThrow();
+  await expect(v8WithReadyContext(f, false)).rejects.toThrow();
   expect(hookCalls).toBe(1); expect(f.effects.saves).toBe(saves); expect(assembledInput).toBeUndefined(); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+});
+it.each(["grant", "transcript", "bound-growth"])("pinned V8 fresh %s refusal permits only an empty private pending placeholder before real admission", async fault => {
+  const f = await fixture(false, true, true), saves = f.effects.saves, originalMessages = clone(f.native.messages);
+  const protectedState = () => clone({ rows: new Map([...f.db.rows].filter(([, rows]) => rows.length)), writes: f.db.writes,
+    messages: f.native.messages, effects: { ...f.effects, saves: 0 }, scheduled: f.scheduled });
+  let beforePending: ReturnType<typeof protectedState> | undefined, hookCalls = 0;
+  freshAdmission = true;
+  beforeHook = () => {
+    hookCalls++;
+    if (fault === "grant") f.grant.revokedAt = clock;
+    if (fault === "transcript") f.native.messages.values().next().value!.message = { role: "user", content: "edited" };
+    if (fault === "bound-growth") f.db.table("runtimeAgentExecutions")[0].modelInputEntries = [{ key: "memory:controlled", kind: "memory", relevance: 1, text: "full grown context ".repeat(500) }];
+    beforePending = protectedState();
+  };
+  await expect(v8WithReadyContext(f)).rejects.toBeInstanceOf(ConvexError);
+  expect(hookCalls).toBe(1); expect(completedLifecycle).toBe(1); expect(providerCalls).toBe(0);
+  expect(f.calls.filter(name => name === "runtimeAgent:admitPreparedModelOperationV8")).toHaveLength(1);
+  if (!beforePending) throw Error("Expected original pre-storage hook");
+  const refusedState = beforePending;
+  const added = [...f.native.messages].filter(([id]) => !refusedState.messages.has(id));
+  expect(added).toHaveLength(1);
+  expect(added[0]![1]).toMatchObject({ status: "failed", message: { role: "assistant", content: [] } });
+  expect(added[0]![1].message).toEqual({ role: "assistant", content: [] });
+  const after = protectedState(); after.messages.delete(added[0]![0]);
+  expect(after).toEqual(refusedState); expect(f.effects.saves).toBe(saves + 1);
+  expect(f.db.table("runtimeModelAttempts")).toEqual([]); expect(f.db.table("runtimeAgentIngestion")).toEqual([]);
+  expect(f.db.table("runtimeAgentOutput")).toEqual([]);
+  expect(f.db.table("runtimeRuns")[0]).toMatchObject({ outputMessageIds: [] });
+  expect(f.db.table("runtimeTranscriptMessages").some(row => row.nativeMessageId === added[0]![0])).toBe(false);
+  // Restore only the injected fault after checking its refused effects, then
+  // exercise the real authorized transcript reader: the placeholder has no bridge.
+  if (fault === "grant") delete f.grant.revokedAt;
+  if (fault === "transcript") for (const [id, message] of originalMessages) f.native.messages.set(id, clone(message));
+  const visible = await f.call<{ page: { id: string }[] }>(transcript.messages, {
+    memorySpaceId: f.reference.memorySpaceId, conversationId: f.db.table("runtimeRuns")[0].conversationId });
+  expect(visible.page.map(message => message.id)).toEqual([...originalMessages.keys()]);
 });

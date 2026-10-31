@@ -1,0 +1,124 @@
+(node:17618) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/request-preflight.test.ts (5.799 s)
+  ✓ new candidate retains all original prepared values and final DB effects, adding no activation RPC (81 ms)
+  ✓ complete over-cap context is refused before operation start and rolls back all preparation effects (53 ms)
+  ✓ compound save commits the original context while refused child preparation rolls back every new operation (30 ms)
+  ✓ a durable started operation is never restarted or preflight-readmitted (42 ms)
+  ✓ a durable unknown operation is never restarted or preflight-readmitted (47 ms)
+  ✓ completed operation reconciliation returns original saved result before any new preparation effect (40 ms)
+  ✓ known later-turn bounds refusal retains completed model/approved tool/history and original durable failure disposition (75 ms)
+  ✓ original grant refusal and rollback remain identical to the legacy preparation (24 ms)
+  ✓ original principal refusal and rollback remain identical to the legacy preparation (21 ms)
+  ✓ original transcript refusal and rollback remain identical to the legacy preparation (20 ms)
+  ✓ original lease refusal and rollback remain identical to the legacy preparation (20 ms)
+  ✓ original cancel refusal and rollback remain identical to the legacy preparation (20 ms)
+  ✓ original qualification refusal and rollback remain identical to the legacy preparation (34 ms)
+  ✓ installed Agent start invokes the actual product fresh context hook before one pending save (35 ms)
+  ✓ installed Agent fresh hook denies grant before pending storage and before any provider/admission (35 ms)
+  ✓ installed Agent fresh hook denies transcript before pending storage and before any provider/admission (32 ms)
+  ✓ installed Agent fresh hook denies bound-growth before pending storage and before any provider/admission (33 ms)
+  ✓ installed Agent V8 context hook uses the same quoted evidence/chronology as fitting without storing synthetic evidence (67 ms)
+  ✓ installed legacy Agent hook retains its exact historical trailing system context (35 ms)
+  ✓ unpinned V8 fresh grant refusal still precedes pending storage and any billing port (55 ms)
+  ✓ unpinned V8 fresh transcript refusal still precedes pending storage and any billing port (59 ms)
+  ✓ unpinned V8 fresh bound-growth refusal still precedes pending storage and any billing port (58 ms)
+  ✓ pinned V8 fresh grant refusal permits only an empty private pending placeholder before real admission (64 ms)
+  ✓ pinned V8 fresh transcript refusal permits only an empty private pending placeholder before real admission (65 ms)
+  ✓ pinned V8 fresh bound-growth refusal permits only an empty private pending placeholder before real admission (65 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.8s | 25/25 passed | /tests/unit/runtimeAgent/request-preflight.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.08s ( 1.4%) - new candidate retains all original prepared values and final DB effects, adding no activation RPC
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 2. [32m✓[0m    0.07s ( 1.3%) - known later-turn bounds refusal retains completed model/approved tool/history and original durable failure disposition
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 3. [32m✓[0m    0.07s ( 1.1%) - installed Agent V8 context hook uses the same quoted evidence/chronology as fitting without storing synthetic evidence
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 4. [32m✓[0m    0.07s ( 1.1%) - pinned V8 fresh transcript refusal permits only an empty private pending placeholder before real admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 5. [32m✓[0m    0.07s ( 1.1%) - pinned V8 fresh bound-growth refusal permits only an empty private pending placeholder before real admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 6. [32m✓[0m    0.06s ( 1.1%) - pinned V8 fresh grant refusal permits only an empty private pending placeholder before real admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 7. [32m✓[0m    0.06s ( 1.0%) - unpinned V8 fresh transcript refusal still precedes pending storage and any billing port
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 8. [32m✓[0m    0.06s ( 1.0%) - unpinned V8 fresh bound-growth refusal still precedes pending storage and any billing port
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 9. [32m✓[0m    0.06s ( 0.9%) - unpinned V8 fresh grant refusal still precedes pending storage and any billing port
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+10. [32m✓[0m    0.05s ( 0.9%) - complete over-cap context is refused before operation start and rolls back all preparation effects
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+11. [32m✓[0m    0.05s ( 0.8%) - a durable unknown operation is never restarted or preflight-readmitted
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+12. [32m✓[0m    0.04s ( 0.7%) - a durable started operation is never restarted or preflight-readmitted
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+13. [32m✓[0m    0.04s ( 0.7%) - completed operation reconciliation returns original saved result before any new preparation effect
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+14. [32m✓[0m    0.04s ( 0.6%) - installed Agent start invokes the actual product fresh context hook before one pending save
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+15. [32m✓[0m    0.04s ( 0.6%) - installed Agent fresh hook denies grant before pending storage and before any provider/admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+16. [32m✓[0m    0.04s ( 0.6%) - installed legacy Agent hook retains its exact historical trailing system context
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+17. [32m✓[0m    0.03s ( 0.6%) - original qualification refusal and rollback remain identical to the legacy preparation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+18. [32m✓[0m    0.03s ( 0.6%) - installed Agent fresh hook denies bound-growth before pending storage and before any provider/admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+19. [32m✓[0m    0.03s ( 0.5%) - installed Agent fresh hook denies transcript before pending storage and before any provider/admission
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+20. [32m✓[0m    0.03s ( 0.5%) - compound save commits the original context while refused child preparation rolls back every new operation
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.00s (16.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.94s
+  Test suites:        1
+  Individual tests:   25
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       25 passed, 25 total
+Snapshots:   0 total
+Time:        5.944 s
+Ran all test suites within paths "tests/unit/runtimeAgent/request-preflight.test.ts".

@@ -44,7 +44,8 @@ jest.unstable_mockModule("@convex-dev/agent", () => ({ ...agentModule, Agent: cl
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(input: { handler: unknown }) { return { _handler: input.handler }; } async start() { return "workflow:turn-action"; }
 } }));
-const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
+// Install the trusted policy fixture first, then replace the Gateway factory
+// before ingestion loads runtimeMemory and its Gateway backend dependency.
 const { clone, ledger, clock } = await import("../runtimeTranscript/fixture");
 const { qualifiedTerminalModelId } = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
 const gatewayModule = await import("../../../convex-dev/runtimeGateway");
@@ -53,6 +54,7 @@ jest.unstable_mockModule("../../../convex-dev/runtimeGateway", () => ({ ...gatew
   return { model: { specificationVersion: "v4", provider: "controlled", modelId: "controlled/model", doStream: async () => {}, doGenerate: async () => {} },
     lifecycle: { complete: async () => { completionCalls++; }, signal: new AbortController().signal } };
 } }));
+const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
 const runtime = await import("../../../convex-dev/runtimeAgent"), runs = await import("../../../convex-dev/runs"), memory = await import("../../../convex-dev/runtimeMemory");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 beforeEach(() => { installIngestionMockRoot(); providerCalls = completionCalls = 0; mode = "final"; beforeDispatch = undefined; }); afterEach(() => { jest.restoreAllMocks(); });

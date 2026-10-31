@@ -81,7 +81,9 @@ function instrument(f: Fixture) {
   const reads: { method: string; table: string; id?: string; index?: string; keys?: unknown[]; family?: boolean }[] = [];
   jest.spyOn(f.db, "get").mockImplementation(async (table, id) => { reads.push({ method: "get", table, id }); return get(table, id); });
   jest.spyOn(f.db, "query").mockImplementation(table => {
-    const record = { method: "query", table, family: /readManaged(?:SourceRows|ConversationRows|TranscriptBridgeRows|SourceRunRows)/.test(new Error().stack ?? ""), index: undefined as string | undefined, keys: [] as unknown[] };
+    // The V8 owner also retains the exact unique() root lookup, separately
+    // from ancestry take(2). Direct source queries remain mutable reads.
+    const record = { method: "query", table, family: /readManaged(?:SourceRows|SourceUniqueRow|ConversationRows|TranscriptBridgeRows|SourceRunRows)/.test(new Error().stack ?? ""), index: undefined as string | undefined, keys: [] as unknown[] };
     reads.push(record); const builder = query(table), withIndex = builder.withIndex.bind(builder);
     builder.withIndex = (index, callback) => { record.index = index; return withIndex(index, q => {
       if (q === null || typeof q !== "object") throw Error("Expected native index query object");
